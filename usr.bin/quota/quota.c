@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "from: @(#)quota.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"from: @(#)quota.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +116,36 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -114,37 +158,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fstab.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -579,17 +593,6 @@ decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|,
-name|errno
-decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -708,18 +711,13 @@ name|ngroups
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
-literal|"quota: getgroups"
+literal|1
+argument_list|,
+literal|"getgroups"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|showgid
 argument_list|(
 name|mygid
@@ -886,11 +884,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"Usage: quota [-guqv]"
+literal|"usage: quota [-guqv]"
 argument_list|,
-literal|"\tquota [-qv] -u username ..."
+literal|"       quota [-qv] -u username ..."
 argument_list|,
-literal|"\tquota [-qv] -g groupname ..."
+literal|"       quota [-qv] -g groupname ..."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1025,11 +1023,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"quota: %s: unknown user\n"
+literal|"%s: unknown user"
 argument_list|,
 name|name
 argument_list|)
@@ -1054,11 +1050,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"quota: %s (uid %u): permission denied\n"
+literal|"%s (uid %u): permission denied"
 argument_list|,
 name|name
 argument_list|,
@@ -1165,9 +1159,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"quota: getgroups"
+literal|"getgroups"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1214,11 +1208,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"quota: %s (gid %lu): permission denied\n"
+literal|"%s (gid %lu): permission denied"
 argument_list|,
 name|name
 argument_list|,
@@ -1288,11 +1280,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"quota: %s: unknown group\n"
+literal|"%s: unknown group"
 argument_list|,
 name|name
 argument_list|)
@@ -1320,9 +1310,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"quota: getgroups"
+literal|"getgroups"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1373,11 +1363,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"quota: %s (gid %u): permission denied\n"
+literal|"%s (gid %u): permission denied"
 argument_list|,
 name|name
 argument_list|,
@@ -2323,20 +2311,13 @@ name|nfst
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"quota: no filesystems mounted!\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"no filesystems mounted!"
 argument_list|)
 expr_stmt|;
-block|}
 name|setfsent
 argument_list|()
 expr_stmt|;
@@ -2381,20 +2362,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"quota: out of memory\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2910,7 +2884,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 name|qfpathname
 argument_list|)
@@ -2997,15 +2971,10 @@ comment|/* OK */
 break|break;
 default|default:
 comment|/* ERROR */
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"read error: %s"
 argument_list|,
-literal|"quota: read error"
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|qfpathname
 argument_list|)
 expr_stmt|;
@@ -3141,11 +3110,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot find hostname for %s\n"
+literal|"cannot find hostname for %s"
 argument_list|,
 name|fst
 operator|->
@@ -3261,11 +3228,9 @@ break|break;
 case|case
 name|Q_EPERM
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"quota permission error, host: %s\n"
+literal|"quota permission error, host: %s"
 argument_list|,
 name|fst
 operator|->
@@ -3432,11 +3397,9 @@ literal|1
 operator|)
 return|;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad rpc result, host: %s\n"
+literal|"bad rpc result, host: %s"
 argument_list|,
 name|fst
 operator|->
