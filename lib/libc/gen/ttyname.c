@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<termios.h>
 end_include
 
 begin_include
@@ -136,7 +136,7 @@ name|stat
 name|sb
 decl_stmt|;
 name|struct
-name|sgttyb
+name|termios
 name|ttyb
 decl_stmt|;
 name|DB
@@ -162,11 +162,9 @@ struct|;
 comment|/* Must be a terminal. */
 if|if
 condition|(
-name|ioctl
+name|tcgetattr
 argument_list|(
 name|fd
-argument_list|,
-name|TIOCGETP
 argument_list|,
 operator|&
 name|ttyb
