@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -1361,6 +1367,15 @@ operator|.
 name|lo_name
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_nvcsw
+operator|++
+expr_stmt|;
 name|mi_switch
 argument_list|()
 expr_stmt|;
@@ -2022,6 +2037,15 @@ name|m
 operator|->
 name|mtx_lock
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_nivcsw
+operator|++
 expr_stmt|;
 name|mi_switch
 argument_list|()
