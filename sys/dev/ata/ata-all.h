@@ -1221,5 +1221,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int32_t
+name|ata_find_dev
+parameter_list|(
+name|device_t
+parameter_list|,
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -2770,7 +2776,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"ad%d: wouldn't take transfer command - HELP!\n"
+literal|"ad%d: wouldn't take transfer command\n"
 argument_list|,
 name|adp
 operator|->

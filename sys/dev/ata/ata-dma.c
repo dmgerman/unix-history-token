@@ -1497,7 +1497,7 @@ break|break;
 case|case
 literal|0x05711106
 case|:
-comment|/* VIA Apollo 82c571 / 82c586 / 82c686 */
+comment|/* VIA Apollo 82C571 / 82C586 / 82C686 */
 name|devno
 operator|=
 operator|(
@@ -1520,25 +1520,21 @@ else|:
 literal|1
 operator|)
 expr_stmt|;
-comment|/* UDMA4 mode only on rev 6 (VT82C686) hardware */
+comment|/* UDMA4 mode only on VT82C686 hardware */
 if|if
 condition|(
 name|udmamode
 operator|>=
 literal|4
 operator|&&
-name|pci_read_config
+name|ata_find_dev
 argument_list|(
 name|scp
 operator|->
 name|dev
 argument_list|,
-literal|0x08
-argument_list|,
-literal|1
+literal|0x06861106
 argument_list|)
-operator|==
-literal|0x06
 condition|)
 block|{
 name|int8_t
@@ -1676,7 +1672,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* UDMA2 mode only on rev 1 and up (VT82C586, VT82C686) hardware */
+comment|/* UDMA2 mode only on rev 1 and better 82C586& 82C586 chips */
 if|if
 condition|(
 name|udmamode
@@ -1695,6 +1691,26 @@ literal|1
 argument_list|)
 operator|>=
 literal|0x01
+operator|&&
+operator|(
+name|ata_find_dev
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|,
+literal|0x05861106
+argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|,
+literal|0x06861106
+argument_list|)
+operator|)
 condition|)
 block|{
 name|int8_t
@@ -1855,20 +1871,14 @@ name|ata_parm
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|pci_read_config
+name|ata_find_dev
 argument_list|(
 name|scp
 operator|->
 name|dev
 argument_list|,
-literal|0x08
-argument_list|,
-literal|1
+literal|0x06861106
 argument_list|)
-operator|==
-literal|0x06
-operator|)
 operator|&&
 operator|(
 name|ap
@@ -3329,7 +3339,6 @@ comment|/* well, we have no support for this, but try anyways */
 if|if
 condition|(
 operator|(
-operator|(
 name|wdmamode
 operator|>=
 literal|2
@@ -3338,11 +3347,15 @@ name|apiomode
 operator|>=
 literal|4
 operator|)
-operator|||
-name|udmamode
-operator|>=
-literal|2
-operator|)
+operator|&&
+name|scp
+operator|->
+name|bmaddr
+condition|)
+block|{
+if|#
+directive|if
+name|MAYBE_NOT
 operator|&&
 operator|(
 name|inb
@@ -3366,8 +3379,10 @@ else|:
 name|ATA_BMSTAT_DMA_SLAVE
 operator|)
 operator|)
-condition|)
+block|)
 block|{
+endif|#
+directive|endif
 name|error
 operator|=
 name|ata_command
