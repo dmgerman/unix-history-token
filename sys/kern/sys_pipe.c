@@ -5484,6 +5484,7 @@ name|NULL
 expr_stmt|;
 name|funsetown
 argument_list|(
+operator|&
 name|cpipe
 operator|->
 name|pipe_sigio

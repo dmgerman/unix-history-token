@@ -922,6 +922,13 @@ name|lock_class_sx
 block|}
 block|,
 block|{
+literal|"sigio lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
 literal|"process group"
 block|,
 operator|&

@@ -5878,6 +5878,7 @@ directive|ifdef
 name|__FreeBSD__
 name|funsetown
 argument_list|(
+operator|&
 name|dev
 operator|->
 name|buf_sigio

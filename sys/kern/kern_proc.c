@@ -1947,14 +1947,6 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|SIGIO_LOCK
-argument_list|()
-expr_stmt|;
-name|PGRP_LOCK
-argument_list|(
-name|pgrp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pgid. 	 */
 name|funsetownlst
 argument_list|(
@@ -1964,8 +1956,10 @@ operator|->
 name|pg_sigiolst
 argument_list|)
 expr_stmt|;
-name|SIGIO_UNLOCK
-argument_list|()
+name|PGRP_LOCK
+argument_list|(
+name|pgrp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -1639,6 +1639,7 @@ name|s
 decl_stmt|;
 name|funsetown
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|t_sigio

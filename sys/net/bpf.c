@@ -1496,6 +1496,7 @@ argument_list|)
 expr_stmt|;
 name|funsetown
 argument_list|(
+operator|&
 name|d
 operator|->
 name|bd_sigio

@@ -1758,6 +1758,7 @@ expr_stmt|;
 block|}
 name|funsetown
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|tun_sigio

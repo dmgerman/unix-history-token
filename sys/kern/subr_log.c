@@ -413,6 +413,7 @@ literal|0
 expr_stmt|;
 name|funsetown
 argument_list|(
+operator|&
 name|logsoftc
 operator|.
 name|sc_sigio

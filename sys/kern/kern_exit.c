@@ -649,14 +649,6 @@ name|p_itcallout
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pid. 	 */
-name|SIGIO_LOCK
-argument_list|()
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|funsetownlst
 argument_list|(
 operator|&
@@ -664,14 +656,6 @@ name|p
 operator|->
 name|p_sigiolst
 argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|SIGIO_UNLOCK
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Close open files and release open-file table. 	 * This may block! 	 */
 name|fdfree
