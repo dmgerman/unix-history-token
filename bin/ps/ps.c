@@ -480,7 +480,7 @@ name|char
 name|dfmt
 index|[]
 init|=
-literal|"pid tt state time command"
+literal|"pid,tt,state,time,command"
 decl_stmt|;
 end_decl_stmt
 
@@ -490,7 +490,7 @@ name|char
 name|jfmt
 index|[]
 init|=
-literal|"user pid ppid pgid jobc state tt time command"
+literal|"user,pid,ppid,pgid,jobc,state,tt,time,command"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,7 +500,7 @@ name|char
 name|lfmt
 index|[]
 init|=
-literal|"uid pid ppid cpu pri nice vsz rss mwchan state tt time command"
+literal|"uid,pid,ppid,cpu,pri,nice,vsz,rss,mwchan,state,tt,time,command"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,7 +520,7 @@ name|char
 name|o2
 index|[]
 init|=
-literal|"tt state time command"
+literal|"tt,state,time,command"
 decl_stmt|;
 end_decl_stmt
 
@@ -530,7 +530,7 @@ name|char
 name|ufmt
 index|[]
 init|=
-literal|"user pid %cpu %mem vsz rss tt state start time command"
+literal|"user,pid,%cpu,%mem,vsz,rss,tt,state,start,time,command"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,7 +540,7 @@ name|char
 name|vfmt
 index|[]
 init|=
-literal|"pid state time sl re pagein vsz rss lim tsiz %cpu %mem command"
+literal|"pid,state,time,sl,re,pagein,vsz,rss,lim,tsiz,%cpu,%mem,command"
 decl_stmt|;
 end_decl_stmt
 
