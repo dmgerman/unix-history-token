@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acct.h	4.5	82/10/10	*/
+comment|/*	acct.h	4.6	83/07/25	*/
 end_comment
 
 begin_comment
@@ -122,28 +122,6 @@ end_define
 
 begin_comment
 comment|/* killed by a signal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACCTLO
-value|30
-end_define
-
-begin_comment
-comment|/* acctg off when space< this */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACCTHI
-value|100
-end_define
-
-begin_comment
-comment|/* acctg resumes at this level */
 end_comment
 
 begin_ifdef
