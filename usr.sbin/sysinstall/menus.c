@@ -7430,6 +7430,9 @@ operator|&
 name|BootMgr
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|PC98
 block|{
 literal|"Standard"
 block|,
@@ -7453,6 +7456,8 @@ block|,
 literal|1
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"None"
 block|,
