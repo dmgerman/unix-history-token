@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.129 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.130 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.129		%G%"
+literal|"@(#)sendmail.h	8.130		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1292,6 +1292,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_MAKE8BIT
+value|'9'
+end_define
+
+begin_comment
+comment|/* convert 7 -> 8 bit if appropriate */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_CHECKINCLUDE
 value|':'
 end_define
@@ -1875,6 +1886,17 @@ end_define
 
 begin_comment
 comment|/* OK to send 8 bit characters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_CVT7TO8
+value|0x2000
+end_define
+
+begin_comment
+comment|/* convert from 7 to 8 bits */
 end_comment
 
 begin_comment
