@@ -18,12 +18,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|SC_ALT_MOUSE_IMAGE
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|SC_DFLT_FONT
 end_undef
 
@@ -133,36 +127,6 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c)> 0x1b || ((c)> 0x0f&& (c)< 0x1b) \ 				 || (c)< 0x07)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISMOUSEAVAIL
-parameter_list|(
-name|af
-parameter_list|)
-value|(1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISFONTAVAIL
-parameter_list|(
-name|af
-parameter_list|)
-value|((af)& V_ADP_FONT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISPALAVAIL
-parameter_list|(
-name|af
-parameter_list|)
-value|((af)& V_ADP_PALETTE)
 end_define
 
 begin_endif
