@@ -1593,12 +1593,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|sndbuf_getsize
-argument_list|(
-name|ch
-operator|->
-name|buffer
-argument_list|)
+name|blocksize
 return|;
 block|}
 end_function
