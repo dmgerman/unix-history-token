@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|NBUS
-value|4
+value|8
 end_define
 
 begin_endif
