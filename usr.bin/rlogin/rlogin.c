@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rlogin.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -1096,23 +1116,13 @@ argument_list|()
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: unknown user id.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unknown user id"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1198,23 +1208,13 @@ name|sp
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: login/tcp: unknown service.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"login/tcp: unknown service"
 argument_list|)
 expr_stmt|;
-block|}
 define|#
 directive|define
 name|MAX_TERM_LENGTH
@@ -1392,15 +1392,11 @@ name|h_name
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rlogin: %s\n"
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1408,12 +1404,6 @@ name|ENOMEM
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|rem
 operator|=
 name|KSUCCESS
@@ -1529,23 +1519,13 @@ name|sp
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: unknown service login/tcp.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unknown service login/tcp"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
@@ -1582,23 +1562,13 @@ if|if
 condition|(
 name|doencrypt
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: the -x flag requires Kerberos authentication.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"the -x flag requires Kerberos authentication"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* CRYPT */
@@ -1686,19 +1656,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: setsockopt: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"setsockopt"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1724,9 +1684,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"rlogin: setsockopt NODELAY (ignored)"
+literal|"setsockopt NODELAY (ignored)"
 argument_list|)
 expr_stmt|;
 name|one
@@ -1758,9 +1718,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"rlogin: setsockopt TOS (ignored)"
+literal|"setsockopt TOS (ignored)"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2017,19 +1977,9 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: fork: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"fork"
 argument_list|)
 expr_stmt|;
 name|done
@@ -3544,19 +3494,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: ioctl: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"ioctl"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3874,19 +3814,9 @@ operator|==
 name|EINTR
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: read: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read"
 argument_list|)
 expr_stmt|;
 return|return
