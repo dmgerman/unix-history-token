@@ -990,7 +990,7 @@ block|}
 comment|/* 	 * If rename fails because we're trying to cross devices, and 	 * it's a regular file, do the copy internally; otherwise, use 	 * cp and rm. 	 */
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|from
 argument_list|,
