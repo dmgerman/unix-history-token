@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.45	82/01/14	*/
+comment|/*	conf.c	4.46	82/01/17	*/
 end_comment
 
 begin_include
@@ -1856,6 +1856,9 @@ argument_list|()
 decl_stmt|,
 name|ptswrite
 argument_list|()
+decl_stmt|,
+name|ptsstop
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1973,6 +1976,13 @@ define|#
 directive|define
 name|ptcselect
 value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptsstop
+value|nulldev
 end_define
 
 begin_endif
@@ -2571,7 +2581,7 @@ block|,
 comment|/*20*/
 name|ptyioctl
 block|,
-name|nulldev
+name|ptsstop
 block|,
 name|nodev
 block|,
