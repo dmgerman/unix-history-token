@@ -57,9 +57,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|em_82542_rev2_0
+name|em_undefined
 init|=
 literal|0
+block|,
+name|em_82542_rev2_0
 block|,
 name|em_82542_rev2_1
 block|,
@@ -427,6 +429,13 @@ name|E1000_ERR_PARAM
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_ERR_MAC_TYPE
+value|5
+end_define
+
 begin_comment
 comment|/* Function prototypes */
 end_comment
@@ -450,6 +459,18 @@ end_function_decl
 begin_function_decl
 name|int32_t
 name|em_init_hw
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_set_mac_type
 parameter_list|(
 name|struct
 name|em_hw
@@ -1006,6 +1027,30 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|em_pci_set_mwi
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|em_pci_clear_mwi
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|em_read_pci_cfg
 parameter_list|(
 name|struct
@@ -1210,6 +1255,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82540EP_LOM
+value|0x1016
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82540EP
+value|0x1017
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82540EP_LP
+value|0x101E
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82545EM_COPPER
 value|0x100F
 end_define
@@ -1239,7 +1305,7 @@ begin_define
 define|#
 directive|define
 name|NUM_DEV_IDS
-value|13
+value|16
 end_define
 
 begin_define
@@ -4844,6 +4910,9 @@ name|uint32_t
 name|phy_id
 decl_stmt|;
 name|uint32_t
+name|phy_revision
+decl_stmt|;
+name|uint32_t
 name|phy_addr
 decl_stmt|;
 name|uint32_t
@@ -7559,6 +7628,17 @@ begin_comment
 comment|/* TXDCTL Low Threshold */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_TXDCTL_FULL_TX_DESC_WB
+value|0x01010000
+end_define
+
+begin_comment
+comment|/* GRAN=1, WTHRESH=1 */
+end_comment
+
 begin_comment
 comment|/* Transmit Configuration Word */
 end_comment
@@ -9270,6 +9350,20 @@ define|#
 directive|define
 name|PCIX_STATUS_HI_MMRBC_SHIFT
 value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIX_STATUS_HI_MMRBC_4K
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIX_STATUS_HI_MMRBC_2K
+value|0x2
 end_define
 
 begin_comment
@@ -11201,6 +11295,13 @@ define|#
 directive|define
 name|M88E1000_14_PHY_ID
 value|M88E1000_E_PHY_ID
+end_define
+
+begin_define
+define|#
+directive|define
+name|M88E1011_I_REV_4
+value|0x04
 end_define
 
 begin_comment
