@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)vmparam.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)vmparam.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -220,6 +220,17 @@ value|(2*NPTEPG)
 end_define
 
 begin_comment
+comment|/*  * Size of User Raw I/O map  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USRIOSIZE
+value|30
+end_define
+
+begin_comment
 comment|/*  * The size of the clock loop.  */
 end_comment
 
@@ -249,7 +260,7 @@ begin_define
 define|#
 directive|define
 name|SAFERSS
-value|32
+value|8
 end_define
 
 begin_comment
@@ -454,6 +465,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Flush MMU TLB  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tlbflush
+parameter_list|()
+value|asm(" movl %cr3,%eax; movl %eax,%cr3 "
+comment|/*, "ax" */
+value|)
+end_define
 
 end_unit
 
