@@ -1318,6 +1318,8 @@ operator|(
 name|PG_BUSY
 operator||
 name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
 operator|)
 operator|)
 operator|||

@@ -180,19 +180,13 @@ expr_stmt|;
 block|}
 name|devp
 struct|;
+if|#
+directive|if
+literal|0
 comment|/* 		 * Physmem pager 		 * 		 *	physp_pglist - list of allocated pages 		 */
-struct|struct
-block|{
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|vm_page
-argument_list|)
-name|physp_pglist
-expr_stmt|;
-block|}
-name|physp
-struct|;
+block|struct { 			TAILQ_HEAD(, vm_page) physp_pglist; 		} physp;
+endif|#
+directive|endif
 comment|/* 		 * Swap pager 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
 struct|struct
 block|{

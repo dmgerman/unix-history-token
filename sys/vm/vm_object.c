@@ -2878,7 +2878,7 @@ goto|goto
 name|shadowlookup
 goto|;
 block|}
-comment|/* 		 * If the page is busy or not in a normal active state, 		 * we skip it.  Things can break if we mess with pages 		 * in any of the below states. 		 */
+comment|/* 		 * If the page is busy or not in a normal active state, 		 * we skip it.  If the page is not managed there are no 		 * page queues to mess with.  Things can break if we mess 		 * with pages in any of the below states. 		 */
 if|if
 condition|(
 name|m
@@ -2888,6 +2888,14 @@ operator|||
 name|m
 operator|->
 name|wire_count
+operator|||
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_UNMANAGED
+operator|)
 operator|||
 name|m
 operator|->
@@ -4223,6 +4231,20 @@ operator|==
 literal|0
 operator|)
 operator|)
+expr_stmt|;
+comment|/* 	 * Since physically-backed objects do not use managed pages, we can't 	 * remove pages from the object (we must instead remove the page 	 * references, and then destroy the object). 	 */
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_PHYS
+argument_list|,
+operator|(
+literal|"attempt to remove pages from a physical object"
+operator|)
+argument_list|)
 expr_stmt|;
 name|vm_object_pip_add
 argument_list|(

@@ -923,7 +923,7 @@ operator|->
 name|object
 expr_stmt|;
 comment|/* 	 * It doesn't cost us anything to pageout OBJT_DEFAULT or OBJT_SWAP 	 * with the new swapper, but we could have serious problems paging 	 * out other object types if there is insufficient memory.   	 * 	 * Unfortunately, checking free memory here is far too late, so the 	 * check has been moved up a procedural level. 	 */
-comment|/* 	 * Don't mess with the page if it's busy. 	 */
+comment|/* 	 * Don't mess with the page if it's busy, held, or special 	 */
 if|if
 condition|(
 operator|(
@@ -948,13 +948,19 @@ name|m
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|)
 condition|)
+block|{
 return|return
 literal|0
 return|;
+block|}
 name|mc
 index|[
 name|vm_pageout_page_count
@@ -1051,7 +1057,11 @@ name|p
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|||
 name|p
@@ -1199,7 +1209,11 @@ name|p
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|||
 name|p
@@ -1716,7 +1730,11 @@ name|p
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|||
 operator|!
@@ -3844,7 +3862,11 @@ name|m
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|||
 name|m

@@ -638,7 +638,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_FILLED and PG_DIRTY are added for the filesystems.  */
+comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_FILLED and PG_DIRTY are added for the filesystems.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  */
 end_comment
 
 begin_define
@@ -749,6 +749,17 @@ end_define
 
 begin_comment
 comment|/* do not collect for syncer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_UNMANAGED
+value|0x0800
+end_define
+
+begin_comment
+comment|/* No PV management for page */
 end_comment
 
 begin_comment
@@ -1408,6 +1419,18 @@ argument_list|(
 operator|(
 name|vm_offset_t
 name|pa
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_unmanage
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
 operator|)
 argument_list|)
 decl_stmt|;
