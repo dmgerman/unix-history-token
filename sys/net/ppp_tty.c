@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.26 1997/10/18 00:56:23 peter Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.27 1997/10/18 01:20:28 peter Exp $ */
 end_comment
 
 begin_include
@@ -27,53 +27,19 @@ directive|include
 file|"opt_ppp.h"
 end_include
 
+begin_comment
+comment|/* XXX for ppp_defs.h */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VJC
 end_define
 
-begin_define
-define|#
-directive|define
-name|PPP_COMPRESS
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PPP_FILTER
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"bpfilter.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBPFILTER
-operator|==
-literal|0
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"PPP_FILTER requires bpf"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* XXX for ppp_defs.h */
+end_comment
 
 begin_include
 include|#
@@ -126,24 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
+
+begin_comment
+comment|/*  * XXX stop<sys/vnode.h> from including<vnode_if.h>.<vnode_if.h> doesn't  * exist if we are an LKM.  */
+end_comment
 
 begin_undef
 undef|#
 directive|undef
 name|KERNEL
 end_undef
-
-begin_comment
-comment|/* so that vnode.h does not try to include vnode_if.h */
-end_comment
 
 begin_include
 include|#
@@ -174,53 +134,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VJC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/slcompress.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -237,12 +150,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/ppp_defs.h>
-end_include
 
 begin_include
 include|#
@@ -2958,25 +2865,16 @@ specifier|static
 name|u_short
 name|pppfcs
 parameter_list|(
-name|fcs
-parameter_list|,
-name|cp
-parameter_list|,
-name|len
-parameter_list|)
-specifier|register
 name|u_short
 name|fcs
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|u_char
 modifier|*
 name|cp
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 while|while
 condition|(
