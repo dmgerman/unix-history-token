@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -181,7 +181,6 @@ name|n
 parameter_list|,
 name|t
 parameter_list|)
-define|\
 value|__CONCAT(dev_type_,t)(__CONCAT(n,t))
 end_define
 
@@ -213,7 +212,6 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
 value|(c> 0 ? __CONCAT(n,size) : 0)
 end_define
 
@@ -225,7 +223,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|dev_decl(n,open); dev_decl(n,close); dev_decl(n,strategy); \   dev_decl(n,ioctl); dev_decl(n,dump); dev_decl(n,size)
+value|dev_decl(n,open); dev_decl(n,close); dev_decl(n,strategy); \ 	dev_decl(n,ioctl); dev_decl(n,dump); dev_decl(n,size)
 end_define
 
 begin_define
@@ -237,8 +235,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), (dev_type_close((*))) nullop, \     dev_init(c,n,strategy), dev_init(c,n,ioctl), \     dev_init(c,n,dump), dev_size_init(c,n), 0 }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, \ 	dev_init(c,n,strategy), dev_init(c,n,ioctl), \ 	dev_init(c,n,dump), dev_size_init(c,n), 0 }
 end_define
 
 begin_define
@@ -250,8 +247,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), \     dev_init(c,n,strategy), dev_init(c,n,ioctl), \     dev_init(c,n,dump), 0, B_TAPE }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), \ 	dev_init(c,n,strategy), dev_init(c,n,ioctl), \ 	dev_init(c,n,dump), 0, B_TAPE }
 end_define
 
 begin_define
@@ -259,8 +255,7 @@ define|#
 directive|define
 name|bdev_swap_init
 parameter_list|()
-define|\
-value|{ (dev_type_open((*))) enodev, (dev_type_close((*))) enodev, \     swstrategy, (dev_type_ioctl((*))) enodev, \     (dev_type_dump((*))) enodev, 0, 0 }
+value|{ \ 	(dev_type_open((*))) enodev, (dev_type_close((*))) enodev, \ 	swstrategy, (dev_type_ioctl((*))) enodev, \ 	(dev_type_dump((*))) enodev, 0, 0 }
 end_define
 
 begin_define
@@ -503,7 +498,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|dev_decl(n,open); dev_decl(n,close); dev_decl(n,read); \   dev_decl(n,write); dev_decl(n,ioctl); dev_decl(n,stop); \   dev_decl(n,reset); dev_decl(n,select); dev_decl(n,map); \   dev_decl(n,strategy); extern struct tty __CONCAT(n,_tty)[]
+value|dev_decl(n,open); dev_decl(n,close); dev_decl(n,read); \ 	dev_decl(n,write); dev_decl(n,ioctl); dev_decl(n,stop); \ 	dev_decl(n,reset); dev_decl(n,select); dev_decl(n,map); \ 	dev_decl(n,strategy); extern struct tty __CONCAT(n,_tty)[]
 end_define
 
 begin_define
@@ -531,8 +526,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \     dev_init(c,n,strategy) }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	dev_init(c,n,strategy) }
 end_define
 
 begin_comment
@@ -548,8 +542,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \     dev_init(c,n,strategy) }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	dev_init(c,n,strategy) }
 end_define
 
 begin_comment
@@ -565,8 +558,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), dev_init(c,n,stop), \     (dev_type_reset((*))) nullop, dev_tty_init(c,n), ttselect, \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), dev_init(c,n,stop), \ 	(dev_type_reset((*))) nullop, dev_tty_init(c,n), ttselect, \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_define
@@ -574,8 +566,7 @@ define|#
 directive|define
 name|cdev_notdef
 parameter_list|()
-define|\
-value|{ (dev_type_open((*))) enodev, (dev_type_close((*))) enodev, \     (dev_type_read((*))) enodev, (dev_type_write((*))) enodev, \     (dev_type_ioctl((*))) enodev, (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) nullop, 0, seltrue, \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	(dev_type_open((*))) enodev, (dev_type_close((*))) enodev, \ 	(dev_type_read((*))) enodev, (dev_type_write((*))) enodev, \ 	(dev_type_ioctl((*))) enodev, (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_expr_stmt
@@ -611,8 +602,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \     (dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_expr_stmt
@@ -636,8 +626,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \     (dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_expr_stmt
@@ -661,8 +650,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ (dev_type_open((*))) nullop, (dev_type_close((*))) nullop, mmrw, \     mmrw, (dev_type_ioctl((*))) enodev, (dev_type_stop((*))) nullop, \     (dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, 0 }
+value|{ \ 	(dev_type_open((*))) nullop, (dev_type_close((*))) nullop, mmrw, \ 	mmrw, (dev_type_ioctl((*))) enodev, (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_comment
@@ -678,8 +666,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ (dev_type_open((*))) nullop, (dev_type_close((*))) nullop, rawread, \     rawwrite, (dev_type_ioctl((*))) enodev, (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) nullop, 0, (dev_type_select((*))) enodev, \     (dev_type_map((*))) enodev, dev_init(c,n,strategy) }
+value|{ \ 	(dev_type_open((*))) nullop, (dev_type_close((*))) nullop, rawread, \ 	rawwrite, (dev_type_ioctl((*))) enodev, (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, (dev_type_select((*))) enodev, \ 	(dev_type_map((*))) enodev, dev_init(c,n,strategy) }
 end_define
 
 begin_include
@@ -745,8 +732,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \     (dev_type_reset((*))) nullop, dev_tty_init(c,n), dev_init(c,n,select), \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, dev_tty_init(c,n), dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_expr_stmt
@@ -770,8 +756,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     (dev_type_write((*))) enodev, dev_init(c,n,ioctl), \     (dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \     dev_init(c,n,select), (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	(dev_type_write((*))) enodev, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	dev_init(c,n,select), (dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_expr_stmt
@@ -823,8 +808,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), (dev_type_read((*))) nullop, \     (dev_type_write((*))) nullop, dev_init(c,n,ioctl), \     (dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \     dev_init(c,n,select), dev_init(c,n,map), 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), (dev_type_read((*))) nullop, \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	dev_init(c,n,select), dev_init(c,n,map), 0 }
 end_define
 
 begin_include
@@ -854,8 +838,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) nullop, 0, (dev_type_select((*))) enodev, \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, (dev_type_select((*))) enodev, \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_include
@@ -899,8 +882,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) nullop, dev_tty_init(c,n), ttselect, \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, dev_tty_init(c,n), ttselect, \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_comment
@@ -928,8 +910,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     (dev_type_write((*))) nullop, dev_init(c,n,ioctl), \     (dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \     dev_init(c,n,select), dev_init(c,n,map), 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	dev_init(c,n,select), dev_init(c,n,map), 0 }
 end_define
 
 begin_include
@@ -981,8 +962,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), (dev_type_read((*))) nullop, \     (dev_type_write((*))) nullop, dev_init(c,n,ioctl), \     (dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \     (dev_type_select((*))) nullop, dev_init(c,n,map), 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), (dev_type_read((*))) nullop, \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	(dev_type_select((*))) nullop, dev_init(c,n,map), 0 }
 end_define
 
 begin_expr_stmt
@@ -1006,8 +986,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \     0 }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	0 }
 end_define
 
 begin_expr_stmt
@@ -1031,8 +1010,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), (dev_type_close((*))) enodev, \     (dev_type_read((*))) enodev, (dev_type_write((*))) enodev, \     (dev_type_ioctl((*))) enodev, (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) enodev, 0, (dev_type_select((*))) enodev, \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) enodev, \ 	(dev_type_read((*))) enodev, (dev_type_write((*))) enodev, \ 	(dev_type_ioctl((*))) enodev, (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) enodev, 0, (dev_type_select((*))) enodev, \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_include
@@ -1062,8 +1040,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|{ dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \     dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \     (dev_type_reset((*))) enodev, 0, dev_init(c,n,select), \     (dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) enodev, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
 begin_decl_stmt
