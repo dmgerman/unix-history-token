@@ -1950,7 +1950,7 @@ operator|(
 name|u_int
 operator|)
 name|ino
-operator|>=
+operator|>
 name|fs
 operator|->
 name|s_inodes_per_group

@@ -5716,7 +5716,7 @@ operator|||
 name|ufhp
 operator|->
 name|ufid_ino
-operator|>=
+operator|>
 name|fs
 operator|->
 name|s_groups_count
