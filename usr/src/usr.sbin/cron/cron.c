@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.13 (Berkeley) %G%"
+literal|"@(#)cron.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,6 +334,25 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+if|if
+condition|(
+name|geteuid
+argument_list|()
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cron: NOT super-user\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|openlog
 argument_list|(
 literal|"cron"
