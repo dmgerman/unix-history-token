@@ -15,10 +15,6 @@ begin_comment
 comment|/*  * CCR registers, appearing in the attribute memory space  */
 end_comment
 
-begin_comment
-comment|/* XXX sort these offsets out*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -246,6 +242,13 @@ end_define
 begin_comment
 comment|/* soft-reset the card */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_COR_DEFAULT
+value|(RAY_COR_CFG_NUM | RAY_COR_LEVEL_IRQ)
+end_define
 
 begin_comment
 comment|/*  * CCS register bits  */
