@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.20 (Berkeley) %G%"
+literal|"@(#)ls.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -145,18 +151,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* use time of last access */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_firsttime
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* to control recursion */
 end_comment
 
 begin_decl_stmt
@@ -342,8 +336,24 @@ decl_stmt|,
 name|stat
 argument_list|()
 decl_stmt|;
+name|struct
+name|sgttyb
+name|sgbuf
+decl_stmt|;
+name|struct
+name|winsize
+name|win
+decl_stmt|;
 name|int
 name|ch
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|getenv
+argument_list|()
 decl_stmt|;
 name|int
 name|namecmp
@@ -371,6 +381,16 @@ decl_stmt|,
 name|revstatcmp
 argument_list|()
 decl_stmt|;
+name|int
+name|printcol
+argument_list|()
+decl_stmt|,
+name|printlong
+argument_list|()
+decl_stmt|,
+name|printscol
+argument_list|()
+decl_stmt|;
 comment|/* 	 * terminal defaults to -C -q 	 * non-terminal defaults to -1 	 */
 if|if
 condition|(
@@ -387,6 +407,64 @@ expr_stmt|;
 name|lengthfcn
 operator|=
 name|prablelen
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|1
+argument_list|,
+name|TIOCGETP
+argument_list|,
+operator|&
+name|sgbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|1
+argument_list|,
+name|TIOCGWINSZ
+argument_list|,
+operator|&
+name|win
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+operator|!
+name|win
+operator|.
+name|ws_col
+condition|)
+name|termwidth
+operator|=
+operator|(
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"COLUMNS"
+argument_list|)
+operator|)
+condition|?
+name|atoi
+argument_list|(
+name|p
+argument_list|)
+else|:
+literal|80
+expr_stmt|;
+else|else
+name|termwidth
+operator|=
+name|win
+operator|.
+name|ws_col
 expr_stmt|;
 block|}
 else|else
@@ -745,6 +823,29 @@ operator|=
 name|modcmp
 expr_stmt|;
 block|}
+comment|/* select a print function */
+if|if
+condition|(
+name|f_singlecol
+condition|)
+name|printfcn
+operator|=
+name|printscol
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|f_longform
+condition|)
+name|printfcn
+operator|=
+name|printlong
+expr_stmt|;
+else|else
+name|printfcn
+operator|=
+name|printcol
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -1425,7 +1526,7 @@ argument_list|,
 name|sortfcn
 argument_list|)
 expr_stmt|;
-name|printdir
+name|printfcn
 argument_list|(
 name|stats
 argument_list|,
