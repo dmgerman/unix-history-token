@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: security.h,v 1.9 2000/10/04 06:07:52 assar Exp $ */
+comment|/* $Id: security.h,v 1.9.12.1 2003/08/20 16:41:53 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -325,6 +325,13 @@ directive|define
 name|AUTH_ERROR
 value|2
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ftp_do_gss_bindings
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#

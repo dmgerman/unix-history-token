@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: chpass_s.c,v 1.13 2001/01/30 01:24:28 assar Exp $"
+literal|"$Id: chpass_s.c,v 1.13.8.1 2003/12/30 15:59:58 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -111,7 +111,7 @@ name|context
 operator|->
 name|db
 argument_list|,
-literal|0
+name|HDB_F_DECRYPT
 argument_list|,
 operator|&
 name|ent
@@ -228,9 +228,24 @@ name|cmp
 operator|==
 literal|0
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|,
+literal|"Password reuse forbidden"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|KADM5_PASS_REUSE
+expr_stmt|;
 goto|goto
 name|out2
 goto|;
+block|}
 name|ret
 operator|=
 name|_kadm5_set_modifier

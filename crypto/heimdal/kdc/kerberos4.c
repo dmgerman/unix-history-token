@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos4.c,v 1.45 2003/03/17 05:37:55 assar Exp $"
+literal|"$Id: kerberos4.c,v 1.45.2.1 2004/03/30 10:29:27 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -486,6 +486,12 @@ name|req_time
 decl_stmt|;
 name|time_t
 name|max_life
+decl_stmt|,
+name|max_end
+decl_stmt|,
+name|actual_end
+decl_stmt|,
+name|issue_time
 decl_stmt|;
 name|u_int8_t
 name|life
@@ -2008,7 +2014,7 @@ goto|goto
 name|out2
 goto|;
 block|}
-name|max_life
+name|max_end
 operator|=
 name|krb_life_to_time
 argument_list|(
@@ -2021,11 +2027,11 @@ operator|.
 name|life
 argument_list|)
 expr_stmt|;
-name|max_life
+name|max_end
 operator|=
 name|min
 argument_list|(
-name|max_life
+name|max_end
 argument_list|,
 name|krb_life_to_time
 argument_list|(
@@ -2045,43 +2051,63 @@ name|krb_time_to_life
 argument_list|(
 name|kdc_time
 argument_list|,
-name|max_life
+name|max_end
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|max_life
+name|issue_time
+operator|=
+name|kdc_time
+expr_stmt|;
+name|actual_end
 operator|=
 name|krb_life_to_time
 argument_list|(
-literal|0
+name|issue_time
 argument_list|,
 name|life
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if(client->max_life) 	    max_life = min(max_life, *client->max_life);
-endif|#
-directive|endif
-if|if
+while|while
 condition|(
-name|server
-operator|->
-name|max_life
+name|actual_end
+operator|>
+name|max_end
+operator|&&
+name|life
+operator|>
+literal|1
 condition|)
-name|max_life
+block|{
+comment|/* move them into the next earlier lifetime bracket */
+name|life
+operator|--
+expr_stmt|;
+name|actual_end
 operator|=
-name|min
+name|krb_life_to_time
 argument_list|(
-name|max_life
+name|issue_time
 argument_list|,
-operator|*
-name|server
-operator|->
-name|max_life
+name|life
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|actual_end
+operator|>
+name|max_end
+condition|)
+block|{
+comment|/* if life<= 1 and it's still too long, backdate the ticket */
+name|issue_time
+operator|-=
+name|actual_end
+operator|-
+name|max_end
+expr_stmt|;
+block|}
 block|{
 name|KTEXT_ST
 name|cipher
@@ -2130,7 +2156,7 @@ name|session
 argument_list|,
 name|life
 argument_list|,
-name|kdc_time
+name|issue_time
 argument_list|,
 name|sname
 argument_list|,
@@ -2169,7 +2195,7 @@ argument_list|,
 operator|&
 name|ticket
 argument_list|,
-name|kdc_time
+name|issue_time
 argument_list|,
 operator|&
 name|ad

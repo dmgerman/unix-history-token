@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: krb5.h,v 1.209 2003/03/16 18:30:02 lha Exp $ */
+comment|/* $Id: krb5.h,v 1.209.2.1 2003/09/18 20:50:40 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -580,6 +580,10 @@ block|,
 name|KEYTYPE_ARCFOUR
 init|=
 literal|23
+block|,
+name|KEYTYPE_ARCFOUR_56
+init|=
+literal|24
 block|}
 name|krb5_keytype
 typedef|;

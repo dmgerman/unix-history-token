@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gai_strerror.c,v 1.2 1999/12/03 04:10:06 assar Exp $"
+literal|"$Id: gai_strerror.c,v 1.2.20.1 2004/01/15 18:14:17 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -57,12 +57,17 @@ block|,
 literal|"no error"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|EAI_ADDRFAMILY
 block|{
 name|EAI_ADDRFAMILY
 block|,
 literal|"address family for nodename not supported"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|EAI_AGAIN
 block|,
@@ -93,12 +98,17 @@ block|,
 literal|"memory allocation failure"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|EAI_NODATA
 block|{
 name|EAI_NODATA
 block|,
 literal|"no address associated with nodename"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|EAI_NONAME
 block|,

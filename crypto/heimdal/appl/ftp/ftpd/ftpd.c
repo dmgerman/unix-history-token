@@ -41,7 +41,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftpd.c,v 1.166 2003/04/16 15:02:05 lha Exp $"
+literal|"$Id: ftpd.c,v 1.166.2.2 2004/03/14 17:16:39 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1281,6 +1281,26 @@ block|,
 literal|"allowed anonymous upload filename chars"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|KRB5
+block|{
+literal|"gss-bindings"
+block|,
+literal|0
+block|,
+name|arg_flag
+block|,
+operator|&
+name|ftp_do_gss_bindings
+block|,
+literal|"Require GSS-API bindings"
+block|,
+name|NULL
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"version"
 block|,
@@ -1529,13 +1549,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 if|#
 directive|if
 name|defined
 argument_list|(
 name|KRB4
 argument_list|)
-operator|&&
+operator|||
 name|defined
 argument_list|(
 name|KRB5
@@ -1550,7 +1571,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 if|if
 condition|(
 name|getarg

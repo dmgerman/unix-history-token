@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_safe.c,v 1.28 2002/09/04 16:26:05 joda Exp $"
+literal|"$Id: mk_safe.c,v 1.28.4.1 2004/03/07 12:46:43 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -160,7 +160,7 @@ name|sec2
 expr_stmt|;
 name|usec2
 operator|=
-name|usec2
+name|usec
 expr_stmt|;
 name|s
 operator|.

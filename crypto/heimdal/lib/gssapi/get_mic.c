@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_mic.c,v 1.21 2003/03/16 18:02:04 lha Exp $"
+literal|"$Id: get_mic.c,v 1.21.2.1 2003/09/18 22:05:12 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1170,6 +1170,27 @@ case|:
 name|ret
 operator|=
 name|mic_des3
+argument_list|(
+name|minor_status
+argument_list|,
+name|context_handle
+argument_list|,
+name|qop_req
+argument_list|,
+name|message_buffer
+argument_list|,
+name|message_token
+argument_list|,
+name|key
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KEYTYPE_ARCFOUR
+case|:
+name|ret
+operator|=
+name|_gssapi_get_mic_arcfour
 argument_list|(
 name|minor_status
 argument_list|,

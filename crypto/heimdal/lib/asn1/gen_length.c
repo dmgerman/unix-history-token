@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen_length.c,v 1.11 2001/09/25 13:39:26 assar Exp $"
+literal|"$Id: gen_length.c,v 1.11.6.1 2004/01/26 09:26:10 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -434,6 +434,18 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"int oldret = %s;\n"
+literal|"%s = 0;\n"
+argument_list|,
+name|variable
+argument_list|,
+name|variable
+argument_list|)
+expr_stmt|;
 name|asprintf
 argument_list|(
 operator|&
@@ -451,6 +463,15 @@ argument_list|,
 name|t
 operator|->
 name|subtype
+argument_list|,
+name|variable
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"%s += oldret;\n"
 argument_list|,
 name|variable
 argument_list|)

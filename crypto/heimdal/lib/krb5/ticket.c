@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ticket.c,v 1.5 2001/05/14 06:14:51 assar Exp $"
+literal|"$Id: ticket.c,v 1.5.8.1 2003/09/18 21:01:57 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -85,7 +85,14 @@ decl_stmt|;
 name|krb5_ticket
 modifier|*
 name|tmp
-init|=
+decl_stmt|;
+operator|*
+name|to
+operator|=
+name|NULL
+expr_stmt|;
+name|tmp
+operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -94,7 +101,7 @@ operator|*
 name|tmp
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|tmp
@@ -171,6 +178,11 @@ operator|->
 name|ticket
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -186,10 +198,7 @@ operator|->
 name|server
 argument_list|,
 operator|&
-operator|(
-operator|*
-name|to
-operator|)
+name|tmp
 operator|->
 name|server
 argument_list|)
@@ -214,6 +223,11 @@ operator|&
 name|tmp
 operator|->
 name|ticket
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 return|return

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kinit.c,v 1.90.4.1 2003/05/08 18:58:37 lha Exp $"
+literal|"$Id: kinit.c,v 1.90.4.4 2004/01/13 10:13:55 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1281,6 +1281,11 @@ operator|.
 name|server
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
 name|krb5_free_principal
 argument_list|(
 name|context
@@ -1288,13 +1293,16 @@ argument_list|,
 name|client
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
 return|return
 name|ret
 return|;
+block|}
+name|in_creds
+operator|.
+name|client
+operator|=
+name|client
+expr_stmt|;
 name|ret
 operator|=
 name|krb5_get_credentials
@@ -1310,6 +1318,13 @@ name|in_creds
 argument_list|,
 operator|&
 name|real_creds
+argument_list|)
+expr_stmt|;
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|client
 argument_list|)
 expr_stmt|;
 name|krb5_free_principal
@@ -1974,6 +1989,18 @@ block|}
 if|if
 condition|(
 name|renew_life
+operator|==
+name|NULL
+operator|&&
+name|renewable_flag
+condition|)
+name|renew_life
+operator|=
+literal|"1 month"
+expr_stmt|;
+if|if
+condition|(
+name|renew_life
 condition|)
 block|{
 name|renew
@@ -2009,23 +2036,6 @@ name|renew
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|renewable_flag
-operator|==
-literal|1
-condition|)
-name|krb5_get_init_creds_opt_set_renew_life
-argument_list|(
-operator|&
-name|opt
-argument_list|,
-literal|1
-operator|<<
-literal|30
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ticket_life
@@ -3394,6 +3404,8 @@ operator|>
 literal|1
 condition|)
 block|{
+name|ret
+operator|=
 name|simple_execvp
 argument_list|(
 name|argv
@@ -3431,6 +3443,7 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
+block|{
 name|krb5_cc_close
 argument_list|(
 name|context
@@ -3438,6 +3451,11 @@ argument_list|,
 name|ccache
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|krb5_free_principal
 argument_list|(
 name|context
@@ -3451,7 +3469,7 @@ name|context
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: eai_to_heim_errno.c,v 1.3 2001/05/14 22:48:33 assar Exp $"
+literal|"$Id: eai_to_heim_errno.c,v 1.3.8.1 2004/02/13 16:15:16 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,12 +43,17 @@ case|:
 return|return
 literal|0
 return|;
+ifdef|#
+directive|ifdef
+name|EAI_ADDRFAMILY
 case|case
 name|EAI_ADDRFAMILY
 case|:
 return|return
 name|HEIM_EAI_ADDRFAMILY
 return|;
+endif|#
+directive|endif
 case|case
 name|EAI_AGAIN
 case|:
@@ -79,12 +84,24 @@ case|:
 return|return
 name|HEIM_EAI_MEMORY
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|EAI_NODATA
+argument_list|)
+operator|&&
+name|EAI_NODATA
+operator|!=
+name|EAI_NONAME
 case|case
 name|EAI_NODATA
 case|:
 return|return
 name|HEIM_EAI_NODATA
 return|;
+endif|#
+directive|endif
 case|case
 name|EAI_NONAME
 case|:

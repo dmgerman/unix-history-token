@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: wrap.c,v 1.21 2003/03/16 17:57:48 lha Exp $"
+literal|"$Id: wrap.c,v 1.21.2.1 2003/09/18 22:05:45 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -256,6 +256,9 @@ condition|)
 block|{
 case|case
 name|KEYTYPE_DES
+case|:
+case|case
+name|KEYTYPE_ARCFOUR
 case|:
 name|ret
 operator|=
@@ -1870,6 +1873,31 @@ case|:
 name|ret
 operator|=
 name|wrap_des3
+argument_list|(
+name|minor_status
+argument_list|,
+name|context_handle
+argument_list|,
+name|conf_req_flag
+argument_list|,
+name|qop_req
+argument_list|,
+name|input_message_buffer
+argument_list|,
+name|conf_state
+argument_list|,
+name|output_message_buffer
+argument_list|,
+name|key
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KEYTYPE_ARCFOUR
+case|:
+name|ret
+operator|=
+name|_gssapi_wrap_arcfour
 argument_list|(
 name|minor_status
 argument_list|,

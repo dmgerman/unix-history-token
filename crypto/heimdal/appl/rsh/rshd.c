@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rshd.c,v 1.51 2003/04/16 19:50:49 joda Exp $"
+literal|"$Id: rshd.c,v 1.51.2.1 2003/08/19 11:36:17 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4838,9 +4838,17 @@ block|,
 literal|"Don't accept non-kerberised connections"
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 block|{
 name|NULL
 block|,

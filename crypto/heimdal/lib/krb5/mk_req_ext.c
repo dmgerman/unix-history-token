@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_req_ext.c,v 1.26 2002/09/02 17:13:52 joda Exp $"
+literal|"$Id: mk_req_ext.c,v 1.26.4.1 2003/09/18 20:34:30 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -215,6 +215,44 @@ argument_list|,
 literal|0
 argument_list|,
 name|CKSUMTYPE_RSA_MD4
+argument_list|,
+name|in_data
+operator|->
+name|data
+argument_list|,
+name|in_data
+operator|->
+name|length
+argument_list|,
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ac
+operator|->
+name|keyblock
+operator|->
+name|keytype
+operator|==
+name|ETYPE_ARCFOUR_HMAC_MD5
+condition|)
+block|{
+comment|/* this is to make MS kdc happy */
+name|ret
+operator|=
+name|krb5_create_checksum
+argument_list|(
+name|context
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|CKSUMTYPE_RSA_MD5
 argument_list|,
 name|in_data
 operator|->

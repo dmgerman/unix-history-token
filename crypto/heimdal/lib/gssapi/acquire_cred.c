@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: acquire_cred.c,v 1.13 2003/04/06 00:31:55 lha Exp $"
+literal|"$Id: acquire_cred.c,v 1.13.2.1 2003/08/15 14:18:24 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1234,13 +1234,28 @@ if|if
 condition|(
 name|time_rec
 condition|)
-operator|*
-name|time_rec
+block|{
+name|ret
 operator|=
+name|gssapi_lifetime_left
+argument_list|(
+name|minor_status
+argument_list|,
 name|handle
 operator|->
 name|lifetime
+argument_list|,
+name|time_rec
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+block|}
 name|handle
 operator|->
 name|usage

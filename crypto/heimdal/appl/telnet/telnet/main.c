@@ -32,7 +32,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.38 2002/08/28 21:05:22 joda Exp $"
+literal|"$Id: main.c,v 1.38.6.1 2004/03/22 18:16:35 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -450,6 +450,14 @@ name|char
 modifier|*
 name|user
 decl_stmt|;
+name|setprogname
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KRB5
