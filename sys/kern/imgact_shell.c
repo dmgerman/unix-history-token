@@ -169,6 +169,41 @@ literal|1
 expr_stmt|;
 comment|/* 	 * Copy shell name and arguments from image_header into string 	 *	buffer. 	 */
 comment|/* 	 * Find end of line; return if the line> MAXSHELLCMDLEN long. 	 */
+define|#
+directive|define
+name|REL4_SCRIPT_OPTIONS
+value|1
+if|#
+directive|if
+name|REL4_SCRIPT_OPTIONS
+comment|/* 	 * XXX - This behavior is not correct, but it matches what FreeBSD 	 * has being doing since March 2000 (3.5-release, and all of the 	 * 4.x releases), so we will continue to go with it for 5.4-release. 	 * This behavior will certainly be changed before 6.0-release, and 	 * might change for 5.5-release. 	 */
+for|for
+control|(
+name|ihp
+operator|=
+operator|&
+name|image_header
+index|[
+literal|2
+index|]
+init|;
+operator|*
+name|ihp
+operator|!=
+literal|'\n'
+operator|&&
+operator|*
+name|ihp
+operator|!=
+literal|'#'
+condition|;
+operator|++
+name|ihp
+control|)
+block|{
+else|#
+directive|else
+comment|/* 	 * XXX - This behavior is closer to correct, but it requires a 	 * change to /bin/sh which is not ready yet, and which will also 	 * require making another incompatible change here.  We will 	 * not have all that tested in time for 5.4-release.  But this 	 * is left here as a compile-time option, because attempting to 	 * parse-out the comments causes a problem for some users. 	 */
 for|for
 control|(
 name|ihp
@@ -188,6 +223,8 @@ operator|++
 name|ihp
 control|)
 block|{
+endif|#
+directive|endif
 if|if
 condition|(
 name|ihp
@@ -412,13 +449,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Tell kern_execve.c about it, with a little help from the linker.  */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|execsw
@@ -430,9 +461,6 @@ block|,
 literal|"#!"
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|EXEC_SET
 argument_list|(
 name|shell
@@ -440,7 +468,7 @@ argument_list|,
 name|shell_execsw
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_function
 
 end_unit
 
