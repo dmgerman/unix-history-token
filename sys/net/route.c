@@ -2744,6 +2744,12 @@ operator|->
 name|rt_parent
 condition|)
 block|{
+name|RT_UNLOCK
+argument_list|(
+name|rt2
+argument_list|)
+expr_stmt|;
+comment|/* XXX recursive lock */
 name|rtrequest
 argument_list|(
 name|RTM_DELETE
@@ -2769,7 +2775,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|RTFREE_LOCKED
+name|RTFREE
 argument_list|(
 name|rt2
 argument_list|)
