@@ -5843,6 +5843,9 @@ name|csum_flags
 operator||=
 name|CSUM_IP_VALID
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 operator|(
@@ -5891,6 +5894,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 if|#
 directive|if
