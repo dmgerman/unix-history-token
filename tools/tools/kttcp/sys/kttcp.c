@@ -126,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/kttcp/kttcpio.h>
+file|"kttcpio.h"
 end_include
 
 begin_ifndef
