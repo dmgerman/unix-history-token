@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.13 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.14 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.13 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.14 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2311,9 +2311,16 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|i
+name|bool
+name|oldSuprErrs
+init|=
+name|SuprErrs
 decl_stmt|;
+comment|/* 	**	Suppress errors here -- we may be processing a different 	**	job when we do the quit connection, and we don't want the  	**	new job to be penalized for something that isn't it's 	**	problem. 	*/
+name|SuprErrs
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* send the quit message if we haven't gotten I/O error */
 if|if
 condition|(
@@ -2355,6 +2362,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|SuprErrs
+operator|=
+name|oldSuprErrs
+expr_stmt|;
 if|if
 condition|(
 name|mci
@@ -2363,11 +2374,18 @@ name|mci_state
 operator|==
 name|MCIS_CLOSED
 condition|)
+block|{
+name|SuprErrs
+operator|=
+name|oldSuprErrs
+expr_stmt|;
 return|return;
 block|}
+block|}
 comment|/* now actually close the connection and pick up the zombie */
-name|i
-operator|=
+operator|(
+name|void
+operator|)
 name|endmailer
 argument_list|(
 name|mci
@@ -2379,25 +2397,9 @@ operator|->
 name|m_argv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-name|EX_OK
-condition|)
-name|syserr
-argument_list|(
-literal|"451 smtpquit %s: stat %d"
-argument_list|,
-name|m
-operator|->
-name|m_argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|i
-argument_list|)
+name|SuprErrs
+operator|=
+name|oldSuprErrs
 expr_stmt|;
 block|}
 end_block
