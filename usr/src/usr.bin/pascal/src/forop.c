@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forop.c 1.1 %G%"
+literal|"@(#)forop.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1356,6 +1356,9 @@ ifdef|#
 directive|ifdef
 name|OBJ
 comment|/* 		 * okay, so we have to do it again. 		 * Luckily we have a magic opcode which increments the 		 * index variable, checks the limit falling through if 		 * it has been reached, else range checking the result 		 * updating the index variable, and returning to the top 		 * of the loop. 		 */
+name|putline
+argument_list|()
+expr_stmt|;
 name|put
 argument_list|(
 literal|2
