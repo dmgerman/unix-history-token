@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)isctype.c	5.2 (Berkeley) %G%"
+literal|"@(#)isctype.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,6 +130,41 @@ name|_U
 operator||
 name|_L
 operator|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_undef
+undef|#
+directive|undef
+name|isblank
+end_undef
+
+begin_macro
+name|isblank
+argument_list|(
+argument|c
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|c
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|c
+operator|==
+literal|'\t'
+operator|||
+name|c
+operator|==
+literal|' '
 operator|)
 return|;
 block|}
