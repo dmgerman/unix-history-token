@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.11 1996/08/21 01:23:33 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.12 1996/08/24 09:51:59 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -954,6 +954,21 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ftp
+operator|->
+name|is_verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Sending %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|writes
@@ -1073,6 +1088,21 @@ argument_list|,
 literal|"MDTM %s\r\n"
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ftp
+operator|->
+name|is_verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Sending %s"
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|i
@@ -1581,6 +1611,10 @@ decl_stmt|;
 name|int
 name|port
 decl_stmt|;
+name|FILE
+modifier|*
+name|fp2
+decl_stmt|;
 specifier|static
 name|FILE
 modifier|*
@@ -1588,26 +1622,11 @@ name|fp
 init|=
 name|NULL
 decl_stmt|;
-name|FILE
+specifier|static
+name|char
 modifier|*
-name|fp2
+name|prev_host
 decl_stmt|;
-if|if
-condition|(
-name|fp
-condition|)
-block|{
-comment|/* Close previous managed connection */
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|fp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|get_url_info
@@ -1625,6 +1644,72 @@ operator|==
 name|SUCCESS
 condition|)
 block|{
+if|if
+condition|(
+name|prev_host
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|prev_host
+argument_list|,
+name|host
+argument_list|)
+condition|)
+block|{
+comment|/* Try to use cached connection */
+name|fp2
+operator|=
+name|ftpGet
+argument_list|(
+name|fp
+argument_list|,
+name|name
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fp2
+condition|)
+block|{
+comment|/* Connection timed out or was no longer valid */
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|prev_host
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+return|return
+name|fp2
+return|;
+block|}
+else|else
+block|{
+comment|/* It's a different host now, flush old */
+name|free
+argument_list|(
+name|prev_host
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|fp
 operator|=
 name|ftpLogin
@@ -1654,6 +1739,13 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|prev_host
+operator|=
+name|strdup
+argument_list|(
+name|host
 argument_list|)
 expr_stmt|;
 return|return
@@ -2850,6 +2942,21 @@ argument_list|,
 literal|"\r\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ftp
+operator|->
+name|is_verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Sending: %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|writes
@@ -3331,6 +3438,19 @@ condition|)
 block|{
 if|if
 condition|(
+name|ftp
+operator|->
+name|is_verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Sending PASV\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|writes
 argument_list|(
 name|ftp
@@ -3539,7 +3659,7 @@ name|cmd
 argument_list|(
 name|ftp
 argument_list|,
-literal|"RETR %d"
+literal|"REST %d"
 argument_list|,
 operator|*
 name|seekto
@@ -3577,18 +3697,6 @@ return|return
 name|i
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|i
-operator|==
-literal|350
-condition|)
-operator|*
-name|seekto
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|i
 operator|=
@@ -3850,7 +3958,7 @@ name|cmd
 argument_list|(
 name|ftp
 argument_list|,
-literal|"RETR %d"
+literal|"REST %d"
 argument_list|,
 operator|*
 name|seekto
