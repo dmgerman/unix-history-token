@@ -4139,6 +4139,20 @@ literal|"nat port proto localaddr:port[-port] aliasport[-aliasport]"
 block|}
 block|,
 block|{
+literal|"proto"
+block|,
+name|NULL
+block|,
+name|nat_RedirectProto
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"protocol redirection"
+block|,
+literal|"nat proto proto localIP [publicIP [remoteIP]]"
+block|}
+block|,
+block|{
 literal|"proxy"
 block|,
 name|NULL
