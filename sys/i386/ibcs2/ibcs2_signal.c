@@ -1935,14 +1935,12 @@ argument_list|)
 index|]
 expr_stmt|;
 return|return
-name|kern_kill
+name|kill
 argument_list|(
 name|td
 argument_list|,
 operator|&
 name|ka
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}

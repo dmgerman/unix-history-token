@@ -9,13 +9,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_expr_stmt
+begin_macro
 name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_include
 include|#
@@ -2225,14 +2224,12 @@ name|pid
 expr_stmt|;
 return|return
 operator|(
-name|kern_kill
+name|kill
 argument_list|(
 name|td
 argument_list|,
 operator|&
 name|tmp
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 return|;
