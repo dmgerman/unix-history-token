@@ -644,11 +644,9 @@ name|mpu_irq
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|mpu_config
-operator|=
+operator|!=
 name|NULL
-operator|)
 condition|)
 block|{
 name|mpu_base
