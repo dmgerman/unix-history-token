@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -291,7 +291,7 @@ name|pgno
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	*((size_t *)p)++ = size; \ 	*((pgno_t *)p)++ = pgno; \ 	*((u_char *)p)++ = flags; \ }
+value|{ \ 	*(size_t *)p = size; \ 	p += sizeof(size_t); \ 	*(pgno_t *)p = pgno; \ 	p += sizeof(pgno_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ }
 end_define
 
 begin_comment
@@ -360,7 +360,7 @@ name|nrecs
 parameter_list|,
 name|pgno
 parameter_list|)
-value|{ \ 	*((recno_t *)p)++ = nrecs; \ 	*(pgno_t *)p = pgno; \ }
+value|{ \ 	*(recno_t *)p = nrecs; \ 	p += sizeof(recno_t); \ 	*(pgno_t *)p = pgno; \ }
 end_define
 
 begin_comment
@@ -461,7 +461,7 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	*((size_t *)p)++ = key->size; \ 	*((size_t *)p)++ = data->size; \ 	*((u_char *)p)++ = flags; \ 	bcopy(key->data, p, key->size); \ 	p += key->size; \ 	bcopy(data->data, p, data->size); \ }
+value|{ \ 	*(size_t *)p = key->size; \ 	p += sizeof(size_t); \ 	*(size_t *)p = data->size; \ 	p += sizeof(size_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ 	bcopy(key->data, p, key->size); \ 	p += key->size; \ 	bcopy(data->data, p, data->size); \ }
 end_define
 
 begin_comment
@@ -553,7 +553,7 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	*((size_t *)p)++ = data->size; \ 	*((u_char *)p)++ = flags; \ 	bcopy(data->data, p, data->size); \ }
+value|{ \ 	*(size_t *)p = data->size; \ 	p += sizeof(size_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ 	bcopy(data->data, p, data->size); \ }
 end_define
 
 begin_comment
