@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8,17 +8,6 @@ include|#
 directive|include
 file|<mpool.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEFMAXKEYPAGE
-value|(0)
-end_define
-
-begin_comment
-comment|/* Maximum keys per page */
-end_comment
 
 begin_define
 define|#
@@ -54,7 +43,7 @@ comment|/* Minimum page size */
 end_comment
 
 begin_comment
-comment|/*  * Page 0 of a btree file contains a BTMETA structure.  The rest of the first  * page is empty, so that all disk operations are page-aligned.  This page is  * also used as an out-of-band page, i.e. page pointers that point to nowhere  * point to page 0.  The m_nrecs field is used only the RECNO code.  This is   * because the btree doesn't really need it and it requires that put or delete  * calls modify the meta data.  */
+comment|/*  * Page 0 of a btree file contains a copy of the meta-data.  This page is also  * used as an out-of-band page, i.e. page pointers that point to nowhere point  * to page 0.  Page 1 is the root of the btree.  */
 end_comment
 
 begin_define
@@ -76,7 +65,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Tree meta-info page number. */
+comment|/* Tree metadata page number. */
 end_comment
 
 begin_define
@@ -90,50 +79,8 @@ begin_comment
 comment|/* Tree root page number. */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|BTMETA
-block|{
-name|u_long
-name|m_magic
-decl_stmt|;
-comment|/* magic number */
-name|u_long
-name|m_version
-decl_stmt|;
-comment|/* version */
-name|u_long
-name|m_psize
-decl_stmt|;
-comment|/* page size */
-name|u_long
-name|m_free
-decl_stmt|;
-comment|/* page number of first free page */
-name|u_long
-name|m_nrecs
-decl_stmt|;
-comment|/* R: number of records */
-define|#
-directive|define
-name|SAVEMETA
-value|(BTF_NODUPS | BTF_RECNO)
-name|u_long
-name|m_flags
-decl_stmt|;
-comment|/* bt_flags& SAVEMETA */
-name|u_long
-name|m_lorder
-decl_stmt|;
-comment|/* byte order */
-block|}
-name|BTMETA
-typedef|;
-end_typedef
-
 begin_comment
-comment|/*  * There are five page layouts in the btree: btree internal pages, btree leaf  * pages, recno internal pages, recno leaf pages and overflow pages.  Each type  * of page starts with a page header as typed by PAGE.  */
+comment|/*  * There are five page layouts in the btree: btree internal pages (BINTERNAL),  * btree leaf pages (BLEAF), recno internal pages (RINTERNAL), recno leaf pages  * (RLEAF) and overflow pages.  All five page types have a page header (PAGE).  * This implementation requires that longs within structures are NOT padded.  * (ANSI C permits random padding.)  If your compiler pads randomly you'll have  * to do some work to get this package to run.  */
 end_comment
 
 begin_typedef
@@ -241,9 +188,9 @@ define|#
 directive|define
 name|LALIGN
 parameter_list|(
-name|l
+name|n
 parameter_list|)
-value|(((l) + sizeof(u_long) - 1)& ~(sizeof(u_long) - 1))
+value|(((n) + sizeof(u_long) - 1)& ~(sizeof(u_long) - 1))
 end_define
 
 begin_define
@@ -344,7 +291,7 @@ name|pgno
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	*(size_t *)p = size; \ 	p += sizeof(size_t); \ 	*(pgno_t *)p = pgno; \ 	p += sizeof(pgno_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ }
+value|{ \ 	*((size_t *)p)++ = size; \ 	*((pgno_t *)p)++ = pgno; \ 	*((u_char *)p)++ = flags; \ }
 end_define
 
 begin_comment
@@ -413,7 +360,7 @@ name|nrecs
 parameter_list|,
 name|pgno
 parameter_list|)
-value|{ \ 	*(size_t *)p = nrecs; \ 	p += sizeof(recno_t); \ 	*(pgno_t *)p = pgno; \ }
+value|{ \ 	*((recno_t *)p)++ = nrecs; \ 	*(pgno_t *)p = pgno; \ }
 end_define
 
 begin_comment
@@ -477,8 +424,7 @@ name|NBLEAF
 parameter_list|(
 name|p
 parameter_list|)
-define|\
-value|LALIGN(sizeof(size_t) + sizeof(size_t) + sizeof(u_char) + \ 	    (p)->ksize + (p)->dsize)
+value|NBLEAFDBT((p)->ksize, (p)->dsize)
 end_define
 
 begin_comment
@@ -515,7 +461,7 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	*(size_t *)p = key->size; \ 	p += sizeof(size_t); \ 	*(size_t *)p = data->size; \ 	p += sizeof(size_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ 	bcopy(key->data, p, key->size); \ 	p += key->size; \ 	bcopy(data->data, p, data->size); \ }
+value|{ \ 	*((size_t *)p)++ = key->size; \ 	*((size_t *)p)++ = data->size; \ 	*((u_char *)p)++ = flags; \ 	bcopy(key->data, p, key->size); \ 	p += key->size; \ 	bcopy(data->data, p, data->size); \ }
 end_define
 
 begin_comment
@@ -574,8 +520,7 @@ name|NRLEAF
 parameter_list|(
 name|p
 parameter_list|)
-define|\
-value|LALIGN(sizeof(size_t) + sizeof(u_char) + (p)->dsize)
+value|NRLEAFDBT((p)->dsize)
 end_define
 
 begin_comment
@@ -608,11 +553,11 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	*(size_t *)p = data->size; \ 	p += sizeof(size_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ 	bcopy(data->data, p, data->size); \ }
+value|{ \ 	*((size_t *)p)++ = data->size; \ 	*((u_char *)p)++ = flags; \ 	bcopy(data->data, p, data->size); \ }
 end_define
 
 begin_comment
-comment|/*  * A record in the tree is either a pointer to a page and an index in the page  * or a page number and an index.  These structures are used as a cursor, stack  * entry and search returns as well as to pass records to other routines.  *  * One comment about searches.  Internal page searches must find the largest  * record less than key in the tree so that descents work.  Leaf page searches  * must find the smallest record greater than key so that the returned index  * is the record's correct position for insertion.  */
+comment|/*  * A record in the tree is either a pointer to a page and an index in the page  * or a page number and an index.  These structures are used as a cursor, stack  * entry and search returns as well as to pass records to other routines.  *  * One comment about searches.  Internal page searches must find the largest  * record less than key in the tree so that descents work.  Leaf page searches  * must find the smallest record greater than key so that the returned index  * is the record's correct position for insertion.  *  * One comment about cursors.  The cursor key is never removed from the tree,  * even if deleted.  This is because it is quite difficult to decide where the  * cursor should be when other keys have been inserted/deleted in the tree;  * duplicate keys make it impossible.  This scheme does require extra work  * though, to make sure that we don't perform an operation on a deleted key.  */
 end_comment
 
 begin_typedef
@@ -653,6 +598,52 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * The metadata of the tree.  The m_nrecs field is used only by the RECNO code.  * This is because the btree doesn't really need it and it requires that every  * put or delete call modify the metadata.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|BTMETA
+block|{
+name|u_long
+name|m_magic
+decl_stmt|;
+comment|/* magic number */
+name|u_long
+name|m_version
+decl_stmt|;
+comment|/* version */
+name|u_long
+name|m_psize
+decl_stmt|;
+comment|/* page size */
+name|u_long
+name|m_free
+decl_stmt|;
+comment|/* page number of first free page */
+name|u_long
+name|m_nrecs
+decl_stmt|;
+comment|/* R: number of records */
+define|#
+directive|define
+name|SAVEMETA
+value|(BTF_NODUPS | BTF_RECNO)
+name|u_long
+name|m_flags
+decl_stmt|;
+comment|/* bt_flags& SAVEMETA */
+name|u_long
+name|m_lorder
+decl_stmt|;
+comment|/* byte order */
+block|}
+name|BTMETA
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* The in-memory btree/recno data structure. */
 end_comment
 
@@ -674,11 +665,11 @@ comment|/* pointer to enclosing DB */
 name|EPGNO
 name|bt_bcursor
 decl_stmt|;
-comment|/* btree cursor */
+comment|/* B: btree cursor */
 name|recno_t
 name|bt_rcursor
 decl_stmt|;
-comment|/* R: recno cursor */
+comment|/* R: recno cursor (1-based) */
 define|#
 directive|define
 name|BT_POP
@@ -740,19 +731,15 @@ comment|/* R: record file descriptor */
 name|pgno_t
 name|bt_free
 decl_stmt|;
-comment|/* next free page */
-name|size_t
+comment|/* XXX next free page */
+name|index_t
 name|bt_psize
 decl_stmt|;
 comment|/* page size */
-name|int
-name|bt_maxkeypage
+name|index_t
+name|bt_ovflsize
 decl_stmt|;
-comment|/* maximum keys per page */
-name|size_t
-name|bt_minkeypage
-decl_stmt|;
-comment|/* minimum keys per page */
+comment|/* cut-off for key/data overflow */
 name|int
 name|bt_lorder
 decl_stmt|;
@@ -827,7 +814,7 @@ expr_stmt|;
 name|recno_t
 name|bt_nrecs
 decl_stmt|;
-comment|/* R: number of records in the tree */
+comment|/* R: number of records */
 name|caddr_t
 name|bt_smap
 decl_stmt|;
@@ -848,7 +835,7 @@ define|#
 directive|define
 name|BTF_DELCRSR
 value|0x001
-comment|/* B: delete cursor when closes/moves */
+comment|/* cursor has been deleted */
 define|#
 directive|define
 name|BTF_FIXEDLEN
@@ -863,7 +850,7 @@ define|#
 directive|define
 name|BTF_METADIRTY
 value|0x008
-comment|/* B: need to write meta-data */
+comment|/* B: need to write metadata */
 define|#
 directive|define
 name|BTF_MODIFIED
@@ -873,7 +860,7 @@ define|#
 directive|define
 name|BTF_NODUPS
 value|0x020
-comment|/* no duplicate keys permitted */
+comment|/* B: no duplicate keys permitted */
 define|#
 directive|define
 name|BTF_RDONLY
