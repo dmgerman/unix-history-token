@@ -50,6 +50,36 @@ argument|fw_xfer
 argument_list|)
 name|xferlist
 expr_stmt|;
+name|struct
+name|crom_chunk
+name|unit4
+decl_stmt|;
+comment|/* unit directory for IPv4 */
+name|struct
+name|crom_chunk
+name|spec4
+decl_stmt|;
+comment|/* specifier description IPv4 */
+name|struct
+name|crom_chunk
+name|ver4
+decl_stmt|;
+comment|/* version description IPv4 */
+name|struct
+name|crom_chunk
+name|unit6
+decl_stmt|;
+comment|/* unit directory for IPv6 */
+name|struct
+name|crom_chunk
+name|spec6
+decl_stmt|;
+comment|/* specifier description IPv6 */
+name|struct
+name|crom_chunk
+name|ver6
+decl_stmt|;
+comment|/* version description IPv6 */
 struct|struct
 name|fwip_eth_softc
 block|{
