@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.135 (Berkeley) %G%"
+literal|"@(#)main.c	8.136 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7407,16 +7407,32 @@ block|{
 name|int
 name|stat
 decl_stmt|;
+name|int
+name|rs
+init|=
+name|strtorwset
+argument_list|(
+name|p
+argument_list|,
+name|NULL
+argument_list|,
+name|ST_FIND
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|rs
+operator|<
+literal|0
+condition|)
+break|break;
 name|stat
 operator|=
 name|rewrite
 argument_list|(
 name|pvp
 argument_list|,
-name|atoi
-argument_list|(
-name|p
-argument_list|)
+name|rs
 argument_list|,
 literal|0
 argument_list|,
@@ -7431,9 +7447,11 @@ name|EX_OK
 condition|)
 name|printf
 argument_list|(
-literal|"== Ruleset %s status %d\n"
+literal|"== Ruleset %s (%d) status %d\n"
 argument_list|,
 name|p
+argument_list|,
+name|rs
 argument_list|,
 name|stat
 argument_list|)
