@@ -190,7 +190,7 @@ index|]
 decl_stmt|;
 comment|/* OEM name and version */
 name|int8_t
-name|bsPBP
+name|bsBPB
 index|[
 literal|53
 index|]
