@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.64 2003/02/08 03:32:51 ichiro Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.68 2004/06/29 06:30:05 mycroft Exp $	*/
 end_comment
 
 begin_comment
@@ -1812,6 +1812,16 @@ argument_list|,
 name|UHF_C_PORT_ENABLE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|change
+operator|&
+name|UPS_C_CONNECT_STATUS
+condition|)
+block|{
+comment|/* Ignore the port error if the device 				   vanished. */
+block|}
+elseif|else
 if|if
 condition|(
 name|status
