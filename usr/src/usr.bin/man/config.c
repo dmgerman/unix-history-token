@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	8.5 (Berkeley) %G%"
+literal|"@(#)config.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,8 +201,9 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 name|len
+operator|==
+literal|1
 condition|)
 comment|/* Skip empty lines. */
 continue|continue;
