@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	draw.c	1.8	84/05/09  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
+comment|/*	draw.c	1.9	84/11/27  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
 end_comment
 
 begin_include
@@ -910,7 +910,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------  | Routine:	drawwig (character_buffer, file_pointer, type_flag)  |  | Results:	Given the starting position, the motion list in buf, and any  |		extra characters from fp (terminated by a \n), drawwig sets  |		up a point list to make a spline from.  If "pic" is set picurve  |		is called to draw the curve in pic style; else it calls HGCurve  |		for the gremlin-style curve.  |  | Side Efct:	Resulting position is reached from adding successive motions  |		to the current position.  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------  | Routine:	drawwig (character_buffer, file_pointer, type_flag)  |  | Results:	Given the starting position, the motion list in buf, and any  |		extra characters from fp (terminated by a \n), drawwig sets  |		up a point list to make a spline or polygon from.  If "pic" is  |		zero, a gremlin curve is drawn with HGCurve; if less than zero  |		a polygon is drawn, else (pic> 0) a pic style spline is drawn  |		using picurve.  |  | Side Efct:	Resulting position is reached from adding successive motions  |		to the current position.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1322,7 +1322,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	polygon (xpoints, ypoints, num_of_points)  |  | Results:	draws a polygon through the points (xpoints, ypoints).  |		The polygon has a raster fill associated with it.  The  |		fill is already set up from conv(), but if the stipple  |		pattern "laststipmem" is zero, polygon draws a "clear"  |		polygon.  |  | Bugs:	If the path is not closed, polygon will NOT close it.  |		(or is that a feature?)  |		polygons are affected by line thickness, but NOT line style.  |		if the path is "counterclockwise", it'll slow down the  |		Imagen's rendering.  This is not checked for here.  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	polygon (xpoints, ypoints, num_of_points)  |  | Results:	draws a polygon through the points (xpoints, ypoints).  |		The polygon has a raster fill associated with it.  The  |		fill is already set up from conv(), but if the stipple  |		pattern "laststipmem" is zero, polygon draws a "clear"  |		polygon.  |  | Bugs:	If the path is not closed, polygon will NOT close it.  |		(or is that a feature?)  |		self-interseting polygons can choke the Imagen - tough luck  |		if the path is "counterclockwise", it'll slow down the  |		rendering.  This is not checked for here.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -1385,6 +1385,58 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|polyborder
+operator|&&
+name|linmod
+operator|!=
+name|SOLID
+condition|)
+block|{
+comment|/* if the border isn't solid */
+for|for
+control|(
+name|i
+operator|=
+literal|2
+init|;
+name|i
+operator|<=
+name|npts
+condition|;
+name|i
+operator|++
+control|)
+comment|/*    have HGtline draw it */
+name|HGtline
+argument_list|(
+name|x
+index|[
+name|i
+operator|-
+literal|1
+index|]
+argument_list|,
+name|y
+index|[
+name|i
+operator|-
+literal|1
+index|]
+argument_list|,
+name|x
+index|[
+name|i
+index|]
+argument_list|,
+name|y
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|byte
 argument_list|(
 name|ASPATH
@@ -1437,6 +1489,10 @@ block|}
 if|if
 condition|(
 name|polyborder
+operator|&&
+name|linmod
+operator|==
+name|SOLID
 condition|)
 block|{
 name|byte
@@ -4420,8 +4476,7 @@ if|if
 condition|(
 name|linmod
 operator|==
-operator|-
-literal|1
+name|SOLID
 condition|)
 block|{
 name|line
