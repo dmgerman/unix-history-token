@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.h	8.1.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ struct|struct
 name|radix_node
 block|{
 name|struct
-name|radix_mask
+name|radix_node
 modifier|*
 name|rn_mklist
 decl_stmt|;
@@ -170,57 +170,6 @@ define|#
 directive|define
 name|rn_r
 value|rn_u.rn_node.rn_R
-end_define
-
-begin_comment
-comment|/*  * Annotations to tree concerning potential routes applying to subtrees.  */
-end_comment
-
-begin_struct
-specifier|extern
-struct|struct
-name|radix_mask
-block|{
-name|short
-name|rm_b
-decl_stmt|;
-comment|/* bit offset; -1-index(netmask) */
-name|char
-name|rm_unused
-decl_stmt|;
-comment|/* cf. rn_bmask */
-name|u_char
-name|rm_flags
-decl_stmt|;
-comment|/* cf. rn_flags */
-name|struct
-name|radix_mask
-modifier|*
-name|rm_mklist
-decl_stmt|;
-comment|/* more masks to try */
-name|caddr_t
-name|rm_mask
-decl_stmt|;
-comment|/* the mask */
-name|int
-name|rm_refs
-decl_stmt|;
-comment|/* # of references to this struct */
-block|}
-modifier|*
-name|rn_mkfreelist
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|MKGet
-parameter_list|(
-name|m
-parameter_list|)
-value|{\ 	if (rn_mkfreelist) {\ 		m = rn_mkfreelist; \ 		rn_mkfreelist = (m)->rm_mklist; \ 	} else \ 		R_Malloc(m, struct radix_mask *, sizeof (*(m))); }\  #define MKFree(m) { (m)->rm_mklist = rn_mkfreelist; rn_mkfreelist = (m);}
 end_define
 
 begin_struct
@@ -424,6 +373,75 @@ name|w
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* mapping stuff */
+struct|struct
+name|radix_index_table
+block|{
+name|short
+name|limit
+decl_stmt|;
+name|short
+name|offset
+decl_stmt|;
+block|}
+modifier|*
+name|rnh_table
+struct|;
+comment|/* how to re-order the bits */
+name|int
+name|rnh_offset
+decl_stmt|;
+comment|/* for martialed keys */
+name|int
+argument_list|(
+argument|*rnh_bits_matched
+argument_list|)
+comment|/* used in matching, insert */
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|trial
+operator|,
+name|void
+operator|*
+name|ref
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+name|head
+operator|,
+name|int
+name|masklen
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*rnh_set_mask
+argument_list|)
+comment|/* used in insertion */
+name|__P
+argument_list|(
+operator|(
+name|int
+name|index
+operator|,
+expr|struct
+name|radix_node
+operator|*
+name|rn
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+name|rnh
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* the treetop itself */
 name|struct
 name|radix_node
 name|rnh_nodes
@@ -560,6 +578,15 @@ name|p
 parameter_list|)
 value|free((caddr_t)p, M_RTABLE);
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*KERNEL*/
+end_comment
 
 begin_decl_stmt
 name|void
@@ -755,7 +782,7 @@ operator|)
 argument_list|)
 decl_stmt|,
 modifier|*
-name|rn_search_m
+name|rn_search_unmapped
 name|__P
 argument_list|(
 operator|(
@@ -763,24 +790,84 @@ name|void
 operator|*
 operator|,
 expr|struct
-name|radix_node
-operator|*
-operator|,
-name|void
+name|radix_node_head
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*KERNEL*/
-end_comment
+begin_decl_stmt
+name|int
+name|rn_set_unmapped_mask
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|radix_node
+operator|*
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+operator|)
+argument_list|)
+decl_stmt|,
+name|rn_set_mapped_mask
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|radix_node
+operator|*
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+operator|)
+argument_list|)
+decl_stmt|,
+name|rn_mapped_bits_matched
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|,
+name|rn_unmapped_bits_matched
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
