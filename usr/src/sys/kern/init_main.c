@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1243,6 +1243,17 @@ literal|"cannot mount root"
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_expr_stmt
+name|mountlist
+operator|.
+name|cqh_first
+operator|->
+name|mnt_flag
+operator||=
+name|MNT_ROOTFS
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Get the vnode for '/'.  Set fdp->fd_fd.fd_cdir to reference it. */
