@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.94 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.95 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -398,7 +398,7 @@ block|{
 operator|&
 name|vop_bmap_desc
 block|,
-name|lfs_bmap
+name|ufs_bmap
 block|}
 block|,
 comment|/* bmap */
@@ -1362,6 +1362,8 @@ name|error
 init|=
 literal|0
 decl_stmt|,
+name|lock_on_enter
+decl_stmt|,
 name|size
 decl_stmt|;
 name|long
@@ -1500,6 +1502,16 @@ name|bp2
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|lock_on_enter
+operator|=
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|ILOCKED
+condition|)
 name|IUNLOCK
 argument_list|(
 name|ip
@@ -1583,18 +1595,19 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-name|rablock
-operator|=
-name|lbn
-operator|+
-literal|1
-expr_stmt|;
 name|lfs_check
 argument_list|(
 name|vp
 argument_list|,
 name|lbn
 argument_list|)
+expr_stmt|;
+comment|/* */
+name|rablock
+operator|=
+name|lbn
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1664,6 +1677,7 @@ operator|&
 name|bp1
 argument_list|)
 expr_stmt|;
+comment|/* 		error = ufs_breada(vp, lbn, size, NOCRED,&bp1); */
 if|if
 condition|(
 name|bp2
@@ -1772,6 +1786,10 @@ argument_list|(
 name|bp2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lock_on_enter
+condition|)
 name|ILOCK
 argument_list|(
 name|ip
