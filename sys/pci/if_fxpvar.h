@@ -60,6 +60,10 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* interrupt handler cookie */
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* __NetBSD__ */
@@ -308,6 +312,40 @@ parameter_list|)
 value|(ifp)->if_bpf
 end_define
 
+begin_define
+define|#
+directive|define
+name|FXP_SPLVAR
+parameter_list|(
+name|x
+parameter_list|)
+value|int x;
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_LOCK
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|x = splimp()
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|splx(x)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -363,6 +401,39 @@ parameter_list|(
 name|ifp
 parameter_list|)
 value|ifp
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_SPLVAR
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_LOCK
+parameter_list|(
+name|_sc
+parameter_list|,
+name|x
+parameter_list|)
+value|mtx_enter(&(_sc)->sc_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|,
+name|x
+parameter_list|)
+value|mtx_exit(&(_sc)->sc_mtx, MTX_DEF)
 end_define
 
 begin_endif
