@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: pfkeyv2.h,v 1.17 2000/06/22 08:38:33 sakane Exp $	*/
+comment|/*	$KAME: pfkeyv2.h,v 1.25 2001/03/12 08:34:06 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -215,10 +215,6 @@ directive|define
 name|SADB_X_SPDEXPIRE
 value|21
 end_define
-
-begin_comment
-comment|/* not yet */
-end_comment
 
 begin_define
 define|#
@@ -971,6 +967,10 @@ name|SADB_SAFLAGS_PFS
 value|1
 end_define
 
+begin_comment
+comment|/* RFC2367 numbers - meets RFC2407 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -986,7 +986,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* 2 */
+comment|/*2*/
 end_comment
 
 begin_define
@@ -997,15 +997,67 @@ value|2
 end_define
 
 begin_comment
-comment|/* 3 */
+comment|/*3*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SADB_AALG_MD5
+name|SADB_AALG_MAX
+value|8
+end_define
+
+begin_comment
+comment|/* private allocations - based on RFC2407/IANA assignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_SHA2_256
+value|6
+end_define
+
+begin_comment
+comment|/*5*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_SHA2_384
+value|7
+end_define
+
+begin_comment
+comment|/*6*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_SHA2_512
+value|8
+end_define
+
+begin_comment
+comment|/*7*/
+end_comment
+
+begin_comment
+comment|/* private allocations should use 249-255 (RFC2407) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_MD5
 value|3
 end_define
+
+begin_comment
+comment|/*249*/
+end_comment
 
 begin_comment
 comment|/* Keyed MD5 */
@@ -1014,9 +1066,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SADB_AALG_SHA
+name|SADB_X_AALG_SHA
 value|4
 end_define
+
+begin_comment
+comment|/*250*/
+end_comment
 
 begin_comment
 comment|/* Keyed SHA */
@@ -1025,20 +1081,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SADB_AALG_NULL
+name|SADB_X_AALG_NULL
 value|5
 end_define
+
+begin_comment
+comment|/*251*/
+end_comment
 
 begin_comment
 comment|/* null authentication */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SADB_AALG_MAX
-value|6
-end_define
+begin_comment
+comment|/* RFC2367 numbers - meets RFC2407 */
+end_comment
 
 begin_define
 define|#
@@ -1055,7 +1112,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* 2 */
+comment|/*2*/
 end_comment
 
 begin_define
@@ -1066,7 +1123,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* 3 */
+comment|/*3*/
 end_comment
 
 begin_define
@@ -1077,36 +1134,59 @@ value|3
 end_define
 
 begin_comment
-comment|/* 11 */
+comment|/*11*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SADB_EALG_BLOWFISHCBC
-value|4
+name|SADB_EALG_MAX
+value|12
 end_define
+
+begin_comment
+comment|/* private allocations - based on RFC2407/IANA assignment */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SADB_EALG_CAST128CBC
+name|SADB_X_EALG_CAST128CBC
 value|5
 end_define
 
+begin_comment
+comment|/*6*/
+end_comment
+
 begin_define
 define|#
 directive|define
-name|SADB_EALG_RC5CBC
-value|6
+name|SADB_X_EALG_BLOWFISHCBC
+value|4
+end_define
+
+begin_comment
+comment|/*7*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_RIJNDAELCBC
+value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|SADB_EALG_MAX
-value|7
+name|SADB_X_EALG_AES
+value|12
 end_define
+
+begin_comment
+comment|/* private allocations should use 249-255 (RFC2407) */
+end_comment
 
 begin_if
 if|#

@@ -3117,9 +3117,10 @@ name|AF_INET
 operator|||
 name|lflag
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%6ld %8ld "
+literal|"%6ld %8ld"
 argument_list|,
 name|rt
 operator|->
@@ -3130,6 +3131,42 @@ operator|->
 name|rt_use
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lflag
+condition|)
+block|{
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%6lu "
+argument_list|,
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%6s "
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|rt

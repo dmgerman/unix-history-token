@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipsec_strerror.c,v 1.6 2000/05/07 05:25:03 itojun Exp $	*/
+comment|/*	$KAME: ipsec_strerror.c,v 1.7 2000/07/30 00:45:12 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -49,6 +49,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ipsec_errlist
@@ -144,6 +145,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ipsec_strerror
@@ -178,6 +180,7 @@ begin_function
 name|void
 name|__ipsec_set_strerror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str

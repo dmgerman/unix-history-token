@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip_encap.c,v 1.36 2000/06/17 20:34:24 itojun Exp $	*/
+comment|/*	$KAME: ip_encap.c,v 1.41 2001/03/15 08:35:08 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -275,6 +281,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIST_HEAD_INITIALIZER
+end_ifndef
+
 begin_comment
 comment|/* rely upon BSS initialization */
 end_comment
@@ -292,11 +304,54 @@ name|encaptab
 expr_stmt|;
 end_expr_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|encaptab
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|encaptab
+operator|=
+name|LIST_HEAD_INITIALIZER
+argument_list|(
+operator|&
+name|encaptab
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|encap_init
 parameter_list|()
 block|{
+specifier|static
+name|int
+name|initialized
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|initialized
+condition|)
+return|return;
+name|initialized
+operator|++
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -306,6 +361,12 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 name|void
@@ -709,6 +770,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: keydb.h,v 1.11 2000/06/15 12:20:50 sakane Exp $	*/
+comment|/*	$KAME: keydb.h,v 1.14 2000/08/02 17:58:26 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -191,20 +191,22 @@ name|u_int
 name|ivlen
 decl_stmt|;
 comment|/* length of IV */
-if|#
-directive|if
-literal|0
-block|caddr_t misc1; 	caddr_t misc2; 	caddr_t misc3;
-endif|#
-directive|endif
+name|void
+modifier|*
+name|sched
+decl_stmt|;
+comment|/* intermediate encryption key */
+name|size_t
+name|schedlen
+decl_stmt|;
 name|struct
 name|secreplay
 modifier|*
 name|replay
 decl_stmt|;
 comment|/* replay prevention */
-name|u_int32_t
-name|tick
+name|long
+name|created
 decl_stmt|;
 comment|/* for lifetime */
 name|struct
@@ -329,8 +331,8 @@ name|u_int32_t
 name|seq
 decl_stmt|;
 comment|/* sequence number */
-name|u_int32_t
-name|tick
+name|long
+name|created
 decl_stmt|;
 comment|/* for lifetime */
 name|int

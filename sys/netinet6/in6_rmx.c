@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_rmx.c,v 1.7 2000/04/06 08:30:43 sumikawa Exp $	*/
+comment|/*	$KAME: in6_rmx.c,v 1.10 2001/05/24 05:44:58 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -320,63 +320,6 @@ name|RTF_LOCAL
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * We also specify a send and receive pipe size for every 	 * route added, to help TCP a bit.  TCP doesn't actually 	 * want a true pipe size, which would be prohibitive in memory 	 * costs and is hard to compute anyway; it simply uses these 	 * values to size its buffers.  So, we fill them in with the 	 * same values that TCP would have used anyway, and allow the 	 * installing program or the link layer to override these values 	 * as it sees fit.  This will hopefully allow TCP more 	 * opportunities to save its ssthresh value. 	 */
-if|if
-condition|(
-operator|!
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_sendpipe
-operator|&&
-operator|!
-operator|(
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_locks
-operator|&
-name|RTV_SPIPE
-operator|)
-condition|)
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_sendpipe
-operator|=
-name|tcp_sendspace
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_recvpipe
-operator|&&
-operator|!
-operator|(
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_locks
-operator|&
-name|RTV_RPIPE
-operator|)
-condition|)
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_recvpipe
-operator|=
-name|tcp_recvspace
-expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -115,6 +115,12 @@ directive|include
 file|<net/bpf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/bpfdesc.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1066,6 +1072,31 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+name|n
+operator|->
+name|m_pkthdr
+operator|.
+name|aux
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|aux
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|aux
+operator|=
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -1194,7 +1225,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -1326,7 +1356,18 @@ name|n
 init|=
 name|m
 decl_stmt|;
-comment|/* 		 * We need to prepend the address family as 		 * a four byte field.  Cons up a dummy header 		 * to pacify bpf.  This is safe because bpf 		 * will only read from the mbuf (i.e., it won't 		 * try to free it or keep a pointer a to it). 		 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_bpf
+operator|->
+name|bif_dlt
+operator|==
+name|DLT_NULL
+condition|)
+block|{
+comment|/* 			 * We need to prepend the address family as 			 * a four byte field.  Cons up a dummy header 			 * to pacify bpf.  This is safe because bpf 			 * will only read from the mbuf (i.e., it won't 			 * try to free it or keep a pointer a to it). 			 */
 name|m0
 operator|.
 name|m_next
@@ -1355,6 +1396,7 @@ operator|=
 operator|&
 name|m0
 expr_stmt|;
+block|}
 name|bpf_mtap
 argument_list|(
 name|ifp

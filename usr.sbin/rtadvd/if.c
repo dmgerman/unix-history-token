@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: if.c,v 1.14 2000/10/25 04:28:34 jinmei Exp $	*/
+comment|/*	$KAME: if.c,v 1.17 2001/01/21 15:27:30 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -1257,72 +1257,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|get_rtinfo
-parameter_list|(
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-modifier|*
-name|len
-parameter_list|)
-block|{
-name|int
-name|mib
-index|[
-literal|6
-index|]
-init|=
-block|{
-name|CTL_NET
-block|,
-name|AF_ROUTE
-block|,
-literal|0
-block|,
-name|AF_INET6
-block|,
-name|NET_RT_DUMP
-block|,
-literal|0
-block|}
-decl_stmt|;
-if|if
-condition|(
-name|sysctl
-argument_list|(
-name|mib
-argument_list|,
-literal|6
-argument_list|,
-name|buf
-argument_list|,
-name|len
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_define
 define|#
 directive|define
@@ -1808,11 +1742,6 @@ begin_undef
 undef|#
 directive|undef
 name|FILTER_MATCH
-name|(
-name|type
-name|,
-name|filter
-name|)
 end_undef
 
 begin_function

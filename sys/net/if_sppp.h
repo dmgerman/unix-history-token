@@ -83,6 +83,17 @@ begin_comment
 comment|/* idx into state table */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IDX_IPV6CP
+value|2
+end_define
+
+begin_comment
+comment|/* idx into state table */
+end_comment
+
 begin_struct
 struct|struct
 name|sipcp
@@ -109,6 +120,21 @@ directive|define
 name|IPCP_MYADDR_SEEN
 value|4
 comment|/* have seen his address already */
+ifdef|#
+directive|ifdef
+name|notdef
+define|#
+directive|define
+name|IPV6CP_MYIFID_DYN
+value|2
+comment|/* my ifid is dynamically assigned */
+endif|#
+directive|endif
+define|#
+directive|define
+name|IPV6CP_MYIFID_SEEN
+value|4
+comment|/* have seen his ifid already */
 block|}
 struct|;
 end_struct
@@ -178,14 +204,14 @@ begin_define
 define|#
 directive|define
 name|IDX_PAP
-value|2
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|IDX_CHAP
-value|3
+value|4
 end_define
 
 begin_define
@@ -264,10 +290,16 @@ decl_stmt|;
 comment|/* loopback detection counter */
 name|u_long
 name|pp_seq
+index|[
+name|IDX_COUNT
+index|]
 decl_stmt|;
 comment|/* local sequence number */
 name|u_long
 name|pp_rseq
+index|[
+name|IDX_COUNT
+index|]
 decl_stmt|;
 comment|/* remote sequence number */
 name|enum
@@ -326,6 +358,11 @@ name|sipcp
 name|ipcp
 decl_stmt|;
 comment|/* IPCP params */
+name|struct
+name|sipcp
+name|ipv6cp
+decl_stmt|;
+comment|/* IPv6CP params */
 name|struct
 name|sauth
 name|myauth

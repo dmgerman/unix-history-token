@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_mroute.c,v 1.33 2000/10/19 02:23:43 jinmei Exp $	*/
+comment|/*	$KAME: ip6_mroute.c,v 1.46 2001/04/04 05:17:30 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
 end_include
 
 begin_include
@@ -568,14 +574,6 @@ name|pim6stat
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|callout_handle
-name|expire_upcalls_ch
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * one-back cache used by ipip_input to locate a tunnel's mif  * given a datagram's src ip address.  */
 end_comment
@@ -618,7 +616,7 @@ name|g
 parameter_list|,
 name|rt
 parameter_list|)
-value|do { \ 	register struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	mrt6stat.mrt6s_mfc_lookups++; \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		mrt6stat.mrt6s_mfc_misses++; \ 	} \ } while (0)
+value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	mrt6stat.mrt6s_mfc_lookups++; \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		mrt6stat.mrt6s_mfc_misses++; \ 	} \ } while (0)
 end_define
 
 begin_comment
@@ -636,7 +634,7 @@ name|b
 parameter_list|,
 name|delta
 parameter_list|)
-value|do { \ 	    register int xxs; \ 		\ 	    delta = (a).tv_usec - (b).tv_usec; \ 	    if ((xxs = (a).tv_sec - (b).tv_sec)) { \ 	       switch (xxs) { \ 		      case 2: \ 			  delta += 1000000; \
+value|do { \ 	    int xxs; \ 		\ 	    delta = (a).tv_usec - (b).tv_usec; \ 	    if ((xxs = (a).tv_sec - (b).tv_sec)) { \ 	       switch (xxs) { \ 		      case 2: \ 			  delta += 1000000; \
 comment|/* fall through */
 value|\ 		      case 1: \ 			  delta += 1000000; \ 			  break; \ 		      default: \ 			  delta += (1000000 * xxs); \ 	       } \ 	    } \ } while (0)
 end_define
@@ -801,6 +799,14 @@ name|mf6cctl
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout
+name|expire_upcalls_ch
 decl_stmt|;
 end_decl_stmt
 
@@ -1211,14 +1217,12 @@ name|get_sg_cnt
 parameter_list|(
 name|req
 parameter_list|)
-specifier|register
 name|struct
 name|sioc_sg_req6
 modifier|*
 name|req
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|mf6c
 modifier|*
@@ -1315,14 +1319,12 @@ name|get_mif6_cnt
 parameter_list|(
 name|req
 parameter_list|)
-specifier|register
 name|struct
 name|sioc_mif_req6
 modifier|*
 name|req
 decl_stmt|;
 block|{
-specifier|register
 name|mifi_t
 name|mifi
 init|=
@@ -1597,18 +1599,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* used for stubbing out/in pim stuff */
-name|expire_upcalls_ch
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|expire_upcalls
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|NULL
+operator|&
+name|expire_upcalls_ch
 argument_list|,
 name|EXPIRE_TIMEOUT
+argument_list|,
+name|expire_upcalls
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1828,15 +1828,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* used to stub out/in pim specific code */
-name|untimeout
+name|callout_stop
 argument_list|(
-name|expire_upcalls
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|NULL
-argument_list|,
+operator|&
 name|expire_upcalls_ch
 argument_list|)
 expr_stmt|;
@@ -2015,14 +2009,12 @@ name|add_m6if
 parameter_list|(
 name|mifcp
 parameter_list|)
-specifier|register
 name|struct
 name|mif6ctl
 modifier|*
 name|mifcp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|mif6
 modifier|*
@@ -2342,7 +2334,6 @@ modifier|*
 name|mifip
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|mif6
 modifier|*
@@ -2353,7 +2344,6 @@ operator|+
 operator|*
 name|mifip
 decl_stmt|;
-specifier|register
 name|mifi_t
 name|mifi
 decl_stmt|;
@@ -2570,7 +2560,6 @@ name|rtdetq
 modifier|*
 name|rte
 decl_stmt|;
-specifier|register
 name|u_short
 name|nstl
 decl_stmt|;
@@ -3327,23 +3316,19 @@ name|collate
 parameter_list|(
 name|t
 parameter_list|)
-specifier|register
 name|struct
 name|timeval
 modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|u_long
 name|d
 decl_stmt|;
-specifier|register
 name|struct
 name|timeval
 name|tp
 decl_stmt|;
-specifier|register
 name|u_long
 name|delta
 decl_stmt|;
@@ -3719,7 +3704,6 @@ name|ifp
 parameter_list|,
 name|m
 parameter_list|)
-specifier|register
 name|struct
 name|ip6_hdr
 modifier|*
@@ -3736,19 +3720,16 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|mf6c
 modifier|*
 name|rt
 decl_stmt|;
-specifier|register
 name|struct
 name|mif6
 modifier|*
 name|mifp
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -3949,23 +3930,20 @@ block|}
 else|else
 block|{
 comment|/* 		 * If we don't have a route for packet's origin, 		 * Make a copy of the packet& 		 * send message to routing daemon 		 */
-specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|mb0
 decl_stmt|;
-specifier|register
 name|struct
 name|rtdetq
 modifier|*
 name|rte
 decl_stmt|;
-specifier|register
 name|u_long
 name|hash
 decl_stmt|;
-comment|/*	register int i, npkts;*/
+comment|/*		int i, npkts;*/
 ifdef|#
 directive|ifdef
 name|UPCALL_TIMING
@@ -4702,7 +4680,6 @@ modifier|*
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|npkts
 init|=
@@ -5046,18 +5023,16 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|expire_upcalls_ch
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|expire_upcalls
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|NULL
+operator|&
+name|expire_upcalls_ch
 argument_list|,
 name|EXPIRE_TIMEOUT
+argument_list|,
+name|expire_upcalls
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5078,26 +5053,22 @@ name|ifp
 parameter_list|,
 name|rt
 parameter_list|)
-specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-specifier|register
 name|struct
 name|mf6c
 modifier|*
 name|rt
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ip6_hdr
 modifier|*
@@ -5112,19 +5083,16 @@ name|ip6_hdr
 operator|*
 argument_list|)
 decl_stmt|;
-specifier|register
 name|mifi_t
 name|mifi
 decl_stmt|,
 name|iif
 decl_stmt|;
-specifier|register
 name|struct
 name|mif6
 modifier|*
 name|mifp
 decl_stmt|;
-specifier|register
 name|int
 name|plen
 init|=
@@ -5262,7 +5230,6 @@ block|,
 name|AF_INET6
 block|}
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -5410,6 +5377,12 @@ operator|->
 name|im6_msgtype
 operator|=
 name|MRT6MSG_WRONGMIF
+expr_stmt|;
+name|im
+operator|->
+name|im6_mbz
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -5792,7 +5765,6 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -5818,15 +5790,21 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
+comment|/* needs to protect static "ro" below. */
 specifier|static
 name|struct
 name|route_in6
-name|ro6
+name|ro
 decl_stmt|;
 name|struct
 name|in6_multi
 modifier|*
 name|in6m
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+modifier|*
+name|dst6
 decl_stmt|;
 comment|/* 	 * Make a new reference to the packet; make sure that 	 * the IPv6 header is actually copied, not just referenced, 	 * so that ip6_output() only scribbles on the copy. 	 */
 name|mb_copy
@@ -5880,7 +5858,14 @@ name|mb_copy
 operator|==
 name|NULL
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* set MCAST flag to the outgoing packet */
 name|mb_copy
 operator|->
@@ -5934,7 +5919,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|ro6
+name|ro
 argument_list|,
 name|IPV6_FORWARDING
 argument_list|,
@@ -5976,6 +5961,18 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * If we belong to the destination multicast group 	 * on the outgoing interface, loop back a copy. 	 */
+name|dst6
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+operator|&
+name|ro
+operator|.
+name|ro_dst
+expr_stmt|;
 name|IN6_LOOKUP_MULTI
 argument_list|(
 name|ip6
@@ -5994,10 +5991,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ro6
-operator|.
-name|ro_dst
-operator|.
+name|dst6
+operator|->
 name|sin6_len
 operator|=
 sizeof|sizeof
@@ -6006,18 +6001,14 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
-name|ro6
-operator|.
-name|ro_dst
-operator|.
+name|dst6
+operator|->
 name|sin6_family
 operator|=
 name|AF_INET6
 expr_stmt|;
-name|ro6
-operator|.
-name|ro_dst
-operator|.
+name|dst6
+operator|->
 name|sin6_addr
 operator|=
 name|ip6
@@ -6030,8 +6021,13 @@ name|ifp
 argument_list|,
 name|m
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
 operator|&
-name|ro6
+name|ro
 operator|.
 name|ro_dst
 argument_list|)
@@ -6057,10 +6053,8 @@ operator|<
 name|IPV6_MMTU
 condition|)
 block|{
-name|ro6
-operator|.
-name|ro_dst
-operator|.
+name|dst6
+operator|->
 name|sin6_len
 operator|=
 sizeof|sizeof
@@ -6069,18 +6063,14 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
-name|ro6
-operator|.
-name|ro_dst
-operator|.
+name|dst6
+operator|->
 name|sin6_family
 operator|=
 name|AF_INET6
 expr_stmt|;
-name|ro6
-operator|.
-name|ro_dst
-operator|.
+name|dst6
+operator|->
 name|sin6_addr
 operator|=
 name|ip6
@@ -6107,7 +6097,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|ro6
+name|ro
 operator|.
 name|ro_dst
 argument_list|,
@@ -6157,7 +6147,6 @@ operator|->
 name|if_mtu
 argument_list|)
 expr_stmt|;
-return|return;
 else|#
 directive|else
 ifdef|#
@@ -6173,16 +6162,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"phyint_send: packet too big on %s%u o %s g %s"
+literal|"phyint_send: packet too big on %s o %s g %s"
 literal|" size %d(discarded)\n"
 argument_list|,
-name|ifp
-operator|->
 name|if_name
-argument_list|,
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -6216,10 +6202,14 @@ name|mb_copy
 argument_list|)
 expr_stmt|;
 comment|/* simply discard the packet */
-return|return;
 endif|#
 directive|endif
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6234,7 +6224,6 @@ name|mif
 parameter_list|,
 name|m
 parameter_list|)
-specifier|register
 name|struct
 name|ip6_hdr
 modifier|*
@@ -6245,20 +6234,17 @@ name|mif6
 modifier|*
 name|mif
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|mm
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -6345,6 +6331,14 @@ condition|)
 return|return
 name|ENOBUFS
 return|;
+name|mm
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
 name|mm
 operator|->
 name|m_data
@@ -6568,20 +6562,17 @@ decl_stmt|,
 name|proto
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|pim
 modifier|*
 name|pim
 decl_stmt|;
 comment|/* pointer to a pim struct */
-specifier|register
 name|struct
 name|ip6_hdr
 modifier|*
 name|ip6
 decl_stmt|;
-specifier|register
 name|int
 name|pimlen
 decl_stmt|;
@@ -6629,7 +6620,7 @@ operator|-
 operator|*
 name|offp
 expr_stmt|;
-comment|/*          * Validate lengths          */
+comment|/* 	 * Validate lengths 	 */
 if|if
 condition|(
 name|pimlen
@@ -7117,6 +7108,57 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* verify the version number of the inner packet */
+if|if
+condition|(
+operator|(
+name|eip6
+operator|->
+name|ip6_vfc
+operator|&
+name|IPV6_VERSION_MASK
+operator|)
+operator|!=
+name|IPV6_VERSION
+condition|)
+block|{
+operator|++
+name|pim6stat
+operator|.
+name|pim6s_rcv_badregisters
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MRT6DEBUG
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"pim6_input: invalid IP version (%d) "
+literal|"of the inner packet\n"
+argument_list|,
+operator|(
+name|eip6
+operator|->
+name|ip6_vfc
+operator|&
+name|IPV6_VERSION
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|IPPROTO_NONE
+operator|)
+return|;
+block|}
 comment|/* verify the inner packet is destined to a mcast group */
 if|if
 condition|(

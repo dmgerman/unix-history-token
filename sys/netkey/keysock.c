@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: keysock.c,v 1.22 2000/05/23 13:19:21 itojun Exp $	*/
+comment|/*	$KAME: keysock.c,v 1.24 2000/12/03 00:41:48 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -141,38 +141,11 @@ directive|include
 file|<netkey/keysock.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netkey/key_debug.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KEYDEBUG
-parameter_list|(
-name|lev
-parameter_list|,
-name|arg
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -598,6 +571,9 @@ name|int
 name|promisc
 decl_stmt|;
 block|{
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|promisc
@@ -795,10 +771,16 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
+name|error
+operator|=
 name|ENOBUFS
-return|;
+expr_stmt|;
 block|}
+else|else
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|sorwakeup
 argument_list|(
 name|rp
@@ -807,7 +789,7 @@ name|rcb_socket
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function

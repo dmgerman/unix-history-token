@@ -351,7 +351,7 @@ expr_stmt|;
 name|des_set_key
 argument_list|(
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|kk
@@ -363,13 +363,13 @@ expr_stmt|;
 name|des_ecb_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|data
 argument_list|,
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|dest

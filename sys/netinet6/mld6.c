@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: mld6.c,v 1.19 2000/05/05 11:01:03 sumikawa Exp $	*/
+comment|/*	$KAME: mld6.c,v 1.27 2001/04/04 05:17:30 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -297,19 +297,17 @@ name|u_int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|init_ip6pktopts
+argument_list|(
+operator|&
+name|ip6_opts
+argument_list|)
+expr_stmt|;
 name|ip6_opts
 operator|.
 name|ip6po_hbh
 operator|=
 name|hbh
-expr_stmt|;
-comment|/* We will specify the hoplimit by a multicast option. */
-name|ip6_opts
-operator|.
-name|ip6po_hlim
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 block|}
 end_function
@@ -585,42 +583,6 @@ name|int
 name|timer
 decl_stmt|;
 comment|/* timer value in the MLD query header */
-comment|/* source address validation */
-if|if
-condition|(
-operator|!
-name|IN6_IS_ADDR_LINKLOCAL
-argument_list|(
-operator|&
-name|ip6
-operator|->
-name|ip6_src
-argument_list|)
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"mld6_input: src %s is not link-local\n"
-argument_list|,
-name|ip6_sprintf
-argument_list|(
-operator|&
-name|ip6
-operator|->
-name|ip6_src
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 		 * spec (RFC2710) does not explicitly 		 * specify to discard the packet from a non link-local 		 * source address. But we believe it's expected to do so. 		 */
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 ifndef|#
 directive|ifndef
 name|PULLDOWN_TEST
@@ -692,6 +654,62 @@ return|return;
 block|}
 endif|#
 directive|endif
+comment|/* source address validation */
+name|ip6
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
+comment|/* in case mpullup */
+if|if
+condition|(
+operator|!
+name|IN6_IS_ADDR_LINKLOCAL
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_src
+argument_list|)
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"mld6_input: src %s is not link-local (grp=%s)\n"
+argument_list|,
+name|ip6_sprintf
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_src
+argument_list|)
+argument_list|,
+name|ip6_sprintf
+argument_list|(
+operator|&
+name|mldh
+operator|->
+name|mld6_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * spec (RFC2710) does not explicitly 		 * specify to discard the packet from a non link-local 		 * source address. But we believe it's expected to do so. 		 * XXX: do we have to allow :: as source? 		 */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * In the MLD6 specification, there are 3 states and a flag. 	 * 	 * In Non-Listener state, we simply don't have a membership record. 	 * In Delaying Listener state, our timer is running (in6m->in6m_timer) 	 * In Idle Listener state, our timer is not running (in6m->in6m_timer==0) 	 * 	 * The flag is in6m->in6m_state, it is set to MLD6_OTHERLISTENER if 	 * we have heard a report from another member, or MLD6_IREPORTEDLAST 	 * if we sent the last report. 	 */
 switch|switch
 condition|(
@@ -1121,7 +1139,6 @@ name|void
 name|mld6_fasttimeo
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|in6_multi
 modifier|*
@@ -1358,6 +1375,14 @@ operator|->
 name|m_next
 operator|=
 name|md
+expr_stmt|;
+name|mh
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
 expr_stmt|;
 name|mh
 operator|->

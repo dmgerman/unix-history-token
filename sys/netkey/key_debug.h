@@ -23,6 +23,28 @@ directive|define
 name|_NETKEY_KEY_DEBUG_H_
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|IPSEC_DEBUG
+argument_list|)
+operator|)
+end_if
+
 begin_comment
 comment|/* debug flags */
 end_comment
@@ -423,6 +445,31 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KEYDEBUG
+parameter_list|(
+name|lev
+parameter_list|,
+name|arg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!defined(_KERNEL) || (defined(_KERNEL)&& defined(IPSEC_DEBUG))*/
+end_comment
 
 begin_endif
 endif|#

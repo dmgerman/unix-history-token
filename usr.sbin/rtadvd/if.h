@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: if.h,v 1.2 2000/05/16 13:34:13 itojun Exp $	*/
+comment|/*	$KAME: if.h,v 1.6 2001/01/21 15:37:14 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -62,7 +62,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -76,7 +75,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -89,10 +87,8 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|ifindex
 operator|,
 name|int
-name|oifflags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -107,7 +103,6 @@ operator|(
 expr|struct
 name|sockaddr_dl
 operator|*
-name|sdl
 operator|)
 argument_list|)
 decl_stmt|;
@@ -122,12 +117,10 @@ operator|(
 expr|struct
 name|sockaddr_dl
 operator|*
-name|sdl
 operator|,
 expr|struct
 name|nd_opt_hdr
 operator|*
-name|ndopt
 operator|)
 argument_list|)
 decl_stmt|;
@@ -146,24 +139,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|get_rtinfo
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|buf
-operator|,
-name|size_t
-operator|*
-name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|get_next_msg
@@ -172,21 +147,16 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|,
 name|char
 operator|*
-name|lim
 operator|,
 name|int
-name|ifindex
 operator|,
 name|size_t
 operator|*
-name|lenp
 operator|,
 name|int
-name|filter
 operator|)
 argument_list|)
 decl_stmt|;
@@ -202,7 +172,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -216,7 +185,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -230,7 +198,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -244,7 +211,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -258,7 +224,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -272,7 +237,22 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|prefixlen
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|u_char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -286,7 +266,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -300,7 +279,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -314,7 +292,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -328,7 +305,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;

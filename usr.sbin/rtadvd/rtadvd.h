@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: rtadvd.h,v 1.8 2000/05/16 13:34:14 itojun Exp $	*/
+comment|/*	$KAME: rtadvd.h,v 1.16 2001/04/10 15:08:31 suz Exp $	*/
 end_comment
 
 begin_comment
@@ -21,8 +21,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALLROUTERS
+name|ALLROUTERS_LINK
 value|"ff02::2"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLROUTERS_SITE
+value|"ff05::2"
 end_define
 
 begin_define
@@ -246,10 +253,18 @@ name|u_int32_t
 name|validlifetime
 decl_stmt|;
 comment|/* AdvValidLifetime */
+name|long
+name|vltimeexpire
+decl_stmt|;
+comment|/* expiration of vltime; decrement case only */
 name|u_int32_t
 name|preflifetime
 decl_stmt|;
 comment|/* AdvPreferredLifetime */
+name|long
+name|pltimeexpire
+decl_stmt|;
+comment|/* expiration of pltime; decrement case only */
 name|u_int
 name|onlinkflg
 decl_stmt|;
@@ -274,6 +289,41 @@ name|int
 name|origin
 decl_stmt|;
 comment|/* from kernel or cofig */
+name|struct
+name|in6_addr
+name|prefix
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|rtinfo
+block|{
+name|struct
+name|rtinfo
+modifier|*
+name|prev
+decl_stmt|;
+comment|/* previous link */
+name|struct
+name|rtinfo
+modifier|*
+name|next
+decl_stmt|;
+comment|/* forward link */
+name|u_int32_t
+name|ltime
+decl_stmt|;
+comment|/* route lifetime */
+name|u_int
+name|rtpref
+decl_stmt|;
+comment|/* router preference */
+name|int
+name|prefixlen
+decl_stmt|;
 name|struct
 name|in6_addr
 name|prefix
@@ -381,6 +431,10 @@ decl_stmt|;
 comment|/* HAFlag */
 endif|#
 directive|endif
+name|int
+name|rtpref
+decl_stmt|;
+comment|/* router preference */
 name|u_int32_t
 name|linkmtu
 decl_stmt|;
@@ -406,6 +460,10 @@ name|int
 name|pfxs
 decl_stmt|;
 comment|/* number of prefixes */
+name|long
+name|clockskew
+decl_stmt|;
+comment|/* used for consisitency check of lifetimes */
 ifdef|#
 directive|ifdef
 name|MIP6
@@ -419,6 +477,15 @@ decl_stmt|;
 comment|/* Home Agent Lifetime */
 endif|#
 directive|endif
+name|struct
+name|rtinfo
+name|route
+decl_stmt|;
+comment|/* route information option (link head) */
+name|int
+name|routes
+decl_stmt|;
+comment|/* number of route information options */
 comment|/* actual RA packet data and its length */
 name|size_t
 name|ra_datalen
@@ -482,6 +549,50 @@ name|timeval
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|prefix_match
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in6_addr
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|in6_addr
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|rainfo
+modifier|*
+name|if_indextorainfo
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|in6_addr
+name|in6a_site_allrouters
 decl_stmt|;
 end_decl_stmt
 

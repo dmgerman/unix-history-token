@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: pfkey_dump.c,v 1.19 2000/06/10 06:47:11 sakane Exp $	*/
+comment|/*	$KAME: pfkey_dump.c,v 1.27 2001/03/12 09:03:38 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -119,6 +119,129 @@ directive|include
 file|"libpfkey.h"
 end_include
 
+begin_comment
+comment|/* cope with old kame headers - ugly */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SADB_X_AALG_MD5
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_MD5
+value|SADB_AALG_MD5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SADB_X_AALG_SHA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_SHA
+value|SADB_AALG_SHA
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SADB_X_AALG_NULL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_NULL
+value|SADB_AALG_NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SADB_X_EALG_BLOWFISHCBC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_BLOWFISHCBC
+value|SADB_EALG_BLOWFISHCBC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SADB_X_EALG_CAST128CBC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_CAST128CBC
+value|SADB_EALG_CAST128CBC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SADB_X_EALG_RC5CBC
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SADB_EALG_RC5CBC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_RC5CBC
+value|SADB_EALG_RC5CBC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -130,6 +253,19 @@ name|num
 parameter_list|)
 define|\
 value|do { \ 	if (sizeof((str)[0]) == 0 \ 	 || num>= sizeof(str)/sizeof((str)[0])) \ 		printf("%d ", (num)); \ 	else if (strlen((str)[(num)]) == 0) \ 		printf("%d ", (num)); \ 	else \ 		printf("%s ", (str)[(num)]); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETMSGV2S
+parameter_list|(
+name|v2s
+parameter_list|,
+name|num
+parameter_list|)
+define|\
+value|do { \ 	struct val2str *p;  \ 	for (p = (v2s); p&& p->str; p++) { \ 		if (p->val == (num)) \ 			break; \ 	} \ 	if (p&& p->str) \ 		printf("%s ", p->str); \ 	else \ 		printf("%d ", (num)); \ } while (0)
 end_define
 
 begin_decl_stmt
@@ -198,6 +334,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|val2str
+block|{
+name|int
+name|val
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Must to be re-written about following strings.  */
 end_comment
@@ -206,7 +358,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|_str_satype
+name|str_satype
 index|[]
 init|=
 block|{
@@ -237,7 +389,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|_str_mode
+name|str_mode
 index|[]
 init|=
 block|{
@@ -254,7 +406,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|_str_upper
+name|str_upper
 index|[]
 init|=
 block|{
@@ -394,7 +546,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|_str_state
+name|str_state
 index|[]
 init|=
 block|{
@@ -411,67 +563,216 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|_str_alg_auth
+name|struct
+name|val2str
+name|str_alg_auth
 index|[]
 init|=
 block|{
+block|{
+name|SADB_AALG_NONE
+block|,
 literal|"none"
+block|, }
+block|,
+block|{
+name|SADB_AALG_MD5HMAC
 block|,
 literal|"hmac-md5"
+block|, }
+block|,
+block|{
+name|SADB_AALG_SHA1HMAC
 block|,
 literal|"hmac-sha1"
+block|, }
+block|,
+block|{
+name|SADB_X_AALG_MD5
 block|,
 literal|"md5"
+block|, }
+block|,
+block|{
+name|SADB_X_AALG_SHA
 block|,
 literal|"sha"
+block|, }
+block|,
+block|{
+name|SADB_X_AALG_NULL
 block|,
 literal|"null"
+block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_SHA2_256
+block|{
+name|SADB_X_AALG_SHA2_256
+block|,
+literal|"hmac-sha2-256"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_SHA2_384
+block|{
+name|SADB_X_AALG_SHA2_384
+block|,
+literal|"hmac-sha2-384"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_SHA2_512
+block|{
+name|SADB_X_AALG_SHA2_512
+block|,
+literal|"hmac-sha2-512"
+block|, }
+block|,
+endif|#
+directive|endif
+block|{
+operator|-
+literal|1
+block|,
+name|NULL
+block|, }
 block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|_str_alg_enc
+name|struct
+name|val2str
+name|str_alg_enc
 index|[]
 init|=
 block|{
+block|{
+name|SADB_EALG_NONE
+block|,
 literal|"none"
+block|, }
+block|,
+block|{
+name|SADB_EALG_DESCBC
 block|,
 literal|"des-cbc"
+block|, }
+block|,
+block|{
+name|SADB_EALG_3DESCBC
 block|,
 literal|"3des-cbc"
+block|, }
+block|,
+block|{
+name|SADB_EALG_NULL
 block|,
 literal|"null"
+block|, }
 block|,
-literal|"blowfish-cbc"
-block|,
-literal|"cast128-cbc"
+ifdef|#
+directive|ifdef
+name|SADB_X_EALG_RC5CBC
+block|{
+name|SADB_X_EALG_RC5CBC
 block|,
 literal|"rc5-cbc"
 block|, }
+block|,
+endif|#
+directive|endif
+block|{
+name|SADB_X_EALG_CAST128CBC
+block|,
+literal|"cast128-cbc"
+block|, }
+block|,
+block|{
+name|SADB_X_EALG_BLOWFISHCBC
+block|,
+literal|"blowfish-cbc"
+block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|SADB_X_EALG_RIJNDAELCBC
+block|{
+name|SADB_X_EALG_RIJNDAELCBC
+block|,
+literal|"rijndael-cbc"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_EALG_TWOFISHCBC
+block|{
+name|SADB_X_EALG_TWOFISHCBC
+block|,
+literal|"twofish-cbc"
+block|, }
+block|,
+endif|#
+directive|endif
+block|{
+operator|-
+literal|1
+block|,
+name|NULL
+block|, }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|_str_alg_comp
+name|struct
+name|val2str
+name|str_alg_comp
 index|[]
 init|=
 block|{
+block|{
+name|SADB_X_CALG_NONE
+block|,
 literal|"none"
+block|, }
+block|,
+block|{
+name|SADB_X_CALG_OUI
 block|,
 literal|"oui"
+block|, }
+block|,
+block|{
+name|SADB_X_CALG_DEFLATE
 block|,
 literal|"deflate"
+block|, }
+block|,
+block|{
+name|SADB_X_CALG_LZS
 block|,
 literal|"lzs"
+block|, }
+block|,
+block|{
+operator|-
+literal|1
+block|,
+name|NULL
+block|, }
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -852,7 +1153,7 @@ argument_list|)
 expr_stmt|;
 name|GETMSGSTR
 argument_list|(
-name|_str_satype
+name|str_satype
 argument_list|,
 name|m
 operator|->
@@ -866,7 +1167,7 @@ argument_list|)
 expr_stmt|;
 name|GETMSGSTR
 argument_list|(
-name|_str_mode
+name|str_mode
 argument_list|,
 name|m_sa2
 operator|->
@@ -927,9 +1228,9 @@ argument_list|(
 literal|"\tC: "
 argument_list|)
 expr_stmt|;
-name|GETMSGSTR
+name|GETMSGV2S
 argument_list|(
-name|_str_alg_comp
+name|str_alg_comp
 argument_list|,
 name|m_sa
 operator|->
@@ -959,9 +1260,9 @@ argument_list|(
 literal|"\tE: "
 argument_list|)
 expr_stmt|;
-name|GETMSGSTR
+name|GETMSGV2S
 argument_list|(
-name|_str_alg_enc
+name|str_alg_enc
 argument_list|,
 name|m_sa
 operator|->
@@ -1008,9 +1309,9 @@ argument_list|(
 literal|"\tA: "
 argument_list|)
 expr_stmt|;
-name|GETMSGSTR
+name|GETMSGV2S
 argument_list|(
-name|_str_alg_auth
+name|str_alg_auth
 argument_list|,
 name|m_sa
 operator|->
@@ -1065,7 +1366,7 @@ argument_list|)
 expr_stmt|;
 name|GETMSGSTR
 argument_list|(
-name|_str_state
+name|str_state
 argument_list|,
 name|m_sa
 operator|->
@@ -1381,6 +1682,13 @@ modifier|*
 name|m_xpl
 decl_stmt|;
 name|struct
+name|sadb_lifetime
+modifier|*
+name|m_lft
+init|=
+name|NULL
+decl_stmt|;
+name|struct
 name|sockaddr
 modifier|*
 name|sa
@@ -1461,6 +1769,18 @@ operator|)
 name|mhp
 index|[
 name|SADB_X_EXT_POLICY
+index|]
+expr_stmt|;
+name|m_lft
+operator|=
+operator|(
+expr|struct
+name|sadb_lifetime
+operator|*
+operator|)
+name|mhp
+index|[
+name|SADB_EXT_LIFETIME_HARD
 index|]
 expr_stmt|;
 comment|/* source address */
@@ -1722,7 +2042,7 @@ expr_stmt|;
 else|else
 name|GETMSGSTR
 argument_list|(
-name|_str_upper
+name|str_upper
 argument_list|,
 name|m_saddr
 operator|->
@@ -1773,6 +2093,32 @@ expr_stmt|;
 name|free
 argument_list|(
 name|d_xpl
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* lifetime */
+if|if
+condition|(
+name|m_lft
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\tlifetime:%lu validtime:%lu\n"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|m_lft
+operator|->
+name|sadb_lifetime_addtime
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|m_lft
+operator|->
+name|sadb_lifetime_usetime
 argument_list|)
 expr_stmt|;
 block|}

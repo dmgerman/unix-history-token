@@ -198,6 +198,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netinet6/ipcomp.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -467,6 +473,8 @@ block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
+operator||
+name|PR_LASTHDR
 block|,
 name|icmp_input
 block|,
@@ -501,6 +509,8 @@ block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
+operator||
+name|PR_LASTHDR
 block|,
 name|igmp_input
 block|,
@@ -535,6 +545,8 @@ block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
+operator||
+name|PR_LASTHDR
 block|,
 name|rsvp_input
 block|,
@@ -634,6 +646,40 @@ block|}
 block|,
 endif|#
 directive|endif
+block|{
+name|SOCK_RAW
+block|,
+operator|&
+name|inetdomain
+block|,
+name|IPPROTO_IPCOMP
+block|,
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+block|,
+name|ipcomp4_input
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|&
+name|nousrreqs
+block|}
+block|,
 endif|#
 directive|endif
 comment|/* IPSEC */
@@ -648,6 +694,8 @@ block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
+operator||
+name|PR_LASTHDR
 block|,
 name|encap4_input
 block|,
@@ -668,7 +716,7 @@ block|,
 literal|0
 block|,
 operator|&
-name|nousrreqs
+name|rip_usrreqs
 block|}
 block|,
 ifdef|#
@@ -685,6 +733,8 @@ block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
+operator||
+name|PR_LASTHDR
 block|,
 name|encap4_input
 block|,
@@ -696,7 +746,7 @@ name|rip_ctloutput
 block|,
 literal|0
 block|,
-literal|0
+name|encap_init
 block|,
 literal|0
 block|,
@@ -705,7 +755,7 @@ block|,
 literal|0
 block|,
 operator|&
-name|nousrreqs
+name|rip_usrreqs
 block|}
 block|,
 endif|#
@@ -763,6 +813,8 @@ block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
+operator||
+name|PR_LASTHDR
 block|,
 name|ipxip_input
 block|,
@@ -802,6 +854,8 @@ block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
+operator||
+name|PR_LASTHDR
 block|,
 name|idpip_input
 block|,

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: if_gif.h,v 1.13 2000/06/17 20:34:24 itojun Exp $	*/
+comment|/*	$KAME: if_gif.h,v 1.17 2000/09/11 11:36:41 sumikawa Exp $	*/
 end_comment
 
 begin_comment
@@ -30,26 +30,6 @@ end_define
 begin_if
 if|#
 directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
 name|defined
 argument_list|(
 name|_KERNEL
@@ -67,11 +47,6 @@ include|#
 directive|include
 file|"opt_inet.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

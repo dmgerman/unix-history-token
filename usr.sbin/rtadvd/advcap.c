@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: advcap.c,v 1.3 2000/05/16 13:34:13 itojun Exp $	*/
+comment|/*	$KAME: advcap.c,v 1.5 2001/02/01 09:12:08 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -299,7 +299,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
+name|long
 name|tgetnum
 name|__P
 argument_list|(
@@ -1193,7 +1194,8 @@ comment|/*  * Return the (numeric) option id.  * Numeric options look like  *	li
 end_comment
 
 begin_function
-name|int
+name|long
+name|long
 name|tgetnum
 parameter_list|(
 name|id
@@ -1205,7 +1207,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|long
-name|int
+name|long
 name|i
 decl_stmt|;
 specifier|register

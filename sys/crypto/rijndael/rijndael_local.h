@@ -53,12 +53,5 @@ name|MAXROUNDS
 value|RIJNDAEL_MAXROUNDS
 end_define
 
-begin_define
-define|#
-directive|define
-name|BINARY_KEY_MATERIAL
-value|1
-end_define
-
 end_unit
 

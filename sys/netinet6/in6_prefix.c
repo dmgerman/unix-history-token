@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_prefix.c,v 1.30 2000/06/12 14:53:17 jinmei Exp $	*/
+comment|/*	$KAME: in6_prefix.c,v 1.47 2001/03/25 08:41:39 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -135,6 +135,13 @@ begin_decl_stmt
 name|struct
 name|rr_prhead
 name|rr_prefix
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|callout
+name|in6_rr_timer_ch
 decl_stmt|;
 end_decl_stmt
 
@@ -1704,14 +1711,15 @@ name|ra_addr
 operator|=
 name|ia
 expr_stmt|;
+name|IFAREF
+argument_list|(
+operator|&
 name|rap
 operator|->
 name|ra_addr
 operator|->
 name|ia_ifa
-operator|.
-name|ifa_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -2046,6 +2054,7 @@ literal|64
 else|:
 name|plen
 decl_stmt|;
+comment|/* XXX hardcoded 64 is bad */
 comment|/* allocate a prefix for ia, with default properties */
 comment|/* init rp */
 name|bzero
@@ -2320,14 +2329,15 @@ name|ra_addr
 operator|=
 name|ia
 expr_stmt|;
+name|IFAREF
+argument_list|(
+operator|&
 name|rap
 operator|->
 name|ra_addr
 operator|->
 name|ia_ifa
-operator|.
-name|ifa_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -2346,7 +2356,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"ip6_prefix.c: addr %s/%d matched prefix"
-literal|"has already another ia %p(%s) on its ifid list\n"
+literal|" already has another ia %p(%s) on its ifid list\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -2855,6 +2865,27 @@ name|rp_plen
 argument_list|)
 expr_stmt|;
 comment|/* don't care ifra_flags for now */
+comment|/* 	 * XXX: if we did this with finite lifetime values, the lifetimes would 	 *      decrese in time and never incremented. 	 *      we should need more clarifications on the prefix mechanism... 	 */
+name|ifra
+operator|.
+name|ifra_lifetime
+operator|.
+name|ia6t_vltime
+operator|=
+name|rpp
+operator|->
+name|rp_vltime
+expr_stmt|;
+name|ifra
+operator|.
+name|ifra_lifetime
+operator|.
+name|ia6t_pltime
+operator|=
+name|rpp
+operator|->
+name|rp_pltime
+expr_stmt|;
 name|ia6
 operator|=
 name|in6ifa_ifpwithaddr
@@ -2910,14 +2941,15 @@ name|ra_addr
 operator|=
 name|ia6
 expr_stmt|;
+name|IFAREF
+argument_list|(
+operator|&
 name|rap
 operator|->
 name|ra_addr
 operator|->
 name|ia_ifa
-operator|.
-name|ifa_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 name|ia6
 operator|->
@@ -2964,14 +2996,15 @@ name|ra_addr
 operator|=
 name|ia6
 expr_stmt|;
+name|IFAREF
+argument_list|(
+operator|&
 name|rap
 operator|->
 name|ra_addr
 operator|->
 name|ia_ifa
-operator|.
-name|ifa_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -2980,8 +3013,8 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"in6_prefix.c: add_each_addr: addition of an addr"
-literal|"%s/%d failed because there is already another addr %s/%d\n"
+literal|"in6_prefix.c: add_each_addr: addition of an addr %s/%d "
+literal|"failed because there is already another addr %s/%d\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -3013,6 +3046,8 @@ operator|->
 name|ia_prefixmask
 operator|.
 name|sin6_addr
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3062,6 +3097,7 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_ERR
@@ -3087,6 +3123,7 @@ name|error
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * link beween this addr and the prefix will be done 	 * in in6_prefix_add_ifid 	 */
 block|}
 end_function
@@ -4692,7 +4729,14 @@ name|rap
 operator|==
 name|NULL
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|LIST_REMOVE
 argument_list|(
 name|rap
@@ -4739,10 +4783,6 @@ operator|->
 name|ra_addr
 operator|->
 name|ia_ifa
-argument_list|,
-name|rpp
-operator|->
-name|rp_ifp
 argument_list|)
 expr_stmt|;
 name|IFAFREE
@@ -5746,18 +5786,18 @@ name|rr_prefix
 modifier|*
 name|rpp
 decl_stmt|;
-name|timeout
+name|callout_reset
 argument_list|(
-name|in6_rr_timer
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
+operator|&
+name|in6_rr_timer_ch
 argument_list|,
 name|ip6_rr_prune
 operator|*
 name|hz
+argument_list|,
+name|in6_rr_timer
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|s

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: bf_locl.h,v 1.3 2000/03/27 04:36:26 sumikawa Exp $	*/
+comment|/*	$KAME: bf_locl.h,v 1.5 2000/08/31 06:03:48 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l =((unsigned long)(*((c)++)))    , \ 			 l|=((unsigned long)(*((c)++)))<< 8L, \ 			 l|=((unsigned long)(*((c)++)))<<16L, \ 			 l|=((unsigned long)(*((c)++)))<<24L)
+value|(l =((BF_LONG)(*((c)++)))    , \ 			 l|=((BF_LONG)(*((c)++)))<< 8L, \ 			 l|=((BF_LONG)(*((c)++)))<<16L, \ 			 l|=((BF_LONG)(*((c)++)))<<24L)
 end_define
 
 begin_comment
@@ -60,7 +60,7 @@ name|l2
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 			c+=n; \ 			l1=l2=0; \ 			switch (n) { \ 			case 8: l2 =((unsigned long)(*(--(c))))<<24L; \ 			case 7: l2|=((unsigned long)(*(--(c))))<<16L; \ 			case 6: l2|=((unsigned long)(*(--(c))))<< 8L; \ 			case 5: l2|=((unsigned long)(*(--(c))));     \ 			case 4: l1 =((unsigned long)(*(--(c))))<<24L; \ 			case 3: l1|=((unsigned long)(*(--(c))))<<16L; \ 			case 2: l1|=((unsigned long)(*(--(c))))<< 8L; \ 			case 1: l1|=((unsigned long)(*(--(c))));     \ 				} \ 			}
+value|{ \ 			c+=n; \ 			l1=l2=0; \ 			switch (n) { \ 			case 8: l2 =((BF_LONG)(*(--(c))))<<24L; \ 			case 7: l2|=((BF_LONG)(*(--(c))))<<16L; \ 			case 6: l2|=((BF_LONG)(*(--(c))))<< 8L; \ 			case 5: l2|=((BF_LONG)(*(--(c))));     \ 			case 4: l1 =((BF_LONG)(*(--(c))))<<24L; \ 			case 3: l1|=((BF_LONG)(*(--(c))))<<16L; \ 			case 2: l1|=((BF_LONG)(*(--(c))))<< 8L; \ 			case 1: l1|=((BF_LONG)(*(--(c))));     \ 				} \ 			}
 end_define
 
 begin_undef
@@ -124,7 +124,7 @@ name|l2
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 			c+=n; \ 			l1=l2=0; \ 			switch (n) { \ 			case 8: l2 =((unsigned long)(*(--(c))))    ; \ 			case 7: l2|=((unsigned long)(*(--(c))))<< 8; \ 			case 6: l2|=((unsigned long)(*(--(c))))<<16; \ 			case 5: l2|=((unsigned long)(*(--(c))))<<24; \ 			case 4: l1 =((unsigned long)(*(--(c))))    ; \ 			case 3: l1|=((unsigned long)(*(--(c))))<< 8; \ 			case 2: l1|=((unsigned long)(*(--(c))))<<16; \ 			case 1: l1|=((unsigned long)(*(--(c))))<<24; \ 				} \ 			}
+value|{ \ 			c+=n; \ 			l1=l2=0; \ 			switch (n) { \ 			case 8: l2 =((BF_LONG)(*(--(c))))    ; \ 			case 7: l2|=((BF_LONG)(*(--(c))))<< 8; \ 			case 6: l2|=((BF_LONG)(*(--(c))))<<16; \ 			case 5: l2|=((BF_LONG)(*(--(c))))<<24; \ 			case 4: l1 =((BF_LONG)(*(--(c))))    ; \ 			case 3: l1|=((BF_LONG)(*(--(c))))<< 8; \ 			case 2: l1|=((BF_LONG)(*(--(c))))<<16; \ 			case 1: l1|=((BF_LONG)(*(--(c))))<<24; \ 				} \ 			}
 end_define
 
 begin_comment
@@ -162,7 +162,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l =((unsigned long)(*((c)++)))<<24L, \                          l|=((unsigned long)(*((c)++)))<<16L, \                          l|=((unsigned long)(*((c)++)))<< 8L, \                          l|=((unsigned long)(*((c)++))))
+value|(l =((BF_LONG)(*((c)++)))<<24L, \                          l|=((BF_LONG)(*((c)++)))<<16L, \                          l|=((BF_LONG)(*((c)++)))<< 8L, \                          l|=((BF_LONG)(*((c)++))))
 end_define
 
 begin_undef
@@ -191,32 +191,71 @@ begin_comment
 comment|/* use BF_PTR2 for intel boxes,  * BF_PTR for sparc and MIPS/SGI  * use nothing for Alpha and HP.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BF_PTR
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BF_PTR2
-argument_list|)
-end_if
-
 begin_undef
 undef|#
 directive|undef
 name|BF_PTR
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|BF_PTR2
+end_undef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BF_PTR2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BF_PTR
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*NetBSD*/
+end_comment
 
 begin_define
 define|#

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah.h,v 1.10 2000/07/02 13:23:33 itojun Exp $	*/
+comment|/*	$KAME: ah.h,v 1.13 2000/10/18 21:28:00 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -101,12 +101,33 @@ name|caddr_t
 operator|,
 name|size_t
 operator|,
+specifier|const
 expr|struct
 name|ah_algorithm
 operator|*
 operator|,
 expr|struct
 name|secasvar
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ah6_ctlinput
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|sockaddr
+operator|*
+operator|,
+name|void
 operator|*
 operator|)
 argument_list|)

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: cast128.h,v 1.4 2000/06/14 10:41:16 itojun Exp $	*/
+comment|/*	$KAME: cast128.h,v 1.6 2000/09/18 20:59:20 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
 end_include
 
 begin_define
@@ -153,35 +147,6 @@ operator|*
 operator|,
 name|u_int32_t
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cast128_cbc_process
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|,
-name|size_t
-operator|,
-name|size_t
-operator|,
-name|u_int32_t
-operator|*
-operator|,
-name|u_int8_t
-operator|*
-operator|,
-name|size_t
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

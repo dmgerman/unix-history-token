@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME$	*/
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: rijndael-api-fst.h,v 1.6 2001/05/27 00:23:23 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -268,8 +272,10 @@ name|int
 name|blockLen
 decl_stmt|;
 comment|/* block length */
+union|union
+block|{
 name|u_int8_t
-name|keySched
+name|xkS8
 index|[
 name|RIJNDAEL_MAXROUNDS
 operator|+
@@ -283,6 +289,25 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* key schedule		*/
+name|u_int32_t
+name|xkS32
+index|[
+name|RIJNDAEL_MAXROUNDS
+operator|+
+literal|1
+index|]
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* key schedule		*/
+block|}
+name|xKeySched
+union|;
+define|#
+directive|define
+name|keySched
+value|xKeySched.xkS8
 block|}
 name|keyInstance
 typedef|;

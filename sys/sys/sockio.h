@@ -534,6 +534,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSLIFPHYADDR
+value|_IOW('i', 74, struct if_laddrreq)
+end_define
+
+begin_comment
+comment|/* set gif addrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGLIFPHYADDR
+value|_IOWR('i', 75, struct if_laddrreq)
+end_define
+
+begin_comment
+comment|/* get gif addrs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSIFGENERIC
 value|_IOW('i', 57, struct ifreq)
 end_define

@@ -15,6 +15,12 @@ directive|define
 name|_NETINET_IP_VAR_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_comment
 comment|/*  * Overlay for ip header used by other protocols (tcp, udp).  */
 end_comment
@@ -153,6 +159,11 @@ modifier|*
 name|imo_multicast_ifp
 decl_stmt|;
 comment|/* ifp for outgoing multicasts */
+name|struct
+name|in_addr
+name|imo_multicast_addr
+decl_stmt|;
+comment|/* ifindex/addr on MULTICAST_IF */
 name|u_char
 name|imo_multicast_ttl
 decl_stmt|;
@@ -297,6 +308,10 @@ name|u_long
 name|ips_nogif
 decl_stmt|;
 comment|/* no match gif found */
+name|u_long
+name|ips_badaddr
+decl_stmt|;
+comment|/* invalid address on header */
 block|}
 struct|;
 end_struct

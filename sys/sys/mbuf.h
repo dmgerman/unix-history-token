@@ -1037,6 +1037,58 @@ name|u_long
 name|m_mhlen
 decl_stmt|;
 comment|/* length of data in a header mbuf */
+name|u_quad_t
+name|m_exthdrget
+decl_stmt|;
+comment|/* # of calls to IP6_EXTHDR_GET */
+name|u_quad_t
+name|m_exthdrget0
+decl_stmt|;
+comment|/* # of calls to IP6_EXTHDR_GET0 */
+name|u_quad_t
+name|m_pulldowns
+decl_stmt|;
+comment|/* # of calls to m_pulldown */
+name|u_quad_t
+name|m_pulldown_copy
+decl_stmt|;
+comment|/* # of mbuf copies in m_pulldown */
+name|u_quad_t
+name|m_pulldown_alloc
+decl_stmt|;
+comment|/* # of mbuf allocs in m_pulldown */
+name|u_quad_t
+name|m_pullups
+decl_stmt|;
+comment|/* # of calls to m_pullup */
+name|u_quad_t
+name|m_pullup_copy
+decl_stmt|;
+comment|/* # of possible m_pullup copies */
+name|u_quad_t
+name|m_pullup_alloc
+decl_stmt|;
+comment|/* # of possible m_pullup mallocs */
+name|u_quad_t
+name|m_pullup_fail
+decl_stmt|;
+comment|/* # of possible m_pullup failures */
+name|u_quad_t
+name|m_pullup2
+decl_stmt|;
+comment|/* # of calls to m_pullup2 */
+name|u_quad_t
+name|m_pullup2_copy
+decl_stmt|;
+comment|/* # of possible m_pullup2 copies */
+name|u_quad_t
+name|m_pullup2_alloc
+decl_stmt|;
+comment|/* # of possible m_pullup2 mallocs */
+name|u_quad_t
+name|m_pullup2_fail
+decl_stmt|;
+comment|/* # of possible m_pullup2 failures */
 block|}
 struct|;
 end_struct
@@ -1401,7 +1453,7 @@ value|do {						\ 	struct mbuf *_mmm = (m);					\ 									\ 	MEXT_REM_REF(_mmm)
 end_define
 
 begin_comment
-comment|/*  * MFREE(struct mbuf *m, struct mbuf *n)  * Free a single mbuf and associated external storage.  * Place the successor, if any, in n.  */
+comment|/*  * MFREE(struct mbuf *m, struct mbuf *n)  * Free a single mbuf and associated external storage.  * Place the successor, if any, in n.  *  * we do need to check non-first mbuf for m_aux, since some of existing  * code does not call M_PREPEND properly.  * (example: call to bpf_mtap from drivers)  */
 end_comment
 
 begin_define
@@ -1413,7 +1465,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE(_mm);						\ 	mtx_lock(&mbuf_mtx);						\ 	mbtypes[_mm->m_type]--;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree.m_head;					\ 	mmbfree.m_head = _mm;						\ 	MBWAKEUP(m_mballoc_wid,&mmbfree.m_starved);			\ 	mtx_unlock(&mbuf_mtx); 						\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE(_mm);						\ 	mtx_lock(&mbuf_mtx);						\ 	mbtypes[_mm->m_type]--;						\ 	if ((_mm->m_flags& M_PKTHDR) != 0&& _mm->m_pkthdr.aux) {	\ 		m_freem(_mm->m_pkthdr.aux);				\ 		_mm->m_pkthdr.aux = NULL;				\ 	}								\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree.m_head;					\ 	mmbfree.m_head = _mm;						\ 	MBWAKEUP(m_mballoc_wid,&mmbfree.m_starved);			\ 	mtx_unlock(&mbuf_mtx); 						\ } while (0)
 end_define
 
 begin_comment
@@ -1586,6 +1638,10 @@ name|af
 decl_stmt|;
 name|int
 name|type
+decl_stmt|;
+name|void
+modifier|*
+name|p
 decl_stmt|;
 block|}
 struct|;
@@ -1786,6 +1842,52 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_aux_add2
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_aux_find2
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|struct

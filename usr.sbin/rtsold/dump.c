@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: dump.c,v 1.7 2000/08/13 06:14:59 itojun Exp $	*/
+comment|/*	$KAME: dump.c,v 1.8 2000/10/05 22:20:39 itojun Exp $	*/
 end_comment
 
 begin_comment

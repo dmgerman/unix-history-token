@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: scope6.c,v 1.9 2000/05/18 15:03:26 jinmei Exp $	*/
+comment|/*	$KAME: scope6.c,v 1.10 2000/07/24 13:29:31 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include

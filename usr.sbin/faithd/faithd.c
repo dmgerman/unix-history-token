@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: faithd.c,v 1.20 2000/07/01 11:40:45 itojun Exp $	*/
+comment|/*	$KAME: faithd.c,v 1.39 2001/04/25 11:20:42 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -64,6 +64,23 @@ include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -248,6 +265,12 @@ directive|include
 file|"faithd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"prefix.h"
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -376,6 +399,16 @@ name|int
 name|inetd
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|configfile
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +590,36 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|exit_stderr
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__format__
+argument_list|(
+name|__printf__
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
@@ -775,6 +838,25 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+name|config_load
+argument_list|(
+name|configfile
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|configfile
+condition|)
+block|{
+name|exit_failure
+argument_list|(
+literal|"could not load config file"
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+if|if
+condition|(
 name|strrchr
 argument_list|(
 name|argv
@@ -848,7 +930,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|exit_error
+name|exit_failure
 argument_list|(
 literal|"socket(PF_ROUTE): %s"
 argument_list|,
@@ -886,11 +968,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|exit_error
+block|{
+name|exit_failure
 argument_list|(
-literal|"getsockname"
+literal|"getsockname: %s"
+argument_list|,
+name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|fromlen
 operator|=
 sizeof|sizeof
@@ -918,11 +1005,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|exit_error
+block|{
+name|exit_failure
 argument_list|(
-literal|"getpeername"
+literal|"getpeername: %s"
+argument_list|,
+name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 if|if
 condition|(
 name|getnameinfo
@@ -1049,11 +1141,14 @@ name|argc
 operator|>=
 name|MAXARGV
 condition|)
+block|{
 name|exit_failure
 argument_list|(
 literal|"too many arguments"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|serverarg
 index|[
 literal|0
@@ -1118,13 +1213,16 @@ name|error
 operator|<
 literal|0
 condition|)
-name|exit_error
+block|{
+name|exit_failure
 argument_list|(
 literal|"setsockopt(SO_OOBINLINE): %s"
 argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|play_child
 argument_list|(
 name|STDIN_FILENO
@@ -1213,7 +1311,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dp46"
+literal|"df:p46"
 argument_list|)
 operator|)
 operator|!=
@@ -1231,6 +1329,14 @@ literal|'d'
 case|:
 name|dflag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|configfile
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1265,7 +1371,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-break|break;
+comment|/*NOTREACHED*/
 block|}
 block|}
 name|argc
@@ -1276,6 +1382,25 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|config_load
+argument_list|(
+name|configfile
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|configfile
+condition|)
+block|{
+name|exit_failure
+argument_list|(
+literal|"could not load config file"
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 ifdef|#
 directive|ifdef
 name|FAITH_NS
@@ -1420,29 +1545,10 @@ block|{
 case|case
 literal|0
 case|:
-name|serverpath
-operator|=
-name|DEFAULT_PATH
+name|usage
+argument_list|()
 expr_stmt|;
-name|serverarg
-index|[
-literal|0
-index|]
-operator|=
-name|DEFAULT_NAME
-expr_stmt|;
-name|serverarg
-index|[
-literal|1
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-name|service
-operator|=
-name|DEFAULT_PORT_NAME
-expr_stmt|;
-break|break;
+comment|/*NOTREACHED*/
 default|default:
 name|serverargc
 operator|=
@@ -1456,9 +1562,9 @@ name|serverargc
 operator|>=
 name|MAXARGV
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
-literal|"too many augments"
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 name|serverpath
@@ -1614,7 +1720,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"getaddrinfo: %s"
 argument_list|,
@@ -1648,7 +1754,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"socket: %s"
 argument_list|,
@@ -1693,7 +1799,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"setsockopt(IPV6_FAITH): %s"
 argument_list|,
@@ -1744,7 +1850,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"setsockopt(IP_FAITH): %s"
 argument_list|,
@@ -1783,7 +1889,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"setsockopt(SO_REUSEADDR): %s"
 argument_list|,
@@ -1816,7 +1922,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"setsockopt(SO_OOBINLINE): %s"
 argument_list|,
@@ -1850,7 +1956,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"bind: %s"
 argument_list|,
@@ -1873,7 +1979,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"listen: %s"
 argument_list|,
@@ -1901,7 +2007,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"socket(PF_ROUTE): %s"
 argument_list|,
@@ -1969,7 +2075,7 @@ argument_list|(
 name|s_wld
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 name|exit
 argument_list|(
 literal|1
@@ -2175,6 +2281,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|exit_failure
 argument_list|(
 literal|"socket: %s"
@@ -2182,6 +2289,8 @@ argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|child_pid
 operator|=
 name|fork
@@ -2232,6 +2341,7 @@ argument_list|(
 literal|"should never reach here"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 else|else
 block|{
@@ -2333,6 +2443,12 @@ name|sockaddr
 modifier|*
 name|sa4
 decl_stmt|;
+specifier|const
+name|struct
+name|config
+modifier|*
+name|conf
+decl_stmt|;
 name|tv
 operator|.
 name|tv_sec
@@ -2401,6 +2517,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|exit_failure
 argument_list|(
 literal|"getsockname: %s"
@@ -2408,6 +2525,8 @@ argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|getnameinfo
 argument_list|(
 operator|(
@@ -2593,11 +2712,12 @@ argument_list|(
 name|s_src
 argument_list|)
 expr_stmt|;
-name|exit_error
+name|exit_failure
 argument_list|(
 literal|"map6to4 failed"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 name|syslog
 argument_list|(
@@ -2641,11 +2761,12 @@ argument_list|(
 name|s_src
 argument_list|)
 expr_stmt|;
-name|exit_error
+name|exit_failure
 argument_list|(
 literal|"map4to6 failed"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 name|syslog
 argument_list|(
@@ -2663,7 +2784,7 @@ argument_list|(
 name|s_src
 argument_list|)
 expr_stmt|;
-name|exit_error
+name|exit_failure
 argument_list|(
 literal|"family not supported"
 argument_list|)
@@ -2702,6 +2823,65 @@ argument_list|,
 name|NI_NUMERICHOST
 argument_list|)
 expr_stmt|;
+name|conf
+operator|=
+name|config_match
+argument_list|(
+name|srcaddr
+argument_list|,
+name|sa4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|conf
+operator|||
+operator|!
+name|conf
+operator|->
+name|permit
+condition|)
+block|{
+name|close
+argument_list|(
+name|s_src
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|conf
+condition|)
+block|{
+name|exit_failure
+argument_list|(
+literal|"translation to %s not permitted for %s"
+argument_list|,
+name|dst4
+argument_list|,
+name|prefix_string
+argument_list|(
+operator|&
+name|conf
+operator|->
+name|match
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+else|else
+block|{
+name|exit_failure
+argument_list|(
+literal|"translation to %s not permitted"
+argument_list|,
+name|dst4
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+block|}
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -2826,10 +3006,10 @@ block|}
 if|if
 condition|(
 name|s_dst
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
+block|{
 name|exit_failure
 argument_list|(
 literal|"socket: %s"
@@ -2837,6 +3017,59 @@ argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+if|if
+condition|(
+name|conf
+operator|->
+name|src
+operator|.
+name|a
+operator|.
+name|ss_family
+condition|)
+block|{
+if|if
+condition|(
+name|bind
+argument_list|(
+name|s_dst
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|conf
+operator|->
+name|src
+operator|.
+name|a
+argument_list|,
+name|conf
+operator|->
+name|src
+operator|.
+name|a
+operator|.
+name|ss_len
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|exit_failure
+argument_list|(
+literal|"bind: %s"
+argument_list|,
+name|ERRSTR
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+block|}
 name|error
 operator|=
 name|setsockopt
@@ -2859,17 +3092,19 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
-name|exit_error
+block|{
+name|exit_failure
 argument_list|(
 literal|"setsockopt(SO_OOBINLINE): %s"
 argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|error
 operator|=
 name|setsockopt
@@ -2892,17 +3127,19 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
-name|exit_error
+block|{
+name|exit_failure
 argument_list|(
 literal|"setsockopt(SO_SNDTIMEO): %s"
 argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|error
 operator|=
 name|setsockopt
@@ -2925,17 +3162,19 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
-name|exit_error
+block|{
+name|exit_failure
 argument_list|(
 literal|"setsockopt(SO_SNDTIMEO): %s"
 argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|error
 operator|=
 name|connect
@@ -2952,10 +3191,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
+block|{
 name|exit_failure
 argument_list|(
 literal|"connect: %s"
@@ -2963,6 +3202,8 @@ argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 switch|switch
 condition|(
 name|hport
@@ -2982,6 +3223,13 @@ break|break;
 case|case
 name|RSH_PORT
 case|:
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"WARINNG: it is insecure to relay rsh port"
+argument_list|)
+expr_stmt|;
 name|rsh_relay
 argument_list|(
 name|s_src
@@ -2990,6 +3238,17 @@ name|s_dst
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|RLOGIN_PORT
+case|:
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"WARINNG: it is insecure to relay rlogin port"
+argument_list|)
+expr_stmt|;
+comment|/*FALLTHROUGH*/
 default|default:
 name|tcp_relay
 argument_list|(
@@ -3116,13 +3375,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|exit_error
+block|{
+name|exit_failure
 argument_list|(
 literal|"sysctl: %s"
 argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 if|if
 condition|(
 name|memcmp
@@ -3512,11 +3774,14 @@ name|INADDR_BROADCAST
 operator|||
 name|IN_MULTICAST
 argument_list|(
+name|ntohl
+argument_list|(
 name|dst4
 operator|->
 name|sin_addr
 operator|.
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -3763,7 +4028,10 @@ if|if
 condition|(
 name|pid
 operator|&&
+name|WEXITSTATUS
+argument_list|(
 name|status
+argument_list|)
 condition|)
 name|syslog
 argument_list|(
@@ -3810,6 +4078,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SA_NOCLDWAIT
+name|struct
+name|sigaction
+name|sa
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|daemon
@@ -3822,13 +4099,66 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_stderr
 argument_list|(
 literal|"daemon: %s"
 argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SA_NOCLDWAIT
+name|memset
+argument_list|(
+operator|&
+name|sa
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sa
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|sig_child
+expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator|=
+name|SA_NOCLDWAIT
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGCHLD
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|signal
@@ -3840,6 +4170,7 @@ argument_list|)
 operator|==
 name|SIG_ERR
 condition|)
+block|{
 name|exit_failure
 argument_list|(
 literal|"signal CHLD: %s"
@@ -3847,6 +4178,10 @@ argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|signal
@@ -3858,6 +4193,7 @@ argument_list|)
 operator|==
 name|SIG_ERR
 condition|)
+block|{
 name|exit_failure
 argument_list|(
 literal|"signal TERM: %s"
@@ -3865,12 +4201,15 @@ argument_list|,
 name|ERRSTR
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|exit_error
+name|exit_stderr
 parameter_list|(
 specifier|const
 name|char
@@ -5221,7 +5560,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-dp] [service [serverpath [serverargs]]]\n"
+literal|"usage: %s [-dp] [-f conf] service [serverpath [serverargs]]\n"
 argument_list|,
 name|faithdname
 argument_list|)

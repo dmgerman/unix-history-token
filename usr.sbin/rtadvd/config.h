@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME$	*/
+comment|/*	$KAME: config.h,v 1.3 2000/05/16 13:34:13 itojun Exp $	*/
 end_comment
 
 begin_comment

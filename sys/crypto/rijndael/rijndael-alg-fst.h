@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME$	*/
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: rijndael-alg-fst.h,v 1.4 2000/10/02 17:14:26 itojun Exp $	*/
 end_comment
 
 begin_comment

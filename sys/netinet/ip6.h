@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6.h,v 1.9 2000/07/02 21:01:32 itojun Exp $	*/
+comment|/*	$KAME: ip6.h,v 1.18 2001/03/29 05:34:30 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ name|ip6_dst
 decl_stmt|;
 comment|/* destination address */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -215,6 +221,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
 begin_comment
 comment|/* ECN bits proposed by Sally Floyd */
 end_comment
@@ -241,6 +253,11 @@ begin_comment
 comment|/* ECN-capable transport */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Extension Headers  */
 end_comment
@@ -249,13 +266,19 @@ begin_struct
 struct|struct
 name|ip6_ext
 block|{
-name|u_char
+name|u_int8_t
 name|ip6e_nxt
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|ip6e_len
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -281,6 +304,12 @@ decl_stmt|;
 comment|/* length in units of 8 octets */
 comment|/* followed by options */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -306,6 +335,12 @@ decl_stmt|;
 comment|/* length in units of 8 octets */
 comment|/* followed by options */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -349,9 +384,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP6OPT_JUMBO_LEN
-value|6
+name|IP6OPT_NSAP_ADDR
+value|0xC3
 end_define
+
+begin_comment
+comment|/* 11 0 00011 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_TUNNEL_LIMIT
+value|0x04
+end_define
+
+begin_comment
+comment|/* 00 0 00100 */
+end_comment
 
 begin_define
 define|#
@@ -361,7 +411,7 @@ value|0x05
 end_define
 
 begin_comment
-comment|/* 00 0 00101 */
+comment|/* 00 0 00101 (KAME definition) */
 end_comment
 
 begin_define
@@ -414,6 +464,61 @@ end_define
 begin_define
 define|#
 directive|define
+name|IP6OPT_BINDING_UPDATE
+value|0xc6
+end_define
+
+begin_comment
+comment|/* 11 0 00110 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_BINDING_ACK
+value|0x07
+end_define
+
+begin_comment
+comment|/* 00 0 00111 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_BINDING_REQ
+value|0x08
+end_define
+
+begin_comment
+comment|/* 00 0 01000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_HOME_ADDRESS
+value|0xc9
+end_define
+
+begin_comment
+comment|/* 11 0 01001 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_EID
+value|0x8a
+end_define
+
+begin_comment
+comment|/* 10 0 01010 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP6OPT_TYPE
 parameter_list|(
 name|o
@@ -456,6 +561,13 @@ name|IP6OPT_MUTABLE
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|IP6OPT_JUMBO_LEN
+value|6
+end_define
+
 begin_comment
 comment|/* Routing header */
 end_comment
@@ -482,6 +594,12 @@ decl_stmt|;
 comment|/* segments left */
 comment|/* followed by routing type specific data */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -529,6 +647,12 @@ index|]
 decl_stmt|;
 comment|/* up to 23 addresses */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -557,6 +681,12 @@ name|ip6f_ident
 decl_stmt|;
 comment|/* identification */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 

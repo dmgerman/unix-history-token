@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME$	*/
+comment|/*	$KAME: dump.h,v 1.1 2000/05/23 11:31:26 itojun Exp $	*/
 end_comment
 
 begin_comment

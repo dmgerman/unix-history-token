@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6protosw.h,v 1.11 2000/10/03 09:59:35 jinmei Exp $	*/
+comment|/*	$KAME: ip6protosw.h,v 1.22 2001/02/08 18:02:08 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -83,12 +83,24 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|icmp6_hdr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|in6_addr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|pr_usrreqs
 struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * argument type for the last arg of pr_ctlinput().  * should be consulted only with AF_INET6 family.  */
+comment|/*  * argument type for the last arg of pr_ctlinput().  * should be consulted only with AF_INET6 family.  *  * IPv6 ICMP IPv6 [exthdrs] finalhdr paylaod  * ^    ^    ^              ^  * |    |    ip6c_ip6       ip6c_off  * |    ip6c_icmp6  * ip6c_m  *  * ip6c_finaldst usually points to ip6c_ip6->ip6_dst.  if the original  * (internal) packet carries a routing header, it may point the final  * dstination address in the routing header.  *  * ip6c_src: ip6c_ip6->ip6_src + scope info + flowlabel in ip6c_ip6  *	(beware of flowlabel, if you try to compare it against others)  * ip6c_dst: ip6c_finaldst + scope info  */
 end_comment
 
 begin_struct
@@ -102,6 +114,12 @@ name|ip6c_m
 decl_stmt|;
 comment|/* start of mbuf chain */
 name|struct
+name|icmp6_hdr
+modifier|*
+name|ip6c_icmp6
+decl_stmt|;
+comment|/* icmp6 header of target packet */
+name|struct
 name|ip6_hdr
 modifier|*
 name|ip6c_ip6
@@ -111,6 +129,33 @@ name|int
 name|ip6c_off
 decl_stmt|;
 comment|/* offset of the target proto header */
+name|struct
+name|sockaddr_in6
+modifier|*
+name|ip6c_src
+decl_stmt|;
+comment|/* srcaddr w/ additional info */
+name|struct
+name|sockaddr_in6
+modifier|*
+name|ip6c_dst
+decl_stmt|;
+comment|/* (final) dstaddr w/ additional info */
+name|struct
+name|in6_addr
+modifier|*
+name|ip6c_finaldst
+decl_stmt|;
+comment|/* final destination address */
+name|void
+modifier|*
+name|ip6c_cmdarg
+decl_stmt|;
+comment|/* control command dependent data */
+name|u_int8_t
+name|ip6c_nxt
+decl_stmt|;
+comment|/* final next header field */
 block|}
 struct|;
 end_struct

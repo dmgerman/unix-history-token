@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip_ecn.c,v 1.7 2000/05/05 11:00:56 sumikawa Exp $	*/
+comment|/*	$KAME: ip_ecn.c,v 1.11 2001/05/03 16:09:29 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -51,12 +51,6 @@ directive|include
 file|<sys/errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -75,33 +69,11 @@ directive|include
 file|<netinet/ip.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|INET6
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -138,7 +110,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * modify outer ECN (TOS) field on ingress operation (tunnel encapsulation).  * call it after you've done the default initialization/copy for the outer.  */
+comment|/*  * modify outer ECN (TOS) field on ingress operation (tunnel encapsulation).  */
 end_comment
 
 begin_function
@@ -158,6 +130,7 @@ name|u_int8_t
 modifier|*
 name|outer
 decl_stmt|;
+specifier|const
 name|u_int8_t
 modifier|*
 name|inner
@@ -175,6 +148,12 @@ name|panic
 argument_list|(
 literal|"NULL pointer passed to ip_ecn_ingress"
 argument_list|)
+expr_stmt|;
+operator|*
+name|outer
+operator|=
+operator|*
+name|inner
 expr_stmt|;
 switch|switch
 condition|(
@@ -217,7 +196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * modify inner ECN (TOS) field on egress operation (tunnel decapsulation).  * call it after you've done the default initialization/copy for the inner.  */
+comment|/*  * modify inner ECN (TOS) field on egress operation (tunnel decapsulation).  */
 end_comment
 
 begin_function
@@ -233,6 +212,7 @@ parameter_list|)
 name|int
 name|mode
 decl_stmt|;
+specifier|const
 name|u_int8_t
 modifier|*
 name|outer
@@ -312,6 +292,7 @@ name|u_int32_t
 modifier|*
 name|outer
 decl_stmt|;
+specifier|const
 name|u_int32_t
 modifier|*
 name|inner
@@ -334,20 +315,6 @@ name|panic
 argument_list|(
 literal|"NULL pointer passed to ip6_ecn_ingress"
 argument_list|)
-expr_stmt|;
-name|outer8
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-operator|*
-name|outer
-argument_list|)
-operator|>>
-literal|20
-operator|)
-operator|&
-literal|0xff
 expr_stmt|;
 name|inner8
 operator|=
@@ -414,6 +381,7 @@ parameter_list|)
 name|int
 name|mode
 decl_stmt|;
+specifier|const
 name|u_int32_t
 modifier|*
 name|outer
@@ -448,20 +416,6 @@ name|ntohl
 argument_list|(
 operator|*
 name|outer
-argument_list|)
-operator|>>
-literal|20
-operator|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|inner8
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-operator|*
-name|inner
 argument_list|)
 operator|>>
 literal|20

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: if_stf.c,v 1.42 2000/08/15 07:24:23 itojun Exp $	*/
+comment|/*	$KAME: if_stf.c,v 1.60 2001/05/03 14:51:47 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (C) 2000 WIDE Project.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * 6to4 interface, based on draft-ietf-ngtrans-6to4-06.txt.  *  * 6to4 interface is NOT capable of link-layer (I mean, IPv4) multicasting.  * There is no address mapping defined from IPv6 multicast address to IPv4  * address.  Therefore, we do not have IFF_MULTICAST on the interface.  *  * Due to the lack of address mapping for link-local addresses, we cannot  * throw packets toward link-local addresses (fe80::x).  Also, we cannot throw  * packets to link-local multicast addresses (ff02::x).  *  * Here are interesting symptoms due to the lack of link-local address:  *  * Unicast routing exchange:  * - RIPng: Impossible.  Uses link-local multicast packet toward ff02::9,  *   and link-local addresses as nexthop.  * - OSPFv6: Impossible.  OSPFv6 assumes that there's link-local address  *   assigned to the link, and makes use of them.  Also, HELLO packets use  *   link-local multicast addresses (ff02::5 and ff02::6).  * - BGP4+: Maybe.  You can only use global address as nexthop, and global  *   address as TCP endpoint address.  *  * Multicast routing protocols:  * - PIM: Hello packet cannot be used to discover adjacent PIM routers.  *   Adjacent PIM routers must be configured manually (is it really spec-wise  *   correct thing to do?).  *  * ICMPv6:  * - Redirects cannot be used due to the lack of link-local address.  *  * Starting from 04 draft, the specification suggests how to construct  * link-local address for 6to4 interface.  * However, it seems to have no real use and does not help the above symptom  * much.  Even if we assign link-locals to interface, we cannot really  * use link-local unicast/multicast on top of 6to4 cloud, and the above  * analysis does not change.  *  * 6to4 interface has security issues.  Refer to  * http://playground.iijlab.net/i-d/draft-itojun-ipv6-transition-abuse-00.txt  * for details.  The code tries to filter out some of malicious packets.  * Note that there is no way to be 100% secure.  */
+comment|/*  * 6to4 interface, based on RFC3056.  *  * 6to4 interface is NOT capable of link-layer (I mean, IPv4) multicasting.  * There is no address mapping defined from IPv6 multicast address to IPv4  * address.  Therefore, we do not have IFF_MULTICAST on the interface.  *  * Due to the lack of address mapping for link-local addresses, we cannot  * throw packets toward link-local addresses (fe80::x).  Also, we cannot throw  * packets to link-local multicast addresses (ff02::x).  *  * Here are interesting symptoms due to the lack of link-local address:  *  * Unicast routing exchange:  * - RIPng: Impossible.  Uses link-local multicast packet toward ff02::9,  *   and link-local addresses as nexthop.  * - OSPFv6: Impossible.  OSPFv6 assumes that there's link-local address  *   assigned to the link, and makes use of them.  Also, HELLO packets use  *   link-local multicast addresses (ff02::5 and ff02::6).  * - BGP4+: Maybe.  You can only use global address as nexthop, and global  *   address as TCP endpoint address.  *  * Multicast routing protocols:  * - PIM: Hello packet cannot be used to discover adjacent PIM routers.  *   Adjacent PIM routers must be configured manually (is it really spec-wise  *   correct thing to do?).  *  * ICMPv6:  * - Redirects cannot be used due to the lack of link-local address.  *  * stf interface does not have, and will not need, a link-local address.    * It seems to have no real benefit and does not help the above symptoms much.  * Even if we assign link-locals to interface, we cannot really  * use link-local unicast/multicast on top of 6to4 cloud (since there's no  * encapsulation defined for link-local address), and the above analysis does  * not change.  RFC3056 does not mandate the assignment of link-local address  * either.  *  * 6to4 interface has security issues.  Refer to  * http://playground.iijlab.net/i-d/draft-itojun-ipv6-transition-abuse-00.txt  * for details.  The code tries to filter out some of malicious packets.  * Note that there is no way to be 100% secure.  */
 end_comment
 
 begin_include
@@ -500,6 +500,10 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
+name|stf_softc
+operator|*
+operator|,
+expr|struct
 name|in_addr
 operator|*
 operator|,
@@ -518,6 +522,10 @@ name|stf_checkaddr6
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|stf_softc
+operator|*
+operator|,
 expr|struct
 name|in6_addr
 operator|*
@@ -767,6 +775,13 @@ name|if_type
 operator|=
 name|IFT_STF
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* turn off ingress filter */
+block|sc->sc_if.if_flags  |= IFF_LINK2;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|sc_if
@@ -930,6 +945,24 @@ operator|&
 name|IFF_UP
 operator|)
 operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+comment|/* IFF_LINK0 means "no decapsulation" */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_LINK0
+operator|)
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1342,6 +1375,11 @@ modifier|*
 name|dst6
 decl_stmt|;
 name|struct
+name|in_addr
+modifier|*
+name|in4
+decl_stmt|;
+name|struct
 name|sockaddr_in
 modifier|*
 name|dst4
@@ -1490,6 +1528,59 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
+comment|/* 	 * Pickup the right outer dst addr from the list of candidates. 	 * ip6_dst has priority as it may be able to give us shorter IPv4 hops. 	 */
+if|if
+condition|(
+name|IN6_IS_ADDR_6TO4
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
+argument_list|)
+condition|)
+name|in4
+operator|=
+name|GET_V4
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IN6_IS_ADDR_6TO4
+argument_list|(
+operator|&
+name|dst6
+operator|->
+name|sin6_addr
+argument_list|)
+condition|)
+name|in4
+operator|=
+name|GET_V4
+argument_list|(
+operator|&
+name|dst6
+operator|->
+name|sin6_addr
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|ENETUNREACH
+return|;
+block|}
 name|M_PREPEND
 argument_list|(
 name|m
@@ -1596,13 +1687,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|GET_V4
-argument_list|(
-operator|&
-name|dst6
-operator|->
-name|sin6_addr
-argument_list|)
+name|in4
 argument_list|,
 operator|&
 name|ip
@@ -1652,6 +1737,20 @@ condition|)
 name|ip_ecn_ingress
 argument_list|(
 name|ECN_ALLOWED
+argument_list|,
+operator|&
+name|ip
+operator|->
+name|ip_tos
+argument_list|,
+operator|&
+name|tos
+argument_list|)
+expr_stmt|;
+else|else
+name|ip_ecn_ingress
+argument_list|(
+name|ECN_NOCARE
 argument_list|,
 operator|&
 name|ip
@@ -1837,10 +1936,17 @@ specifier|static
 name|int
 name|stf_checkaddr4
 parameter_list|(
+name|sc
+parameter_list|,
 name|in
 parameter_list|,
-name|ifp
+name|inifp
 parameter_list|)
+name|struct
+name|stf_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|struct
 name|in_addr
 modifier|*
@@ -1849,7 +1955,7 @@ decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
-name|ifp
+name|inifp
 decl_stmt|;
 comment|/* incoming interface */
 block|{
@@ -1967,7 +2073,21 @@ block|}
 comment|/* 	 * perform ingress filter 	 */
 if|if
 condition|(
-name|ifp
+name|sc
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_LINK2
+operator|)
+operator|==
+literal|0
+operator|&&
+name|inifp
 condition|)
 block|{
 name|struct
@@ -2034,20 +2154,24 @@ if|if
 condition|(
 operator|!
 name|rt
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
+operator|||
 name|rt
 operator|->
 name|rt_ifp
 operator|!=
-name|ifp
+name|inifp
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|log(LOG_WARNING, "%s: packet from 0x%x dropped " 			    "due to ingress filter\n", if_name(&sc->sc_if), 			    (u_int32_t)ntohl(sin.sin_addr.s_addr));
+endif|#
+directive|endif
+if|if
+condition|(
+name|rt
+condition|)
 name|rtfree
 argument_list|(
 name|rt
@@ -2075,10 +2199,17 @@ specifier|static
 name|int
 name|stf_checkaddr6
 parameter_list|(
+name|sc
+parameter_list|,
 name|in6
 parameter_list|,
-name|ifp
+name|inifp
 parameter_list|)
+name|struct
+name|stf_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|struct
 name|in6_addr
 modifier|*
@@ -2087,7 +2218,7 @@ decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
-name|ifp
+name|inifp
 decl_stmt|;
 comment|/* incoming interface */
 block|{
@@ -2102,12 +2233,14 @@ condition|)
 return|return
 name|stf_checkaddr4
 argument_list|(
+name|sc
+argument_list|,
 name|GET_V4
 argument_list|(
 name|in6
 argument_list|)
 argument_list|,
-name|ifp
+name|inifp
 argument_list|)
 return|;
 comment|/* 	 * reject anything that look suspicious.  the test is implemented 	 * in ip6_input too, but we check here as well to 	 * (1) reject bad packets earlier, and 	 * (2) to be safe against future ip6_input change. 	 */
@@ -2155,7 +2288,6 @@ name|m
 parameter_list|,
 name|va_alist
 parameter_list|)
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -2314,6 +2446,8 @@ if|if
 condition|(
 name|stf_checkaddr4
 argument_list|(
+name|sc
+argument_list|,
 operator|&
 name|ip
 operator|->
@@ -2326,6 +2460,8 @@ literal|0
 operator|||
 name|stf_checkaddr4
 argument_list|(
+name|sc
+argument_list|,
 operator|&
 name|ip
 operator|->
@@ -2410,6 +2546,8 @@ if|if
 condition|(
 name|stf_checkaddr6
 argument_list|(
+name|sc
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -2422,6 +2560,8 @@ literal|0
 operator|||
 name|stf_checkaddr6
 argument_list|(
+name|sc
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -2482,6 +2622,18 @@ operator|&
 name|itos
 argument_list|)
 expr_stmt|;
+else|else
+name|ip_ecn_egress
+argument_list|(
+name|ECN_NOCARE
+argument_list|,
+operator|&
+name|otos
+argument_list|,
+operator|&
+name|itos
+argument_list|)
+expr_stmt|;
 name|ip6
 operator|->
 name|ip6_flow
@@ -2533,7 +2685,7 @@ name|struct
 name|mbuf
 name|m0
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|af
 init|=
 name|AF_INET6
@@ -2663,30 +2815,11 @@ name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-name|_BSDI_VERSION
-operator|>=
-literal|199802
-name|struct
-name|rt_addrinfo
-modifier|*
-name|sa
-decl_stmt|;
-else|#
-directive|else
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 if|if
 condition|(

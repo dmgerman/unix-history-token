@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_fw.c,v 1.15 2000/07/02 14:17:37 itojun Exp $	*/
+comment|/*	$KAME: ip6_fw.c,v 1.21 2001/01/24 01:25:32 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -2506,7 +2506,6 @@ name|chain
 argument_list|)
 control|)
 block|{
-specifier|register
 name|struct
 name|ip6_fw
 modifier|*
@@ -3724,10 +3723,31 @@ name|ti
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|m_freem
+name|tcp_respond
 argument_list|(
+name|NULL
+argument_list|,
+name|ip6
+argument_list|,
+operator|(
+expr|struct
+name|tcphdr
+operator|*
+operator|)
+operator|(
+name|ip6
+operator|+
+literal|1
+operator|)
+argument_list|,
 operator|*
 name|m
+argument_list|,
+name|ack
+argument_list|,
+name|seq
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5452,15 +5472,15 @@ operator|.
 name|le_next
 control|)
 block|{
-name|memcpy
+name|bcopy
 argument_list|(
-name|m
-operator|->
-name|m_data
-argument_list|,
 name|fcp
 operator|->
 name|rule
+argument_list|,
+name|m
+operator|->
+name|m_data
 argument_list|,
 sizeof|sizeof
 expr|*

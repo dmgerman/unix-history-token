@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: rtsold.h,v 1.9 2000/08/13 06:15:00 itojun Exp $	*/
+comment|/*	$KAME: rtsold.h,v 1.11 2000/10/10 06:18:04 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -412,6 +412,36 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* rtsock.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rtsock_open
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rtsock_input
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

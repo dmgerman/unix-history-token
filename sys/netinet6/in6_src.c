@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_src.c,v 1.27 2000/06/21 08:07:13 itojun Exp $	*/
+comment|/*	$KAME: in6_src.c,v 1.37 2001/03/29 05:34:31 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -171,7 +177,7 @@ file|<net/net_osdep.h>
 end_include
 
 begin_comment
-comment|/*  * Return an IPv6 address, which is the most appropriate for given  * destination and user specified options.  * If necessary, this function lookups the routing table and return  * an entry to the caller for later use.  */
+comment|/*  * Return an IPv6 address, which is the most appropriate for a given  * destination and user specified options.  * If necessary, this function lookups the routing table and returns  * an entry to the caller for later use.  */
 end_comment
 
 begin_function
@@ -729,6 +735,11 @@ operator|)
 literal|0
 condition|)
 block|{
+name|struct
+name|sockaddr_in6
+modifier|*
+name|sa6
+decl_stmt|;
 comment|/* No route yet, so try to acquire one */
 name|bzero
 argument_list|(
@@ -744,18 +755,26 @@ name|sockaddr_in6
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sa6
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+operator|&
 name|ro
 operator|->
 name|ro_dst
-operator|.
+expr_stmt|;
+name|sa6
+operator|->
 name|sin6_family
 operator|=
 name|AF_INET6
 expr_stmt|;
-name|ro
+name|sa6
 operator|->
-name|ro_dst
-operator|.
 name|sin6_len
 operator|=
 sizeof|sizeof
@@ -764,19 +783,15 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
-name|ro
+name|sa6
 operator|->
-name|ro_dst
-operator|.
 name|sin6_addr
 operator|=
 operator|*
 name|dst
 expr_stmt|;
-name|ro
+name|sa6
 operator|->
-name|ro_dst
-operator|.
 name|sin6_scope_id
 operator|=
 name|dstsock
@@ -1777,36 +1792,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-ifndef|#
-directive|ifndef
-name|FAKE_LOOPBACK_IF
-if|if
-condition|(
-name|ifp
-operator|&&
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
-operator|==
-literal|0
-operator|&&
-name|ifp
-operator|->
-name|if_index
-operator|!=
-name|scopeid
-condition|)
-block|{
-return|return
-name|ENXIO
-return|;
-block|}
-else|#
-directive|else
 if|if
 condition|(
 name|ifp
@@ -1820,8 +1805,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-endif|#
-directive|endif
 name|sin6
 operator|->
 name|sin6_addr
@@ -1844,6 +1827,41 @@ block|}
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * just clear the embedded scope identifer.  * XXX: currently used for bsdi4 only as a supplement function.  */
+end_comment
+
+begin_function
+name|void
+name|in6_clearscope
+parameter_list|(
+name|addr
+parameter_list|)
+name|struct
+name|in6_addr
+modifier|*
+name|addr
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|IN6_IS_SCOPE_LINKLOCAL
+argument_list|(
+name|addr
+argument_list|)
+condition|)
+name|addr
+operator|->
+name|s6_addr16
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

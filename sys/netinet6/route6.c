@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: route6.c,v 1.15 2000/06/23 16:18:20 itojun Exp $	*/
+comment|/*	$KAME: route6.c,v 1.24 2001/03/14 03:07:05 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -130,13 +136,11 @@ name|proto
 decl_stmt|;
 comment|/* proto is unused */
 block|{
-specifier|register
 name|struct
 name|ip6_hdr
 modifier|*
 name|ip6
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -145,7 +149,6 @@ init|=
 operator|*
 name|mp
 decl_stmt|;
-specifier|register
 name|struct
 name|ip6_rthdr
 modifier|*
@@ -159,6 +162,62 @@ name|offp
 decl_stmt|,
 name|rhlen
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|n
+decl_stmt|;
+name|n
+operator|=
+name|ip6_findaux
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+condition|)
+block|{
+name|struct
+name|ip6aux
+modifier|*
+name|ip6a
+init|=
+name|mtod
+argument_list|(
+name|n
+argument_list|,
+expr|struct
+name|ip6aux
+operator|*
+argument_list|)
+decl_stmt|;
+comment|/* XXX reject home-address option before rthdr */
+if|if
+condition|(
+name|ip6a
+operator|->
+name|ip6a_flags
+operator|&
+name|IP6A_SWAP
+condition|)
+block|{
+name|ip6stat
+operator|.
+name|ip6s_badoptions
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|IPPROTO_DONE
+return|;
+block|}
+block|}
 ifndef|#
 directive|ifndef
 name|PULLDOWN_TEST
@@ -424,7 +483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Type0 routing header processing  */
+comment|/*  * Type0 routing header processing  *  * RFC2292 backward compatibility warning: no support for strict/loose bitmap,  * as it was dropped between RFC1883 and RFC2460.  */
 end_comment
 
 begin_function
@@ -676,7 +735,10 @@ argument_list|)
 operator|||
 name|IN6_IS_ADDR_V4COMPAT
 argument_list|(
-name|nextaddr
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
 argument_list|)
 condition|)
 block|{

@@ -1312,8 +1312,6 @@ block|{
 name|in6_purgeaddr
 argument_list|(
 name|ifa
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* ifp_addrhead is already updated */
@@ -1340,6 +1338,17 @@ name|ifa
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|INET6
+comment|/* 	 * Remove all IPv6 kernel structs related to ifp.  This should be done 	 * before removing routing entries below, since IPv6 interface direct 	 * routes are expected to be removed by the IPv6-specific kernel API. 	 * Otherwise, the kernel will detect some inconsistency and bark it. 	 */
+name|in6_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Delete all remaining routes using this interface 	 * Unfortuneatly the only way to do this is to slog through 	 * the entire routing table looking for routes which point 	 * to this interface...oh well... 	 */
 for|for
 control|(
@@ -1384,17 +1393,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INET6
-comment|/* nuke all IPv6 kernel structs related to ifp */
-name|in6_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3962,6 +3960,9 @@ case|:
 endif|#
 directive|endif
 case|case
+name|SIOCSLIFPHYADDR
+case|:
+case|case
 name|SIOCSIFMEDIA
 case|:
 case|case
@@ -4050,6 +4051,15 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+case|case
+name|SIOCGIFPSRCADDR
+case|:
+case|case
+name|SIOCGIFPDSTADDR
+case|:
+case|case
+name|SIOCGLIFPHYADDR
+case|:
 case|case
 name|SIOCGIFMEDIA
 case|:

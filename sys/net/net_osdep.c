@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: net_osdep.c,v 1.4 2000/03/25 07:23:34 sumikawa Exp $	*/
+comment|/*	$KAME: net_osdep.c,v 1.9 2001/04/06 09:22:05 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -21,6 +21,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -115,9 +121,16 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
+define|#
+directive|define
+name|MAXNUMBUF
+value|8
 specifier|static
 name|char
 name|nam
+index|[
+name|MAXNUMBUF
+index|]
 index|[
 name|IFNAMSIZ
 operator|+
@@ -125,9 +138,36 @@ literal|10
 index|]
 decl_stmt|;
 comment|/*enough?*/
+specifier|static
+name|int
+name|ifbufround
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|ifbufround
+operator|=
+operator|(
+name|ifbufround
+operator|+
+literal|1
+operator|)
+operator|%
+name|MAXNUMBUF
+expr_stmt|;
+name|cp
+operator|=
+name|nam
+index|[
+name|ifbufround
+index|]
+expr_stmt|;
 name|snprintf
 argument_list|(
-name|nam
+name|cp
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -146,8 +186,18 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 return|return
-name|nam
+operator|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|cp
+operator|)
 return|;
+undef|#
+directive|undef
+name|MAXNUMBUF
 block|}
 end_function
 

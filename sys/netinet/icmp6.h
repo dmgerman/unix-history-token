@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: icmp6.h,v 1.18 2000/07/03 02:51:08 itojun Exp $	*/
+comment|/*	$KAME: icmp6.h,v 1.46 2001/04/27 15:09:48 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ block|}
 name|icmp6_dataun
 union|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -453,8 +459,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICMP6_HADISCOV_REQUEST
+value|143
+end_define
+
+begin_comment
+comment|/* XXX To be defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_HADISCOV_REPLY
+value|144
+end_define
+
+begin_comment
+comment|/* XXX To be defined */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICMP6_MAXTYPE
-value|142
+value|144
 end_define
 
 begin_define
@@ -625,7 +653,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ICMP6_NI_SUCESS
+name|ICMP6_NI_SUCCESS
 value|0
 end_define
 
@@ -732,6 +760,12 @@ name|mld6_addr
 decl_stmt|;
 comment|/* multicast address */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -785,6 +819,12 @@ name|nd_rs_hdr
 decl_stmt|;
 comment|/* could be followed by options */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -835,6 +875,12 @@ decl_stmt|;
 comment|/* retransmit timer */
 comment|/* could be followed by options */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -890,6 +936,72 @@ end_define
 begin_define
 define|#
 directive|define
+name|ND_RA_FLAG_HA
+value|0x20
+end_define
+
+begin_comment
+comment|/*  * Router preference values based on draft-draves-ipngwg-router-selection-01.  * These are non-standard definitions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_MASK
+value|0x18
+end_define
+
+begin_comment
+comment|/* 00011000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_HIGH
+value|0x08
+end_define
+
+begin_comment
+comment|/* 00001000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_MEDIUM
+value|0x00
+end_define
+
+begin_comment
+comment|/* 00000000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_LOW
+value|0x18
+end_define
+
+begin_comment
+comment|/* 00011000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_RA_FLAG_RTPREF_RSV
+value|0x10
+end_define
+
+begin_comment
+comment|/* 00010000 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|nd_ra_router_lifetime
 value|nd_ra_hdr.icmp6_data16[1]
 end_define
@@ -910,6 +1022,12 @@ decl_stmt|;
 comment|/*target address */
 comment|/* could be followed by options */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -957,6 +1075,12 @@ decl_stmt|;
 comment|/* target address */
 comment|/* could be followed by options */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1082,6 +1206,12 @@ decl_stmt|;
 comment|/* destination address */
 comment|/* could be followed by options */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1126,6 +1256,12 @@ name|nd_opt_len
 decl_stmt|;
 comment|/* followed by option specific data*/
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1164,6 +1300,17 @@ name|ND_OPT_MTU
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|ND_OPT_ROUTE_INFO
+value|9
+end_define
+
+begin_comment
+comment|/* draft-draves-router-preference, not officially assigned yet */
+end_comment
+
 begin_struct
 struct|struct
 name|nd_opt_prefix_info
@@ -1195,6 +1342,12 @@ name|in6_addr
 name|nd_opt_pi_prefix
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1231,6 +1384,12 @@ name|nd_opt_rh_reserved2
 decl_stmt|;
 comment|/* followed by IP header and data */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1252,6 +1411,43 @@ name|u_int32_t
 name|nd_opt_mtu_mtu
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nd_opt_route_info
+block|{
+comment|/* route info */
+name|u_int8_t
+name|nd_opt_rti_type
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_rti_len
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_rti_prefixlen
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_rti_flags
+decl_stmt|;
+name|u_int32_t
+name|nd_opt_rti_lifetime
+decl_stmt|;
+comment|/* followed by prefix */
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1284,6 +1480,12 @@ endif|#
 directive|endif
 comment|/* could be followed by options */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1307,6 +1509,12 @@ index|]
 decl_stmt|;
 comment|/* could be followed by reply data */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1375,7 +1583,18 @@ value|2
 end_define
 
 begin_comment
-comment|/* FQDN */
+comment|/* FQDN (draft 04) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NI_QTYPE_DNSNAME
+value|2
+end_define
+
+begin_comment
+comment|/* DNS Name */
 end_comment
 
 begin_define
@@ -1386,7 +1605,18 @@ value|3
 end_define
 
 begin_comment
-comment|/* Node Addresses. XXX: spec says 2, but it may be a typo... */
+comment|/* Node Addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NI_QTYPE_IPV4ADDR
+value|4
+end_define
+
+begin_comment
+comment|/* IPv4 Addresses */
 end_comment
 
 begin_if
@@ -1718,6 +1948,12 @@ index|]
 decl_stmt|;
 comment|/* XXX: alignment */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1747,49 +1983,48 @@ name|u_int32_t
 name|rr_reserved
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
 begin_define
 define|#
 directive|define
-name|ICMP6_RR_FLAGS_SEGNUM
+name|ICMP6_RR_FLAGS_TEST
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICMP6_RR_FLAGS_TEST
+name|ICMP6_RR_FLAGS_REQRESULT
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICMP6_RR_FLAGS_REQRESULT
+name|ICMP6_RR_FLAGS_FORCEAPPLY
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICMP6_RR_FLAGS_FORCEAPPLY
+name|ICMP6_RR_FLAGS_SPECSITE
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICMP6_RR_FLAGS_SPECSITE
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
 name|ICMP6_RR_FLAGS_PREVDONE
-value|0x04
+value|0x08
 end_define
 
 begin_define
@@ -1851,6 +2086,12 @@ name|in6_addr
 name|rpm_prefix
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1913,6 +2154,12 @@ name|in6_addr
 name|rpu_prefix
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2001,6 +2248,12 @@ name|in6_addr
 name|rrr_prefix
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2038,14 +2291,14 @@ begin_define
 define|#
 directive|define
 name|ICMP6_RR_RESULT_FLAGS_OOB
-value|0x02
+value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICMP6_RR_RESULT_FLAGS_FORBIDDEN
-value|0x01
+value|0x0100
 end_define
 
 begin_endif
@@ -2358,6 +2611,34 @@ define|#
 directive|define
 name|icp6s_ounknown
 value|icp6s_outerrhist.icp6errs_unknown
+name|u_quad_t
+name|icp6s_pmtuchg
+decl_stmt|;
+comment|/* path MTU changes */
+name|u_quad_t
+name|icp6s_nd_badopt
+decl_stmt|;
+comment|/* bad ND options */
+name|u_quad_t
+name|icp6s_badns
+decl_stmt|;
+comment|/* bad neighbor solicitation */
+name|u_quad_t
+name|icp6s_badna
+decl_stmt|;
+comment|/* bad neighbor advertisement */
+name|u_quad_t
+name|icp6s_badrs
+decl_stmt|;
+comment|/* bad router advertisement */
+name|u_quad_t
+name|icp6s_badra
+decl_stmt|;
+comment|/* bad router advertisement */
+name|u_quad_t
+name|icp6s_badredirect
+decl_stmt|;
+comment|/* bad redirect message */
 block|}
 struct|;
 end_struct
@@ -2395,6 +2676,16 @@ begin_comment
 comment|/* redirect cache time */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*obsoleted*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2405,6 +2696,11 @@ end_define
 begin_comment
 comment|/* ICMPv6 error rate limitation */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2473,15 +2769,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICMPV6CTL_MAXID
+name|ICMPV6CTL_MTUDISC_HIWAT
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
+name|ICMPV6CTL_MTUDISC_LOWAT
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMPV6CTL_ND6_DEBUG
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMPV6CTL_ND6_DRLIST
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMPV6CTL_ND6_PRLIST
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMPV6CTL_MAXID
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|ICMPV6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "rediraccept", CTLTYPE_INT }, \ 	{ "redirtimeout", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "errratelimit", CTLTYPE_INT }, \ 	{ "nd6_prune", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "nd6_delay", CTLTYPE_INT }, \ 	{ "nd6_umaxtries", CTLTYPE_INT }, \ 	{ "nd6_mmaxtries", CTLTYPE_INT }, \ 	{ "nd6_useloopback", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "nodeinfo", CTLTYPE_INT }, \ 	{ "errppslimit", CTLTYPE_INT }, \ 	{ "nd6_maxnudhint", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "rediraccept", CTLTYPE_INT }, \ 	{ "redirtimeout", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "nd6_prune", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "nd6_delay", CTLTYPE_INT }, \ 	{ "nd6_umaxtries", CTLTYPE_INT }, \ 	{ "nd6_mmaxtries", CTLTYPE_INT }, \ 	{ "nd6_useloopback", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "nodeinfo", CTLTYPE_INT }, \ 	{ "errppslimit", CTLTYPE_INT }, \ 	{ "nd6_maxnudhint", CTLTYPE_INT }, \ 	{ "mtudisc_hiwat", CTLTYPE_INT }, \ 	{ "mtudisc_lowat", CTLTYPE_INT }, \ 	{ "nd6_debug", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ }
 end_define
 
 begin_define
@@ -2665,6 +2996,28 @@ operator|,
 expr|struct
 name|rtentry
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|ip6ctlparam
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+name|void
+name|icmp6_mtudisc_update
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ip6ctlparam
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

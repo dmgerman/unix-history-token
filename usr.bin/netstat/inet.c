@@ -2723,6 +2723,13 @@ argument_list|,
 literal|"\t%lu tunneling packet%s that can't find gif\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|ips_badaddr
+argument_list|,
+literal|"\t%lu datagram%s with bad address in header\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
