@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.110 1997/12/15 20:21:46 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.111 1997/12/17 00:19:22 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -311,6 +311,17 @@ begin_decl_stmt
 name|struct
 name|in_addr
 name|ifnetmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|HIDDEN
+init|=
+literal|"********"
 decl_stmt|;
 end_decl_stmt
 
@@ -2703,7 +2714,7 @@ name|VarTerm
 argument_list|,
 literal|"AuthKey  = %s\n"
 argument_list|,
-name|VarAuthKey
+name|HIDDEN
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3677,6 +3688,11 @@ modifier|*
 specifier|const
 modifier|*
 name|argv
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|prefix
 parameter_list|)
 block|{
 name|struct
@@ -3720,7 +3736,9 @@ name|LogPrintf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s: Ambiguous command\n"
+literal|"%s%s: Ambiguous command\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|*
 name|argv
@@ -3788,7 +3806,9 @@ name|LogPrintf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s: Invalid command\n"
+literal|"%s%s: Invalid command\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|*
 name|argv
@@ -3821,7 +3841,9 @@ name|LogPrintf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s: Failed %d\n"
+literal|"%s%s: Failed %d\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|*
 name|argv
@@ -4030,6 +4052,82 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|int
+name|arghidden
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+specifier|const
+modifier|*
+specifier|const
+modifier|*
+name|argv
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+comment|/* Is arg n of the given command to be hidden from the log ? */
+if|if
+condition|(
+name|n
+operator|==
+literal|2
+operator|&&
+operator|!
+name|strncasecmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"se"
+argument_list|,
+literal|2
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|strncasecmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"authk"
+argument_list|,
+literal|5
+argument_list|)
+operator|||
+operator|!
+name|strncasecmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"ke"
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|RunCommand
 parameter_list|(
@@ -4158,6 +4256,36 @@ index|]
 operator|=
 literal|' '
 expr_stmt|;
+if|if
+condition|(
+name|arghidden
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|f
+argument_list|)
+condition|)
+name|strncpy
+argument_list|(
+name|buf
+operator|+
+name|n
+argument_list|,
+name|HIDDEN
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+name|n
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 name|strncpy
 argument_list|(
 name|buf
@@ -4206,6 +4334,8 @@ argument_list|,
 name|argc
 argument_list|,
 name|argv
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -4300,6 +4430,8 @@ argument_list|,
 name|arg
 operator|->
 name|argv
+argument_list|,
+literal|"show "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8015,6 +8147,8 @@ argument_list|,
 name|arg
 operator|->
 name|argv
+argument_list|,
+literal|"set "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8615,6 +8749,8 @@ argument_list|,
 name|arg
 operator|->
 name|argv
+argument_list|,
+literal|"alias "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9000,6 +9136,8 @@ argument_list|,
 name|arg
 operator|->
 name|argv
+argument_list|,
+literal|"allow "
 argument_list|)
 expr_stmt|;
 elseif|else
