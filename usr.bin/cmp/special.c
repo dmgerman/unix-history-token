@@ -172,6 +172,10 @@ argument_list|,
 name|file2
 argument_list|)
 expr_stmt|;
+name|dfound
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|skip1
@@ -206,10 +210,6 @@ condition|)
 goto|goto
 name|eof
 goto|;
-name|dfound
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|byte
