@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.10 %G%"
+literal|"@(#)cc.c 4.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,15 @@ modifier|*
 name|ccom
 init|=
 literal|"/lib/ccom"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|sccom
+init|=
+literal|"/lib/sccom"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +212,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|fflag
+decl_stmt|,
 name|gflag
 decl_stmt|,
 name|Gflag
@@ -499,6 +510,13 @@ condition|)
 name|crt0
 operator|=
 literal|"/usr/lib/gcrt0.o"
+expr_stmt|;
+continue|continue;
+case|case
+literal|'f'
+case|:
+name|fflag
+operator|++
 expr_stmt|;
 continue|continue;
 case|case
@@ -892,6 +910,20 @@ block|{
 case|case
 literal|'0'
 case|:
+if|if
+condition|(
+name|fflag
+condition|)
+name|sccom
+operator|=
+name|strspl
+argument_list|(
+name|npassname
+argument_list|,
+literal|"sccom"
+argument_list|)
+expr_stmt|;
+else|else
 name|ccom
 operator|=
 name|strspl
@@ -1266,6 +1298,10 @@ index|[
 literal|0
 index|]
 operator|=
+name|fflag
+condition|?
+literal|"sccom"
+else|:
 literal|"ccom"
 expr_stmt|;
 name|av
@@ -1354,6 +1390,10 @@ if|if
 condition|(
 name|callsys
 argument_list|(
+name|fflag
+condition|?
+name|sccom
+else|:
 name|ccom
 argument_list|,
 name|av
