@@ -1246,7 +1246,7 @@ name|align
 operator|=
 operator|(
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|cp
 operator|)
@@ -2109,7 +2109,7 @@ name|ENI_LOC_PREDIV
 operator|)
 operator|+
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|eup
 operator|->

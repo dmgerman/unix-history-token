@@ -1029,7 +1029,7 @@ name|align
 operator|=
 operator|(
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|cp
 operator|)

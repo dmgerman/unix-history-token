@@ -386,7 +386,7 @@ operator|*
 operator|)
 operator|(
 call|(
-name|int
+name|intptr_t
 call|)
 argument_list|(
 operator|(
@@ -403,7 +403,7 @@ name|ENI_LOC_PREDIV
 argument_list|)
 operator|+
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|eup
 operator|->
@@ -2143,6 +2143,9 @@ operator|=
 operator|(
 name|int
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|evp
 expr_stmt|;
 comment|/* 			 * Schedule callback 			 */
@@ -2322,7 +2325,7 @@ operator|->
 name|ev_connvc
 argument_list|,
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 argument_list|,
