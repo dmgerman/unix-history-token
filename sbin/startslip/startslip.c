@@ -2083,6 +2083,21 @@ break|break;
 block|}
 block|}
 block|}
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+comment|/* Wait until login completed */
+if|if
+condition|(
+name|hup
+operator|||
+name|terminate
+condition|)
+goto|goto
+name|restart
+goto|;
 comment|/* 	 * Attach 	 */
 name|printd
 argument_list|(
