@@ -2693,7 +2693,7 @@ literal|""
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"%s%s: manipulate archive files\n"
 argument_list|,
@@ -2763,7 +2763,7 @@ name|fputs
 argument_list|(
 name|prog
 argument_list|,
-name|stderr
+name|stdout
 argument_list|)
 expr_stmt|;
 name|p
