@@ -587,6 +587,20 @@ argument_list|(
 literal|"associated"
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ifmr
+operator|.
+name|ifm_status
+operator|&
+name|IFM_AVALID
+condition|)
+name|printf
+argument_list|(
+literal|"ad hoc"
+argument_list|)
+expr_stmt|;
 else|else
 name|printf
 argument_list|(
