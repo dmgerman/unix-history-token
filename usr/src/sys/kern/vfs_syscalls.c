@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	6.8	84/06/30	*/
+comment|/*	vfs_syscalls.c	6.9	84/07/02	*/
 end_comment
 
 begin_include
@@ -3412,6 +3412,11 @@ decl_stmt|,
 modifier|*
 name|dp
 decl_stmt|;
+name|struct
+name|inode
+modifier|*
+name|zp
+decl_stmt|;
 name|int
 name|oldparent
 decl_stmt|,
@@ -4058,16 +4063,24 @@ name|uap
 operator|->
 name|from
 expr_stmt|;
-name|dp
+name|zp
 operator|=
 name|namei
 argument_list|(
 name|uchar
 argument_list|,
 name|DELETE
+operator||
+name|LOCKPARENT
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|dp
+operator|=
+name|u
+operator|.
+name|u_pdir
 expr_stmt|;
 comment|/* 	 * Insure directory entry still exists and 	 * has not changed since the start of all 	 * this.  If either has occured, forget about 	 * about deleting the original entry. 	 */
 if|if
@@ -4076,15 +4089,9 @@ name|dp
 operator|!=
 name|NULL
 operator|&&
-name|u
-operator|.
-name|u_dent
-operator|.
-name|d_ino
+name|zp
 operator|==
 name|ip
-operator|->
-name|i_number
 condition|)
 block|{
 comment|/* 		 * If source is a directory, must adjust 		 * link count of parent directory also. 		 * If target didn't exist and source and 		 * target have the same parent, then we 		 * needn't touch the link count, it all 		 * balances out in the end.  Otherwise, we 		 * must do so to reflect deletion of ".." 		 * done above. 		 */
@@ -4119,12 +4126,12 @@ name|dirremove
 argument_list|()
 condition|)
 block|{
-name|ip
+name|zp
 operator|->
 name|i_nlink
 operator|--
 expr_stmt|;
-name|ip
+name|zp
 operator|->
 name|i_flag
 operator||=
@@ -4145,6 +4152,17 @@ operator|.
 name|u_error
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|zp
+operator|!=
+name|NULL
+condition|)
+name|iput
+argument_list|(
+name|zp
+argument_list|)
+expr_stmt|;
 name|irele
 argument_list|(
 name|ip
