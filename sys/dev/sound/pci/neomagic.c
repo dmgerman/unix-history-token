@@ -331,6 +331,8 @@ block|,
 literal|0x008f1028
 block|,
 literal|0x00dd1014
+block|,
+literal|0x8005110a
 block|, }
 decl_stmt|;
 end_decl_stmt
