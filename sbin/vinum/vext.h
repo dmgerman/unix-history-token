@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: vext.h,v 1.10 1999/01/12 04:31:45 grog Exp grog $ */
+comment|/* $Id: vext.h,v 1.3 1999/01/21 00:45:11 grog Exp $ */
 end_comment
 
 begin_define
@@ -46,6 +46,58 @@ literal|1073741824
 block|}
 enum|;
 end_enum
+
+begin_if
+if|#
+directive|if
+name|RAID5
+end_if
+
+begin_define
+define|#
+directive|define
+name|VINUMMOD
+value|"Vinum"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRONGMOD
+value|"vinum"
+end_define
+
+begin_comment
+comment|/* don't want this one */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VINUMMOD
+value|"vinum"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRONGMOD
+value|"Vinum"
+end_define
+
+begin_comment
+comment|/* don't want this one */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Prototype declarations */
@@ -648,6 +700,26 @@ end_function_decl
 begin_function_decl
 name|void
 name|vinum_printconfig
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vinum_saveconfig
 parameter_list|(
 name|int
 name|argc
