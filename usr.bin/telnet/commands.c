@@ -178,6 +178,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"general.h"
 end_include
 
@@ -10221,14 +10227,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|unsigned
-name|long
-name|inet_addr
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|tn
@@ -10269,12 +10267,6 @@ name|unsigned
 name|long
 name|temp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
 if|#
 directive|if
 name|defined

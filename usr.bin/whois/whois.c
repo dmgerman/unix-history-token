@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: whois.c,v 1.4 1997/08/26 11:16:08 charnier Exp $"
+literal|"$Id: whois.c,v 1.5 1998/02/19 19:07:50 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
