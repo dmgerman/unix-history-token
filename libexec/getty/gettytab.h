@@ -827,5 +827,12 @@ name|NC
 value|gettyflags[24].value
 end_define
 
+begin_define
+define|#
+directive|define
+name|PL
+value|gettyflags[25].value
+end_define
+
 end_unit
 
