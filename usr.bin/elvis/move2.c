@@ -951,6 +951,8 @@ argument_list|(
 name|ptrn
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -961,8 +963,6 @@ return|return
 name|MARK_UNSET
 return|;
 block|}
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if

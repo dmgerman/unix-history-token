@@ -4133,6 +4133,10 @@ name|signal
 argument_list|(
 name|SIGWINCH
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|getsize
 argument_list|)
 expr_stmt|;
