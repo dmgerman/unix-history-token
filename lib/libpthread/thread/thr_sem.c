@@ -41,7 +41,7 @@ parameter_list|(
 name|sem
 parameter_list|)
 define|\
-value|if ((*(sem))->magic != SEM_MAGIC) {	\ 		retval = EINVAL;		\ 		goto RETURN;			\ 	}
+value|if ((*(sem))->magic != SEM_MAGIC) {	\ 		errno = EINVAL;			\ 		retval = -1;			\ 		goto RETURN;			\ 	}
 end_define
 
 begin_function
@@ -72,9 +72,14 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * The user wants a semaphore that can be shared among 		 * processes, which this implementation can't do.  Sounds like a 		 * permissions problem to me (yeah right). 		 */
-name|retval
+name|errno
 operator|=
 name|EPERM
+expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|RETURN
@@ -87,9 +92,14 @@ operator|>
 name|SEM_VALUE_MAX
 condition|)
 block|{
-name|retval
+name|errno
 operator|=
 name|EINVAL
+expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|RETURN
@@ -118,17 +128,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|retval
+name|errno
 operator|=
 name|ENOSPC
+expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|RETURN
 goto|;
 block|}
 comment|/* 	 * Initialize the semaphore. 	 */
-name|retval
-operator|=
+if|if
+condition|(
 name|pthread_mutex_init
 argument_list|(
 operator|&
@@ -141,10 +156,6 @@ name|lock
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|retval
 operator|!=
 literal|0
 condition|)
@@ -155,12 +166,21 @@ operator|*
 name|sem
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|ENOSPC
+expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 goto|goto
 name|RETURN
 goto|;
 block|}
-name|retval
-operator|=
+if|if
+condition|(
 name|pthread_cond_init
 argument_list|(
 operator|&
@@ -173,10 +193,6 @@ name|gtzero
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|retval
 operator|!=
 literal|0
 condition|)
@@ -197,6 +213,15 @@ argument_list|(
 operator|*
 name|sem
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|ENOSPC
+expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|RETURN
@@ -231,6 +256,10 @@ operator|->
 name|magic
 operator|=
 name|SEM_MAGIC
+expr_stmt|;
+name|retval
+operator|=
+literal|0
 expr_stmt|;
 name|RETURN
 label|:
@@ -292,9 +321,14 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|retval
+name|errno
 operator|=
 name|EBUSY
+expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|RETURN
@@ -594,10 +628,17 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-name|retval
+block|{
+name|errno
 operator|=
 name|EAGAIN
 expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
@@ -664,7 +705,9 @@ name|nwaiters
 operator|>
 literal|0
 condition|)
-name|pthread_cond_signal
+block|{
+comment|/* 		 * We must use pthread_cond_broadcast() rather than 		 * pthread_cond_signal() in order to assure that the highest 		 * priority thread is run by the scheduler, since 		 * pthread_cond_signal() signals waiting threads in FIFO order. 		 */
+name|pthread_cond_broadcast
 argument_list|(
 operator|&
 operator|(
@@ -675,6 +718,7 @@ operator|->
 name|gtzero
 argument_list|)
 expr_stmt|;
+block|}
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
