@@ -104,6 +104,11 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+name|wclrtoeol
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|line_edit
 argument_list|(
