@@ -67,15 +67,22 @@ name|struct
 name|pthread
 modifier|*
 name|curthread
+init|=
+name|_get_curthread
+argument_list|()
 decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|_kse_isthreaded
-argument_list|()
+name|curthread
+operator|->
+name|attr
+operator|.
+name|flags
+operator|&
+name|PTHREAD_SCOPE_SYSTEM
 condition|)
 name|ret
 operator|=
@@ -91,11 +98,6 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 		 * When exec'ing, set the kernel signal mask to the thread's 	 	 * signal mask to satisfy POSIX requirements. 		 */
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 name|args
 operator|.
 name|sigmask
