@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dumpcis.c,v 1.8 1997/10/06 11:35:54 charnier Exp $"
+literal|"$Id: dumpcis.c,v 1.9 1997/11/18 21:08:06 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,7 @@ name|open
 argument_list|(
 name|name
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
