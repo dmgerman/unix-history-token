@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.3 1993/11/01 16:26:17 pk Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.4 1993/11/05 12:43:11 pk Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -970,14 +970,21 @@ operator|(
 operator|!
 name|sp
 operator|||
+name|sp
+operator|->
+name|defined
+operator|||
+operator|(
 operator|!
 name|sp
 operator|->
 name|referenced
-operator|||
+operator|&&
+operator|!
 name|sp
 operator|->
-name|defined
+name|sorefs
+operator|)
 operator|)
 condition|)
 continue|continue;
@@ -1812,10 +1819,17 @@ operator||
 name|N_EXT
 operator|)
 condition|)
-goto|goto
-name|xxx
-goto|;
+break|break;
+comment|/* We need it */
 block|}
+if|if
+condition|(
+name|lsp
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+comment|/* We don't need it */
 if|if
 condition|(
 name|write_map
@@ -1843,9 +1857,6 @@ block|}
 return|return
 literal|1
 return|;
-name|xxx
-label|:
-empty_stmt|;
 block|}
 block|}
 return|return

@@ -33,11 +33,11 @@ comment|/* Linker `ld' for GNU    Copyright (C) 1988 Free Software Foundation, I
 end_comment
 
 begin_comment
-comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, indirect, and warning symbol features added by Randy Smith.     NOTE: Set and indirect symbols are no longer supported by this    version. (pk) */
+comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, indirect, and warning symbol features added by Randy Smith. */
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.10 1993/11/01 16:26:13 pk Exp $  */
+comment|/*  *	$Id: ld.c,v 1.11 1993/11/05 12:47:11 pk Exp $  */
 end_comment
 
 begin_comment
@@ -6190,15 +6190,10 @@ block|{
 comment|/* 			 * It's data from shared object with size info. 			 */
 if|if
 condition|(
+operator|!
 name|sp
 operator|->
 name|so_defined
-operator|!=
-operator|(
-name|N_DATA
-operator|+
-name|N_EXT
-operator|)
 condition|)
 name|fatal
 argument_list|(
@@ -6643,9 +6638,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 			 * Only allocate an alias for function calls. Use 			 * sp->size here as a heuristic to discriminate 			 * between function definitions and data residing 			 * in the text segment. 			 * NOTE THAT THE COMPILER MUST NOT GENERATE ".size" 			 * DIRECTIVES FOR FUNCTIONS. 			 * In the future we might go for ".type" directives. 			 */
 if|if
 condition|(
 name|force_alias_definition
+operator|&&
+name|sp
+operator|->
+name|size
+operator|==
+literal|0
 operator|&&
 name|sp
 operator|->
@@ -6670,6 +6672,7 @@ name|sp
 operator|->
 name|size
 operator|&&
+operator|(
 name|sp
 operator|->
 name|so_defined
@@ -6677,6 +6680,15 @@ operator|==
 name|N_DATA
 operator|+
 name|N_EXT
+operator|||
+name|sp
+operator|->
+name|so_defined
+operator|==
+name|N_TEXT
+operator|+
+name|N_EXT
+operator|)
 condition|)
 block|{
 comment|/* Reference to shared library data */

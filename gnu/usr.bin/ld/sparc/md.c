@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md.c,v 1.2 1993/10/27 00:56:17 pk Exp $  */
+comment|/*  * $Id: md.c,v 1.3 1993/11/06 19:15:31 pk Exp $  */
 end_comment
 
 begin_include
@@ -620,6 +620,42 @@ decl_stmt|,
 name|flags
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|NetBSD
+name|N_SETMAGIC
+argument_list|(
+operator|(
+operator|*
+name|hp
+operator|)
+argument_list|,
+name|magic
+argument_list|,
+name|MID_MACHINE
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+comment|/* TEXT_START depends on the value of outheader.a_entry.  */
+if|if
+condition|(
+operator|!
+operator|(
+name|link_mode
+operator|&
+name|SHAREABLE
+operator|)
+condition|)
+comment|/*WAS: if (entry_symbol) */
+name|hp
+operator|->
+name|a_entry
+operator|=
+name|PAGSIZ
+expr_stmt|;
+else|#
+directive|else
 name|hp
 operator|->
 name|a_magic
@@ -671,6 +707,8 @@ operator|*
 name|hp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

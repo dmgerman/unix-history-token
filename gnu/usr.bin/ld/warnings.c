@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.3 1993/11/01 16:26:20 pk Exp $  */
+comment|/*  * $Id: warnings.c,v 1.4 1993/11/05 12:45:25 pk Exp $  */
 end_comment
 
 begin_include
@@ -2820,6 +2820,11 @@ operator|!
 name|g
 operator|->
 name|defined
+operator|&&
+operator|!
+name|g
+operator|->
+name|so_defined
 condition|)
 block|{
 if|if
