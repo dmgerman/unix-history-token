@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.13 1997/11/19 02:31:40 nate Exp $"
+literal|"$Id: file.c,v 1.14 1998/03/09 05:18:56 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,97 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|KWD_EOF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_IO
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_IRQ
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_MEMORY
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_CARD
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_DEVICE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_CONFIG
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_RESET
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_ETHER
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_INSERT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_REMOVE
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_IOSIZE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_MEMSIZE
+value|13
+end_define
 
 begin_struct
 struct|struct
@@ -419,12 +510,12 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|1
+name|KWD_EOF
 case|:
 comment|/* EOF */
 return|return;
 case|case
-literal|2
+name|KWD_IO
 case|:
 comment|/* reserved I/O blocks */
 while|while
@@ -499,7 +590,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|3
+name|KWD_IRQ
 case|:
 comment|/* reserved irqs */
 while|while
@@ -528,7 +619,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|4
+name|KWD_MEMORY
 case|:
 comment|/* reserved memory blocks. */
 while|while
@@ -609,7 +700,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|5
+name|KWD_CARD
 case|:
 comment|/* Card definition. */
 name|parse_card
@@ -737,7 +828,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|7
+name|KWD_CONFIG
 case|:
 comment|/* config */
 name|i
@@ -911,7 +1002,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|8
+name|KWD_RESET
 case|:
 comment|/* reset */
 name|i
@@ -942,7 +1033,7 @@ name|i
 expr_stmt|;
 break|break;
 case|case
-literal|9
+name|KWD_ETHER
 case|:
 comment|/* ether */
 name|cp
@@ -976,7 +1067,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|10
+name|KWD_INSERT
 case|:
 comment|/* insert */
 name|addcmd
@@ -989,7 +1080,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|11
+name|KWD_REMOVE
 case|:
 comment|/* remove */
 name|addcmd
