@@ -19166,7 +19166,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a user file descriptor to a kernel file entry.  * The file entry is locked upon returning.  */
+comment|/*  * Convert a user file descriptor to a kernel file entry.  * A reference on the file entry is held upon returning.  */
 end_comment
 
 begin_function
