@@ -2666,6 +2666,13 @@ block|}
 block|,
 comment|/* CRD0001 - Cardinal MVP288IV ? */
 block|{
+literal|0x0000aa1a
+block|,
+name|NULL
+block|}
+block|,
+comment|/* FUJ0000 - FUJITSU Modem 33600 PNP/I2 */
+block|{
 literal|0x1200c31e
 block|,
 name|NULL
