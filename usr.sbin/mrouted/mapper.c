@@ -4291,6 +4291,15 @@ decl_stmt|;
 if|if
 condition|(
 name|e
+operator|&&
+name|e
+operator|->
+name|h_length
+operator|==
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
 condition|)
 name|memcpy
 argument_list|(

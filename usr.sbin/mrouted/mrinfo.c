@@ -1716,6 +1716,15 @@ condition|(
 name|hp
 operator|==
 name|NULL
+operator|||
+name|hp
+operator|->
+name|h_length
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|target_addr
+argument_list|)
 condition|)
 block|{
 name|fprintf
