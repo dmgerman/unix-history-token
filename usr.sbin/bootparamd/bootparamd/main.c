@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>   */
+comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.3.2.2 1997/09/15 06:26:16 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: chroot.c,v 1.1.1.1.8.2 1997/09/16 06:46:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.2 1995/05/30 03:51:39 rgrimes Exp $"
+literal|"$Id: main.c,v 1.3 1996/01/22 09:02:01 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,6 +286,19 @@ operator|,
 specifier|const
 name|DBT
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -634,20 +647,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: sa [-abcdDfijkKlmnqrstu] [-v cutoff] [file ...]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|argc
@@ -871,7 +872,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"couldn't set signal mask "
+literal|"couldn't set signal mask"
 argument_list|)
 expr_stmt|;
 name|unmask
@@ -1055,6 +1056,30 @@ block|}
 name|exit
 argument_list|(
 name|error
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: sa [-abcdDfijkKlmnqrstu] [-v cutoff] [file ...]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

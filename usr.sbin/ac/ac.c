@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ac.c,v 1.4.2.1 1997/08/29 05:14:56 imp Exp $"
+literal|"$Id: ac.c,v 1.4.2.2 1997/09/02 06:28:56 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<utmp.h>
 end_include
 
 begin_comment

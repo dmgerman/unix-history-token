@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lockd.c,v 1.2.2.1 1997/11/05 07:33:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,7 +78,6 @@ file|"lockd.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
 name|void
 name|nlm_prog_1
 name|__P
@@ -86,16 +85,16 @@ argument_list|(
 operator|(
 expr|struct
 name|svc_req
+operator|*
 operator|,
-specifier|register
 name|SVCXPRT
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|void
 name|nlm_prog_3
 name|__P
@@ -103,9 +102,10 @@ argument_list|(
 operator|(
 expr|struct
 name|svc_req
+operator|*
 operator|,
-specifier|register
 name|SVCXPRT
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

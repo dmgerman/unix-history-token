@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bootparamd.c,v 1.3.2.1 1997/09/15 06:26:15 charnier Exp $"
+literal|"$Id: bootparamd.c,v 1.3.2.2 1997/10/19 10:44:28 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include

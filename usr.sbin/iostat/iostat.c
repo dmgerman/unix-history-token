@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: iostat.c,v 1.5.2.3 1997/09/22 06:25:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkdosfs.c,v 1.2.2.2 1997/09/29 06:34:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -42,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rarpd.c,v 1.7.2.4 1997/11/05 07:27:19 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

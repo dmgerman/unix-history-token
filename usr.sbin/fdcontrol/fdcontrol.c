@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fdcontrol.c,v 1.2.6.2 1997/09/18 06:29:16 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

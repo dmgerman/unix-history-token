@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypxfrd_main.c,v 1.1.1.1.2.2 1997/11/06 07:32:21 charnier Exp $"
+literal|"$Id: ypxfrd_main.c,v 1.1.1.1.2.3 1997/11/07 03:16:22 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 

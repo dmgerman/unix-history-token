@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: portmap.c,v 1.4.2.2 1997/10/10 06:16:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -536,8 +536,7 @@ operator|(
 name|FileLayout
 operator|*
 operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 name|warn
 argument_list|(
