@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.8 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	1.9 %G%";  */
 end_comment
 
 begin_comment
@@ -1311,6 +1311,14 @@ begin_function_decl
 name|char
 modifier|*
 name|readtty
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|reedit
 parameter_list|()
 function_decl|;
 end_function_decl
