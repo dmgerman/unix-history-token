@@ -481,6 +481,10 @@ name|n
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ACPI timer looks %s min = %d, max = %d, width = %d\n"
