@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3047,7 +3047,7 @@ operator|.
 name|tcps_rcvdupack
 operator|++
 expr_stmt|;
-comment|/* 				 * If we have outstanding data (not a 				 * window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change), the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet.  Close the congestion 				 * window to half its current size 				 * to prevent a restart burst if this 				 * packet fills all the holes in the 				 * receiver's sequence space and she 				 * advertises a fully open window on 				 * the next real ack. 				 */
+comment|/* 				 * If we have outstanding data (not a 				 * window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change), the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet.  If this packet fills the 				 * only hole in the receiver's seq. 				 * space, the next real ack will fully 				 * open our window.  This means we 				 * have to do the usual slow-start to 				 * not overwhelm an intermediate gateway 				 * with a burst of packets.  Leave 				 * here with the congestion window set 				 * to allow 2 packets on the next real 				 * ack and the exp-to-linear thresh 				 * set for half the current window 				 * size (since we know we're losing at 				 * the current window size). 				 */
 if|if
 condition|(
 name|tp
@@ -3091,13 +3091,46 @@ name|tp
 operator|->
 name|snd_nxt
 decl_stmt|;
-name|u_short
-name|cwnd
+name|u_int
+name|win
 init|=
+name|MIN
+argument_list|(
+name|tp
+operator|->
+name|snd_wnd
+argument_list|,
 name|tp
 operator|->
 name|snd_cwnd
+argument_list|)
+operator|/
+literal|2
+operator|/
+name|tp
+operator|->
+name|t_maxseg
 decl_stmt|;
+if|if
+condition|(
+name|win
+operator|<
+literal|2
+condition|)
+name|win
+operator|=
+literal|2
+expr_stmt|;
+name|tp
+operator|->
+name|snd_ssthresh
+operator|=
+name|win
+operator|*
+name|tp
+operator|->
+name|t_maxseg
+expr_stmt|;
 name|tp
 operator|->
 name|t_timer
@@ -3136,24 +3169,6 @@ name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cwnd
-operator|>=
-literal|4
-operator|*
-name|tp
-operator|->
-name|t_maxseg
-condition|)
-name|tp
-operator|->
-name|snd_cwnd
-operator|=
-name|cwnd
-operator|/
-literal|2
 expr_stmt|;
 if|if
 condition|(
