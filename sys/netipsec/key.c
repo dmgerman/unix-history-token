@@ -323,12 +323,6 @@ directive|include
 file|<sys/random.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -499,6 +493,47 @@ name|sptree_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|SPTREE_LOCK_INIT
+parameter_list|()
+define|\
+value|mtx_init(&sptree_lock, "sptree", \ 		"fast ipsec security policy database", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPTREE_LOCK_DESTROY
+parameter_list|()
+value|mtx_destroy(&sptree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPTREE_LOCK
+parameter_list|()
+value|mtx_lock(&sptree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPTREE_UNLOCK
+parameter_list|()
+value|mtx_unlock(&sptree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPTREE_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&sptree_lock, MA_OWNED)
+end_define
+
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -522,6 +557,47 @@ name|mtx
 name|sahtree_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SAHTREE_LOCK_INIT
+parameter_list|()
+define|\
+value|mtx_init(&sahtree_lock, "sahtree", \ 		"fast ipsec security association database", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAHTREE_LOCK_DESTROY
+parameter_list|()
+value|mtx_destroy(&sahtree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAHTREE_LOCK
+parameter_list|()
+value|mtx_lock(&sahtree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAHTREE_UNLOCK
+parameter_list|()
+value|mtx_unlock(&sahtree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAHTREE_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&sahtree_lock, MA_OWNED)
+end_define
 
 begin_comment
 comment|/* registed list */
@@ -552,6 +628,47 @@ name|regtree_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|REGTREE_LOCK_INIT
+parameter_list|()
+define|\
+value|mtx_init(&regtree_lock, "regtree", "fast ipsec regtree", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGTREE_LOCK_DESTROY
+parameter_list|()
+value|mtx_destroy(&regtree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGTREE_LOCK
+parameter_list|()
+value|mtx_lock(&regtree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGTREE_UNLOCK
+parameter_list|()
+value|mtx_unlock(&regtree_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGTREE_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&regtree_lock, MA_OWNED)
+end_define
+
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -576,6 +693,47 @@ name|acq_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ACQ_LOCK_INIT
+parameter_list|()
+define|\
+value|mtx_init(&acq_lock, "acqtree", "fast ipsec acquire list", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACQ_LOCK_DESTROY
+parameter_list|()
+value|mtx_destroy(&acq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACQ_LOCK
+parameter_list|()
+value|mtx_lock(&acq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACQ_UNLOCK
+parameter_list|()
+value|mtx_unlock(&acq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACQ_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&acq_lock, MA_OWNED)
+end_define
+
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -599,6 +757,47 @@ name|mtx
 name|spacq_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SPACQ_LOCK_INIT
+parameter_list|()
+define|\
+value|mtx_init(&spacq_lock, "spacqtree", \ 		"fast ipsec security policy acquire list", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPACQ_LOCK_DESTROY
+parameter_list|()
+value|mtx_destroy(&spacq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPACQ_LOCK
+parameter_list|()
+value|mtx_lock(&spacq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPACQ_UNLOCK
+parameter_list|()
+value|mtx_unlock(&spacq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPACQ_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&spacq_lock, MA_OWNED)
+end_define
 
 begin_comment
 comment|/* search order for SAs */
@@ -1244,32 +1443,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LIST_FOREACH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LIST_FOREACH
-parameter_list|(
-name|elm
-parameter_list|,
-name|head
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|for (elm = LIST_FIRST(head); elm; elm = LIST_NEXT(elm, field))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -3073,7 +3246,7 @@ name|SA_ADDREF
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	(p)->refcnt++;							\ 	KASSERT((p)->refcnt != 0,					\ 		("SA refcnt overflow at %s:%u", __FILE__, __LINE__));	\ } while (0)
+value|do {						\ 	(p)->refcnt++;							\ 	IPSEC_ASSERT((p)->refcnt != 0, ("SA refcnt overflow"));		\ } while (0)
 end_define
 
 begin_define
@@ -3083,7 +3256,7 @@ name|SA_DELREF
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	KASSERT((p)->refcnt> 0,					\ 		("SA refcnt underflow at %s:%u", __FILE__, __LINE__));	\ 	(p)->refcnt--;							\ } while (0)
+value|do {						\ 	IPSEC_ASSERT((p)->refcnt> 0, ("SA refcnt underflow"));		\ 	(p)->refcnt--;							\ } while (0)
 end_define
 
 begin_define
@@ -3093,7 +3266,7 @@ name|SP_ADDREF
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	(p)->refcnt++;							\ 	KASSERT((p)->refcnt != 0,					\ 		("SP refcnt overflow at %s:%u", __FILE__, __LINE__));	\ } while (0)
+value|do {						\ 	(p)->refcnt++;							\ 	IPSEC_ASSERT((p)->refcnt != 0, ("SP refcnt overflow"));		\ } while (0)
 end_define
 
 begin_define
@@ -3103,7 +3276,7 @@ name|SP_DELREF
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	KASSERT((p)->refcnt> 0,					\ 		("SP refcnt underflow at %s:%u", __FILE__, __LINE__));	\ 	(p)->refcnt--;							\ } while (0)
+value|do {						\ 	IPSEC_ASSERT((p)->refcnt> 0, ("SP refcnt underflow"));		\ 	(p)->refcnt--;							\ } while (0)
 end_define
 
 begin_comment
@@ -3181,18 +3354,18 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|spidx
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_allocsp: null spidx"
+literal|"null spidx"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|dir
 operator|==
@@ -3203,7 +3376,7 @@ operator|==
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
 operator|(
-literal|"key_allocsp: invalid direction %u"
+literal|"invalid direction %u"
 operator|,
 name|dir
 operator|)
@@ -3215,7 +3388,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_allocsp from %s:%u\n"
+literal|"DP %s from %s:%u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|where
 argument_list|,
@@ -3233,11 +3408,8 @@ literal|"*** objects\n"
 argument|); 		kdebug_secpolicyindex(spidx)
 argument_list|)
 empty_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -3304,7 +3476,7 @@ name|dir
 argument_list|,
 name|dir
 argument_list|,
-literal|"key_allocsp"
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* found a SPD entry */
@@ -3320,11 +3492,8 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|KEYDEBUG
 argument_list|(
@@ -3332,7 +3501,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_allocsp return SP:%p (ID=%u) refcnt %u\n"
+literal|"DP %s return SP:%p (ID=%u) refcnt %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sp
 argument_list|,
@@ -3398,18 +3569,18 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|dst
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_allocsp2: null dst"
+literal|"null dst"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|dir
 operator|==
@@ -3420,7 +3591,7 @@ operator|==
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
 operator|(
-literal|"key_allocsp2: invalid direction %u"
+literal|"invalid direction %u"
 operator|,
 name|dir
 operator|)
@@ -3432,7 +3603,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_allocsp2 from %s:%u\n"
+literal|"DP %s from %s:%u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|where
 argument_list|,
@@ -3452,11 +3625,8 @@ literal|"spi %u proto %u dir %u\n"
 argument|, spi, proto, dir); 		kdebug_sockaddr(&dst->sa)
 argument_list|)
 empty_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -3572,7 +3742,7 @@ name|dir
 argument_list|,
 name|dir
 argument_list|,
-literal|"key_allocsp2"
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* found a SPD entry */
@@ -3588,11 +3758,8 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|KEYDEBUG
 argument_list|(
@@ -3600,7 +3767,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_allocsp2 return SP:%p (ID=%u) refcnt %u\n"
+literal|"DP %s return SP:%p (ID=%u) refcnt %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sp
 argument_list|,
@@ -3703,7 +3872,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_gettunnel from %s:%u\n"
+literal|"DP %s from %s:%u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|where
 argument_list|,
@@ -3727,7 +3898,9 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"protocol family mismatched %d != %d\n."
+literal|"%s: protocol family mismatched %d != %d\n."
+operator|,
+name|__func__
 operator|,
 name|isrc
 operator|->
@@ -3747,11 +3920,8 @@ goto|goto
 name|done
 goto|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -3996,11 +4166,8 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|done
 label|:
@@ -4010,7 +4177,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_gettunnel return SP:%p (ID=%u) refcnt %u\n"
+literal|"DP %s return SP:%p (ID=%u) refcnt %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sp
 argument_list|,
@@ -4064,29 +4233,29 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|isr
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_checkrequest: null isr"
+literal|"null isr"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|saidx
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_checkrequest: null saidx"
+literal|"null saidx"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|saidx
 operator|->
@@ -4101,7 +4270,7 @@ operator|==
 name|IPSEC_MODE_TUNNEL
 argument_list|,
 operator|(
-literal|"key_checkrequest: unexpected policy %u"
+literal|"unexpected policy %u"
 operator|,
 name|saidx
 operator|->
@@ -4110,14 +4279,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX guard against protocol callbacks from the crypto 	 * thread as they reference ipsecrequest.sav which we 	 * temporarily null out below.  Need to rethink how we 	 * handle bundled SA's in the callback thread. 	 */
-name|mtx_assert
+name|IPSECREQUEST_LOCK_ASSERT
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* get current level */
@@ -4132,7 +4296,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * We do allocate new SA only if the state of SA in the holder is 	 * SADB_SASTATE_DEAD.  The SA for outbound must be the oldest. 	 */
-block|if (isr->sav != NULL) { 		if (isr->sav->sah == NULL) 			panic("key_checkrequest: sah is null.\n"); 		if (isr->sav == (struct secasvar *)LIST_FIRST(&isr->sav->sah->savtree[SADB_SASTATE_DEAD])) { 			KEY_FREESAV(&isr->sav); 			isr->sav = NULL; 		} 	}
+block|if (isr->sav != NULL) { 		if (isr->sav->sah == NULL) 			panic("%s: sah is null.\n", __func__); 		if (isr->sav == (struct secasvar *)LIST_FIRST(&isr->sav->sah->savtree[SADB_SASTATE_DEAD])) { 			KEY_FREESAV(&isr->sav); 			isr->sav = NULL; 		} 	}
 else|#
 directive|else
 comment|/* 	 * we free any SA stashed in the IPsec request because a different 	 * SA may be involved each time this request is checked, either 	 * because new SAs are being configured, or this request is 	 * associated with an unconnected datagram socket, or this request 	 * is associated with a system default policy. 	 * 	 * The operation may have negative impact to performance.  We may 	 * want to check cached SA carefully, rather than picking new SA 	 * every time. 	 */
@@ -4240,8 +4404,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_checkrequest: error %d returned "
-literal|"from key_acquire.\n"
+literal|"%s: error %d returned from key_acquire\n"
+operator|,
+name|__func__
 operator|,
 name|error
 operator|)
@@ -4259,7 +4424,7 @@ name|IPSEC_LEVEL_REQUIRE
 condition|)
 block|{
 comment|/* XXX sigh, the interface to this routine is botched */
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|isr
 operator|->
@@ -4268,7 +4433,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"key_checkrequest: unexpected SA"
+literal|"unexpected SA"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4318,11 +4483,8 @@ name|stateidx
 decl_stmt|,
 name|state
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -4357,23 +4519,16 @@ name|CMP_MODE_REQID
 argument_list|)
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
-comment|/* XXX??? */
 goto|goto
 name|found
 goto|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|NULL
@@ -4469,11 +4624,8 @@ name|candidate
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -4517,7 +4669,7 @@ name|state
 argument_list|,
 name|state
 argument_list|,
-literal|"key_do_allocsa_policy"
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* initialize */
@@ -4535,25 +4687,30 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* Which SA is the better ? */
-comment|/* sanity check 2 */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|candidate
 operator|->
 name|lft_c
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null candidate lifetime"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|sav
 operator|->
 name|lft_c
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_do_allocsa_policy: "
-literal|"lifetime_current is NULL.\n"
+argument_list|,
+operator|(
+literal|"null sav lifetime"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* What the best method is to compare ? */
@@ -4642,7 +4799,7 @@ argument_list|,
 name|SADB_SASTATE_DEAD
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|d
 operator|->
@@ -4651,7 +4808,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"key_do_allocsa_policy: bogus ref count"
+literal|"bogus ref count"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4945,8 +5102,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP allocsa_policy cause "
-literal|"refcnt++:%d SA:%p\n"
+literal|"DP %s cause refcnt++:%d SA:%p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|candidate
 operator|->
@@ -4957,11 +5115,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|candidate
@@ -5014,14 +5169,14 @@ name|stateidx
 decl_stmt|,
 name|state
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|dst
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_allocsa: null dst address"
+literal|"null dst address"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5031,7 +5186,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_allocsa from %s:%u\n"
+literal|"DP %s from %s:%u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|where
 argument_list|,
@@ -5040,11 +5197,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * searching SAD. 	 * XXX: to be checked internal IP header somewhere.  Also when 	 * IPsec tunnel packet is received.  But ESP tunnel mode is 	 * encrypted so we can't check internal IP header. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -5098,7 +5252,7 @@ name|state
 argument_list|,
 name|state
 argument_list|,
-literal|"key_allocsav"
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* do not return entries w/ unusable state */
@@ -5191,11 +5345,8 @@ name|NULL
 expr_stmt|;
 name|done
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|KEYDEBUG
 argument_list|(
@@ -5203,7 +5354,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_allocsa return SA:%p; refcnt %u\n"
+literal|"DP %s return SA:%p; refcnt %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sav
 argument_list|,
@@ -5254,22 +5407,19 @@ init|=
 operator|*
 name|spp
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_freesp: null sp"
+literal|"null sp"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|SP_DELREF
 argument_list|(
@@ -5282,7 +5432,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_freesp SP:%p (ID=%u) from %s:%u; refcnt now %u\n"
+literal|"DP %s SP:%p (ID=%u) from %s:%u; refcnt now %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sp
 argument_list|,
@@ -5320,11 +5472,8 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -5343,15 +5492,14 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-comment|/* sanity check */
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|so
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_freeso: null so"
+literal|"null so"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5516,7 +5664,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_freeso: unknown address family=%d.\n"
+literal|"%s: unknown address family=%d.\n"
+operator|,
+name|__func__
 operator|,
 name|so
 operator|->
@@ -5545,7 +5695,7 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|!=
@@ -5557,7 +5707,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_freesp_so: null sp"
+literal|"null sp"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5582,7 +5732,7 @@ operator|==
 name|IPSEC_POLICY_BYPASS
 condition|)
 return|return;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 operator|(
 operator|*
@@ -5594,7 +5744,7 @@ operator|==
 name|IPSEC_POLICY_IPSEC
 argument_list|,
 operator|(
-literal|"key_freesp_so: invalid policy %u"
+literal|"invalid policy %u"
 operator|,
 operator|(
 operator|*
@@ -5644,17 +5794,18 @@ init|=
 operator|*
 name|psav
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_freesav: null sav"
+literal|"null sav"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX unguarded? */
 name|SA_DELREF
 argument_list|(
 name|sav
@@ -5666,7 +5817,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_freesav SA:%p (SPI %u) from %s:%u; refcnt now %u\n"
+literal|"DP %s SA:%p (SPI %u) from %s:%u; refcnt now %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sav
 argument_list|,
@@ -5737,24 +5890,19 @@ decl_stmt|,
 modifier|*
 name|nextisr
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_delsp: null sp"
+literal|"null sp"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|SPTREE_LOCK_ASSERT
+argument_list|()
 expr_stmt|;
 name|sp
 operator|->
@@ -5762,7 +5910,7 @@ name|state
 operator|=
 name|IPSEC_SPSTATE_DEAD
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|->
@@ -5771,7 +5919,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"key_delsp: SP with references deleted (refcnt %u)"
+literal|"SP with references deleted (refcnt %u)"
 operator|,
 name|sp
 operator|->
@@ -5877,22 +6025,19 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|spidx
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_getsp: null spidx"
+literal|"null spidx"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -5933,11 +6078,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|sp
@@ -5965,11 +6107,8 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -6047,11 +6186,8 @@ block|}
 block|}
 name|done
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|SPTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|sp
@@ -6108,18 +6244,9 @@ condition|(
 name|newsp
 condition|)
 block|{
-name|mtx_init
+name|SECPOLICY_LOCK_INIT
 argument_list|(
-operator|&
 name|newsp
-operator|->
-name|lock
-argument_list|,
-literal|"ipsec policy"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|newsp
@@ -6141,7 +6268,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_newsp from %s:%u return SP:%p\n"
+literal|"DP %s from %s:%u return SP:%p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|where
 argument_list|,
@@ -6168,12 +6297,9 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|mtx_destroy
+name|SECPOLICY_LOCK_DESTROY
 argument_list|(
-operator|&
 name|sp
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -6220,31 +6346,32 @@ name|secpolicy
 modifier|*
 name|newsp
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
-name|xpl0
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_msg2sp: NULL pointer was passed.\n"
+name|xpl0
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null xpl0"
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|len
-operator|<
+operator|>=
 sizeof|sizeof
 argument_list|(
 operator|*
 name|xpl0
 argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"key_msg2sp: invalid length.\n"
+argument_list|,
+operator|(
+literal|"policy too short: %u"
+operator|,
+name|len
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6262,7 +6389,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: Invalid msg length.\n"
+literal|"%s: Invalid msg length.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6384,7 +6513,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: Invalid msg length.\n"
+literal|"%s: Invalid msg length.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6455,8 +6586,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: "
-literal|"invalid ipsecrequest length.\n"
+literal|"%s: invalid ipsecrequest "
+literal|"length.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6498,7 +6631,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6541,7 +6676,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: invalid proto type=%u\n"
+literal|"%s: invalid proto type=%u\n"
+operator|,
+name|__func__
 operator|,
 name|xisr
 operator|->
@@ -6600,7 +6737,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: invalid mode=%u\n"
+literal|"%s: invalid mode=%u\n"
+operator|,
+name|__func__
 operator|,
 name|xisr
 operator|->
@@ -6672,8 +6811,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: reqid=%d range "
+literal|"%s: reqid=%d range "
 literal|"violation, updated by kernel.\n"
+operator|,
+name|__func__
 operator|,
 name|xisr
 operator|->
@@ -6770,7 +6911,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: invalid level=%u\n"
+literal|"%s: invalid level=%u\n"
+operator|,
+name|__func__
 operator|,
 name|xisr
 operator|->
@@ -6861,8 +7004,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: invalid request "
-literal|"address length.\n"
+literal|"%s: invalid "
+literal|"request address length.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6943,8 +7088,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: invalid request "
-literal|"address length.\n"
+literal|"%s: invalid "
+literal|"request address length.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7022,7 +7169,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: becoming tlen< 0.\n"
+literal|"%s: becoming tlen< 0.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7068,7 +7217,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_msg2sp: invalid policy type.\n"
+literal|"%s: invalid policy type.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7170,16 +7321,15 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-comment|/* sanity check. */
-if|if
-condition|(
-name|sp
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_sp2msg: NULL pointer was passed.\n"
+name|sp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null policy"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -7597,19 +7747,26 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-operator|||
-name|mhp
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"null pointer passed to key_gather"
+name|m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
+name|mhp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -7714,22 +7871,19 @@ name|sadb_msg
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|len
-operator|>
-name|MHLEN
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"assumption failed"
+name|len
+operator|<=
+name|MHLEN
+argument_list|,
+operator|(
+literal|"header too big %u"
+operator|,
+name|len
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|MGETHDR
 argument_list|(
 name|n
@@ -8041,30 +8195,50 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_spdadd: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8164,7 +8338,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdadd: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8212,7 +8388,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdadd: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8337,7 +8515,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdadd: Invalid SP direction.\n"
+literal|"%s: Invalid SP direction.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8375,7 +8555,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdadd: Invalid policy type.\n"
+literal|"%s: Invalid policy type.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8426,7 +8608,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdadd: some policy requests part required.\n"
+literal|"%s: some policy requests part required\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8500,7 +8684,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdadd: a SP entry exists already.\n"
+literal|"%s: a SP entry exists already.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8976,11 +9162,8 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|)
+name|SPACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -9349,7 +9532,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_getnewspid: to allocate policy id is failed.\n"
+literal|"%s: to allocate policy id is failed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9417,30 +9602,50 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null so"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_spddelete: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -9478,7 +9683,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spddelete: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9540,7 +9747,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spddelete: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9650,7 +9859,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spddelete: Invalid SP direction.\n"
+literal|"%s: Invalid SP direction.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9686,7 +9897,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spddelete: no SP found.\n"
+literal|"%s: no SP found.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9716,12 +9929,9 @@ name|state
 operator|=
 name|IPSEC_SPSTATE_DEAD
 expr_stmt|;
-name|mtx_destroy
+name|SECPOLICY_LOCK_DESTROY
 argument_list|(
-operator|&
 name|sp
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|KEY_FREESP
@@ -9867,30 +10077,50 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_spddelete2: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -9923,7 +10153,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spddelete2: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9978,7 +10210,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spddelete2: no SP found id:%u.\n"
+literal|"%s: no SP found id:%u.\n"
+operator|,
+name|__func__
 operator|,
 name|id
 operator|)
@@ -10000,12 +10234,9 @@ name|state
 operator|=
 name|IPSEC_SPSTATE_DEAD
 expr_stmt|;
-name|mtx_destroy
+name|SECPOLICY_LOCK_DESTROY
 argument_list|(
-operator|&
 name|sp
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|KEY_FREESP
@@ -10174,22 +10405,21 @@ name|sadb_msg
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|off
-operator|!=
-name|len
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"length inconsistency in key_spddelete2"
+name|off
+operator|==
+name|len
+argument_list|,
+operator|(
+literal|"length inconsistency (off %u len %u)"
+operator|,
+name|off
+operator|,
+name|len
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|n
 operator|->
 name|m_next
@@ -10365,30 +10595,50 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_spdget: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -10421,7 +10671,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdget: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10474,7 +10726,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdget: no SP found id:%u.\n"
+literal|"%s: no SP found id:%u.\n"
+operator|,
+name|__func__
 operator|,
 name|id
 operator|)
@@ -10579,42 +10833,45 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
-name|sp
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_spdacquire: NULL pointer is passed.\n"
+name|sp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null secpolicy"
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|sp
 operator|->
 name|req
-operator|!=
+operator|==
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_spdacquire: called but there is request.\n"
+argument_list|,
+operator|(
+literal|"policy exists"
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|sp
 operator|->
 name|policy
-operator|!=
+operator|==
 name|IPSEC_POLICY_IPSEC
-condition|)
-name|panic
-argument_list|(
-literal|"key_spdacquire: policy mismathed. IPsec is expected.\n"
+argument_list|,
+operator|(
+literal|"policy not IPSEC %u"
+operator|,
+name|sp
+operator|->
+name|policy
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Get an entry to check whether sent message or not. */
@@ -10664,11 +10921,8 @@ return|return
 literal|0
 return|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|)
+name|SPACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -10854,30 +11108,50 @@ decl_stmt|;
 name|u_int
 name|dir
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_spdflush: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -10919,6 +11193,9 @@ name|dir
 operator|++
 control|)
 block|{
+name|SPTREE_LOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|sp
@@ -10927,14 +11204,15 @@ argument|&sptree[dir]
 argument_list|,
 argument|chain
 argument_list|)
-block|{
 name|sp
 operator|->
 name|state
 operator|=
 name|IPSEC_SPSTATE_DEAD
 expr_stmt|;
-block|}
+name|SPTREE_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -10959,7 +11237,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_spdflush: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11103,30 +11383,50 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_spddump: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* search SPD entry and get buffer size. */
@@ -11698,16 +11998,15 @@ modifier|*
 name|lt
 decl_stmt|;
 comment|/* XXX: Why do we lock ? */
-comment|/* sanity check */
-if|if
-condition|(
-name|sp
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_spdexpire: NULL pointer is passed.\n"
+name|sp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null secpolicy"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* set msg header */
@@ -12238,14 +12537,14 @@ name|secashead
 modifier|*
 name|newsah
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|saidx
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_newsaidx: null saidx"
+literal|"null saidx"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12329,11 +12628,8 @@ name|state
 operator|=
 name|SADB_SASTATE_MATURE
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -12345,11 +12641,8 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 return|return
@@ -12387,33 +12680,25 @@ name|nextsav
 decl_stmt|;
 name|u_int
 name|stateidx
-decl_stmt|,
-name|state
 decl_stmt|;
 name|int
 name|zombie
 init|=
 literal|0
 decl_stmt|;
-comment|/* sanity check */
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sah
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_delsah: NULL sah"
+literal|"NULL sah"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|SAHTREE_LOCK_ASSERT
+argument_list|()
 expr_stmt|;
 comment|/* searching all SA registerd in the secindex. */
 for|for
@@ -12433,51 +12718,25 @@ name|stateidx
 operator|++
 control|)
 block|{
+name|u_int
 name|state
-operator|=
+init|=
 name|saorder_state_any
 index|[
 name|stateidx
 index|]
-expr_stmt|;
-for|for
-control|(
-name|sav
-operator|=
-operator|(
-expr|struct
-name|secasvar
-operator|*
-operator|)
-name|LIST_FIRST
+decl_stmt|;
+name|LIST_FOREACH_SAFE
 argument_list|(
-operator|&
-name|sah
-operator|->
-name|savtree
-index|[
-name|state
-index|]
-argument_list|)
-init|;
-name|sav
-operator|!=
-name|NULL
-condition|;
-name|sav
-operator|=
-name|nextsav
-control|)
-block|{
-name|nextsav
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|sav
+argument|sav
 argument_list|,
-name|chain
+argument|&sah->savtree[state]
+argument_list|,
+argument|chain
+argument_list|,
+argument|nextsav
 argument_list|)
-expr_stmt|;
+block|{
 if|if
 condition|(
 name|sav
@@ -12496,7 +12755,7 @@ name|sav
 operator|->
 name|state
 argument_list|,
-literal|"key_delsah"
+name|__func__
 argument_list|)
 expr_stmt|;
 name|KEY_FREESAV
@@ -12515,12 +12774,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* remove from tree of SA index */
 if|if
 condition|(
 operator|!
 name|zombie
-operator|&&
+condition|)
+block|{
+comment|/* delete only if there are savs */
+comment|/* remove from tree of SA index */
+if|if
+condition|(
 name|__LIST_CHAINED
 argument_list|(
 name|sah
@@ -12533,12 +12796,6 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-comment|/* don't delete sah only if there are savs. */
-if|if
-condition|(
-name|zombie
-condition|)
-return|return;
 if|if
 condition|(
 name|sah
@@ -12578,6 +12835,7 @@ argument_list|,
 name|M_IPSEC_SAH
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -12644,30 +12902,50 @@ name|sadb_sa
 modifier|*
 name|xsa
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-operator|||
-name|sah
-operator|==
-name|NULL
-condition|)
-name|panic
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_newsa: NULL pointer is passed.\n"
+name|sah
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null secashead"
+operator|)
 argument_list|)
 expr_stmt|;
 name|newsav
@@ -12699,7 +12977,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_newsa: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12810,7 +13090,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_newsa: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12924,18 +13206,9 @@ name|done
 goto|;
 block|}
 block|}
-name|mtx_init
+name|SECASVAR_LOCK_INIT
 argument_list|(
-operator|&
 name|newsav
-operator|->
-name|lock
-argument_list|,
-literal|"ipsec sa"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* reset created */
@@ -13000,7 +13273,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_newsav from %s:%u return SP:%p\n"
+literal|"DP %s from %s:%u return SP:%p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|where
 argument_list|,
@@ -13059,6 +13334,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|KASSERT
+argument_list|(
+name|sav
+operator|->
+name|iv
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"iv but no xform"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sav
@@ -13294,31 +13582,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sav
-operator|->
-name|iv
-operator|!=
-name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|sav
-operator|->
-name|iv
-argument_list|,
-name|M_IPSEC_MISC
-argument_list|)
-expr_stmt|;
-name|sav
-operator|->
-name|iv
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -13339,18 +13602,18 @@ modifier|*
 name|sav
 decl_stmt|;
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_delsav: null sav"
+literal|"null sav"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -13359,7 +13622,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"key_delsav: reference count %u> 0"
+literal|"reference count %u> 0"
 operator|,
 name|sav
 operator|->
@@ -13387,12 +13650,9 @@ argument_list|(
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|SECASVAR_LOCK_DESTROY
 argument_list|(
-operator|&
 name|sav
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -13429,11 +13689,8 @@ name|secashead
 modifier|*
 name|sah
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -13469,11 +13726,8 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|sah
@@ -13540,7 +13794,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_checkspidup: address family mismatched.\n"
+literal|"%s: address family mismatched.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13553,11 +13809,8 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* check all SAD */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -13604,11 +13857,8 @@ name|NULL
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|sav
@@ -13654,11 +13904,8 @@ name|sav
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK_ASSERT
+argument_list|()
 expr_stmt|;
 comment|/* search all status */
 for|for
@@ -13709,8 +13956,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_getsavbyspi: "
+literal|"%s: "
 literal|"invalid sav->state (queue: %d SA: %d)\n"
+operator|,
+name|__func__
 operator|,
 name|state
 operator|,
@@ -13733,12 +13982,6 @@ condition|)
 break|break;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
-expr_stmt|;
 return|return
 name|sav
 return|;
@@ -13782,26 +14025,39 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_setsaval: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* initialization */
@@ -14025,7 +14281,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsaval: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14202,7 +14460,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsaval: invalid key_auth values.\n"
+literal|"%s: invalid key_auth values.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14237,7 +14497,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsaval: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14384,7 +14646,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsaval: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14445,7 +14709,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsatval: invalid key_enc value.\n"
+literal|"%s: invalid key_enc value.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14520,7 +14786,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsaval: unable to initialize SA type %u.\n"
+literal|"%s: unable to initialize SA type %u.\n"
+operator|,
+name|__func__
 operator|,
 name|mhp
 operator|->
@@ -14573,7 +14841,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsaval: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14724,7 +14994,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsaval: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14814,7 +15086,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setsaval: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14908,7 +15182,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_mature: illegal range of SPI %u.\n"
+literal|"%s: illegal range of SPI %u.\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|u_int32_t
@@ -14970,8 +15246,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_mature: "
-literal|"invalid flag (derived) given to old-esp.\n"
+literal|"%s: invalid flag (derived) "
+literal|"given to old-esp.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -15007,8 +15285,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_mature: "
-literal|"invalid flag (derived) given to AH SA.\n"
+literal|"%s: invalid flag (derived) "
+literal|"given to AH SA.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -15030,8 +15310,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_mature: "
-literal|"protocol and algorithm mismated.\n"
+literal|"%s: protocol and algorithm "
+literal|"mismated.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -15068,8 +15350,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_mature: "
-literal|"protocol and algorithm mismated.\n"
+literal|"%s: protocol and algorithm "
+literal|"mismated.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -15106,7 +15390,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_mature: invalid cpi for IPComp.\n"
+literal|"%s: invalid cpi for IPComp.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -15132,7 +15418,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_mature: Invalid satype.\n"
+literal|"%s: Invalid satype.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -15149,11 +15437,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|key_sa_chgstate
 argument_list|(
@@ -15162,11 +15447,8 @@ argument_list|,
 name|SADB_SASTATE_MATURE
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 return|return
@@ -16856,7 +17138,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_dup: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -16908,16 +17192,15 @@ name|ia
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* sanity check */
-if|if
-condition|(
-name|sa
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_ismyaddr: NULL pointer is passed.\n"
+name|sa
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null sockaddr"
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -18555,13 +18838,22 @@ name|time_t
 name|now
 parameter_list|)
 block|{
+specifier|static
+name|u_int16_t
+name|sptree_scangen
+init|=
+literal|0
+decl_stmt|;
+name|u_int16_t
+name|gen
+init|=
+name|sptree_scangen
+operator|++
+decl_stmt|;
 name|struct
 name|secpolicy
 modifier|*
 name|sp
-decl_stmt|,
-modifier|*
-name|nextsp
 decl_stmt|;
 name|u_int
 name|dir
@@ -18581,42 +18873,35 @@ name|dir
 operator|++
 control|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|)
+name|restart
+label|:
+name|SPTREE_LOCK
+argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|sp
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH
 argument_list|(
-operator|&
-name|sptree
-index|[
-name|dir
-index|]
-argument_list|)
-init|;
-name|sp
-operator|!=
-name|NULL
-condition|;
-name|sp
-operator|=
-name|nextsp
-control|)
-block|{
-name|nextsp
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|sp
+argument|sp
 argument_list|,
-name|chain
+argument|&sptree[dir]
+argument_list|,
+argument|chain
 argument_list|)
+block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|scangen
+operator|==
+name|gen
+condition|)
+comment|/* previously handled */
+continue|continue;
+name|sp
+operator|->
+name|scangen
+operator|=
+name|gen
 expr_stmt|;
 if|if
 condition|(
@@ -18627,13 +18912,19 @@ operator|==
 name|IPSEC_SPSTATE_DEAD
 condition|)
 block|{
+comment|/* NB: clean entries created by key_spdflush */
+name|SPTREE_UNLOCK
+argument_list|()
+expr_stmt|;
 name|KEY_FREESP
 argument_list|(
 operator|&
 name|sp
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|restart
+goto|;
 block|}
 if|if
 condition|(
@@ -18650,7 +18941,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* the deletion will occur next time */
 if|if
 condition|(
 operator|(
@@ -18692,19 +18982,27 @@ name|state
 operator|=
 name|IPSEC_SPSTATE_DEAD
 expr_stmt|;
+name|SPTREE_UNLOCK
+argument_list|()
+expr_stmt|;
 name|key_spdexpire
 argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
-block|}
-name|mtx_unlock
+name|KEY_FREESP
 argument_list|(
 operator|&
-name|sptree_lock
+name|sp
 argument_list|)
+expr_stmt|;
+goto|goto
+name|restart
+goto|;
+block|}
+block|}
+name|SPTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -18736,40 +19034,20 @@ modifier|*
 name|nextsav
 decl_stmt|;
 comment|/* SAD */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|sah
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH_SAFE
 argument_list|(
-operator|&
-name|sahtree
-argument_list|)
-init|;
-name|sah
-operator|!=
-name|NULL
-condition|;
-name|sah
-operator|=
-name|nextsah
-control|)
-block|{
-name|nextsah
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|sah
+argument|sah
 argument_list|,
-name|chain
+argument|&sahtree
+argument_list|,
+argument|chain
+argument_list|,
+argument|nextsah
 argument_list|)
-expr_stmt|;
+block|{
 comment|/* if sah has been dead, then delete it and process next sah. */
 if|if
 condition|(
@@ -18788,39 +19066,17 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* if LARVAL entry doesn't become MATURE, delete it. */
-for|for
-control|(
-name|sav
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH_SAFE
 argument_list|(
-operator|&
-name|sah
-operator|->
-name|savtree
-index|[
-name|SADB_SASTATE_LARVAL
-index|]
-argument_list|)
-init|;
-name|sav
-operator|!=
-name|NULL
-condition|;
-name|sav
-operator|=
-name|nextsav
-control|)
-block|{
-name|nextsav
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|sav
+argument|sav
 argument_list|,
-name|chain
+argument|&sah->savtree[SADB_SASTATE_LARVAL]
+argument_list|,
+argument|chain
+argument_list|,
+argument|nextsav
 argument_list|)
-expr_stmt|;
+block|{
 if|if
 condition|(
 name|now
@@ -18831,7 +19087,6 @@ name|created
 operator|>
 name|key_larval_lifetime
 condition|)
-block|{
 name|KEY_FREESAV
 argument_list|(
 operator|&
@@ -18839,41 +19094,18 @@ name|sav
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 comment|/* 		 * check MATURE entry to start to send expire message 		 * whether or not. 		 */
-for|for
-control|(
-name|sav
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH_SAFE
 argument_list|(
-operator|&
-name|sah
-operator|->
-name|savtree
-index|[
-name|SADB_SASTATE_MATURE
-index|]
-argument_list|)
-init|;
-name|sav
-operator|!=
-name|NULL
-condition|;
-name|sav
-operator|=
-name|nextsav
-control|)
-block|{
-name|nextsav
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|sav
+argument|sav
 argument_list|,
-name|chain
+argument|&sah->savtree[SADB_SASTATE_MATURE]
+argument_list|,
+argument|chain
+argument_list|,
+argument|nextsav
 argument_list|)
-expr_stmt|;
+block|{
 comment|/* we don't need to check. */
 if|if
 condition|(
@@ -18899,8 +19131,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_timehandler: "
-literal|"There is no CURRENT time, why?\n"
+literal|"%s: there is no CURRENT "
+literal|"time, why?\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -19015,39 +19249,17 @@ expr_stmt|;
 block|}
 block|}
 comment|/* check DYING entry to change status to DEAD. */
-for|for
-control|(
-name|sav
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH_SAFE
 argument_list|(
-operator|&
-name|sah
-operator|->
-name|savtree
-index|[
-name|SADB_SASTATE_DYING
-index|]
-argument_list|)
-init|;
-name|sav
-operator|!=
-name|NULL
-condition|;
-name|sav
-operator|=
-name|nextsav
-control|)
-block|{
-name|nextsav
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|sav
+argument|sav
 argument_list|,
-name|chain
+argument|&sah->savtree[SADB_SASTATE_DYING]
+argument_list|,
+argument|chain
+argument_list|,
+argument|nextsav
 argument_list|)
-expr_stmt|;
+block|{
 comment|/* we don't need to check. */
 if|if
 condition|(
@@ -19073,8 +19285,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_timehandler: "
-literal|"There is no CURRENT time, why?\n"
+literal|"%s: there is no CURRENT "
+literal|"time, why?\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -19168,39 +19382,17 @@ expr_stmt|;
 block|}
 block|}
 comment|/* delete entry in DEAD */
-for|for
-control|(
-name|sav
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH_SAFE
 argument_list|(
-operator|&
-name|sah
-operator|->
-name|savtree
-index|[
-name|SADB_SASTATE_DEAD
-index|]
-argument_list|)
-init|;
-name|sav
-operator|!=
-name|NULL
-condition|;
-name|sav
-operator|=
-name|nextsav
-control|)
-block|{
-name|nextsav
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|sav
+argument|sav
 argument_list|,
-name|chain
+argument|&sah->savtree[SADB_SASTATE_DEAD]
+argument_list|,
+argument|chain
+argument_list|,
+argument|nextsav
 argument_list|)
-expr_stmt|;
+block|{
 comment|/* sanity check */
 if|if
 condition|(
@@ -19216,10 +19408,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_timehandler: "
-literal|"invalid sav->state "
-literal|"(queue: %d SA: %d): "
-literal|"kill it anyway\n"
+literal|"%s: invalid sav->state "
+literal|"(queue: %d SA: %d): kill it anyway\n"
+operator|,
+name|__func__
 operator|,
 name|SADB_SASTATE_DEAD
 operator|,
@@ -19233,11 +19425,8 @@ block|}
 comment|/* 			 * do not call key_freesav() here. 			 * sav should already be freed, and sav->refcnt 			 * shows other references to sav 			 * (such as from SPD). 			 */
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -19260,11 +19449,8 @@ modifier|*
 name|nextacq
 decl_stmt|;
 comment|/* ACQ tree */
-name|mtx_lock
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|)
+name|ACQ_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -19326,11 +19512,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|)
+name|ACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -19353,11 +19536,8 @@ modifier|*
 name|nextacq
 decl_stmt|;
 comment|/* SP ACQ tree */
-name|mtx_lock
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|)
+name|SPACQ_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -19419,11 +19599,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|)
+name|SPACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -19811,30 +19988,50 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_getspi: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -19863,7 +20060,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_getspi: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -19912,7 +20111,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_getspi: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -20043,7 +20244,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_getspi: invalid satype is passed.\n"
+literal|"%s: invalid satype is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -20414,7 +20617,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_getspi: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -20754,22 +20959,21 @@ name|sadb_sa
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|off
-operator|!=
-name|len
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"length inconsistency in key_getspi"
+name|off
+operator|==
+name|len
+argument_list|,
+operator|(
+literal|"length inconsistency (off %u len %u)"
+operator|,
+name|off
+operator|,
+name|len
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|n
 operator|->
 name|m_next
@@ -21092,7 +21296,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_do_getnewspi: SPI %u exists already.\n"
+literal|"%s: SPI %u exists already.\n"
+operator|,
+name|__func__
 operator|,
 name|min
 operator|)
@@ -21172,7 +21378,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_do_getnewspi: to allocate spi is failed.\n"
+literal|"%s: to allocate spi is failed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -21275,30 +21483,50 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_update: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -21325,7 +21553,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: invalid satype is passed.\n"
+literal|"%s: invalid satype is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -21453,7 +21683,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -21515,7 +21747,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -21679,7 +21913,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: no SA index found.\n"
+literal|"%s: no SA index found.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -21758,7 +21994,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: no larval SA with sequence %u exists.\n"
+literal|"%s: no larval SA with sequence %u "
+literal|"exists.\n"
+operator|,
+name|__func__
 operator|,
 name|mhp
 operator|->
@@ -21781,9 +22020,9 @@ return|;
 block|}
 else|#
 directive|else
-if|if
-condition|(
-operator|(
+name|SAHTREE_LOCK
+argument_list|()
+expr_stmt|;
 name|sav
 operator|=
 name|key_getsavbyspi
@@ -21794,7 +22033,13 @@ name|sa0
 operator|->
 name|sadb_sa_spi
 argument_list|)
-operator|)
+expr_stmt|;
+name|SAHTREE_UNLOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|sav
 operator|==
 name|NULL
 condition|)
@@ -21804,7 +22049,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: no such a SA found (spi:%u)\n"
+literal|"%s: no such a SA found (spi:%u)\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|u_int32_t
@@ -21850,7 +22097,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: protocol mismatched (DB=%u param=%u)\n"
+literal|"%s: protocol mismatched "
+literal|"(DB=%u param=%u)\n"
+operator|,
+name|__func__
 operator|,
 name|sav
 operator|->
@@ -21894,7 +22144,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: SPI mismatched (DB:%u param:%u)\n"
+literal|"%s: SPI mismatched (DB:%u param:%u)\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|u_int32_t
@@ -21949,7 +22201,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: pid mismatched (DB:%u param:%u)\n"
+literal|"%s: pid mismatched (DB:%u param:%u)\n"
+operator|,
+name|__func__
 operator|,
 name|sav
 operator|->
@@ -22072,7 +22326,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -22166,7 +22422,7 @@ name|sav
 operator|->
 name|state
 argument_list|,
-literal|"key_getsabyseq"
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -22189,8 +22445,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP key_getsavbyseq cause "
-literal|"refcnt++:%d SA:%p\n"
+literal|"DP %s cause refcnt++:%d SA:%p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sav
 operator|->
@@ -22287,30 +22544,50 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_add: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -22337,7 +22614,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_add: invalid satype is passed.\n"
+literal|"%s: invalid satype is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -22465,7 +22744,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_add: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -22528,7 +22809,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_add: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -22703,7 +22986,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_add: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -22750,8 +23035,11 @@ return|;
 block|}
 comment|/* create new SA entry. */
 comment|/* We can create new SA only if SPI is differenct. */
-if|if
-condition|(
+name|SAHTREE_LOCK
+argument_list|()
+expr_stmt|;
+name|newsav
+operator|=
 name|key_getsavbyspi
 argument_list|(
 name|newsah
@@ -22760,6 +23048,15 @@ name|sa0
 operator|->
 name|sadb_sa_spi
 argument_list|)
+expr_stmt|;
+name|SAHTREE_UNLOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|newsav
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ipseclog
@@ -22767,7 +23064,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_add: SA already exists.\n"
+literal|"%s: SA already exists.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -22875,7 +23174,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_update: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -22955,30 +23256,50 @@ name|idsrclen
 decl_stmt|,
 name|iddstlen
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|sah
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null secashead"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_setident: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* don't make buffer if not there */
@@ -23045,7 +23366,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setident: invalid identity.\n"
+literal|"%s: invalid identity.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23118,7 +23441,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setident: ident type mismatch.\n"
+literal|"%s: ident type mismatch.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23188,7 +23513,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setident: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23238,7 +23565,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_setident: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23306,26 +23635,39 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_getmsgbuf_x1: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* create new sadb_msg to reply. */
@@ -23533,30 +23875,50 @@ decl_stmt|;
 name|u_int16_t
 name|proto
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_delete: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -23583,7 +23945,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_delete: invalid satype is passed.\n"
+literal|"%s: invalid satype is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23624,7 +23988,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_delete: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23673,7 +24039,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_delete: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23706,7 +24074,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_delete: doing delete all.\n"
+literal|"%s: doing delete all.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23745,7 +24115,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_delete: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23828,11 +24200,8 @@ name|saidx
 argument_list|)
 expr_stmt|;
 comment|/* get a SA header */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -23895,18 +24264,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|ipseclog
 argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_delete: no SA found.\n"
+literal|"%s: no SA found.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -23928,11 +24296,8 @@ argument_list|,
 name|SADB_SASTATE_DEAD
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|KEY_FREESAV
 argument_list|(
@@ -24200,11 +24565,8 @@ operator|&
 name|saidx
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -24322,9 +24684,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_delete_all: "
-literal|"invalid sav->state "
-literal|"(queue: %d SA: %d)\n"
+literal|"%s: invalid "
+literal|"sav->state (queue %d SA %d)\n"
+operator|,
+name|__func__
 operator|,
 name|state
 operator|,
@@ -24352,11 +24715,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|{
 name|struct
@@ -24560,30 +24920,50 @@ decl_stmt|;
 name|u_int16_t
 name|proto
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_get: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -24610,7 +24990,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_get: invalid satype is passed.\n"
+literal|"%s: invalid satype is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -24660,7 +25042,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_get: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -24722,7 +25106,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_get: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -24801,11 +25187,8 @@ name|saidx
 argument_list|)
 expr_stmt|;
 comment|/* get a SA header */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -24861,11 +25244,8 @@ name|sav
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -24879,7 +25259,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_get: no SA found.\n"
+literal|"%s: no SA found.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -24927,7 +25309,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_get: there was invalid proto in SAD.\n"
+literal|"%s: there was invalid proto in SAD.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -25224,14 +25608,14 @@ argument_list|()
 expr_stmt|;
 else|else
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|l
 operator|<=
 name|MLEN
 argument_list|,
 operator|(
-literal|"key_getcomb_esp: l=%u> MLEN=%lu"
+literal|"l=%u> MLEN=%lu"
 operator|,
 name|l
 operator|,
@@ -25323,7 +25707,7 @@ name|n
 operator|->
 name|m_len
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 operator|(
 name|totlen
@@ -25334,7 +25718,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"key_getcomb_esp: totlen=%u, l=%u"
+literal|"totlen=%u, l=%u"
 operator|,
 name|totlen
 operator|,
@@ -25568,7 +25952,9 @@ default|default:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"key_getsizes_ah: unknown AH algorithm %u\n"
+literal|"%s: unknown AH algorithm %u\n"
+operator|,
+name|__func__
 operator|,
 name|alg
 operator|)
@@ -25706,14 +26092,14 @@ operator|!
 name|m
 condition|)
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|l
 operator|<=
 name|MLEN
 argument_list|,
 operator|(
-literal|"key_getcomb_ah: l=%u> MLEN=%lu"
+literal|"l=%u> MLEN=%lu"
 operator|,
 name|l
 operator|,
@@ -25915,14 +26301,14 @@ operator|!
 name|m
 condition|)
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|l
 operator|<=
 name|MLEN
 argument_list|,
 operator|(
-literal|"key_getcomb_ipcomp: l=%u> MLEN=%lu"
+literal|"l=%u> MLEN=%lu"
 operator|,
 name|l
 operator|,
@@ -26262,15 +26648,14 @@ decl_stmt|;
 name|u_int32_t
 name|seq
 decl_stmt|;
-comment|/* sanity check */
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|saidx
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_acquire: null saidx"
+literal|"null saidx"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -26283,14 +26668,14 @@ operator|->
 name|proto
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|satype
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"key_acquire: null satype, protocol %u"
+literal|"null satype, protocol %u"
 operator|,
 name|saidx
 operator|->
@@ -26770,7 +27155,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_newacq: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -26825,11 +27212,8 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* add to acqtree */
-name|mtx_lock
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|)
+name|ACQ_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -26841,11 +27225,8 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|)
+name|ACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|newacq
@@ -26872,11 +27253,8 @@ name|secacq
 modifier|*
 name|acq
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|)
+name|ACQ_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -26903,11 +27281,8 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|)
+name|ACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|acq
@@ -26933,11 +27308,8 @@ name|secacq
 modifier|*
 name|acq
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|)
+name|ACQ_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -26958,11 +27330,8 @@ name|seq
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|)
+name|ACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|acq
@@ -27020,7 +27389,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_newspacq: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -27059,11 +27430,8 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* add to spacqtree */
-name|mtx_lock
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|)
+name|SPACQ_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -27075,11 +27443,8 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|)
+name|SPACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|acq
@@ -27107,11 +27472,8 @@ name|secspacq
 modifier|*
 name|acq
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|)
+name|SPACQ_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -27141,11 +27503,8 @@ name|acq
 return|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|)
+name|SPACQ_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|NULL
@@ -27209,30 +27568,50 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_acquire2: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Error message from KMd. 	 * We assume that if error was occured in IKEd, the length of PFKEY 	 * message is equal to the size of sadb_msg structure. 	 * We do not raise error even if error occured in this function. 	 */
@@ -27276,7 +27655,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_acquire2: must specify sequence number.\n"
+literal|"%s: must specify sequence "
+literal|"number.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -27364,7 +27746,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_acquire2: invalid satype is passed.\n"
+literal|"%s: invalid satype is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -27415,7 +27799,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_acquire2: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -27478,7 +27864,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_acquire2: invalid message is passed.\n"
+literal|"%s: invalid message is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -27543,11 +27931,8 @@ name|saidx
 argument_list|)
 expr_stmt|;
 comment|/* get a SA index */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -27584,11 +27969,8 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -27602,7 +27984,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_acquire2: a SA exists already.\n"
+literal|"%s: a SA exists already.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -27639,8 +28023,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_acquire2: error %d returned "
-literal|"from key_acquire.\n"
+literal|"%s: error %d returned from key_acquire\n"
+operator|,
+name|__func__
 operator|,
 name|mhp
 operator|->
@@ -27716,30 +28101,50 @@ name|newreg
 init|=
 literal|0
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_register: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* check for invalid register message */
@@ -27789,11 +28194,8 @@ goto|goto
 name|setmsg
 goto|;
 comment|/* check whether existing or not */
-name|mtx_lock
-argument_list|(
-operator|&
-name|regtree_lock
-argument_list|)
+name|REGTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -27813,18 +28215,17 @@ operator|==
 name|so
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|regtree_lock
-argument_list|)
+name|REGTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|ipseclog
 argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_register: socket exists already.\n"
+literal|"%s: socket exists already.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -27865,18 +28266,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|regtree_lock
-argument_list|)
+name|REGTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|ipseclog
 argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_register: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -27930,11 +28330,8 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|regtree_lock
-argument_list|)
+name|REGTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|setmsg
 label|:
@@ -28546,22 +28943,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|DIGAGNOSTIC
-if|if
-condition|(
-name|off
-operator|!=
-name|len
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"length assumption failed in key_register"
+name|off
+operator|==
+name|len
+argument_list|,
+operator|(
+literal|"length assumption failed (off %u len %u)"
+operator|,
+name|off
+operator|,
+name|len
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -28603,24 +28999,20 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* sanity check */
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|so
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_freereg: NULL so"
+literal|"NULL so"
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * check whether existing or not. 	 * check all type of SA, because there is a potential that 	 * one socket is registered to multiple type of SA. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|regtree_lock
-argument_list|)
+name|REGTREE_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -28677,11 +29069,8 @@ break|break;
 block|}
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|regtree_lock
-argument_list|)
+name|REGTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -28738,34 +29127,31 @@ name|splnet
 argument_list|()
 expr_stmt|;
 comment|/*called from softclock()*/
-comment|/* sanity check */
-if|if
-condition|(
-name|sav
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_expire: NULL pointer is passed.\n"
+name|sav
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null sav"
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|sav
 operator|->
 name|sah
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_expire: Why was SA index in SA NULL.\n"
+argument_list|,
+operator|(
+literal|"null sa header"
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+comment|/* set msg header */
 name|satype
 operator|=
 name|key_proto2satype
@@ -28778,16 +29164,20 @@ name|saidx
 operator|.
 name|proto
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
+expr_stmt|;
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_expire: invalid proto is passed.\n"
+name|satype
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"invalid proto, satype %u"
+operator|,
+name|satype
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* set msg header */
 name|m
 operator|=
 name|key_setsadbmsg
@@ -29386,26 +29776,39 @@ decl_stmt|;
 name|u_int
 name|stateidx
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_flush: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -29432,7 +29835,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_flush: invalid satype is passed.\n"
+literal|"%s: invalid satype is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -29448,11 +29853,8 @@ argument_list|)
 return|;
 block|}
 comment|/* no SATYPE specified, i.e. flushing all SA. */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -29580,11 +29982,8 @@ operator|=
 name|SADB_SASTATE_DEAD
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -29619,7 +30018,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_flush: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -29779,30 +30180,50 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_dump: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* map satype to proto */
@@ -29829,7 +30250,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_dump: invalid satype is passed.\n"
+literal|"%s: invalid satype is passed.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -29849,11 +30272,8 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -29929,11 +30349,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|key_senderror
@@ -29998,18 +30415,18 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|ipseclog
 argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_dump: there was invalid proto in SAD.\n"
+literal|"%s: there was invalid proto in "
+literal|"SAD.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -30083,11 +30500,8 @@ operator|!
 name|n
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|key_senderror
@@ -30112,11 +30526,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -30164,30 +30575,50 @@ block|{
 name|int
 name|olen
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|so
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
-operator|==
+operator|!=
 name|NULL
-operator|||
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|mhp
 operator|->
 name|msg
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"key_promisc: NULL pointer is passed.\n"
+argument_list|,
+operator|(
+literal|"null msg"
+operator|)
 argument_list|)
 expr_stmt|;
 name|olen
@@ -30521,27 +30952,33 @@ decl_stmt|;
 name|int
 name|target
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-operator|||
-name|so
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_parse: NULL pointer is passed.\n"
+name|so
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null socket"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
+name|m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/*kdebug_sadb assumes msg in linear buffer*/
-block|KEYDEBUG(KEYDEBUG_KEY_DUMP, 		ipseclog((LOG_DEBUG, "key_parse: passed sadb_msg\n")); 		kdebug_sadb(msg));
+block|KEYDEBUG(KEYDEBUG_KEY_DUMP, 		ipseclog((LOG_DEBUG, "%s: passed sadb_msg\n", __func__)); 		kdebug_sadb(msg));
 endif|#
 directive|endif
 if|if
@@ -30633,7 +31070,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: invalid message length.\n"
+literal|"%s: invalid message length.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -30664,7 +31103,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: PF_KEY version %u is mismatched.\n"
+literal|"%s: PF_KEY version %u is mismatched.\n"
+operator|,
+name|__func__
 operator|,
 name|msg
 operator|->
@@ -30699,7 +31140,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: invalid type %u is passed.\n"
+literal|"%s: invalid type %u is passed.\n"
+operator|,
+name|__func__
 operator|,
 name|msg
 operator|->
@@ -30958,8 +31401,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: must specify satype "
+literal|"%s: must specify satype "
 literal|"when msg type=%u.\n"
+operator|,
+name|__func__
 operator|,
 name|msg
 operator|->
@@ -31026,7 +31471,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: illegal satype=%u\n"
+literal|"%s: illegal satype=%u\n"
+operator|,
+name|__func__
 operator|,
 name|msg
 operator|->
@@ -31065,7 +31512,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: type %u isn't supported.\n"
+literal|"%s: type %u isn't supported.\n"
+operator|,
+name|__func__
 operator|,
 name|msg
 operator|->
@@ -31105,7 +31554,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: invalid type %u is passed.\n"
+literal|"%s: invalid type %u is passed.\n"
+operator|,
+name|__func__
 operator|,
 name|msg
 operator|->
@@ -31208,7 +31659,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: upper layer protocol mismatched.\n"
+literal|"%s: upper layer protocol "
+literal|"mismatched.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -31248,7 +31702,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: address family mismatched.\n"
+literal|"%s: address family mismatched.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -31287,7 +31743,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: address struct size mismatched.\n"
+literal|"%s: address struct size "
+literal|"mismatched.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -31386,7 +31845,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: unsupported address family.\n"
+literal|"%s: unsupported address family\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -31470,7 +31931,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_parse: illegal prefixlen.\n"
+literal|"%s: illegal prefixlen.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -31601,21 +32064,25 @@ name|sadb_msg
 modifier|*
 name|msg
 decl_stmt|;
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|m
 operator|->
 name|m_len
-operator|<
+operator|>=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sadb_msg
 argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"invalid mbuf passed to key_senderror"
+argument_list|,
+operator|(
+literal|"mbuf too small, len %u"
+operator|,
+name|m
+operator|->
+name|m_len
+operator|)
 argument_list|)
 expr_stmt|;
 name|msg
@@ -31693,37 +32160,47 @@ decl_stmt|;
 name|int
 name|toff
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-operator|||
-name|mhp
-operator|==
-name|NULL
-condition|)
-name|panic
+name|IPSEC_ASSERT
 argument_list|(
-literal|"key_align: NULL pointer is passed.\n"
+name|m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null mbuf"
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
+name|mhp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null msghdr"
+operator|)
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
 name|m
 operator|->
 name|m_len
-operator|<
+operator|>=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sadb_msg
 argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"invalid mbuf passed to key_align"
+argument_list|,
+operator|(
+literal|"mbuf too small, len %u"
+operator|,
+name|m
+operator|->
+name|m_len
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* initialize */
@@ -31933,8 +32410,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_align: duplicate ext_type %u "
-literal|"is passed.\n"
+literal|"%s: duplicate ext_type "
+literal|"%u\n"
+operator|,
+name|__func__
 operator|,
 name|ext
 operator|->
@@ -31963,7 +32442,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"key_align: invalid ext_type %u is passed.\n"
+literal|"%s: invalid ext_type %u\n"
+operator|,
+name|__func__
 operator|,
 name|ext
 operator|->
@@ -32439,65 +32920,20 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sptree_lock
-argument_list|,
-literal|"sptree lock"
-argument_list|,
-literal|"fast ipsec sadb"
-argument_list|,
-name|MTX_DEF
-argument_list|)
+name|SPTREE_LOCK_INIT
+argument_list|()
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|regtree_lock
-argument_list|,
-literal|"regtree lock"
-argument_list|,
-literal|"fast ipsec sadb"
-argument_list|,
-name|MTX_DEF
-argument_list|)
+name|REGTREE_LOCK_INIT
+argument_list|()
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|,
-literal|"sahtree lock"
-argument_list|,
-literal|"fast ipsec sadb"
-argument_list|,
-name|MTX_DEF
-argument_list|)
+name|SAHTREE_LOCK_INIT
+argument_list|()
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|acq_lock
-argument_list|,
-literal|"acqtree lock"
-argument_list|,
-literal|"fast ipsec sadb"
-argument_list|,
-name|MTX_DEF
-argument_list|)
+name|ACQ_LOCK_INIT
+argument_list|()
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|spacq_lock
-argument_list|,
-literal|"spacqtree lock"
-argument_list|,
-literal|"fast ipsec sadb"
-argument_list|,
-name|MTX_DEF
-argument_list|)
+name|SPACQ_LOCK_INIT
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -32606,7 +33042,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"IPsec: Initialized Security Association Processing.\n"
+literal|"Fast IPsec: Initialized Security Association Processing.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -32644,18 +33080,17 @@ name|caddr_t
 name|dst
 decl_stmt|;
 block|{
-comment|/* sanity check */
-if|if
-condition|(
+name|IPSEC_ASSERT
+argument_list|(
 name|sav
 operator|->
 name|sah
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"sav->sah == NULL at key_checktunnelsanity"
+argument_list|,
+operator|(
+literal|"null SA header"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX: check inner IP header */
@@ -32688,25 +33123,25 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_sa_recordxfer: Null secasvar"
+literal|"Null secasvar"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_sa_recordxfer: Null mbuf"
+literal|"Null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -32781,11 +33216,8 @@ name|route
 modifier|*
 name|ro
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_LOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -32856,11 +33288,8 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|)
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -32883,24 +33312,19 @@ name|u_int8_t
 name|state
 decl_stmt|;
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"key_sa_chgstate: NULL sav"
+literal|"NULL sav"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|sahtree_lock
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|SAHTREE_LOCK_ASSERT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -32964,16 +33388,17 @@ modifier|*
 name|sav
 decl_stmt|;
 block|{
-if|if
-condition|(
-operator|!
+name|IPSEC_ASSERT
+argument_list|(
 name|sav
 operator|->
 name|iv
-condition|)
-name|panic
-argument_list|(
-literal|"key_sa_stir_iv called with sav == NULL"
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null IV"
+operator|)
 argument_list|)
 expr_stmt|;
 name|key_randomfill

@@ -114,14 +114,14 @@ name|len
 decl_stmt|,
 name|off
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m0
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"m_clone: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -263,7 +263,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Not writable, replace with a copy or coalesce with 		 * the previous mbuf if possible (since we have to copy 		 * it anyway, we try to reduce the number of mbufs and 		 * clusters so that future work is easier). 		 */
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|->
@@ -272,7 +272,7 @@ operator|&
 name|M_EXT
 argument_list|,
 operator|(
-literal|"m_clone: m_flags 0x%x"
+literal|"m_flags 0x%x"
 operator|,
 name|m
 operator|->
@@ -705,25 +705,25 @@ decl_stmt|;
 name|unsigned
 name|remain
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m0
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"m_dmakespace: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|hlen
 operator|<
 name|MHLEN
 argument_list|,
 operator|(
-literal|"m_makespace: hlen too big: %u"
+literal|"hlen too big: %u"
 operator|,
 name|hlen
 operator|)
@@ -792,14 +792,14 @@ modifier|*
 name|n
 decl_stmt|;
 comment|/* XXX code doesn't handle clusters XXX */
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|remain
 operator|<
 name|MLEN
 argument_list|,
 operator|(
-literal|"m_makespace: remainder too big: %u"
+literal|"remainder too big: %u"
 operator|,
 name|remain
 operator|)
@@ -1159,7 +1159,9 @@ comment|/* No stupid arguments. */
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"m_pad: pad length invalid (%d)\n"
+literal|"%s: pad length invalid (%d)\n"
+operator|,
+name|__func__
 operator|,
 name|n
 operator|)
@@ -1199,26 +1201,6 @@ operator|<
 name|len
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|m0
-operator|->
-name|m_next
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"m_pad: m0 null, len %u m_len %u"
-operator|,
-name|len
-operator|,
-name|m0
-operator|->
-name|m_len
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*XXX*/
 name|len
 operator|-=
 name|m0
@@ -1244,7 +1226,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"m_pad: length mismatch (should be %d instead of %d)\n"
+literal|"%s: length mismatch (should be %d instead of %d)\n"
+operator|,
+name|__func__
 operator|,
 name|m
 operator|->
@@ -1307,8 +1291,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"m_pad: length mismatch (should be %d "
-literal|"instead of %d)\n"
+literal|"%s: length mismatch (should be %d instead "
+literal|"of %d)\n"
+operator|,
+name|__func__
 operator|,
 name|m
 operator|->
@@ -1381,7 +1367,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"m_pad: unable to get extra mbuf\n"
+literal|"%s: unable to get extra mbuf\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

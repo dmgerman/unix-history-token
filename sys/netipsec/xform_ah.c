@@ -470,7 +470,7 @@ block|{
 name|int
 name|authsize
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -479,7 +479,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_hdrsiz: null xform"
+literal|"null xform"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -585,7 +585,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_init: unsupported authentication algorithm %u\n"
+literal|"%s: unsupported authentication algorithm %u\n"
+operator|,
+name|__func__
 operator|,
 name|sav
 operator|->
@@ -625,8 +627,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_init: replay state block inconsistency, "
+literal|"%s: replay state block inconsistency, "
 literal|"%s algorithm %s replay state\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|sav
@@ -668,8 +672,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_init: no authentication key for %s "
-literal|"algorithm\n"
+literal|"%s: no authentication key for %s algorithm\n"
+operator|,
+name|__func__
 operator|,
 name|thash
 operator|->
@@ -708,8 +713,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_init: invalid keylength %d, algorithm "
-literal|"%s requires keysize %d\n"
+literal|"%s: invalid keylength %d, algorithm %s requires "
+literal|"keysize %d\n"
+operator|,
+name|__func__
 operator|,
 name|keylen
 operator|,
@@ -1035,7 +1042,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers: m_pullup failed\n"
+literal|"%s: m_pullup failed\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1224,8 +1233,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers: illegal IPv4 "
-literal|"option length for option %d\n"
+literal|"%s: illegal IPv4 option length for "
+literal|"option %d\n"
+operator|,
+name|__func__
 operator|,
 name|ptr
 index|[
@@ -1303,9 +1314,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers: "
-literal|"illegal IPv4 option length for "
-literal|"option %d\n"
+literal|"%s: illegal IPv4 option "
+literal|"length for option %d\n"
+operator|,
+name|__func__
 operator|,
 name|ptr
 index|[
@@ -1355,9 +1367,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers: "
-literal|"illegal IPv4 option length for "
-literal|"option %d\n"
+literal|"%s: illegal IPv4 option "
+literal|"length for option %d\n"
+operator|,
+name|__func__
 operator|,
 name|ptr
 index|[
@@ -1431,9 +1444,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers: "
-literal|"illegal IPv4 option length for "
-literal|"option %d\n"
+literal|"%s: illegal IPv4 option "
+literal|"length for option %d\n"
+operator|,
+name|__func__
 operator|,
 name|ptr
 index|[
@@ -1487,8 +1501,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers(): malformed "
-literal|"IPv4 options header\n"
+literal|"%s: malformed IPv4 options header\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1545,7 +1560,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers: unsupported IPv6 jumbogram\n"
+literal|"%s: unsupported IPv6 jumbogram\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1701,9 +1718,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers: failed "
-literal|"to allocate memory for IPv6 "
-literal|"headers\n"
+literal|"%s: failed to allocate memory"
+literal|"for IPv6 headers\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2046,8 +2064,9 @@ default|default:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_massage_headers: unexpected "
-literal|"IPv6 header type %d"
+literal|"%s: unexpected IPv6 header type %d"
+operator|,
+name|__func__
 operator|,
 name|off
 operator|)
@@ -2187,24 +2206,23 @@ name|cryptop
 modifier|*
 name|crp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ah_input");
-endif|#
-directive|endif
-name|KASSERT
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_input: null SA"
+literal|"null SA"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -2213,11 +2231,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_input: null authentication key"
+literal|"null authentication key"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -2226,7 +2244,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_input: null authentication xform"
+literal|"null authentication xform"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2312,7 +2330,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input: packet replay failure: %s\n"
+literal|"%s: packet replay failure: %s\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_logsastr
 argument_list|(
@@ -2373,8 +2393,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input: bad authenticator length %u (expecting %lu)"
+literal|"%s: bad authenticator length %u (expecting %lu)"
 literal|" for packet in SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|hl
 operator|,
@@ -2463,7 +2485,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input: failed to acquire crypto descriptor\n"
+literal|"%s: failed to acquire crypto descriptor\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2487,14 +2511,14 @@ name|crp
 operator|->
 name|crp_desc
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|crda
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_input: null crypto descriptor"
+literal|"null crypto descriptor"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2717,7 +2741,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input: failed to allocate tdb_crypto\n"
+literal|"%s: failed to allocate tdb_crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3129,14 +3155,14 @@ name|crp
 operator|->
 name|crp_opaque
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|tc
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_input_cb: null opaque crypto data area!"
+literal|"null opaque crypto data area!"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3213,7 +3239,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input_cb: SA expired while in crypto\n"
+literal|"%s: SA expired while in crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3235,7 +3263,7 @@ name|sah
 operator|->
 name|saidx
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|saidx
 operator|->
@@ -3258,7 +3286,7 @@ operator|==
 name|AF_INET6
 argument_list|,
 operator|(
-literal|"ah_input_cb: unexpected protocol family %u"
+literal|"unexpected protocol family %u"
 operator|,
 name|saidx
 operator|->
@@ -3327,7 +3355,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input_cb: crypto error %d\n"
+literal|"%s: crypto error %d\n"
+operator|,
+name|__func__
 operator|,
 name|crp
 operator|->
@@ -3384,7 +3414,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input_cb: bogus returned buffer from crypto\n"
+literal|"%s: bogus returned buffer from crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3464,8 +3496,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input: authentication hash mismatch "
-literal|"for packet in SA %s/%08lx\n"
+literal|"%s: authentication hash mismatch for packet "
+literal|"in SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -3654,7 +3688,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_input_cb: mangled mbuf chain for SA %s/%08lx\n"
+literal|"%s: mangled mbuf chain for SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -3844,26 +3880,25 @@ name|newah
 modifier|*
 name|ah
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ah_output");
-endif|#
-directive|endif
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr
 operator|->
 name|sav
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_output: null SA"
+literal|"null SA"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3873,14 +3908,14 @@ name|sav
 operator|->
 name|tdb_authalgxform
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|ahx
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_output: null authentication xform"
+literal|"null authentication xform"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3945,8 +3980,10 @@ default|default:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output: unknown/unsupported protocol "
-literal|"family %u, SA %s/%08lx\n"
+literal|"%s: unknown/unsupported protocol family %u, "
+literal|"SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|sav
 operator|->
@@ -4022,8 +4059,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output: packet in SA %s/%08lx got too big "
+literal|"%s: packet in SA %s/%08lx got too big "
 literal|"(len %u, max len %u)\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -4104,7 +4143,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output: cannot clone mbuf chain, SA %s/%08lx\n"
+literal|"%s: cannot clone mbuf chain, SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -4170,8 +4211,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output: failed to inject %u byte AH header for SA "
+literal|"%s: failed to inject %u byte AH header for SA "
 literal|"%s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|rplen
 operator|+
@@ -4337,8 +4380,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output: replay counter wrapped for SA "
-literal|"%s/%08lx\n"
+literal|"%s: replay counter wrapped for SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -4416,7 +4460,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output: failed to acquire crypto descriptors\n"
+literal|"%s: failed to acquire crypto descriptors\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4534,7 +4580,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output: failed to allocate tdb_crypto\n"
+literal|"%s: failed to allocate tdb_crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5034,14 +5082,14 @@ name|crp
 operator|->
 name|crp_opaque
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|tc
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ah_output_cb: null opaque data area!"
+literal|"null opaque data area!"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5085,12 +5133,9 @@ name|tc
 operator|->
 name|tc_isr
 expr_stmt|;
-name|mtx_lock
+name|IPSECREQUEST_LOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|sav
@@ -5126,7 +5171,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output_cb: SA expired while in crypto\n"
+literal|"%s: SA expired while in crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5139,7 +5186,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|isr
 operator|->
@@ -5148,7 +5195,7 @@ operator|==
 name|sav
 argument_list|,
 operator|(
-literal|"ah_output_cb: SA changed\n"
+literal|"SA changed\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5191,12 +5238,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -5214,7 +5258,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output_cb: crypto error %d\n"
+literal|"%s: crypto error %d\n"
+operator|,
+name|__func__
 operator|,
 name|crp
 operator|->
@@ -5248,7 +5294,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ah_output_cb: bogus returned buffer from crypto\n"
+literal|"%s: bogus returned buffer from crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5311,12 +5359,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -5334,12 +5379,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 if|if

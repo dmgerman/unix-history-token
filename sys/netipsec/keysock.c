@@ -308,7 +308,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"key_output: NULL pointer was passed.\n"
+literal|"%s: NULL pointer was passed.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|pfkeystat
@@ -800,7 +802,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"key_sendup: NULL pointer was passed.\n"
+literal|"%s: NULL pointer was passed.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|KEYDEBUG
@@ -808,8 +812,8 @@ argument_list|(
 argument|KEYDEBUG_KEY_DUMP
 argument_list|,
 argument|printf(
-literal|"key_sendup: \n"
-argument|); 		kdebug_sadb(msg)
+literal|"%s: \n"
+argument|, __func__); 		kdebug_sadb(msg)
 argument_list|)
 empty_stmt|;
 comment|/* 	 * we increment statistics here, just in case we have ENOBUFS 	 * in this function. 	 */
@@ -1157,7 +1161,9 @@ name|KEY_SENDUP_ONE
 condition|)
 name|panic
 argument_list|(
-literal|"key_sendup_mbuf: NULL pointer was passed.\n"
+literal|"%s: NULL pointer was passed.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|pfkeystat

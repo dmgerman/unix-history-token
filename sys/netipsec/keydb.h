@@ -262,7 +262,7 @@ modifier|*
 name|replay
 decl_stmt|;
 comment|/* replay prevention */
-name|long
+name|time_t
 name|created
 decl_stmt|;
 comment|/* for lifetime */
@@ -331,6 +331,57 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SECASVAR_LOCK_INIT
+parameter_list|(
+name|_sav
+parameter_list|)
+define|\
+value|mtx_init(&(_sav)->lock, "ipsec association", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECASVAR_LOCK
+parameter_list|(
+name|_sav
+parameter_list|)
+value|mtx_lock(&(_sav)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECASVAR_UNLOCK
+parameter_list|(
+name|_sav
+parameter_list|)
+value|mtx_unlock(&(_sav)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECASVAR_LOCK_DESTROY
+parameter_list|(
+name|_sav
+parameter_list|)
+value|mtx_destroy(&(_sav)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECASVAR_LOCK_ASSERT
+parameter_list|(
+name|_sav
+parameter_list|)
+value|mtx_assert(&(_sav)->lock, MA_OWNED)
+end_define
+
 begin_comment
 comment|/* replay prevention */
 end_comment
@@ -389,12 +440,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPSEC_NONBLOCK_ACQUIRE
-end_ifndef
-
 begin_comment
 comment|/* acquiring list table. */
 end_comment
@@ -417,7 +462,7 @@ name|u_int32_t
 name|seq
 decl_stmt|;
 comment|/* sequence number */
-name|long
+name|time_t
 name|created
 decl_stmt|;
 comment|/* for lifetime */
@@ -428,11 +473,6 @@ comment|/* for lifetime */
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Sensitivity Level Specification */

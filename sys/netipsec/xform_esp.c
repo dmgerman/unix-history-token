@@ -409,7 +409,7 @@ name|NULL
 condition|)
 block|{
 comment|/*XXX not right for null algorithm--does it matter??*/
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -418,7 +418,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_hdrsiz: SA with null xform"
+literal|"SA with null xform"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -558,7 +558,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_init: unsupported encryption algorithm %d\n"
+literal|"%s: unsupported encryption algorithm %d\n"
+operator|,
+name|__func__
 operator|,
 name|sav
 operator|->
@@ -582,7 +584,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_init: no encoding key for %s algorithm\n"
+literal|"%s: no encoding key for %s algorithm\n"
+operator|,
+name|__func__
 operator|,
 name|txform
 operator|->
@@ -614,7 +618,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_init: 4-byte IV not supported with protocol\n"
+literal|"%s: 4-byte IV not supported with protocol\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -649,8 +655,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_init: invalid key length %u, must be in "
-literal|"the range [%u..%u] for algorithm %s\n"
+literal|"%s: invalid key length %u, must be in the range "
+literal|"[%u..%u] for algorithm %s\n"
+operator|,
+name|__func__
 operator|,
 name|keylen
 operator|,
@@ -720,7 +728,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_init: no memory for IV\n"
+literal|"%s: no memory for IV\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -917,7 +927,9 @@ comment|/* XXX cannot happen? */
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_init: no encoding OR authentication xform!\n"
+literal|"%s: no encoding OR authentication xform!\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -979,7 +991,29 @@ name|key_enc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* NB: sav->iv is freed elsewhere, even though we malloc it! */
+if|if
+condition|(
+name|sav
+operator|->
+name|iv
+condition|)
+block|{
+name|free
+argument_list|(
+name|sav
+operator|->
+name|iv
+argument_list|,
+name|M_XDATA
+argument_list|)
+expr_stmt|;
+name|sav
+operator|->
+name|iv
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|sav
 operator|->
 name|tdb_encalgxform
@@ -1071,24 +1105,23 @@ name|cryptop
 modifier|*
 name|crp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "esp_input");
-endif|#
-directive|endif
-name|KASSERT
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_input: null SA"
+literal|"null SA"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -1097,11 +1130,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_input: null encoding xform"
+literal|"null encoding xform"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 operator|(
 name|skip
@@ -1124,7 +1157,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"esp_input: misaligned packet, skip %u pkt len %u"
+literal|"misaligned packet, skip %u pkt len %u"
 operator|,
 name|skip
 operator|,
@@ -1252,9 +1285,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input: "
-literal|"payload of %d octets not a multiple of %d octets,"
+literal|"%s: payload of %d octets not a multiple of %d octets,"
 literal|"  SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|plen
 operator|,
@@ -1326,7 +1360,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input: packet replay check for %s\n"
+literal|"%s: packet replay check for %s\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_logsastr
 argument_list|(
@@ -1483,7 +1519,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input: failed to acquire crypto descriptors\n"
+literal|"%s: failed to acquire crypto descriptors\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1574,7 +1612,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input: failed to allocate tdb_crypto\n"
+literal|"%s: failed to allocate tdb_crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1615,14 +1655,14 @@ name|crp
 operator|->
 name|crp_desc
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|crda
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_input: null ah crypto descriptor"
+literal|"null ah crypto descriptor"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1842,14 +1882,14 @@ condition|(
 name|espx
 condition|)
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|crde
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_input: null esp crypto descriptor"
+literal|"null esp crypto descriptor"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2082,14 +2122,14 @@ name|crp
 operator|->
 name|crp_desc
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|crd
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_input_cb: null crypto descriptor!"
+literal|"null crypto descriptor!"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2104,14 +2144,14 @@ name|crp
 operator|->
 name|crp_opaque
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|tc
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_input_cb: null opaque crypto data area!"
+literal|"null opaque crypto data area!"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2182,8 +2222,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input_cb: SA expired while in crypto "
-literal|"(SA %s/%08lx proto %u)\n"
+literal|"%s: SA gone during crypto (SA %s/%08lx proto %u)\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -2227,7 +2268,7 @@ name|sah
 operator|->
 name|saidx
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|saidx
 operator|->
@@ -2250,7 +2291,7 @@ operator|==
 name|AF_INET6
 argument_list|,
 operator|(
-literal|"ah_input_cb: unexpected protocol family %u"
+literal|"unexpected protocol family %u"
 operator|,
 name|saidx
 operator|->
@@ -2329,7 +2370,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input_cb: crypto error %d\n"
+literal|"%s: crypto error %d\n"
+operator|,
+name|__func__
 operator|,
 name|crp
 operator|->
@@ -2363,7 +2406,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input_cb: bogus returned buffer from crypto\n"
+literal|"%s: bogus returned buffer from crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2464,8 +2509,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input_cb: "
+literal|"%s: "
 literal|"authentication hash mismatch for packet in SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -2602,7 +2649,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input_cb: bad mbuf chain, SA %s/%08lx\n"
+literal|"%s: bad mbuf chain, SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -2677,8 +2726,10 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input_cb: invalid padding length %d "
-literal|"for %u byte packet in SA %s/%08lx\n"
+literal|"%s: invalid padding length %d for %u byte packet "
+literal|"in SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|lastthree
 index|[
@@ -2767,8 +2818,10 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_input_cb: decryption failed "
-literal|"for packet in SA %s/%08lx\n"
+literal|"%s: decryption failed for packet in "
+literal|"SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -2791,23 +2844,6 @@ name|sav
 operator|->
 name|spi
 argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"esp_input_cb: %x %x\n"
-operator|,
-name|lastthree
-index|[
-literal|0
-index|]
-operator|,
-name|lastthree
-index|[
-literal|1
-index|]
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3044,26 +3080,25 @@ name|cryptop
 modifier|*
 name|crp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "esp_output");
-endif|#
-directive|endif
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr
 operator|->
 name|sav
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_output: null SA"
+literal|"null SA"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3079,14 +3114,14 @@ name|sav
 operator|->
 name|tdb_encalgxform
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|espx
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_output: null encoding xform"
+literal|"null encoding xform"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3243,8 +3278,10 @@ default|default:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output: unknown/unsupported protocol "
+literal|"%s: unknown/unsupported protocol "
 literal|"family %d, SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|saidx
 operator|->
@@ -3305,8 +3342,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output: packet in SA %s/%08lx got too big "
+literal|"%s: packet in SA %s/%08lx got too big "
 literal|"(len %u, max len %u)\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -3383,7 +3422,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output: cannot clone mbuf chain, SA %s/%08lx\n"
+literal|"%s: cannot clone mbuf chain, SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -3443,8 +3484,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output: failed to inject %u byte ESP hdr for SA "
-literal|"%s/%08lx\n"
+literal|"%s: %u byte ESP hdr inject failed for SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|hlen
 operator|,
@@ -3585,7 +3627,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output: m_pad failed for SA %s/%08lx\n"
+literal|"%s: m_pad failed for SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -3766,7 +3810,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output: failed to acquire crypto descriptors\n"
+literal|"%s: failed to acquire crypto descriptors\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3923,7 +3969,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output: failed to allocate tdb_crypto\n"
+literal|"%s: failed to allocate tdb_crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4171,14 +4219,14 @@ name|crp
 operator|->
 name|crp_opaque
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|tc
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"esp_output_cb: null opaque data area!"
+literal|"null opaque data area!"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4199,12 +4247,9 @@ name|tc
 operator|->
 name|tc_isr
 expr_stmt|;
-name|mtx_lock
+name|IPSECREQUEST_LOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|sav
@@ -4240,8 +4285,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output_cb: SA expired while in crypto "
-literal|"(SA %s/%08lx proto %u)\n"
+literal|"%s: SA gone during crypto (SA %s/%08lx proto %u)\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -4276,7 +4322,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|isr
 operator|->
@@ -4285,7 +4331,7 @@ operator|==
 name|sav
 argument_list|,
 operator|(
-literal|"esp_output_cb: SA changed was %p now %p\n"
+literal|"SA changed was %p now %p\n"
 operator|,
 name|isr
 operator|->
@@ -4335,12 +4381,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4358,7 +4401,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output_cb: crypto error %d\n"
+literal|"%s: crypto error %d\n"
+operator|,
+name|__func__
 operator|,
 name|crp
 operator|->
@@ -4392,7 +4437,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"esp_output_cb: bogus returned buffer from crypto\n"
+literal|"%s: bogus returned buffer from crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4461,12 +4508,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4484,12 +4528,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 if|if

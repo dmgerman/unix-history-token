@@ -310,12 +310,6 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1467,18 +1461,18 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|tdbi
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicy: null tdbi"
+literal|"null tdbi"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|dir
 operator|==
@@ -1489,7 +1483,7 @@ operator|==
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
 operator|(
-literal|"ipsec_getpolicy: invalid direction %u"
+literal|"invalid direction %u"
 operator|,
 name|dir
 operator|)
@@ -1527,14 +1521,14 @@ operator|=
 name|KEY_ALLOCSP_DEFAULT
 argument_list|()
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicy: null SP"
+literal|"null SP"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1600,40 +1594,40 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybysock: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|inp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybysock: null inpcb"
+literal|"null inpcb"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|error
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybysock: null error"
+literal|"null error"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|dir
 operator|==
@@ -1644,7 +1638,7 @@ operator|==
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybysock: invalid direction %u"
+literal|"invalid direction %u"
 operator|,
 name|dir
 operator|)
@@ -1717,14 +1711,14 @@ condition|)
 return|return
 name|NULL
 return|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|pcbsp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybysock: null pcbsp"
+literal|"null pcbsp"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1754,14 +1748,14 @@ name|sp_out
 expr_stmt|;
 break|break;
 block|}
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|currsp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybysock: null currsp"
+literal|"null currsp"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1831,8 +1825,9 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec_getpolicybysock: "
-literal|"Invalid policy for PCB %d\n"
+literal|"%s: Invalid policy for PCB %d\n"
+operator|,
+name|__func__
 operator|,
 name|currsp
 operator|->
@@ -1888,8 +1883,10 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec_getpolicybysock: "
-literal|"Illegal policy for non-priviliged defined %d\n"
+literal|"%s: Illegal policy for "
+literal|"non-priviliged defined %d\n"
+operator|,
+name|__func__
 operator|,
 name|currsp
 operator|->
@@ -1933,8 +1930,10 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec_getpolicybysock: "
-literal|"Invalid policy for PCB %d\n"
+literal|"%s: Invalid policy for "
+literal|"PCB %d\n"
+operator|,
+name|__func__
 operator|,
 name|currsp
 operator|->
@@ -1953,14 +1952,14 @@ return|;
 block|}
 block|}
 block|}
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybysock: null SP (priv %u policy %u"
+literal|"null SP (priv %u policy %u"
 operator|,
 name|pcbsp
 operator|->
@@ -1978,8 +1977,9 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP ipsec_getpolicybysock (priv %u policy %u) allocates "
-literal|"SP:%p (refcnt %u)\n"
+literal|"DP %s (priv %u policy %u) allocate SP:%p (refcnt %u)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|pcbsp
 operator|->
@@ -2046,29 +2046,29 @@ name|secpolicy
 modifier|*
 name|sp
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybyaddr: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|error
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybyaddr: null error"
+literal|"null error"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|dir
 operator|==
@@ -2079,7 +2079,7 @@ operator|==
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
 operator|(
-literal|"ipsec4_getpolicybaddr: invalid direction %u"
+literal|"invalid direction %u"
 operator|,
 name|dir
 operator|)
@@ -2130,8 +2130,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_getpolicybyaddr: setpidx failed,"
-literal|" dir %u flag %u\n"
+literal|"%s: setpidx failed, dir %u flag %u\n"
+operator|,
+name|__func__
 operator|,
 name|dir
 operator|,
@@ -2183,14 +2184,14 @@ operator|=
 name|KEY_ALLOCSP_DEFAULT
 argument_list|()
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_getpolicybyaddr: null SP"
+literal|"null SP"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2286,7 +2287,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 operator|*
 name|error
@@ -2294,7 +2295,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"ipsec4_checkpolicy: getpolicy failed w/o error"
+literal|"getpolicy failed w/o error"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2307,7 +2308,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 operator|*
 name|error
@@ -2315,7 +2316,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"ipsec4_checkpolicy: sp w/ error set to %u"
+literal|"sp w/ error set to %u"
 operator|,
 operator|*
 name|error
@@ -2335,7 +2336,9 @@ case|:
 default|default:
 name|printf
 argument_list|(
-literal|"ipsec4_checkpolicy: invalid policy %u\n"
+literal|"%s: invalid policy %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sp
 operator|->
@@ -2447,18 +2450,18 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|pcb
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_setspidx_inpcb: null pcb"
+literal|"null pcb"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|pcb
 operator|->
@@ -2467,11 +2470,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_setspidx_inpcb: null inp_sp"
+literal|"null inp_sp"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|pcb
 operator|->
@@ -2490,7 +2493,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_setspidx_inpcb: null sp_in || sp_out"
+literal|"null sp_in || sp_out"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2649,18 +2652,18 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|pcb
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_setspidx_in6pcb: null pcb"
+literal|"null pcb"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|pcb
 operator|->
@@ -2669,11 +2672,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_setspidx_in6pcb: null inp_sp"
+literal|"null inp_sp"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|pcb
 operator|->
@@ -2692,7 +2695,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_setspidx_in6pcb: null sp_in || sp_out"
+literal|"null sp_in || sp_out"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2908,14 +2911,14 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_setspidx: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2961,9 +2964,9 @@ name|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec_setspidx: "
-literal|"total of m_len(%d) != pkthdr.len(%d), "
-literal|"ignored.\n"
+literal|"%s: pkthdr len(%d) mismatch (%d), ignored.\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|len
 argument_list|,
@@ -3000,8 +3003,9 @@ name|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec_setspidx: "
-literal|"pkthdr.len(%d)< sizeof(struct ip), ignored.\n"
+literal|"%s: pkthdr len(%d) too small (v4), ignored.\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|m
 operator|->
@@ -3149,9 +3153,10 @@ name|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec_setspidx: "
-literal|"pkthdr.len(%d)< sizeof(struct ip6_hdr), "
-literal|"ignored.\n"
+literal|"%s: pkthdr len(%d) too small (v6), "
+literal|"ignored\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|m
 operator|->
@@ -3202,8 +3207,10 @@ name|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec_setspidx: "
+literal|"%s: "
 literal|"unknown IP version %u, ignored.\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|v
 argument_list|)
@@ -3242,18 +3249,18 @@ name|int
 name|off
 decl_stmt|;
 comment|/* sanity check */
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_get_ulp: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|->
@@ -3268,7 +3275,7 @@ name|ip
 argument_list|)
 argument_list|,
 operator|(
-literal|"ipsec4_get_ulp: packet too short"
+literal|"packet too short"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3991,7 +3998,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_get_ulp: NULL pointer was passed.\n"
+literal|"%s: NULL pointer was passed.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|KEYDEBUG
@@ -3999,8 +4008,8 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 argument|printf(
-literal|"ipsec6_get_ulp:\n"
-argument|); kdebug_mbuf(m)
+literal|"%s:\n"
+argument|, __func__); kdebug_mbuf(m)
 argument_list|)
 empty_stmt|;
 comment|/* set default */
@@ -4656,7 +4665,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_init_policy: NULL pointer was passed.\n"
+literal|"%s: NULL pointer was passed.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|new
@@ -4693,7 +4704,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"ipsec_init_policy: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4701,34 +4714,14 @@ return|return
 name|ENOBUFS
 return|;
 block|}
-if|if
-condition|(
-name|so
-operator|->
-name|so_cred
-operator|!=
-literal|0
-operator|&&
-name|so
-operator|->
-name|so_cred
-operator|->
-name|cr_uid
-operator|==
-literal|0
-condition|)
 name|new
 operator|->
 name|priv
 operator|=
-literal|1
-expr_stmt|;
-else|else
-name|new
-operator|->
-name|priv
-operator|=
-literal|0
+name|IPSEC_IS_PRIVILEGED_SO
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4973,18 +4966,9 @@ name|p
 operator|!=
 name|NULL
 condition|)
-name|mtx_init
+name|IPSECREQUEST_LOCK_INIT
 argument_list|(
-operator|&
 name|p
-operator|->
-name|lock
-argument_list|,
-literal|"ipsec request"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -5003,12 +4987,9 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|mtx_destroy
+name|IPSECREQUEST_LOCK_DESTROY
 argument_list|(
-operator|&
 name|p
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -5434,8 +5415,8 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 argument|printf(
-literal|"ipsec_set_policy: passed policy\n"
-argument|); 		kdebug_sadb_x_policy((struct sadb_ext *)xpl)
+literal|"%s: passed policy\n"
+argument|, __func__); 		kdebug_sadb_x_policy((struct sadb_ext *)xpl)
 argument_list|)
 empty_stmt|;
 comment|/* check policy type */
@@ -5517,8 +5498,8 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 argument|printf(
-literal|"ipsec_set_policy: new policy\n"
-argument|); 		kdebug_secpolicy(newsp)
+literal|"%s: new policy\n"
+argument|, __func__); 		kdebug_secpolicy(newsp)
 argument_list|)
 empty_stmt|;
 return|return
@@ -5582,7 +5563,9 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"ipsec_get_policy: No more memory.\n"
+literal|"%s: No more memory.\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5604,8 +5587,8 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 argument|printf(
-literal|"ipsec_get_policy:\n"
-argument|); 		kdebug_mbuf(*mp)
+literal|"%s:\n"
+argument|, __func__); kdebug_mbuf(*mp)
 argument_list|)
 empty_stmt|;
 return|return
@@ -5733,7 +5716,9 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec4_set_policy: invalid direction=%u\n"
+literal|"%s: invalid direction=%u\n"
+operator|,
+name|__func__
 operator|,
 name|xpl
 operator|->
@@ -5820,7 +5805,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|inp
 operator|->
@@ -5829,7 +5814,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_get_policy: null inp_sp"
+literal|"null inp_sp"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5893,7 +5878,9 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec4_set_policy: invalid direction=%u\n"
+literal|"%s: invalid direction=%u\n"
+operator|,
+name|__func__
 operator|,
 name|xpl
 operator|->
@@ -5932,14 +5919,14 @@ modifier|*
 name|inp
 decl_stmt|;
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|inp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_delete_pcbpolicy: null inp"
+literal|"null inp"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6138,7 +6125,9 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec6_set_policy: invalid direction=%u\n"
+literal|"%s: invalid direction=%u\n"
+operator|,
+name|__func__
 operator|,
 name|xpl
 operator|->
@@ -6225,7 +6214,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|in6p
 operator|->
@@ -6234,7 +6223,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_get_policy: null in6p_sp"
+literal|"null in6p_sp"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6298,7 +6287,9 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec6_set_policy: invalid direction=%u\n"
+literal|"%s: invalid direction=%u\n"
+operator|,
+name|__func__
 operator|,
 name|xpl
 operator|->
@@ -6333,14 +6324,14 @@ modifier|*
 name|in6p
 decl_stmt|;
 block|{
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|in6p
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_delete_pcbpolicy: null in6p"
+literal|"null in6p"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6450,7 +6441,7 @@ name|ah_trans_deflev
 decl_stmt|,
 name|ah_net_deflev
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|isr
 operator|!=
@@ -6463,11 +6454,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_get_reqlevel: null argument"
+literal|"null argument"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|isr
 operator|->
@@ -6494,7 +6485,7 @@ operator|.
 name|sa_family
 argument_list|,
 operator|(
-literal|"ipsec_get_reqlevel: af family mismatch, src %u, dst %u"
+literal|"af family mismatch, src %u, dst %u"
 operator|,
 name|isr
 operator|->
@@ -6631,7 +6622,9 @@ comment|/* INET6 */
 default|default:
 name|panic
 argument_list|(
-literal|"key_get_reqlevel: unknown af %u"
+literal|"%s: unknown af %u"
+argument_list|,
+name|__func__
 argument_list|,
 name|isr
 operator|->
@@ -6727,8 +6720,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec_get_reqlevel: "
-literal|"Illegal protocol defined %u\n"
+literal|"%s: Illegal protocol defined %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|isr
 operator|->
@@ -6763,7 +6757,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec_get_reqlevel: Illegal IPsec level %u\n"
+literal|"%s: Illegal IPsec level %u\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|isr
 operator|->
@@ -6809,8 +6805,8 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DATA
 argument_list|,
 argument|printf(
-literal|"ipsec_in_reject: using SP\n"
-argument|); 		kdebug_secpolicy(sp)
+literal|"%s: using SP\n"
+argument|, __func__); kdebug_secpolicy(sp)
 argument_list|)
 empty_stmt|;
 comment|/* check policy */
@@ -6837,7 +6833,7 @@ return|return
 literal|0
 return|;
 block|}
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|->
@@ -6846,7 +6842,7 @@ operator|==
 name|IPSEC_POLICY_IPSEC
 argument_list|,
 operator|(
-literal|"ipsec_in_reject: invalid policy %u"
+literal|"invalid policy %u"
 operator|,
 name|sp
 operator|->
@@ -6919,7 +6915,9 @@ name|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec_in_reject: ESP m_flags:%x\n"
+literal|"%s: ESP m_flags:%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|m
 operator|->
@@ -6967,7 +6965,9 @@ name|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec_in_reject: ESP/AH m_flags:%x\n"
+literal|"%s: ESP/AH m_flags:%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|m
 operator|->
@@ -7006,7 +7006,9 @@ name|KEYDEBUG_IPSEC_DUMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec_in_reject: AH m_flags:%x\n"
+literal|"%s: AH m_flags:%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|m
 operator|->
@@ -7067,14 +7069,14 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_in_reject_so: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7327,8 +7329,8 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DATA
 argument_list|,
 argument|printf(
-literal|"ipsec_hdrsiz: using SP\n"
-argument|); 		kdebug_secpolicy(sp)
+literal|"%s: using SP\n"
+argument|, __func__); kdebug_secpolicy(sp)
 argument_list|)
 empty_stmt|;
 switch|switch
@@ -7351,7 +7353,7 @@ return|return
 literal|0
 return|;
 block|}
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sp
 operator|->
@@ -7360,7 +7362,7 @@ operator|==
 name|IPSEC_POLICY_IPSEC
 argument_list|,
 operator|(
-literal|"ipsec_hdrsiz: invalid policy %u"
+literal|"invalid policy %u"
 operator|,
 name|sp
 operator|->
@@ -7503,8 +7505,10 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec_hdrsiz: "
-literal|"unknown AF %d in IPsec tunnel SA\n"
+literal|"%s: unknown AF %d in "
+literal|"IPsec tunnel SA\n"
+operator|,
+name|__func__
 operator|,
 operator|(
 operator|(
@@ -7577,14 +7581,14 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_hdrsiz: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7644,7 +7648,9 @@ name|KEYDEBUG_IPSEC_DATA
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec4_hdrsiz: size:%lu.\n"
+literal|"%s: size:%lu.\n"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|unsigned
@@ -7720,18 +7726,18 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_hdrsiz: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|in6p
 operator|==
@@ -7744,7 +7750,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_hdrsize: socket w/o inpcb"
+literal|"socket w/o inpcb"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7807,7 +7813,9 @@ name|KEYDEBUG_IPSEC_DATA
 argument_list|,
 name|printf
 argument_list|(
-literal|"ipsec6_hdrsiz: size:%lu.\n"
+literal|"%s: size:%lu.\n"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|unsigned
@@ -7879,24 +7887,23 @@ name|int
 name|frlast
 decl_stmt|;
 comment|/* constant: last frame */
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipsec_chkreplay");
-endif|#
-directive|endif
-name|KASSERT
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_chkreplay: Null SA"
+literal|"Null SA"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -7905,7 +7912,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_chkreplay: Null replay state"
+literal|"Null replay state"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8082,24 +8089,23 @@ name|int
 name|frlast
 decl_stmt|;
 comment|/* constant: last frame */
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipsec_updatereplay");
-endif|#
-directive|endif
-name|KASSERT
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_updatereplay: Null SA"
+literal|"Null SA"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -8108,7 +8114,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_updatereplay: Null replay state"
+literal|"Null replay state"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8401,7 +8407,9 @@ argument_list|(
 operator|(
 name|LOG_WARNING
 operator|,
-literal|"replay counter made %d cycle. %s\n"
+literal|"%s: replay counter made %d cycle. %s\n"
+operator|,
+name|__func__
 operator|,
 name|replay
 operator|->
@@ -8770,7 +8778,7 @@ name|sah
 operator|->
 name|saidx
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|saidx
 operator|->
@@ -8789,7 +8797,7 @@ operator|.
 name|sa_family
 argument_list|,
 operator|(
-literal|"ipsec_logsastr: address family mismatch"
+literal|"address family mismatch"
 operator|)
 argument_list|)
 expr_stmt|;

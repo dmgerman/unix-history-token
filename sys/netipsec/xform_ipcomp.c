@@ -366,7 +366,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_init: unsupported compression algorithm %d\n"
+literal|"%s: unsupported compression algorithm %d\n"
+operator|,
+name|__func__
 operator|,
 name|sav
 operator|->
@@ -523,12 +525,11 @@ name|hlen
 init|=
 name|IPCOMP_HLENGTH
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipcomp_input");
-endif|#
-directive|endif
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Get crypto descriptors */
 name|crp
 operator|=
@@ -552,7 +553,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_input: no crypto descriptors\n"
+literal|"%s: no crypto descriptors\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -608,7 +611,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_input: cannot allocate tdb_crypto\n"
+literal|"%s: cannot allocate tdb_crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -920,14 +925,14 @@ name|crp
 operator|->
 name|crp_opaque
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|tc
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipcomp_input_cb: null opaque crypto data area!"
+literal|"null opaque crypto data area!"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -998,7 +1003,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_input_cb: SA expired while in crypto\n"
+literal|"%s: SA expired while in crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1020,7 +1027,7 @@ name|sah
 operator|->
 name|saidx
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|saidx
 operator|->
@@ -1043,7 +1050,7 @@ operator|==
 name|AF_INET6
 argument_list|,
 operator|(
-literal|"ah_input_cb: unexpected protocol family %u"
+literal|"unexpected protocol family %u"
 operator|,
 name|saidx
 operator|->
@@ -1110,7 +1117,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_input_cb: crypto error %d\n"
+literal|"%s: crypto error %d\n"
+operator|,
+name|__func__
 operator|,
 name|crp
 operator|->
@@ -1144,7 +1153,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_input_cb: null mbuf returned from crypto\n"
+literal|"%s: null mbuf returned from crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1242,7 +1253,9 @@ comment|/*XXX*/
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_input_cb: m_pullup failed\n"
+literal|"%s: m_pullup failed\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1310,7 +1323,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_input_cb: bad mbuf chain, IPCA %s/%08lx\n"
+literal|"%s: bad mbuf chain, IPCA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -1512,26 +1527,25 @@ name|ipcomp
 modifier|*
 name|ipcomp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipcomp_output");
-endif|#
-directive|endif
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr
 operator|->
 name|sav
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipcomp_output: null SA"
+literal|"null SA"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1541,14 +1555,14 @@ name|sav
 operator|->
 name|tdb_compalgxform
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|ipcompx
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipcomp_output: null compression xform"
+literal|"null compression xform"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1625,8 +1639,10 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output: unknown/unsupported protocol family %d"
-literal|", IPCA %s/%08lx\n"
+literal|"%s: unknown/unsupported protocol family %d, "
+literal|"IPCA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|sav
 operator|->
@@ -1691,8 +1707,10 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output: packet in IPCA %s/%08lx got too big "
+literal|"%s: packet in IPCA %s/%08lx got too big "
 literal|"(len %u, max len %u)\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -1769,7 +1787,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output: cannot clone mbuf chain, IPCA %s/%08lx\n"
+literal|"%s: cannot clone mbuf chain, IPCA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -1833,8 +1853,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output: failed to inject IPCOMP header for "
-literal|"IPCA %s/%08lx\n"
+literal|"%s: IPCOMP header inject failed for IPCA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -2024,7 +2045,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output: failed to acquire crypto descriptor\n"
+literal|"%s: failed to acquire crypto descriptor\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2128,7 +2151,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output: failed to allocate tdb_crypto\n"
+literal|"%s: failed to allocate tdb_crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2321,14 +2346,14 @@ name|crp
 operator|->
 name|crp_opaque
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|tc
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipcomp_output_cb: null opaque data area!"
+literal|"null opaque data area!"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2363,12 +2388,9 @@ name|tc
 operator|->
 name|tc_isr
 expr_stmt|;
-name|mtx_lock
+name|IPSECREQUEST_LOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|sav
@@ -2404,7 +2426,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output_cb: SA expired while in crypto\n"
+literal|"%s: SA expired while in crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2417,7 +2441,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|isr
 operator|->
@@ -2426,7 +2450,7 @@ operator|==
 name|sav
 argument_list|,
 operator|(
-literal|"ipcomp_output_cb: SA changed\n"
+literal|"SA changed\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2470,12 +2494,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2493,7 +2514,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output_cb: crypto error %d\n"
+literal|"%s: crypto error %d\n"
+operator|,
+name|__func__
 operator|,
 name|crp
 operator|->
@@ -2527,7 +2550,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output_cb: bogus return buffer from crypto\n"
+literal|"%s: bogus return buffer from crypto\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2649,8 +2674,10 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipcomp_output: unknown/unsupported protocol "
+literal|"%s: unknown/unsupported protocol "
 literal|"family %d, IPCA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|sav
 operator|->
@@ -2731,12 +2758,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2754,12 +2778,9 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IPSECREQUEST_UNLOCK
 argument_list|(
-operator|&
 name|isr
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 if|if

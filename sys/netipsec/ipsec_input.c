@@ -264,12 +264,6 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/net_osdep.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -285,6 +279,25 @@ name|z
 parameter_list|)
 value|((p) == IPPROTO_ESP ? (x)++ : \ 			    (p) == IPPROTO_AH ? (y)++ : (z)++)
 end_define
+
+begin_function_decl
+specifier|static
+name|void
+name|ipsec4_common_ctlinput
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * ipsec_common_input gets called when an IPsec-protected packet  * is received by IPv4 or IPv6.  It's job is to find the right SA  # and call the appropriate transform.  The transform callback  * takes care of further processing (like ingress filtering).  */
@@ -345,14 +358,14 @@ operator|.
 name|ipcomps_input
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec_common_input: null packet"
+literal|"null packet"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -455,7 +468,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_common_input: packet too small\n"
+literal|"%s: packet too small\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -694,8 +709,9 @@ default|default:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_common_input: unsupported protocol "
-literal|"family %u\n"
+literal|"%s: unsupported protocol family %u\n"
+operator|,
+name|__func__
 operator|,
 name|af
 operator|)
@@ -750,8 +766,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_common_input: no key association found for"
-literal|" SA %s/%08lx/%u\n"
+literal|"%s: no key association found for SA %s/%08lx/%u\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -809,8 +826,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_common_input: attempted to use uninitialized"
-literal|" SA %s/%08lx/%u\n"
+literal|"%s: attempted to use uninitialized SA %s/%08lx/%u\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -1005,6 +1023,55 @@ end_function
 
 begin_function
 name|void
+name|ah4_ctlinput
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|,
+name|void
+modifier|*
+name|v
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sa
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+operator|&&
+name|sa
+operator|->
+name|sa_len
+operator|==
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+condition|)
+name|ipsec4_common_ctlinput
+argument_list|(
+name|cmd
+argument_list|,
+name|sa
+argument_list|,
+name|v
+argument_list|,
+name|IPPROTO_AH
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|esp4_input
 parameter_list|(
 name|struct
@@ -1021,6 +1088,55 @@ argument_list|(
 name|m
 argument_list|,
 name|off
+argument_list|,
+name|IPPROTO_ESP
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|esp4_ctlinput
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|,
+name|void
+modifier|*
+name|v
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sa
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+operator|&&
+name|sa
+operator|->
+name|sa_len
+operator|==
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+condition|)
+name|ipsec4_common_ctlinput
+argument_list|(
+name|cmd
+argument_list|,
+name|sa
+argument_list|,
+name|v
 argument_list|,
 name|IPPROTO_ESP
 argument_list|)
@@ -1113,35 +1229,34 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipsec4_common_input_cb");
-endif|#
-directive|endif
-name|KASSERT
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_common_input_cb: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_common_input_cb: null SA"
+literal|"null SA"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -1150,7 +1265,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec4_common_input_cb: null SAH"
+literal|"null SAH"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1173,14 +1288,14 @@ name|sa
 operator|.
 name|sa_family
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|af
 operator|==
 name|AF_INET
 argument_list|,
 operator|(
-literal|"ipsec4_common_input_cb: unexpected af %u"
+literal|"unexpected af %u"
 operator|,
 name|af
 operator|)
@@ -1192,7 +1307,7 @@ name|saidx
 operator|->
 name|proto
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sproto
 operator|==
@@ -1207,7 +1322,7 @@ operator|==
 name|IPPROTO_IPCOMP
 argument_list|,
 operator|(
-literal|"ipsec4_common_input_cb: unexpected security protocol %u"
+literal|"unexpected security protocol %u"
 operator|,
 name|sproto
 operator|)
@@ -1224,7 +1339,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec4_common_input_cb: null mbuf"
+literal|"%s: null mbuf"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1288,8 +1405,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec4_common_input_cb: processing failed "
-literal|"for SA %s/%08lx\n"
+literal|"%s: processing failed for SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -1568,9 +1686,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec4_common_input_cb: inner "
-literal|"source address %s doesn't correspond to "
-literal|"expected proxy source %s, SA %s/%08lx\n"
+literal|"%s: inner source address %s doesn't "
+literal|"correspond to expected proxy source %s, "
+literal|"SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|inet_ntoa4
 argument_list|(
@@ -1790,9 +1910,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec4_common_input_cb: inner "
-literal|"source address %s doesn't correspond to "
-literal|"expected proxy source %s, SA %s/%08lx\n"
+literal|"%s: inner source address %s doesn't "
+literal|"correspond to expected proxy source %s, "
+literal|"SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ip6_sprintf
 argument_list|(
@@ -1899,7 +2021,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec4_common_input_cb: failed to get tag\n"
+literal|"%s: failed to get tag\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2034,8 +2158,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec4_common_input_cb: queue full; "
-literal|"proto %u packet dropped\n"
+literal|"%s: queue full; proto %u packet dropped\n"
+operator|,
+name|__func__
 operator|,
 name|sproto
 operator|)
@@ -2058,6 +2183,30 @@ expr_stmt|;
 return|return
 name|error
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ipsec4_common_ctlinput
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|,
+name|void
+modifier|*
+name|v
+parameter_list|,
+name|int
+name|proto
+parameter_list|)
+block|{
+comment|/* XXX nothing just yet */
 block|}
 end_function
 
@@ -2125,7 +2274,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec6_common_input: bad offset %u\n"
+literal|"%s: bad offset %u\n"
+operator|,
+name|__func__
 operator|,
 operator|*
 name|offp
@@ -2229,14 +2380,14 @@ operator|)
 operator|<<
 literal|3
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|l
 operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"ah6_input: l went zero or negative"
+literal|"l went zero or negative"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2265,8 +2416,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec6_common_input: bad packet header chain, "
-literal|"protoff %u, l %u, off %u\n"
+literal|"%s: bad packet header chain, protoff %u, "
+literal|"l %u, off %u\n"
+operator|,
+name|__func__
 operator|,
 name|protoff
 operator|,
@@ -2344,242 +2497,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|esp6_ctlinput
-parameter_list|(
-name|int
-name|cmd
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|sa
-parameter_list|,
-name|void
-modifier|*
-name|d
-parameter_list|)
-block|{
-if|if
-condition|(
-name|sa
-operator|->
-name|sa_family
-operator|!=
-name|AF_INET6
-operator|||
-name|sa
-operator|->
-name|sa_len
-operator|!=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in6
-argument_list|)
-condition|)
-return|return;
-if|if
-condition|(
-operator|(
-name|unsigned
-operator|)
-name|cmd
-operator|>=
-name|PRC_NCMDS
-condition|)
-return|return;
-comment|/* if the parameter is from icmp6, decode it. */
-if|if
-condition|(
-name|d
-operator|!=
-name|NULL
-condition|)
-block|{
-name|struct
-name|ip6ctlparam
-modifier|*
-name|ip6cp
-init|=
-operator|(
-expr|struct
-name|ip6ctlparam
-operator|*
-operator|)
-name|d
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-init|=
-name|ip6cp
-operator|->
-name|ip6c_m
-decl_stmt|;
-name|int
-name|off
-init|=
-name|ip6cp
-operator|->
-name|ip6c_off
-decl_stmt|;
-name|struct
-name|ip6ctlparam
-name|ip6cp1
-decl_stmt|;
-comment|/* 		 * Notify the error to all possible sockets via pfctlinput2. 		 * Since the upper layer information (such as protocol type, 		 * source and destination ports) is embedded in the encrypted 		 * data and might have been cut, we can't directly call 		 * an upper layer ctlinput function. However, the pcbnotify 		 * function will consider source and destination addresses 		 * as well as the flow info value, and may be able to find 		 * some PCB that should be notified. 		 * Although pfctlinput2 will call esp6_ctlinput(), there is 		 * no possibility of an infinite loop of function calls, 		 * because we don't pass the inner IPv6 header. 		 */
-name|bzero
-argument_list|(
-operator|&
-name|ip6cp1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ip6cp1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ip6cp1
-operator|.
-name|ip6c_src
-operator|=
-name|ip6cp
-operator|->
-name|ip6c_src
-expr_stmt|;
-name|pfctlinput2
-argument_list|(
-name|cmd
-argument_list|,
-name|sa
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|ip6cp1
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Then go to special cases that need ESP header information. 		 * XXX: We assume that when ip6 is non NULL, 		 * M and OFF are valid. 		 */
-if|if
-condition|(
-name|cmd
-operator|==
-name|PRC_MSGSIZE
-condition|)
-block|{
-name|struct
-name|secasvar
-modifier|*
-name|sav
-decl_stmt|;
-name|u_int32_t
-name|spi
-decl_stmt|;
-name|int
-name|valid
-decl_stmt|;
-comment|/* check header length before using m_copydata */
-if|if
-condition|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|<
-name|off
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|esp
-argument_list|)
-condition|)
-return|return;
-name|m_copydata
-argument_list|(
-name|m
-argument_list|,
-name|off
-operator|+
-name|offsetof
-argument_list|(
-expr|struct
-name|esp
-argument_list|,
-name|esp_spi
-argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
-argument_list|)
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|spi
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Check to see if we have a valid SA corresponding to 			 * the address in the ICMP message payload. 			 */
-name|sav
-operator|=
-name|KEY_ALLOCSA
-argument_list|(
-operator|(
-expr|union
-name|sockaddr_union
-operator|*
-operator|)
-name|sa
-argument_list|,
-name|IPPROTO_ESP
-argument_list|,
-name|spi
-argument_list|)
-expr_stmt|;
-name|valid
-operator|=
-operator|(
-name|sav
-operator|!=
-name|NULL
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|sav
-condition|)
-name|KEY_FREESAV
-argument_list|(
-operator|&
-name|sav
-argument_list|)
-expr_stmt|;
-comment|/* XXX Further validation? */
-comment|/* 			 * Depending on whether the SA is "valid" and 			 * routing table size (mtudisc_{hi,lo}wat), we will: 			 * - recalcurate the new MTU and create the 			 *   corresponding routing entry, or 			 * - ignore the MTU change notification. 			 */
-name|icmp6_mtudisc_update
-argument_list|(
-name|ip6cp
-argument_list|,
-name|valid
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* we normally notify any pcb here */
-block|}
-block|}
-end_function
-
 begin_comment
 comment|/*  * IPsec input callback, called by the transform callback. Takes care of  * filtering and other sanity checks on the processed packet.  */
 end_comment
@@ -2648,29 +2565,29 @@ name|error
 decl_stmt|,
 name|nest
 decl_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|m
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_common_input_cb: null mbuf"
+literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_common_input_cb: null SA"
+literal|"null SA"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -2679,7 +2596,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipsec6_common_input_cb: null SAH"
+literal|"null SAH"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2702,14 +2619,14 @@ name|sa
 operator|.
 name|sa_family
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|af
 operator|==
 name|AF_INET6
 argument_list|,
 operator|(
-literal|"ipsec6_common_input_cb: unexpected af %u"
+literal|"unexpected af %u"
 operator|,
 name|af
 operator|)
@@ -2721,7 +2638,7 @@ name|saidx
 operator|->
 name|proto
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sproto
 operator|==
@@ -2736,7 +2653,7 @@ operator|==
 name|IPPROTO_IPCOMP
 argument_list|,
 operator|(
-literal|"ipsec6_common_input_cb: unexpected security protocol %u"
+literal|"unexpected security protocol %u"
 operator|,
 name|sproto
 operator|)
@@ -2753,7 +2670,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec4_common_input_cb: null mbuf"
+literal|"%s: null mbuf"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2816,8 +2735,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_common_input_cb: processing failed "
-literal|"for SA %s/%08lx\n"
+literal|"%s: processing failed for SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -3065,9 +2985,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_common_input_cb: inner "
-literal|"source address %s doesn't correspond to "
-literal|"expected proxy source %s, SA %s/%08lx\n"
+literal|"%s: inner source address %s doesn't "
+literal|"correspond to expected proxy source %s, "
+literal|"SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|inet_ntoa4
 argument_list|(
@@ -3284,9 +3206,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_common_input_cb: inner "
-literal|"source address %s doesn't correspond to "
-literal|"expected proxy source %s, SA %s/%08lx\n"
+literal|"%s: inner source address %s doesn't "
+literal|"correspond to expected proxy source %s, "
+literal|"SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ip6_sprintf
 argument_list|(
@@ -3390,8 +3314,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipsec_common_input_cb: failed to "
-literal|"get tag\n"
+literal|"%s: failed to get tag\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3476,6 +3401,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|mt
+operator|!=
+name|NULL
+condition|)
 name|mt
 operator|->
 name|m_tag_id
@@ -3664,6 +3595,242 @@ expr_stmt|;
 return|return
 name|error
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|esp6_ctlinput
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|,
+name|void
+modifier|*
+name|d
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sa
+operator|->
+name|sa_family
+operator|!=
+name|AF_INET6
+operator|||
+name|sa
+operator|->
+name|sa_len
+operator|!=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|cmd
+operator|>=
+name|PRC_NCMDS
+condition|)
+return|return;
+comment|/* if the parameter is from icmp6, decode it. */
+if|if
+condition|(
+name|d
+operator|!=
+name|NULL
+condition|)
+block|{
+name|struct
+name|ip6ctlparam
+modifier|*
+name|ip6cp
+init|=
+operator|(
+expr|struct
+name|ip6ctlparam
+operator|*
+operator|)
+name|d
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+name|ip6cp
+operator|->
+name|ip6c_m
+decl_stmt|;
+name|int
+name|off
+init|=
+name|ip6cp
+operator|->
+name|ip6c_off
+decl_stmt|;
+name|struct
+name|ip6ctlparam
+name|ip6cp1
+decl_stmt|;
+comment|/* 		 * Notify the error to all possible sockets via pfctlinput2. 		 * Since the upper layer information (such as protocol type, 		 * source and destination ports) is embedded in the encrypted 		 * data and might have been cut, we can't directly call 		 * an upper layer ctlinput function. However, the pcbnotify 		 * function will consider source and destination addresses 		 * as well as the flow info value, and may be able to find 		 * some PCB that should be notified. 		 * Although pfctlinput2 will call esp6_ctlinput(), there is 		 * no possibility of an infinite loop of function calls, 		 * because we don't pass the inner IPv6 header. 		 */
+name|bzero
+argument_list|(
+operator|&
+name|ip6cp1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ip6cp1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ip6cp1
+operator|.
+name|ip6c_src
+operator|=
+name|ip6cp
+operator|->
+name|ip6c_src
+expr_stmt|;
+name|pfctlinput2
+argument_list|(
+name|cmd
+argument_list|,
+name|sa
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|ip6cp1
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Then go to special cases that need ESP header information. 		 * XXX: We assume that when ip6 is non NULL, 		 * M and OFF are valid. 		 */
+if|if
+condition|(
+name|cmd
+operator|==
+name|PRC_MSGSIZE
+condition|)
+block|{
+name|struct
+name|secasvar
+modifier|*
+name|sav
+decl_stmt|;
+name|u_int32_t
+name|spi
+decl_stmt|;
+name|int
+name|valid
+decl_stmt|;
+comment|/* check header length before using m_copydata */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+name|off
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|esp
+argument_list|)
+condition|)
+return|return;
+name|m_copydata
+argument_list|(
+name|m
+argument_list|,
+name|off
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|esp
+argument_list|,
+name|esp_spi
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|spi
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Check to see if we have a valid SA corresponding to 			 * the address in the ICMP message payload. 			 */
+name|sav
+operator|=
+name|KEY_ALLOCSA
+argument_list|(
+operator|(
+expr|union
+name|sockaddr_union
+operator|*
+operator|)
+name|sa
+argument_list|,
+name|IPPROTO_ESP
+argument_list|,
+name|spi
+argument_list|)
+expr_stmt|;
+name|valid
+operator|=
+operator|(
+name|sav
+operator|!=
+name|NULL
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sav
+condition|)
+name|KEY_FREESAV
+argument_list|(
+operator|&
+name|sav
+argument_list|)
+expr_stmt|;
+comment|/* XXX Further validation? */
+comment|/* 			 * Depending on whether the SA is "valid" and 			 * routing table size (mtudisc_{hi,lo}wat), we will: 			 * - recalcurate the new MTU and create the 			 *   corresponding routing entry, or 			 * - ignore the MTU change notification. 			 */
+name|icmp6_mtudisc_update
+argument_list|(
+name|ip6cp
+argument_list|,
+name|valid
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* we normally notify any pcb here */
+block|}
 block|}
 end_function
 

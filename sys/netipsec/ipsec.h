@@ -77,6 +77,12 @@ directive|include
 file|<netipsec/keydb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netipsec/ipsec_osdep.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -181,10 +187,14 @@ define|#
 directive|define
 name|IPSEC_SPSTATE_ALIVE
 value|1
-name|u_int
+name|u_int16_t
 name|policy
 decl_stmt|;
-comment|/* DISCARD, NONE or IPSEC, see keyv2.h */
+comment|/* policy_type per pfkeyv2.h */
+name|u_int16_t
+name|scangen
+decl_stmt|;
+comment|/* scan generation # */
 name|struct
 name|ipsecrequest
 modifier|*
@@ -193,11 +203,11 @@ decl_stmt|;
 comment|/* pointer to the ipsec request tree, */
 comment|/* if policy == IPSEC else this value == NULL.*/
 comment|/* 	 * lifetime handler. 	 * the policy can be used without limitiation if both lifetime and 	 * validtime are zero. 	 * "lifetime" is passed by sadb_lifetime.sadb_lifetime_addtime. 	 * "validtime" is passed by sadb_lifetime.sadb_lifetime_usetime. 	 */
-name|long
+name|time_t
 name|created
 decl_stmt|;
 comment|/* time created the policy */
-name|long
+name|time_t
 name|lastused
 decl_stmt|;
 comment|/* updated every when kernel sends a packet */
@@ -212,6 +222,57 @@ comment|/* duration this policy is valid without use */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SECPOLICY_LOCK_INIT
+parameter_list|(
+name|_sp
+parameter_list|)
+define|\
+value|mtx_init(&(_sp)->lock, "ipsec policy", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECPOLICY_LOCK
+parameter_list|(
+name|_sp
+parameter_list|)
+value|mtx_lock(&(_sp)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECPOLICY_UNLOCK
+parameter_list|(
+name|_sp
+parameter_list|)
+value|mtx_unlock(&(_sp)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECPOLICY_LOCK_DESTROY
+parameter_list|(
+name|_sp
+parameter_list|)
+value|mtx_destroy(&(_sp)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECPOLICY_LOCK_ASSERT
+parameter_list|(
+name|_sp
+parameter_list|)
+value|mtx_assert(&(_sp)->lock, MA_OWNED)
+end_define
 
 begin_comment
 comment|/* Request for IPsec */
@@ -260,6 +321,61 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Need recursion for when crypto callbacks happen directly,  * as in the case of software crypto.  Need to look at how  * hard it is to remove this...  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_LOCK_INIT
+parameter_list|(
+name|_isr
+parameter_list|)
+define|\
+value|mtx_init(&(_isr)->lock, "ipsec request", NULL, MTX_DEF | MTX_RECURSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_LOCK
+parameter_list|(
+name|_isr
+parameter_list|)
+value|mtx_lock(&(_isr)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_UNLOCK
+parameter_list|(
+name|_isr
+parameter_list|)
+value|mtx_unlock(&(_isr)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_LOCK_DESTROY
+parameter_list|(
+name|_isr
+parameter_list|)
+value|mtx_destroy(&(_isr)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_LOCK_ASSERT
+parameter_list|(
+name|_isr
+parameter_list|)
+value|mtx_assert(&(_isr)->lock, MA_OWNED)
+end_define
+
+begin_comment
 comment|/* security policy in PCB */
 end_comment
 
@@ -303,7 +419,7 @@ name|struct
 name|secpolicyindex
 name|spidx
 decl_stmt|;
-name|long
+name|time_t
 name|created
 decl_stmt|;
 comment|/* for lifetime */
@@ -1509,6 +1625,25 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|ah4_ctlinput
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|esp4_input
 parameter_list|(
 name|struct
@@ -1518,6 +1653,25 @@ name|m
 parameter_list|,
 name|int
 name|off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|esp4_ctlinput
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

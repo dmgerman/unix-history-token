@@ -368,7 +368,7 @@ if|#
 directive|if
 literal|0
 comment|/* If we do not accept IP-in-IP explicitly, drop.  */
-block|if (!ipip_allow&& ((*m)->m_flags& M_IPSEC) == 0) { 		DPRINTF(("ip4_input6: dropped due to policy\n")); 		ipipstat.ipips_pdrops++; 		m_freem(*m); 		return IPPROTO_DONE; 	}
+block|if (!ipip_allow&& ((*m)->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		ipipstat.ipips_pdrops++; 		m_freem(*m); 		return IPPROTO_DONE; 	}
 endif|#
 directive|endif
 name|_ipip_input
@@ -429,7 +429,7 @@ if|#
 directive|if
 literal|0
 comment|/* If we do not accept IP-in-IP explicitly, drop.  */
-block|if (!ipip_allow&& (m->m_flags& M_IPSEC) == 0) { 		DPRINTF(("ip4_input: dropped due to policy\n")); 		ipipstat.ipips_pdrops++; 		m_freem(m); 		return; 	}
+block|if (!ipip_allow&& (m->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		ipipstat.ipips_pdrops++; 		m_freem(m); 		return; 	}
 endif|#
 directive|endif
 name|va_start
@@ -659,7 +659,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipip_input: m_pullup (1) failed\n"
+literal|"%s: m_pullup (1) failed\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -939,7 +941,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipip_input: m_pullup (2) failed\n"
+literal|"%s: m_pullup (2) failed\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1350,7 +1354,13 @@ directive|endif
 default|default:
 name|panic
 argument_list|(
-literal|"ipip_input: should never reach here"
+literal|"%s: bogus ip version %u"
+argument_list|,
+name|__func__
+argument_list|,
+name|v
+operator|>>
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -1373,7 +1383,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipip_input: packet dropped because of full queue\n"
+literal|"%s: packet dropped because of full queue\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1454,30 +1466,29 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-if|#
-directive|if
-literal|0
-block|SPLASSERT(net, "ipip_output");
-endif|#
-directive|endif
+name|IPSEC_SPLASSERT_SOFTNET
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr
 operator|->
 name|sav
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipip_output: null SA"
+literal|"null SA"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|IPSEC_ASSERT
 argument_list|(
 name|sav
 operator|->
@@ -1486,7 +1497,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"ipip_output: null SAH"
+literal|"null SAH"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1580,8 +1591,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipip_output: unspecified tunnel endpoint "
+literal|"%s: unspecified tunnel endpoint "
 literal|"address in SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -1639,7 +1652,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipip_output: M_PREPEND failed\n"
+literal|"%s: M_PREPEND failed\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2017,8 +2032,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipip_output: unspecified tunnel endpoint "
+literal|"%s: unspecified tunnel endpoint "
 literal|"address in SA %s/%08lx\n"
+operator|,
+name|__func__
 operator|,
 name|ipsec_address
 argument_list|(
@@ -2130,7 +2147,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipip_output: M_PREPEND failed\n"
+literal|"%s: M_PREPEND failed\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2385,7 +2404,9 @@ label|:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ipip_output: unsupported protocol family %u\n"
+literal|"%s: unsupported protocol family %u\n"
+operator|,
+name|__func__
 operator|,
 name|saidx
 operator|->
@@ -2614,7 +2635,9 @@ block|{
 comment|/* This is a rather serious mistake, so no conditional printing. */
 name|printf
 argument_list|(
-literal|"ipe4_input: should never be called\n"
+literal|"%s: should never be called\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
