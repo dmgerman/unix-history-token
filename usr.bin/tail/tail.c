@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tail.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tail.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -652,7 +666,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|ap
@@ -663,7 +676,7 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -997,7 +1010,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tail [-f | -r] [-b # | -c # | -n #] [file ...]\n"
+literal|"usage: tail [-F | -f | -r] [-b # | -c # | -n #] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
