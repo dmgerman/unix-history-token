@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_nfs.c,v 1.21 1997/04/18 16:23:10 dfr Exp $"
+literal|"$Id: mount_nfs.c,v 1.22 1997/05/01 12:30:02 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,6 +383,8 @@ block|,
 name|MOPT_FORCE
 block|,
 name|MOPT_UPDATE
+block|,
+name|MOPT_ASYNC
 block|,
 block|{
 literal|"bg"
