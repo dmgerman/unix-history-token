@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.23 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,24 @@ end_define
 begin_comment
 comment|/* the message is successfully delivered */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VARTMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_VARTMP
+value|"/usr/tmp/"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|savemail
@@ -1130,7 +1148,14 @@ name|strcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"/usr/tmp/dead.letter"
+name|_PATH_VARTMP
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"dead.letter"
 argument_list|)
 expr_stmt|;
 if|if
