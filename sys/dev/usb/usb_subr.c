@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.89 2001/11/10 17:10:42 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.90 2001/11/10 17:11:38 augustss Exp	$	*/
 end_comment
 
 begin_comment
@@ -3856,13 +3856,6 @@ operator|&
 name|p
 operator|->
 name|queue
-argument_list|)
-expr_stmt|;
-name|usb_callout_init
-argument_list|(
-name|p
-operator|->
-name|abort_handle
 argument_list|)
 expr_stmt|;
 name|err

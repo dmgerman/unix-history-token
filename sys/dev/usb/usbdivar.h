@@ -615,9 +615,6 @@ decl_stmt|;
 name|int
 name|interval
 decl_stmt|;
-name|usb_callout_t
-name|abort_handle
-decl_stmt|;
 comment|/* Filled by HC driver. */
 name|struct
 name|usbd_pipe_methods
