@@ -4811,7 +4811,7 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"%s len=%d, want %d\n"
+literal|"%s len=%d, want %zu\n"
 operator|,
 name|err_prefix
 operator|,
@@ -4819,9 +4819,6 @@ name|m
 operator|->
 name|m_len
 operator|,
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6141,7 +6138,7 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"%s len=%d, want %d\n"
+literal|"%s len=%d, want %zu\n"
 operator|,
 name|err_prefix
 operator|,
@@ -6149,9 +6146,6 @@ name|m
 operator|->
 name|m_len
 operator|,
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
