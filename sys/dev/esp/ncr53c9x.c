@@ -3898,7 +3898,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|==
-name|XPT_RESET_BUS
+name|XPT_RESET_DEV
 condition|)
 block|{
 name|ecb
@@ -5391,7 +5391,16 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{ 		}
+block|{
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_AUTOSNS_VALID
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
