@@ -20,7 +20,7 @@ name|_SYS_GNU_EXT2FS_I386_BITOPS_H_
 end_define
 
 begin_comment
-comment|/*  * Copyright 1992, Linus Torvalds.  */
+comment|/*-  * Copyright 1992, Linus Torvalds.  */
 end_comment
 
 begin_comment

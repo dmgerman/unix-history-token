@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Initial implementation:  * Copyright (c) 2001 Robert Drehmel  * All rights reserved.  *  * As long as the above copyright statement and this notice remain  * unchanged, you can do what ever you want with this file.  *  * $FreeBSD$  */
+comment|/*-  * Initial implementation:  * Copyright (c) 2001 Robert Drehmel  * All rights reserved.  *  * As long as the above copyright statement and this notice remain  * unchanged, you can do what ever you want with this file.  *  * $FreeBSD$  */
 end_comment
 
 begin_include

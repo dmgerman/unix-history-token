@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bitops.h,v 1.31 2000/09/23 02:09:21 davem Exp $  * bitops.h: Bit string operations on the V9.  *  * Copyright 1996, 1997 David S. Miller (davem@caip.rutgers.edu)  */
+comment|/*-  * $Id: bitops.h,v 1.31 2000/09/23 02:09:21 davem Exp $  * bitops.h: Bit string operations on the V9.  *  * Copyright 1996, 1997 David S. Miller (davem@caip.rutgers.edu)  */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
