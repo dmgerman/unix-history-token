@@ -29,7 +29,7 @@ end_include
 
 begin_struct
 struct|struct
-name|geom_ctl_req_arg
+name|gctl_req_arg
 block|{
 name|u_int
 name|nlen
@@ -42,6 +42,9 @@ name|off_t
 name|offset
 decl_stmt|;
 name|int
+name|flag
+decl_stmt|;
+name|int
 name|len
 decl_stmt|;
 name|void
@@ -52,9 +55,45 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|GCTL_PARAM_RD
+value|1
+end_define
+
+begin_comment
+comment|/* Must match VM_PROT_READ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCTL_PARAM_WR
+value|2
+end_define
+
+begin_comment
+comment|/* Must match VM_PROT_WRITE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCTL_PARAM_RW
+value|(GCTL_PARAM_RD | GCTL_PARAM_WR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCTL_PARAM_ASCII
+value|4
+end_define
+
 begin_struct
 struct|struct
-name|geom_ctl_req
+name|gctl_req
 block|{
 name|u_int
 name|version
@@ -63,14 +102,14 @@ name|u_int
 name|serial
 decl_stmt|;
 name|enum
-name|geom_ctl_request
+name|gctl_request
 name|request
 decl_stmt|;
 name|u_int
 name|narg
 decl_stmt|;
 name|struct
-name|geom_ctl_req_arg
+name|gctl_req_arg
 modifier|*
 name|arg
 decl_stmt|;
@@ -82,7 +121,7 @@ modifier|*
 name|error
 decl_stmt|;
 name|struct
-name|geom_ctl_req_table
+name|gctl_req_table
 modifier|*
 name|reqt
 decl_stmt|;
@@ -94,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|GEOM_CTL
-value|_IOW('G', GEOM_CTL_VERSION, struct geom_ctl_req)
+value|_IOW('G', GCTL_VERSION, struct gctl_req)
 end_define
 
 begin_define

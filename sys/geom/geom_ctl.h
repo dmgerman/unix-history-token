@@ -22,7 +22,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEOM_CTL_VERSION
+name|GCTL_VERSION
 value|1
 end_define
 
@@ -32,31 +32,31 @@ end_comment
 
 begin_enum
 enum|enum
-name|geom_ctl_request
+name|gctl_request
 block|{
-name|GEOM_INVALID_REQUEST
+name|GCTL_INVALID_REQUEST
 init|=
 literal|0
 block|,
-name|GEOM_CREATE_GEOM
+name|GCTL_CREATE_GEOM
 block|,
-name|GEOM_NEW_GEOM
+name|GCTL_DESTROY_GEOM
 block|,
-name|GEOM_ATTACH
+name|GCTL_ATTACH
 block|,
-name|GEOM_DETACH
+name|GCTL_DETACH
 block|,
-name|GEOM_CREATE_PROVIDER
+name|GCTL_CREATE_PROVIDER
 block|,
-name|GEOM_DESTROY_PROVIDER
+name|GCTL_DESTROY_PROVIDER
 block|,
-name|GEOM_INSERT_GEOM
+name|GCTL_INSERT_GEOM
 block|,
-name|GEOM_ELIMINATE_GEOM
+name|GCTL_ELIMINATE_GEOM
 block|,
-name|GEOM_WRITE_META
+name|GCTL_WRITE_META
 block|,
-name|GEOM_READ_META
+name|GCTL_READ_META
 block|}
 enum|;
 end_enum
@@ -64,12 +64,12 @@ end_enum
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GEOM_CTL_TABLE
+name|GCTL_TABLE
 end_ifdef
 
 begin_struct
 struct|struct
-name|geom_ctl_req_table
+name|gctl_req_table
 block|{
 name|int
 name|class
@@ -94,7 +94,7 @@ modifier|*
 name|name
 decl_stmt|;
 name|enum
-name|geom_ctl_request
+name|gctl_request
 name|request
 decl_stmt|;
 block|}
@@ -106,7 +106,7 @@ comment|/*        Cl Ge Pr Co Pa Me Name                Request			*/
 block|{
 literal|1
 block|,
-literal|1
+literal|0
 block|,
 literal|1
 block|,
@@ -118,25 +118,25 @@ literal|0
 block|,
 literal|"create geom"
 block|,
-name|GEOM_CREATE_GEOM
+name|GCTL_CREATE_GEOM
 block|}
 block|,
 block|{
-literal|1
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|0
 block|,
 literal|1
 block|,
 literal|0
 block|,
-literal|"new geom"
+literal|0
 block|,
-name|GEOM_NEW_GEOM
+literal|1
+block|,
+literal|0
+block|,
+literal|"destroy geom"
+block|,
+name|GCTL_DESTROY_GEOM
 block|}
 block|,
 block|{
@@ -154,7 +154,7 @@ literal|0
 block|,
 literal|"attach"
 block|,
-name|GEOM_ATTACH
+name|GCTL_ATTACH
 block|}
 block|,
 block|{
@@ -172,7 +172,7 @@ literal|0
 block|,
 literal|"detach"
 block|,
-name|GEOM_DETACH
+name|GCTL_DETACH
 block|}
 block|,
 block|{
@@ -190,7 +190,7 @@ literal|0
 block|,
 literal|"create provider"
 block|,
-name|GEOM_CREATE_PROVIDER
+name|GCTL_CREATE_PROVIDER
 block|}
 block|,
 block|{
@@ -208,7 +208,7 @@ literal|0
 block|,
 literal|"destroy provider"
 block|,
-name|GEOM_DESTROY_PROVIDER
+name|GCTL_DESTROY_PROVIDER
 block|}
 block|,
 block|{
@@ -226,7 +226,7 @@ literal|0
 block|,
 literal|"insert geom"
 block|,
-name|GEOM_INSERT_GEOM
+name|GCTL_INSERT_GEOM
 block|}
 block|,
 block|{
@@ -244,7 +244,7 @@ literal|0
 block|,
 literal|"eliminate geom"
 block|,
-name|GEOM_ELIMINATE_GEOM
+name|GCTL_ELIMINATE_GEOM
 block|}
 block|,
 block|{
@@ -262,7 +262,7 @@ literal|1
 block|,
 literal|"write meta"
 block|,
-name|GEOM_WRITE_META
+name|GCTL_WRITE_META
 block|}
 block|,
 block|{
@@ -280,7 +280,7 @@ literal|1
 block|,
 literal|"read meta"
 block|,
-name|GEOM_READ_META
+name|GCTL_READ_META
 block|}
 block|,
 comment|/* Terminator entry */
@@ -299,7 +299,7 @@ literal|1
 block|,
 literal|"*INVALID*"
 block|,
-name|GEOM_INVALID_REQUEST
+name|GCTL_INVALID_REQUEST
 block|}
 block|}
 struct|;
@@ -311,7 +311,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* GEOM_CTL_TABLE */
+comment|/* GCTL_TABLE */
 end_comment
 
 begin_endif
