@@ -4102,9 +4102,10 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-comment|/* Look if socket address is stored in packet tags */
+comment|/* 	 * Look if socket address is stored in packet tags. 	 * If sockaddr is ours, or provided by a third party (zero id), 	 * then we accept it. 	 */
 if|if
 condition|(
+operator|(
 operator|(
 name|stag
 operator|=
@@ -4126,6 +4127,24 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|stag
+operator|->
+name|id
+operator|==
+name|NG_NODE_ID
+argument_list|(
+name|node
+argument_list|)
+operator|||
+name|stag
+operator|->
+name|id
+operator|==
+literal|0
+operator|)
 condition|)
 name|sa
 operator|=
@@ -5014,6 +5033,15 @@ argument_list|(
 name|sa
 argument_list|,
 name|M_SONAME
+argument_list|)
+expr_stmt|;
+name|stag
+operator|->
+name|id
+operator|=
+name|NG_NODE_ID
+argument_list|(
+name|node
 argument_list|)
 expr_stmt|;
 name|m_tag_prepend

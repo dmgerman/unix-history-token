@@ -173,6 +173,9 @@ name|struct
 name|m_tag
 name|tag
 decl_stmt|;
+name|ng_ID_t
+name|id
+decl_stmt|;
 name|struct
 name|sockaddr
 name|sa
