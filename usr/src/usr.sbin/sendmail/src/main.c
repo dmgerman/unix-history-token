@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.45 (Berkeley) %G%"
+literal|"@(#)main.c	6.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1548,6 +1548,13 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+name|setclass
+argument_list|(
+literal|'w'
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|q
 operator|=
 name|strchr
@@ -1570,13 +1577,6 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|p
-operator|=
-name|newstr
-argument_list|(
-name|jbuf
-argument_list|)
-expr_stmt|;
 name|define
 argument_list|(
 literal|'m'
@@ -1586,7 +1586,13 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-block|}
+name|p
+operator|=
+name|newstr
+argument_list|(
+name|jbuf
+argument_list|)
+expr_stmt|;
 name|setclass
 argument_list|(
 literal|'w'
@@ -1594,6 +1600,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|uname
