@@ -265,7 +265,7 @@ condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 argument_list|)
 expr_stmt|;
 block|}

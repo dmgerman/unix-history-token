@@ -486,7 +486,7 @@ parameter_list|,
 name|UINT32
 name|width
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|,
@@ -1572,7 +1572,7 @@ parameter_list|,
 name|UINT32
 name|width
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|,
@@ -1657,7 +1657,7 @@ name|Function
 condition|)
 block|{
 case|case
-name|ACPI_READ_ADR_SPACE
+name|ACPI_READ
 case|:
 name|EcRequest
 operator|.
@@ -1680,7 +1680,7 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_WRITE_ADR_SPACE
+name|ACPI_WRITE
 case|:
 name|EcRequest
 operator|.
@@ -1733,7 +1733,7 @@ if|if
 condition|(
 name|Function
 operator|==
-name|ACPI_READ_ADR_SPACE
+name|ACPI_READ
 condition|)
 name|EcRequest
 operator|.
@@ -1781,7 +1781,7 @@ name|Value
 operator|)
 operator||=
 operator|(
-name|UINT32
+name|ACPI_INTEGER
 operator|)
 name|EcRequest
 operator|.

@@ -436,7 +436,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_INTEGER
 name|Value
 parameter_list|,
 name|UINT32

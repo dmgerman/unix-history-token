@@ -183,7 +183,7 @@ parameter_list|(
 name|ACPI_IO_ADDRESS
 name|OutPort
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_INTEGER
 name|Value
 parameter_list|,
 name|UINT32
@@ -382,7 +382,7 @@ parameter_list|,
 name|UINT32
 name|Register
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_INTEGER
 name|Value
 parameter_list|,
 name|UINT32
