@@ -2160,10 +2160,10 @@ argument_list|(
 operator|*
 name|Reply_Ptr
 operator|!=
-name|NULL
+literal|0
 argument_list|,
 operator|(
-literal|"Reply_Ptr == NULL"
+literal|"*Reply_Ptr == 0"
 operator|)
 argument_list|)
 expr_stmt|;
