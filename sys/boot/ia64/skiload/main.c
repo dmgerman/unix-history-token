@@ -109,22 +109,11 @@ end_comment
 
 begin_function
 name|void
-name|__start
+name|ski_main
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
-name|char
-name|stack
-index|[
-literal|16384
-index|]
-name|__aligned
-argument_list|(
-literal|16
-argument_list|)
-decl_stmt|;
 specifier|static
 name|char
 name|malloc
@@ -137,10 +126,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-asm|__asm __volatile("movl gp=__gp;;");
-asm|__asm __volatile("mov sp=%0" :: "r"(&stack[16384]));
-asm|__asm __volatile("bsw.1;;");
-asm|__asm __volatile("mov ar.fpsr=%0" :: "r"(IA64_FPSR_DEFAULT));
 comment|/*  	 * initialise the heap as early as possible.  Once this is done, 	 * alloc() is usable. The stack is buried inside us, so this is 	 * safe. 	 */
 name|setheap
 argument_list|(
