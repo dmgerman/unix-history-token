@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	6.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	6.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,7 +109,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|max
 end_endif
 
 begin_comment
@@ -193,10 +192,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* lint */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -209,7 +204,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 end_unit
