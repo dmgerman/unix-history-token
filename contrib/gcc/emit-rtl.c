@@ -496,6 +496,20 @@ begin_comment
 comment|/* (REG:Pmode PIC_OFFSET_TABLE_REGNUM) */
 end_comment
 
+begin_comment
+comment|/* This is used to implement __builtin_return_address for some machines.    See for instance the MIPS port.  */
+end_comment
+
+begin_decl_stmt
+name|rtx
+name|return_address_pointer_rtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* (REG:Pmode RETURN_ADDRESS_POINTER_REGNUM) */
+end_comment
+
 begin_decl_stmt
 name|rtx
 name|virtual_incoming_args_rtx
@@ -1010,6 +1024,29 @@ name|reload_in_progress
 condition|)
 return|return
 name|arg_pointer_rtx
+return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|RETURN_ADDRESS_POINTER_REGNUM
+if|if
+condition|(
+name|return_address_pointer_rtx
+operator|&&
+name|regno
+operator|==
+name|RETURN_ADDRESS_POINTER_REGNUM
+operator|&&
+name|mode
+operator|==
+name|Pmode
+operator|&&
+operator|!
+name|reload_in_progress
+condition|)
+return|return
+name|return_address_pointer_rtx
 return|;
 endif|#
 directive|endif
@@ -13122,6 +13159,22 @@ argument_list|,
 name|ARG_POINTER_REGNUM
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RETURN_ADDRESS_POINTER_REGNUM
+name|return_address_pointer_rtx
+operator|=
+name|gen_rtx
+argument_list|(
+name|REG
+argument_list|,
+name|Pmode
+argument_list|,
+name|RETURN_ADDRESS_POINTER_REGNUM
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Create the virtual registers.  Do so here since the following objects      might reference them.  */
 name|virtual_incoming_args_rtx
 operator|=

@@ -46,12 +46,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -19357,6 +19351,8 @@ argument_list|,
 name|dir_separator_str
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|just_machine_suffix
 operator|=
 name|concat
@@ -19366,8 +19362,6 @@ argument_list|,
 name|dir_separator_str
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|specs_file
 operator|=
 name|find_a_file
@@ -19399,9 +19393,6 @@ argument_list|(
 name|specs_file
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XXX_THIS_DUMPS_CORE
 comment|/* We need to check standard_exec_prefix/just_machine_suffix/specs       for any override of as, ld and libraries. */
 name|specs_file
 operator|=
@@ -19466,8 +19457,6 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* If not cross-compiling, look for startfiles in the standard places.  */
 comment|/* The fact that these are done here, after reading the specs file,      means that it cannot be found in these directories.      But that's okay.  It should never be there anyway.  */
 if|if

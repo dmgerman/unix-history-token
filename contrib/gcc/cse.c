@@ -33120,7 +33120,7 @@ name|written
 argument_list|)
 condition|)
 block|{
-comment|/* A varying address that is a sum indicates an array element, 	     and that's just as good as a structure element 	     in implying that we need not invalidate scalar variables. 	     However, we must allow QImode aliasing of scalars, because the 	     ANSI C standard allows character pointers to alias anything.  */
+comment|/* A varying address that is a sum indicates an array element, 	     and that's just as good as a structure element 	     in implying that we need not invalidate scalar variables. 	     However, we must allow QImode aliasing of scalars, because the 	     ANSI C standard allows character pointers to alias anything. 	     We must also allow AND addresses, because they may generate 	     accesses outside the object being referenced.  This is used to 	     generate aligned addresses from unaligned adresses, e.g., the 	     Alpha storeqi_unaligned pattern.  */
 if|if
 condition|(
 operator|!
@@ -33150,6 +33150,18 @@ name|written
 argument_list|)
 operator|!=
 name|QImode
+operator|&&
+name|GET_CODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|written
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|!=
+name|AND
 operator|)
 condition|)
 name|writes_ptr

@@ -307,12 +307,39 @@ directive|ifndef
 name|__LONG_MAX__
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|__LONG_MAX__
 value|2147483647L
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__LONG_MAX__
+value|9223372036854775807L
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __alpha__ */
+end_comment
 
 begin_endif
 endif|#

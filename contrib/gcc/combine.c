@@ -1458,6 +1458,8 @@ argument_list|(
 operator|(
 name|rtx
 operator|,
+name|rtx
+operator|,
 name|int
 operator|,
 name|rtx
@@ -9156,7 +9158,85 @@ name|NULL_RTX
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We now know that we can do this combination.  Merge the insns and       update the status of registers and LOG_LINKS.  */
+comment|/* We now know that we can do this combination.  */
+comment|/* Earlier we did all the checks required to determine if we could      logically combine three insns into one.  Then we determined that      the machine description would not let us do it in one, but would      let us do it in two.  Thus when generating two insns, they must,      in general, be adjacent -- one logical instruction if you will.       We could be complicated and figure out some rules that would allow      us to not move the insn, but it seems likely that the scheduler will      do as good with no muss.  */
+if|if
+condition|(
+name|newi2pat
+operator|&&
+name|NEXT_INSN
+argument_list|(
+name|i2
+argument_list|)
+operator|!=
+name|i3
+condition|)
+block|{
+name|rtx
+name|n
+init|=
+name|NEXT_INSN
+argument_list|(
+name|i2
+argument_list|)
+decl_stmt|;
+name|int
+name|c
+init|=
+name|INSN_CUID
+argument_list|(
+name|i2
+argument_list|)
+decl_stmt|;
+comment|/* Move the instruction */
+name|reorder_insns
+argument_list|(
+name|i2
+argument_list|,
+name|i2
+argument_list|,
+name|PREV_INSN
+argument_list|(
+name|i3
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Update the CUID map */
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|uid_cuid
+index|[
+name|INSN_UID
+argument_list|(
+name|n
+argument_list|)
+index|]
+operator|=
+name|c
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|i2
+condition|)
+break|break;
+name|n
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+operator|++
+name|c
+expr_stmt|;
+block|}
+block|}
+comment|/* Merge the insns and update the status of registers and LOG_LINKS.  */
 block|{
 name|rtx
 name|i3notes
@@ -9722,10 +9802,53 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Get death notes for everything that is now used in either I3 or        I2 and used to die in a previous insn.  */
+comment|/* Get death notes for everything that is now used in either I3 or        I2 and used to die in a previous insn.  If we built two new         patterns, move from i1 to i2 then i2 to i3 so that we get the        proper movement on registers that i2 modifies.  */
+if|if
+condition|(
+name|newi2pat
+condition|)
+block|{
+name|move_deaths
+argument_list|(
+name|newi2pat
+argument_list|,
+name|NULL_RTX
+argument_list|,
+name|INSN_CUID
+argument_list|(
+name|i1
+argument_list|)
+argument_list|,
+name|i2
+argument_list|,
+operator|&
+name|midnotes
+argument_list|)
+expr_stmt|;
 name|move_deaths
 argument_list|(
 name|newpat
+argument_list|,
+name|newi2pat
+argument_list|,
+name|INSN_CUID
+argument_list|(
+name|i1
+argument_list|)
+argument_list|,
+name|i3
+argument_list|,
+operator|&
+name|midnotes
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|move_deaths
+argument_list|(
+name|newpat
+argument_list|,
+name|NULL_RTX
 argument_list|,
 name|i1
 condition|?
@@ -9740,25 +9863,6 @@ name|i2
 argument_list|)
 argument_list|,
 name|i3
-argument_list|,
-operator|&
-name|midnotes
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|newi2pat
-condition|)
-name|move_deaths
-argument_list|(
-name|newi2pat
-argument_list|,
-name|INSN_CUID
-argument_list|(
-name|i1
-argument_list|)
-argument_list|,
-name|i2
 argument_list|,
 operator|&
 name|midnotes
@@ -53255,7 +53359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For each register (hardware or pseudo) used within expression X, if its    death is in an instruction with cuid between FROM_CUID (inclusive) and    TO_INSN (exclusive), put a REG_DEAD note for that register in the    list headed by PNOTES.      This is done when X is being merged by combination into TO_INSN.  These    notes will then be distributed as needed.  */
+comment|/* For each register (hardware or pseudo) used within expression X, if its    death is in an instruction with cuid between FROM_CUID (inclusive) and    TO_INSN (exclusive), put a REG_DEAD note for that register in the    list headed by PNOTES.      That said, don't move registers killed by maybe_kill_insn.     This is done when X is being merged by combination into TO_INSN.  These    notes will then be distributed as needed.  */
 end_comment
 
 begin_function
@@ -53265,6 +53369,8 @@ name|move_deaths
 parameter_list|(
 name|x
 parameter_list|,
+name|maybe_kill_insn
+parameter_list|,
 name|from_cuid
 parameter_list|,
 name|to_insn
@@ -53273,6 +53379,9 @@ name|pnotes
 parameter_list|)
 name|rtx
 name|x
+decl_stmt|;
+name|rtx
+name|maybe_kill_insn
 decl_stmt|;
 name|int
 name|from_cuid
@@ -53337,6 +53446,27 @@ name|before_dead
 decl_stmt|,
 name|after_dead
 decl_stmt|;
+comment|/* Don't move the register if it gets killed in between from and to */
+if|if
+condition|(
+name|maybe_kill_insn
+operator|&&
+name|reg_set_p
+argument_list|(
+name|x
+argument_list|,
+name|maybe_kill_insn
+argument_list|)
+operator|&&
+operator|!
+name|reg_referenced_p
+argument_list|(
+name|x
+argument_list|,
+name|maybe_kill_insn
+argument_list|)
+condition|)
+return|return;
 comment|/* WHERE_DEAD could be a USE insn made by combine, so first we 	 make sure that we have insns with valid INSN_CUID values.  */
 name|before_dead
 operator|=
@@ -53652,6 +53782,8 @@ argument_list|,
 name|i
 argument_list|)
 argument_list|,
+name|maybe_kill_insn
+argument_list|,
 name|from_cuid
 argument_list|,
 name|to_insn
@@ -53750,6 +53882,8 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|,
+name|maybe_kill_insn
+argument_list|,
 name|from_cuid
 argument_list|,
 name|to_insn
@@ -53829,6 +53963,8 @@ name|move_deaths
 argument_list|(
 name|dest
 argument_list|,
+name|maybe_kill_insn
+argument_list|,
 name|from_cuid
 argument_list|,
 name|to_insn
@@ -53873,6 +54009,8 @@ name|dest
 argument_list|,
 literal|0
 argument_list|)
+argument_list|,
+name|maybe_kill_insn
 argument_list|,
 name|from_cuid
 argument_list|,
@@ -53967,6 +54105,8 @@ argument_list|,
 name|j
 argument_list|)
 argument_list|,
+name|maybe_kill_insn
+argument_list|,
 name|from_cuid
 argument_list|,
 name|to_insn
@@ -53993,6 +54133,8 @@ name|x
 argument_list|,
 name|i
 argument_list|)
+argument_list|,
+name|maybe_kill_insn
 argument_list|,
 name|from_cuid
 argument_list|,
