@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)blkcpy.c 1.1 %G%"
+literal|"@(#)blkcpy.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,11 +56,9 @@ name|siz
 decl_stmt|;
 if|if
 condition|(
-name|from
-operator|+
-name|size
-operator|<
 name|to
+operator|<
+name|from
 condition|)
 while|while
 condition|(
