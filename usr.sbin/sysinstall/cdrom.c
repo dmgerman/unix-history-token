@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.7.2.2 1995/07/21 11:45:32 rgrimes Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.8 1995/09/18 16:52:20 peter Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -73,8 +73,11 @@ directive|undef
 name|CD9660
 end_undef
 
+begin_comment
+comment|/* This isn't static, like the others, since it's often useful to know whether or not we have a CDROM    available in some of the other installation screens. */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|Boolean
 name|cdromMounted
 decl_stmt|;
@@ -96,6 +99,12 @@ decl_stmt|;
 name|struct
 name|stat
 name|sb
+decl_stmt|;
+name|char
+name|specialrel
+index|[
+literal|80
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -165,11 +174,16 @@ operator|-
 literal|1
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Error mounting %s on /cdrom: %s (%u)\n"
+literal|"Error mounting %s on /cdrom: %s (%u)"
 argument_list|,
 name|dev
+operator|->
+name|devname
 argument_list|,
 name|strerror
 argument_list|(
@@ -183,12 +197,34 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/*      * Do a very simple check to see if this looks roughly like a 2.0.5 CDROM      * Unfortunately FreeBSD won't let us read the ``label'' AFAIK, which is one      * sure way of telling the disc version :-(      */
+comment|/*      * Do a very simple check to see if this looks roughly like a FreeBSD CDROM      * Unfortunately FreeBSD won't let us read the ``label'' AFAIK, which is one      * sure way of telling the disc version :-(      */
+name|snprintf
+argument_list|(
+name|specialrel
+argument_list|,
+literal|80
+argument_list|,
+literal|"/cdrom/%s/dists"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_RELNAME
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stat
 argument_list|(
 literal|"/cdrom/dists"
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|&&
+name|stat
+argument_list|(
+name|specialrel
 argument_list|,
 operator|&
 name|sb
@@ -202,9 +238,14 @@ operator|==
 name|ENOENT
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Couldn't locate the directory `dists' on the CD.\nIs this a FreeBSD CDROM?\n"
+literal|"Couldn't locate the directory `dists' anywhere on the CD.\n"
+literal|"Is this a FreeBSD CDROM?  Is the release version set properly\n"
+literal|"in the Options editor?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -213,11 +254,12 @@ return|;
 block|}
 else|else
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Couldn't stat directory %s: %s"
-argument_list|,
-literal|"/cdrom/dists"
+literal|"Error trying to stat the CDROM's dists directory: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -233,6 +275,15 @@ block|}
 name|cdromMounted
 operator|=
 name|TRUE
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"Mounted CDROM device %s on /cdrom\n"
+argument_list|,
+name|dev
+operator|->
+name|devname
+argument_list|)
 expr_stmt|;
 return|return
 name|TRUE
@@ -252,9 +303,8 @@ name|char
 modifier|*
 name|file
 parameter_list|,
-name|Attribs
-modifier|*
-name|dist_attrs
+name|Boolean
+name|tentative
 parameter_list|)
 block|{
 name|char
@@ -263,6 +313,13 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+name|msgDebug
+argument_list|(
+literal|"Request for %s from CDROM\n"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -276,12 +333,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|access
+name|file_readable
 argument_list|(
 name|buf
-argument_list|,
-name|R_OK
 argument_list|)
 condition|)
 return|return
@@ -299,6 +353,68 @@ argument_list|,
 name|PATH_MAX
 argument_list|,
 literal|"/cdrom/dists/%s"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|file_readable
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+return|return
+name|open
+argument_list|(
+name|buf
+argument_list|,
+name|O_RDONLY
+argument_list|)
+return|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+name|PATH_MAX
+argument_list|,
+literal|"/cdrom/%s/%s"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_RELNAME
+argument_list|)
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|file_readable
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+return|return
+name|open
+argument_list|(
+name|buf
+argument_list|,
+name|O_RDONLY
+argument_list|)
+return|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+name|PATH_MAX
+argument_list|,
+literal|"/cdrom/%s/dists/%s"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_RELNAME
+argument_list|)
 argument_list|,
 name|file
 argument_list|)
@@ -334,7 +450,11 @@ condition|)
 return|return;
 name|msgDebug
 argument_list|(
-literal|"Unmounting /cdrom\n"
+literal|"Unmounting %s from /cdrom\n"
+argument_list|,
+name|dev
+operator|->
+name|devname
 argument_list|)
 expr_stmt|;
 if|if
@@ -348,9 +468,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Could not unmount the CDROM: %s\n"
+literal|"Could not unmount the CDROM from /cdrom: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -358,9 +482,10 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|msgDebug
 argument_list|(
-literal|"Unmount returned\n"
+literal|"Unmount successful\n"
 argument_list|)
 expr_stmt|;
 name|cdromMounted

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: decode.c,v 1.5.2.3 1995/06/02 15:30:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: decode.c,v 1.6.2.5 1995/11/03 12:02:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -72,7 +72,7 @@ block|}
 end_function
 
 begin_function
-name|Boolean
+name|int
 name|dispatch
 parameter_list|(
 name|DMenuItem
@@ -84,10 +84,10 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|Boolean
-name|failed
+name|int
+name|val
 init|=
-name|FALSE
+name|RET_SUCCESS
 decl_stmt|;
 switch|switch
 condition|(
@@ -96,11 +96,11 @@ operator|->
 name|type
 condition|)
 block|{
-comment|/* We want to simply display a file */
+comment|/* We want to simply display a help file */
 case|case
 name|DMENU_DISPLAY_FILE
 case|:
-name|systemDisplayFile
+name|systemDisplayHelp
 argument_list|(
 operator|(
 name|char
@@ -131,7 +131,7 @@ name|ptr
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Execute it as a system command */
+comment|/* Execute it as a direct exec */
 case|case
 name|DMENU_SYSTEM_COMMAND
 case|:
@@ -194,7 +194,7 @@ break|break;
 case|case
 name|DMENU_CALL
 case|:
-name|failed
+name|val
 operator|=
 operator|(
 operator|(
@@ -218,9 +218,11 @@ break|break;
 case|case
 name|DMENU_CANCEL
 case|:
-return|return
-name|TRUE
-return|;
+name|val
+operator|=
+name|RET_DONE
+expr_stmt|;
+break|break;
 case|case
 name|DMENU_SET_VARIABLE
 case|:
@@ -230,6 +232,15 @@ operator|(
 name|char
 operator|*
 operator|)
+name|tmp
+operator|->
+name|ptr
+argument_list|)
+expr_stmt|;
+name|msgInfo
+argument_list|(
+literal|"Set %s"
+argument_list|,
 name|tmp
 operator|->
 name|ptr
@@ -292,13 +303,13 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|failed
+name|val
 return|;
 block|}
 end_function
 
 begin_function
-name|Boolean
+name|int
 name|decode_and_dispatch_multiple
 parameter_list|(
 name|DMenu
@@ -426,6 +437,8 @@ name|tmp
 argument_list|,
 name|names
 argument_list|)
+operator|!=
+name|RET_SUCCESS
 condition|)
 operator|++
 name|errors
@@ -450,10 +463,6 @@ expr_stmt|;
 block|}
 return|return
 name|errors
-condition|?
-name|TRUE
-else|:
-name|FALSE
 return|;
 block|}
 end_function

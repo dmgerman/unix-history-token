@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: tst01.c,v 1.14.2.1 1995/06/05 02:24:35 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: tst01.c,v 1.15.2.1 1995/09/20 10:43:04 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -2890,6 +2890,29 @@ block|{
 name|All_FreeBSD
 argument_list|(
 name|d
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+operator|*
+name|cmds
+argument_list|,
+literal|"dedicate"
+argument_list|)
+condition|)
+block|{
+name|All_FreeBSD
+argument_list|(
+name|d
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3328,6 +3351,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\tallfreebsd\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tdedicate\n"
 argument_list|)
 expr_stmt|;
 name|printf

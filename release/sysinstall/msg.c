@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: msg.c,v 1.28.2.2 1995/06/02 15:31:31 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: msg.c,v 1.29.2.8 1995/10/22 21:38:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -48,17 +48,26 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|OptFlags
-operator|&
-name|OPT_DEBUG
-condition|)
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 return|return
-name|TRUE
-return|;
-return|return
-name|FALSE
+operator|(
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_DEBUG
+argument_list|)
+operator|)
+operator|&&
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"no"
+argument_list|)
 return|;
 block|}
 end_function
@@ -908,7 +917,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Switching back to VTY 0\n"
+literal|"Switching back to VTY1\n"
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -1145,7 +1154,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Switching back to VTY 0\n"
+literal|"Switching back to VTY1\n"
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -1323,7 +1332,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Switching back to VTY 0\n"
+literal|"Switching back to VTY1\n"
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -1598,9 +1607,53 @@ name|OnVTY
 condition|)
 name|msgInfo
 argument_list|(
-literal|"Command output is on debugging screen - type ALT-F2 to see it"
+literal|"Command output is on VTY2 - type ALT-F2 to see it"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Simple versions of msgConfirm() and msgNotify() for calling from scripts */
+end_comment
+
+begin_function
+name|int
+name|msgSimpleConfirm
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|msgConfirm
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|msgSimpleNotify
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|msgNotify
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_SUCCESS
+return|;
 block|}
 end_function
 

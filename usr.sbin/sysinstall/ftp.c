@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.13.2.9 1995/06/05 18:34:15 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.14.2.1 1995/10/21 14:06:35 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
 end_comment
 
 begin_include
@@ -108,6 +108,20 @@ name|int
 name|FtpPort
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* How to see by a given code whether or not the connection has timed out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTP_TIMEOUT
+parameter_list|(
+name|code
+parameter_list|)
+value|(code == 421)
+end_define
 
 begin_ifndef
 ifndef|#
@@ -1520,6 +1534,11 @@ condition|(
 name|i
 operator|<
 literal|0
+operator|||
+name|FTP_TIMEOUT
+argument_list|(
+name|i
+argument_list|)
 condition|)
 return|return
 name|zap
@@ -1856,6 +1875,11 @@ condition|(
 name|i
 operator|<
 literal|0
+operator|||
+name|FTP_TIMEOUT
+argument_list|(
+name|i
+argument_list|)
 condition|)
 block|{
 name|close
@@ -2152,6 +2176,11 @@ condition|(
 name|i
 operator|>
 literal|299
+operator|||
+name|FTP_TIMEOUT
+argument_list|(
+name|i
+argument_list|)
 condition|)
 block|{
 if|if
@@ -2171,6 +2200,20 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|FTP_TIMEOUT
+argument_list|(
+name|i
+argument_list|)
+condition|)
+return|return
+name|zap
+argument_list|(
+name|ftp
+argument_list|)
+return|;
+else|else
 return|return
 operator|-
 literal|1

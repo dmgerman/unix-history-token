@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.7.2.2 1995/07/21 10:57:33 rgrimes Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.8 1995/09/18 16:52:33 peter Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -16,13 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -35,13 +41,6 @@ begin_decl_stmt
 specifier|static
 name|Boolean
 name|networkInitialized
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|pid_t
-name|pppPid
 decl_stmt|;
 end_decl_stmt
 
@@ -82,27 +81,69 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|char
+name|ifname
+index|[
+literal|255
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|!
 name|RunningAsInit
 operator|||
 name|networkInitialized
-operator|||
-operator|(
-name|dev
-operator|->
-name|flags
-operator|&
-name|OPT_LEAVE_NETWORK_UP
-operator|)
 condition|)
 return|return
 name|TRUE
 return|;
+name|msgDebug
+argument_list|(
+literal|"Init routine called for network device %s.\n"
+argument_list|,
+name|dev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/etc/resolv.conf"
+argument_list|)
+condition|)
 name|configResolv
 argument_list|()
 expr_stmt|;
+comment|/* Old process lying around? */
+if|if
+condition|(
+name|dev
+operator|->
+name|private
+condition|)
+block|{
+name|kill
+argument_list|(
+operator|(
+name|pid_t
+operator|)
+name|dev
+operator|->
+name|private
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|private
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -118,12 +159,16 @@ literal|4
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"You have selected a serial-line network interface.\nDo you want to use PPP with it?"
+literal|"You have selected a serial-line network interface.\n"
+literal|"Do you want to use PPP with it?"
 argument_list|)
 condition|)
 block|{
@@ -146,9 +191,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Unable to start PPP!  This installation method\ncannot be used."
+literal|"Unable to start PPP!  This installation method cannot be used."
 argument_list|)
 expr_stmt|;
 return|return
@@ -195,7 +243,14 @@ name|msgGetInput
 argument_list|(
 name|attach
 argument_list|,
-literal|"Warning:  SLIP is rather poorly supported in this revision\nof the installation due to the lack of a dialing utility.\nIf you can use PPP for this instead then you're much better\noff doing so, otherwise SLIP works fairly well for *hardwired*\nlinks.  Please edit the following slattach command for\ncorrectness (default here is VJ compression, Hardware flow-control,\nignore carrier and 9600 baud data rate) and hit return to execute it."
+literal|"Warning:  SLIP is rather poorly supported in this revision\n"
+literal|"of the installation due to the lack of a dialing utility.\n"
+literal|"If you can use PPP for this instead then you're much better\n"
+literal|"off doing so, otherwise SLIP works fairly well for *hardwired*\n"
+literal|"links.  Please edit the following slattach command for\n"
+literal|"correctness (default here is: VJ compression, Hardware flow-\n"
+literal|"control, ignore carrier and 9600 baud data rate).  When you're\n"
+literal|"ready, press [ENTER] to execute it."
 argument_list|)
 expr_stmt|;
 if|if
@@ -216,23 +271,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|vsystem
 argument_list|(
 name|attach
 argument_list|)
 condition|)
-name|dev
-operator|->
-name|private
-operator|=
-name|NULL
-expr_stmt|;
-else|else
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"slattach returned a bad status!  Please verify that\nthe command is correct and try again."
+literal|"slattach returned a bad status!  Please verify that\n"
+literal|"the command is correct and try again."
 argument_list|)
 expr_stmt|;
 return|return
@@ -240,12 +291,29 @@ name|FALSE
 return|;
 block|}
 block|}
+name|strcpy
+argument_list|(
+name|ifname
+argument_list|,
+literal|"sl0"
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+name|strcpy
+argument_list|(
+name|ifname
+argument_list|,
+name|dev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|ifconfig
 argument_list|,
-literal|64
+literal|255
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -258,7 +326,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|getenv
+name|variable_get
 argument_list|(
 name|ifconfig
 argument_list|)
@@ -269,22 +337,35 @@ operator|!
 name|cp
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"The %s device is not configured.  You will need to do so\nin the Networking configuration menu before proceeding."
+literal|"The %s device is not configured.  You will need to do so\n"
+literal|"in the Networking configuration menu before proceeding."
+argument_list|,
+name|ifname
 argument_list|)
 expr_stmt|;
 return|return
 name|FALSE
 return|;
 block|}
+name|msgNotify
+argument_list|(
+literal|"Configuring network device %s."
+argument_list|,
+name|ifname
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|vsystem
 argument_list|(
 literal|"ifconfig %s %s"
 argument_list|,
-literal|"sl0"
+name|ifname
 argument_list|,
 name|cp
 argument_list|)
@@ -294,13 +375,15 @@ condition|(
 name|i
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Unable to configure the %s interface!\nThis installation method cannot be used."
+literal|"Unable to configure the %s interface!\n"
+literal|"This installation method cannot be used."
 argument_list|,
-name|dev
-operator|->
-name|name
+name|ifname
 argument_list|)
 expr_stmt|;
 return|return
@@ -309,7 +392,7 @@ return|;
 block|}
 name|rp
 operator|=
-name|getenv
+name|variable_get
 argument_list|(
 name|VAR_GATEWAY
 argument_list|)
@@ -324,17 +407,37 @@ name|rp
 operator|==
 literal|'0'
 condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"No gateway has been set. You may be unable to access hosts\nnot on your local network\n"
+literal|"No gateway has been set. You may be unable to access hosts\n"
+literal|"not on your local network"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+name|msgNotify
+argument_list|(
+literal|"Adding default route to %s."
+argument_list|,
+name|rp
+argument_list|)
+expr_stmt|;
 name|vsystem
 argument_list|(
 literal|"route add default %s"
 argument_list|,
 name|rp
+argument_list|)
+expr_stmt|;
+block|}
+name|msgDebug
+argument_list|(
+literal|"Network initialized successfully.\n"
 argument_list|)
 expr_stmt|;
 name|networkInitialized
@@ -367,16 +470,17 @@ name|RunningAsInit
 operator|||
 operator|!
 name|networkInitialized
-operator|||
-operator|(
-name|dev
-operator|->
-name|flags
-operator|&
-name|OPT_LEAVE_NETWORK_UP
-operator|)
 condition|)
 return|return;
+name|msgDebug
+argument_list|(
+literal|"Shutdown called for network device %s\n"
+argument_list|,
+name|dev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -397,14 +501,14 @@ decl_stmt|;
 name|char
 name|ifconfig
 index|[
-literal|64
+literal|255
 index|]
 decl_stmt|;
 name|snprintf
 argument_list|(
 name|ifconfig
 argument_list|,
-literal|64
+literal|255
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -417,7 +521,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|getenv
+name|variable_get
 argument_list|(
 name|ifconfig
 argument_list|)
@@ -428,6 +532,15 @@ operator|!
 name|cp
 condition|)
 return|return;
+name|msgNotify
+argument_list|(
+literal|"Shutting interface %s down."
+argument_list|,
+name|dev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|vsystem
@@ -443,6 +556,10 @@ if|if
 condition|(
 name|i
 condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning: Unable to down the %s interface properly"
@@ -452,9 +569,10 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|cp
 operator|=
-name|getenv
+name|variable_get
 argument_list|(
 name|VAR_GATEWAY
 argument_list|)
@@ -463,11 +581,18 @@ if|if
 condition|(
 name|cp
 condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Deleting default route."
+argument_list|)
+expr_stmt|;
 name|vsystem
 argument_list|(
 literal|"route delete default"
 argument_list|)
 expr_stmt|;
+block|}
 name|networkInitialized
 operator|=
 name|FALSE
@@ -476,21 +601,44 @@ block|}
 elseif|else
 if|if
 condition|(
-name|pppPid
-operator|!=
-literal|0
+name|dev
+operator|->
+name|private
 condition|)
 block|{
+name|msgNotify
+argument_list|(
+literal|"Killing PPP process %d."
+argument_list|,
+operator|(
+name|int
+operator|)
+name|dev
+operator|->
+name|private
+argument_list|)
+expr_stmt|;
 name|kill
 argument_list|(
-name|pppPid
+operator|(
+name|pid_t
+operator|)
+name|dev
+operator|->
+name|private
 argument_list|,
 name|SIGTERM
 argument_list|)
 expr_stmt|;
-name|pppPid
+name|dev
+operator|->
+name|private
 operator|=
-literal|0
+name|NULL
+expr_stmt|;
+name|networkInitialized
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 block|}
@@ -511,8 +659,6 @@ name|devp
 parameter_list|)
 block|{
 name|int
-name|vfd
-decl_stmt|,
 name|fd2
 decl_stmt|;
 name|FILE
@@ -542,26 +688,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* We're going over to VTY2 */
-name|vfd
-operator|=
-name|open
-argument_list|(
-literal|"/dev/ttyv2"
-argument_list|,
-name|O_RDWR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vfd
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-literal|0
-return|;
 comment|/* These are needed to make ppp work */
 name|Mkdir
 argument_list|(
@@ -584,21 +710,44 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|variable_get
+argument_list|(
+name|VAR_SERIAL_SPEED
+argument_list|)
+condition|)
+name|variable_set2
+argument_list|(
+name|VAR_SERIAL_SPEED
+argument_list|,
+literal|"115200"
+argument_list|)
+expr_stmt|;
 comment|/* Get any important user values */
 name|val
 operator|=
-name|msgGetInput
+name|variable_get_value
 argument_list|(
-literal|"115200"
+name|VAR_SERIAL_SPEED
 argument_list|,
-literal|"Enter the baud rate for your modem - this can be higher than the actual\nmaximum data rate since most modems can talk at one speed to the\ncomputer and at another speed to the remote end.\n\nIf you're not sure what to put here, just select the default."
+literal|"Enter the baud rate for your modem - this can be higher than the actual\n"
+literal|"maximum data rate since most modems can talk at one speed to the\n"
+literal|"computer and at another speed to the remote end.\n\n"
+literal|"If you're not sure what to put here, just select the default."
 argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
 name|speed
 argument_list|,
+operator|(
 name|val
+operator|&&
+operator|*
+name|val
+operator|)
 condition|?
 name|val
 else|:
@@ -609,12 +758,12 @@ name|strcpy
 argument_list|(
 name|provider
 argument_list|,
-name|getenv
+name|variable_get
 argument_list|(
 name|VAR_GATEWAY
 argument_list|)
 condition|?
-name|getenv
+name|variable_get
 argument_list|(
 name|VAR_GATEWAY
 argument_list|)
@@ -628,7 +777,8 @@ name|msgGetInput
 argument_list|(
 name|provider
 argument_list|,
-literal|"Enter the IP address of your service provider or 0 if you\ndon't know it and would prefer to negotiate it dynamically."
+literal|"Enter the IP address of your service provider or 0 if you\n"
+literal|"don't know it and would prefer to negotiate it dynamically."
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -762,7 +912,7 @@ name|fchmod
 argument_list|(
 name|fd2
 argument_list|,
-literal|0755
+literal|0700
 argument_list|)
 expr_stmt|;
 name|close
@@ -786,6 +936,9 @@ operator|!
 name|fp
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't open /etc/ppp/ppp.conf file!  This isn't going to work"
@@ -840,16 +993,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Creating /dev/tun0 device.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|!
 name|file_readable
 argument_list|(
@@ -873,6 +1016,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning:  No /dev/tun0 device.  PPP will not work!"
@@ -893,32 +1039,153 @@ argument_list|()
 operator|)
 condition|)
 block|{
-name|dup2
+name|int
+name|i
+decl_stmt|,
+name|fd
+decl_stmt|;
+name|struct
+name|termios
+name|foo
+decl_stmt|;
+specifier|extern
+name|int
+name|login_tty
 argument_list|(
-name|vfd
-argument_list|,
+name|int
+argument_list|)
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
+init|;
+name|i
+operator|<
+literal|64
+condition|;
+name|i
+operator|++
+control|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+comment|/* We're going over to VTY2 */
+name|DebugFD
+operator|=
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/ttyv2"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+operator|&
+name|fd
 argument_list|)
 expr_stmt|;
 name|dup2
 argument_list|(
-name|vfd
+literal|0
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 name|dup2
 argument_list|(
-name|vfd
+literal|0
 argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|execl
+if|if
+condition|(
+name|login_tty
 argument_list|(
-literal|"/stand/ppp"
+name|fd
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|msgDebug
+argument_list|(
+literal|"ppp: Can't set the controlling terminal.\n"
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTTOU
 argument_list|,
-literal|"/stand/ppp"
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|foo
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|foo
+operator|.
+name|c_cc
+index|[
+name|VERASE
+index|]
+operator|=
+literal|'\010'
+expr_stmt|;
+if|if
+condition|(
+name|tcsetattr
+argument_list|(
+name|fd
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|foo
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|msgDebug
+argument_list|(
+literal|"ppp: Unable to set the erase character.\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|msgDebug
+argument_list|(
+literal|"ppp: Unable to get the terminal attributes!\n"
+argument_list|)
+expr_stmt|;
+name|execlp
+argument_list|(
+literal|"ppp"
+argument_list|,
+literal|"ppp"
 argument_list|,
 operator|(
 name|char
@@ -927,17 +1194,34 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"PPP process failed to exec!\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"The PPP command is now started on screen 3 (type ALT-F3 to\ninteract with it, ALT-F1 to switch back here). The only command\nyou'll probably want or need to use is the \"term\" command\nwhich starts a terminal emulator you can use to talk to your\nmodem and dial the service provider.  Once you're connected,\ncome back to this screen and press return.  DO NOT PRESS RETURN\nHERE UNTIL THE CONNECTION IS FULLY ESTABLISHED!"
+literal|"The PPP command is now started on VTY3 (type ALT-F3 to\n"
+literal|"interact with it, ALT-F1 to switch back here). The only command\n"
+literal|"you'll probably want or need to use is the \"term\" command\n"
+literal|"which starts a terminal emulator you can use to talk to your\n"
+literal|"modem and dial the service provider.  Once you're connected,\n"
+literal|"come back to this screen and press return.  DO NOT PRESS [ENTER]\n"
+literal|"HERE UNTIL THE CONNECTION IS FULLY ESTABLISHED!"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|pid
 return|;
