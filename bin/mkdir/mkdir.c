@@ -468,10 +468,7 @@ name|path
 expr_stmt|;
 name|oumask
 operator|=
-operator|(
-name|mode_t
-operator|)
-name|NULL
+literal|0
 expr_stmt|;
 if|if
 condition|(
