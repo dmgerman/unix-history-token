@@ -1378,9 +1378,10 @@ decl_stmt|;
 comment|/* 	 * The following structure isn't actually part of the TxCB, 	 * unless the extended TxCB feature is being used.  In this 	 * case, the first two elements of the structure below are  	 * fetched along with the TxCB. 	 */
 union|union
 block|{
-struct_decl|struct
+name|struct
 name|fxp_ipcb
-struct_decl|;
+name|ipcb
+decl_stmt|;
 name|struct
 name|fxp_tbd
 name|tbd
@@ -1406,42 +1407,42 @@ begin_define
 define|#
 directive|define
 name|ipcb_schedule_low
-value|tx_cb_u.ipcb_schedule_low
+value|tx_cb_u.ipcb.ipcb_schedule_low
 end_define
 
 begin_define
 define|#
 directive|define
 name|ipcb_ip_schedule
-value|tx_cb_u.ipcb_ip_schedule
+value|tx_cb_u.ipcb.ipcb_ip_schedule
 end_define
 
 begin_define
 define|#
 directive|define
 name|ipcb_ip_activation_high
-value|tx_cb_u.ipcb_ip_activation_high
+value|tx_cb_u.ipcb.ipcb_ip_activation_high
 end_define
 
 begin_define
 define|#
 directive|define
 name|ipcb_vlan_id
-value|tx_cb_u.ipcb_vlan_id
+value|tx_cb_u.ipcb.ipcb_vlan_id
 end_define
 
 begin_define
 define|#
 directive|define
 name|ipcb_ip_header_offset
-value|tx_cb_u.ipcb_ip_header_offset
+value|tx_cb_u.ipcb.ipcb_ip_header_offset
 end_define
 
 begin_define
 define|#
 directive|define
 name|ipcb_tcp_header_offset
-value|tx_cb_u.ipcb_tcp_header_offset
+value|tx_cb_u.ipcb.ipcb_tcp_header_offset
 end_define
 
 begin_comment
