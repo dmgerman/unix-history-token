@@ -1105,7 +1105,7 @@ while|while
 condition|(
 name|len
 operator|>
-literal|0
+literal|1
 operator|&&
 name|name
 index|[
@@ -1186,7 +1186,7 @@ while|while
 condition|(
 name|len
 operator|>
-literal|0
+literal|1
 operator|&&
 name|buf
 index|[
@@ -2773,6 +2773,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
