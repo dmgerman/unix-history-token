@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spp_usrreq.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spp_usrreq.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -434,6 +434,8 @@ operator|=
 name|sonewconn
 argument_list|(
 name|so
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6177,8 +6179,6 @@ argument|m
 argument_list|,
 argument|nam
 argument_list|,
-argument|rights
-argument_list|,
 argument|controlp
 argument_list|)
 end_macro
@@ -6205,9 +6205,6 @@ name|m
 decl_stmt|,
 modifier|*
 name|nam
-decl_stmt|,
-modifier|*
-name|rights
 decl_stmt|,
 modifier|*
 name|controlp
@@ -6283,27 +6280,10 @@ expr|struct
 name|ifnet
 operator|*
 operator|)
-name|rights
+name|controlp
 argument_list|)
 operator|)
 return|;
-if|if
-condition|(
-name|rights
-operator|&&
-name|rights
-operator|->
-name|m_len
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|release
-goto|;
-block|}
 if|if
 condition|(
 name|nsp
@@ -7342,8 +7322,6 @@ argument|m
 argument_list|,
 argument|nam
 argument_list|,
-argument|rights
-argument_list|,
 argument|controlp
 argument_list|)
 end_macro
@@ -7372,9 +7350,6 @@ modifier|*
 name|nam
 decl_stmt|,
 modifier|*
-name|rights
-decl_stmt|,
-modifier|*
 name|controlp
 decl_stmt|;
 end_decl_stmt
@@ -7393,8 +7368,6 @@ argument_list|,
 name|m
 argument_list|,
 name|nam
-argument_list|,
-name|rights
 argument_list|,
 name|controlp
 argument_list|)
