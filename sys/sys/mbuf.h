@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.3 (Berkeley) 1/21/94  * $Id: mbuf.h,v 1.6 1994/10/02 17:24:50 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.3 (Berkeley) 1/21/94  * $Id: mbuf.h,v 1.7 1994/10/02 20:04:04 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -623,20 +623,6 @@ begin_comment
 comment|/*  * mbuf allocation/deallocation macros:  *  *	MGET(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain internal data.  *  *	MGETHDR(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain a packet header  * and internal data.  */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|mbuffree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mbuffreecnt
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -648,7 +634,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	int s = splimp(); \ 	if (mbuffree == 0) { \ 		splx(s); \ 		MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	} else { \ 		--mbuffreecnt; \ 		(m) = mbuffree; \ 		mbuffree = (m)->m_next; \ 		splx(s); \ 	} \ 	if (m) { \ 		(m)->m_type = (type); \ 		MBUFLOCK(mbstat.m_mtypes[type]++;) \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 	} else \ 		(m) = m_retry((how), (type)); \ }
+value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		MBUFLOCK(mbstat.m_mtypes[type]++;) \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 	} else \ 		(m) = m_retry((how), (type)); \ }
 end_define
 
 begin_define
@@ -662,7 +648,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	int s = splimp(); \ 	if (mbuffree == 0) { \ 		splx(s); \ 		MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	} else { \ 		--mbuffreecnt; \ 		(m) = mbuffree; \ 		mbuffree = (m)->m_next; \ 		splx(s); \ 	} \ 	if (m) { \ 		(m)->m_type = (type); \ 		MBUFLOCK(mbstat.m_mtypes[type]++;) \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 	} else \ 		(m) = m_retryhdr((how), (type)); \ }
+value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		MBUFLOCK(mbstat.m_mtypes[type]++;) \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 	} else \ 		(m) = m_retryhdr((how), (type)); \ }
 end_define
 
 begin_comment
@@ -767,7 +753,7 @@ parameter_list|,
 name|nn
 parameter_list|)
 define|\
-value|{ MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--;) \ 	  if ((m)->m_flags& M_EXT) { \ 		MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (nn) = (m)->m_next; \ 	  if (mbuffreecnt< 256) { \ 		int s = splimp(); \ 		++mbuffreecnt; \ 		(m)->m_next = mbuffree; \ 		mbuffree = (m); \ 		splx(s); \ 	  } else { \ 	  	FREE((m), mbtypes[(m)->m_type]); \ 	  } \ 	}
+value|{ MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--;) \ 	  if ((m)->m_flags& M_EXT) { \ 		MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (nn) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
 end_define
 
 begin_endif
