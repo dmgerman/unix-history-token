@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -1042,18 +1042,11 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-specifier|auto
-name|int
-name|i
-init|=
-name|size
-decl_stmt|;
 name|gethostname
 argument_list|(
 name|hostbuf
 argument_list|,
-operator|&
-name|i
+name|size
 argument_list|)
 expr_stmt|;
 name|hp
