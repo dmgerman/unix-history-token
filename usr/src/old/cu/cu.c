@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cu.c	4.2 (Berkeley) %G%"
+literal|"@(#)cu.c	4.3 (Berkeley) 81/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -400,11 +400,36 @@ name|struct
 name|sgttyb
 name|stbuf
 decl_stmt|;
+name|int
+name|cleanup
+parameter_list|()
+function_decl|;
 name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
 name|sig14
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|cleanup
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|cleanup
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|cleanup
 argument_list|)
 expr_stmt|;
 if|if
@@ -3117,6 +3142,16 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|<
+operator|&
+name|b
+index|[
+literal|600
+index|]
+condition|)
 operator|*
 name|p
 operator|++
