@@ -254,15 +254,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: vidcontrol [-CdLPpx] [-b color] [-c appearance] [-f [size] file]"
 argument_list|,
 literal|"                  [-g geometry] [-h size] [-i adapter | mode] [-l screen_map]"
 argument_list|,
-literal|"                  [-m on | off] [-M char] [-r foreground background] [-s num]"
+literal|"                  [-M char] [-m on | off] [-r foreground background]"
 argument_list|,
-literal|"                  [-S on | off] [-t N | off] [mode] [foreground [background]] [show]"
+literal|"                  [-S on | off] [-s number] [-t N | off] [mode]"
+argument_list|,
+literal|"                  [foreground [background]] [show]"
 argument_list|)
 expr_stmt|;
 name|exit
