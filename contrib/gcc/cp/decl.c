@@ -34390,6 +34390,13 @@ condition|)
 return|return
 name|NULL_TREE
 return|;
+name|maybe_vlist_ctor_wrapper
+argument_list|(
+name|decl
+argument_list|,
+name|funcdef_flag
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -46294,6 +46301,13 @@ name|parmtypes
 argument_list|)
 expr_stmt|;
 block|}
+name|maybe_vlist_ctor_wrapper
+argument_list|(
+name|decl
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* [class.copy]       A non-template constructor for class X is a copy constructor if      its first parameter is of type X&, const X&, volatile X& or const      volatile X&, and either there are no other parameters or else all      other parameters have default arguments.  */
 if|if
 condition|(

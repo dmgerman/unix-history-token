@@ -170,6 +170,12 @@ else|#
 directive|else
 end_else
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_FILE_END
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -199,6 +205,12 @@ end_define
 begin_comment
 comment|/* Output #ident as a .ident.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_IDENT
+end_undef
 
 begin_define
 define|#
@@ -308,6 +320,12 @@ end_define
 begin_comment
 comment|/* The standard SVR4 assembler seems to require that certain builtin    library routines (e.g. .udiv) be explicitly declared as .globl    in each assembly file where they are referenced.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_EXTERNAL_LIBCALL
+end_undef
 
 begin_define
 define|#
@@ -426,6 +444,12 @@ end_define
 begin_comment
 comment|/* Support const sections and the ctors and dtors sections for g++.    Note that there appears to be two different ways to support const    sections at the moment.  You can either #define the symbol    READONLY_DATA_SECTION (giving it some code which switches to the    readonly data section) or else you can #define the symbols    EXTRA_SECTIONS, EXTRA_SECTION_FUNCTIONS, SELECT_SECTION, and    SELECT_RTX_SECTION.  We do both here just to be on the safe side.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USE_CONST_SECTION
+end_undef
 
 begin_define
 define|#
@@ -607,6 +631,12 @@ begin_comment
 comment|/* A C statement (sans semicolon) to output an element in the table of    global constructors.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_CONSTRUCTOR
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -623,6 +653,12 @@ end_define
 begin_comment
 comment|/* A C statement (sans semicolon) to output an element in the table of    global destructors.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_DESTRUCTOR
+end_undef
 
 begin_define
 define|#
@@ -697,6 +733,12 @@ end_define
 begin_comment
 comment|/* This is how we tell the assembler that a symbol is weak.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_WEAKEN_LABEL
+end_undef
 
 begin_define
 define|#
@@ -775,6 +817,12 @@ begin_comment
 comment|/* Write the extra assembler code needed to declare an object properly.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_DECLARE_OBJECT_NAME
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -793,6 +841,12 @@ end_define
 begin_comment
 comment|/* Output the size directive for a decl in rest_of_decl_compilation    in the case where we did not do so before the initializer.    Once we find the error_mark_node, we know that the value of    size_directive_output was set    by ASM_DECLARE_OBJECT_NAME when it was run for the same decl.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_FINISH_DECLARE_OBJECT
+end_undef
 
 begin_define
 define|#
