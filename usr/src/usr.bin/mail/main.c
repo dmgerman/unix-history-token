@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.14 (Berkeley) %G%"
+literal|"@(#)main.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,11 +88,6 @@ name|argv
 decl_stmt|;
 block|{
 specifier|register
-name|char
-modifier|*
-name|ef
-decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -110,9 +105,15 @@ decl_stmt|,
 modifier|*
 name|smopts
 decl_stmt|;
+name|char
+modifier|*
+name|subject
+decl_stmt|;
+name|char
+modifier|*
+name|ef
+decl_stmt|;
 name|int
-name|mustsend
-decl_stmt|,
 name|hdrstop
 argument_list|()
 decl_stmt|,
@@ -168,23 +169,23 @@ name|NOSTR
 expr_stmt|;
 name|to
 operator|=
-name|NULL
+name|NIL
 expr_stmt|;
 name|cc
 operator|=
-name|NULL
+name|NIL
 expr_stmt|;
 name|bcc
 operator|=
-name|NULL
+name|NIL
 expr_stmt|;
 name|smopts
 operator|=
-name|NULL
+name|NIL
 expr_stmt|;
-name|mustsend
+name|subject
 operator|=
-literal|0
+name|NOSTR
 expr_stmt|;
 while|while
 condition|(
@@ -285,10 +286,7 @@ case|case
 literal|'s'
 case|:
 comment|/* 			 * Give a subject field for sending from 			 * non terminal 			 */
-name|mustsend
-operator|++
-expr_stmt|;
-name|sflag
+name|subject
 operator|=
 name|optarg
 expr_stmt|;
@@ -389,11 +387,10 @@ argument_list|,
 name|nalloc
 argument_list|(
 name|optarg
+argument_list|,
+name|GCC
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|mustsend
-operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -409,11 +406,10 @@ argument_list|,
 name|nalloc
 argument_list|(
 name|optarg
+argument_list|,
+name|GBCC
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|mustsend
-operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -471,6 +467,8 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|,
+name|GTO
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -497,25 +495,36 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for inconsistent arguments. 	 */
 if|if
 condition|(
-operator|!
 name|to
+operator|==
+name|NIL
 operator|&&
 operator|(
+name|subject
+operator|!=
+name|NOSTR
+operator|||
 name|cc
+operator|!=
+name|NIL
 operator|||
 name|bcc
+operator|!=
+name|NIL
 operator|)
 condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"You must also specify direct recipients of mail.\n"
+literal|"You must specify direct recipients with -s, -c, or -b.\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -528,13 +537,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|ef
 operator|!=
 name|NOSTR
-operator|)
 operator|&&
 name|to
+operator|!=
+name|NIL
 condition|)
 block|{
 name|fprintf
@@ -542,27 +551,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Cannot give -f and people to send to.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|mustsend
-operator|&&
-operator|!
-name|to
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"The flags you gave make no sense since you're not sending mail.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -616,6 +604,8 @@ argument_list|,
 name|bcc
 argument_list|,
 name|smopts
+argument_list|,
+name|subject
 argument_list|)
 expr_stmt|;
 comment|/* 		 * why wait? 		 */

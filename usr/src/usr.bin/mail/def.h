@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)def.h	5.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)def.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -727,7 +727,8 @@ begin_struct
 struct|struct
 name|header
 block|{
-name|char
+name|struct
+name|name
 modifier|*
 name|h_to
 decl_stmt|;
@@ -737,25 +738,24 @@ modifier|*
 name|h_subject
 decl_stmt|;
 comment|/* Subject string */
-name|char
+name|struct
+name|name
 modifier|*
 name|h_cc
 decl_stmt|;
 comment|/* Carbon copies string */
-name|char
+name|struct
+name|name
 modifier|*
 name|h_bcc
 decl_stmt|;
 comment|/* Blind carbon copies */
-name|char
+name|struct
+name|name
 modifier|*
 name|h_smopts
 decl_stmt|;
 comment|/* Sendmail options */
-name|int
-name|h_seq
-decl_stmt|;
-comment|/* Sequence for optimization */
 block|}
 struct|;
 end_struct
@@ -1499,6 +1499,15 @@ name|struct
 name|grouphead
 modifier|*
 name|findgroup
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|name
+modifier|*
+name|nalloc
 parameter_list|()
 function_decl|;
 end_function_decl
