@@ -140,8 +140,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|terminalCursorAddress
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -153,8 +151,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|screenInitd
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -166,8 +162,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|screenStopped
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -212,8 +206,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|needToRing
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -240,6 +232,8 @@ specifier|static
 name|WINDOW
 modifier|*
 name|bellwin
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1945,12 +1939,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* StartScreen - called to initialize the screen, etc. */
+comment|/* InitTerminal - called to initialize the screen, etc. */
 end_comment
 
 begin_function
 name|void
-name|StartScreen
+name|InitTerminal
 parameter_list|()
 block|{
 if|#
@@ -2000,6 +1994,10 @@ block|}
 decl_stmt|;
 endif|#
 directive|endif
+name|InitMapping
+argument_list|()
+expr_stmt|;
+comment|/* Go do mapping file (MAP3270) first */
 if|if
 condition|(
 operator|!
@@ -2039,66 +2037,6 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* defined(unix) */
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|Host
-argument_list|,
-sizeof|sizeof
-name|Host
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|Orders
-argument_list|,
-sizeof|sizeof
-name|Orders
-argument_list|)
-expr_stmt|;
-name|Orders
-index|[
-name|ORDER_SF
-index|]
-operator|=
-name|Orders
-index|[
-name|ORDER_SBA
-index|]
-operator|=
-name|Orders
-index|[
-name|ORDER_IC
-index|]
-operator|=
-name|Orders
-index|[
-name|ORDER_PT
-index|]
-operator|=
-name|Orders
-index|[
-name|ORDER_RA
-index|]
-operator|=
-name|Orders
-index|[
-name|ORDER_EUA
-index|]
-operator|=
-name|Orders
-index|[
-name|ORDER_YALE
-index|]
-operator|=
-literal|1
-expr_stmt|;
-name|DeleteAllFields
-argument_list|()
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2120,25 +2058,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(SLOWSCREEN) */
-name|Lowest
-operator|=
-name|HighestScreen
-argument_list|()
-operator|+
-literal|1
-expr_stmt|;
-name|Highest
-operator|=
-name|LowestScreen
-argument_list|()
-operator|-
-literal|1
-expr_stmt|;
 name|terminalCursorAddress
-operator|=
-name|CursorAddress
-operator|=
-name|BufferAddress
 operator|=
 name|SetBufferAddress
 argument_list|(
@@ -2146,23 +2066,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|UnLocked
-operator|=
-literal|1
-expr_stmt|;
-name|Initialized
-operator|=
-literal|1
-expr_stmt|;
-name|OutputClock
-operator|=
-literal|1
-expr_stmt|;
-name|TransparentClock
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 if|#
 directive|if
@@ -2424,6 +2327,10 @@ literal|0
 expr_stmt|;
 comment|/* Not stopped */
 block|}
+name|Initialized
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
