@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1045,6 +1045,12 @@ name|um
 operator|->
 name|um_lowervp
 expr_stmt|;
+if|if
+condition|(
+name|lowervp
+operator|!=
+name|NULLVP
+condition|)
 name|VREF
 argument_list|(
 name|lowervp
