@@ -94,6 +94,8 @@ block|,
 literal|"sd0"
 block|,
 literal|"sd1"
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
