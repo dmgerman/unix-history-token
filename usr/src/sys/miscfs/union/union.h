@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -114,6 +114,12 @@ comment|/* Hash chain */
 name|struct
 name|vnode
 modifier|*
+name|un_vnode
+decl_stmt|;
+comment|/* Back pointer */
+name|struct
+name|vnode
+modifier|*
 name|un_uppervp
 decl_stmt|;
 comment|/* overlaying object */
@@ -129,12 +135,6 @@ modifier|*
 name|un_dirvp
 decl_stmt|;
 comment|/* Parent dir of uppervp */
-name|struct
-name|vnode
-modifier|*
-name|un_vnode
-decl_stmt|;
-comment|/* Back pointer */
 name|char
 modifier|*
 name|un_path
@@ -167,25 +167,38 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|int
-name|union_node_create
+name|union_allocvp
 name|__P
 argument_list|(
 operator|(
 expr|struct
+name|vnode
+operator|*
+operator|*
+operator|,
+expr|struct
 name|mount
 operator|*
-name|mp
 operator|,
 expr|struct
 name|vnode
 operator|*
-name|target
 operator|,
 expr|struct
 name|vnode
 operator|*
+operator|,
+expr|struct
+name|componentname
 operator|*
-name|vpp
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

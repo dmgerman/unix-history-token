@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	1.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	1.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -817,6 +817,13 @@ argument_list|(
 name|vpp
 argument_list|,
 name|mp
+argument_list|,
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+literal|0
 argument_list|,
 operator|(
 expr|struct
