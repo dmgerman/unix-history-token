@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	5.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1311,6 +1311,14 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|kstack
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * in u. to call routine, followed by kcall  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, and the  * frame pointer, it returns to the user  * specified pc, psl.  */
 end_comment
@@ -1369,6 +1377,8 @@ name|p_sigacts
 decl_stmt|;
 name|int
 name|oonstack
+decl_stmt|,
+name|frmtrap
 decl_stmt|;
 name|regs
 operator|=
@@ -1381,6 +1391,14 @@ operator|=
 name|ps
 operator|->
 name|ps_onstack
+expr_stmt|;
+name|frmtrap
+operator|=
+name|curpcb
+operator|->
+name|pcb_flags
+operator|&
+name|FM_TRAP
 expr_stmt|;
 comment|/*#include "dbg.h" dprintf(DALLTRAPS|DPAGIN,"s %d %d ", sig, frm);*/
 comment|/* 	 * Allocate and validate space for the signal handler 	 * context. Note that if the stack is in P0 space, the 	 * call to grow() is a nop, and the useracc() check 	 * will fail if the process has not already allocated 	 * the space with a `brk'. 	 */
@@ -1438,9 +1456,7 @@ else|else
 block|{
 if|if
 condition|(
-name|code
-operator|&
-literal|0x100
+name|frmtrap
 condition|)
 name|fp
 operator|=
@@ -1542,9 +1558,7 @@ name|fp
 argument_list|,
 name|regs
 index|[
-name|code
-operator|&
-literal|0x100
+name|frmtrap
 condition|?
 name|tESP
 else|:
@@ -1613,8 +1627,6 @@ name|sf_code
 operator|=
 name|code
 expr_stmt|;
-comment|/* indicate trap occured from system call */
-comment|/*if(!(code&FRMTRAP)) fp->sf_code |= 0x80;*/
 name|fp
 operator|->
 name|sf_scp
@@ -1633,9 +1645,7 @@ expr_stmt|;
 comment|/* save scratch registers */
 if|if
 condition|(
-name|code
-operator|&
-literal|0x100
+name|frmtrap
 condition|)
 block|{
 name|fp
@@ -1715,9 +1725,7 @@ name|mask
 expr_stmt|;
 if|if
 condition|(
-name|code
-operator|&
-literal|0x100
+name|frmtrap
 condition|)
 block|{
 name|fp
@@ -1779,15 +1787,18 @@ index|[
 name|tEIP
 index|]
 operator|=
-operator|(
+call|(
 name|int
+call|)
+argument_list|(
+operator|(
+expr|struct
+name|pcb
+operator|*
 operator|)
-name|p
+name|kstack
+argument_list|)
 operator|->
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
 name|pcb_sigc
 expr_stmt|;
 comment|/*dprintf(DALLTRAPS|DPAGIN,"E ");*/
@@ -1853,15 +1864,18 @@ index|[
 name|sEIP
 index|]
 operator|=
-operator|(
+call|(
 name|int
+call|)
+argument_list|(
+operator|(
+expr|struct
+name|pcb
+operator|*
 operator|)
-name|p
+name|kstack
+argument_list|)
 operator|->
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
 name|pcb_sigc
 expr_stmt|;
 comment|/*dprintf(DALLTRAPS|DPAGIN,"e "); */
@@ -3071,14 +3085,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|kstack
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|user
 modifier|*
@@ -3898,9 +3904,15 @@ name|proc0paddr
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*cninit (SYSTEM+0xa0000);*/
-end_comment
+begin_expr_stmt
+name|cninit
+argument_list|(
+name|SYSTEM
+operator|+
+literal|0xa0000
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*pg("init386 first %x&x %x Maxmem %x", first,&x, Maxmem); pg("init386 PTmap[0] %x PTD[0] %x", *(int *)PTmap, *(int *)PTD);*/
@@ -4944,17 +4956,9 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|pg
-argument_list|(
-literal|"maxmem %dk"
-argument_list|,
-literal|4
-operator|*
-name|maxmem
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*pg("maxmem %dk", 4*maxmem);*/
+end_comment
 
 begin_comment
 comment|/* call pmap initialization to make new kernel address space */
@@ -4989,7 +4993,7 @@ name|p_addr
 operator|->
 name|u_pcb
 operator|.
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_esp0
 operator|=
@@ -5011,7 +5015,7 @@ name|p_addr
 operator|->
 name|u_pcb
 operator|.
-name|pcbtss
+name|pcb_tss
 operator|.
 name|tss_ss0
 operator|=
