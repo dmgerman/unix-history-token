@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.16 81/11/20 */
+comment|/* ip_input.c 1.17 81/11/23 */
 end_comment
 
 begin_include
@@ -305,6 +305,11 @@ name|IP_INPUT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check header and byteswap. 	 */
+name|printf
+argument_list|(
+literal|"ip_input\n"
+argument_list|)
+expr_stmt|;
 name|ip
 operator|=
 name|mtod
@@ -348,6 +353,7 @@ name|ipcksum
 condition|)
 if|if
 condition|(
+operator|(
 name|ip
 operator|->
 name|ip_sum
@@ -358,6 +364,9 @@ name|m
 argument_list|,
 name|hlen
 argument_list|)
+operator|)
+operator|!=
+literal|0xffff
 condition|)
 block|{
 name|printf
@@ -419,6 +428,15 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check that the amount of data in the buffers 	 * is as at least much as the IP header would have us expect. 	 * Trim mbufs if longer than we expect. 	 * Drop packet if shorter than we expect. 	 */
+name|printf
+argument_list|(
+literal|"ip_input: %d:"
+argument_list|,
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 literal|0
@@ -436,11 +454,27 @@ name|m
 operator|->
 name|m_next
 control|)
+block|{
 name|i
 operator|+=
 name|m
 operator|->
 name|m_len
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %d"
+argument_list|,
+name|m
+operator|->
+name|m_len
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
 expr_stmt|;
 name|m
 operator|=
@@ -473,6 +507,17 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|printf
+argument_list|(
+literal|"m_adj %d\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_len
+operator|-
+name|i
+argument_list|)
+expr_stmt|;
 name|m_adj
 argument_list|(
 name|m
@@ -512,6 +557,15 @@ operator|!=
 name|n_lhost
 operator|.
 name|s_addr
+operator|&&
+name|if_ifwithaddr
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
