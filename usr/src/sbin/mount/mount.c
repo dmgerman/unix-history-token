@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.4 (Berkeley) %G%"
+literal|"@(#)mount.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,8 +127,6 @@ specifier|static
 name|int
 name|fake
 decl_stmt|,
-name|rval
-decl_stmt|,
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -180,6 +178,8 @@ decl_stmt|,
 name|ch
 decl_stmt|,
 name|fd
+decl_stmt|,
+name|rval
 decl_stmt|;
 name|char
 modifier|*
@@ -333,6 +333,10 @@ condition|(
 name|all
 condition|)
 block|{
+name|rval
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -361,6 +365,8 @@ operator|->
 name|fs_type
 argument_list|)
 condition|)
+name|rval
+operator||=
 name|mountfs
 argument_list|(
 name|fs
@@ -519,6 +525,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|exit
+argument_list|(
 name|mountfs
 argument_list|(
 name|fs
@@ -537,10 +545,6 @@ name|fs
 operator|->
 name|fs_type
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|rval
 argument_list|)
 expr_stmt|;
 block|}
@@ -553,6 +557,8 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|exit
+argument_list|(
 name|mountfs
 argument_list|(
 name|argv
@@ -571,10 +577,6 @@ name|type
 else|:
 literal|"rw"
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|rval
 argument_list|)
 expr_stmt|;
 block|}
@@ -656,14 +658,16 @@ name|spec
 argument_list|,
 name|name
 argument_list|,
+operator|!
+name|strcmp
+argument_list|(
 name|type
+argument_list|,
+name|FSTAB_RO
+argument_list|)
 argument_list|)
 condition|)
 block|{
-name|rval
-operator|=
-literal|1
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -714,7 +718,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 comment|/* we don't do quotas.... */
 if|if
@@ -1035,6 +1043,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1146,7 +1159,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount [-arw]\nor mount [-rw] special | node\nor mount [-rw] special node\n"
+literal|"usage: mount [-afrw]\nor mount [-frw] special | node\nor mount [-frw] special node\n"
 argument_list|)
 block|;
 name|exit
