@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ums.c,v 1.8 1998/08/01 20:11:39 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: ums.c,v 1.3 1998/12/14 09:32:24 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -713,12 +713,8 @@ begin_define
 define|#
 directive|define
 name|UMS_CDEV_MAJOR
-value|138
+value|111
 end_define
-
-begin_comment
-comment|/* XXX NWH should be requested */
-end_comment
 
 begin_decl_stmt
 specifier|static
