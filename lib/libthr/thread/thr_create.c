@@ -568,12 +568,6 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Protect the scheduling queues. 	 */
-name|GIANT_LOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialise the unique id which GDB uses to 	 * track threads. 	 */
 name|new_thread
 operator|->
@@ -581,6 +575,13 @@ name|uniqueid
 operator|=
 name|next_uniqueid
 operator|++
+expr_stmt|;
+name|THREAD_LIST_LOCK
+expr_stmt|;
+name|_thread_critical_enter
+argument_list|(
+name|new_thread
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if the garbage collector thread 	 * needs to be started. 	 */
 name|f_gc
@@ -605,6 +606,8 @@ name|new_thread
 argument_list|,
 name|tle
 argument_list|)
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
 expr_stmt|;
 comment|/* 	 * Create the thread. 	 * 	 */
 if|if
@@ -663,11 +666,6 @@ literal|"thr_create"
 argument_list|)
 expr_stmt|;
 block|}
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* Return a pointer to the thread structure: */
 operator|(
 operator|*
@@ -675,6 +673,11 @@ name|thread
 operator|)
 operator|=
 name|new_thread
+expr_stmt|;
+name|_thread_critical_exit
+argument_list|(
+name|new_thread
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Start a garbage collector thread 	 * if necessary. 	 */
 if|if

@@ -53,10 +53,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|GIANT_LOCK
-argument_list|(
-name|curthread
-argument_list|)
+name|THREAD_LIST_LOCK
 expr_stmt|;
 comment|/* Search for the specified thread: */
 name|TAILQ_FOREACH
@@ -76,10 +73,7 @@ name|pthread1
 condition|)
 break|break;
 block|}
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
+name|THREAD_LIST_UNLOCK
 expr_stmt|;
 comment|/* Return zero if the thread exists: */
 return|return
