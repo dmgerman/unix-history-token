@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ERROR.c 1.4 %G%"
+literal|"@(#)ERROR.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,7 +551,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Negative format width: %D\n"
+literal|"Non-positive format width: %D\n"
 argument_list|,
 name|errdata
 operator|.
