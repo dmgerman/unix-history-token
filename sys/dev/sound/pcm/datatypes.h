@@ -185,6 +185,10 @@ name|fl
 decl_stmt|;
 comment|/* lenght of ready and free areas. */
 specifier|volatile
+name|int
+name|hp
+decl_stmt|;
+specifier|volatile
 name|u_int32_t
 name|int_count
 decl_stmt|,
@@ -211,6 +215,8 @@ name|blkcnt
 decl_stmt|;
 name|int
 name|underflow
+decl_stmt|,
+name|overrun
 decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
