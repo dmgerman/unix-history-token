@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.37 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.38 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.37 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.38 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1717,6 +1717,39 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* check to see if we need to re-expand aliases */
+for|for
+control|(
+name|a
+operator|=
+name|e
+operator|->
+name|e_sendqueue
+init|;
+name|a
+operator|!=
+name|NULL
+condition|;
+name|a
+operator|=
+name|a
+operator|->
+name|q_next
+control|)
+block|{
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QVERIFIED
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+break|break;
+block|}
 comment|/* collect the text of the message */
 name|SmtpPhase
 operator|=
@@ -1738,6 +1771,10 @@ expr_stmt|;
 name|collect
 argument_list|(
 name|TRUE
+argument_list|,
+name|a
+operator|!=
+name|NULL
 argument_list|,
 name|e
 argument_list|)
@@ -1807,39 +1844,6 @@ name|e
 operator|->
 name|e_id
 expr_stmt|;
-comment|/* check to see if we need to re-expand aliases */
-for|for
-control|(
-name|a
-operator|=
-name|e
-operator|->
-name|e_sendqueue
-init|;
-name|a
-operator|!=
-name|NULL
-condition|;
-name|a
-operator|=
-name|a
-operator|->
-name|q_next
-control|)
-block|{
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|QVERIFIED
-argument_list|,
-name|a
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-break|break;
-block|}
 comment|/* send to all recipients */
 name|sendall
 argument_list|(

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.17 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.18 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.17 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.18 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -908,21 +908,9 @@ name|nmx
 operator|=
 literal|1
 expr_stmt|;
-name|prefer
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|weight
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
 block|}
+else|else
+block|{
 comment|/* sort the records */
 for|for
 control|(
@@ -1084,7 +1072,7 @@ operator|>=
 name|localpref
 condition|)
 block|{
-comment|/* 			 * truncate higher pref part of list; if we're 			 * the best choice left, we should have realized 			 * awhile ago that this was a local delivery. 			 */
+comment|/* 				 * truncate higher pref part of list; if we're 				 * the best choice left, we should have realized 				 * awhile ago that this was a local delivery. 				 */
 if|if
 condition|(
 name|i
@@ -1109,6 +1097,7 @@ operator|=
 name|i
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 comment|/* if we have a default lowest preference, include that */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.58 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,9 @@ name|splitenv
 init|=
 name|NULL
 decl_stmt|;
+name|bool
+name|announcequeueup
+decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
@@ -184,7 +187,18 @@ name|mode
 operator|=
 name|SM_QUEUE
 expr_stmt|;
+name|announcequeueup
+operator|=
+name|mode
+operator|==
+name|SM_QUEUE
+expr_stmt|;
 block|}
+else|else
+name|announcequeueup
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|tTd

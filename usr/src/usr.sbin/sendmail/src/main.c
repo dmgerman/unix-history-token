@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.50 (Berkeley) %G%"
+literal|"@(#)main.c	6.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4070,6 +4070,8 @@ name|collect
 argument_list|(
 name|FALSE
 argument_list|,
+name|FALSE
+argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
@@ -4153,6 +4155,8 @@ name|GrabTo
 condition|)
 name|collect
 argument_list|(
+name|FALSE
+argument_list|,
 name|FALSE
 argument_list|,
 name|CurEnv

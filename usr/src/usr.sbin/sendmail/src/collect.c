@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.12 (Berkeley) %G%"
+literal|"@(#)collect.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -956,6 +956,9 @@ comment|/* 	**  Find out some information from the headers. 	**	Examples are who
 name|eatheader
 argument_list|(
 name|e
+argument_list|,
+operator|!
+name|requeueflag
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Add an Apparently-To: line if we have no recipient lines. 	*/

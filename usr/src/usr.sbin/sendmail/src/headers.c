@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.27 (Berkeley) %G%"
+literal|"@(#)headers.c	6.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1121,13 +1121,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. **		Aborts the message if the hop count is exceeded. */
+comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. **		full -- if set, do full processing (e.g., compute **			message priority). ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. **		Aborts the message if the hop count is exceeded. */
 end_comment
 
 begin_expr_stmt
 name|eatheader
 argument_list|(
 name|e
+argument_list|,
+name|full
 argument_list|)
 specifier|register
 name|ENVELOPE
@@ -1135,6 +1137,12 @@ operator|*
 name|e
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|full
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1407,15 +1415,7 @@ block|}
 comment|/* save the message-id for logging */
 if|if
 condition|(
-operator|!
-name|bitset
-argument_list|(
-name|EF_QUEUERUN
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
+name|full
 operator|&&
 name|h
 operator|->
@@ -1562,15 +1562,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|bitset
-argument_list|(
-name|EF_QUEUERUN
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
+name|full
 condition|)
 name|e
 operator|->
@@ -1663,15 +1655,7 @@ directive|ifdef
 name|LOG
 if|if
 condition|(
-operator|!
-name|bitset
-argument_list|(
-name|EF_QUEUERUN
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
+name|full
 operator|&&
 name|LogLevel
 operator|>
