@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rdmap.c,v 1.5.2.1 1997/10/08 07:33:28 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/card.h>
+file|<pccard/cardinfo.h>
 end_include
 
 begin_include

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: readcis.c,v 1.10 1997/10/06 11:36:08 charnier Exp $"
+literal|"$Id: readcis.c,v 1.6.2.2 1997/10/26 04:13:47 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/card.h>
+file|<pccard/cardinfo.h>
 end_include
 
 begin_include
@@ -923,6 +923,28 @@ name|int
 name|len
 parameter_list|)
 block|{
+operator|*
+name|cp
+operator|->
+name|manuf
+operator|=
+operator|*
+name|cp
+operator|->
+name|vers
+operator|=
+operator|*
+name|cp
+operator|->
+name|add_info1
+operator|=
+operator|*
+name|cp
+operator|->
+name|add_info2
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cp
 operator|->
 name|maj_v
@@ -939,6 +961,14 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|0xff
+condition|)
+return|return;
 name|strncpy
 argument_list|(
 name|cp
@@ -959,6 +989,14 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|0xff
+condition|)
+return|return;
 name|strncpy
 argument_list|(
 name|cp
@@ -979,6 +1017,14 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|0xff
+condition|)
+return|return;
 name|strncpy
 argument_list|(
 name|cp
@@ -999,6 +1045,14 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|0xff
+condition|)
+return|return;
 name|strncpy
 argument_list|(
 name|cp

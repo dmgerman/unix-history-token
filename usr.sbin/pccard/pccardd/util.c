@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.6.2.2 1997/10/26 04:13:48 nate Exp $"
+literal|"$Id: util.c,v 1.6.2.3 1997/11/25 19:41:39 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -828,6 +828,11 @@ name|struct
 name|cmd
 modifier|*
 name|cmdp
+parameter_list|,
+name|struct
+name|slot
+modifier|*
+name|sp
 parameter_list|)
 block|{
 name|char
@@ -928,42 +933,42 @@ name|cp
 argument_list|,
 literal|"%x:%x:%x:%x:%x:%x"
 argument_list|,
-name|current_slot
+name|sp
 operator|->
 name|eaddr
 index|[
 literal|0
 index|]
 argument_list|,
-name|current_slot
+name|sp
 operator|->
 name|eaddr
 index|[
 literal|1
 index|]
 argument_list|,
-name|current_slot
+name|sp
 operator|->
 name|eaddr
 index|[
 literal|2
 index|]
 argument_list|,
-name|current_slot
+name|sp
 operator|->
 name|eaddr
 index|[
 literal|3
 index|]
 argument_list|,
-name|current_slot
+name|sp
 operator|->
 name|eaddr
 index|[
 literal|4
 index|]
 argument_list|,
-name|current_slot
+name|sp
 operator|->
 name|eaddr
 index|[
@@ -1005,7 +1010,7 @@ name|cp
 argument_list|,
 literal|"%s%d"
 argument_list|,
-name|current_slot
+name|sp
 operator|->
 name|config
 operator|->
@@ -1013,7 +1018,7 @@ name|driver
 operator|->
 name|kernel
 argument_list|,
-name|current_slot
+name|sp
 operator|->
 name|config
 operator|->
