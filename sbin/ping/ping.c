@@ -272,26 +272,29 @@ begin_define
 define|#
 directive|define
 name|MAXIPLEN
-value|60
+value|(sizeof(struct ip) + MAX_IPOPTLEN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXICMPLEN
-value|76
+value|(ICMP_ADVLENMIN + MAX_IPOPTLEN)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXPACKET
-value|(65536 - 60 - 8)
+name|MINICMPLEN
+value|ICMP_MINLEN
 end_define
 
-begin_comment
-comment|/* max packet size */
-end_comment
+begin_define
+define|#
+directive|define
+name|MAXPAYLOAD
+value|(IP_MAXPACKET - MAXIPLEN - MINICMPLEN)
+end_define
 
 begin_define
 define|#
@@ -313,17 +316,6 @@ end_define
 
 begin_comment
 comment|/* max seconds for alarm timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NROUTES
-value|9
-end_define
-
-begin_comment
-comment|/* number of record route slots */
 end_comment
 
 begin_define
@@ -606,7 +598,9 @@ begin_decl_stmt
 name|u_char
 name|outpack
 index|[
-name|MAXPACKET
+name|MINICMPLEN
+operator|+
+name|MAXPAYLOAD
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1070,8 +1064,10 @@ name|u_char
 modifier|*
 name|datap
 decl_stmt|,
-modifier|*
 name|packet
+index|[
+name|IP_MAXPACKET
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -1149,13 +1145,7 @@ name|IP_OPTIONS
 name|char
 name|rspace
 index|[
-literal|3
-operator|+
-literal|4
-operator|*
-name|NROUTES
-operator|+
-literal|1
+name|MAX_IPOPTLEN
 index|]
 decl_stmt|;
 comment|/* record route space */
@@ -1220,7 +1210,7 @@ operator|=
 operator|&
 name|outpack
 index|[
-literal|8
+name|MINICMPLEN
 operator|+
 name|PHDR_LEN
 index|]
@@ -1686,15 +1676,17 @@ if|if
 condition|(
 name|ultmp
 operator|>
-name|MAXPACKET
+name|MAXPAYLOAD
 condition|)
 name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"packet size too large: %lu"
+literal|"packet size too large: %lu> %u"
 argument_list|,
 name|ultmp
+argument_list|,
+name|MAXPAYLOAD
 argument_list|)
 expr_stmt|;
 if|if
@@ -1705,9 +1697,6 @@ operator|||
 name|ep
 operator|==
 name|optarg
-operator|||
-operator|!
-name|ultmp
 condition|)
 name|errx
 argument_list|(
@@ -2036,6 +2025,12 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|)
+operator|||
+name|hp
+operator|->
+name|h_length
+operator|<
+literal|0
 condition|)
 name|errx
 argument_list|(
@@ -2374,37 +2369,21 @@ literal|1
 expr_stmt|;
 name|packlen
 operator|=
-name|datalen
-operator|+
 name|MAXIPLEN
 operator|+
 name|MAXICMPLEN
+operator|+
+name|datalen
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|packet
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-operator|(
-name|size_t
-operator|)
 name|packlen
-argument_list|)
-operator|)
-condition|)
-name|err
-argument_list|(
-name|EX_UNAVAILABLE
-argument_list|,
-literal|"malloc"
-argument_list|)
+operator|=
+name|packlen
+operator|>
+name|IP_MAXPACKET
+condition|?
+name|IP_MAXPACKET
+else|:
+name|packlen
 expr_stmt|;
 if|if
 condition|(
@@ -2976,11 +2955,12 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * When pinging the broadcast address, you can get a lot of answers. 	 * Doing something so evil is useful if you are trying to stress the 	 * ethernet, or just want to fill the arp cache to get some stuff for 	 * /etc/ethers.  But beware: RFC 1122 allows hosts to ignore broadcast 	 * or multicast pings if they wish. 	 */
+comment|/* 	 * XXX receive buffer needs undetermined space for mbuf overhead 	 * as well. 	 */
 name|hold
 operator|=
-literal|48
-operator|*
-literal|1024
+name|IP_MAXPACKET
+operator|+
+literal|128
 expr_stmt|;
 operator|(
 name|void
@@ -3922,7 +3902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in host  * byte-order, to compute the round-trip time.  */
+comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first PHDR_LEN  * bytes of the data portion are used to hold a UNIX "timeval" struct in  * host byte-order, to compute the round-trip time.  */
 end_comment
 
 begin_function
@@ -4010,7 +3990,7 @@ operator|)
 operator|&
 name|outpack
 index|[
-literal|8
+name|MINICMPLEN
 index|]
 argument_list|,
 operator|(
@@ -4023,11 +4003,10 @@ argument_list|)
 expr_stmt|;
 name|cc
 operator|=
-name|datalen
+name|MINICMPLEN
 operator|+
-name|PHDR_LEN
+name|datalen
 expr_stmt|;
-comment|/* skips ICMP portion */
 comment|/* compute ICMP checksum here */
 name|icp
 operator|->
@@ -4635,7 +4614,7 @@ operator|=
 operator|&
 name|outpack
 index|[
-literal|8
+name|MINICMPLEN
 operator|+
 name|PHDR_LEN
 index|]
@@ -4767,7 +4746,7 @@ operator|=
 operator|&
 name|outpack
 index|[
-literal|8
+name|MINICMPLEN
 index|]
 expr_stmt|;
 for|for
@@ -7153,7 +7132,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|ii
 decl_stmt|,
 name|jj
@@ -7309,11 +7288,9 @@ literal|0
 init|;
 name|kk
 operator|<=
-name|MAXPACKET
+name|MAXPAYLOAD
 operator|-
 operator|(
-literal|8
-operator|+
 name|PHDR_LEN
 operator|+
 name|ii
