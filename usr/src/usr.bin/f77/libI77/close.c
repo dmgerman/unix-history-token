@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_close[] = "@(#)close.c	1.4";  *  * close.c  -  f77 file close, flush, exit routines  */
+comment|/* char id_close[] = "@(#)close.c	1.5";  *  * close.c  -  f77 file close, flush, exit routines  */
 end_comment
 
 begin_include
@@ -9,12 +9,15 @@ directive|include
 file|"fio.h"
 end_include
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|static
+name|char
 name|FROM_OPEN
-value|'\1'
-end_define
+index|[]
+init|=
+literal|"\2"
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|f_clos
@@ -97,6 +100,9 @@ operator|->
 name|csta
 operator|!=
 name|FROM_OPEN
+index|[
+literal|0
+index|]
 operator|)
 condition|)
 name|err
@@ -137,6 +143,16 @@ condition|(
 name|a
 operator|->
 name|csta
+operator|&&
+operator|*
+name|a
+operator|->
+name|csta
+operator|!=
+name|FROM_OPEN
+index|[
+literal|0
+index|]
 condition|)
 switch|switch
 condition|(
@@ -287,7 +303,7 @@ name|xx
 operator|.
 name|csta
 operator|=
-literal|"\1"
+name|FROM_OPEN
 expr_stmt|;
 for|for
 control|(
