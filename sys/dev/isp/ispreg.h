@@ -1137,6 +1137,17 @@ parameter_list|)
 value|(IS_FC(isp)? \ 	((isr& BIU2100_ISR_RISC_INT) != 0) : ((isr& BIU_ISR_RISC_INT) != 0))
 end_define
 
+begin_define
+define|#
+directive|define
+name|INT_PENDING_MASK
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_FC(isp)? BIU2100_ISR_RISC_INT: BIU_ISR_RISC_INT)
+end_define
+
 begin_comment
 comment|/* BUS SEMAPHORE REGISTER */
 end_comment
@@ -1847,11 +1858,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|OMBOX_OFFN
+name|MBOX_OFF
 parameter_list|(
 name|n
 parameter_list|)
-value|(MBOX_BLOCK + (n * 2))
+value|(MBOX_BLOCK + ((n)<< 1))
 end_define
 
 begin_define
@@ -1863,6 +1874,24 @@ name|isp
 parameter_list|)
 define|\
 value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 8 : 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NMBOX_BMASK
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 0xff : 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_MAILBOX
+value|8
 end_define
 
 begin_comment
@@ -4670,7 +4699,7 @@ comment|/* Offset 5 */
 end_comment
 
 begin_comment
-comment|/* 	uint8_t bios_configuration_mode     :2; 	uint8_t bios_disable                :1; 	uint8_t selectable_scsi_boot_enable :1; 	uint8_t cd_rom_boot_enable          :1; 	uint8_t disable_loading_risc_code   :1; 	uint8_t enable_64bit_addressing     :1; 	uint8_t unused_7                    :1;  */
+comment|/* 	u_int8_t bios_configuration_mode     :2; 	u_int8_t bios_disable                :1; 	u_int8_t selectable_scsi_boot_enable :1; 	u_int8_t cd_rom_boot_enable          :1; 	u_int8_t disable_loading_risc_code   :1; 	u_int8_t enable_64bit_addressing     :1; 	u_int8_t unused_7                    :1;  */
 end_comment
 
 begin_comment
@@ -4678,7 +4707,7 @@ comment|/* Offsets 6, 7 */
 end_comment
 
 begin_comment
-comment|/*         uint8_t boot_lun_number    :5;         uint8_t scsi_bus_number    :1;         uint8_t unused_6           :1;         uint8_t unused_7           :1;         uint8_t boot_target_number :4;         uint8_t unused_12          :1;         uint8_t unused_13          :1;         uint8_t unused_14          :1;         uint8_t unused_15          :1;  */
+comment|/*         u_int8_t boot_lun_number    :5;         u_int8_t scsi_bus_number    :1;         u_int8_t unused_6           :1;         u_int8_t unused_7           :1;         u_int8_t boot_target_number :4;         u_int8_t unused_12          :1;         u_int8_t unused_13          :1;         u_int8_t unused_14          :1;         u_int8_t unused_15          :1;  */
 end_comment
 
 begin_define
