@@ -49,6 +49,13 @@ name|Maxmem
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|busdma_swi_pending
+decl_stmt|;
+end_decl_stmt
+
 begin_extern
 extern|extern	void	(*netisrs[32]
 end_extern

@@ -1565,12 +1565,15 @@ name|void
 name|swi_vm
 parameter_list|()
 block|{
-if|#
-directive|if
+if|if
+condition|(
+name|busdma_swi_pending
+operator|!=
 literal|0
-block|if (busdma_swi_pending != 0) 		busdma_swi();
-endif|#
-directive|endif
+condition|)
+name|busdma_swi
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
