@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_time.c	5.15	83/05/27	*/
+comment|/*	kern_time.c	5.16	83/06/10	*/
 end_comment
 
 begin_include
@@ -981,6 +981,12 @@ name|tv
 operator|->
 name|tv_sec
 operator|==
+literal|0
+operator|&&
+name|tv
+operator|->
+name|tv_usec
+operator|!=
 literal|0
 operator|&&
 name|tv
