@@ -5285,6 +5285,8 @@ block|}
 block|,
 comment|/* 382 = thread_wakeup */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|0
 block|,
 operator|(

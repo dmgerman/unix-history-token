@@ -673,6 +673,41 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+operator|)
+operator|&&
+name|thread_single
+argument_list|(
+name|SNGLE_EXIT
+argument_list|)
+condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERESTART
+operator|)
+return|;
+comment|/* Try again later. */
+block|}
+comment|/* If we get here all other threads are dead. */
 name|p
 operator|->
 name|p_flag
@@ -684,9 +719,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
-comment|/* !!!!!!!! we need abort all the other threads of this process before we */
-comment|/* proceed beyond his point! */
 comment|/* 	 * Initialize part of the common data 	 */
 name|imgp
 operator|->

@@ -2438,37 +2438,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map process state to descriptive letter. Note that this does not  * quite correspond to what Linux outputs, but it's close enough.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|state_str
-index|[]
-init|=
-block|{
-literal|"? (unknown)"
-block|,
-literal|"I (idle)"
-block|,
-literal|"R (running)"
-block|,
-literal|"S (sleeping)"
-block|,
-literal|"T (stopped)"
-block|,
-literal|"Z (zombie)"
-block|,
-literal|"W (waiting)"
-block|,
-literal|"M (mutex)"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Filler function for proc/pid/status  */
 end_comment
 
@@ -2491,6 +2460,11 @@ decl_stmt|;
 name|segsz_t
 name|lsize
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td2
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2500,39 +2474,135 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|td2
+operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* XXXKSE pretend only one thread */
+if|if
+condition|(
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+condition|)
+block|{
+name|state
+operator|=
+literal|"T (stopped)"
+expr_stmt|;
+block|}
+else|else
+block|{
+switch|switch
+condition|(
+name|p
+operator|->
+name|p_state
+condition|)
+block|{
+case|case
+name|PRS_NEW
+case|:
+name|state
+operator|=
+literal|"I (idle)"
+expr_stmt|;
+break|break;
+case|case
+name|PRS_NORMAL
+case|:
 if|if
 condition|(
 name|p
 operator|->
-name|p_stat
-operator|>
-sizeof|sizeof
-name|state_str
-operator|/
-sizeof|sizeof
-expr|*
-name|state_str
+name|p_flag
+operator|&
+name|P_WEXIT
 condition|)
+block|{
 name|state
 operator|=
-name|state_str
-index|[
-literal|0
-index|]
+literal|"X (exiting)"
 expr_stmt|;
-else|else
-name|state
-operator|=
-name|state_str
-index|[
-operator|(
-name|int
-operator|)
-name|p
+break|break;
+block|}
+switch|switch
+condition|(
+name|td2
 operator|->
-name|p_stat
-index|]
+name|td_state
+condition|)
+block|{
+case|case
+name|TDS_SLP
+case|:
+case|case
+name|TDS_MTX
+case|:
+name|state
+operator|=
+literal|"S (sleeping)"
 expr_stmt|;
+break|break;
+case|case
+name|TDS_RUNQ
+case|:
+case|case
+name|TDS_RUNNING
+case|:
+name|state
+operator|=
+literal|"R (running)"
+expr_stmt|;
+break|break;
+case|case
+name|TDS_NEW
+case|:
+case|case
+name|TDS_UNQUEUED
+case|:
+case|case
+name|TDS_IWAIT
+case|:
+case|case
+name|TDS_SURPLUS
+case|:
+default|default:
+name|state
+operator|=
+literal|"? (unknown)"
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|PRS_WAIT
+case|:
+name|state
+operator|=
+literal|"W (waiting)"
+expr_stmt|;
+break|break;
+case|case
+name|PRS_ZOMBIE
+case|:
+name|state
+operator|=
+literal|"Z (zombie)"
+expr_stmt|;
+break|break;
+default|default:
+name|state
+operator|=
+literal|"? (unknown)"
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&

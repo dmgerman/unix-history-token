@@ -29,6 +29,106 @@ begin_comment
 comment|/*  * This file defines four types of data structures: singly-linked lists,  * singly-linked tail queues, lists and tail queues.  *  * A singly-linked list is headed by a single forward pointer. The elements  * are singly linked for minimum space and pointer manipulation overhead at  * the expense of O(n) removal for arbitrary elements. New elements can be  * added to the list after an existing element or at the head of the list.  * Elements being removed from the head of the list should use the explicit  * macro for this purpose for optimum efficiency. A singly-linked list may  * only be traversed in the forward direction.  Singly-linked lists are ideal  * for applications with large datasets and few or no removals or for  * implementing a LIFO queue.  *  * A singly-linked tail queue is headed by a pair of pointers, one to the  * head of the list and the other to the tail of the list. The elements are  * singly linked for minimum space and pointer manipulation overhead at the  * expense of O(n) removal for arbitrary elements. New elements can be added  * to the list after an existing element, at the head of the list, or at the  * end of the list. Elements being removed from the head of the tail queue  * should use the explicit macro for this purpose for optimum efficiency.  * A singly-linked tail queue may only be traversed in the forward direction.  * Singly-linked tail queues are ideal for applications with large datasets  * and few or no removals or for implementing a FIFO queue.  *  * A list is headed by a single forward pointer (or an array of forward  * pointers for a hash table header). The elements are doubly linked  * so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before  * or after an existing element or at the head of the list. A list  * may only be traversed in the forward direction.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  *  * For details on the use of these macros, see the queue(3) manual page.  *  *  *			SLIST	LIST	STAILQ	TAILQ  * _HEAD		+	+	+	+  * _HEAD_INITIALIZER	+	+	+	+  * _ENTRY		+	+	+	+  * _INIT		+	+	+	+  * _EMPTY		+	+	+	+  * _FIRST		+	+	+	+  * _NEXT		+	+	+	+  * _PREV		-	-	-	+  * _LAST		-	-	+	+  * _FOREACH		+	+	+	+  * _FOREACH_REVERSE	-	-	-	+  * _INSERT_HEAD		+	+	+	+  * _INSERT_BEFORE	-	+	-	+  * _INSERT_AFTER	+	+	+	+  * _INSERT_TAIL		-	-	+	+  * _CONCAT		-	-	+	+  * _REMOVE_HEAD		+	-	+	-  * _REMOVE		+	+	+	+  *  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|QUEUE_MACRO_DEBUG
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUEUE_MACRO_DEBUG
+end_ifdef
+
+begin_struct
+struct|struct
+name|qm_trace
+block|{
+name|char
+modifier|*
+name|lastfile
+decl_stmt|;
+name|int
+name|lastline
+decl_stmt|;
+name|char
+modifier|*
+name|prevfile
+decl_stmt|;
+name|int
+name|prevline
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TRACEBUF
+value|struct qm_trace trace;
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TRACE_HEAD
+parameter_list|(
+name|head
+parameter_list|)
+value|do {					\ 	(head)->trace.prevline = (head)->trace.lastline;		\ 	(head)->trace.prevfile = (head)->trace.lastfile;		\ 	(head)->trace.lastline = __LINE__;				\ 	(head)->trace.lastfile = __FILE__;				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TRACE_ELEM
+parameter_list|(
+name|elem
+parameter_list|)
+value|do {					\ 	(elem)->trace.prevline = (elem)->trace.lastline;		\ 	(elem)->trace.prevfile = (elem)->trace.lastfile;		\ 	(elem)->trace.lastline = __LINE__;				\ 	(elem)->trace.lastfile = __FILE__;				\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|QMD_TRACE_ELEM
+parameter_list|(
+name|elem
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_TRACE_HEAD
+parameter_list|(
+name|head
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACEBUF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* QUEUE_MACRO_DEBUG */
+end_comment
+
 begin_comment
 comment|/*  * Singly-linked List declarations.  */
 end_comment
@@ -586,7 +686,7 @@ value|struct name {								\ 	struct type *tqh_first;
 comment|/* first element */
 value|\ 	struct type **tqh_last;
 comment|/* addr of last next element */
-value|\ }
+value|\ 	TRACEBUF							\ }
 end_define
 
 begin_define
@@ -612,7 +712,7 @@ value|struct {								\ 	struct type *tqe_next;
 comment|/* next element */
 value|\ 	struct type **tqe_prev;
 comment|/* address of previous next element */
-value|\ }
+value|\ 	TRACEBUF							\ }
 end_define
 
 begin_comment
@@ -630,7 +730,7 @@ name|head2
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	if (!TAILQ_EMPTY(head2)) {					\ 		*(head1)->tqh_last = (head2)->tqh_first;		\ 		(head2)->tqh_first->field.tqe_prev = (head1)->tqh_last;	\ 		(head1)->tqh_last = (head2)->tqh_last;			\ 		TAILQ_INIT((head2));					\ 	}								\ } while (0)
+value|do {				\ 	if (!TAILQ_EMPTY(head2)) {					\ 		*(head1)->tqh_last = (head2)->tqh_first;		\ 		(head2)->tqh_first->field.tqe_prev = (head1)->tqh_last;	\ 		(head1)->tqh_last = (head2)->tqh_last;			\ 		TAILQ_INIT((head2));					\ 		QMD_TRACE_HEAD(head);					\ 		QMD_TRACE_HEAD(head2);					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -692,7 +792,7 @@ name|TAILQ_INIT
 parameter_list|(
 name|head
 parameter_list|)
-value|do {						\ 	TAILQ_FIRST((head)) = NULL;					\ 	(head)->tqh_last =&TAILQ_FIRST((head));			\ } while (0)
+value|do {						\ 	TAILQ_FIRST((head)) = NULL;					\ 	(head)->tqh_last =&TAILQ_FIRST((head));			\ 	QMD_TRACE_HEAD(head);						\ } while (0)
 end_define
 
 begin_define
@@ -708,7 +808,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {		\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_NEXT((listelm), field)) != NULL)\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\&TAILQ_NEXT((elm), field);				\ 	else								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 	TAILQ_NEXT((listelm), field) = (elm);				\ 	(elm)->field.tqe_prev =&TAILQ_NEXT((listelm), field);		\ } while (0)
+value|do {		\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_NEXT((listelm), field)) != NULL)\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\&TAILQ_NEXT((elm), field);				\ 	else {								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	TAILQ_NEXT((listelm), field) = (elm);				\ 	(elm)->field.tqe_prev =&TAILQ_NEXT((listelm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&listelm->field);				\ } while (0)
 end_define
 
 begin_define
@@ -722,7 +822,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	(elm)->field.tqe_prev = (listelm)->field.tqe_prev;		\ 	TAILQ_NEXT((elm), field) = (listelm);				\ 	*(listelm)->field.tqe_prev = (elm);				\ 	(listelm)->field.tqe_prev =&TAILQ_NEXT((elm), field);		\ } while (0)
+value|do {			\ 	(elm)->field.tqe_prev = (listelm)->field.tqe_prev;		\ 	TAILQ_NEXT((elm), field) = (listelm);				\ 	*(listelm)->field.tqe_prev = (elm);				\ 	(listelm)->field.tqe_prev =&TAILQ_NEXT((elm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&listelm->field);				\ } while (0)
 end_define
 
 begin_define
@@ -736,7 +836,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_FIRST((head))) != NULL)	\ 		TAILQ_FIRST((head))->field.tqe_prev =			\&TAILQ_NEXT((elm), field);				\ 	else								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 	TAILQ_FIRST((head)) = (elm);					\ 	(elm)->field.tqe_prev =&TAILQ_FIRST((head));			\ } while (0)
+value|do {			\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_FIRST((head))) != NULL)	\ 		TAILQ_FIRST((head))->field.tqe_prev =			\&TAILQ_NEXT((elm), field);				\ 	else								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 	TAILQ_FIRST((head)) = (elm);					\ 	(elm)->field.tqe_prev =&TAILQ_FIRST((head));			\ 	QMD_TRACE_HEAD(head);						\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
 begin_define
@@ -750,7 +850,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	TAILQ_NEXT((elm), field) = NULL;				\ 	(elm)->field.tqe_prev = (head)->tqh_last;			\ 	*(head)->tqh_last = (elm);					\ 	(head)->tqh_last =&TAILQ_NEXT((elm), field);			\ } while (0)
+value|do {			\ 	TAILQ_NEXT((elm), field) = NULL;				\ 	(elm)->field.tqe_prev = (head)->tqh_last;			\ 	*(head)->tqh_last = (elm);					\ 	(head)->tqh_last =&TAILQ_NEXT((elm), field);			\ 	QMD_TRACE_HEAD(head);						\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
 begin_define
@@ -804,7 +904,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ } while (0)
+value|do {				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	(elm)->field.tqe_next = (void *)-1;				\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
 begin_ifdef

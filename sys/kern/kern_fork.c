@@ -811,18 +811,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void kse_init(struct kse *kse1, struct kse *kse2)  { }  void thread_init(struct thread *thread1, struct thread *thread2)  { }  void ksegrp_init(struct ksegrp *ksegrp1, struct ksegrp *ksegrp2)  { }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|fork1
@@ -1102,6 +1090,48 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+condition|)
+block|{
+comment|/* 		 * Idle the other threads for a second. 		 * Since the user space is copied, it must remain stable. 		 * In addition, all threads (from the user perspective) 		 * need to either be suspended or in the kernel, 		 * where they will try restart in the parent and will 		 * be aborted in the child. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|thread_single
+argument_list|(
+name|SNGLE_NO_EXIT
+argument_list|)
+condition|)
+block|{
+comment|/* Abort.. someone else is single threading before us */
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERESTART
+operator|)
+return|;
+block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+comment|/* 		 * All other activity in this process 		 * is now suspended at the user boundary, 		 * (or other safe places if we think of any). 		 */
+block|}
 comment|/* Allocate new proc. */
 name|newproc
 operator|=
@@ -1159,6 +1189,29 @@ argument_list|,
 name|newproc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|thread_single_end
+argument_list|()
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+block|}
 name|tsleep
 argument_list|(
 operator|&
@@ -1239,6 +1292,29 @@ argument_list|,
 name|newproc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|thread_single_end
+argument_list|()
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+block|}
 name|tsleep
 argument_list|(
 operator|&
@@ -1552,9 +1628,9 @@ name|newproc
 expr_stmt|;
 name|p2
 operator|->
-name|p_stat
+name|p_state
 operator|=
-name|SIDL
+name|PRS_NEW
 expr_stmt|;
 comment|/* protect against others */
 name|p2
@@ -1706,10 +1782,8 @@ expr_stmt|;
 comment|/* 	 * Make a proc table entry for the new process. 	 * Start by zeroing the section of proc that is zero-initialized, 	 * then copy the section that is copied directly from the parent. 	 */
 name|td2
 operator|=
-name|thread_get
-argument_list|(
-name|p2
-argument_list|)
+name|thread_alloc
+argument_list|()
 expr_stmt|;
 name|ke2
 operator|=
@@ -1778,27 +1852,13 @@ name|ke_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|td2
-operator|->
-name|td_startzero
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
-argument_list|(
-expr|struct
-name|thread
-argument_list|,
-name|td_startzero
-argument_list|,
-name|td_endzero
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* bzero'd by the thread allocator */
+block|bzero(&td2->td_startzero, 	    (unsigned) RANGEOF(struct thread, td_startzero, td_endzero));
+endif|#
+directive|endif
 name|bzero
 argument_list|(
 operator|&
@@ -1957,7 +2017,7 @@ expr_stmt|;
 undef|#
 directive|undef
 name|RANGEOF
-comment|/* 	 * XXXKSE Theoretically only the running thread would get copied  	 * Others in the kernel would be 'aborted' in the child. 	 * i.e return E*something* 	 */
+comment|/* 	 * XXXKSE Theoretically only the running thread would get copied  	 * Others in the kernel would be 'aborted' in the child. 	 * i.e return E*something* 	 * On SMP we would have to stop them running on 	 * other CPUs! (set a flag in the proc that stops 	 * all returns to userland until completed) 	 * This is wrong but ok for 1:1. 	 */
 name|proc_linkup
 argument_list|(
 name|p2
@@ -1967,6 +2027,67 @@ argument_list|,
 name|ke2
 argument_list|,
 name|td2
+argument_list|)
+expr_stmt|;
+comment|/* Set up the thread as an active thread (as if runnable). */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|kg2
+operator|->
+name|kg_iq
+argument_list|,
+name|ke2
+argument_list|,
+name|ke_kgrlist
+argument_list|)
+expr_stmt|;
+name|kg2
+operator|->
+name|kg_idle_kses
+operator|--
+expr_stmt|;
+name|ke2
+operator|->
+name|ke_state
+operator|=
+name|KES_UNQUEUED
+expr_stmt|;
+name|ke2
+operator|->
+name|ke_thread
+operator|=
+name|td2
+expr_stmt|;
+name|td2
+operator|->
+name|td_kse
+operator|=
+name|ke2
+expr_stmt|;
+name|td2
+operator|->
+name|td_flags
+operator|&=
+operator|~
+name|TDF_UNBOUND
+expr_stmt|;
+comment|/* For the rest of this syscall. */
+name|KASSERT
+argument_list|(
+operator|(
+name|ke2
+operator|->
+name|ke_kgrlist
+operator|.
+name|tqe_next
+operator|!=
+name|ke2
+operator|)
+argument_list|,
+operator|(
+literal|"linked to self!"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* note.. XXXKSE no pcb or u-area yet */
@@ -2850,12 +2971,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|p2
-operator|->
-name|p_stat
-operator|=
-name|SRUN
-expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td2
@@ -3210,6 +3325,27 @@ argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_state
+operator|=
+name|PRS_NORMAL
+expr_stmt|;
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_RUNNING
+expr_stmt|;
+comment|/* Already done in switch() on 386. */
+name|td
+operator|->
+name|td_kse
+operator|->
+name|ke_state
+operator|=
+name|KES_RUNNING
+expr_stmt|;
 comment|/* 	 * Finish setting up thread glue.  We need to initialize 	 * the thread into a td_critnest=1 state.  Some platforms 	 * may have already partially or fully initialized td_critnest 	 * and/or td_md.md_savecrit (when applciable). 	 * 	 * see<arch>/<arch>/critical.c 	 */
 name|sched_lock
 operator|.
@@ -3233,9 +3369,9 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"fork_exit: new proc %p (pid %d, %s)"
+literal|"fork_exit: new thread %p (pid %d, %s)"
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|p
 operator|->

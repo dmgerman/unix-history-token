@@ -3968,7 +3968,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|procrunnable
+name|kserunnable
 argument_list|()
 condition|)
 block|{

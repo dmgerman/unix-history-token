@@ -285,14 +285,14 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|P_STAT
+name|P_STATE
 argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
 name|proc
 argument_list|,
-name|p_stat
+name|p_state
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -314,9 +314,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*ASSYM(TD_STAT, offsetof(struct thread, td__stat));*/
-end_comment
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|TD_STATE
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|thread
+argument_list|,
+name|td_state
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|ASSYM
@@ -533,9 +545,9 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|SSLEEP
+name|TDS_SLP
 argument_list|,
-name|SSLEEP
+name|TDS_SLP
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -543,9 +555,19 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|SRUN
+name|TDS_RUNQ
 argument_list|,
-name|SRUN
+name|TDS_RUNQ
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|TDS_RUNNING
+argument_list|,
+name|TDS_RUNNING
 argument_list|)
 expr_stmt|;
 end_expr_stmt

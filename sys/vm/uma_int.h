@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|UMA_BOOT_PAGES
-value|15
+value|30
 end_define
 
 begin_comment

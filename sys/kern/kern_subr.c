@@ -2550,11 +2550,6 @@ operator|->
 name|kg_user_pri
 expr_stmt|;
 comment|/* XXXKSE */
-name|setrunqueue
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_proc

@@ -355,12 +355,6 @@ name|RFSTOPPED
 operator|)
 condition|)
 block|{
-name|p2
-operator|->
-name|p_stat
-operator|=
-name|SRUN
-expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|FIRST_THREAD_IN_PROC
@@ -369,7 +363,6 @@ name|p2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 block|}
 name|mtx_unlock_spin
 argument_list|(

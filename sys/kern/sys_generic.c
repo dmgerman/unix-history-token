@@ -5681,11 +5681,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|==
-name|SSLEEP
+name|TDS_SLP
 condition|)
 name|setrunnable
 argument_list|(

@@ -950,17 +950,25 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* drop per-process resources */
+comment|/* XXXKSE by here there should not be any threads left! */
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
 argument_list|,
 argument|td
 argument_list|)
+block|{
+name|panic
+argument_list|(
+literal|"vm_waitproc: Survivor thread!"
+argument_list|)
+expr_stmt|;
 name|pmap_dispose_thread
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 name|vmspace_exitfree
 argument_list|(
 name|p
@@ -1179,11 +1187,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|==
-name|SRUN
+name|TDS_RUNQ
 condition|)
 comment|/* XXXKSE */
 name|setrunqueue
@@ -1214,7 +1220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  *  XXXKSE - KSEGRP with highest priority counts..  *  * Giant is still held at this point, to be released in tsleep.  */
+comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  *  XXXKSE - process with the thread with highest priority counts..  *  * Giant is still held at this point, to be released in tsleep.  */
 end_comment
 
 begin_comment
@@ -1237,6 +1243,11 @@ name|struct
 name|proc
 modifier|*
 name|p
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|int
 name|pri
@@ -1298,21 +1309,8 @@ name|ksegrp
 modifier|*
 name|kg
 decl_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|p
-operator|->
-name|p_stat
-operator|==
-name|SRUN
-operator|&&
-operator|(
 name|p
 operator|->
 name|p_sflag
@@ -1322,19 +1320,39 @@ name|PS_INMEM
 operator||
 name|PS_SWAPPING
 operator|)
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
-comment|/* Find the minimum sleeptime for the process */
-name|FOREACH_KSEGRP_IN_PROC
+continue|continue;
+block|}
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
 argument_list|,
-argument|kg
+argument|td
 argument_list|)
 block|{
+comment|/* Only consider runnable threads */
+if|if
+condition|(
+name|td
+operator|->
+name|td_state
+operator|==
+name|TDS_RUNQ
+condition|)
+block|{
+name|kg
+operator|=
+name|td
+operator|->
+name|td_ksegrp
+expr_stmt|;
 name|pri
 operator|=
 name|p
@@ -1450,7 +1468,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We would like to bring someone in. (only if there is space). 	 */
+comment|/* 	 * We would like to bring someone in. (only if there is space). 	 * [What checks the space? ] 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1584,6 +1602,11 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|ksegrp
 modifier|*
 name|kg
@@ -1628,13 +1651,9 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 block|{
 name|struct
@@ -1666,6 +1685,8 @@ operator|->
 name|p_flag
 operator|&
 operator|(
+name|P_STOPPED_SNGL
+operator||
 name|P_TRACED
 operator||
 name|P_SYSTEM
@@ -1731,10 +1752,11 @@ switch|switch
 condition|(
 name|p
 operator|->
-name|p_stat
+name|p_state
 condition|)
 block|{
 default|default:
+comment|/* Don't swap out processes in any sort 			 * of 'special' state. */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1748,10 +1770,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|SSLEEP
-case|:
-case|case
-name|SSTOP
+name|PRS_NORMAL
 case|:
 comment|/* 			 * do not swapout a realtime process 			 * Check all the thread groups.. 			 */
 name|FOREACH_KSEGRP_IN_PROC
@@ -1789,26 +1808,11 @@ block|}
 comment|/* 				 * Do not swapout a process waiting 				 * on a critical event of some kind.  				 * Also guarantee swap_idle_threshold1 				 * time in memory. 				 */
 if|if
 condition|(
-operator|(
-operator|(
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-operator|->
-name|td_priority
-operator|)
-operator|<
-name|PSOCK
-operator|)
-operator|||
-operator|(
 name|kg
 operator|->
 name|kg_slptime
 operator|<
 name|swap_idle_threshold1
-operator|)
 condition|)
 block|{
 name|mtx_unlock_spin
@@ -1825,6 +1829,40 @@ expr_stmt|;
 goto|goto
 name|nextproc
 goto|;
+block|}
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|td
+argument_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|td
+operator|->
+name|td_priority
+operator|)
+operator|<
+name|PSOCK
+condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+goto|goto
+name|nextproc
+goto|;
+block|}
 block|}
 comment|/* 				 * If the system is under memory stress, 				 * or if we are swapping 				 * idle processes>= swap_idle_threshold2, 				 * then swap the process out. 				 */
 if|if
@@ -2117,11 +2155,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|==
-name|SRUN
+name|TDS_RUNQ
 condition|)
 comment|/* XXXKSE */
 name|remrunqueue

@@ -3379,15 +3379,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-name|userret
-argument_list|(
-name|td
-argument_list|,
-name|framep
-argument_list|,
-name|sticks
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Release Giant if we had to get it. 	 */
 if|if
 condition|(
@@ -3405,6 +3396,15 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
+argument_list|)
+expr_stmt|;
+name|userret
+argument_list|(
+name|td
+argument_list|,
+name|framep
+argument_list|,
+name|sticks
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4096,16 +4096,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Handle reschedule and other end-of-syscall issues 	 */
-name|userret
-argument_list|(
-name|td
-argument_list|,
-name|framep
-argument_list|,
-name|sticks
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Release Giant if we previously set it. 	 */
 if|if
 condition|(
@@ -4123,6 +4113,16 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Handle reschedule and other end-of-syscall issues 	 */
+name|userret
+argument_list|(
+name|td
+argument_list|,
+name|framep
+argument_list|,
+name|sticks
 argument_list|)
 expr_stmt|;
 ifdef|#

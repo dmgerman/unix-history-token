@@ -455,6 +455,95 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * XXXXKSE: MUST abort all other threads before proceeding past here. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+condition|)
+block|{
+comment|/* 		 * First check if some other thread got here before us.. 		 * if so, act apropriatly, (exit or suspend); 		 */
+name|thread_suspend_check
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Here is a trick.. 		 * We need to free up our KSE to process other threads 		 * so that we can safely set the UNBOUND flag 		 * (whether or not we have a mailbox) as we are NEVER 		 * going to return to the user. 		 * The flag will not be set yet if we are exiting 		 * because of a signal, pagefault, or similar 		 * (or even an exit(2) from the UTS). 		 */
+name|td
+operator|->
+name|td_flags
+operator||=
+name|TDF_UNBOUND
+expr_stmt|;
+comment|/* 		 * Kill off the other threads. This requires 		 * Some co-operation from other parts of the kernel 		 * so it may not be instant. 		 * With this state set: 		 * Any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediatly 		 * with EINTR or EWOULDBLOCK, which will hopefully force them 		 * to back out to userland, freeing resources as they go, and 		 * anything attempting to return to userland will thread_exit() 		 * from userret().  thread_exit() will unsuspend us 		 * when the last other thread exits. 		 */
+if|if
+condition|(
+name|thread_single
+argument_list|(
+name|SNGLE_EXIT
+argument_list|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"Exit: Single threading fouled up"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * All other activity in this process is now stopped. 		 * Remove excess KSEs and KSEGRPS. XXXKSE (when we have them) 		 * ...  		 * Turn off threading support. 		 */
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_KSES
+expr_stmt|;
+name|td
+operator|->
+name|td_flags
+operator|&=
+operator|~
+name|TDF_UNBOUND
+expr_stmt|;
+name|thread_single_end
+argument_list|()
+expr_stmt|;
+comment|/* Don't need this any more. */
+block|}
+comment|/* 	 * With this state set: 	 * Any thread entering the kernel from userspace will thread_exit() 	 * in trap().  Any thread attempting to sleep will return immediatly 	 * with EINTR or EWOULDBLOCK, which will hopefully force them 	 * to back out to userland, freeing resources as they go, and 	 * anything attempting to return to userland will thread_exit() 	 * from userret().  thread_exit() will do a wakeup on p->p_numthreads 	 * if it transitions to 1. 	 */
+name|p
+operator|->
+name|p_flag
+operator||=
+name|P_WEXIT
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_kse
+operator|->
+name|ke_mdstorage
+condition|)
+name|cpu_free_kse_mdstorage
+argument_list|(
+name|td
+operator|->
+name|td_kse
+argument_list|)
+expr_stmt|;
 comment|/* Are we a task leader? */
 name|PROC_LOCK
 argument_list|(
@@ -623,12 +712,6 @@ name|P_TRACED
 operator||
 name|P_PPWAIT
 operator|)
-expr_stmt|;
-name|p
-operator|->
-name|p_flag
-operator||=
-name|P_WEXIT
 expr_stmt|;
 name|SIGEMPTYSET
 argument_list|(
@@ -1588,12 +1671,12 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to wait until after releasing all locks before 	 * changing p_stat.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
+comment|/* 	 * We have to wait until after releasing all locks before 	 * changing p_state.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
 name|p
 operator|->
-name|p_stat
+name|p_state
 operator|=
-name|SZOMB
+name|PRS_ZOMBIE
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1607,11 +1690,6 @@ argument_list|(
 name|p
 operator|->
 name|p_pptr
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|cnt
@@ -1639,7 +1717,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|cpu_throw
+comment|/* XXXKSE check if this should be in thread_exit */
+comment|/* 	 * Make sure this thread is discarded from the zombie. 	 * This will also release this thread's reference to the ucred. 	 */
+name|thread_exit
 argument_list|()
 expr_stmt|;
 name|panic
@@ -1829,6 +1909,16 @@ name|status
 decl_stmt|,
 name|error
 decl_stmt|;
+name|struct
+name|kse
+modifier|*
+name|ke
+decl_stmt|;
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
 name|q
 operator|=
 name|td
@@ -1989,9 +2079,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_stat
+name|p_state
 operator|==
-name|SZOMB
+name|PRS_ZOMBIE
 condition|)
 block|{
 comment|/* 			 * charge childs scheduling cpu usage to parent 			 * XXXKSE assume only one thread& kse& ksegrp 			 * keep estcpu in each ksegrp 			 * so charge it to the ksegrp that did the wait 			 * since process estcpu is sum of all ksegrps, 			 * this is strictly as expected. 			 * Assume that the child process aggregated all  			 * tke estcpu into the 'build-in' ksegrp. 			 * XXXKSE 			 */
@@ -2484,6 +2574,53 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* 			 * There should only be one KSE/KSEGRP but 			 * do it right anyhow. 			 */
+name|FOREACH_KSEGRP_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|kg
+argument_list|)
+block|{
+name|FOREACH_KSE_IN_GROUP
+argument_list|(
+argument|kg
+argument_list|,
+argument|ke
+argument_list|)
+block|{
+comment|/* Free the KSE spare thread. */
+if|if
+condition|(
+name|ke
+operator|->
+name|ke_tdspare
+operator|!=
+name|NULL
+condition|)
+block|{
+name|thread_free
+argument_list|(
+name|ke
+operator|->
+name|ke_tdspare
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_kse
+operator|.
+name|ke_tdspare
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+block|}
+name|thread_reap
+argument_list|()
+expr_stmt|;
+comment|/* check for zombie threads */
 comment|/* 			 * Give vm and machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
 name|vm_waitproc
 argument_list|(
@@ -2534,12 +2671,12 @@ return|;
 block|}
 if|if
 condition|(
+name|P_SHOULDSTOP
+argument_list|(
 name|p
-operator|->
-name|p_stat
-operator|==
-name|SSTOP
+argument_list|)
 operator|&&
+operator|(
 operator|(
 name|p
 operator|->
@@ -2549,6 +2686,7 @@ name|P_WAITED
 operator|)
 operator|==
 literal|0
+operator|)
 operator|&&
 operator|(
 name|p

@@ -487,14 +487,12 @@ name|KASSERT
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|==
-name|SRUN
+name|TDS_RUNNING
 argument_list|,
 operator|(
-literal|"forward_signal: process is not SRUN"
+literal|"forward_signal: thread is not TDS_RUNNING"
 operator|)
 argument_list|)
 expr_stmt|;

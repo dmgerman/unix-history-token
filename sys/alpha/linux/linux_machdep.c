@@ -743,12 +743,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|p2
-operator|->
-name|p_stat
-operator|=
-name|SRUN
-expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|FIRST_THREAD_IN_PROC

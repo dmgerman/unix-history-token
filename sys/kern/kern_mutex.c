@@ -324,6 +324,28 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_state
+operator|!=
+name|TDS_SURPLUS
+argument_list|,
+operator|(
+literal|"Mutex owner SURPLUS"
+operator|)
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|td
+operator|->
+name|td_proc
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|MPASS
 argument_list|(
 name|td
@@ -339,11 +361,9 @@ name|KASSERT
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|!=
-name|SSLEEP
+name|TDS_SLP
 argument_list|,
 operator|(
 literal|"sleeping thread owns a mutex"
@@ -360,48 +380,21 @@ name|pri
 condition|)
 comment|/* lower is higher priority */
 return|return;
-comment|/* 		 * Bump this thread's priority. 		 */
+comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_state
+operator|==
+name|TDS_RUNNING
+condition|)
+block|{
 name|td
 operator|->
 name|td_priority
 operator|=
 name|pri
-expr_stmt|;
-comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
-if|if
-condition|(
-name|thread_running
-argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
-name|MPASS
-argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_stat
-operator|==
-name|SRUN
-operator|||
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_stat
-operator|==
-name|SZOMB
-operator|||
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_stat
-operator|==
-name|SSTOP
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -422,16 +415,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * If on run queue move to new run queue, and quit. 		 * XXXKSE this gets a lot more complicated under threads 		 * but try anyhow. 		 */
+comment|/* 		 * If on run queue move to new run queue, and quit. 		 * XXXKSE this gets a lot more complicated under threads 		 * but try anyhow. 		 * We should have a special call to do this more efficiently. 		 */
 if|if
 condition|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|==
-name|SRUN
+name|TDS_RUNQ
 condition|)
 block|{
 name|MPASS
@@ -448,6 +439,12 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_priority
+operator|=
+name|pri
+expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
@@ -455,16 +452,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 		 * Adjust for any other cases. 		 */
+name|td
+operator|->
+name|td_priority
+operator|=
+name|pri
+expr_stmt|;
 comment|/* 		 * If we aren't blocked on a mutex, we should be. 		 */
 name|KASSERT
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|==
-name|SMTX
+name|TDS_MTX
 argument_list|,
 operator|(
 literal|"process %d(%s):%d holds %s but isn't blocked on a mutex\n"
@@ -483,9 +485,7 @@ name|p_comm
 operator|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|,
 name|m
 operator|->
@@ -2698,11 +2698,9 @@ name|lo_name
 expr_stmt|;
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_stat
+name|td_state
 operator|=
-name|SMTX
+name|TDS_MTX
 expr_stmt|;
 name|propagate_priority
 argument_list|(
@@ -3340,14 +3338,6 @@ name|td_blocked
 operator|=
 name|NULL
 expr_stmt|;
-name|td1
-operator|->
-name|td_proc
-operator|->
-name|p_stat
-operator|=
-name|SRUN
-expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td1
@@ -3430,11 +3420,6 @@ block|}
 block|}
 endif|#
 directive|endif
-name|setrunqueue
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|LOCK_LOG_TEST

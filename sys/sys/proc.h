@@ -391,7 +391,7 @@ comment|/***************  * In pictures:  With a single run queue used by all pr
 end_comment
 
 begin_comment
-comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  */
+comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When waing to be run, threads are hung off the KSEGRP in priority order.  * with N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  */
 end_comment
 
 begin_struct
@@ -410,18 +410,6 @@ modifier|*
 name|td_ksegrp
 decl_stmt|;
 comment|/* Associated KSEG. */
-name|struct
-name|kse
-modifier|*
-name|td_last_kse
-decl_stmt|;
-comment|/* Where it wants to be if possible. */
-name|struct
-name|kse
-modifier|*
-name|td_kse
-decl_stmt|;
-comment|/* Current KSE if running. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -474,6 +462,18 @@ name|int
 name|td_flags
 decl_stmt|;
 comment|/* (j) TDF_* flags. */
+name|struct
+name|kse
+modifier|*
+name|td_last_kse
+decl_stmt|;
+comment|/* Where it wants to be if possible. */
+name|struct
+name|kse
+modifier|*
+name|td_kse
+decl_stmt|;
+comment|/* Current KSE if running. */
 name|int
 name|td_dupfd
 decl_stmt|;
@@ -541,6 +541,17 @@ name|int
 name|td_intr_nesting_level
 decl_stmt|;
 comment|/* (k) Interrupt recursion. */
+name|void
+modifier|*
+name|td_mailbox
+decl_stmt|;
+comment|/* the userland mailbox address */
+name|struct
+name|ucred
+modifier|*
+name|td_ucred
+decl_stmt|;
+comment|/* (k) Reference to credentials. */
 define|#
 directive|define
 name|td_endzero
@@ -575,17 +586,36 @@ directive|define
 name|td_endcopy
 value|td_pcb
 name|struct
-name|ucred
-modifier|*
-name|td_ucred
-decl_stmt|;
-comment|/* (k) Reference to credentials. */
-name|struct
 name|pcb
 modifier|*
 name|td_pcb
 decl_stmt|;
 comment|/* (k) Kernel VA of pcb and kstack. */
+enum|enum
+block|{
+name|TDS_NEW
+init|=
+literal|0x20
+block|,
+name|TDS_UNQUEUED
+block|,
+name|TDS_SLP
+block|,
+name|TDS_MTX
+block|,
+name|TDS_RUNQ
+block|,
+name|TDS_RUNNING
+block|,
+name|TDS_SUSPENDED
+block|,
+comment|/* would have liked to have run */
+name|TDS_IWAIT
+block|,
+name|TDS_SURPLUS
+block|}
+name|td_state
+enum|;
 name|struct
 name|callout
 name|td_slpcallout
@@ -616,6 +646,113 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* flags kept in td_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_UNBOUND
+value|0x000001
+end_define
+
+begin_comment
+comment|/* may give away the kse, uses the kg runq */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SINTR
+value|0x000008
+end_define
+
+begin_comment
+comment|/* Sleep is interruptible. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_TIMEOUT
+value|0x000010
+end_define
+
+begin_comment
+comment|/* Timing out during sleep. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SELECT
+value|0x000040
+end_define
+
+begin_comment
+comment|/* Selecting; wakeup/waiting danger. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_CVWAITQ
+value|0x000080
+end_define
+
+begin_comment
+comment|/* Thread is on a cv_waitq (not slpq). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_UPCALLING
+value|0x000100
+end_define
+
+begin_comment
+comment|/* This thread is doing an upcall. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_INMSLEEP
+value|0x000400
+end_define
+
+begin_comment
+comment|/* Don't recurse in msleep() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_TIMOFAIL
+value|0x001000
+end_define
+
+begin_comment
+comment|/* Timeout from sleep after we were awake. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_DEADLKTREAT
+value|0x800000
+end_define
+
+begin_comment
+comment|/* Lock aquisition - deadlock treatment. */
+end_comment
+
+begin_comment
+comment|/*  * Traps for young players:  * The main thread flag that controls whether a thread acts as a threaded  * or unthreaded thread is the TDF_UNBOUND flag.  * UPCALLS run with the UNBOUND flags clear, after they are first scheduled.  * i.e. they bind themselves to whatever thread thay are first scheduled with.  * You may see BOUND threads in KSE processes but you should never see  * UNBOUND threads in non KSE processes.  */
+end_comment
+
+begin_comment
 comment|/*  * The schedulable entity that can be given a context to run.  * A process may have several of these. Probably one per processor  * but posibly a few more. In this universe they are grouped  * with a KSEG that contains the priority and niceness  * for the group.  */
 end_comment
 
@@ -635,12 +772,6 @@ modifier|*
 name|ke_ksegrp
 decl_stmt|;
 comment|/* Associated KSEG. */
-name|struct
-name|thread
-modifier|*
-name|ke_thread
-decl_stmt|;
-comment|/* Associated thread, if running. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|kse
@@ -662,14 +793,6 @@ argument_list|)
 name|ke_procq
 expr_stmt|;
 comment|/* (j) Run queue. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|thread
-argument_list|)
-name|ke_runq
-expr_stmt|;
-comment|/* (td_runq) RUNNABLE bound to KSE. */
 define|#
 directive|define
 name|ke_startzero
@@ -678,6 +801,18 @@ name|int
 name|ke_flags
 decl_stmt|;
 comment|/* (j) KEF_* flags. */
+name|struct
+name|thread
+modifier|*
+name|ke_thread
+decl_stmt|;
+comment|/* Active associated thread. */
+name|struct
+name|thread
+modifier|*
+name|ke_bound
+decl_stmt|;
+comment|/* Thread bound to this KSE (*) */
 comment|/*u_int		ke_estcpu; */
 comment|/* (j) Time averaged val of cpticks. */
 name|int
@@ -724,33 +859,149 @@ name|char
 name|ke_rqindex
 decl_stmt|;
 comment|/* (j) Run queue index. */
+enum|enum
+block|{
+name|KES_IDLE
+init|=
+literal|0x10
+block|,
+name|KES_ONRUNQ
+block|,
+name|KES_UNQUEUED
+block|,
+comment|/* in transit */
+name|KES_RUNNING
+block|}
+name|ke_state
+enum|;
+comment|/* (j) S* process status. */
+name|void
+modifier|*
+name|ke_mailbox
+decl_stmt|;
+comment|/* the userland mailbox address */
+name|struct
+name|thread
+modifier|*
+name|ke_tdspare
+decl_stmt|;
+comment|/* spare thread for upcalls */
 define|#
 directive|define
 name|ke_endzero
-value|ke_priority
+value|ke_dummy
 define|#
 directive|define
 name|ke_startcopy
 value|ke_endzero
 name|u_char
-name|ke_priority
+name|ke_dummy
 decl_stmt|;
-comment|/* (j) Process priority. */
-name|u_char
-name|ke_usrpri
-decl_stmt|;
-comment|/* (j) User pri from cpu& nice. */
+comment|/*   */
 define|#
 directive|define
 name|ke_endcopy
-value|ke_end
-name|int
-name|ke_end
+value|ke_mdstorage
+name|void
+modifier|*
+name|ke_upcall
 decl_stmt|;
-comment|/* dummy entry */
+name|void
+modifier|*
+name|ke_stackbase
+decl_stmt|;
+name|u_long
+name|ke_stacksize
+decl_stmt|;
+name|void
+modifier|*
+name|ke_mdstorage
+decl_stmt|;
+comment|/* where we store the pcb and frame */
+name|struct
+name|pcb
+modifier|*
+name|ke_pcb
+decl_stmt|;
+comment|/* the pcb saved for the upcalls */
+name|struct
+name|trapframe
+modifier|*
+name|ke_frame
+decl_stmt|;
+comment|/* the upcall trapframe */
+name|void
+modifier|*
+name|mdkse
+decl_stmt|;
+comment|/* eventually you load from this in */
+comment|/* switch for our extension PCB x86 */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* flags kept in ke_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_OWEUPC
+value|0x00002
+end_define
+
+begin_comment
+comment|/* Owe process an addupc() call at next ast. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_IDLEKSE
+value|0x00004
+end_define
+
+begin_comment
+comment|/* A 'Per CPU idle process'.. has one thread */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_LOANED
+value|0x00004
+end_define
+
+begin_comment
+comment|/* On loan from the bound thread to another */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_ASTPENDING
+value|0x00400
+end_define
+
+begin_comment
+comment|/* KSE has a pending ast. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_NEEDRESCHED
+value|0x00800
+end_define
+
+begin_comment
+comment|/* Process needs to yield. */
+end_comment
+
+begin_comment
+comment|/*  * (*) A bound KSE with a bound thread in a KSE process may be lent to  * Other threads, as long as those threads do not leave the kernel.   * The other threads must be either exiting, or be unbound with a valid  * mailbox so that they can save their state there rather than going  * to user space. While this happens the real bound thread is still linked  * to the kse via the ke_bound field, and the KSE has its "KEF_LOANED  * flag set.  */
+end_comment
 
 begin_comment
 comment|/*  * Kernel-scheduled entity group (KSEG).  The scheduler considers each KSEG to  * be an indivisible unit from a time-sharing perspective, though each KSEG may  * contain multiple KSEs.  */
@@ -786,14 +1037,6 @@ argument_list|(
 argument_list|,
 argument|kse
 argument_list|)
-name|kg_rq
-expr_stmt|;
-comment|/* (ke_kgrlist) Runnable KSEs. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|kse
-argument_list|)
 name|kg_iq
 expr_stmt|;
 comment|/* (ke_kgrlist) Idle KSEs. */
@@ -812,7 +1055,7 @@ argument|thread
 argument_list|)
 name|kg_runq
 expr_stmt|;
-comment|/* (td_runq) Unbound RUNNABLE threads */
+comment|/* (td_runq) waiting RUNNABLE threads */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -833,6 +1076,32 @@ name|u_int
 name|kg_slptime
 decl_stmt|;
 comment|/* (j) How long completely blocked. */
+name|struct
+name|thread
+modifier|*
+name|kg_last_assigned
+decl_stmt|;
+comment|/* Last thread assigned to a KSE */
+name|int
+name|kg_numthreads
+decl_stmt|;
+comment|/* Num threads in total */
+name|int
+name|kg_runnable
+decl_stmt|;
+comment|/* Num runnable threads on queue. */
+name|int
+name|kg_kses
+decl_stmt|;
+comment|/* Num KSEs in group. */
+name|int
+name|kg_runq_kses
+decl_stmt|;
+comment|/* Num KSEs on runq. */
+name|int
+name|kg_idle_kses
+decl_stmt|;
+comment|/* num KSEs idle */
 define|#
 directive|define
 name|kg_endzero
@@ -853,27 +1122,15 @@ name|char
 name|kg_nice
 decl_stmt|;
 comment|/* (j?/k?) Process "nice" value. */
-name|struct
-name|rtprio
-name|kg_rtprio
-decl_stmt|;
+comment|/*	struct rtprio	kg_rtprio; */
 comment|/* (j) Realtime priority. */
 define|#
 directive|define
 name|kg_endcopy
-value|kg_runnable
+value|kg_dummy
 name|int
-name|kg_runnable
+name|kg_dummy
 decl_stmt|;
-comment|/* Num runnable threads on queue. */
-name|int
-name|kg_runq_kses
-decl_stmt|;
-comment|/* Num KSEs on runq. */
-name|int
-name|kg_kses
-decl_stmt|;
-comment|/* Num KSEs in group. */
 block|}
 struct|;
 end_struct
@@ -909,6 +1166,14 @@ argument_list|)
 name|p_threads
 expr_stmt|;
 comment|/* (td_plist) Threads. (shortcut) */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|thread
+argument_list|)
+name|p_suspended
+expr_stmt|;
+comment|/* (td_runq) suspended threads */
 name|struct
 name|ucred
 modifier|*
@@ -954,10 +1219,6 @@ name|struct
 name|kse
 name|p_kse
 decl_stmt|;
-name|struct
-name|thread
-name|p_xxthread
-decl_stmt|;
 comment|/* 	 * The following don't make too much sense.. 	 * See the td_ or ke_ versions of the same flags 	 */
 name|int
 name|p_flag
@@ -967,9 +1228,23 @@ name|int
 name|p_sflag
 decl_stmt|;
 comment|/* (j) PS_* flags. */
-name|int
-name|p_stat
-decl_stmt|;
+enum|enum
+block|{
+name|PRS_NEW
+init|=
+literal|0
+block|,
+comment|/* In creation */
+name|PRS_NORMAL
+block|,
+comment|/* KSEs can be run */
+name|PRS_WAIT
+block|,
+comment|/* Waiting on interrupt ? */
+name|PRS_ZOMBIE
+block|}
+name|p_state
+enum|;
 comment|/* (j) S* process status. */
 name|pid_t
 name|p_pid
@@ -1121,6 +1396,24 @@ modifier|*
 name|p_aioinfo
 decl_stmt|;
 comment|/* (c) ASYNC I/O info. */
+name|int
+name|p_numthreads
+decl_stmt|;
+comment|/* (?) number of threads */
+name|int
+name|p_numksegrps
+decl_stmt|;
+comment|/* (?) number of ksegrps */
+name|struct
+name|thread
+modifier|*
+name|p_singlethread
+decl_stmt|;
+comment|/* If single threading this is it */
+name|int
+name|p_suspcount
+decl_stmt|;
+comment|/* # waiting threads in suspended mode*/
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -1283,83 +1576,6 @@ begin_comment
 comment|/* Status values (p_stat). */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIDL
-value|1
-end_define
-
-begin_comment
-comment|/* Process being created by fork. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRUN
-value|2
-end_define
-
-begin_comment
-comment|/* Currently runnable. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSLEEP
-value|3
-end_define
-
-begin_comment
-comment|/* Sleeping on an address. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSTOP
-value|4
-end_define
-
-begin_comment
-comment|/* Process debugging or suspension. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SZOMB
-value|5
-end_define
-
-begin_comment
-comment|/* Awaiting collection by parent. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SWAIT
-value|6
-end_define
-
-begin_comment
-comment|/* Waiting for interrupt. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMTX
-value|7
-end_define
-
-begin_comment
-comment|/* Blocked on a mutex. */
-end_comment
-
 begin_comment
 comment|/* These flags are kept in p_flag. */
 end_comment
@@ -1444,23 +1660,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_TRACED
-value|0x00800
-end_define
-
-begin_comment
-comment|/* Debugged process being traced. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|P_WAITED
 value|0x01000
 end_define
 
 begin_comment
-comment|/* Debugging process has waited for child. */
+comment|/* Someone is waiting for us */
 end_comment
 
 begin_define
@@ -1506,6 +1711,82 @@ end_define
 begin_comment
 comment|/* Proc has continued from a stopped state. */
 end_comment
+
+begin_comment
+comment|/* flags that control how threads may be suspended for some reason */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_STOPPED_SGNL
+value|0x10000
+end_define
+
+begin_comment
+comment|/* Stopped due to SIGSTOP/SIGTSTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_STOPPED_TRACE
+value|0x20000
+end_define
+
+begin_comment
+comment|/* Stopped because of tracing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_STOPPED_SNGL
+value|0x40000
+end_define
+
+begin_comment
+comment|/* Only one thread can continue (not to user) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_SINGLE_EXIT
+value|0x00400
+end_define
+
+begin_comment
+comment|/* Threads suspending should exit, not wait */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_TRACED
+value|0x00800
+end_define
+
+begin_comment
+comment|/* Debugged process being traced. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_STOPPED
+value|(P_STOPPED_SGNL|P_STOPPED_SNGL|P_STOPPED_TRACE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_SHOULDSTOP
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_flag& P_STOPPED)
+end_define
 
 begin_comment
 comment|/* Should be moved to machine-dependent areas. */
@@ -1655,132 +1936,84 @@ comment|/* Process may need signal delivery. */
 end_comment
 
 begin_comment
-comment|/* flags kept in td_flags */
+comment|/* used only in legacy conversion code */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TDF_ONRUNQ
-value|0x00001
+name|SIDL
+value|1
 end_define
 
 begin_comment
-comment|/* This KE is on a run queue */
+comment|/* Process being created by fork. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TDF_SINTR
-value|0x00008
+name|SRUN
+value|2
 end_define
 
 begin_comment
-comment|/* Sleep is interruptible. */
+comment|/* Currently runnable. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TDF_TIMEOUT
-value|0x00010
+name|SSLEEP
+value|3
 end_define
 
 begin_comment
-comment|/* Timing out during sleep. */
+comment|/* Sleeping on an address. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TDF_SELECT
-value|0x00040
+name|SSTOP
+value|4
 end_define
 
 begin_comment
-comment|/* Selecting; wakeup/waiting danger. */
+comment|/* Process debugging or suspension. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TDF_CVWAITQ
-value|0x00080
+name|SZOMB
+value|5
 end_define
 
 begin_comment
-comment|/* Thread is on a cv_waitq (not slpq). */
+comment|/* Awaiting collection by parent. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TDF_TIMOFAIL
-value|0x01000
+name|SWAIT
+value|6
 end_define
 
 begin_comment
-comment|/* Timeout from sleep after we were awake. */
+comment|/* Waiting for interrupt. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TDF_DEADLKTREAT
-value|0x800000
+name|SMTX
+value|7
 end_define
 
 begin_comment
-comment|/* Lock aquisition - deadlock treatment. */
-end_comment
-
-begin_comment
-comment|/* flags kept in ke_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_ONRUNQ
-value|0x00001
-end_define
-
-begin_comment
-comment|/* This KE is on a run queue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_OWEUPC
-value|0x00002
-end_define
-
-begin_comment
-comment|/* Owe process an addupc() call at next ast. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_ASTPENDING
-value|0x00400
-end_define
-
-begin_comment
-comment|/* KSE has a pending ast. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_NEEDRESCHED
-value|0x00800
-end_define
-
-begin_comment
-comment|/* Process needs to yield. */
+comment|/* Blocked on a mutex. */
 end_comment
 
 begin_define
@@ -3100,6 +3333,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|threadinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|proc_linkup
 parameter_list|(
 name|struct
@@ -3469,15 +3711,373 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* New in KSE. */
+end_comment
+
 begin_function_decl
 name|struct
 name|thread
 modifier|*
-name|thread_get
+name|thread_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_free
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cpu_export_context
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_free_kse_mdstorage
+parameter_list|(
+name|struct
+name|kse
+modifier|*
+name|kse
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_save_upcall
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|kse
+modifier|*
+name|newkse
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_set_args
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|kse
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_set_upcall
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|void
+modifier|*
+name|pcb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_thread_exit
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_thread_setup
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kse_reassign
+parameter_list|(
+name|struct
+name|kse
+modifier|*
+name|ke
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kse_link
+parameter_list|(
+name|struct
+name|kse
+modifier|*
+name|ke
+parameter_list|,
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ksegrp_link
+parameter_list|(
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kserunnable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|make_kse_runnable
+parameter_list|(
+name|struct
+name|kse
+modifier|*
+name|ke
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|thread_exit
+argument_list|(
+name|void
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|thread_export_context
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_link
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_reap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|thread
+modifier|*
+name|thread_schedule_upcall
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|kse
+modifier|*
+name|ke
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_single
+parameter_list|(
+name|int
+name|how
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|SNGLE_NO_EXIT
+value|0
+end_define
+
+begin_comment
+comment|/* values for 'how' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNGLE_EXIT
+value|1
+end_define
+
+begin_function_decl
+name|void
+name|thread_single_end
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_stash
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_suspend_check
+parameter_list|(
+name|int
+name|how
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_unsuspend
 parameter_list|(
 name|struct
 name|proc
 modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_userret
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+parameter_list|,
+name|struct
+name|kse
+modifier|*
+name|ke
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_sanity_check
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl

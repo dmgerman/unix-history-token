@@ -224,11 +224,11 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|P_SHOULDSTOP
+argument_list|(
 name|p
-operator|->
-name|p_stat
-operator|!=
-name|SSTOP
+argument_list|)
 condition|)
 name|error
 operator|=

@@ -59,6 +59,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kse.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -147,6 +159,23 @@ name|td
 operator|->
 name|td_ksegrp
 decl_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_SYSC
+argument_list|,
+literal|"userret: thread %p (pid %d, %s)"
+argument_list|,
+name|td
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -187,10 +216,8 @@ operator|==
 literal|0
 operator|||
 operator|(
-name|p
+name|ke
 operator|->
-name|p_kse
-operator|.
 name|ke_flags
 operator|&
 name|KEF_ASTPENDING
@@ -256,6 +283,48 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * We need to check to see if we have to exit or wait due to a 	 * single threading requirement or some other STOP condition. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|thread_suspend_check
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Can suspend or kill */
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* 	 * DO special thread processing, e.g. upcall tweaking and such 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+condition|)
+block|{
+name|thread_userret
+argument_list|(
+name|p
+argument_list|,
+name|kg
+argument_list|,
+name|ke
+argument_list|,
+name|td
+argument_list|,
+name|frame
+argument_list|)
+expr_stmt|;
+comment|/* printf("KSE thread returned"); */
+block|}
 comment|/* 	 * Charge system time if profiling. 	 * 	 * XXX should move PS_PROFIL to a place that can obviously be 	 * accessed safely without sched_lock. 	 */
 if|if
 condition|(
@@ -318,13 +387,11 @@ begin_function
 name|void
 name|ast
 parameter_list|(
-name|framep
-parameter_list|)
 name|struct
 name|trapframe
 modifier|*
 name|framep
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|thread
@@ -391,6 +458,23 @@ name|ucode
 decl_stmt|;
 endif|#
 directive|endif
+name|CTR3
+argument_list|(
+name|KTR_SYSC
+argument_list|,
+literal|"ast: thread %p (pid %d, %s)"
+argument_list|,
+name|td
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|TRAPF_USERMODE
@@ -541,6 +625,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXKSE While the fact that we owe a user profiling 	 * tick is stored per KSE in this code, the statistics 	 * themselves are still stored per process. 	 * This should probably change, by which I mean that 	 * possibly the location of both might change. 	 */
 if|if
 condition|(
 name|td
@@ -715,11 +800,6 @@ name|kg
 operator|->
 name|kg_user_pri
 expr_stmt|;
-name|setrunqueue
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_stats
@@ -758,7 +838,7 @@ name|sig
 operator|=
 name|cursig
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=

@@ -95,7 +95,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|((p)->p_stat == SSTOP&& \ 	 (p)->p_pptr == (curp)&& \ 	 ((p)->p_flag& P_TRACED))
+value|(P_SHOULDSTOP(p)&& \ 	 (p)->p_pptr == (curp)&& \ 	 ((p)->p_flag& P_TRACED))
 end_define
 
 begin_define
@@ -900,6 +900,14 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_STOPPED_SGNL
+expr_stmt|;
+comment|/* this uses SIGSTOP */
 break|break;
 comment|/* 	 * Wait for the target process to stop. 	 * If the target is not being traced then just wait 	 * to enter 	 */
 case|case
@@ -921,11 +929,10 @@ operator|==
 literal|0
 operator|&&
 operator|(
+name|P_SHOULDSTOP
+argument_list|(
 name|p
-operator|->
-name|p_stat
-operator|!=
-name|SSTOP
+argument_list|)
 operator|)
 operator|&&
 operator|(
@@ -991,17 +998,17 @@ name|EBUSY
 expr_stmt|;
 block|}
 else|else
+block|{
 while|while
 condition|(
 name|error
 operator|==
 literal|0
 operator|&&
+name|P_SHOULDSTOP
+argument_list|(
 name|p
-operator|->
-name|p_stat
-operator|!=
-name|SSTOP
+argument_list|)
 condition|)
 name|error
 operator|=
@@ -1026,6 +1033,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -1049,23 +1057,12 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_stat
-operator|==
-name|SSTOP
-condition|)
-name|setrunnable
-argument_list|(
-name|FIRST_THREAD_IN_PROC
+name|thread_unsuspend
 argument_list|(
 name|p
-argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
+comment|/* If it can run, let it do so. */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1314,6 +1311,13 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE: */
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_STOPPED_SGNL
+expr_stmt|;
 name|setrunnable
 argument_list|(
 name|FIRST_THREAD_IN_PROC

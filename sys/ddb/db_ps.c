@@ -94,6 +94,10 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|char
+modifier|*
+name|state
+decl_stmt|;
 name|np
 operator|=
 name|nprocs
@@ -227,9 +231,67 @@ name|pp
 operator|=
 name|p
 expr_stmt|;
+switch|switch
+condition|(
+name|p
+operator|->
+name|p_state
+condition|)
+block|{
+case|case
+name|PRS_NORMAL
+case|:
+if|if
+condition|(
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+condition|)
+name|state
+operator|=
+literal|"stopped"
+expr_stmt|;
+else|else
+name|state
+operator|=
+literal|"Normal"
+expr_stmt|;
+break|break;
+case|case
+name|PRS_NEW
+case|:
+name|state
+operator|=
+literal|"New"
+expr_stmt|;
+break|break;
+case|case
+name|PRS_WAIT
+case|:
+name|state
+operator|=
+literal|"Wait"
+expr_stmt|;
+break|break;
+case|case
+name|PRS_ZOMBIE
+case|:
+name|state
+operator|=
+literal|"Zombie"
+expr_stmt|;
+break|break;
+default|default:
+name|state
+operator|=
+literal|"Unknown"
+expr_stmt|;
+break|break;
+block|}
 name|db_printf
 argument_list|(
-literal|"%5d %8p %8p %4d %5d %5d %07x  %d"
+literal|"%5d %8p %8p %4d %5d %5d %07x  %s"
 argument_list|,
 name|p
 operator|->
@@ -282,9 +344,7 @@ name|p
 operator|->
 name|p_flag
 argument_list|,
-name|p
-operator|->
-name|p_stat
+name|state
 argument_list|)
 expr_stmt|;
 if|if
@@ -315,7 +375,9 @@ block|{
 name|db_printf
 argument_list|(
 literal|".  .  .  .  .  .  .  "
-literal|".  .  .  .  .  .  .  .  "
+literal|".  thread %p   .  .  .  "
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -327,7 +389,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%6s %8p"
+literal|"SLP %6s %8p\n"
 argument_list|,
 name|td
 operator|->
@@ -346,16 +408,16 @@ block|}
 elseif|else
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_stat
+name|td_state
 operator|==
-name|SMTX
+name|TDS_MTX
 condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%6s %8p"
+literal|"MTX %6s %8p\n"
 argument_list|,
 name|td
 operator|->
@@ -375,7 +437,7 @@ else|else
 block|{
 name|db_printf
 argument_list|(
-literal|"--not blocked--"
+literal|"--not blocked--\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -418,11 +480,11 @@ block|}
 elseif|else
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_stat
+name|td_state
 operator|==
-name|SMTX
+name|TDS_MTX
 condition|)
 block|{
 name|db_printf

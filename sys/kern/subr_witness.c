@@ -1097,6 +1097,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"zombie_thread_lock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL

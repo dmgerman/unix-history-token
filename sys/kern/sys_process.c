@@ -1353,11 +1353,11 @@ block|}
 comment|/* not currently stopped */
 if|if
 condition|(
+operator|!
+name|P_SHOULDSTOP
+argument_list|(
 name|p
-operator|->
-name|p_stat
-operator|!=
-name|SSTOP
+argument_list|)
 operator|||
 operator|(
 name|p
@@ -1748,11 +1748,10 @@ expr_stmt|;
 comment|/* deliver or queue signal */
 if|if
 condition|(
+name|P_SHOULDSTOP
+argument_list|(
 name|p
-operator|->
-name|p_stat
-operator|==
-name|SSTOP
+argument_list|)
 condition|)
 block|{
 name|p
@@ -1769,12 +1768,24 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+operator|(
+name|P_STOPPED_TRACE
+operator||
+name|P_STOPPED_SGNL
+operator|)
+expr_stmt|;
 name|setrunnable
 argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+comment|/* Need foreach kse in proc, ... make_kse_queued(). */
 name|mtx_unlock_spin
 argument_list|(
 operator|&

@@ -1131,11 +1131,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|setrunqueue
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 name|curthread
 operator|->
 name|td_proc

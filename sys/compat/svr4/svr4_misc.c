@@ -5696,9 +5696,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_stat
+name|p_state
 operator|==
-name|SZOMB
+name|PRS_ZOMBIE
 condition|)
 block|{
 name|i
@@ -6178,11 +6178,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|q
 operator|->
-name|p_stat
+name|p_state
 operator|==
-name|SZOMB
+name|PRS_ZOMBIE
+operator|)
 operator|&&
 operator|(
 operator|(
@@ -6675,14 +6677,15 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* XXXKSE this needs clarification */
 if|if
 condition|(
+name|P_SHOULDSTOP
+argument_list|(
 name|q
-operator|->
-name|p_stat
-operator|==
-name|SSTOP
+argument_list|)
 operator|&&
+operator|(
 operator|(
 name|q
 operator|->
@@ -6692,6 +6695,7 @@ name|P_WAITED
 operator|)
 operator|==
 literal|0
+operator|)
 operator|&&
 operator|(
 name|q

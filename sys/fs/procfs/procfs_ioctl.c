@@ -337,7 +337,9 @@ block|}
 if|#
 directive|if
 literal|0
-block|mtx_lock_spin(&sched_lock); 		p->p_step = 0; 		if (p->p_stat == SSTOP) { 			p->p_xstat = sig; 			setrunnable(FIRST_THREAD_IN_PROC(p)); 			mtx_unlock_spin(&sched_lock); 		} else { 			mtx_unlock_spin(&sched_lock); 			if (sig) 				psignal(p, sig); 		}
+block|mtx_lock_spin(&sched_lock); 		p->p_step = 0; 		if (P_SHOULDSTOP(p)) { 			p->p_xstat = sig; 			p->p_flag&= ~(P_STOPPED_TRACE|P_STOPPED_SGNL); 			FOREACH_THREAD_IN_PROC(p, td) 				setrunnable(td);
+comment|/* XXX Totally bogus */
+block|mtx_unlock_spin(&sched_lock); 		} else { 			mtx_unlock_spin(&sched_lock); 			if (sig) 				psignal(p, sig); 		}
 else|#
 directive|else
 if|if

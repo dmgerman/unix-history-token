@@ -3959,6 +3959,33 @@ argument_list|(
 name|ks
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSTACK_GUARD
+name|ks
+operator|-=
+name|PAGE_SIZE
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+operator|(
+name|KSTACK_PAGES
+operator|+
+literal|1
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+else|#
+directive|else
 for|for
 control|(
 name|i
@@ -3973,6 +4000,8 @@ name|i
 operator|++
 control|)
 block|{
+endif|#
+directive|endif
 name|m
 operator|=
 name|vm_page_lookup
@@ -4040,16 +4069,40 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the thread got swapped out some of its KSTACK might have gotten 	 * swapped.  Just get rid of the object to clean up the swap use 	 * proactively.  NOTE! might block waiting for paging I/O to complete. 	 */
-if|if
-condition|(
-name|ksobj
-operator|->
-name|type
-operator|==
-name|OBJT_SWAP
-condition|)
-block|{
+comment|/* 	 * Free the space that this stack was mapped to in the kernel 	 * address map. 	 */
+ifdef|#
+directive|ifdef
+name|KSTACK_GUARD
+name|kmem_free
+argument_list|(
+name|kernel_map
+argument_list|,
+name|ks
+argument_list|,
+operator|(
+name|KSTACK_PAGES
+operator|+
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|kmem_free
+argument_list|(
+name|kernel_map
+argument_list|,
+name|ks
+argument_list|,
+name|KSTACK_PAGES
+operator|*
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_kstack_obj
@@ -4062,14 +4115,7 @@ name|ksobj
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
 comment|/*  * Allow the kernel stack for a thread to be prejudicially paged out.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_swapout_thread
 parameter_list|(
@@ -4170,13 +4216,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Bring the kernel stack for a specified thread back in.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_swapin_thread
 parameter_list|(
@@ -4353,17 +4393,8 @@ name|td_pcb
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/***************************************************  * Page table page management routines.....  ***************************************************/
-end_comment
-
-begin_comment
 comment|/*  * This routine unholds page table pages, and if the hold count  * drops to zero, then it decrements the wire count.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|_pmap_unwire_pte_hold
@@ -4600,9 +4631,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|PMAP_INLINE
 name|int
@@ -4646,13 +4674,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * After removing a page table entry, this routine is used to  * conditionally free the page, and manage the hold/wire counts.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|pmap_unuse_pt
@@ -4750,9 +4772,6 @@ name|mpte
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|pmap_pinit0
 parameter_list|(
@@ -4868,13 +4887,7 @@ name|pm_list
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Initialize a preallocated and zeroed pmap structure,  * such as one in a vmspace structure.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_pinit
 parameter_list|(
@@ -5114,13 +5127,7 @@ name|allpmaps_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Wire in kernel global address entries.  To avoid a race condition  * between pmap initialization and pmap_growkernel, this procedure  * should be called after the vmspace is attached to the process  * but before this pmap is activated.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_pinit2
 parameter_list|(
@@ -5150,9 +5157,6 @@ name|PTESIZE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|pmap_release_free_page
@@ -5450,13 +5454,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * this routine is called if the page table page is not  * mapped correctly.  */
-end_comment
-
-begin_function
 specifier|static
 name|vm_page_t
 name|_pmap_allocpte
@@ -5744,9 +5742,6 @@ return|return
 name|m
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|vm_page_t
 name|pmap_allocpte
@@ -5864,17 +5859,8 @@ name|ptepindex
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*************************************************** * Pmap allocation/deallocation routines.  ***************************************************/
-end_comment
-
-begin_comment
 comment|/*  * Release any resources held by the given physical map.  * Called when a pmap initialized by pmap_pinit is being released.  * Should only be called if the map contains no valid mappings.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_release
 parameter_list|(
@@ -6125,13 +6111,7 @@ name|allpmaps_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * grow the number of kernel page table entries, if needed  */
-end_comment
-
-begin_function
 name|void
 name|pmap_growkernel
 parameter_list|(
@@ -6529,17 +6509,8 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/***************************************************  * page management routines.  ***************************************************/
-end_comment
-
-begin_comment
 comment|/*  * free the pv_entry back to the free list  */
-end_comment
-
-begin_function
 specifier|static
 name|PMAP_INLINE
 name|void
@@ -6560,13 +6531,7 @@ name|pv
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * get a new pv_entry, allocating a block from the system  * when needed.  * the memory allocation is performed bypassing the malloc code  * because of the possibility of allocations at interrupt time.  */
-end_comment
-
-begin_function
 specifier|static
 name|pv_entry_t
 name|get_pv_entry
@@ -6614,13 +6579,7 @@ name|M_NOWAIT
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * This routine is very drastic, but can save the system  * in a pinch.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_collect
 parameter_list|()
@@ -6720,13 +6679,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * If it is the first entry on the list, it is actually  * in the header and we must copy the following entry up  * to the header.  Otherwise we must search the list for  * the entry.  In either case we free the now unused entry.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|pmap_remove_entry
@@ -6911,13 +6864,7 @@ return|return
 name|rtval
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Create a pv entry for page at pa for  * (pmap, va).  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|pmap_insert_entry
@@ -7008,13 +6955,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * pmap_remove_pte: do the things to unmap a page in a process  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|pmap_remove_pte
@@ -7155,13 +7096,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Remove a single page from a process address space  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|pmap_remove_page
@@ -7222,13 +7157,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	Remove the given range of addresses from the specified map.  *  *	It is assumed that the start and end are properly  *	rounded to the page size.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_remove
 parameter_list|(
@@ -7364,13 +7293,7 @@ name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  *	Routine:	pmap_remove_all  *	Function:  *		Removes this physical page from  *		all physical maps in which it resides.  *		Reflects back modify bits to the pager.  *  *	Notes:  *		Original versions of this routine were very  *		inefficient because they iteratively called  *		pmap_remove (slow...)  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|pmap_remove_all
@@ -7652,13 +7575,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	Set the physical protection on the  *	specified range of this map as requested.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_protect
 parameter_list|(
@@ -7964,13 +7881,7 @@ name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  *	Insert the given physical page (p) at  *	the specified virtual address (v) in the  *	target physical map with the protection requested.  *  *	If specified, the page will be wired down, meaning  *	that the related pte can not be reclaimed.  *  *	NB:  This is the only routine which MAY NOT lazy-evaluate  *	or lose information.  That is, this routine must actually  *	insert this page into the given map NOW.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_enter
 parameter_list|(
@@ -8392,13 +8303,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap exists.  * 2. Not wired.  * 3. Read access.  * 4. No page table pages.  * 5. Tlbflush is deferred to calling procedure.  * 6. Page IS managed.  * but is *MUCH* faster than pmap_enter...  */
-end_comment
-
-begin_function
 specifier|static
 name|vm_page_t
 name|pmap_enter_quick
@@ -8656,13 +8561,7 @@ return|return
 name|mpte
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Make temporary mapping for a physical address. This is called  * during dump.  */
-end_comment
-
-begin_function
 name|void
 modifier|*
 name|pmap_kenter_temporary
@@ -8691,20 +8590,11 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|MAX_INIT_PT
 value|(96)
-end_define
-
-begin_comment
 comment|/*  * pmap_object_init_pt preloads the ptes for a given object  * into the specified pmap.  This eliminates the blast of soft  * faults on process startup and immediately after an mmap.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_object_init_pt
 parameter_list|(
@@ -9174,34 +9064,19 @@ block|}
 block|}
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * pmap_prefault provides a quick way of clustering  * pagefaults into a processes address space.  It is a "cousin"  * of pmap_object_init_pt, except it runs at page fault time instead  * of mmap time.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|PFBAK
 value|4
-end_define
-
-begin_define
 define|#
 directive|define
 name|PFFOR
 value|4
-end_define
-
-begin_define
 define|#
 directive|define
 name|PAGEORDER_SIZE
 value|(PFBAK+PFFOR)
-end_define
-
-begin_decl_stmt
 specifier|static
 name|int
 name|pmap_prefault_pageorder
@@ -9240,9 +9115,6 @@ operator|*
 name|PAGE_SIZE
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|pmap_prefault
 parameter_list|(
@@ -9636,13 +9508,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  *	Routine:	pmap_change_wiring  *	Function:	Change the wiring attribute for a map/virtual-address  *			pair.  *	In/out conditions:  *			The mapping must already exist in the pmap.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_change_wiring
 parameter_list|(
@@ -9727,13 +9593,7 @@ name|wired
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	Copy the range specified by src_addr/len  *	from the source map to the range dst_addr/len  *	in the destination map.  *  *	This routine is only advisory and need not do anything.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_copy
 parameter_list|(
@@ -9753,13 +9613,7 @@ name|vm_offset_t
 name|src_addr
 parameter_list|)
 block|{ }
-end_function
-
-begin_comment
 comment|/*  *	pmap_zero_page zeros the specified hardware page by  *	mapping it into virtual memory and using bzero to clear  *	its contents.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_zero_page
 parameter_list|(
@@ -9789,13 +9643,7 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	pmap_zero_page_area zeros the specified hardware page by  *	mapping it into virtual memory and using bzero to clear  *	its contents.  *  *	off and size must reside within a single page.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_zero_page_area
 parameter_list|(
@@ -9837,13 +9685,7 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	pmap_copy_page copies the specified (machine independent)  *	page by mapping the page into virtual memory and using  *	bcopy to copy the page, one machine dependent page at a  *	time.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_copy_page
 parameter_list|(
@@ -9892,13 +9734,7 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	Routine:	pmap_pageable  *	Function:  *		Make the specified pages (by pmap, offset)  *		pageable (or not) as requested.  *  *		A page which is not pageable may not take  *		a fault; therefore, its page table entry  *		must remain valid for the duration.  *  *		This routine is merely advisory; pmap_enter  *		will specify that these pages are to be wired  *		down (or not) as appropriate.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_pageable
 parameter_list|(
@@ -9922,13 +9758,7 @@ name|boolean_t
 name|pageable
 decl_stmt|;
 block|{ }
-end_function
-
-begin_comment
 comment|/*  * Returns true if the pmap's pv is one of the first  * 16 pvs linked to from this page.  This count may  * be changed upwards or downwards in the future; it  * is only necessary that true be returned for a small  * subset of pmaps for proper page aging.  */
-end_comment
-
-begin_function
 name|boolean_t
 name|pmap_page_exists_quick
 parameter_list|(
@@ -10025,19 +9855,10 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|PMAP_REMOVE_PAGES_CURPROC_ONLY
-end_define
-
-begin_comment
 comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only, but  * can have the more generic (and slightly slower)  * mode enabled.  This is much faster than pmap_remove  * in the case of running down an entire address space.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_remove_pages
 parameter_list|(
@@ -10346,13 +10167,7 @@ name|pmap
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * this routine is used to modify bits in ptes  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|pmap_changebit
@@ -10550,13 +10365,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *      pmap_page_protect:  *  *      Lower the permission for all mappings to a given page.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_page_protect
 parameter_list|(
@@ -10611,9 +10420,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 name|vm_offset_t
 name|pmap_phys_address
 parameter_list|(
@@ -10632,13 +10438,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	pmap_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  */
-end_comment
-
-begin_function
 name|int
 name|pmap_ts_referenced
 parameter_list|(
@@ -10737,13 +10537,7 @@ return|return
 name|count
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	pmap_is_modified:  *  *	Return whether or not the specified physical page was modified  *	in any physical maps.  */
-end_comment
-
-begin_function
 name|boolean_t
 name|pmap_is_modified
 parameter_list|(
@@ -10815,13 +10609,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	Clear the modify bits on the specified physical page.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_clear_modify
 parameter_list|(
@@ -10903,13 +10691,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  *	pmap_page_is_free:  *  *	Called when a page is freed to allow pmap to clean up  *	any extra state associated with the page.  In this case  *	clear modified/referenced bits.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_page_is_free
 parameter_list|(
@@ -10926,13 +10708,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *	pmap_clear_reference:  *  *	Clear the reference bit on the specified physical page.  */
-end_comment
-
-begin_function
 name|void
 name|pmap_clear_reference
 parameter_list|(
@@ -11022,13 +10798,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * pmap_emulate_reference:  *  *	Emulate reference and/or modified bit hits.  *	From NetBSD  */
-end_comment
-
-begin_function
 name|void
 name|pmap_emulate_reference
 parameter_list|(
@@ -11220,13 +10990,7 @@ name|v
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Miscellaneous support routines follow  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|alpha_protection_init
@@ -11403,13 +11167,7 @@ break|break;
 block|}
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Map a set of physical memory pages into the kernel virtual  * address space. Return a pointer to where it is mapped. This  * routine is intended to be used for mapping device memory,  * NOT real memory.  */
-end_comment
-
-begin_function
 name|void
 modifier|*
 name|pmap_mapdev
@@ -11436,9 +11194,6 @@ name|pa
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|pmap_unmapdev
 parameter_list|(
@@ -11453,13 +11208,7 @@ name|vm_size_t
 name|size
 decl_stmt|;
 block|{ }
-end_function
-
-begin_comment
 comment|/*  * perform the pmap work for mincore  */
-end_comment
-
-begin_function
 name|int
 name|pmap_mincore
 parameter_list|(
@@ -11641,9 +11390,6 @@ return|return
 name|val
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|pmap_activate
 parameter_list|(
@@ -11832,9 +11578,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|pmap_deactivate
 parameter_list|(
@@ -11882,9 +11625,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|vm_offset_t
 name|pmap_addr_hint
 parameter_list|(
