@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/trap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"doscmd.h"
 end_include
 
@@ -13,6 +19,18 @@ begin_include
 include|#
 directive|include
 file|"trap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"video.h"
 end_include
 
 begin_comment
@@ -127,6 +145,10 @@ case|:
 comment|/* multiplex interrupt */
 name|int2f
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->
@@ -174,8 +196,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|user_int
-label|:
+comment|/* user_int: */
 name|debug
 argument_list|(
 name|D_TRAPS
@@ -1134,6 +1155,51 @@ operator|!=
 literal|0
 condition|)
 block|{
+switch|switch
+condition|(
+name|sf
+operator|->
+name|sf_uc
+operator|.
+name|uc_mcontext
+operator|.
+name|mc_trapno
+condition|)
+block|{
+case|case
+name|T_PAGEFLT
+case|:
+name|debug
+argument_list|(
+name|D_TRAPS2
+argument_list|,
+literal|"Page fault, trying to access 0x%x\n"
+argument_list|,
+name|sf
+operator|->
+name|sf_addr
+argument_list|)
+expr_stmt|;
+comment|/* nothing but accesses to video memory can fault for now */
+if|if
+condition|(
+name|vmem_pageflt
+argument_list|(
+name|sf
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* FALLTHRU */
+default|default:
+name|dump_regs
+argument_list|(
+name|REGS
+argument_list|)
+expr_stmt|;
 name|fatal
 argument_list|(
 literal|"SIGBUS code %d, trapno: %d, err: %d\n"
@@ -1162,6 +1228,8 @@ operator|.
 name|mc_err
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 block|}
 name|addr
 operator|=
@@ -2284,6 +2352,10 @@ expr_stmt|;
 comment|/* remember we've updated */
 name|video_update
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->

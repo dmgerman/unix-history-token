@@ -30,6 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -97,6 +109,30 @@ begin_include
 include|#
 directive|include
 file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cwd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"trap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"video.h"
 end_include
 
 begin_comment
@@ -337,16 +373,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|init_iomap
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Local option flags&c. */
 end_comment
@@ -472,16 +498,6 @@ name|fd
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|char
-name|buffer
-index|[
-literal|4096
-index|]
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
 decl_stmt|;
 comment|/* XXX should only be for tty mode */
 name|fd
@@ -947,6 +963,12 @@ expr_stmt|;
 name|cpu_init
 argument_list|()
 expr_stmt|;
+name|kbd_init
+argument_list|()
+expr_stmt|;
+name|kbd_bios_init
+argument_list|()
+expr_stmt|;
 name|video_init
 argument_list|()
 expr_stmt|;
@@ -1206,6 +1228,10 @@ expr_stmt|;
 undef|#
 directive|undef
 name|sc
+comment|/* quiet -Wall */
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1411,7 +1437,7 @@ name|int
 name|try_boot
 parameter_list|(
 name|int
-name|booting
+name|bootdrv
 parameter_list|)
 block|{
 name|int
@@ -1421,7 +1447,7 @@ name|fd
 operator|=
 name|disk_fd
 argument_list|(
-name|booting
+name|bootdrv
 argument_list|)
 expr_stmt|;
 if|if
@@ -1440,7 +1466,7 @@ literal|"Cannot boot from %c\n"
 argument_list|,
 name|drntol
 argument_list|(
-name|booting
+name|bootdrv
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1476,7 +1502,7 @@ literal|"Short read on boot block from %c:\n"
 argument_list|,
 name|drntol
 argument_list|(
-name|booting
+name|bootdrv
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2065,9 +2091,6 @@ index|[
 literal|4096
 index|]
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2238,7 +2261,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"234Oc:TkCIEMPRLAU:S:HDtzvVxXYfbri:o:p:d:"
+literal|"234Oc:TkCIEGMPRLAU:S:HDtzvVxXYfbri:o:p:d:"
 argument_list|)
 operator|)
 operator|!=
@@ -2256,6 +2279,7 @@ literal|'d'
 case|:
 if|if
 condition|(
+operator|(
 name|fp
 operator|=
 name|fopen
@@ -2264,6 +2288,9 @@ name|optarg
 argument_list|,
 literal|"w"
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|debugf
@@ -2364,6 +2391,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|col
 operator|=
 name|strchr
@@ -2372,6 +2400,9 @@ name|optarg
 argument_list|,
 literal|':'
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -2435,6 +2466,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|col
 operator|=
 name|strchr
@@ -2443,6 +2475,9 @@ name|optarg
 argument_list|,
 literal|':'
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -2506,6 +2541,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|col
 operator|=
 name|strchr
@@ -2514,6 +2550,9 @@ name|optarg
 argument_list|,
 literal|':'
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -2636,6 +2675,14 @@ case|:
 name|debug_flags
 operator||=
 name|D_EXEC
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+name|debug_flags
+operator||=
+name|D_VIDEO
 expr_stmt|;
 break|break;
 case|case
