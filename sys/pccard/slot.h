@@ -124,6 +124,20 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Map interrupt number */
+name|void
+argument_list|(
+argument|*resume
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slot
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* suspend/resume support */
 name|int
 name|extra
 decl_stmt|;

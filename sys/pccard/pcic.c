@@ -254,6 +254,18 @@ name|pcic_reset
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|pcic_resume
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -1928,20 +1940,15 @@ comment|/*  *	Look for an Intel PCIC (or compatible).  *	For each available slot
 end_comment
 
 begin_comment
-comment|/*  *	VLSI 82C146 has incompatibilities about the I/O address   *	of slot 1.  If it's the only PCIC whose vendor ID is 0x84,   *	I want to remove this #define and corresponding #ifdef's.  *	HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  */
+comment|/*  *	VLSI 82C146 has incompatibilities about the I/O address   *	of slot 1.  Assume it's the only PCIC whose vendor ID is 0x84,  *	contact Nate Williams<nate@FreeBSD.org> if incorrect.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VLSI_SLOT1
-value|1
-end_define
 
 begin_function
 name|int
 name|pcic_probe
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|slot
@@ -1966,18 +1973,12 @@ name|unsigned
 name|char
 name|c
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VLSI_SLOT1
 specifier|static
 name|int
-name|vs
+name|is_vlsi
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* VLSI_SLOT1 */
 comment|/* 	 *	Initialise controller information structure. 	 */
 name|cinfo
 operator|.
@@ -2020,6 +2021,12 @@ operator|.
 name|disable
 operator|=
 name|pcic_disable
+expr_stmt|;
+name|cinfo
+operator|.
+name|resume
+operator|=
+name|pcic_resume
 expr_stmt|;
 name|cinfo
 operator|.
@@ -2083,45 +2090,6 @@ operator|<
 literal|4
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|VLSI_SLOT1
-if|if
-condition|(
-name|slot
-operator|==
-literal|1
-operator|&&
-name|vs
-condition|)
-block|{
-name|sp
-operator|->
-name|index
-operator|=
-name|PCIC_INDEX_0
-operator|+
-literal|4
-expr_stmt|;
-name|sp
-operator|->
-name|data
-operator|=
-name|PCIC_DATA_0
-operator|+
-literal|4
-expr_stmt|;
-name|sp
-operator|->
-name|offset
-operator|=
-name|PCIC_SLOT_SIZE
-operator|<<
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
 name|sp
 operator|->
 name|index
@@ -2142,33 +2110,6 @@ name|slot
 operator|*
 name|PCIC_SLOT_SIZE
 expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* VLSI_SLOT1 */
-name|sp
-operator|->
-name|index
-operator|=
-name|PCIC_INDEX_0
-expr_stmt|;
-name|sp
-operator|->
-name|data
-operator|=
-name|PCIC_DATA_0
-expr_stmt|;
-name|sp
-operator|->
-name|offset
-operator|=
-name|slot
-operator|*
-name|PCIC_SLOT_SIZE
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* VLSI_SLOT1 */
 block|}
 else|else
 block|{
@@ -2195,6 +2136,37 @@ literal|4
 operator|)
 operator|*
 name|PCIC_SLOT_SIZE
+expr_stmt|;
+block|}
+comment|/* XXX - Screwed up slot 1 on the VLSI chips */
+if|if
+condition|(
+name|slot
+operator|==
+literal|1
+operator|&&
+name|is_vlsi
+condition|)
+block|{
+name|sp
+operator|->
+name|index
+operator|+=
+literal|4
+expr_stmt|;
+name|sp
+operator|->
+name|data
+operator|+=
+literal|4
+expr_stmt|;
+name|sp
+operator|->
+name|offset
+operator|=
+name|PCIC_SLOT_SIZE
+operator|<<
+literal|1
 expr_stmt|;
 block|}
 comment|/* 		 * see if there's a PCMCIA controller here 		 * Intel PCMCIA controllers use 0x82 and 0x83 		 * IBM clone chips use 0x88 and 0x89, apparently 		 */
@@ -2351,16 +2323,10 @@ name|controller
 operator|=
 name|PCIC_VLSI
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VLSI_SLOT1
-name|vs
+name|is_vlsi
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* VLSI_SLOT1 */
 break|break;
 case|case
 literal|0x88
@@ -2966,7 +2932,6 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* BUCHI */
 return|return
 operator|(
 name|validslots
@@ -4056,7 +4021,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	PCIC timer, it seems that we loose interrupts sometimes  *	so poll just in case...  */
+comment|/*  *	PCIC timer, it seems that we lose interrupts sometimes  *	so poll just in case...  */
 end_comment
 
 begin_function
@@ -4294,6 +4259,47 @@ block|}
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	pcic_resume - Suspend/resume support for PCIC  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|pcic_resume
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+name|slotp
+parameter_list|)
+block|{
+if|if
+condition|(
+name|pcic_irq
+operator|>
+literal|0
+condition|)
+name|putb
+argument_list|(
+name|slotp
+operator|->
+name|cdata
+argument_list|,
+name|PCIC_STAT_INT
+argument_list|,
+operator|(
+name|pcic_irq
+operator|<<
+literal|4
+operator|)
+operator||
+literal|0xF
 argument_list|)
 expr_stmt|;
 block|}
