@@ -257,67 +257,51 @@ begin_comment
 comment|/*-  * Shell Specifications:  * Each shell type has associated with it the following information:  *	1) The string which must match the last character of the shell name  *	   for the shell to be considered of this type. The longest match  *	   wins.  *	2) A command to issue to turn off echoing of command lines  *	3) A command to issue to turn echoing back on again  *	4) What the shell prints, and its length, when given the echo-off  *	   command. This line will not be printed when received from the shell  *	5) A boolean to tell if the shell has the ability to control  *	   error checking for individual commands.  *	6) The string to turn this checking on.  *	7) The string to turn it off.  *	8) The command-flag to give to cause the shell to start echoing  *	   commands right away.  *	9) The command-flag to cause the shell to Lib_Exit when an error is  *	   detected in one of the commands.  *  * Some special stuff goes on if a shell doesn't have error control. In such  * a case, errCheck becomes a printf template for echoing the command,  * should echoing be on and ignErr becomes another printf template for  * executing the command while ignoring the return status. If either of these  * strings is empty when hasErrCtl is FALSE, the command will be executed  * anyway as is and if it causes an error, so be it.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEF_SHELL_STRUCT
+parameter_list|(
+name|TAG
+parameter_list|,
+name|CONST
+parameter_list|)
+define|\
+value|struct TAG { \     CONST char	  *name;
+comment|/* the name of the shell. For Bourne and C \ 				 * shells, this is used only to find the \ 				 * shell description when used as the single \ 				 * source of a .SHELL target. For user-defined \ 				 * shells, this is the full path of the shell. \ 				 */
+value|\     Boolean 	  hasEchoCtl;
+comment|/* True if both echoOff and echoOn defined */
+value|\     CONST char    *echoOff;
+comment|/* command to turn off echo */
+value|\     CONST char    *echoOn;
+comment|/* command to turn it back on again */
+value|\     CONST char    *noPrint;
+comment|/* command to skip when printing output from \ 				 * shell. This is usually the command which \ 				 * was executed to turn off echoing */
+value|\     int           noPLen;
+comment|/* length of noPrint command */
+value|\     Boolean	  hasErrCtl;
+comment|/* set if can control error checking for \ 				 * individual commands */
+value|\     CONST char	  *errCheck;
+comment|/* string to turn error checking on */
+value|\     CONST char	  *ignErr;
+comment|/* string to turn off error checking */
+value|\
+comment|/* \      * command-line flags \      */
+value|\     CONST char          *echo;
+comment|/* echo commands */
+value|\     CONST char          *exit;
+comment|/* exit on error */
+value|\ }
+end_define
+
 begin_typedef
 typedef|typedef
-struct|struct
+name|DEF_SHELL_STRUCT
+argument_list|(
+argument|Shell
+argument_list|,)
 name|Shell
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* the name of the shell. For Bourne and C 				 * shells, this is used only to find the 				 * shell description when used as the single 				 * source of a .SHELL target. For user-defined 				 * shells, this is the full path of the shell. 				 */
-name|Boolean
-name|hasEchoCtl
-decl_stmt|;
-comment|/* True if both echoOff and echoOn defined */
-name|char
-modifier|*
-name|echoOff
-decl_stmt|;
-comment|/* command to turn off echo */
-name|char
-modifier|*
-name|echoOn
-decl_stmt|;
-comment|/* command to turn it back on again */
-name|char
-modifier|*
-name|noPrint
-decl_stmt|;
-comment|/* command to skip when printing output from 				 * shell. This is usually the command which 				 * was executed to turn off echoing */
-name|int
-name|noPLen
-decl_stmt|;
-comment|/* length of noPrint command */
-name|Boolean
-name|hasErrCtl
-decl_stmt|;
-comment|/* set if can control error checking for 				 * individual commands */
-name|char
-modifier|*
-name|errCheck
-decl_stmt|;
-comment|/* string to turn error checking on */
-name|char
-modifier|*
-name|ignErr
-decl_stmt|;
-comment|/* string to turn off error checking */
-comment|/*      * command-line flags      */
-name|char
-modifier|*
-name|echo
-decl_stmt|;
-comment|/* echo commands */
-name|char
-modifier|*
-name|exit
-decl_stmt|;
-comment|/* exit on error */
-block|}
-name|Shell
-typedef|;
+expr_stmt|;
 end_typedef
 
 begin_decl_stmt
