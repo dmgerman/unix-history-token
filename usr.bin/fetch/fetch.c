@@ -279,8 +279,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|p_flag
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
