@@ -4178,6 +4178,43 @@ name|SOCKADDR
 value|union bigsockaddr
 end_define
 
+begin_comment
+comment|/* **  Vendor codes ** **	Vendors can customize sendmail to add special behaviour, **	generally for back compatibility.  Ideally, this should **	be set up in the .cf file using the "V" command.  However, **	it's quite reasonable for some vendors to want the default **	be their old version; this can be set using **		-DVENDOR_DEFAULT=VENDOR_xxx **	in the Makefile. ** **	Vendors should apply to sendmail@CS.Berkeley.EDU for **	unique vendor codes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VENDOR_BERKELEY
+value|1
+end_define
+
+begin_comment
+comment|/* Berkeley-native configuration file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VENDOR_SUN
+value|2
+end_define
+
+begin_comment
+comment|/* Sun-native configuration file */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|VendorCode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vendor-specific operation enhancements */
+end_comment
+
 begin_escape
 end_escape
 
