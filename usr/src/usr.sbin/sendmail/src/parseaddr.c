@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.11	%G%"
+literal|"@(#)parseaddr.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1227,17 +1227,20 @@ literal|50
 index|]
 decl_stmt|;
 specifier|static
-name|char
+name|bool
 name|firstime
+init|=
+name|TRUE
 decl_stmt|;
 if|if
 condition|(
 name|firstime
-operator|++
-operator|==
-literal|0
 condition|)
 block|{
+name|firstime
+operator|=
+name|FALSE
+expr_stmt|;
 name|expand
 argument_list|(
 literal|"$o"
