@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dlmpcc.c	5.3 (Berkeley) %G%"
+literal|"@(#)dlmpcc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,31 +59,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -101,13 +77,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"scnhdr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -122,7 +122,7 @@ name|char
 modifier|*
 name|MPCCTAB
 init|=
-literal|"/etc/mpcctab"
+name|_PATH_MPCCTAB
 decl_stmt|;
 end_decl_stmt
 
@@ -1990,7 +1990,9 @@ name|sprintf
 argument_list|(
 name|dlname
 argument_list|,
-literal|"/dev/mpcc%d"
+literal|"%s/mpcc%d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|mpccnum
 argument_list|)
@@ -2008,7 +2010,7 @@ name|sprintf
 argument_list|(
 name|fullname
 argument_list|,
-literal|"/etc/mpcc32"
+name|_PATH_MPCC32
 argument_list|)
 expr_stmt|;
 else|else
@@ -2016,7 +2018,7 @@ name|sprintf
 argument_list|(
 name|fullname
 argument_list|,
-literal|"/etc/mpccdl"
+name|_PATH_MPCCDL
 argument_list|)
 expr_stmt|;
 if|if

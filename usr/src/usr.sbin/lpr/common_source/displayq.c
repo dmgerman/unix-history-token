@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	5.8 (Berkeley) %G%"
+literal|"@(#)displayq.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"lp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -354,7 +360,7 @@ name|NULL
 condition|)
 name|LP
 operator|=
-name|DEFDEVLP
+name|_PATH_DEFDEVLP
 expr_stmt|;
 if|if
 condition|(
@@ -394,7 +400,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(

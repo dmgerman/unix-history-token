@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	5.7 (Berkeley) %G%"
+literal|"@(#)tunefs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,13 +83,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fstab.h>
+file|<paths.h>
 end_include
 
 begin_union
@@ -267,7 +273,9 @@ name|sprintf
 argument_list|(
 name|device
 argument_list|,
-literal|"/dev/%s"
+literal|"%s/%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|special
 argument_list|)

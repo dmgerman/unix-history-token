@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)update.c	4.3 (Berkeley) %G%"
+literal|"@(#)update.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,29 +58,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|fillst
-index|[]
-init|=
-block|{
-literal|"/bin"
-block|,
-literal|"/lib"
-block|,
-literal|"/usr"
-block|,
-literal|"/usr/bin"
-block|,
-literal|"/usr/lib"
-block|,
-literal|"/usr/ucb"
-block|,
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_function
 name|main

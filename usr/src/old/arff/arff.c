@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arff.c	5.6 (Berkeley) %G%"
+literal|"@(#)arff.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -79,7 +85,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -563,7 +569,7 @@ name|char
 modifier|*
 name|defdev
 init|=
-literal|"/dev/floppy"
+name|_PATH_FLOPPY
 decl_stmt|;
 end_decl_stmt
 
@@ -1839,7 +1845,7 @@ name|tty
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_RDWR
 argument_list|)

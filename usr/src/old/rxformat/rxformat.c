@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rxformat.c	5.4 (Berkeley) %G%"
+literal|"@(#)rxformat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,19 +49,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -70,12 +58,30 @@ directive|include
 file|<vaxuba/rxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_decl_stmt
 name|char
 name|devname
 index|[]
 init|=
-literal|"/dev/rrx?a"
+name|_PATH_DEVNAME
 decl_stmt|;
 end_decl_stmt
 

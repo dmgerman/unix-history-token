@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	5.6 (Berkeley) %G%"
+literal|"@(#)lpd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|"lp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -240,7 +246,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -250,7 +256,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_WRONLY
 argument_list|)
@@ -267,7 +273,7 @@ name|f
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -320,7 +326,7 @@ name|lfd
 operator|=
 name|open
 argument_list|(
-name|MASTERLOCK
+name|_PATH_MASTERLOCK
 argument_list|,
 name|O_WRONLY
 operator||
@@ -342,7 +348,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m"
 argument_list|,
-name|MASTERLOCK
+name|_PATH_MASTERLOCK
 argument_list|)
 expr_stmt|;
 name|exit
@@ -383,7 +389,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m"
 argument_list|,
-name|MASTERLOCK
+name|_PATH_MASTERLOCK
 argument_list|)
 expr_stmt|;
 name|exit
@@ -437,7 +443,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m"
 argument_list|,
-name|MASTERLOCK
+name|_PATH_MASTERLOCK
 argument_list|)
 expr_stmt|;
 name|exit
@@ -462,7 +468,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|SOCKETNAME
+name|_PATH_SOCKETNAME
 argument_list|)
 expr_stmt|;
 name|funix
@@ -568,7 +574,7 @@ name|sun
 operator|.
 name|sun_path
 argument_list|,
-name|SOCKETNAME
+name|_PATH_SOCKETNAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -1079,7 +1085,7 @@ argument_list|)
 expr_stmt|;
 name|unlink
 argument_list|(
-name|SOCKETNAME
+name|_PATH_SOCKETNAME
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2009,7 +2015,7 @@ name|hostf
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/hosts.equiv"
+name|_PATH_HOSTSEQUIV
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2072,7 +2078,7 @@ name|hostf
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/hosts.lpd"
+name|_PATH_HOSTSLPD
 argument_list|,
 literal|"r"
 argument_list|)

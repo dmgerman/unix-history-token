@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.14 %G%"
+literal|"@(#)write.c	4.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,18 +23,6 @@ end_endif
 begin_comment
 comment|/*  * write to another user  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -51,13 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -69,7 +51,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_define

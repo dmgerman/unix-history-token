@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.18 (Berkeley) %G%"
+literal|"@(#)conf.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,7 +265,7 @@ name|char
 modifier|*
 name|ConfFile
 init|=
-literal|"/usr/lib/sendmail.cf"
+literal|"/etc/sendmail.cf"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,7 +278,7 @@ name|char
 modifier|*
 name|FreezeFile
 init|=
-literal|"/usr/lib/sendmail.fc"
+literal|"/etc/sendmail.fc"
 decl_stmt|;
 end_decl_stmt
 

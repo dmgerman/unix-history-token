@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmjob.c	5.4 (Berkeley) %G%"
+literal|"@(#)rmjob.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"lp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -226,7 +232,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -266,7 +272,7 @@ name|NULL
 condition|)
 name|LP
 operator|=
-name|DEFDEVLP
+name|_PATH_DEFDEVLP
 expr_stmt|;
 if|if
 condition|(

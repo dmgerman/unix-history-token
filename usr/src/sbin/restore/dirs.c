@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.6 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -325,7 +331,9 @@ name|sprintf
 argument_list|(
 name|dirfile
 argument_list|,
-literal|"/tmp/rstdir%d"
+literal|"%s/rstdir%d"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|dumpdate
 argument_list|)
@@ -380,7 +388,9 @@ name|sprintf
 argument_list|(
 name|modefile
 argument_list|,
-literal|"/tmp/rstmode%d"
+literal|"%s/rstmode%d"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|dumpdate
 argument_list|)
@@ -2239,7 +2249,9 @@ name|sprintf
 argument_list|(
 name|modefile
 argument_list|,
-literal|"/tmp/rstmode%d"
+literal|"%s/rstmode%d"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|dumpdate
 argument_list|)

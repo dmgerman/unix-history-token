@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trsp.c	6.4 (Berkeley) %G%"
+literal|"@(#)trsp.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,7 +208,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<paths.h>
 end_include
 
 begin_decl_stmt

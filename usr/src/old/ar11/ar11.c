@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ar11.c	4.5 (Berkeley) %G%"
+literal|"@(#)ar11.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -16,7 +16,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -28,13 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -1321,7 +1327,7 @@ name|char
 name|name2
 index|[]
 init|=
-literal|"/tmp/v2XXXXX"
+name|_PATH_TMP2
 decl_stmt|;
 name|init
 argument_list|()
@@ -1524,7 +1530,7 @@ name|char
 name|name0
 index|[]
 init|=
-literal|"/tmp/vXXXXX"
+name|_PATH_TMP0
 decl_stmt|;
 specifier|static
 name|short
@@ -2756,7 +2762,7 @@ name|char
 name|name1
 index|[]
 init|=
-literal|"/tmp/v1XXXXX"
+name|_PATH_TMP1
 decl_stmt|;
 specifier|register
 name|f

@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c 2.3 %G%"
+literal|"@(#)clri.c 2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -16,12 +16,6 @@ end_comment
 begin_comment
 comment|/*  * clri filsys inumber ...  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIMFS
-end_ifndef
 
 begin_include
 include|#
@@ -40,34 +34,6 @@ include|#
 directive|include
 file|<sys/fs.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"../h/param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/fs.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

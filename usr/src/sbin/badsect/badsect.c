@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)badsect.c	5.5 (Berkeley) %G%"
+literal|"@(#)badsect.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,19 +59,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fs.h>
 end_include
 
 begin_include
@@ -89,7 +77,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_union
@@ -286,7 +292,7 @@ name|strcpy
 argument_list|(
 name|name
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 if|if

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.9 (Berkeley) %G%"
+literal|"@(#)arp.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -252,7 +252,7 @@ index|[
 literal|2
 index|]
 else|:
-name|_PATH_VMUNIX
+name|_PATH_UNIX
 argument_list|,
 name|mem
 argument_list|)
@@ -2517,7 +2517,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       arp -a [/vmunix] [/dev/kmem]\n"
+literal|"       arp -a [kernel] [kernel_memory]\n"
 argument_list|)
 expr_stmt|;
 name|printf

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tp0.c	4.1 %G%"
+literal|"@(#)tp0.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,8 +29,52 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tp_defs.h"
+file|"pathnames.h"
 end_include
+
+begin_decl_stmt
+name|char
+name|mt
+index|[]
+init|=
+name|_PATH_MT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|tc
+index|[]
+init|=
+name|_PATH_TAPX
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+init|=
+name|flu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|mheader
+index|[]
+init|=
+name|_PATH_MBOOT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|theader
+index|[]
+init|=
+name|_PATH_TBOOT
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.15 (Berkeley) %G%"
+literal|"@(#)tape.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -240,6 +246,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|RRESTORE
@@ -253,6 +263,11 @@ decl_stmt|;
 endif|#
 directive|endif
 endif|RRESTORE
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
 name|flsht
 argument_list|()
 expr_stmt|;
@@ -373,7 +388,7 @@ name|terminal
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"r"
 argument_list|)
@@ -385,16 +400,28 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"Cannot open(\"/dev/tty\")"
+name|stderr
+argument_list|,
+literal|"Cannot open %s: %s\n"
+argument_list|,
+name|_PATH_TTY
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|terminal
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"r"
 argument_list|)
@@ -406,9 +433,21 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"Cannot open(\"/dev/null\")"
+name|stderr
+argument_list|,
+literal|"Cannot open %s: %s\n"
+argument_list|,
+name|_PATH_DEVNULL
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|done

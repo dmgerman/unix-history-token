@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)announce.c	5.6 (Berkeley) %G%"
+literal|"@(#)announce.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,12 @@ begin_include
 include|#
 directive|include
 file|<protocols/talkd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -304,7 +310,9 @@ name|sprintf
 argument_list|(
 name|full_tty
 argument_list|,
-literal|"/dev/%s"
+literal|"%s/%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|request
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.7 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<sys/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -202,7 +208,7 @@ name|NULL
 condition|)
 name|LF
 operator|=
-name|DEFLOGF
+name|_PATH_CONSOLE
 expr_stmt|;
 if|if
 condition|(
@@ -222,7 +228,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -283,7 +289,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_WRONLY
 argument_list|)
@@ -459,7 +465,7 @@ name|dfd
 init|=
 name|opendir
 argument_list|(
-literal|"/dev"
+name|_PATH_DEV
 argument_list|)
 decl_stmt|;
 name|struct
@@ -487,7 +493,7 @@ name|strcpy
 argument_list|(
 name|devname
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 while|while

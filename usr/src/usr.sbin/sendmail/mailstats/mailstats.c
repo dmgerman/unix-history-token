@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailstats.c	5.5 (Berkeley) %G%"
+literal|"@(#)mailstats.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<mailstats.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_function
@@ -118,7 +124,7 @@ argument_list|()
 decl_stmt|;
 name|sfile
 operator|=
-literal|"/usr/lib/sendmail.st"
+name|_PATH_MAILSTATS
 expr_stmt|;
 while|while
 condition|(

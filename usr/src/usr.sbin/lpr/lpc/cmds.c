@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.4 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -284,7 +290,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -1014,7 +1020,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1475,7 +1481,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -1790,7 +1796,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -2197,7 +2203,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -2994,7 +3000,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -3329,7 +3335,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -3921,7 +3927,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
@@ -4216,7 +4222,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(

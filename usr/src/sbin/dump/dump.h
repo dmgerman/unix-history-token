@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dump.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dump.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -23,18 +23,6 @@ directive|define
 name|MAXNINDIR
 value|(MAXBSIZE / sizeof(daddr_t))
 end_define
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -87,13 +75,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_define
@@ -630,28 +630,6 @@ end_define
 
 begin_comment
 comment|/* abort all of dump; don't attempt checkpointing*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TAPE
-value|"/dev/rmt8"
-end_define
-
-begin_comment
-comment|/* default tape device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DISK
-value|"/dev/rrp1g"
-end_define
-
-begin_comment
-comment|/* default disk */
 end_comment
 
 begin_define

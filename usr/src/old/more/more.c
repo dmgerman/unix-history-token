@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.20 (Berkeley) %G%"
+literal|"@(#)more.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,19 +122,11 @@ directive|include
 file|<varargs.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|HELPFILE
-value|"/usr/lib/omore.help"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VI
-value|"/usr/ucb/vi"
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_define
 define|#

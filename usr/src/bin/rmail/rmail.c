@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	4.12 (Berkeley) %G%"
+literal|"@(#)rmail.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,12 +55,6 @@ end_comment
 begin_comment
 comment|/*  * RMAIL -- UUCP mail server.  *  *	This program reads the>From ... remote from ... lines that  *	UUCP is so fond of and turns them into something reasonable.  *	It calls sendmail giving it a -f option built from these lines.   */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -84,6 +78,18 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -143,13 +149,6 @@ end_decl_stmt
 begin_comment
 comment|/* Default "Domain" */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAILER
-value|"/usr/lib/sendmail"
-end_define
 
 begin_function
 name|main
@@ -360,7 +359,7 @@ name|strcpy
 argument_list|(
 name|ufrom
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -700,7 +699,7 @@ name|i
 operator|++
 index|]
 operator|=
-name|MAILER
+name|_PATH_SENDMAIL
 expr_stmt|;
 name|args
 index|[
@@ -1087,7 +1086,7 @@ expr_stmt|;
 block|}
 name|execv
 argument_list|(
-name|MAILER
+name|_PATH_SENDMAIL
 argument_list|,
 name|args
 argument_list|)
@@ -1098,7 +1097,7 @@ name|stderr
 argument_list|,
 literal|"Exec of %s failed!\n"
 argument_list|,
-name|MAILER
+name|_PATH_SENDMAIL
 argument_list|)
 expr_stmt|;
 name|exit

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	5.8 (Berkeley) %G%"
+literal|"@(#)edquota.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,7 +175,7 @@ name|char
 name|tmpfil
 index|[]
 init|=
-literal|"/tmp/EdP.aXXXXX"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 
@@ -699,7 +699,7 @@ literal|0
 condition|)
 name|ed
 operator|=
-name|_PATH_EDITOR
+name|_PATH_VI
 expr_stmt|;
 name|execlp
 argument_list|(
@@ -2108,7 +2108,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: not in /etc/fstab\n"
+literal|"%s: not in fstab\n"
 argument_list|,
 operator|*
 name|dqf

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.16 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_define
@@ -1867,7 +1873,9 @@ name|sprintf
 argument_list|(
 name|device
 argument_list|,
-literal|"/dev/r%s"
+literal|"%s/r%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|special
 argument_list|)

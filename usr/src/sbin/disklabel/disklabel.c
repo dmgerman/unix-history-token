@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.15 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,7 +301,7 @@ name|char
 name|tmpfil
 index|[]
 init|=
-literal|"/tmp/EdDk.aXXXXXX"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 
@@ -652,7 +652,9 @@ name|sprintf
 argument_list|(
 name|np
 argument_list|,
-literal|"/dev/r%s%c"
+literal|"%s/r%s%c"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|dkname
 argument_list|,
@@ -718,7 +720,9 @@ name|sprintf
 argument_list|(
 name|specname
 argument_list|,
-literal|"/dev/r%s"
+literal|"%s/r%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|dkname
 argument_list|)

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	5.6 (Berkeley) %G%"
+literal|"@(#)atrun.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,38 +109,11 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ATDIR
-value|"/usr/spool/at"
-end_define
-
-begin_comment
-comment|/* spooling area */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMPDIR
-value|"/tmp"
-end_define
-
-begin_comment
-comment|/* area for temporary files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAILER
-value|"/bin/mail"
-end_define
-
-begin_comment
-comment|/* program to use for sending 						   mail */
-end_comment
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_define
 define|#
@@ -162,28 +135,6 @@ end_define
 
 begin_comment
 comment|/* job exited abnormally */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PASTDIR
-value|"/usr/spool/at/past"
-end_define
-
-begin_comment
-comment|/* area to run jobs from */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LASTFILE
-value|"/usr/spool/at/lasttimedone"
-end_define
-
-begin_comment
-comment|/* update time file */
 end_comment
 
 begin_decl_stmt
@@ -248,7 +199,7 @@ comment|/* queue of jobs to be run */
 comment|/* 	 * Move to the spooling area. 	 */
 name|chdir
 argument_list|(
-name|ATDIR
+name|_PATH_ATDIR
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Create a filename that represents the time it is now. This is used 	 * to determine if the execution time for a job has arrived. 	 */
@@ -281,7 +232,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|ATDIR
+name|_PATH_ATDIR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -763,7 +714,7 @@ name|runfile
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|PASTDIR
+name|_PATH_PAST
 argument_list|,
 name|spoolfile
 argument_list|)
@@ -777,7 +728,7 @@ argument_list|)
 expr_stmt|;
 name|chdir
 argument_list|(
-name|PASTDIR
+name|_PATH_PAST
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Create a temporary file where we will redirect errors to. 	 * Just to make sure we've got a unique file, we'll run an "access" 	 * check on the file. 	 */
@@ -802,7 +753,7 @@ name|errfile
 argument_list|,
 literal|"%s/at.err%d"
 argument_list|,
-name|TMPDIR
+name|_PATH_TMP
 argument_list|,
 operator|(
 name|getpid
@@ -889,7 +840,7 @@ condition|)
 block|{
 name|chdir
 argument_list|(
-name|ATDIR
+name|_PATH_ATDIR
 argument_list|)
 expr_stmt|;
 name|rename
@@ -1087,14 +1038,14 @@ expr_stmt|;
 comment|/* 	 * Reposition stdin, stdout, and stderr. 	 * 	 *	stdin  = /dev/null 	 *	stout  = /dev/null 	 *	stderr = /tmp/at.err{pid} 	 *	 	 */
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|1
 argument_list|)
@@ -1116,48 +1067,6 @@ argument_list|(
 name|whichshell
 argument_list|,
 literal|"/bin/%s"
-argument_list|,
-name|shell
-argument_list|)
-expr_stmt|;
-name|execl
-argument_list|(
-name|whichshell
-argument_list|,
-name|shell
-argument_list|,
-name|runfile
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 	 * If not in /bin, look for the shell in /usr/bin. 	 */
-name|sprintf
-argument_list|(
-name|whichshell
-argument_list|,
-literal|"/usr/bin/%s"
-argument_list|,
-name|shell
-argument_list|)
-expr_stmt|;
-name|execl
-argument_list|(
-name|whichshell
-argument_list|,
-name|shell
-argument_list|,
-name|runfile
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 	 * If not in /bin, look for the shell in /usr/new. 	 */
-name|sprintf
-argument_list|(
-name|whichshell
-argument_list|,
-literal|"/usr/new/%s"
 argument_list|,
 name|shell
 argument_list|)
@@ -1262,7 +1171,7 @@ name|mailtouser
 argument_list|,
 literal|"%s %s"
 argument_list|,
-name|MAILER
+name|_PATH_MAIL
 argument_list|,
 name|user
 argument_list|)
@@ -1286,7 +1195,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|MAILER
+name|_PATH_MAIL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1615,7 +1524,7 @@ name|lastimefile
 operator|=
 name|fopen
 argument_list|(
-name|LASTFILE
+name|_PATH_LASTFILE
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1633,7 +1542,7 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-name|LASTFILE
+name|_PATH_LASTFILE
 argument_list|)
 expr_stmt|;
 name|exit

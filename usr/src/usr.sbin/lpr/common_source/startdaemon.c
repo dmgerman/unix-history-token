@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startdaemon.c	5.3 (Berkeley) %G%"
+literal|"@(#)startdaemon.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,12 +31,6 @@ end_comment
 begin_comment
 comment|/*  * Tell the printer daemon that there are new files in the spool directory.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -59,7 +53,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lp.local.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_macro
@@ -135,7 +141,7 @@ name|sun
 operator|.
 name|sun_path
 argument_list|,
-name|SOCKETNAME
+name|_PATH_SOCKETNAME
 argument_list|)
 expr_stmt|;
 if|if

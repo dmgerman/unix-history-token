@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.14 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -912,7 +912,7 @@ index|[
 literal|20
 index|]
 init|=
-literal|"/dev/"
+name|_PATH_DEV
 decl_stmt|;
 name|struct
 name|sgttyb

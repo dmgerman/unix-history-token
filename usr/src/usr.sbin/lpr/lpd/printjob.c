@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	5.6 (Berkeley) %G%"
+literal|"@(#)printjob.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"lp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -489,7 +495,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_WRONLY
 argument_list|)
@@ -1308,18 +1314,18 @@ index|[
 literal|4
 index|]
 index|[
-literal|18
+literal|40
 index|]
 init|=
 block|{
-literal|"/usr/lib/vfont/R"
+name|_PATH_VFONTR
 block|,
-literal|"/usr/lib/vfont/I"
+name|_PATH_VFONTI
 block|,
-literal|"/usr/lib/vfont/B"
+name|_PATH_VFONTB
 block|,
-literal|"/usr/lib/vfont/S"
-block|}
+name|_PATH_VFONTS
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2319,7 +2325,7 @@ block|{
 comment|/* use output filter */
 name|prog
 operator|=
-name|PR
+name|_PATH_PR
 expr_stmt|;
 name|av
 index|[
@@ -2438,7 +2444,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-name|PR
+name|_PATH_PR
 argument_list|,
 literal|"pr"
 argument_list|,
@@ -2464,7 +2470,7 @@ name|LOG_ERR
 argument_list|,
 literal|"cannot execl %s"
 argument_list|,
-name|PR
+name|_PATH_PR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2720,7 +2726,7 @@ name|write
 argument_list|(
 name|fo
 argument_list|,
-literal|"/usr/lib/vfont/"
+name|_PATH_VFONT
 argument_list|,
 literal|15
 argument_list|)
@@ -5060,7 +5066,7 @@ name|cp
 operator|=
 name|rindex
 argument_list|(
-name|MAIL
+name|_PATH_SENDMAIL
 argument_list|,
 literal|'/'
 argument_list|)
@@ -5074,7 +5080,7 @@ expr_stmt|;
 else|else
 name|cp
 operator|=
-name|MAIL
+name|_PATH_SENDMAIL
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -5089,7 +5095,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-name|MAIL
+name|_PATH_SENDMAIL
 argument_list|,
 name|cp
 argument_list|,
@@ -5582,7 +5588,7 @@ name|NULL
 condition|)
 name|LP
 operator|=
-name|DEFDEVLP
+name|_PATH_DEFDEVLP
 expr_stmt|;
 if|if
 condition|(
@@ -5662,7 +5668,7 @@ name|NULL
 condition|)
 name|LF
 operator|=
-name|DEFLOGF
+name|_PATH_CONSOLE
 expr_stmt|;
 if|if
 condition|(
@@ -5682,7 +5688,7 @@ name|NULL
 condition|)
 name|SD
 operator|=
-name|DEFSPOOL
+name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(

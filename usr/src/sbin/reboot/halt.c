@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)halt.c	5.5 (Berkeley) %G%"
+literal|"@(#)halt.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,19 +59,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/reboot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -89,19 +83,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<pwd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_function
@@ -252,15 +258,15 @@ if|if
 condition|(
 name|ttyn
 operator|&&
-operator|*
-operator|(
 name|ttyn
-operator|+
-name|strlen
+index|[
+sizeof|sizeof
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|)
-operator|)
+operator|-
+literal|1
+index|]
 operator|==
 literal|'d'
 condition|)

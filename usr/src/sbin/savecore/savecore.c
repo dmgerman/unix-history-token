@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.15 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<paths.h>
 end_include
 
 begin_define
@@ -907,7 +907,7 @@ name|strcpy
 argument_list|(
 name|devname
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 if|if

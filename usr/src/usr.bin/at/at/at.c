@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	5.8 (Berkeley) %G%"
+literal|"@(#)at.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -161,45 +167,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BOURNE
-value|"/bin/sh"
-end_define
-
-begin_comment
-comment|/* run commands with Bourne shell*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CSHELL
-value|"/bin/csh"
-end_define
-
-begin_comment
-comment|/* run commands with C shell */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NODATEFOUND
 value|-1
 end_define
 
 begin_comment
 comment|/* no date was given on command line */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATDIR
-value|"/usr/spool/at"
-end_define
-
-begin_comment
-comment|/* spooling area */
 end_comment
 
 begin_define
@@ -587,7 +560,7 @@ name|char
 modifier|*
 name|shell
 init|=
-name|BOURNE
+name|_PATH_BSHELL
 decl_stmt|;
 comment|/* what shell do we use to run job? */
 name|int
@@ -695,7 +668,7 @@ operator|++
 expr_stmt|;
 name|shell
 operator|=
-name|CSHELL
+name|_PATH_CSHELL
 expr_stmt|;
 break|break;
 case|case
@@ -706,7 +679,7 @@ operator|++
 expr_stmt|;
 name|shell
 operator|=
-name|BOURNE
+name|_PATH_BSHELL
 expr_stmt|;
 break|break;
 case|case
@@ -1663,7 +1636,7 @@ name|atfile
 argument_list|,
 literal|"%s/%02d.%03d.%02d%02d.%02d"
 argument_list|,
-name|ATDIR
+name|_PATH_ATDIR
 argument_list|,
 name|year
 argument_list|,

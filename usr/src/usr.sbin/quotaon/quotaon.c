@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotaon.c	5.4 (Berkeley) %G%"
+literal|"@(#)quotaon.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|<mtab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -357,7 +363,7 @@ name|mf
 operator|=
 name|open
 argument_list|(
-literal|"/etc/mtab"
+name|_PATH_MTAB
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -371,7 +377,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/etc/mtab"
+name|_PATH_MTAB
 argument_list|)
 expr_stmt|;
 name|exit
@@ -518,7 +524,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s not found in /etc/fstab\n"
+literal|"%s not found in fstab\n"
 argument_list|,
 name|argv
 index|[
@@ -979,7 +985,7 @@ name|mf
 operator|=
 name|creat
 argument_list|(
-literal|"/etc/mtab"
+name|_PATH_MTAB
 argument_list|,
 literal|0644
 argument_list|)

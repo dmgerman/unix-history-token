@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	5.5 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/dumprestore.h>
 end_include
 
 begin_include
@@ -76,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<protocols/dumprestore.h>
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -313,7 +319,7 @@ name|name
 argument_list|,
 name|name
 argument_list|,
-literal|"/etc/rmt"
+name|_PATH_RMT
 argument_list|,
 literal|0
 argument_list|)

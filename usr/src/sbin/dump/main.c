@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,11 +206,11 @@ expr_stmt|;
 comment|/* Default later, based on 'c' option for cart tapes */
 name|tape
 operator|=
-name|TAPE
+name|_PATH_DEFTAPE
 expr_stmt|;
 name|disk
 operator|=
-name|DISK
+name|_PATH_DEFDISK
 expr_stmt|;
 name|increm
 operator|=

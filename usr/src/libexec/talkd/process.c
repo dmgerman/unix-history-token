@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.7 (Berkeley) %G%"
+literal|"@(#)process.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<protocols/talkd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_function_decl
@@ -809,7 +815,7 @@ name|strcpy
 argument_list|(
 name|ftty
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 while|while

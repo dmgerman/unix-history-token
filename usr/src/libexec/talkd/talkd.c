@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)talkd.c	5.4 (Berkeley) %G%"
+literal|"@(#)talkd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|<protocols/talkd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -242,7 +248,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"/dev"
+name|_PATH_DEV
 argument_list|)
 operator|<
 literal|0
@@ -252,7 +258,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chdir: /dev: %m"
+literal|"chdir: %s: %m"
+argument_list|,
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|_exit

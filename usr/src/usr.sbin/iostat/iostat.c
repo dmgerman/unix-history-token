@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.15 (Berkeley) 87/01/12"
+literal|"@(#)iostat.c	4.16 (Berkeley) 89/05/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,30 +23,6 @@ end_endif
 begin_comment
 comment|/*  * iostat  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
 
 begin_include
 include|#
@@ -70,6 +46,36 @@ begin_include
 include|#
 directive|include
 file|<sys/dkstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -433,7 +439,7 @@ index|]
 decl_stmt|;
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nl
 argument_list|)
@@ -450,9 +456,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"dk_busy not found in /vmunix namelist\n"
+name|stderr
+argument_list|,
+literal|"iostat: dk_busy not found in %s namelist\n"
+argument_list|,
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 name|exit
@@ -465,7 +475,7 @@ name|mf
 operator|=
 name|open
 argument_list|(
-literal|"/dev/kmem"
+name|_PATH_KMEM
 argument_list|,
 literal|0
 argument_list|)
@@ -477,9 +487,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"cannot open /dev/kmem\n"
+name|stderr
+argument_list|,
+literal|"iostat: cannot open %s\n"
+argument_list|,
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 name|exit

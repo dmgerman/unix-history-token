@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printcap.c	5.3 (Berkeley) %G%"
+literal|"@(#)printcap.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -135,19 +141,6 @@ define|#
 directive|define
 name|tnamatch
 value|pnamatch
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|E_TERMCAP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|E_TERMCAP
-value|"/etc/printcap"
 end_define
 
 begin_define
@@ -263,7 +256,7 @@ name|pfp
 operator|=
 name|fopen
 argument_list|(
-name|E_TERMCAP
+name|_PATH_PRINTCAP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -574,7 +567,7 @@ name|tf
 operator|=
 name|open
 argument_list|(
-name|E_TERMCAP
+name|_PATH_PRINTCAP
 argument_list|,
 literal|0
 argument_list|)
@@ -602,7 +595,7 @@ name|tf
 operator|=
 name|open
 argument_list|(
-name|E_TERMCAP
+name|_PATH_PRINTCAP
 argument_list|,
 literal|0
 argument_list|)
@@ -613,7 +606,7 @@ name|tf
 operator|=
 name|open
 argument_list|(
-name|E_TERMCAP
+name|_PATH_PRINTCAP
 argument_list|,
 literal|0
 argument_list|)

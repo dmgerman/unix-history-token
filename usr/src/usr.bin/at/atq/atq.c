@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atq.c	5.5 (Berkeley) %G%"
+literal|"@(#)atq.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,27 +98,11 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ATDIR
-value|"/usr/spool/at"
-end_define
-
-begin_comment
-comment|/* spooling area */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LASTFILE
-value|"/usr/spool/at/lasttimedone"
-end_define
-
-begin_comment
-comment|/* update time record  							   file */
-end_comment
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_comment
 comment|/*  * Months of the year  */
@@ -365,7 +349,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-name|ATDIR
+name|_PATH_ATDIR
 argument_list|)
 operator|==
 operator|-
@@ -374,7 +358,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|ATDIR
+name|_PATH_ATDIR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -412,7 +396,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|ATDIR
+name|_PATH_ATDIR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1116,7 +1100,7 @@ name|last
 operator|=
 name|fopen
 argument_list|(
-name|LASTFILE
+name|_PATH_LASTFILE
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1127,7 +1111,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|LASTFILE
+name|_PATH_LASTFILE
 argument_list|)
 expr_stmt|;
 name|exit

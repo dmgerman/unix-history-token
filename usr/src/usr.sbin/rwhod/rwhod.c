@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.12 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<paths.h>
 end_include
 
 begin_comment
@@ -494,7 +494,7 @@ name|s
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|2
 argument_list|)
@@ -1734,7 +1734,7 @@ name|utmpent
 operator|&&
 name|chdir
 argument_list|(
-literal|"/dev"
+name|_PATH_DEV
 argument_list|)
 condition|)
 block|{
@@ -1742,7 +1742,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chdir(/dev): %m"
+literal|"chdir(%s): %m"
+argument_list|,
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|exit

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tk.c	4.2 (Berkeley) %G%"
+literal|"@(#)tk.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -16,13 +16,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<paths.h>
 end_include
 
 begin_define
@@ -363,7 +369,7 @@ name|ttyin
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1054,7 +1060,7 @@ if|if
 condition|(
 name|freopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"r"
 argument_list|,
@@ -1065,7 +1071,7 @@ name|NULL
 condition|)
 name|freopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"r"
 argument_list|,
@@ -1078,7 +1084,7 @@ end_if
 begin_expr_stmt
 name|execl
 argument_list|(
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,
