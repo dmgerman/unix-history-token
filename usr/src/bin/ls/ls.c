@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.17 (Berkeley) %G%"
+literal|"@(#)ls.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1678,8 +1678,8 @@ if|if
 condition|(
 name|statf
 operator|==
-name|stat
-operator|&&
+name|lstat
+operator|||
 name|lstat
 argument_list|(
 name|file
