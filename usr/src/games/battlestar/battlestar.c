@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)battlestar.c	1.1 %G%"
+literal|"@(#)battlestar.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,20 +74,11 @@ label|:
 name|news
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
 name|beenthere
 index|[
 name|position
 index|]
-condition|)
-name|beenthere
-index|[
-name|position
-index|]
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 if|if
 condition|(

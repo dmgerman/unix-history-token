@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com7.c	1.1 %G%"
+literal|"@(#)com7.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ else|else
 block|{
 name|puts
 argument_list|(
-literal|"You collapse exhausted and he pulverizes your skull."
+literal|"You collapse exhausted, and he pulverizes your skull."
 argument_list|)
 expr_stmt|;
 name|die
@@ -115,7 +115,7 @@ literal|20
 condition|)
 name|puts
 argument_list|(
-literal|"You look tired, I hope you're able to fight."
+literal|"You look tired! I hope you're able to fight."
 argument_list|)
 expr_stmt|;
 name|next
@@ -504,7 +504,7 @@ literal|2
 case|:
 name|puts
 argument_list|(
-literal|"You pierce him and his breath hisses through clenched teeth."
+literal|"You pierce him, and his breath hisses through clenched teeth."
 argument_list|)
 expr_stmt|;
 break|break;

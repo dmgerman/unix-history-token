@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)save.c	1.1 %G%"
+literal|"@(#)save.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -644,7 +644,7 @@ argument_list|,
 name|home1
 argument_list|)
 expr_stmt|;
-name|fread
+name|fwrite
 argument_list|(
 operator|&
 name|WEIGHT
@@ -657,7 +657,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|fread
+name|fwrite
 argument_list|(
 operator|&
 name|CUMBER
@@ -670,7 +670,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|fread
+name|fwrite
 argument_list|(
 operator|&
 name|clock
@@ -697,7 +697,7 @@ name|n
 operator|++
 control|)
 block|{
-name|fread
+name|fwrite
 argument_list|(
 name|location
 index|[
@@ -719,7 +719,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|fread
+name|fwrite
 argument_list|(
 name|location
 index|[

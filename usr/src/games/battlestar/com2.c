@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com2.c	1.1 %G%"
+literal|"@(#)com2.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1058,7 +1058,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"You strike him to the ground and he coughs up blood."
+literal|"You strike him to the ground, and he coughs up blood."
 argument_list|)
 expr_stmt|;
 name|puts
@@ -1177,7 +1177,7 @@ name|NORMGOD
 case|:
 name|puts
 argument_list|(
-literal|"You attack the goddess and she screams as you beat her.  She falls down"
+literal|"You attack the goddess, and she screams as you beat her.  She falls down"
 argument_list|)
 expr_stmt|;
 name|puts
@@ -1219,12 +1219,12 @@ name|NATIVE
 case|:
 name|puts
 argument_list|(
-literal|"The girl tries to run but you catch her and throw her down.  Her face is"
+literal|"The girl tries to run, but you catch her and throw her down.  Her face is"
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"bleeding and she screams as you tear off her clothes."
+literal|"bleeding, and she screams as you tear off her clothes."
 argument_list|)
 expr_stmt|;
 name|power
@@ -1252,7 +1252,7 @@ argument_list|(
 literal|100
 argument_list|)
 operator|<
-literal|20
+literal|50
 condition|)
 block|{
 name|puts
@@ -1439,17 +1439,17 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"The Dark Lord leaps and runs down secret tunnels and corridoors.  You chase"
+literal|"The Dark Lord leaps away and runs down secret tunnels and corridoors."
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"him through the darkness and splash in pools of water.  You have cornered him."
+literal|"You chase him through the darkness and splash in pools of water."
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"His laser sword extends as he steps forward."
+literal|"You have cornered him.  His laser sword extends as he steps forward."
 argument_list|)
 expr_stmt|;
 name|position

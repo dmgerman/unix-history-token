@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	1.1 %G%"
+literal|"@(#)init.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,21 +233,20 @@ name|list
 index|[]
 init|=
 block|{
+comment|/* hereditary wizards */
 literal|"riggle"
 block|,
 literal|"chris"
 block|,
-literal|"caro"
-block|,
 literal|"edward"
-block|,
-literal|"chin"
-block|,
-literal|"ervin-tr"
 block|,
 literal|"comay"
 block|,
-literal|"conde"
+literal|"yee"
+block|,
+literal|"dmr"
+block|,
+literal|"ken"
 block|,
 literal|0
 block|}
@@ -260,7 +259,15 @@ modifier|*
 name|badguys
 index|[]
 init|=
+block|{
+literal|"wnj"
+block|,
+literal|"root"
+block|,
+literal|"ted"
+block|,
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -392,7 +399,7 @@ name|WEIGHT
 operator|=
 literal|9
 expr_stmt|;
-comment|/* that'l get him */
+comment|/* that'll get him! */
 name|clock
 operator|=
 literal|10

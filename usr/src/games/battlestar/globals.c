@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)globals.c	1.1 %G%"
+literal|"@(#)globals.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,9 +149,9 @@ literal|"A gold bracelet is on the ground here."
 block|,
 literal|"A swarthy woman with stern features pulls you aside from the crowd,\n'I must talk to you -- but not here.  Meet me at midnight in the gardens.'"
 block|,
-literal|"The swarthy woman has been awiating you anxiousy. 'I must warn you that the\nIsland has anticipated your Quest.  You will not be welcomed. The Darkness is\nstrong where you must search.  Seek not the shadows save only at night, for\nthen are they the weakest.  In the mountains far from here a canyon winds\nwith ferns and streams and forgotten vines.  There you will go and take this\nrope.'"
+literal|"The swarthy woman has been awaiting you anxiousy. 'I must warn you that the\nIsland has anticipated your Quest.  You will not be welcomed. The Darkness is\nstrong where you must search.  Seek not the shadows save only at night, for\nthen are they the weakest.  In the mountains far from here a canyon winds\nwith ferns and streams and forgotten vines.  There you must go. Take this\nrope.'"
 block|,
-literal|"Out from the shadows a figure leaps!  His black cape swirls around and he\nholds a laser sword at your chest.  'So, you have come to fulfill the Quest.\nHa! Your weapons are no match for me!'"
+literal|"Out from the shadows a figure leaps!  His black cape swirls around, and he\nholds a laser sword at your chest.  'So, you have come to fulfill the Quest.\nHa! Your weapons are no match for me!'"
 block|,
 literal|"An old timer with one eye missing and no money for a drink sits at the bar."
 block|,
@@ -653,6 +653,24 @@ name|int
 name|matchcount
 init|=
 literal|20
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|followgod
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|followfight
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 

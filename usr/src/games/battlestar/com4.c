@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com4.c	1.1 %G%"
+literal|"@(#)com4.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,12 +712,12 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"The amulet is warm to the touch and its beauty catches your breath."
+literal|"The amulet is warm to the touch, and its beauty catches your breath."
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"A mist falls over your eyes and then it is gone.  Sounds seem clearer"
+literal|"A mist falls over your eyes, but then it is gone.  Sounds seem clearer"
 argument_list|)
 expr_stmt|;
 name|puts
@@ -727,7 +727,7 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"you from afar.  The mist falls again and your heart leaps in horror.  The gold"
+literal|"you from afar.  The mist falls again, and your heart leaps in horror.  The gold"
 argument_list|)
 expr_stmt|;
 name|puts
@@ -772,7 +772,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"The medallion is warm and it rekindles your spirit with the warmth of life."
+literal|"The medallion is warm, and it rekindles your spirit with the warmth of life."
 argument_list|)
 expr_stmt|;
 name|puts
@@ -817,7 +817,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"The talisman is cold to the touch and it sends a chill down your spine."
+literal|"The talisman is cold to the touch, and it sends a chill down your spine."
 argument_list|)
 expr_stmt|;
 block|}
@@ -873,7 +873,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"She offers a delicate hand and you help her out of the sparkling springs."
+literal|"She offers a delicate hand, and you help her out of the sparkling springs."
 argument_list|)
 expr_stmt|;
 name|puts
@@ -967,8 +967,17 @@ end_block
 
 begin_macro
 name|throw
-argument_list|()
+argument_list|(
+argument|name
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -993,7 +1002,7 @@ if|if
 condition|(
 name|drop
 argument_list|(
-literal|"Thrown"
+name|name
 argument_list|)
 operator|!=
 operator|-
@@ -1509,6 +1518,19 @@ expr_stmt|;
 name|time
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|name
+operator|==
+literal|'K'
+condition|)
+name|puts
+argument_list|(
+literal|"Drop kicked."
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%s.\n"
@@ -1518,6 +1540,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+operator|*
+name|name
+operator|!=
+literal|'K'
+condition|)
 block|{
 name|printf
 argument_list|(
@@ -1556,6 +1586,7 @@ argument_list|(
 literal|"Kicked instead."
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|*
@@ -1569,6 +1600,13 @@ literal|"Given anyway."
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+name|puts
+argument_list|(
+literal|"Kicked."
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1873,7 +1911,7 @@ operator|++
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"Eaten.  I can explore a little longer now."
+literal|"Eaten.  You can explore a little longer now."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1888,7 +1926,7 @@ name|CYCLE
 condition|)
 name|puts
 argument_list|(
-literal|"I'm stuffed."
+literal|"You're stuffed."
 argument_list|)
 expr_stmt|;
 elseif|else

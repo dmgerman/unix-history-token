@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)extern.h	1.1 %G% */
+comment|/* @(#)extern.h	1.2 %G% */
 end_comment
 
 begin_include
@@ -1002,6 +1002,13 @@ name|JUMP
 value|1051
 end_define
 
+begin_define
+define|#
+directive|define
+name|KICK
+value|1052
+end_define
+
 begin_comment
 comment|/* injuries */
 end_comment
@@ -1186,7 +1193,7 @@ begin_define
 define|#
 directive|define
 name|TANKFULL
-value|50
+value|250
 end_define
 
 begin_define

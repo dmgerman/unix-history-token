@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com5.c	1.1 %G%"
+literal|"@(#)com5.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,7 +544,7 @@ argument_list|(
 literal|100
 argument_list|)
 operator|<
-literal|20
+literal|50
 condition|)
 block|{
 name|puts
@@ -556,7 +556,7 @@ switch|switch
 condition|(
 name|rnd
 argument_list|(
-literal|3
+literal|4
 argument_list|)
 condition|)
 block|{
@@ -687,6 +687,8 @@ argument_list|,
 name|HALBERD
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 block|}
@@ -1330,37 +1332,32 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"He fingers the coins for a moment and then looks up agape. 'Kind you are and"
+literal|"He fingers the coins for a moment and then looks up agape.  `Kind you are and"
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"I mean to repay you as best I can.'  Grabbing a pencil and cocktail napkin..."
+literal|"I mean to repay you as best I can.'  Grabbing a pencil and cocktail napkin...\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n-------------------------------------------------------------------------------\n"
+literal|"+-----------------------------------------------------------------------------+\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"|				xxxxxxxxxx\\				      |\n"
+literal|"|				   xxxxxxxx\\				      |\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"|				    xxxxxxx\\	CLIFFS			      |\n"
+literal|"|				       xxxxx\\	CLIFFS			      |\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"|					xxxx\\				      |\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"|		FOREST			   xx\\				      |\n"
+literal|"|		FOREST			  xxx\\				      |\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1410,7 +1407,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"|				//		...	    N<-- + ---  S     |\n"
+literal|"|				//		...	    N<-- + --- S     |\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1425,12 +1422,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"-------------------------------------------------------------------------------\n"
+literal|"+-----------------------------------------------------------------------------+\n"
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"\n'This map shows a secret entrance to the catacombs."
+literal|"\n`This map shows a secret entrance to the catacombs."
 argument_list|)
 expr_stmt|;
 name|puts

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)room.c	1.1 %G%"
+literal|"@(#)room.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,6 @@ name|beenthere
 index|[
 name|position
 index|]
-operator|++
 operator|<
 literal|3
 condition|)
@@ -142,6 +141,19 @@ end_macro
 begin_block
 block|{
 specifier|register
+name|unsigned
+name|int
+modifier|*
+name|p
+init|=
+name|location
+index|[
+name|position
+index|]
+operator|.
+name|objects
+decl_stmt|;
+specifier|register
 name|n
 expr_stmt|;
 name|printf
@@ -162,17 +174,11 @@ condition|;
 name|n
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|testbit
 argument_list|(
-name|location
-index|[
-name|position
-index|]
-operator|.
-name|objects
+name|p
 argument_list|,
 name|n
 argument_list|)
@@ -182,17 +188,14 @@ index|[
 name|n
 index|]
 condition|)
-name|printf
+name|puts
 argument_list|(
-literal|"%s\n"
-argument_list|,
 name|objdes
 index|[
 name|n
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 

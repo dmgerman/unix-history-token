@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com6.c	1.1 %G%"
+literal|"@(#)com6.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,6 +317,17 @@ name|char
 modifier|*
 name|date
 decl_stmt|;
+name|int
+name|s
+init|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGINT
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -412,6 +423,11 @@ else|else
 name|perror
 argument_list|(
 name|logfile
+argument_list|)
+expr_stmt|;
+name|sigsetmask
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -622,7 +638,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"You hop in the car and turn the key.  There is a perceptible grating noise"
+literal|"You hop in the car and turn the key.  There is a perceptible grating noise,"
 argument_list|)
 expr_stmt|;
 name|puts

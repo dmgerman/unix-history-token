@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com1.c	1.1 %G%"
+literal|"@(#)com1.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,13 +145,13 @@ index|]
 condition|)
 name|puts
 argument_list|(
-literal|"You aren't able to move, you better drop something."
+literal|"You aren't able to move; you better drop something."
 argument_list|)
 expr_stmt|;
 else|else
 name|puts
 argument_list|(
-literal|"You are out of fuel, now we will rot in space forever!"
+literal|"You are out of fuel; now you will rot in space forever!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -192,6 +192,11 @@ name|objs
 modifier|*
 name|p
 decl_stmt|;
+specifier|register
+name|i
+operator|,
+name|j
+expr_stmt|;
 if|if
 condition|(
 name|tothis
@@ -199,9 +204,51 @@ operator|==
 name|TONIGHT
 condition|)
 block|{
-name|location
+for|for
+control|(
+name|i
 operator|=
+literal|1
+init|;
+name|i
+operator|<=
+name|NUMOFROOMS
+condition|;
+name|i
+operator|++
+control|)
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|NUMOFWORDS
+condition|;
+name|j
+operator|++
+control|)
 name|nightfile
+index|[
+name|i
+index|]
+operator|.
+name|objects
+index|[
+name|j
+index|]
+operator|=
+name|dayfile
+index|[
+name|i
+index|]
+operator|.
+name|objects
+index|[
+name|j
+index|]
 expr_stmt|;
 for|for
 control|(
@@ -220,7 +267,7 @@ operator|++
 control|)
 name|setbit
 argument_list|(
-name|location
+name|nightfile
 index|[
 name|p
 operator|->
@@ -234,12 +281,58 @@ operator|->
 name|obj
 argument_list|)
 expr_stmt|;
+name|location
+operator|=
+name|nightfile
+expr_stmt|;
 block|}
 else|else
 block|{
-name|location
+for|for
+control|(
+name|i
 operator|=
+literal|1
+init|;
+name|i
+operator|<=
+name|NUMOFROOMS
+condition|;
+name|i
+operator|++
+control|)
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|NUMOFWORDS
+condition|;
+name|j
+operator|++
+control|)
 name|dayfile
+index|[
+name|i
+index|]
+operator|.
+name|objects
+index|[
+name|j
+index|]
+operator|=
+name|nightfile
+index|[
+name|i
+index|]
+operator|.
+name|objects
+index|[
+name|j
+index|]
 expr_stmt|;
 for|for
 control|(
@@ -258,7 +351,7 @@ operator|++
 control|)
 name|clearbit
 argument_list|(
-name|location
+name|dayfile
 index|[
 name|p
 operator|->
@@ -271,6 +364,10 @@ name|p
 operator|->
 name|obj
 argument_list|)
+expr_stmt|;
+name|location
+operator|=
+name|dayfile
 expr_stmt|;
 block|}
 block|}
@@ -313,7 +410,7 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"frozen void of space and killed..."
+literal|"frozen void of space and killed."
 argument_list|)
 expr_stmt|;
 name|die
@@ -361,7 +458,7 @@ literal|5
 condition|)
 name|puts
 argument_list|(
-literal|"I'm getting tired."
+literal|"You're getting tired."
 argument_list|)
 expr_stmt|;
 if|if
@@ -373,7 +470,10 @@ name|rythmn
 operator|+
 name|CYCLE
 operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|location
 operator|==
 name|nightfile
@@ -404,7 +504,7 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"You awake from a misty dream-world into stark reality"
+literal|"You awake from a misty dream-world into stark reality."
 argument_list|)
 expr_stmt|;
 name|puts
@@ -413,22 +513,8 @@ literal|"It is day."
 argument_list|)
 expr_stmt|;
 block|}
-name|rythmn
-operator|=
-name|time
-expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|time
-operator|>
-operator|(
-name|rythmn
-operator|+
-name|CYCLE
-operator|)
-condition|)
+else|else
 block|{
 name|convert
 argument_list|(
@@ -481,9 +567,14 @@ literal|"The world seems completly different at night."
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|rythmn
 operator|=
 name|time
+operator|-
+name|time
+operator|%
+name|CYCLE
 expr_stmt|;
 block|}
 if|if
@@ -551,7 +642,7 @@ literal|1
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"The three amulets glow and reenforce each other in power.  You are now a wizard."
+literal|"The three amulets glow and reenforce each other in power.\nYou are now a wizard."
 argument_list|)
 expr_stmt|;
 block|}
@@ -905,6 +996,11 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -928,7 +1024,7 @@ literal|1
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"Laser blasts sear the cockpit, but then he veers off."
+literal|"Laser blasts sear the cockpit, and the alien veers off in a victory roll."
 argument_list|)
 expr_stmt|;
 name|puts
@@ -1204,7 +1300,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"You're viper strikes the ground and explodes into firey fragments."
+literal|"Your viper strikes the ground and explodes into firey fragments."
 argument_list|)
 expr_stmt|;
 name|puts
