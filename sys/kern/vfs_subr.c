@@ -7113,11 +7113,6 @@ operator|&
 name|sync_mtx
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"done.\n"
-argument_list|)
-expr_stmt|;
 name|kthread_suspend_check
 argument_list|(
 name|td
@@ -7156,7 +7151,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Syncer syncing, vnodes remaining... "
+literal|"\nSyncer syncing, vnodes remaining..."
 argument_list|)
 expr_stmt|;
 name|first_printf

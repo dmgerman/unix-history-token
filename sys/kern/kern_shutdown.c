@@ -1474,11 +1474,6 @@ comment|/* 5 seconds */
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"done\n"
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Unmount filesystems 			 */
 if|if
 condition|(
@@ -2269,7 +2264,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Waiting (max %d seconds) for system process `%s' to stop...\n"
+literal|"Waiting (max %d seconds) for system process `%s' to stop..."
 argument_list|,
 name|kproc_shutdown_wait
 argument_list|,
@@ -2295,17 +2290,13 @@ name|EWOULDBLOCK
 condition|)
 name|printf
 argument_list|(
-literal|"Stop of '%s' timed out.\n"
-argument_list|,
-name|procname
+literal|"timed out\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Process '%s' stopped.\n"
-argument_list|,
-name|procname
+literal|"done\n"
 argument_list|)
 expr_stmt|;
 block|}
