@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.129 1998/01/20 22:47:35 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.130 1998/01/23 04:36:42 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -843,7 +843,7 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|mes
+name|m
 init|=
 name|NULL
 decl_stmt|;
@@ -853,9 +853,9 @@ name|mode
 operator|&
 name|MODE_DDIAL
 condition|)
-name|mes
+name|m
 operator|=
-literal|"Working in dedicated dial mode."
+literal|"direct dial"
 expr_stmt|;
 elseif|else
 if|if
@@ -864,9 +864,9 @@ name|mode
 operator|&
 name|MODE_BACKGROUND
 condition|)
-name|mes
+name|m
 operator|=
-literal|"Working in background mode."
+literal|"background"
 expr_stmt|;
 elseif|else
 if|if
@@ -875,9 +875,9 @@ name|mode
 operator|&
 name|MODE_AUTO
 condition|)
-name|mes
+name|m
 operator|=
-literal|"Working in auto mode."
+literal|"auto"
 expr_stmt|;
 elseif|else
 if|if
@@ -886,9 +886,9 @@ name|mode
 operator|&
 name|MODE_DIRECT
 condition|)
-name|mes
+name|m
 operator|=
-literal|"Working in direct mode."
+literal|"direct"
 expr_stmt|;
 elseif|else
 if|if
@@ -897,13 +897,24 @@ name|mode
 operator|&
 name|MODE_DEDICATED
 condition|)
-name|mes
+name|m
 operator|=
-literal|"Working in dedicated mode."
+literal|"dedicated"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_INTER
+condition|)
+name|m
+operator|=
+literal|"interactive"
 expr_stmt|;
 if|if
 condition|(
-name|mes
+name|m
 condition|)
 block|{
 if|if
@@ -916,17 +927,16 @@ name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|"%s\n"
+literal|"Working in %s mode\n"
 argument_list|,
-name|mes
+name|m
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 return|return
-literal|1
+name|mode
+operator|&
+name|MODE_INTER
 return|;
 block|}
 end_function
@@ -4688,7 +4698,7 @@ name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|"Enter to terminal mode.\n"
+literal|"Entering terminal mode.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
