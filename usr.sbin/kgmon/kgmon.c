@@ -1956,7 +1956,7 @@ name|errx
 argument_list|(
 literal|6
 argument_list|,
-literal|"read ticks: read %u, got %d: %s"
+literal|"read ticks: read %lu, got %ld: %s"
 argument_list|,
 name|kvp
 operator|->
@@ -1964,6 +1964,9 @@ name|gpm
 operator|.
 name|kcountsize
 argument_list|,
+operator|(
+name|long
+operator|)
 name|i
 argument_list|,
 name|kflag
@@ -2135,7 +2138,7 @@ name|errx
 argument_list|(
 literal|9
 argument_list|,
-literal|"read froms: read %u, got %d: %s"
+literal|"read froms: read %lu, got %ld: %s"
 argument_list|,
 name|kvp
 operator|->
@@ -2143,6 +2146,9 @@ name|gpm
 operator|.
 name|fromssize
 argument_list|,
+operator|(
+name|long
+operator|)
 name|i
 argument_list|,
 name|kflag
@@ -2281,7 +2287,7 @@ name|errx
 argument_list|(
 literal|11
 argument_list|,
-literal|"read tos: read %u, got %d: %s"
+literal|"read tos: read %lu, got %ld: %s"
 argument_list|,
 name|kvp
 operator|->
@@ -2289,6 +2295,9 @@ name|gpm
 operator|.
 name|tossize
 argument_list|,
+operator|(
+name|long
+operator|)
 name|i
 argument_list|,
 name|kflag
@@ -2312,8 +2321,12 @@ name|debug
 condition|)
 name|warnx
 argument_list|(
-literal|"lowpc 0x%x, textsize 0x%x"
+literal|"lowpc 0x%lx, textsize 0x%lx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|kvp
 operator|->
 name|gpm
@@ -2421,7 +2434,8 @@ name|debug
 condition|)
 name|warnx
 argument_list|(
-literal|"[mcleanup] frompc 0x%x selfpc 0x%x count %d"
+literal|"[mcleanup] frompc 0x%lx selfpc 0x%lx "
+literal|"count %ld"
 argument_list|,
 name|frompc
 argument_list|,
