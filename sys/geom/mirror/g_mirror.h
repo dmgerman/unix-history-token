@@ -195,13 +195,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|G_MIRROR_SYNC_BLOCK_SIZE
-value|131072
-end_define
-
-begin_define
-define|#
-directive|define
 name|G_MIRROR_BIO_FLAG_REGULAR
 value|0x01
 end_define
