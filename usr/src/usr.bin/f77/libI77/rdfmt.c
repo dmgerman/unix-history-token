@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.11";  *  * formatted read routines  */
+comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.12";  *  * formatted read routines  */
 end_comment
 
 begin_include
@@ -826,6 +826,10 @@ name|v
 init|=
 operator|-
 literal|1
+decl_stmt|,
+name|period
+init|=
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -903,9 +907,49 @@ if|if
 condition|(
 name|ch
 operator|==
+literal|'.'
+operator|&&
+operator|!
+name|period
+condition|)
+name|period
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ch
+operator|==
+literal|' '
+operator|||
+name|ch
+operator|==
+literal|'\t'
+condition|)
+empty_stmt|;
+elseif|else
+if|if
+condition|(
+name|ch
+operator|==
 literal|','
 condition|)
 break|break;
+elseif|else
+if|if
+condition|(
+name|v
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|errno
+operator|=
+name|F_ERLOGIF
+operator|)
+return|;
 block|}
 if|if
 condition|(
