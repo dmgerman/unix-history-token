@@ -1128,7 +1128,7 @@ name|vfs_badlock_panic
 condition|)
 name|Debugger
 argument_list|(
-literal|"Lock violation.\n"
+literal|"Lock violation."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1633,7 +1633,7 @@ name|vfs_badlock_panic
 condition|)
 name|Debugger
 argument_list|(
-literal|"Lock violation.\n"
+literal|"Lock violation."
 argument_list|)
 expr_stmt|;
 block|}
