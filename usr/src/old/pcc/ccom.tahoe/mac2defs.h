@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mac2defs.h	1.2	86/02/04	*/
+comment|/*	mac2defs.h	1.3	86/07/27	*/
 end_comment
 
 begin_comment
@@ -278,20 +278,6 @@ begin_comment
 comment|/*  * Some short routines that get called an awful lot are actually macros.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FORT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SPRECC
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -301,26 +287,6 @@ name|t
 parameter_list|)
 value|((t) == DOUBLE ? 2 : 1)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|szty
-parameter_list|(
-name|t
-parameter_list|)
-value|(((t) == DOUBLE || (t) == FLOAT) ? 2 : 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
