@@ -1856,7 +1856,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"FreeBSD/SMP: Multiprocessor motherboard\n"
+literal|"FreeBSD/SMP: Multiprocessor motherboard: %d CPUs\n"
+argument_list|,
+name|mp_ncpus
 argument_list|)
 expr_stmt|;
 name|printf
