@@ -623,6 +623,12 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
+if|if
+condition|(
+name|vfsname
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|vfsname
@@ -630,6 +636,12 @@ argument_list|,
 name|M_MOUNT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|path
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|path
