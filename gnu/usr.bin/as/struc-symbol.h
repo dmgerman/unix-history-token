@@ -1,52 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* struct_symbol.h - Internal symbol structure    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* struct_symbol.h - Internal symbol structure    Copyright (C) 1987, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        oYou should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+end_comment
+
+begin_comment
+comment|/*  * $Id: struc-symbol.h,v 1.4 1993/10/02 20:57:53 pk Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VMS
+name|__struc_symbol_h__
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|"a.out.gnu.h"
-end_include
-
-begin_comment
-comment|/* Needed to define struct nlist. Sigh. */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"a_out.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|__struc_symbol_h__
+end_define
 
 begin_struct
 struct|struct
 name|symbol
 comment|/* our version of an nlist node */
 block|{
-name|struct
-name|nlist
-name|sy_nlist
+name|obj_symbol_type
+name|sy_symbol
 decl_stmt|;
 comment|/* what we write in .o file (if permitted) */
-name|long
 name|unsigned
+name|long
 name|sy_name_offset
 decl_stmt|;
 comment|/* 4-origin position of sy_name in symbols */
@@ -54,7 +37,6 @@ comment|/* part of object file. */
 comment|/* 0 for (nameless) .stabd symbols. */
 comment|/* Not used until write_object_file() time. */
 name|long
-name|int
 name|sy_number
 decl_stmt|;
 comment|/* 24 bit symbol number. */
@@ -66,6 +48,18 @@ modifier|*
 name|sy_next
 decl_stmt|;
 comment|/* forward chain, or NULL */
+ifdef|#
+directive|ifdef
+name|SYMBOLS_NEED_BACKPOINTERS
+name|struct
+name|symbol
+modifier|*
+name|sy_previous
+decl_stmt|;
+comment|/* backward chain, or NULL */
+endif|#
+directive|endif
+comment|/* SYMBOLS_NEED_BACKPOINTERS */
 name|struct
 name|frag
 modifier|*
@@ -78,6 +72,20 @@ modifier|*
 name|sy_forward
 decl_stmt|;
 comment|/* value is really that of this other symbol */
+comment|/* We will probably want to add a sy_segment here soon. */
+ifdef|#
+directive|ifdef
+name|PIC
+comment|/* Force symbol into symbol table, even if local */
+name|int
+name|sy_forceout
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* Size of symbol as given by the .size directive */
+name|int
+name|sy_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -90,56 +98,33 @@ name|symbolS
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|sy_name
-value|sy_nlist .n_un. n_name
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PIC
+end_ifdef
+
+begin_decl_stmt
+name|symbolS
+modifier|*
+name|GOT_symbol
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* Name field always points to a string. */
+comment|/* Pre-defined "__GLOBAL_OFFSET_TABLE" */
 end_comment
 
-begin_comment
-comment|/* 0 means .stabd-like anonymous symbol. */
-end_comment
+begin_decl_stmt
+name|int
+name|got_referenced
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|sy_type
-value|sy_nlist.	n_type
-end_define
-
-begin_define
-define|#
-directive|define
-name|sy_other
-value|sy_nlist.	n_other
-end_define
-
-begin_define
-define|#
-directive|define
-name|sy_desc
-value|sy_nlist.	n_desc
-end_define
-
-begin_define
-define|#
-directive|define
-name|sy_value
-value|sy_nlist.	n_value
-end_define
-
-begin_comment
-comment|/* Value of symbol is this value + object */
-end_comment
-
-begin_comment
-comment|/* file address of sy_frag. */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -150,10 +135,6 @@ end_typedef
 
 begin_comment
 comment|/* The type of n_value. Helps casting. */
-end_comment
-
-begin_comment
-comment|/* end: struct_symbol.h */
 end_comment
 
 begin_ifndef
@@ -230,6 +211,299 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ndef WORKING_DOT_WORD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGMENT_TO_SYMBOL_TYPE
+parameter_list|(
+name|seg
+parameter_list|)
+value|(seg_N_TYPE[(int) (seg)])
+end_define
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|short
+name|seg_N_TYPE
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* subseg.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_REGISTER
+value|30
+end_define
+
+begin_comment
+comment|/* Fake N_TYPE value for SEG_REGISTER */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYMBOLS_NEED_BACKPOINTERS
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+operator|==
+literal|1
+end_if
+
+begin_function_decl
+name|void
+name|symbol_clear_list_pointers
+parameter_list|(
+name|symbolS
+modifier|*
+name|symbolP
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|symbol_insert
+parameter_list|(
+name|symbolS
+modifier|*
+name|addme
+parameter_list|,
+name|symbolS
+modifier|*
+name|target
+parameter_list|,
+name|symbolS
+modifier|*
+modifier|*
+name|rootP
+parameter_list|,
+name|symbolS
+modifier|*
+modifier|*
+name|lastP
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|symbol_remove
+parameter_list|(
+name|symbolS
+modifier|*
+name|symbolP
+parameter_list|,
+name|symbolS
+modifier|*
+modifier|*
+name|rootP
+parameter_list|,
+name|symbolS
+modifier|*
+modifier|*
+name|lastP
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|verify_symbol_chain
+parameter_list|(
+name|symbolS
+modifier|*
+name|rootP
+parameter_list|,
+name|symbolS
+modifier|*
+name|lastP
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not __STDC__ */
+end_comment
+
+begin_function_decl
+name|void
+name|symbol_clear_list_pointers
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|symbol_insert
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|symbol_remove
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|verify_symbol_chain
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __STDC__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|symbol_previous
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->sy_previous)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SYMBOLS_NEED_BACKPOINTERS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|symbol_clear_list_pointers
+parameter_list|(
+name|clearme
+parameter_list|)
+value|{clearme->sy_next = NULL;}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYMBOLS_NEED_BACKPOINTERS */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+operator|==
+literal|1
+end_if
+
+begin_function_decl
+name|void
+name|symbol_append
+parameter_list|(
+name|symbolS
+modifier|*
+name|addme
+parameter_list|,
+name|symbolS
+modifier|*
+name|target
+parameter_list|,
+name|symbolS
+modifier|*
+modifier|*
+name|rootP
+parameter_list|,
+name|symbolS
+modifier|*
+modifier|*
+name|lastP
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not __STDC__ */
+end_comment
+
+begin_function_decl
+name|void
+name|symbol_append
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __STDC__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|symbol_next
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->sy_next)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __struc_symbol_h__ */
+end_comment
+
+begin_comment
+comment|/*  * Local Variables:  * comment-column: 0  * fill-column: 131  * End:  */
+end_comment
+
+begin_comment
+comment|/* end of struc-symbol.h */
+end_comment
 
 end_unit
 

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* expr.h -> header file for expr.c    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* expr.h -> header file for expr.c    Copyright (C) 1987, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+end_comment
+
+begin_comment
+comment|/*  * $Id: expr.h,v 1.3 1993/10/02 20:57:27 pk Exp $  */
 end_comment
 
 begin_comment
@@ -25,8 +29,12 @@ modifier|*
 name|X_subtract_symbol
 decl_stmt|;
 comment|/* bar */
+name|symbolS
+modifier|*
+name|X_got_symbol
+decl_stmt|;
+comment|/* got */
 name|long
-name|int
 name|X_add_number
 decl_stmt|;
 comment|/* 42.    Must be signed. */
@@ -103,12 +111,62 @@ begin_comment
 comment|/* Number of littlenums in above. */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|char
+name|operator_rankT
+typedef|;
+end_typedef
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+operator|==
+literal|1
+end_if
+
+begin_function_decl
+name|char
+name|get_symbol_end
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|segT
 name|expr
-parameter_list|()
+parameter_list|(
+name|int
+name|rank
+parameter_list|,
+name|expressionS
+modifier|*
+name|resultP
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|get_single_number
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not __STDC__ */
+end_comment
 
 begin_function_decl
 name|char
@@ -117,8 +175,32 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|segT
+name|expr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|get_single_number
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* end: expr.h */
+comment|/* not __STDC__ */
+end_comment
+
+begin_comment
+comment|/* end of expr.h */
 end_comment
 
 end_unit

@@ -1,16 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* expr.c -operands, expressions-    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* expr.c -operands, expressions-    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_comment
 comment|/*  * This is really a branch office of as-read.c. I split it out to clearly  * distinguish the world of expressions from the world of statements.  * (It also gives smaller files to re-compile.)  * Here, "operand"s are of expressions, not instructions.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: expr.c,v 1.3 1993/10/02 20:57:26 pk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -22,38 +49,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"flonum.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"read.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"struc-symbol.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"expr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"obstack.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"symbols.h"
-end_include
+begin_if
+if|#
+directive|if
+name|__STDC__
+operator|==
+literal|1
+end_if
+
+begin_function_decl
+specifier|static
+name|void
+name|clean_up_expression
+parameter_list|(
+name|expressionS
+modifier|*
+name|expressionP
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -65,6 +91,15 @@ end_function_decl
 
 begin_comment
 comment|/* Internal. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __STDC__ */
 end_comment
 
 begin_decl_stmt
@@ -92,7 +127,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SUN_ASM_SYNTAX
+name|LOCAL_LABELS_DOLLAR
 end_ifdef
 
 begin_decl_stmt
@@ -113,11 +148,15 @@ comment|/*  * Build any floating-point literal here.  * Also build any bignum li
 end_comment
 
 begin_comment
-comment|/* LITTLENUM_TYPE	generic_buffer [6];	/* JF this is a hack */
+comment|/* LITTLENUM_TYPE	generic_buffer[6]; */
 end_comment
 
 begin_comment
-comment|/* Seems atof_machine can backscan through generic_bignum and hit whatever    happens to be loaded before it in memory.  And its way too complicated    for me to fix right.  Thus a hack.  JF:  Just make generic_bignum bigger,    and never write into the early words, thus they'll always be zero.    I hate Dean's floating-point code.  Bleh.  */
+comment|/* JF this is a hack */
+end_comment
+
+begin_comment
+comment|/* Seems atof_machine can backscan through generic_bignum and hit whatever    happens to be loaded before it in memory.  And its way too complicated    for me to fix right.  Thus a hack.  JF:  Just make generic_bignum bigger,    and never write into the early words, thus they'll always be zero.    I hate Dean's floating-point code.  Bleh.    */
 end_comment
 
 begin_decl_stmt
@@ -180,7 +219,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Summary of operand().  *  * in:	Input_line_pointer points to 1st char of operand, which may  *	be a space.  *  * out:	A expressionS. X_seg determines how to understand the rest of the  *	expressionS.  *	The operand may have been empty: in this case X_seg == SEG_NONE.  *	Input_line_pointer -> (next non-blank) char after operand.  *  */
+comment|/*  * Summary of operand().  *  * in:	Input_line_pointer points to 1st char of operand, which may  *	be a space.  *  * out:	A expressionS. X_seg determines how to understand the rest of the  *	expressionS.  *	The operand may have been empty: in this case X_seg == SEG_ABSENT.  *	Input_line_pointer->(next non-blank) char after operand.  *  */
 end_comment
 
 begin_escape
@@ -210,23 +249,30 @@ name|name
 decl_stmt|;
 comment|/* points to name of symbol */
 specifier|register
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
 comment|/* Points to symbol */
 specifier|extern
+specifier|const
 name|char
 name|hex_value
 index|[]
 decl_stmt|;
 comment|/* In hex_value.c */
-name|char
-modifier|*
-name|local_label_name
-parameter_list|()
-function_decl|;
+ifdef|#
+directive|ifdef
+name|PIC
+comment|/* XXX */
+name|expressionP
+operator|->
+name|X_got_symbol
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
@@ -237,13 +283,26 @@ operator|*
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* Input_line_pointer -> past char in c. */
+comment|/* Input_line_pointer->past char in c. */
 if|if
 condition|(
 name|isdigit
 argument_list|(
 name|c
 argument_list|)
+operator|||
+operator|(
+name|c
+operator|==
+literal|'H'
+operator|&&
+name|input_line_pointer
+index|[
+literal|0
+index|]
+operator|==
+literal|'\''
+operator|)
 condition|)
 block|{
 specifier|register
@@ -264,18 +323,22 @@ name|short
 name|int
 name|radix
 decl_stmt|;
-comment|/* 8, 10 or 16 */
+comment|/* 2, 8, 10 or 16 */
 comment|/* 0 means we saw start of a floating- */
 comment|/* point constant. */
 specifier|register
 name|short
 name|int
 name|maxdig
+init|=
+literal|0
 decl_stmt|;
 comment|/* Highest permitted digit value. */
 specifier|register
 name|int
 name|too_many_digits
+init|=
+literal|0
 decl_stmt|;
 comment|/* If we see>= this number of */
 comment|/* digits, assume it is a bignum. */
@@ -284,13 +347,17 @@ name|char
 modifier|*
 name|digit_2
 decl_stmt|;
-comment|/* -> 2nd digit of number. */
+comment|/*->2nd digit of number. */
 name|int
 name|small
 decl_stmt|;
 comment|/* TRUE if fits in 32 bits. */
 if|if
 condition|(
+name|c
+operator|==
+literal|'H'
+operator|||
 name|c
 operator|==
 literal|'0'
@@ -312,6 +379,10 @@ operator|||
 name|c
 operator|==
 literal|'X'
+operator|||
+name|c
+operator|==
+literal|'\''
 condition|)
 block|{
 name|c
@@ -320,7 +391,7 @@ operator|*
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* read past "0x" or "0X" */
+comment|/* read past "0x" or "0X" or H' */
 name|maxdig
 operator|=
 name|radix
@@ -334,12 +405,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If it says '0f' and the line ends or it DOESN'T look like 	         a floating point #, its a local label ref.  DTRT */
+comment|/* If it says '0f' and the line ends or it DOESN'T look like 		   a floating point #, its a local label ref.  DTRT */
+comment|/* likewise for the b's.  xoxorich. */
 if|if
 condition|(
+operator|(
 name|c
 operator|==
 literal|'f'
+operator|||
+name|c
+operator|==
+literal|'b'
+operator|||
+name|c
+operator|==
+literal|'B'
+operator|)
 operator|&&
 operator|(
 operator|!
@@ -348,7 +430,7 @@ name|input_line_pointer
 operator|||
 operator|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 literal|"+-.0123456789"
 argument_list|,
@@ -357,7 +439,7 @@ name|input_line_pointer
 argument_list|)
 operator|&&
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|EXP_CHARS
 argument_list|,
@@ -391,8 +473,37 @@ elseif|else
 if|if
 condition|(
 name|c
+operator|==
+literal|'b'
+operator|||
+name|c
+operator|==
+literal|'B'
+condition|)
+block|{
+name|c
+operator|=
+operator|*
+name|input_line_pointer
+operator|++
+expr_stmt|;
+name|maxdig
+operator|=
+name|radix
+operator|=
+literal|2
+expr_stmt|;
+name|too_many_digits
+operator|=
+literal|33
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|c
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|FLT_CHARS
 argument_list|,
@@ -405,7 +516,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Start of floating-point constant. */
-comment|/* input_line_pointer -> 1st char of number. */
+comment|/* input_line_pointer->1st char of number. */
 name|expressionP
 operator|->
 name|X_add_number
@@ -431,20 +542,17 @@ block|{
 comment|/* By elimination, assume octal radix. */
 name|radix
 operator|=
-literal|8
-expr_stmt|;
 name|maxdig
 operator|=
-literal|10
+literal|8
 expr_stmt|;
-comment|/* Un*x sux. Compatibility. */
 name|too_many_digits
 operator|=
 literal|11
 expr_stmt|;
 block|}
 block|}
-comment|/* c == char after "0" or "0x" or "0X" or "0e" etc.*/
+comment|/* c == char after "0" or "0x" or "0X" or "0e" etc. */
 block|}
 else|else
 block|{
@@ -459,6 +567,7 @@ operator|=
 literal|11
 expr_stmt|;
 block|}
+comment|/* if operand starts with a zero */
 if|if
 condition|(
 name|radix
@@ -466,7 +575,7 @@ condition|)
 block|{
 comment|/* Fixed-point integer constant. */
 comment|/* May be bignum, or may fit in 32 bits. */
-comment|/*  * Most numbers fit into 32 bits, and we want this case to be fast.  * So we pretend it will fit into 32 bits. If, after making up a 32  * bit number, we realise that we have scanned more digits than  * comfortably fit into 32 bits, we re-scan the digits coding  * them into a bignum. For decimal and octal numbers we are conservative: some  * numbers may be assumed bignums when in fact they do fit into 32 bits.  * Numbers of any radix can have excess leading zeros: we strive  * to recognise this and cast them back into 32 bits.  * We must check that the bignum really is more than 32  * bits, and change it back to a 32-bit number if it fits.  * The number we are looking for is expected to be positive, but  * if it fits into 32 bits as an unsigned number, we let it be a 32-bit  * number. The cavalier approach is for speed in ordinary cases.  */
+comment|/* 	     * Most numbers fit into 32 bits, and we want this case to be fast. 	     * So we pretend it will fit into 32 bits. If, after making up a 32 	     * bit number, we realise that we have scanned more digits than 	     * comfortably fit into 32 bits, we re-scan the digits coding 	     * them into a bignum. For decimal and octal numbers we are conservative: some 	     * numbers may be assumed bignums when in fact they do fit into 32 bits. 	     * Numbers of any radix can have excess leading zeros: we strive 	     * to recognise this and cast them back into 32 bits. 	     * We must check that the bignum really is more than 32 	     * bits, and change it back to a 32-bit number if it fits. 	     * The number we are looking for is expected to be positive, but 	     * if it fits into 32 bits as an unsigned number, we let it be a 32-bit 	     * number. The cavalier approach is for speed in ordinary cases. 	     */
 name|digit_2
 operator|=
 name|input_line_pointer
@@ -505,7 +614,7 @@ name|digit
 expr_stmt|;
 block|}
 comment|/* C contains character after number. */
-comment|/* Input_line_pointer -> char after C. */
+comment|/* Input_line_pointer->char after C. */
 name|small
 operator|=
 name|input_line_pointer
@@ -520,19 +629,18 @@ operator|!
 name|small
 condition|)
 block|{
-comment|/* 	       * We saw a lot of digits. Manufacture a bignum the hard way. 	       */
+comment|/* 		 * We saw a lot of digits. Manufacture a bignum the hard way. 		 */
 name|LITTLENUM_TYPE
 modifier|*
 name|leader
 decl_stmt|;
-comment|/* -> high order littlenum of the bignum. */
+comment|/*->high order littlenum of the bignum. */
 name|LITTLENUM_TYPE
 modifier|*
 name|pointer
 decl_stmt|;
-comment|/* -> littlenum we are frobbing now. */
+comment|/*->littlenum we are frobbing now. */
 name|long
-name|int
 name|carry
 decl_stmt|;
 name|leader
@@ -559,7 +667,7 @@ operator|=
 operator|--
 name|digit_2
 expr_stmt|;
-comment|/* -> 1st digit. */
+comment|/*->1st digit. */
 name|c
 operator|=
 operator|*
@@ -602,7 +710,6 @@ operator|++
 control|)
 block|{
 name|long
-name|int
 name|work
 decl_stmt|;
 name|work
@@ -655,10 +762,15 @@ block|}
 block|}
 block|}
 comment|/* Again, C is char after number, */
-comment|/* input_line_pointer -> after C. */
+comment|/* input_line_pointer->after C. */
 name|know
 argument_list|(
-name|BITS_PER_INT
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|*
+literal|8
 operator|==
 literal|32
 argument_list|)
@@ -707,7 +819,7 @@ operator|)
 expr_stmt|;
 name|small
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -728,7 +840,7 @@ condition|(
 name|small
 condition|)
 block|{
-comment|/* 	       * Here with number, in correct radix. c is the next char. 	       * Note that unlike Un*x, we allow "011f" "0x9f" to 	       * both mean the same as the (conventional) "9f". This is simply easier 	       * than checking for strict canonical form. Syntax sux! 	       */
+comment|/* 		 * Here with number, in correct radix. c is the next char. 		 * Note that unlike Un*x, we allow "011f" "0x9f" to 		 * both mean the same as the (conventional) "9f". This is simply easier 		 * than checking for strict canonical form. Syntax sux! 		 */
 if|if
 condition|(
 name|number
@@ -736,14 +848,21 @@ operator|<
 literal|10
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SUN_ASM_SYNTAX
 if|if
 condition|(
+literal|0
+ifdef|#
+directive|ifdef
+name|LOCAL_LABELS_FB
+operator|||
 name|c
 operator|==
 literal|'b'
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LOCAL_LABELS_DOLLAR
 operator|||
 operator|(
 name|c
@@ -755,20 +874,12 @@ index|[
 name|number
 index|]
 operator|)
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|c
-operator|==
-literal|'b'
-condition|)
 endif|#
 directive|endif
+condition|)
 block|{
-comment|/* 		       * Backward ref to local label. 		       * Because it is backward, expect it to be DEFINED. 		       */
-comment|/* 		       * Construct a local label. 		       */
+comment|/* 			 * Backward ref to local label. 			 * Because it is backward, expect it to be DEFINED. 			 */
+comment|/* 			 * Construct a local label. 			 */
 name|name
 operator|=
 name|local_label_name
@@ -784,50 +895,39 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|symbolP
 operator|=
-name|symbol_table_lookup
+name|symbol_find
 argument_list|(
 name|name
 argument_list|)
 operator|)
+operator|!=
+name|NULL
+operator|)
 comment|/* seen before */
 operator|&&
 operator|(
+name|S_IS_DEFINED
+argument_list|(
 name|symbolP
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
+argument_list|)
 operator|)
-operator|!=
-name|N_UNDF
-comment|/* symbol is defined: OK */
 condition|)
+comment|/* symbol is defined: OK */
 block|{
 comment|/* Expected path: symbol defined. */
 comment|/* Local labels are never absolute. Don't waste time checking absoluteness. */
 name|know
 argument_list|(
-operator|(
+name|SEG_NORMAL
+argument_list|(
+name|S_GET_SEGMENT
+argument_list|(
 name|symbolP
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
-operator|==
-name|N_DATA
-operator|||
-operator|(
-name|symbolP
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
-operator|==
-name|N_TEXT
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|expressionP
@@ -846,18 +946,16 @@ name|expressionP
 operator|->
 name|X_seg
 operator|=
-name|N_TYPE_seg
-index|[
+name|S_GET_SEGMENT
+argument_list|(
 name|symbolP
-operator|->
-name|sy_type
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* Either not seen or not defined. */
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Backw. ref to unknown label \"%d:\", 0 assumed."
 argument_list|,
@@ -880,14 +978,21 @@ block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|SUN_ASM_SYNTAX
 if|if
 condition|(
+literal|0
+ifdef|#
+directive|ifdef
+name|LOCAL_LABELS_FB
+operator|||
 name|c
 operator|==
 literal|'f'
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LOCAL_LABELS_DOLLAR
 operator|||
 operator|(
 name|c
@@ -900,19 +1005,11 @@ index|[
 name|number
 index|]
 operator|)
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|c
-operator|==
-literal|'f'
-condition|)
 endif|#
 directive|endif
+condition|)
 block|{
-comment|/* 			   * Forward reference. Expect symbol to be undefined or 			   * unknown. Undefined: seen it before. Unknown: never seen 			   * it in this pass. 			   * Construct a local label name, then an undefined symbol. 			   * Don't create a XSEG frag for it: caller may do that. 			   * Just return it as never seen before. 			   */
+comment|/* 			     * Forward reference. Expect symbol to be undefined or 			     * unknown. Undefined: seen it before. Unknown: never seen 			     * it in this pass. 			     * Construct a local label name, then an undefined symbol. 			     * Don't create a XSEG frag for it: caller may do that. 			     * Just return it as never seen before. 			     */
 name|name
 operator|=
 name|local_label_name
@@ -925,77 +1022,44 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|symbolP
 operator|=
-name|symbol_table_lookup
+name|symbol_find_or_make
 argument_list|(
 name|name
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
 comment|/* We have no need to check symbol properties. */
+ifndef|#
+directive|ifndef
+name|MANY_SEGMENTS
+comment|/* Since "know" puts its arg into a "string", we 			       can't have newlines in the argument.  */
 name|know
 argument_list|(
-operator|(
-name|symbolP
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
-operator|==
-name|N_UNDF
-operator|||
-operator|(
-name|symbolP
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
-operator|==
-name|N_DATA
-operator|||
-operator|(
-name|symbolP
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
-operator|==
-name|N_TEXT
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|symbolP
-operator|=
-name|symbol_new
-argument_list|(
-name|name
-argument_list|,
-name|N_UNDF
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|zero_address_frag
-argument_list|)
-expr_stmt|;
-name|symbol_table_insert
+name|S_GET_SEGMENT
 argument_list|(
 name|symbolP
 argument_list|)
+operator|==
+name|SEG_UNKNOWN
+operator|||
+name|S_GET_SEGMENT
+argument_list|(
+name|symbolP
+argument_list|)
+operator|==
+name|SEG_TEXT
+operator|||
+name|S_GET_SEGMENT
+argument_list|(
+name|symbolP
+argument_list|)
+operator|==
+name|SEG_DATA
+argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 name|expressionP
 operator|->
 name|X_add_symbol
@@ -1041,9 +1105,9 @@ operator|--
 expr_stmt|;
 comment|/* Restore following character. */
 block|}
-comment|/* if (c=='f') */
+comment|/* if (c == 'f') */
 block|}
-comment|/* if (c=='b') */
+comment|/* if (c == 'b') */
 block|}
 else|else
 block|{
@@ -1084,14 +1148,14 @@ expr_stmt|;
 name|input_line_pointer
 operator|--
 expr_stmt|;
-comment|/* -> char following number. */
+comment|/*->char following number. */
 block|}
 comment|/* if (small) */
 block|}
 comment|/* (If integer constant) */
 else|else
 block|{
-comment|/* input_line_pointer -> */
+comment|/* input_line_pointer->*/
 comment|/* floating-point constant. */
 name|int
 name|error_code
@@ -1123,7 +1187,7 @@ operator|==
 name|ERROR_EXPONENT_OVERFLOW
 condition|)
 block|{
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Bad floating-point constant: exponent overflow, probably assembling junk"
 argument_list|)
@@ -1131,7 +1195,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Bad floating-point constant: unknown error code=%d."
 argument_list|,
@@ -1146,7 +1210,7 @@ name|X_seg
 operator|=
 name|SEG_BIG
 expr_stmt|;
-comment|/* input_line_pointer -> just after constant, */
+comment|/* input_line_pointer->just after constant, */
 comment|/* which may point to whitespace. */
 name|know
 argument_list|(
@@ -1181,30 +1245,14 @@ name|struct
 name|obstack
 name|frags
 decl_stmt|;
-comment|/*        JF:  '.' is pseudo symbol with value of current location in current        segment. . .      */
+comment|/* 	  JF:  '.' is pseudo symbol with value of current location in current 	  segment... 	  */
 name|symbolP
 operator|=
 name|symbol_new
 argument_list|(
-literal|"L0\001"
+literal|"\001L0"
 argument_list|,
-call|(
-name|unsigned
-name|char
-call|)
-argument_list|(
-name|seg_N_TYPE
-index|[
-operator|(
-name|int
-operator|)
 name|now_seg
-index|]
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 call|(
 name|valueT
@@ -1251,13 +1299,14 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
-comment|/* here if did not begin with a digit */
 block|{
-comment|/*        * Identifier begins here.        * This is kludged for speed, so code is repeated.        */
+comment|/* here if did not begin with a digit */
+comment|/* 	     * Identifier begins here. 	     * This is kludged for speed, so code is repeated. 	     */
 name|name
 operator|=
-operator|--
 name|input_line_pointer
+operator|-
+literal|1
 expr_stmt|;
 name|c
 operator|=
@@ -1266,113 +1315,80 @@ argument_list|()
 expr_stmt|;
 name|symbolP
 operator|=
-name|symbol_table_lookup
+name|symbol_find_or_make
 argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|symbolP
-condition|)
-block|{
-comment|/*            * If we have an absolute symbol, then we know it's value now.            */
-specifier|register
-name|segT
-name|seg
-decl_stmt|;
-name|seg
-operator|=
-name|N_TYPE_seg
-index|[
-operator|(
-name|int
-operator|)
-name|symbolP
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-index|]
-expr_stmt|;
-if|if
-condition|(
-operator|(
+comment|/* 	     * If we have an absolute symbol or a reg, then we know its value now. 	     */
 name|expressionP
 operator|->
 name|X_seg
 operator|=
-name|seg
-operator|)
-operator|==
+name|S_GET_SEGMENT
+argument_list|(
+name|symbolP
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|expressionP
+operator|->
+name|X_seg
+condition|)
+block|{
+case|case
 name|SEG_ABSOLUTE
+case|:
+case|case
+name|SEG_REGISTER
+case|:
+name|expressionP
+operator|->
+name|X_add_number
+operator|=
+name|S_GET_VALUE
+argument_list|(
+name|symbolP
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|expressionP
+operator|->
+name|X_add_number
+operator|=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PIC
+if|if
+condition|(
+name|symbolP
+operator|==
+name|GOT_symbol
 condition|)
 block|{
 name|expressionP
 operator|->
-name|X_add_number
+name|X_got_symbol
 operator|=
 name|symbolP
-operator|->
-name|sy_value
+expr_stmt|;
+name|got_referenced
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
-block|{
-name|expressionP
-operator|->
-name|X_add_number
-operator|=
-literal|0
-expr_stmt|;
+endif|#
+directive|endif
 name|expressionP
 operator|->
 name|X_add_symbol
 operator|=
 name|symbolP
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|expressionP
-operator|->
-name|X_add_symbol
-operator|=
-name|symbolP
-operator|=
-name|symbol_new
-argument_list|(
-name|name
-argument_list|,
-name|N_UNDF
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|zero_address_frag
-argument_list|)
-expr_stmt|;
-name|expressionP
-operator|->
-name|X_add_number
-operator|=
-literal|0
-expr_stmt|;
-name|expressionP
-operator|->
-name|X_seg
-operator|=
-name|SEG_UNKNOWN
-expr_stmt|;
-name|symbol_table_insert
-argument_list|(
-name|symbolP
-argument_list|)
 expr_stmt|;
 block|}
 operator|*
@@ -1393,9 +1409,13 @@ condition|(
 name|c
 operator|==
 literal|'('
+operator|||
+name|c
+operator|==
+literal|'['
 condition|)
-comment|/* didn't begin with digit& not a name */
 block|{
+comment|/* didn't begin with digit& not a name */
 operator|(
 name|void
 operator|)
@@ -1407,14 +1427,28 @@ expr_stmt|;
 comment|/* Expression() will pass trailing whitespace */
 if|if
 condition|(
+name|c
+operator|==
+literal|'('
+operator|&&
 operator|*
 name|input_line_pointer
 operator|++
 operator|!=
 literal|')'
+operator|||
+name|c
+operator|==
+literal|'['
+operator|&&
+operator|*
+name|input_line_pointer
+operator|++
+operator|!=
+literal|']'
 condition|)
 block|{
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Missing ')' assumed"
 argument_list|)
@@ -1423,7 +1457,7 @@ name|input_line_pointer
 operator|--
 expr_stmt|;
 block|}
-comment|/* here with input_line_pointer -> char after "(...)" */
+comment|/* here with input_line_pointer->char after "(...)" */
 block|}
 elseif|else
 if|if
@@ -1435,6 +1469,10 @@ operator|||
 name|c
 operator|==
 literal|'-'
+operator|||
+name|c
+operator|==
+literal|'+'
 condition|)
 block|{
 comment|/* unary operator: hope for SEG_ABSOLUTE */
@@ -1449,7 +1487,7 @@ block|{
 case|case
 name|SEG_ABSOLUTE
 case|:
-comment|/* input_line_pointer -> char after operand */
+comment|/* input_line_pointer->char after operand */
 if|if
 condition|(
 name|c
@@ -1466,9 +1504,15 @@ name|expressionP
 operator|->
 name|X_add_number
 expr_stmt|;
-comment|/*  * Notice: '-' may  overflow: no warning is given. This is compatible  * with other people's assemblers. Sigh.  */
+comment|/* 		 * Notice: '-' may  overflow: no warning is given. This is compatible 		 * with other people's assemblers. Sigh. 		 */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'~'
+condition|)
 block|{
 name|expressionP
 operator|->
@@ -1480,16 +1524,46 @@ operator|->
 name|X_add_number
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|!=
+literal|'+'
+condition|)
+block|{
+name|know
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* switch on unary operator */
 break|break;
-case|case
-name|SEG_TEXT
-case|:
-case|case
-name|SEG_DATA
-case|:
-case|case
-name|SEG_BSS
-case|:
+default|default:
+comment|/* unary on non-absolute is unsuported */
+if|if
+condition|(
+operator|!
+name|SEG_NORMAL
+argument_list|(
+name|operand
+argument_list|(
+name|expressionP
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|as_bad
+argument_list|(
+literal|"Unary operator %c ignored because bad operand follows"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* Fall through for normal segments ****/
 case|case
 name|SEG_PASS1
 case|:
@@ -1526,16 +1600,6 @@ name|SEG_DIFFERENCE
 expr_stmt|;
 break|break;
 block|}
-default|default:
-comment|/* unary on non-absolute is unsuported */
-name|as_warn
-argument_list|(
-literal|"Unary operator %c ignored because bad operand follows"
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-break|break;
 comment|/* Expression undisturbed from operand(). */
 block|}
 block|}
@@ -1547,7 +1611,7 @@ operator|==
 literal|'\''
 condition|)
 block|{
-comment|/*  * Warning: to conform to other people's assemblers NO ESCAPEMENT is permitted  * for a single quote. The next character, parity errors and all, is taken  * as the value of the operand. VERY KINKY.  */
+comment|/* 	 * Warning: to conform to other people's assemblers NO ESCAPEMENT is permitted 	 * for a single quote. The next character, parity errors and all, is taken 	 * as the value of the operand. VERY KINKY. 	 */
 name|expressionP
 operator|->
 name|X_add_number
@@ -1570,13 +1634,18 @@ name|expressionP
 operator|->
 name|X_seg
 operator|=
-name|SEG_NONE
+name|SEG_ABSENT
 expr_stmt|;
 name|input_line_pointer
 operator|--
 expr_stmt|;
+name|md_operand
+argument_list|(
+name|expressionP
+argument_list|)
+expr_stmt|;
 block|}
-comment|/*  * It is more 'efficient' to clean up the expressions when they are created.  * Doing it here saves lines of code.  */
+comment|/*      * It is more 'efficient' to clean up the expressions when they are created.      * Doing it here saves lines of code.      */
 name|clean_up_expression
 argument_list|(
 name|expressionP
@@ -1585,7 +1654,7 @@ expr_stmt|;
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-comment|/* -> 1st char after operand. */
+comment|/*->1st char after operand. */
 name|know
 argument_list|(
 operator|*
@@ -1605,7 +1674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* operand */
+comment|/* operand() */
 end_comment
 
 begin_escape
@@ -1616,7 +1685,7 @@ comment|/* Internal. Simplify a struct expression for use by expr() */
 end_comment
 
 begin_comment
-comment|/*  * In:	address of a expressionS.  *	The X_seg field of the expressionS may only take certain values.  *	Now, we permit SEG_PASS1 to make code smaller& faster.  *	Elsewise we waste time special-case testing. Sigh. Ditto SEG_NONE.  * Out:	expressionS may have been modified:  *	'foo-foo' symbol references cancelled to 0,  *		which changes X_seg from SEG_DIFFERENCE to SEG_ABSOLUTE;  *	Unused fields zeroed to help expr().  */
+comment|/*  * In:	address of a expressionS.  *	The X_seg field of the expressionS may only take certain values.  *	Now, we permit SEG_PASS1 to make code smaller& faster.  *	Elsewise we waste time special-case testing. Sigh. Ditto SEG_ABSENT.  * Out:	expressionS may have been modified:  *	'foo-foo' symbol references cancelled to 0,  *		which changes X_seg from SEG_DIFFERENCE to SEG_ABSOLUTE;  *	Unused fields zeroed to help expr().  */
 end_comment
 
 begin_function
@@ -1640,7 +1709,7 @@ name|X_seg
 condition|)
 block|{
 case|case
-name|SEG_NONE
+name|SEG_ABSENT
 case|:
 case|case
 name|SEG_PASS1
@@ -1684,15 +1753,6 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
-name|SEG_TEXT
-case|:
-case|case
-name|SEG_DATA
-case|:
-case|case
-name|SEG_BSS
-case|:
-case|case
 name|SEG_UNKNOWN
 case|:
 name|expressionP
@@ -1705,7 +1765,7 @@ break|break;
 case|case
 name|SEG_DIFFERENCE
 case|:
-comment|/*        * It does not hurt to 'cancel' NULL==NULL        * when comparing symbols for 'eq'ness.        * It is faster to re-cancel them to NULL        * than to check for this special case.        */
+comment|/* 	 * It does not hurt to 'cancel' NULL == NULL 	 * when comparing symbols for 'eq'ness. 	 * It is faster to re-cancel them to NULL 	 * than to check for this special case. 	 */
 if|if
 condition|(
 name|expressionP
@@ -1737,17 +1797,19 @@ name|X_add_symbol
 operator|->
 name|sy_frag
 operator|&&
+name|S_GET_VALUE
+argument_list|(
 name|expressionP
 operator|->
 name|X_subtract_symbol
-operator|->
-name|sy_value
+argument_list|)
 operator|==
+name|S_GET_VALUE
+argument_list|(
 name|expressionP
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_value
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -1771,7 +1833,42 @@ name|SEG_ABSOLUTE
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|SEG_REGISTER
+case|:
+name|expressionP
+operator|->
+name|X_add_symbol
+operator|=
+name|NULL
+expr_stmt|;
+name|expressionP
+operator|->
+name|X_subtract_symbol
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
 default|default:
+if|if
+condition|(
+name|SEG_NORMAL
+argument_list|(
+name|expressionP
+operator|->
+name|X_seg
+argument_list|)
+condition|)
+block|{
+name|expressionP
+operator|->
+name|X_subtract_symbol
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 name|BAD_CASE
 argument_list|(
 name|expressionP
@@ -1779,10 +1876,15 @@ operator|->
 name|X_seg
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* clean_up_expression() */
+end_comment
 
 begin_escape
 end_escape
@@ -1804,14 +1906,12 @@ name|symbol_1_PP
 parameter_list|,
 name|symbol_2_P
 parameter_list|)
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 modifier|*
 name|symbol_1_PP
 decl_stmt|;
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|symbol_2_P
 decl_stmt|;
@@ -1819,6 +1919,9 @@ block|{
 name|segT
 name|return_value
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|MANY_SEGMENTS
 name|know
 argument_list|(
 operator|(
@@ -1829,56 +1932,43 @@ operator|==
 name|NULL
 operator|||
 operator|(
-operator|(
+name|S_GET_SEGMENT
+argument_list|(
 operator|*
 name|symbol_1_PP
-operator|)
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
+argument_list|)
 operator|==
-name|N_TEXT
+name|SEG_TEXT
+operator|)
 operator|||
 operator|(
-operator|(
+name|S_GET_SEGMENT
+argument_list|(
 operator|*
 name|symbol_1_PP
-operator|)
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
+argument_list|)
 operator|==
-name|N_DATA
+name|SEG_DATA
+operator|)
 operator|||
 operator|(
-operator|(
+name|S_GET_SEGMENT
+argument_list|(
 operator|*
 name|symbol_1_PP
-operator|)
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
+argument_list|)
 operator|==
-name|N_BSS
+name|SEG_BSS
+operator|)
 operator|||
 operator|(
-operator|(
+operator|!
+name|S_IS_DEFINED
+argument_list|(
 operator|*
 name|symbol_1_PP
+argument_list|)
 operator|)
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
-operator|==
-name|N_UNDF
 argument_list|)
 expr_stmt|;
 name|know
@@ -1888,46 +1978,43 @@ operator|==
 name|NULL
 operator|||
 operator|(
+name|S_GET_SEGMENT
+argument_list|(
 name|symbol_2_P
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
+argument_list|)
 operator|==
-name|N_TEXT
+name|SEG_TEXT
+operator|)
 operator|||
 operator|(
+name|S_GET_SEGMENT
+argument_list|(
 name|symbol_2_P
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
+argument_list|)
 operator|==
-name|N_DATA
+name|SEG_DATA
+operator|)
 operator|||
 operator|(
+name|S_GET_SEGMENT
+argument_list|(
 name|symbol_2_P
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
+argument_list|)
 operator|==
-name|N_BSS
+name|SEG_BSS
+operator|)
 operator|||
 operator|(
+operator|!
+name|S_IS_DEFINED
+argument_list|(
 name|symbol_2_P
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
+argument_list|)
 operator|)
-operator|==
-name|N_UNDF
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
@@ -1936,18 +2023,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-operator|(
+operator|!
+name|S_IS_DEFINED
+argument_list|(
 operator|*
 name|symbol_1_PP
-operator|)
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
-operator|==
-name|N_UNDF
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1969,8 +2050,14 @@ else|else
 block|{
 name|know
 argument_list|(
-argument|((* symbol_1_PP) -> sy_type& N_TYPE) == N_UNDF
+operator|!
+name|S_IS_DEFINED
+argument_list|(
+operator|*
+name|symbol_1_PP
 argument_list|)
+argument_list|)
+expr_stmt|;
 name|return_value
 operator|=
 name|SEG_UNKNOWN
@@ -1986,15 +2073,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
+operator|!
+name|S_IS_DEFINED
+argument_list|(
 name|symbol_2_P
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
-operator|==
-name|N_UNDF
+argument_list|)
 condition|)
 block|{
 operator|*
@@ -2010,20 +2093,20 @@ block|}
 else|else
 block|{
 comment|/* {seg1} - {seg2} */
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Expression too complex, 2 symbols forgotten: \"%s\" \"%s\""
 argument_list|,
-operator|(
+name|S_GET_NAME
+argument_list|(
 operator|*
 name|symbol_1_PP
-operator|)
-operator|->
-name|sy_name
+argument_list|)
 argument_list|,
+name|S_GET_NAME
+argument_list|(
 name|symbol_2_P
-operator|->
-name|sy_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2041,17 +2124,11 @@ else|else
 block|{
 name|return_value
 operator|=
-name|N_TYPE_seg
-index|[
-operator|(
+name|S_GET_SEGMENT
+argument_list|(
 operator|*
 name|symbol_1_PP
-operator|)
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2071,16 +2148,10 @@ name|symbol_2_P
 expr_stmt|;
 name|return_value
 operator|=
-name|N_TYPE_seg
-index|[
-operator|(
+name|S_GET_SEGMENT
+argument_list|(
 name|symbol_2_P
-operator|)
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2096,6 +2167,9 @@ name|SEG_ABSOLUTE
 expr_stmt|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|MANY_SEGMENTS
 name|know
 argument_list|(
 name|return_value
@@ -2123,6 +2197,8 @@ operator|==
 name|SEG_PASS1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|know
 argument_list|(
 operator|(
@@ -2133,23 +2209,14 @@ operator|==
 name|NULL
 operator|||
 operator|(
-operator|(
+name|S_GET_SEGMENT
+argument_list|(
 operator|*
 name|symbol_1_PP
-operator|)
-operator|->
-name|sy_type
-operator|&
-name|N_TYPE
-operator|)
+argument_list|)
 operator|==
-name|seg_N_TYPE
-index|[
-operator|(
-name|int
-operator|)
 name|return_value
-index|]
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2167,12 +2234,156 @@ end_comment
 begin_escape
 end_escape
 
+begin_function
+name|void
+name|ps
+parameter_list|(
+name|s
+parameter_list|)
+name|symbolS
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s type %s%s"
+argument_list|,
+name|S_GET_NAME
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+name|S_IS_EXTERNAL
+argument_list|(
+name|s
+argument_list|)
+condition|?
+literal|"EXTERNAL "
+else|:
+literal|""
+argument_list|,
+name|segment_name
+argument_list|(
+name|S_GET_SEGMENT
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pe
+parameter_list|(
+name|e
+parameter_list|)
+name|expressionS
+modifier|*
+name|e
+decl_stmt|;
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"    segment       %s\n"
+argument_list|,
+name|segment_name
+argument_list|(
+name|e
+operator|->
+name|X_seg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"    add_number    %d (%x)\n"
+argument_list|,
+name|e
+operator|->
+name|X_add_number
+argument_list|,
+name|e
+operator|->
+name|X_add_number
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|X_add_symbol
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"    add_symbol    "
+argument_list|)
+expr_stmt|;
+name|ps
+argument_list|(
+name|e
+operator|->
+name|X_add_symbol
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|e
+operator|->
+name|X_subtract_symbol
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"    sub_symbol    "
+argument_list|)
+expr_stmt|;
+name|ps
+argument_list|(
+name|e
+operator|->
+name|X_subtract_symbol
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/* Expression parser. */
 end_comment
 
 begin_comment
-comment|/*  * We allow an empty expression, and just assume (absolute,0) silently.  * Unary operators and parenthetical expressions are treated as operands.  * As usual, Q==quantity==operand, O==operator, X==expression mnemonics.  *  * We used to do a aho/ullman shift-reduce parser, but the logic got so  * warped that I flushed it and wrote a recursive-descent parser instead.  * Now things are stable, would anybody like to write a fast parser?  * Most expressions are either register (which does not even reach here)  * or 1 symbol. Then "symbol+constant" and "symbol-symbol" are common.  * So I guess it doesn't really matter how inefficient more complex expressions  * are parsed.  *  * After expr(RANK,resultP) input_line_pointer -> operator of rank<= RANK.  * Also, we have consumed any leading or trailing spaces (operand does that)  * and done all intervening operators.  */
+comment|/*  * We allow an empty expression, and just assume (absolute,0) silently.  * Unary operators and parenthetical expressions are treated as operands.  * As usual, Q == quantity == operand, O == operator, X == expression mnemonics.  *  * We used to do a aho/ullman shift-reduce parser, but the logic got so  * warped that I flushed it and wrote a recursive-descent parser instead.  * Now things are stable, would anybody like to write a fast parser?  * Most expressions are either register (which does not even reach here)  * or 1 symbol. Then "symbol+constant" and "symbol-symbol" are common.  * So I guess it doesn't really matter how inefficient more complex expressions  * are parsed.  *  * After expr(RANK,resultP) input_line_pointer->operator of rank<= RANK.  * Also, we have consumed any leading or trailing spaces (operand does that)  * and done all intervening operators.  */
 end_comment
 
 begin_typedef
@@ -2236,7 +2447,7 @@ literal|256
 index|]
 init|=
 block|{
-comment|/* maps ASCII -> operators */
+comment|/* maps ASCII->operators */
 name|__
 block|,
 name|__
@@ -2753,15 +2964,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	Rank	Examples  *	0	operand, (expression)  *	1	+ -  *	2& ^ ! |  *	3	* / %<>  */
+comment|/*  *	Rank	Examples  *	0	operand, (expression)  *	1	+ -  *	2& ^ ! |  *	3	* / %<<>>  */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|char
-name|operator_rankT
-typedef|;
-end_typedef
 
 begin_decl_stmt
 specifier|static
@@ -2801,9 +3005,12 @@ end_decl_stmt
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Return resultP->X_seg. */
+end_comment
+
 begin_function
 name|segT
-comment|/* Return resultP -> X_seg. */
 name|expr
 parameter_list|(
 name|rank
@@ -2899,7 +3106,7 @@ block|{
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* -> after 1st character of operator. */
+comment|/*->after 1st character of operator. */
 comment|/* Operators "<<" and ">>" have 2 characters. */
 if|if
 condition|(
@@ -2923,10 +3130,10 @@ name|input_line_pointer
 operator|++
 expr_stmt|;
 block|}
-comment|/* -> after operator. */
+comment|/*->after operator. */
 if|if
 condition|(
-name|SEG_NONE
+name|SEG_ABSENT
 operator|==
 name|expr
 argument_list|(
@@ -3015,7 +3222,7 @@ name|input_line_pointer
 operator|++
 expr_stmt|;
 block|}
-comment|/* -> after operator. */
+comment|/*->after operator. */
 name|know
 argument_list|(
 operator|(
@@ -3042,7 +3249,7 @@ name|op_left
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* input_line_pointer -> after right-hand quantity. */
+comment|/* input_line_pointer->after right-hand quantity. */
 comment|/* left-hand quantity in resultP */
 comment|/* right-hand quantity in right. */
 comment|/* operator in op_left. */
@@ -3179,10 +3386,9 @@ operator|==
 name|O_subtract
 condition|)
 block|{
-comment|/* 	       * Convert - into + by exchanging symbols and negating number. 	       * I know -infinity can't be negated in 2's complement: 	       * but then it can't be subtracted either. This trick 	       * does not cause any further inaccuracy. 	       */
+comment|/* 				 * Convert - into + by exchanging symbols and negating number. 				 * I know -infinity can't be negated in 2's complement: 				 * but then it can't be subtracted either. This trick 				 * does not cause any further inaccuracy. 				 */
 specifier|register
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
@@ -3245,6 +3451,9 @@ decl_stmt|;
 name|segT
 name|seg2
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|MANY_SEGMENTS
 name|know
 argument_list|(
 name|resultP
@@ -3335,6 +3544,8 @@ operator|==
 name|SEG_PASS1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|clean_up_expression
 argument_list|(
 operator|&
@@ -3346,6 +3557,64 @@ argument_list|(
 name|resultP
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PIC
+comment|/* XXX - kludge here to accomodate "_GLOBAL_OFFSET_TABLE + (x - y)"  * expressions: this only works for this special case, the  * _GLOBAL_OFFSET_TABLE thing *must* be the left operand, the whole  * expression is given the segment of right expression (always a DIFFERENCE,  * which should get resolved by fixup_segment())  */
+if|if
+condition|(
+name|resultP
+operator|->
+name|X_got_symbol
+condition|)
+block|{
+name|resultP
+operator|->
+name|X_add_symbol
+operator|=
+name|right
+operator|.
+name|X_add_symbol
+expr_stmt|;
+name|resultP
+operator|->
+name|X_subtract_symbol
+operator|=
+name|right
+operator|.
+name|X_subtract_symbol
+expr_stmt|;
+name|seg1
+operator|=
+name|S_GET_SEGMENT
+argument_list|(
+name|right
+operator|.
+name|X_add_symbol
+argument_list|)
+expr_stmt|;
+name|seg2
+operator|=
+name|S_GET_SEGMENT
+argument_list|(
+name|right
+operator|.
+name|X_subtract_symbol
+argument_list|)
+expr_stmt|;
+name|resultP
+operator|->
+name|X_seg
+operator|=
+name|right
+operator|.
+name|X_seg
+expr_stmt|;
+block|}
+else|else
+block|{
+endif|#
+directive|endif
 name|seg1
 operator|=
 name|expr_part
@@ -3374,6 +3643,12 @@ operator|.
 name|X_subtract_symbol
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PIC
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|seg1
@@ -3387,7 +3662,7 @@ condition|)
 block|{
 name|need_pass_2
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 name|resultP
 operator|->
@@ -3443,6 +3718,9 @@ operator|->
 name|X_subtract_symbol
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MANY_SEGMENTS
 name|know
 argument_list|(
 name|seg1
@@ -3473,6 +3751,8 @@ operator|==
 name|SEG_BSS
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|know
 argument_list|(
 name|resultP
@@ -3487,21 +3767,23 @@ operator|->
 name|X_subtract_symbol
 argument_list|)
 expr_stmt|;
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Expression too complex: forgetting %s - %s"
 argument_list|,
+name|S_GET_NAME
+argument_list|(
 name|resultP
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_name
+argument_list|)
 argument_list|,
+name|S_GET_NAME
+argument_list|(
 name|resultP
 operator|->
 name|X_subtract_symbol
-operator|->
-name|sy_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|resultP
@@ -3559,7 +3841,7 @@ name|SEG_PASS1
 expr_stmt|;
 name|need_pass_2
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -3592,7 +3874,7 @@ operator|!=
 name|SEG_ABSOLUTE
 condition|)
 block|{
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Relocation error. Absolute 0 assumed."
 argument_list|)
@@ -3778,7 +4060,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* switch(operator) */
+comment|/* switch (operator) */
 block|}
 block|}
 comment|/* If we have to force need_pass_2. */
@@ -3801,6 +4083,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* expr() */
+end_comment
 
 begin_escape
 end_escape
@@ -3830,6 +4116,7 @@ operator|++
 argument_list|)
 condition|)
 empty_stmt|;
+empty_stmt|;
 operator|*
 operator|--
 name|input_line_pointer
@@ -3844,8 +4131,35 @@ return|;
 block|}
 end_function
 
+begin_function
+name|unsigned
+name|int
+name|get_single_number
+parameter_list|()
+block|{
+name|expressionS
+name|exp
+decl_stmt|;
+name|operand
+argument_list|(
+operator|&
+name|exp
+argument_list|)
+expr_stmt|;
+return|return
+name|exp
+operator|.
+name|X_add_number
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/* end: expr.c */
+comment|/*  * Local Variables:  * comment-column: 0  * fill-column: 131  * End:  */
+end_comment
+
+begin_comment
+comment|/* end of expr.c */
 end_comment
 
 end_unit

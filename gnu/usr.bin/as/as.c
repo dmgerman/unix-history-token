@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  */
+comment|/* as.c - GAS main program.    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+end_comment
+
+begin_comment
+comment|/*  * Main program for AS; a 32-bit assembler of GNU.  * Understands command arguments.  * Has a few routines that don't fit in other modules because they  * are shared.  *  *  *			bugs  *  * : initialisers  *	Since no-one else says they will support them in future: I  * don't support them now.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +16,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)as.c	6.3 (Berkeley) 5/8/91"
+literal|"$Id: as.c,v 1.3 1993/10/02 20:57:15 pk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,17 +28,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
-begin_comment
-comment|/* as.c - GAS main program.    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
-end_comment
-
-begin_comment
-comment|/*  * Main program for AS; a 32-bit assembler of GNU.  * Understands command arguments.  * Has a few routines that don't fit in other modules because they  * are shared.  *  *  *			bugs  *  * : initialisers  *	Since no-one else says they will support them in future: I  * don't support them now.  *  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -78,17 +82,75 @@ end_include
 begin_include
 include|#
 directive|include
-file|"struc-symbol.h"
+file|"subsegs.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"write.h"
-end_include
+begin_if
+if|#
+directive|if
+name|__STDC__
+operator|==
+literal|1
+end_if
 
 begin_comment
-comment|/* Warning!  This may have some slightly strange side effects 		   if you try to compile two or more assemblers in the same 		   directory! 		 */
+comment|/* This prototype for got_sig() is ansi.  If you want    anything else, then your compiler is lying to you when    it says that it is __STDC__.  If you want to change it,    #ifdef protect it from those of us with real ansi    compilers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGTY
+value|void
+end_define
+
+begin_function_decl
+specifier|static
+name|void
+name|got_sig
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|stralloc
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|perform_an_assembly_pass
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __STDC__ */
 end_comment
 
 begin_ifndef
@@ -110,11 +172,42 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|SIGTY
 name|got_sig
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|stralloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Make a (safe) copy of a string. */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|perform_an_assembly_pass
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __STDC__ */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -132,7 +225,6 @@ end_decl_stmt
 
 begin_function_decl
 name|long
-name|int
 name|gdb_begin
 parameter_list|()
 function_decl|;
@@ -142,6 +234,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|listing
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if a listing is wanted */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -156,6 +258,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|version_string
 index|[]
@@ -166,6 +269,7 @@ begin_escape
 end_escape
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -218,29 +322,6 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-specifier|extern
-name|int
-name|bad_error
-decl_stmt|;
-comment|/* Did we hit a bad error ? */
-name|char
-modifier|*
-name|stralloc
-parameter_list|()
-function_decl|;
-comment|/* Make a (safe) copy of a string. */
-name|void
-name|symbol_begin
-parameter_list|()
-function_decl|;
-name|void
-name|read_begin
-parameter_list|()
-function_decl|;
-name|void
-name|write_object_file
-parameter_list|()
-function_decl|;
 for|for
 control|(
 name|a
@@ -288,9 +369,11 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|flagseen
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -299,11 +382,20 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* aint seen nothing yet */
+ifndef|#
+directive|ifndef
+name|OBJ_DEFAULT_OUTPUT_FILE_NAME
+define|#
+directive|define
+name|OBJ_DEFAULT_OUTPUT_FILE_NAME
+value|"a.out"
+endif|#
+directive|endif
+comment|/* OBJ_DEFAULT_OUTPUT_FILE_NAME */
 name|out_file_name
 operator|=
-literal|"a.out"
+name|OBJ_DEFAULT_OUTPUT_FILE_NAME
 expr_stmt|;
-comment|/* default .o file */
 name|symbol_begin
 argument_list|()
 expr_stmt|;
@@ -334,6 +426,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Parse arguments, but we are only interested in flags. 	 * When we find a flag, we process it then make it's argv[] NULL. 	 * This helps any future argv[] scanners avoid what we processed. 	 * Since it is easy to do here we interpret the special arg "-" 	 * to mean "use stdin" and we set that argv[] pointing to "". 	 * After we have munged argv[], the only things left are source file 	 * name(s) and ""(s) denoting stdin. These file names are used 	 * (perhaps more than once) later. 	 */
+comment|/* FIXME-SOMEDAY this should use getopt. */
 name|work_argc
 operator|=
 name|argc
@@ -405,53 +498,136 @@ comment|/* This better be a switch. */
 name|arg
 operator|++
 expr_stmt|;
-comment|/* -> letter. */
+comment|/*->letter. */
 while|while
 condition|(
+operator|(
 name|a
 operator|=
 operator|*
 name|arg
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 comment|/* scan all the 1-char flags */
 name|arg
 operator|++
 expr_stmt|;
-comment|/* arg -> after letter. */
+comment|/* arg->after letter. */
 name|a
 operator|&=
 literal|0x7F
 expr_stmt|;
 comment|/* ascii only please */
-if|if
-condition|(
-name|flagseen
-index|[
-name|a
-index|]
-condition|)
-name|as_warn
-argument_list|(
-literal|"%s: Flag option -%c has already been seen!"
-argument_list|,
-name|myname
-argument_list|,
-name|a
-argument_list|)
-expr_stmt|;
+comment|/* if (flagseen[a]) 			   as_tsktsk("%s: Flag option - %c has already been seen.", myname, a); */
 name|flagseen
 index|[
 name|a
 index|]
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 switch|switch
 condition|(
 name|a
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+block|{
+name|int
+name|loop
+init|=
+literal|1
+decl_stmt|;
+while|while
+condition|(
+name|loop
+condition|)
+block|{
+switch|switch
+condition|(
+operator|*
+name|arg
+condition|)
+block|{
+case|case
+literal|'l'
+case|:
+name|listing
+operator||=
+name|LISTING_LISTING
+expr_stmt|;
+name|arg
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|listing
+operator||=
+name|LISTING_SYMBOLS
+expr_stmt|;
+name|arg
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|listing
+operator||=
+name|LISTING_HLL
+expr_stmt|;
+name|arg
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|listing
+operator||=
+name|LISTING_NOFORM
+expr_stmt|;
+name|arg
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|listing
+operator||=
+name|LISTING_NODEBUG
+expr_stmt|;
+name|arg
+operator|++
+expr_stmt|;
+break|break;
+default|default:
+if|if
+condition|(
+operator|!
+name|listing
+condition|)
+name|listing
+operator|=
+name|LISTING_DEFAULT
+expr_stmt|;
+name|loop
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+break|break;
 case|case
 literal|'f'
 case|:
@@ -522,9 +698,73 @@ comment|/* Finished with this arg. */
 break|break;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|WORKING_DOT_WORD
+case|case
+literal|'I'
+case|:
+block|{
+comment|/* Include file directory */
+name|char
+modifier|*
+name|temp
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|arg
+condition|)
+name|temp
+operator|=
+name|stralloc
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|work_argc
+condition|)
+block|{
+operator|*
+name|work_argv
+operator|=
+name|NULL
+expr_stmt|;
+name|work_argc
+operator|--
+expr_stmt|;
+name|temp
+operator|=
+operator|*
+operator|++
+name|work_argv
+expr_stmt|;
+block|}
+else|else
+name|as_warn
+argument_list|(
+literal|"%s: I expected a filename after -I"
+argument_list|,
+name|myname
+argument_list|)
+expr_stmt|;
+name|add_include_dir
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
+name|arg
+operator|=
+literal|""
+expr_stmt|;
+comment|/* Finished with this arg. */
+break|break;
+block|}
+if|#
+directive|if
+literal|00000
 case|case
 literal|'k'
 case|:
@@ -601,7 +841,7 @@ literal|'v'
 case|:
 ifdef|#
 directive|ifdef
-name|VMS
+name|OBJ_VMS
 block|{
 specifier|extern
 name|char
@@ -615,7 +855,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* not VMS */
+comment|/* not OBJ_VMS */
 name|fprintf
 argument_list|(
 name|stderr
@@ -642,6 +882,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* not OBJ_VMS */
 while|while
 condition|(
 operator|*
@@ -656,11 +897,14 @@ case|case
 literal|'W'
 case|:
 comment|/* -W means don't warn about things */
-break|break;
 case|case
-literal|'g'
+literal|'X'
 case|:
-comment|/* 				 * -g asks gas to produce gdb/dbx line number 				 * and file name stabs so that an assembly 				 * file can be handled by a source debugger. 				 */
+comment|/* -X means treat warnings as errors */
+case|case
+literal|'Z'
+case|:
+comment|/* -Z means attempt to generate object file even after errors. */
 break|break;
 default|default:
 operator|--
@@ -684,7 +928,7 @@ literal|0
 condition|)
 name|as_warn
 argument_list|(
-literal|"%s: I don't understand '%c' flag!"
+literal|"%s: I don't understand '%c' flag."
 argument_list|,
 name|myname
 argument_list|,
@@ -743,18 +987,44 @@ name|argv
 argument_list|)
 expr_stmt|;
 comment|/* Assemble it. */
+ifdef|#
+directive|ifdef
+name|TC_I960
+name|brtab_emit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|seen_at_least_1_file
 argument_list|()
 operator|&&
 operator|!
-name|bad_error
+operator|(
+operator|(
+name|had_warnings
+argument_list|()
+operator|&&
+name|flagseen
+index|[
+literal|'Z'
+index|]
+operator|)
+operator|||
+name|had_errors
+argument_list|()
+operator|>
+literal|0
+operator|)
 condition|)
+block|{
 name|write_object_file
 argument_list|()
 expr_stmt|;
 comment|/* relax() addresses then emit object file */
+block|}
+comment|/* we also check in write_object_file() just before emit. */
 name|input_scrub_end
 argument_list|()
 expr_stmt|;
@@ -764,28 +1034,70 @@ expr_stmt|;
 comment|/* MACHINE.c */
 ifndef|#
 directive|ifndef
-name|VMS
-name|exit
+name|NO_LISTING
+name|listing_print
 argument_list|(
-name|bad_error
+literal|""
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|HO_VMS
+return|return
+operator|(
+operator|(
+name|had_warnings
+argument_list|()
+operator|&&
+name|flagseen
+index|[
+literal|'Z'
+index|]
+operator|)
+operator|||
+name|had_errors
+argument_list|()
+operator|>
+literal|0
+operator|)
+return|;
 comment|/* WIN */
 else|#
 directive|else
-comment|/* VMS */
-name|exit
-argument_list|(
+comment|/* HO_VMS */
+return|return
+operator|(
 operator|!
-name|bad_error
-argument_list|)
-expr_stmt|;
+operator|(
+operator|(
+name|had_warnings
+argument_list|()
+operator|&&
+name|flagseen
+index|[
+literal|'Z'
+index|]
+operator|)
+operator|||
+name|had_errors
+argument_list|()
+operator|>
+literal|0
+operator|)
+operator|)
+return|;
 comment|/* WIN */
 endif|#
 directive|endif
-comment|/* VMS */
+comment|/* HO_VMS */
 block|}
 end_function
+
+begin_comment
+comment|/* main() */
+end_comment
 
 begin_escape
 end_escape
@@ -794,45 +1106,138 @@ begin_comment
 comment|/*			perform_an_assembly_pass()  *  * Here to attempt 1 pass over each input file.  * We scan argv[*] looking for filenames or exactly "" which is  * shorthand for stdin. Any argv that is NULL is not a file-name.  * We set need_pass_2 TRUE if, after this, we still have unresolved  * expressions of the form (unknown value)+-(unknown value).  *  * Note the un*x semantics: there is only 1 logical input file, but it  * may be a catenation of many 'physical' input files.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|perform_an_assembly_pass
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|char
-modifier|*
-name|buffer
-decl_stmt|;
-comment|/* Where each bufferful of lines will start. */
-name|void
-name|read_a_source_file
-parameter_list|()
-function_decl|;
 name|int
 name|saw_a_file
 init|=
 literal|0
 decl_stmt|;
+name|need_pass_2
+operator|=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MANY_SEGMENTS
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|SEG_E0
+init|;
+name|i
+operator|<
+name|SEG_UNKNOWN
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|segment_info
+index|[
+name|i
+index|]
+operator|.
+name|fix_root
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* Create the three fixed ones */
+name|subseg_new
+argument_list|(
+name|SEG_E0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|subseg_new
+argument_list|(
+name|SEG_E1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|subseg_new
+argument_list|(
+name|SEG_E2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|segment_info
+index|[
+name|SEG_E0
+index|]
+operator|.
+name|scnhdr
+operator|.
+name|s_name
+argument_list|,
+literal|".text"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|segment_info
+index|[
+name|SEG_E1
+index|]
+operator|.
+name|scnhdr
+operator|.
+name|s_name
+argument_list|,
+literal|".data"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|segment_info
+index|[
+name|SEG_E2
+index|]
+operator|.
+name|scnhdr
+operator|.
+name|s_name
+argument_list|,
+literal|".bss"
+argument_list|)
+expr_stmt|;
+name|subseg_new
+argument_list|(
+name|SEG_E0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not MANY_SEGMENTS */
 name|text_fix_root
 operator|=
 name|NULL
@@ -841,10 +1246,20 @@ name|data_fix_root
 operator|=
 name|NULL
 expr_stmt|;
-name|need_pass_2
+name|bss_fix_root
 operator|=
-name|FALSE
+name|NULL
 expr_stmt|;
+name|subseg_new
+argument_list|(
+name|SEG_TEXT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not MANY_SEGMENTS */
 name|argv
 operator|++
 expr_stmt|;
@@ -866,27 +1281,16 @@ name|argv
 condition|)
 block|{
 comment|/* Is it a file-name argument? */
-comment|/* argv -> "" if stdin desired, else -> filename */
-if|if
-condition|(
-name|buffer
-operator|=
-name|input_scrub_new_file
+name|saw_a_file
+operator|++
+expr_stmt|;
+comment|/* argv->"" if stdin desired, else->filename */
+name|read_a_source_file
 argument_list|(
 operator|*
 name|argv
 argument_list|)
-condition|)
-block|{
-name|saw_a_file
-operator|++
 expr_stmt|;
-name|read_a_source_file
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|argv
 operator|++
@@ -898,22 +1302,17 @@ condition|(
 operator|!
 name|saw_a_file
 condition|)
-if|if
-condition|(
-name|buffer
-operator|=
-name|input_scrub_new_file
+name|read_a_source_file
 argument_list|(
 literal|""
 argument_list|)
-condition|)
-name|read_a_source_file
-argument_list|(
-name|buffer
-argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_comment
+comment|/* perform_an_assembly_pass() */
+end_comment
 
 begin_escape
 end_escape
@@ -923,6 +1322,7 @@ comment|/*  *			stralloc()  *  * Allocate memory for a new copy of a string. Cop
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|stralloc
@@ -941,7 +1341,6 @@ name|retval
 decl_stmt|;
 specifier|register
 name|long
-name|int
 name|len
 decl_stmt|;
 name|len
@@ -981,12 +1380,17 @@ end_function
 begin_escape
 end_escape
 
-begin_macro
-name|lose
-argument_list|()
-end_macro
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|comment
+end_ifdef
 
-begin_block
+begin_function
+specifier|static
+name|void
+name|lose
+parameter_list|()
 block|{
 name|as_fatal
 argument_list|(
@@ -995,10 +1399,25 @@ argument_list|,
 name|myname
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-end_block
+end_function
+
+begin_comment
+comment|/* lose() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* comment */
+end_comment
 
 begin_function
+specifier|static
 name|SIGTY
 name|got_sig
 parameter_list|(
@@ -1030,11 +1449,23 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|(
+name|SIGTY
+operator|)
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/* end: as.c */
+comment|/*  * Local Variables:  * comment-column: 0  * fill-column: 131  * End:  */
+end_comment
+
+begin_comment
+comment|/* end of as.c */
 end_comment
 
 end_unit

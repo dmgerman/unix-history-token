@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hash.c - hash table lookup strings -    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* hash.c - hash table lookup strings -    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -28,18 +28,38 @@ begin_comment
 comment|/*  *  I N T E R N A L  *  *  Hash table is an array of hash_entries; each entry is a pointer to a  *  a string and a user-supplied value 1 char* wide.  *  *  The array always has 2 ** n elements, n>0, n integer.  *  There is also a 'wall' entry after the array, which is always empty  *  and acts as a sentinel to stop running off the end of the array.  *  When the array gets too full, we create a new array twice as large  *  and re-hash the symbols into the new array, then forget the old array.  *  (Of course, we copy the values into the new array before we junk the  *  old array!)  *  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: hash.c,v 1.3 1993/10/02 20:57:34 pk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|TRUE
-value|(1)
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
 
 begin_define
 define|#
@@ -47,6 +67,22 @@ directive|define
 name|FALSE
 value|(0)
 end_define
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|(!FALSE)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* no FALSE yet */
+end_comment
 
 begin_include
 include|#
@@ -69,16 +105,15 @@ end_define
 begin_include
 include|#
 directive|include
-file|"hash.h"
+file|"as.h"
 end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|error
+value|as_fatal
+end_define
 
 begin_define
 define|#
@@ -125,7 +160,7 @@ name|islive
 parameter_list|(
 name|ptr
 parameter_list|)
-value|(ptr->hash_string&& ptr->hash_string!=DELETED)
+value|(ptr->hash_string&& ptr->hash_string != DELETED)
 end_define
 
 begin_comment
@@ -277,7 +312,7 @@ name|START_FULL
 value|(4)
 endif|#
 directive|endif
-comment|/*------------------ plan ---------------------------------- i = internal  struct hash_control * c; struct hash_entry   * e;                                                    i int                   b[z];     buffer for statistics                       z         size of b char                * s;        symbol string (address) [ key ] char                * v;        value string (address)  [datum] boolean               f;        TRUE if we found s in hash table            i char                * t;        error string; "" means OK int                   a;        access type [0...n)                         i  c=hash_new       ()             create new hash_control  hash_die         (c)            destroy hash_control (and hash table)                                 table should be empty.                                 doesn't check if table is empty.                                 c has no meaning after this.  hash_say         (c,b,z)        report statistics of hash_control.                                 also report number of available statistics.  v=hash_delete    (c,s)          delete symbol, return old value if any.     ask()                       NULL means no old value.     f  v=hash_replace   (c,s,v)        replace old value of s with v.     ask()                       NULL means no old value: no table change.     f  t=hash_insert    (c,s,v)        insert (s,v) in c.     ask()                       return error string.     f                           it is an error to insert if s is already                                 in table.                                 if any error, c is unchanged.  t=hash_jam       (c,s,v)        assert that new value of s will be v.       i     ask()                       it may decide to GROW the table.            i     f                                                                       i     grow()                                                                  i t=hash_grow      (c)            grow the hash table.                        i     jam()                       will invoke JAM.                            i  ?=hash_apply     (c,y)          apply y() to every symbol in c.     y                           evtries visited in 'unspecified' order.  v=hash_find      (c,s)          return value of s, or NULL if s not in c.     ask()     f  f,e=hash_ask()   (c,s,a)        return slot where s SHOULD live.            i     code()                      maintain collision stats in c.              i  .=hash_code      (c,s)          compute hash-code for s,                    i                                 from parameters of c.                       i  */
+comment|/*------------------ plan ---------------------------------- i = internal      struct hash_control * c;   struct hash_entry   * e;                                                    i   int                   b[z];     buffer for statistics   z         size of b   char                * s;        symbol string (address) [ key ]   char                * v;        value string (address)  [datum]   boolean               f;        TRUE if we found s in hash table            i   char                * t;        error string; "" means OK   int                   a;        access type [0...n)                         i      c=hash_new       ()             create new hash_control      hash_die         (c)            destroy hash_control (and hash table)   table should be empty.   doesn't check if table is empty.   c has no meaning after this.      hash_say         (c,b,z)        report statistics of hash_control.   also report number of available statistics.      v=hash_delete    (c,s)          delete symbol, return old value if any.   ask()                       NULL means no old value.   f      v=hash_replace   (c,s,v)        replace old value of s with v.   ask()                       NULL means no old value: no table change.   f      t=hash_insert    (c,s,v)        insert (s,v) in c.   ask()                       return error string.   f                           it is an error to insert if s is already   in table.   if any error, c is unchanged.      t=hash_jam       (c,s,v)        assert that new value of s will be v.       i   ask()                       it may decide to GROW the table.            i   f                                                                       i   grow()                                                                  i   t=hash_grow      (c)            grow the hash table.                        i   jam()                       will invoke JAM.                            i      ?=hash_apply     (c,y)          apply y() to every symbol in c.   y                           evtries visited in 'unspecified' order.      v=hash_find      (c,s)          return value of s, or NULL if s not in c.   ask()   f      f,e=hash_ask()   (c,s,a)        return slot where s SHOULD live.            i   code()                      maintain collision stats in c.              i      .=hash_code      (c,s)          compute hash-code for s,                    i   from parameters of c.                       i      */
 specifier|static
 name|char
 name|hash_found
@@ -385,11 +420,6 @@ name|hash_entry
 modifier|*
 name|entry
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 specifier|register
 name|int
 modifier|*
@@ -404,6 +434,7 @@ decl_stmt|;
 comment|/* limit of stats block */
 if|if
 condition|(
+operator|(
 name|room
 operator|=
 operator|(
@@ -429,11 +460,15 @@ operator|+
 literal|1
 operator|)
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 comment|/* +1 for the wall entry */
 block|{
 if|if
 condition|(
+operator|(
 name|retval
 operator|=
 operator|(
@@ -449,6 +484,9 @@ expr|struct
 name|hash_control
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|nd
@@ -694,7 +732,7 @@ name|bufsiz
 operator|>
 literal|0
 condition|)
-comment|/* trust nothing! bufsiz<=0 is dangerous */
+comment|/* trust nothing! bufsiz<= 0 is dangerous */
 block|{
 operator|*
 name|buffer
@@ -1278,7 +1316,7 @@ name|oldused
 decl_stmt|;
 endif|#
 directive|endif
-comment|/*    * capture info about old hash table    */
+comment|/* 	 * capture info about old hash table 	 */
 name|oldwhere
 operator|=
 name|handle
@@ -1305,7 +1343,7 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*    * attempt to get enough room for a hash table twice as big    */
+comment|/* 	 * attempt to get enough room for a hash table twice as big 	 */
 name|temp
 operator|=
 name|handle
@@ -1317,6 +1355,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|newwhere
 operator|=
 operator|(
@@ -1345,6 +1384,9 @@ name|hash_entry
 argument_list|)
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 comment|/* +1 for wall slot */
 block|{
@@ -1353,7 +1395,7 @@ operator|=
 literal|""
 expr_stmt|;
 comment|/* assume success until proven otherwise */
-comment|/*        * have enough room: now we do all the work.        * double the size of everything in handle,        * note: hash_mask frob works for 1's& for 2's complement machines        */
+comment|/* 		     * have enough room: now we do all the work. 		     * double the size of everything in handle, 		     * note: hash_mask frob works for 1's& for 2's complement machines 		     */
 name|handle
 operator|->
 name|hash_mask
@@ -1423,7 +1465,7 @@ name|newwhere
 operator|+
 name|newsize
 expr_stmt|;
-comment|/*        * set all those pesky new slots to vacant.        */
+comment|/* 		     * set all those pesky new slots to vacant. 		     */
 for|for
 control|(
 name|newtrack
@@ -1445,7 +1487,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*        * we will do a scan of the old table, the hard way, using the        * new control block to re-insert the data into new hash table.        */
+comment|/* 		     * we will do a scan of the old table, the hard way, using the 		     * new control block to re-insert the data into new hash table. 		     */
 name|handle
 operator|->
 name|hash_stat
@@ -1473,11 +1515,15 @@ block|{
 if|if
 condition|(
 operator|(
+operator|(
 name|string
 operator|=
 name|oldtrack
 operator|->
 name|hash_string
+operator|)
+operator|!=
+name|NULL
 operator|)
 operator|&&
 name|string
@@ -1541,7 +1587,7 @@ operator|*
 name|retval
 condition|)
 block|{
-comment|/* 	   * we have a completely faked up control block. 	   * return the old hash table. 	   */
+comment|/* 				 * we have a completely faked up control block. 				 * return the old hash table. 				 */
 name|free
 argument_list|(
 operator|(
@@ -1551,7 +1597,7 @@ operator|)
 name|oldwhere
 argument_list|)
 expr_stmt|;
-comment|/* 	   * Here with success. retval is already "". 	   */
+comment|/* 				 * Here with success. retval is already "". 				 */
 block|}
 block|}
 else|else
@@ -1844,11 +1890,15 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+operator|(
 name|s
 operator|=
 name|slot
 operator|->
 name|hash_string
+operator|)
+operator|!=
+name|NULL
 operator|)
 operator|&&
 name|s
@@ -1867,7 +1917,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|c
 operator|=
@@ -1875,6 +1924,8 @@ operator|*
 name|s
 operator|++
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -1911,7 +1962,7 @@ name|slot
 operator|++
 expr_stmt|;
 block|}
-comment|/*    * slot:                                                      return:    *       in use:     we found string                           slot    *       at empty:    *                   at wall:        we fell off: wrap round   ????    *                   in table:       dig here                  slot    *       at DELETED: dig here                                  slot    */
+comment|/* 	 * slot:                                                      return: 	 *       in use:     we found string                           slot 	 *       at empty: 	 *                   at wall:        we fell off: wrap round   ???? 	 *                   in table:       dig here                  slot 	 *       at DELETED: dig here                                  slot 	 */
 if|if
 condition|(
 name|slot
@@ -1931,11 +1982,15 @@ comment|/* now look again */
 while|while
 condition|(
 operator|(
+operator|(
 name|s
 operator|=
 name|slot
 operator|->
 name|hash_string
+operator|)
+operator|!=
+name|NULL
 operator|)
 operator|&&
 name|s
@@ -1991,7 +2046,7 @@ name|slot
 operator|++
 expr_stmt|;
 block|}
-comment|/*        * slot:                                                   return:        *       in use: we found it                                slot        *       empty:  wall:         ERROR IMPOSSIBLE             !!!!        *               in table:     dig here                     slot        *       DELETED:dig here                                   slot        */
+comment|/* 		     * slot:                                                   return: 		     *       in use: we found it                                slot 		     *       empty:  wall:         ERROR IMPOSSIBLE             !!!! 		     *               in table:     dig here                     slot 		     *       DELETED:dig here                                   slot 		     */
 block|}
 comment|/*   fprintf(stderr,"hash_ask(%s)->%d(%d)\n",string,hash_code(handle,string),collision); */
 name|handle
@@ -2043,13 +2098,11 @@ decl_stmt|;
 block|{
 specifier|register
 name|long
-name|int
 name|h
 decl_stmt|;
 comment|/* hash code built here */
 specifier|register
 name|long
-name|int
 name|c
 decl_stmt|;
 comment|/* each character lands here */
@@ -2074,11 +2127,15 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|string
 operator|++
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|h
@@ -3020,7 +3077,7 @@ comment|/* #ifdef TEST */
 end_comment
 
 begin_comment
-comment|/* end: hash.c */
+comment|/* end of hash.c */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  */
+comment|/* input_scrub.c - Break up input buffers into whole numbers of lines.    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)input-scrub.c	6.4 (Berkeley) 5/8/91"
+literal|"$Id: input-scrub.c,v 1.3 1993/10/02 20:57:39 pk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_comment
-comment|/* input_scrub.c - layer between app and the rest of the world    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Need this to make errno declaration right */
 end_comment
 
 begin_include
@@ -41,21 +43,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|"read.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"input-file.h"
 end_include
 
 begin_comment
-comment|/*  * O/S independent module to supply buffers of sanitised source code  * to rest of assembler. We get raw input data of some length.  * Also looks after line numbers, for e.g. error messages.  * This module used to do the sanitising, but now a pre-processor program  * (app) does that job so this module is degenerate.  * Now input is pre-sanitised, so we only worry about finding the  * last partial line. A buffer of full lines is returned to caller.  * The last partial line begins the next buffer we build and return to caller.  * The buffer returned to caller is preceeded by BEFORE_STRING and followed  * by AFTER_STRING. The last character before AFTER_STRING is a newline.  */
+comment|/*  * O/S independent module to supply buffers of sanitised source code  * to rest of assembler. We get sanitized input data of arbitrary length.  * We break these buffers on line boundaries, recombine pieces that  * were broken across buffers, and return a buffer of full lines to  * the caller.  * The last partial line begins the next buffer we build and return to caller.  * The buffer returned to caller is preceeded by BEFORE_STRING and followed  * by AFTER_STRING, as sentinels. The last character before AFTER_STRING  * is a newline.  * Also looks after line numbers, for e.g. error messages.  */
 end_comment
 
 begin_comment
-comment|/*  * We expect the following sanitation has already been done.  *  * No comments, reduce a comment to a space.  * Reduce a tab to a space unless it is 1st char of line.  * All multiple tabs and spaces collapsed into 1 char. Tab only  *   legal if 1st char of line.  * # line file statements converted to .line x;.file y; statements.  * Escaped newlines at end of line: remove them but add as many newlines  *   to end of statement as you removed in the middle, to synch line numbers.  */
+comment|/*  * We don't care how filthy our buffers are, but our callers assume  * that the following sanitation has already been done.  *  * No comments, reduce a comment to a space.  * Reduce a tab to a space unless it is 1st char of line.  * All multiple tabs and spaces collapsed into 1 char. Tab only  *   legal if 1st char of line.  * # line file statements converted to .line x;.file y; statements.  * Escaped newlines at end of line: remove them but add as many newlines  *   to end of statement as you removed in the middle, to synch line numbers.  */
 end_comment
 
 begin_escape
@@ -76,7 +72,7 @@ value|("\0")
 end_define
 
 begin_comment
-comment|/* bcopy of 0 chars might choke. */
+comment|/* memcpy of 0 chars might choke. */
 end_comment
 
 begin_define
@@ -102,7 +98,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -> 1st char of full buffer area. */
+comment|/*->1st char of full buffer area. */
 end_comment
 
 begin_decl_stmt
@@ -114,7 +110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -> after last full line in buffer. */
+comment|/*->after last full line in buffer. */
 end_comment
 
 begin_decl_stmt
@@ -125,7 +121,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*>=0. Number of chars in partial line in buffer. */
+comment|/*>= 0. Number of chars in partial line in buffer. */
 end_comment
 
 begin_decl_stmt
@@ -173,28 +169,35 @@ begin_comment
 comment|/* return to us? */
 end_comment
 
-begin_function_decl
-specifier|static
-name|void
-name|as_1_char
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/* We never have more than one source file open at once. We may, however, read more than 1 source file in an assembly. NULL means we have no file open right now. */
-end_comment
-
-begin_comment
-comment|/* We must track the physical file and line number for error messages. We also track a "logical" file and line number corresponding to (C?) compiler source line numbers. Whenever we open a file we must fill in physical_input_file. So if it is NULL we have not opened any files yet. */
+comment|/* Saved information about the file that .include'd this one.  When we hit EOF,    we automatically pop to that file. */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
+name|next_saved_file
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* We can have more than one source file open at once, though the info for all    but the latest one are saved off in a struct input_save.  These files remain    open, so we are limited by the number of open files allowed by the    underlying OS. We may also sequentially read more than one source file in an    assembly. */
+end_comment
+
+begin_comment
+comment|/* We must track the physical file and line number for error messages. We also    track a "logical" file and line number corresponding to (C?)  compiler    source line numbers.  Whenever we open a file we must fill in    physical_input_file. So if it is NULL we have not opened any files yet. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
 name|physical_input_file
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 name|logical_input_file
 decl_stmt|;
@@ -217,13 +220,391 @@ comment|/* A line ends in '\n' or eof. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|line_numberT
 name|physical_input_line
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|line_numberT
 name|logical_input_line
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Struct used to save the state of the input handler during include files */
+end_comment
+
+begin_struct
+struct|struct
+name|input_save
+block|{
+name|char
+modifier|*
+name|buffer_start
+decl_stmt|;
+name|char
+modifier|*
+name|partial_where
+decl_stmt|;
+name|int
+name|partial_size
+decl_stmt|;
+name|char
+name|save_source
+index|[
+name|AFTER_SIZE
+index|]
+decl_stmt|;
+name|int
+name|buffer_length
+decl_stmt|;
+name|char
+modifier|*
+name|physical_input_file
+decl_stmt|;
+name|char
+modifier|*
+name|logical_input_file
+decl_stmt|;
+name|line_numberT
+name|physical_input_line
+decl_stmt|;
+name|line_numberT
+name|logical_input_line
+decl_stmt|;
+name|char
+modifier|*
+name|next_saved_file
+decl_stmt|;
+comment|/* Chain of input_saves */
+name|char
+modifier|*
+name|input_file_save
+decl_stmt|;
+comment|/* Saved state of input routines */
+name|char
+modifier|*
+name|saved_position
+decl_stmt|;
+comment|/* Caller's saved position in buf */
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+operator|==
+literal|1
+end_if
+
+begin_function_decl
+specifier|static
+name|void
+name|as_1_char
+parameter_list|(
+name|unsigned
+name|int
+name|c
+parameter_list|,
+name|FILE
+modifier|*
+name|stream
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|as_1_char
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __STDC__ */
+end_comment
+
+begin_comment
+comment|/* Push the state of input reading and scrubbing so that we can #include.    The return value is a 'void *' (fudged for old compilers) to a save    area, which can be restored by passing it to input_scrub_pop(). */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|input_scrub_push
+parameter_list|(
+name|saved_position
+parameter_list|)
+name|char
+modifier|*
+name|saved_position
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|input_save
+modifier|*
+name|saved
+decl_stmt|;
+name|saved
+operator|=
+operator|(
+expr|struct
+name|input_save
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|saved
+argument_list|)
+expr_stmt|;
+name|saved
+operator|->
+name|saved_position
+operator|=
+name|saved_position
+expr_stmt|;
+name|saved
+operator|->
+name|buffer_start
+operator|=
+name|buffer_start
+expr_stmt|;
+name|saved
+operator|->
+name|partial_where
+operator|=
+name|partial_where
+expr_stmt|;
+name|saved
+operator|->
+name|partial_size
+operator|=
+name|partial_size
+expr_stmt|;
+name|saved
+operator|->
+name|buffer_length
+operator|=
+name|buffer_length
+expr_stmt|;
+name|saved
+operator|->
+name|physical_input_file
+operator|=
+name|physical_input_file
+expr_stmt|;
+name|saved
+operator|->
+name|logical_input_file
+operator|=
+name|logical_input_file
+expr_stmt|;
+name|saved
+operator|->
+name|physical_input_line
+operator|=
+name|physical_input_line
+expr_stmt|;
+name|saved
+operator|->
+name|logical_input_line
+operator|=
+name|logical_input_line
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|save_source
+argument_list|,
+name|saved
+operator|->
+name|save_source
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|save_source
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|saved
+operator|->
+name|next_saved_file
+operator|=
+name|next_saved_file
+expr_stmt|;
+name|saved
+operator|->
+name|input_file_save
+operator|=
+name|input_file_push
+argument_list|()
+expr_stmt|;
+name|input_scrub_begin
+argument_list|()
+expr_stmt|;
+comment|/* Reinitialize! */
+return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|saved
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* input_scrub_push() */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|input_scrub_pop
+parameter_list|(
+name|arg
+parameter_list|)
+name|char
+modifier|*
+name|arg
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|input_save
+modifier|*
+name|saved
+decl_stmt|;
+name|char
+modifier|*
+name|saved_position
+decl_stmt|;
+name|input_scrub_end
+argument_list|()
+expr_stmt|;
+comment|/* Finish off old buffer */
+name|saved
+operator|=
+operator|(
+expr|struct
+name|input_save
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|input_file_pop
+argument_list|(
+name|saved
+operator|->
+name|input_file_save
+argument_list|)
+expr_stmt|;
+name|saved_position
+operator|=
+name|saved
+operator|->
+name|saved_position
+expr_stmt|;
+name|buffer_start
+operator|=
+name|saved
+operator|->
+name|buffer_start
+expr_stmt|;
+name|buffer_length
+operator|=
+name|saved
+operator|->
+name|buffer_length
+expr_stmt|;
+name|physical_input_file
+operator|=
+name|saved
+operator|->
+name|physical_input_file
+expr_stmt|;
+name|logical_input_file
+operator|=
+name|saved
+operator|->
+name|logical_input_file
+expr_stmt|;
+name|physical_input_line
+operator|=
+name|saved
+operator|->
+name|physical_input_line
+expr_stmt|;
+name|logical_input_line
+operator|=
+name|saved
+operator|->
+name|logical_input_line
+expr_stmt|;
+name|partial_where
+operator|=
+name|saved
+operator|->
+name|partial_where
+expr_stmt|;
+name|partial_size
+operator|=
+name|saved
+operator|->
+name|partial_size
+expr_stmt|;
+name|next_saved_file
+operator|=
+name|saved
+operator|->
+name|next_saved_file
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|saved
+operator|->
+name|save_source
+argument_list|,
+name|save_source
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|save_source
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+return|return
+name|saved_position
+return|;
+block|}
+end_function
 
 begin_escape
 end_escape
@@ -251,6 +632,19 @@ name|AFTER_STRING
 argument_list|)
 operator|==
 name|AFTER_SIZE
+operator|||
+operator|(
+name|AFTER_STRING
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|&&
+name|AFTER_SIZE
+operator|==
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 name|input_file_begin
@@ -279,11 +673,11 @@ name|AFTER_SIZE
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|BEFORE_STRING
-argument_list|,
 name|buffer_start
+argument_list|,
+name|BEFORE_STRING
 argument_list|,
 operator|(
 name|int
@@ -309,6 +703,11 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* No file read yet. */
+name|next_saved_file
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* At EOF, don't pop to any other file */
 name|do_scrub_begin
 argument_list|()
 expr_stmt|;
@@ -320,11 +719,30 @@ name|void
 name|input_scrub_end
 parameter_list|()
 block|{
+if|if
+condition|(
+name|buffer_start
+condition|)
+block|{
+name|free
+argument_list|(
+name|buffer_start
+argument_list|)
+expr_stmt|;
+name|buffer_start
+operator|=
+literal|0
+expr_stmt|;
 name|input_file_end
 argument_list|()
 expr_stmt|;
 block|}
+block|}
 end_function
+
+begin_comment
+comment|/* Start reading input from a new file. */
+end_comment
 
 begin_function
 name|char
@@ -379,6 +797,55 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Include a file from the current file.  Save our state, cause it to    be restored on EOF, and begin handling a new file.  Same result as    input_scrub_new_file. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|input_scrub_include_file
+parameter_list|(
+name|filename
+parameter_list|,
+name|position
+parameter_list|)
+name|char
+modifier|*
+name|filename
+decl_stmt|;
+name|char
+modifier|*
+name|position
+decl_stmt|;
+block|{
+name|next_saved_file
+operator|=
+name|input_scrub_push
+argument_list|(
+name|position
+argument_list|)
+expr_stmt|;
+return|return
+name|input_scrub_new_file
+argument_list|(
+name|filename
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|input_scrub_close
+parameter_list|()
+block|{
+name|input_file_close
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|char
 modifier|*
@@ -397,7 +864,14 @@ name|char
 modifier|*
 name|limit
 decl_stmt|;
-comment|/* -> just after last char of buffer. */
+comment|/*->just after last char of buffer. */
+operator|*
+name|bufp
+operator|=
+name|buffer_start
+operator|+
+name|BEFORE_SIZE
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DONTDEF
@@ -457,11 +931,11 @@ if|if
 condition|(
 name|partial_size
 condition|)
-name|bcopy
+name|memcpy
 argument_list|(
-name|save_source
-argument_list|,
 name|partial_where
+argument_list|,
+name|save_source
 argument_list|,
 operator|(
 name|int
@@ -542,11 +1016,11 @@ name|limit
 operator|-
 name|p
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|partial_where
-argument_list|,
 name|save_source
+argument_list|,
+name|partial_where
 argument_list|,
 operator|(
 name|int
@@ -554,11 +1028,11 @@ operator|)
 name|AFTER_SIZE
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|AFTER_STRING
-argument_list|,
 name|partial_where
+argument_list|,
+name|AFTER_STRING
 argument_list|,
 operator|(
 name|int
@@ -588,13 +1062,13 @@ condition|(
 name|partial_size
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
-name|partial_where
-argument_list|,
 name|buffer_start
 operator|+
 name|BEFORE_SIZE
+argument_list|,
+name|partial_where
 argument_list|,
 operator|(
 name|int
@@ -602,13 +1076,13 @@ operator|)
 name|partial_size
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|save_source
-argument_list|,
 name|buffer_start
 operator|+
 name|BEFORE_SIZE
+argument_list|,
+name|save_source
 argument_list|,
 operator|(
 name|int
@@ -652,7 +1126,8 @@ operator|!=
 literal|'\n'
 condition|;
 control|)
-block|{ 	}
+empty_stmt|;
+empty_stmt|;
 operator|++
 name|p
 expr_stmt|;
@@ -683,11 +1158,11 @@ name|limit
 operator|-
 name|p
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|partial_where
-argument_list|,
 name|save_source
+argument_list|,
+name|partial_where
 argument_list|,
 operator|(
 name|int
@@ -695,11 +1170,11 @@ operator|)
 name|AFTER_SIZE
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|AFTER_STRING
-argument_list|,
 name|partial_where
+argument_list|,
+name|AFTER_STRING
 argument_list|,
 operator|(
 name|int
@@ -727,6 +1202,23 @@ literal|"Partial line at end of file ignored"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If we should pop to another file at EOF, do it. */
+if|if
+condition|(
+name|next_saved_file
+condition|)
+block|{
+operator|*
+name|bufp
+operator|=
+name|input_scrub_pop
+argument_list|(
+name|next_saved_file
+argument_list|)
+expr_stmt|;
+comment|/* Pop state */
+comment|/* partial_where is now correct to return, since we popped it. */
+block|}
 block|}
 return|return
 operator|(
@@ -735,6 +1227,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* input_scrub_next_buffer() */
+end_comment
 
 begin_escape
 end_escape
@@ -767,9 +1263,7 @@ block|{
 operator|++
 name|physical_input_line
 expr_stmt|;
-operator|++
-name|logical_input_line
-expr_stmt|;
+comment|/*  ++ logical_input_line; FIXME-now remove this. */
 block|}
 end_function
 
@@ -807,6 +1301,7 @@ operator|=
 name|fname
 expr_stmt|;
 block|}
+comment|/* if we have a file name */
 if|if
 condition|(
 name|line_number
@@ -819,14 +1314,19 @@ operator|=
 name|line_number
 expr_stmt|;
 block|}
+comment|/* if we have a line number */
 block|}
 end_function
+
+begin_comment
+comment|/* new_logical_line() */
+end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			a s _ w h e r e ( )  *  * Write a line to stderr locating where we are in reading  * input source files.  * As a sop to the debugger of AS, pretty-print the offending line.  */
+comment|/*  *			a s _ w h e r e ()  *  * Write a line to stderr locating where we are in reading  * input source files.  * As a sop to the debugger of AS, pretty-print the offending line.  */
 end_comment
 
 begin_function
@@ -841,403 +1341,69 @@ decl_stmt|;
 name|line_numberT
 name|line
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|myname
+decl_stmt|;
 if|if
 condition|(
-name|physical_input_file
-condition|)
-block|{
-comment|/* we tried to read SOME source */
-if|if
-condition|(
-name|input_file_is_open
-argument_list|()
-condition|)
-block|{
-comment|/* we can still read lines from source */
-ifdef|#
-directive|ifdef
-name|DONTDEF
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" @ physical line %ld., file \"%s\""
-argument_list|,
-operator|(
-name|long
-operator|)
-name|physical_input_line
-argument_list|,
-name|physical_input_file
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" @ logical line %ld., file \"%s\"\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|logical_input_line
-argument_list|,
 name|logical_input_file
-argument_list|)
-expr_stmt|;
+operator|&&
 operator|(
-name|void
+name|logical_input_line
+operator|>
+literal|0
 operator|)
-name|putc
-argument_list|(
-literal|' '
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|as_howmuch
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|putc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+condition|)
+block|{
 name|p
 operator|=
 name|logical_input_file
-condition|?
-name|logical_input_file
-else|:
-name|physical_input_file
 expr_stmt|;
 name|line
 operator|=
 name|logical_input_line
-condition|?
-name|logical_input_line
-else|:
-name|physical_input_line
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%u:"
-argument_list|,
-name|p
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|DONTDEF
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" After reading source.\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|p
 operator|=
-name|logical_input_file
-condition|?
-name|logical_input_file
-else|:
 name|physical_input_file
 expr_stmt|;
 name|line
 operator|=
-name|logical_input_line
-condition|?
-name|logical_input_line
-else|:
 name|physical_input_line
 expr_stmt|;
+block|}
+comment|/* line number should match file name */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:unknown:"
+literal|"%s: %s:%u: "
+argument_list|,
+name|myname
 argument_list|,
 name|p
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|DONTDEF
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
-literal|" Before reading source.\n"
+name|line
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-endif|#
-directive|endif
-block|}
+return|return;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*  * Support for source file debugging.  These functions handle  * logical lines and logical files.  */
+comment|/* as_where() */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|saved_file
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|saved_len
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|line_numberT
-name|saved_line
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|void
-name|filestab
-parameter_list|()
-block|{
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|physical_input_file
-operator|||
-operator|!
-name|input_file_is_open
-argument_list|()
-condition|)
-return|return;
-name|file
-operator|=
-name|logical_input_file
-condition|?
-name|logical_input_file
-else|:
-name|physical_input_file
-expr_stmt|;
-if|if
-condition|(
-name|saved_file
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|file
-argument_list|,
-name|saved_file
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|stabs
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|file
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|>
-name|saved_len
-condition|)
-block|{
-if|if
-condition|(
-name|saved_file
-operator|==
-literal|0
-condition|)
-name|saved_file
-operator|=
-name|xmalloc
-argument_list|(
-name|len
-argument_list|)
-expr_stmt|;
-else|else
-name|saved_file
-operator|=
-name|xrealloc
-argument_list|(
-name|saved_file
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|saved_file
-argument_list|,
-name|file
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|saved_len
-operator|=
-name|len
-expr_stmt|;
-block|}
-else|else
-name|strcpy
-argument_list|(
-name|saved_file
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|saved_line
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|funcstab
-parameter_list|(
-name|func
-parameter_list|)
-name|char
-modifier|*
-name|func
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|now_seg
-operator|!=
-name|SEG_TEXT
-condition|)
-return|return;
-name|filestab
-argument_list|()
-expr_stmt|;
-name|stabf
-argument_list|(
-name|func
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|linestab
-parameter_list|()
-block|{
-name|line_numberT
-name|line
-decl_stmt|;
-if|if
-condition|(
-name|now_seg
-operator|!=
-name|SEG_TEXT
-condition|)
-return|return;
-name|filestab
-argument_list|()
-expr_stmt|;
-name|line
-operator|=
-name|logical_input_line
-condition|?
-name|logical_input_line
-else|:
-name|physical_input_line
-expr_stmt|;
-if|if
-condition|(
-name|saved_line
-operator|==
-literal|0
-operator|||
-name|line
-operator|!=
-name|saved_line
-condition|)
-block|{
-name|stabd
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
-name|saved_line
-operator|=
-name|line
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			a s _ h o w m u c h ( )  *  * Output to given stream how much of line we have scanned so far.  * Assumes we have scanned up to and including input_line_pointer.  * No free '\n' at end of line.  */
+comment|/*  *			a s _ h o w m u c h ()  *  * Output to given stream how much of line we have scanned so far.  * Assumes we have scanned up to and including input_line_pointer.  * No free '\n' at end of line.  */
 end_comment
 
 begin_function
@@ -1258,7 +1424,7 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* Scan input line. */
-comment|/* register	char	c; JF unused */
+comment|/* register char c; JF unused */
 for|for
 control|(
 name|p
@@ -1275,11 +1441,11 @@ condition|;
 operator|--
 name|p
 control|)
-block|{     }
+block|{ 	    }
 operator|++
 name|p
 expr_stmt|;
-comment|/* p -> 1st char of line. */
+comment|/* p->1st char of line. */
 for|for
 control|(
 init|;
@@ -1315,7 +1481,7 @@ parameter_list|,
 name|stream
 parameter_list|)
 name|unsigned
-name|char
+name|int
 name|c
 decl_stmt|;
 name|FILE
@@ -1381,7 +1547,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* end: input_scrub.c */
+comment|/*  * Local Variables:  * comment-column: 0  * fill-column: 131  * End:  */
+end_comment
+
+begin_comment
+comment|/* end of input_scrub.c */
 end_comment
 
 end_unit

@@ -1,53 +1,37 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bignum_copy.c - copy a bignum    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* bignum_copy.c - copy a bignum    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"bignum.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|bzero
-parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|memset(s,0,n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bcopy
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|,
-name|n
-parameter_list|)
-value|memcpy(to,from,n)
-end_define
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: bignum-copy.c,v 1.3 1993/10/02 20:57:18 pk Exp $"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"as.h"
+end_include
+
 begin_comment
-comment|/*  *			bignum_copy ()  *  * Copy a bignum from in to out.  * If the output is shorter than the input, copy lower-order littlenums.  * Return 0 or the number of significant littlenums dropped.  * Assumes littlenum arrays are densely packed: no unused chars between  * the littlenums. Uses bcopy() to move littlenums, and wants to  * know length (in chars) of the input bignum.  */
+comment|/*  *			bignum_copy ()  *  * Copy a bignum from in to out.  * If the output is shorter than the input, copy lower-order littlenums.  * Return 0 or the number of significant littlenums dropped.  * Assumes littlenum arrays are densely packed: no unused chars between  * the littlenums. Uses memcpy() to move littlenums, and wants to  * know length (in chars) of the input bignum.  */
 end_comment
 
 begin_comment
@@ -87,7 +71,6 @@ name|out_length
 decl_stmt|;
 comment|/* in sizeof(littlenum)s */
 block|{
-specifier|register
 name|int
 name|significant_littlenums_dropped
 decl_stmt|;
@@ -98,25 +81,24 @@ operator|<
 name|in_length
 condition|)
 block|{
-specifier|register
 name|LITTLENUM_TYPE
 modifier|*
 name|p
 decl_stmt|;
-comment|/* -> most significant (non-zero) input littlenum. */
-name|bcopy
+comment|/* -> most significant (non-zero) input 				      littlenum. */
+name|memcpy
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|)
-name|in
-argument_list|,
-operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|out
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|in
 argument_list|,
 name|out_length
 operator|<<
@@ -173,19 +155,19 @@ block|}
 block|}
 else|else
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|in
+name|out
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|out
+name|in
 argument_list|,
 name|in_length
 operator|<<
@@ -199,7 +181,7 @@ operator|>
 name|in_length
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -210,6 +192,8 @@ name|out
 operator|+
 name|out_length
 operator|)
+argument_list|,
+literal|'\0'
 argument_list|,
 operator|(
 name|out_length
@@ -235,7 +219,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* end: bignum_copy.c */
+comment|/* bignum_copy() */
+end_comment
+
+begin_comment
+comment|/* end of bignum-copy.c */
 end_comment
 
 end_unit

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  */
+comment|/* input_file.c - Deal with Input Files -    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+end_comment
+
+begin_comment
+comment|/*  * Confines all details of reading source bytes to this module.  * All O/S specific crocks should live here.  * What we lose in "efficiency" we gain in modularity.  * Note we don't need to #include the "as.h" file. No common coupling!  */
 end_comment
 
 begin_ifndef
@@ -12,10 +16,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)input-file.c	6.2 (Berkeley) 5/8/91"
+literal|"$Id: input-file.c,v 1.3 1993/10/02 20:57:37 pk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,44 +28,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/* input_file.c - Deal with Input Files -    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
-end_comment
-
-begin_comment
-comment|/*  * Confines all details of reading source bytes to this module.  * All O/S specific crocks should live here.  * What we lose in "efficiency" we gain in modularity.  * Note we don't need to #include the "as.h" file. No common coupling!  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NDEBUG
-end_define
-
-begin_comment
-comment|/* JF remove asserts */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|USG
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|index
-value|strchr
-end_define
-
-begin_comment
-comment|/* JF:  What's the difference between _IOLBF and _IOFBF ? */
-end_comment
 
 begin_define
 define|#
@@ -91,16 +62,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<string.h>
 end_include
 
-begin_comment
-comment|/* #include<sys/types.h> #include<sys/stat.h> #include<sys/file.h> #include<sys/wait.h> */
-end_comment
-
-begin_comment
-comment|/* #include "style.h" */
-end_comment
+begin_include
+include|#
+directive|include
+file|"as.h"
+end_include
 
 begin_include
 include|#
@@ -109,7 +78,7 @@ file|"input-file.h"
 end_include
 
 begin_comment
-comment|/* This variable is non-zero if the file currently being read should be    preprocessed by app.  It is zero if the file can be read straight in.  */
+comment|/* This variable is non-zero if the file currently being read should be    preprocessed by app.  It is zero if the file can be read straight in.    */
 end_comment
 
 begin_decl_stmt
@@ -119,13 +88,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|as_perror
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * This code opens a file, then delivers BUFFER_SIZE character  * chunks of the file on demand.  * BUFFER_SIZE is supposed to be a number chosen for speed.  * The caller only asks once what BUFFER_SIZE is, and asks before  * the nature of the input files (if any) is known.  */
@@ -137,16 +99,6 @@ directive|define
 name|BUFFER_SIZE
 value|(32 * 1024)
 end_define
-
-begin_decl_stmt
-specifier|static
-name|char
-name|in_buf
-index|[
-name|BUFFER_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * We use static data: the data area is not sharable.  */
@@ -160,10 +112,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* JF do things the RIGHT way */
-end_comment
-
-begin_comment
 comment|/* static JF remove static so app.c can use file_name */
 end_comment
 
@@ -173,6 +121,33 @@ modifier|*
 name|file_name
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Struct for saving the state of this module for file includes.  */
+end_comment
+
+begin_struct
+struct|struct
+name|saved_file
+block|{
+name|FILE
+modifier|*
+name|f_in
+decl_stmt|;
+name|char
+modifier|*
+name|file_name
+decl_stmt|;
+name|int
+name|preprocess
+decl_stmt|;
+name|char
+modifier|*
+name|app_save
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_escape
 end_escape
@@ -186,7 +161,6 @@ name|void
 name|input_file_begin
 parameter_list|()
 block|{
-comment|/* file_handle = -1; */
 name|f_in
 operator|=
 operator|(
@@ -205,9 +179,12 @@ parameter_list|()
 block|{ }
 end_function
 
+begin_comment
+comment|/* Return BUFFER_SIZE. */
+end_comment
+
 begin_function
 name|int
-comment|/* Return BUFFER_SIZE. */
 name|input_file_buffer_size
 parameter_list|()
 block|{
@@ -224,7 +201,6 @@ name|int
 name|input_file_is_open
 parameter_list|()
 block|{
-comment|/* return (file_handle>= 0); */
 return|return
 name|f_in
 operator|!=
@@ -234,6 +210,144 @@ operator|*
 operator|)
 literal|0
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Push the state of our input, returning a pointer to saved info that    can be restored with input_file_pop ().  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|input_file_push
+parameter_list|()
+block|{
+specifier|register
+name|struct
+name|saved_file
+modifier|*
+name|saved
+decl_stmt|;
+name|saved
+operator|=
+operator|(
+expr|struct
+name|saved_file
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|saved
+argument_list|)
+expr_stmt|;
+name|saved
+operator|->
+name|f_in
+operator|=
+name|f_in
+expr_stmt|;
+name|saved
+operator|->
+name|file_name
+operator|=
+name|file_name
+expr_stmt|;
+name|saved
+operator|->
+name|preprocess
+operator|=
+name|preprocess
+expr_stmt|;
+if|if
+condition|(
+name|preprocess
+condition|)
+name|saved
+operator|->
+name|app_save
+operator|=
+name|app_push
+argument_list|()
+expr_stmt|;
+name|input_file_begin
+argument_list|()
+expr_stmt|;
+comment|/* Initialize for new file */
+return|return
+operator|(
+name|char
+operator|*
+operator|)
+name|saved
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|input_file_pop
+parameter_list|(
+name|arg
+parameter_list|)
+name|char
+modifier|*
+name|arg
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|saved_file
+modifier|*
+name|saved
+init|=
+operator|(
+expr|struct
+name|saved_file
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+name|input_file_end
+argument_list|()
+expr_stmt|;
+comment|/* Close out old file */
+name|f_in
+operator|=
+name|saved
+operator|->
+name|f_in
+expr_stmt|;
+name|file_name
+operator|=
+name|saved
+operator|->
+name|file_name
+expr_stmt|;
+name|preprocess
+operator|=
+name|saved
+operator|->
+name|preprocess
+expr_stmt|;
+if|if
+condition|(
+name|preprocess
+condition|)
+name|app_pop
+argument_list|(
+name|saved
+operator|->
+name|app_save
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -341,7 +455,7 @@ condition|(
 name|preprocess
 condition|)
 block|{
-comment|/*  * This code was written in haste for a frobbed BSD 4.2.  * I have a flight to catch: will someone please do proper  * error checks? - Dean.  */
+comment|/* 		     * This code was written in haste for a frobbed BSD 4.2. 		     * I have a flight to catch: will someone please do proper 		     * error checks? - Dean. 		     */
 name|int
 name|pid
 decl_stmt|;
@@ -358,11 +472,6 @@ name|union
 name|wait
 name|status
 decl_stmt|;
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -554,7 +663,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Can't preprocess file \"%s\", status = %xx"
 argument_list|,
@@ -716,19 +825,26 @@ return|return;
 block|}
 ifndef|#
 directive|ifndef
-name|VMS
-name|setbuffer
+name|HO_VMS
+comment|/* Ask stdio to buffer our input at BUFFER_SIZE, with a dynamically 	   allocated buffer.  */
+name|setvbuf
 argument_list|(
 name|f_in
 argument_list|,
-name|in_buf
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|_IOFBF
 argument_list|,
 name|BUFFER_SIZE
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* VMS */
+comment|/* HO_VMS */
 name|c
 operator|=
 name|getc
@@ -784,7 +900,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -853,11 +969,6 @@ index|[
 literal|17
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
 name|FILE
 modifier|*
 name|f_out
@@ -906,7 +1017,7 @@ argument_list|,
 name|temporary_file_name
 argument_list|)
 expr_stmt|;
-comment|/* JF this will have to be moved on any system that 			   does not support removal of open files.  */
+comment|/* JF this will have to be moved on any system that 		   does not support removal of open files.  */
 operator|(
 name|void
 operator|)
@@ -955,6 +1066,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Close input file.  */
+end_comment
+
+begin_function
+name|void
+name|input_file_close
+parameter_list|()
+block|{
+if|if
+condition|(
+name|f_in
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|f_in
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* don't close a null file pointer */
+name|f_in
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* input_file_close() */
+end_comment
+
 begin_function
 name|char
 modifier|*
@@ -990,8 +1135,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*        * fflush (stdin); could be done here if you want to synchronise        * stdin and stdout, for the case where our input file is stdin.        * Since the assembler shouldn't do any output to stdout, we        * don't bother to synch output and input.        */
-comment|/* size = read (file_handle, where, BUFFER_SIZE); */
+comment|/* 	 * fflush (stdin); could be done here if you want to synchronise 	 * stdin and stdout, for the case where our input file is stdin. 	 * Since the assembler shouldn't do any output to stdout, we 	 * don't bother to synch output and input. 	 */
 if|if
 condition|(
 name|preprocess
@@ -1012,18 +1156,6 @@ name|FILE
 modifier|*
 name|scrub_file
 decl_stmt|;
-name|int
-name|scrub_from_file
-parameter_list|()
-function_decl|;
-name|void
-name|scrub_to_file
-parameter_list|()
-function_decl|;
-name|int
-name|do_scrub_next_char
-parameter_list|()
-function_decl|;
 name|scrub_file
 operator|=
 name|f_in
@@ -1158,7 +1290,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* end: input_file.c */
+comment|/* end of input-file.c */
 end_comment
 
 end_unit

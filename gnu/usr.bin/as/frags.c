@@ -1,7 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* frags.c - manage frags -    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* frags.c - manage frags -     Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: frags.c,v 1.3 1993/10/02 20:57:31 pk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -19,18 +40,6 @@ begin_include
 include|#
 directive|include
 file|"obstack.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"frags.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"struc-symbol.h"
 end_include
 
 begin_decl_stmt
@@ -83,7 +92,7 @@ literal|0
 block|,
 comment|/* fr_bsr */
 literal|0
-comment|/* fr_literal [0] */
+comment|/* fr_literal[0] */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -127,7 +136,7 @@ literal|0
 block|,
 comment|/* fr_bsr */
 literal|0
-comment|/* fr_literal [0] */
+comment|/* fr_literal[0] */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -146,6 +155,7 @@ name|frag_grow
 parameter_list|(
 name|nchars
 parameter_list|)
+name|unsigned
 name|int
 name|nchars
 decl_stmt|;
@@ -262,6 +272,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* frag_grow() */
+end_comment
 
 begin_escape
 end_escape
@@ -385,7 +399,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Turn off alignment */
-comment|/* If we ever hit a machine 						   where strings must be 						   aligned, we Lose Big */
+comment|/* If we ever hit a machine 	   where strings must be 	   aligned, we Lose Big */
 name|frag_now
 operator|=
 operator|(
@@ -408,9 +422,11 @@ name|tmp
 expr_stmt|;
 comment|/* Restore alignment */
 comment|/* Just in case we don't get zero'd bytes */
-name|bzero
+name|memset
 argument_list|(
 name|frag_now
+argument_list|,
+literal|'\0'
 argument_list|,
 name|SIZEOF_STRUCT_FRAG
 argument_list|)
@@ -435,6 +451,25 @@ name|frch_last
 operator|=
 name|frag_now
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_LISTING
+block|{
+specifier|extern
+name|struct
+name|list_info_struct
+modifier|*
+name|listing_tail
+decl_stmt|;
+name|frag_now
+operator|->
+name|line
+operator|=
+name|listing_tail
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|frag_now
 operator|->
 name|fr_next
@@ -547,7 +582,6 @@ modifier|*
 name|symbol
 decl_stmt|;
 name|long
-name|int
 name|offset
 decl_stmt|;
 name|char
@@ -694,14 +728,13 @@ modifier|*
 name|symbol
 decl_stmt|;
 name|long
-name|int
 name|offset
 decl_stmt|;
 name|char
 modifier|*
 name|opcode
 decl_stmt|;
-name|char
+name|int
 name|pcrel_adjust
 decl_stmt|;
 name|char
@@ -713,7 +746,7 @@ name|char
 modifier|*
 name|retval
 decl_stmt|;
-comment|/*    frag_grow (max_chars); */
+comment|/* frag_grow (max_chars); */
 name|retval
 operator|=
 name|obstack_next_free
@@ -891,7 +924,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* end: frags.c */
+comment|/* frag_align() */
+end_comment
+
+begin_comment
+comment|/* end of frags.c */
 end_comment
 
 end_unit
