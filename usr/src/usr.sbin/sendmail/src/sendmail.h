@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.28 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.27		%G%"
+literal|"@(#)sendmail.h	8.28		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3611,6 +3611,32 @@ directive|define
 name|RF_COPYNONE
 value|0
 end_define
+
+begin_comment
+comment|/* **  Flags passed to safefile. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SF_MUSTOWN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* user must own this file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SF_NOSLINK
+value|0x0002
+end_define
+
+begin_comment
+comment|/* file cannot be a symbolic link */
+end_comment
 
 begin_comment
 comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */

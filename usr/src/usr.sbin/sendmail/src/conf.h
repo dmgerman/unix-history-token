@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.53 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.54 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -368,6 +368,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* **  Most systems have symbolic links today, so default them on.  You **  can turn them off by #undef'ing this below. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASLSTAT
+value|1
+end_define
+
+begin_comment
+comment|/* has lstat(2) call */
+end_comment
 
 begin_comment
 comment|/********************************************************************** **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. **********************************************************************/
@@ -2511,7 +2526,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Stardent Titan 3000 running TitanOS 4.2. ** **	Must be compiled in "cc -43" mode. ** **	From Kate HedStrom<kate@ahab.rutgers.edu>. ** **	Note the tweaking below after the BSD defines are set. */
+comment|/* **  Stardent Titan 3000 running TitanOS 4.2. ** **	Must be compiled in "cc -43" mode. ** **	From Kate Hedstrom<kate@ahab.rutgers.edu>. ** **	Note the tweaking below after the BSD defines are set. */
 end_comment
 
 begin_ifdef
@@ -2877,7 +2892,37 @@ name|S_ISREG
 parameter_list|(
 name|foo
 parameter_list|)
-value|((foo& S_IFREG) == S_IFREG)
+value|((foo& S_IFMT) == S_IFREG)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|S_ISLNK
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|S_IFLNK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|S_ISLNK
+parameter_list|(
+name|foo
+parameter_list|)
+value|((foo& S_IFMT) == S_IFLNK)
 end_define
 
 begin_endif

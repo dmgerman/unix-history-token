@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.16 (Berkeley) %G%"
+literal|"@(#)util.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,7 +1094,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SAFEFILE -- return true if a file exists and is safe for a user. ** **	Parameters: **		fn -- filename to check. **		uid -- user id to compare against. **		gid -- group id to compare against. **		uname -- user name to compare against (used for group **			sets). **		mustown -- to be safe, this uid must own the file. **		mode -- mode bits that must match. ** **	Returns: **		0 if fn exists, is owned by uid, and matches mode. **		An errno otherwise.  The actual errno is cleared. ** **	Side Effects: **		none. */
+comment|/* **  SAFEFILE -- return true if a file exists and is safe for a user. ** **	Parameters: **		fn -- filename to check. **		uid -- user id to compare against. **		gid -- group id to compare against. **		uname -- user name to compare against (used for group **			sets). **		flags -- modifiers: **			SF_MUSTOWN -- "uid" must own this file. **			SF_NOSLINK -- file cannot be a symbolic link. **		mode -- mode bits that must match. ** **	Returns: **		0 if fn exists, is owned by uid, and matches mode. **		An errno otherwise.  The actual errno is cleared. ** **	Side Effects: **		none. */
 end_comment
 
 begin_include
@@ -1169,7 +1169,7 @@ name|gid
 parameter_list|,
 name|uname
 parameter_list|,
-name|mustown
+name|flags
 parameter_list|,
 name|mode
 parameter_list|)
@@ -1187,8 +1187,8 @@ name|char
 modifier|*
 name|uname
 decl_stmt|;
-name|bool
-name|mustown
+name|int
+name|flags
 decl_stmt|;
 name|int
 name|mode
@@ -1222,7 +1222,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"safefile(%s, uid=%d, gid=%d, mustown=%d, mode=%o):\n"
+literal|"safefile(%s, uid=%d, gid=%d, flags=%x, mode=%o):\n"
 argument_list|,
 name|fn
 argument_list|,
@@ -1230,7 +1230,7 @@ name|uid
 argument_list|,
 name|gid
 argument_list|,
-name|mustown
+name|flags
 argument_list|,
 name|mode
 argument_list|)
@@ -1479,6 +1479,40 @@ return|return
 name|ret
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|HASLSTAT
+if|if
+condition|(
+operator|(
+name|bitset
+argument_list|(
+name|SF_NOSLINK
+argument_list|,
+name|flags
+argument_list|)
+condition|?
+name|lstat
+argument_list|(
+name|fn
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+else|:
+name|stat
+argument_list|(
+name|fn
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|stat
@@ -1491,6 +1525,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+endif|#
+directive|endif
 block|{
 name|int
 name|ret
@@ -1524,6 +1560,46 @@ return|return
 name|ret
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|S_ISLNK
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|SF_NOSLINK
+argument_list|,
+name|flags
+argument_list|)
+operator|&&
+name|S_ISLNK
+argument_list|(
+name|stbuf
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|54
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\t[mode %o]\tEPERM\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|EPERM
+return|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|uid
@@ -1692,7 +1768,12 @@ operator|==
 literal|0
 operator|||
 operator|!
-name|mustown
+name|bitset
+argument_list|(
+name|SF_MUSTOWN
+argument_list|,
+name|flags
+argument_list|)
 operator|)
 operator|&&
 operator|(
