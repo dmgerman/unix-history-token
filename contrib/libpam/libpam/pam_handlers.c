@@ -4,7 +4,7 @@ comment|/* pam_handlers.c -- pam config file parsing and module loading */
 end_comment
 
 begin_comment
-comment|/*  * created by Marc Ewing.  * Currently maintained by Andrew G. Morgan<morgan@linux.kernel.org>  *  * $Id: pam_handlers.c,v 1.3 2001/02/05 06:50:41 agmorgan Exp $  *  */
+comment|/*  * created by Marc Ewing.  * Currently maintained by Andrew G. Morgan<morgan@linux.kernel.org>  *  * $Id: pam_handlers.c,v 1.3 2001/02/05 06:50:41 agmorgan Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -35,6 +35,24 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pam_private.h"
 end_include
 
 begin_ifdef
@@ -88,48 +106,8 @@ begin_comment
 comment|/* PAM_DYNAMIC */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pam_private.h"
-end_include
-
 begin_comment
-comment|/* FreeBSD doesn't define this */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RTLD_NOW
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RTLD_NOW
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* If not required, define as nothing - FreeBSD needs it to be "_"... */
+comment|/* If not required, define as nothing */
 end_comment
 
 begin_ifndef
