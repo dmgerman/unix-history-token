@@ -448,6 +448,12 @@ literal|"data too large for key size"
 block|}
 block|,
 block|{
+name|RSA_R_DATA_TOO_LARGE_FOR_MODULUS
+block|,
+literal|"data too large for modulus"
+block|}
+block|,
+block|{
 name|RSA_R_DATA_TOO_SMALL
 block|,
 literal|"data too small"

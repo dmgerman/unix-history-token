@@ -1990,7 +1990,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -[digest]      Digest to sign with (md5, sha1, md2, mdc2)\n"
+literal|" -[digest]      Digest to sign with (md5, sha1, md2, mdc2, md4)\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf

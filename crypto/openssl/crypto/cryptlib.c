@@ -134,6 +134,8 @@ literal|"ssl"
 block|,
 literal|"rand"
 block|,
+literal|"rand2"
+block|,
 literal|"debug_malloc"
 block|,
 literal|"BIO"
@@ -158,7 +160,7 @@ if|#
 directive|if
 name|CRYPTO_NUM_LOCKS
 operator|!=
-literal|28
+literal|29
 error|#
 directive|error
 literal|"Inconsistency between crypto.h and cryptlib.c"
@@ -798,7 +800,14 @@ argument_list|(
 name|dyn_locks
 argument_list|)
 condition|)
+block|{
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_DYNLOCK
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|pointer
 operator|=
 name|sk_CRYPTO_dynlock_value

@@ -47,6 +47,8 @@ specifier|static
 name|DH_METHOD
 modifier|*
 name|default_DH_method
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 

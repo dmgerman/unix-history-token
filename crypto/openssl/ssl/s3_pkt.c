@@ -583,6 +583,8 @@ decl_stmt|,
 name|al
 decl_stmt|;
 name|int
+name|enc_err
+decl_stmt|,
 name|n
 decl_stmt|,
 name|i
@@ -982,9 +984,8 @@ name|rr
 operator|->
 name|input
 expr_stmt|;
-if|if
-condition|(
-operator|!
+name|enc_err
+operator|=
 name|s
 operator|->
 name|method
@@ -997,14 +998,27 @@ name|s
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|enc_err
+operator|<=
+literal|0
 condition|)
 block|{
-name|al
-operator|=
-name|SSL_AD_DECRYPT_ERROR
-expr_stmt|;
+if|if
+condition|(
+name|enc_err
+operator|==
+literal|0
+condition|)
+comment|/* SSLerr() and ssl3_send_alert() have been called */
 goto|goto
-name|f_err
+name|err
+goto|;
+comment|/* otherwise enc_err == -1 */
+goto|goto
+name|decryption_failed_or_bad_record_mac
 goto|;
 block|}
 ifdef|#
@@ -1130,20 +1144,18 @@ operator|+
 name|mac_size
 condition|)
 block|{
-name|al
-operator|=
-name|SSL_AD_RECORD_OVERFLOW
-expr_stmt|;
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_RECORD
-argument_list|,
-name|SSL_R_PRE_MAC_LENGTH_TOO_LONG
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* OK only for stream ciphers (then rr->length is visible from ciphertext anyway) */
+block|al=SSL_AD_RECORD_OVERFLOW; 			SSLerr(SSL_F_SSL3_GET_RECORD,SSL_R_PRE_MAC_LENGTH_TOO_LONG); 			goto f_err;
+else|#
+directive|else
 goto|goto
-name|f_err
+name|decryption_failed_or_bad_record_mac
 goto|;
+endif|#
+directive|endif
 block|}
 comment|/* check the MAC for rr->input (it's in mac_size bytes at the tail) */
 if|if
@@ -1155,20 +1167,18 @@ operator|<
 name|mac_size
 condition|)
 block|{
-name|al
-operator|=
-name|SSL_AD_DECODE_ERROR
-expr_stmt|;
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_RECORD
-argument_list|,
-name|SSL_R_LENGTH_TOO_SHORT
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* OK only for stream ciphers */
+block|al=SSL_AD_DECODE_ERROR; 			SSLerr(SSL_F_SSL3_GET_RECORD,SSL_R_LENGTH_TOO_SHORT); 			goto f_err;
+else|#
+directive|else
 goto|goto
-name|f_err
+name|decryption_failed_or_bad_record_mac
 goto|;
+endif|#
+directive|endif
 block|}
 name|rr
 operator|->
@@ -1217,24 +1227,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|al
-operator|=
-name|SSL_AD_BAD_RECORD_MAC
-expr_stmt|;
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_RECORD
-argument_list|,
-name|SSL_R_BAD_MAC_DECODE
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 goto|goto
-name|f_err
+name|decryption_failed_or_bad_record_mac
 goto|;
 block|}
 block|}
@@ -1364,6 +1358,20 @@ operator|(
 literal|1
 operator|)
 return|;
+name|decryption_failed_or_bad_record_mac
+label|:
+comment|/* Separate 'decryption_failed' alert was introduced with TLS 1.0, 	 * SSL 3.0 only has 'bad_record_mac'.  But unless a decryption 	 * failure is directly visible from the ciphertext anyway, 	 * we should not reveal which kind of error occured -- this 	 * might become visible to an attacker (e.g. via logfile) */
+name|al
+operator|=
+name|SSL_AD_BAD_RECORD_MAC
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_RECORD
+argument_list|,
+name|SSL_R_DECRYPTION_FAILED_OR_BAD_RECORD_MAC
+argument_list|)
+expr_stmt|;
 name|f_err
 label|:
 name|ssl3_send_alert
@@ -4543,6 +4551,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|s
+operator|->
+name|version
+operator|==
+name|SSL3_VERSION
+operator|&&
+name|desc
+operator|==
+name|SSL_AD_PROTOCOL_VERSION
+condition|)
+name|desc
+operator|=
+name|SSL_AD_HANDSHAKE_FAILURE
+expr_stmt|;
+comment|/* SSL 3.0 does not have protocol_version alerts */
+if|if
+condition|(
 name|desc
 operator|<
 literal|0
@@ -4618,7 +4643,7 @@ name|left
 operator|==
 literal|0
 condition|)
-comment|/* data still being written out */
+comment|/* data still being written out? */
 name|ssl3_dispatch_alert
 argument_list|(
 name|s
@@ -4698,7 +4723,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If it is important, send it now.  If the message 		 * does not get sent due to non-blocking IO, we will 		 * not worry too much. */
+comment|/* Alert sent to BIO.  If it is important, flush it now. 		 * If the message does not get sent due to non-blocking IO, 		 * we will not worry too much. */
 if|if
 condition|(
 name|s

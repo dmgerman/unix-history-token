@@ -1,42 +1,42 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lib/obj/obj_dat.h */
+comment|/* crypto/objects/obj_dat.h */
+end_comment
+
+begin_comment
+comment|/* THIS FILE IS GENERATED FROM objects.h by obj_dat.pl via the  * following command:  * perl obj_dat.pl objects.h obj_dat.h  */
 end_comment
 
 begin_comment
 comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
-begin_comment
-comment|/* THIS FILE IS GENERATED FROM Objects.h by obj_dat.pl via the  * following command:  * perl obj_dat.pl objects.h obj_dat.h  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NUM_NID
-value|393
+value|404
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_SN
-value|392
+value|402
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_LN
-value|392
+value|402
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_OBJ
-value|366
+value|376
 end_define
 
 begin_decl_stmt
@@ -45,7 +45,7 @@ name|unsigned
 name|char
 name|lvalues
 index|[
-literal|2896
+literal|2941
 index|]
 init|=
 block|{
@@ -5602,7 +5602,7 @@ literal|0x09
 block|,
 literal|0x03
 block|,
-comment|/* [2607] OBJ_id_pda_pseudonym */
+comment|/* [2607] OBJ_id_pda_gender */
 literal|0x2B
 block|,
 literal|0x06
@@ -5619,7 +5619,7 @@ literal|0x09
 block|,
 literal|0x04
 block|,
-comment|/* [2615] OBJ_id_pda_gender */
+comment|/* [2615] OBJ_id_pda_countryOfCitizenship */
 literal|0x2B
 block|,
 literal|0x06
@@ -5636,24 +5636,7 @@ literal|0x09
 block|,
 literal|0x05
 block|,
-comment|/* [2623] OBJ_id_pda_countryOfCitizenship */
-literal|0x2B
-block|,
-literal|0x06
-block|,
-literal|0x01
-block|,
-literal|0x05
-block|,
-literal|0x05
-block|,
-literal|0x07
-block|,
-literal|0x09
-block|,
-literal|0x06
-block|,
-comment|/* [2631] OBJ_id_pda_countryOfResidence */
+comment|/* [2623] OBJ_id_pda_countryOfResidence */
 literal|0x2B
 block|,
 literal|0x06
@@ -5670,7 +5653,7 @@ literal|0x0A
 block|,
 literal|0x01
 block|,
-comment|/* [2639] OBJ_id_aca_authenticationInfo */
+comment|/* [2631] OBJ_id_aca_authenticationInfo */
 literal|0x2B
 block|,
 literal|0x06
@@ -5687,7 +5670,7 @@ literal|0x0A
 block|,
 literal|0x02
 block|,
-comment|/* [2647] OBJ_id_aca_accessIdentity */
+comment|/* [2639] OBJ_id_aca_accessIdentity */
 literal|0x2B
 block|,
 literal|0x06
@@ -5704,7 +5687,7 @@ literal|0x0A
 block|,
 literal|0x03
 block|,
-comment|/* [2655] OBJ_id_aca_chargingIdentity */
+comment|/* [2647] OBJ_id_aca_chargingIdentity */
 literal|0x2B
 block|,
 literal|0x06
@@ -5721,7 +5704,7 @@ literal|0x0A
 block|,
 literal|0x04
 block|,
-comment|/* [2663] OBJ_id_aca_group */
+comment|/* [2655] OBJ_id_aca_group */
 literal|0x2B
 block|,
 literal|0x06
@@ -5738,7 +5721,7 @@ literal|0x0A
 block|,
 literal|0x05
 block|,
-comment|/* [2671] OBJ_id_aca_role */
+comment|/* [2663] OBJ_id_aca_role */
 literal|0x2B
 block|,
 literal|0x06
@@ -5755,7 +5738,7 @@ literal|0x0B
 block|,
 literal|0x01
 block|,
-comment|/* [2679] OBJ_id_qcs_pkixQCSyntax_v1 */
+comment|/* [2671] OBJ_id_qcs_pkixQCSyntax_v1 */
 literal|0x2B
 block|,
 literal|0x06
@@ -5772,7 +5755,7 @@ literal|0x0C
 block|,
 literal|0x01
 block|,
-comment|/* [2687] OBJ_id_cct_crs */
+comment|/* [2679] OBJ_id_cct_crs */
 literal|0x2B
 block|,
 literal|0x06
@@ -5789,7 +5772,7 @@ literal|0x0C
 block|,
 literal|0x02
 block|,
-comment|/* [2695] OBJ_id_cct_PKIData */
+comment|/* [2687] OBJ_id_cct_PKIData */
 literal|0x2B
 block|,
 literal|0x06
@@ -5806,7 +5789,7 @@ literal|0x0C
 block|,
 literal|0x03
 block|,
-comment|/* [2703] OBJ_id_cct_PKIResponse */
+comment|/* [2695] OBJ_id_cct_PKIResponse */
 literal|0x2B
 block|,
 literal|0x06
@@ -5823,7 +5806,7 @@ literal|0x30
 block|,
 literal|0x03
 block|,
-comment|/* [2711] OBJ_ad_timeStamping */
+comment|/* [2703] OBJ_ad_timeStamping */
 literal|0x2B
 block|,
 literal|0x06
@@ -5840,7 +5823,7 @@ literal|0x30
 block|,
 literal|0x04
 block|,
-comment|/* [2719] OBJ_ad_dvcs */
+comment|/* [2711] OBJ_ad_dvcs */
 literal|0x2B
 block|,
 literal|0x06
@@ -5859,7 +5842,7 @@ literal|0x01
 block|,
 literal|0x01
 block|,
-comment|/* [2727] OBJ_id_pkix_OCSP_basic */
+comment|/* [2719] OBJ_id_pkix_OCSP_basic */
 literal|0x2B
 block|,
 literal|0x06
@@ -5878,7 +5861,7 @@ literal|0x01
 block|,
 literal|0x02
 block|,
-comment|/* [2736] OBJ_id_pkix_OCSP_Nonce */
+comment|/* [2728] OBJ_id_pkix_OCSP_Nonce */
 literal|0x2B
 block|,
 literal|0x06
@@ -5897,7 +5880,7 @@ literal|0x01
 block|,
 literal|0x03
 block|,
-comment|/* [2745] OBJ_id_pkix_OCSP_CrlID */
+comment|/* [2737] OBJ_id_pkix_OCSP_CrlID */
 literal|0x2B
 block|,
 literal|0x06
@@ -5916,7 +5899,7 @@ literal|0x01
 block|,
 literal|0x04
 block|,
-comment|/* [2754] OBJ_id_pkix_OCSP_acceptableResponses */
+comment|/* [2746] OBJ_id_pkix_OCSP_acceptableResponses */
 literal|0x2B
 block|,
 literal|0x06
@@ -5935,7 +5918,7 @@ literal|0x01
 block|,
 literal|0x05
 block|,
-comment|/* [2763] OBJ_id_pkix_OCSP_noCheck */
+comment|/* [2755] OBJ_id_pkix_OCSP_noCheck */
 literal|0x2B
 block|,
 literal|0x06
@@ -5954,7 +5937,7 @@ literal|0x01
 block|,
 literal|0x06
 block|,
-comment|/* [2772] OBJ_id_pkix_OCSP_archiveCutoff */
+comment|/* [2764] OBJ_id_pkix_OCSP_archiveCutoff */
 literal|0x2B
 block|,
 literal|0x06
@@ -5973,7 +5956,7 @@ literal|0x01
 block|,
 literal|0x07
 block|,
-comment|/* [2781] OBJ_id_pkix_OCSP_serviceLocator */
+comment|/* [2773] OBJ_id_pkix_OCSP_serviceLocator */
 literal|0x2B
 block|,
 literal|0x06
@@ -5992,7 +5975,7 @@ literal|0x01
 block|,
 literal|0x08
 block|,
-comment|/* [2790] OBJ_id_pkix_OCSP_extendedStatus */
+comment|/* [2782] OBJ_id_pkix_OCSP_extendedStatus */
 literal|0x2B
 block|,
 literal|0x06
@@ -6011,7 +5994,7 @@ literal|0x01
 block|,
 literal|0x09
 block|,
-comment|/* [2799] OBJ_id_pkix_OCSP_valid */
+comment|/* [2791] OBJ_id_pkix_OCSP_valid */
 literal|0x2B
 block|,
 literal|0x06
@@ -6030,7 +6013,7 @@ literal|0x01
 block|,
 literal|0x0A
 block|,
-comment|/* [2808] OBJ_id_pkix_OCSP_path */
+comment|/* [2800] OBJ_id_pkix_OCSP_path */
 literal|0x2B
 block|,
 literal|0x06
@@ -6049,7 +6032,7 @@ literal|0x01
 block|,
 literal|0x0B
 block|,
-comment|/* [2817] OBJ_id_pkix_OCSP_trustRoot */
+comment|/* [2809] OBJ_id_pkix_OCSP_trustRoot */
 literal|0x2B
 block|,
 literal|0x0E
@@ -6058,7 +6041,7 @@ literal|0x03
 block|,
 literal|0x02
 block|,
-comment|/* [2826] OBJ_algorithm */
+comment|/* [2818] OBJ_algorithm */
 literal|0x2B
 block|,
 literal|0x0E
@@ -6069,36 +6052,36 @@ literal|0x02
 block|,
 literal|0x0B
 block|,
-comment|/* [2830] OBJ_rsaSignature */
+comment|/* [2822] OBJ_rsaSignature */
 literal|0x55
 block|,
 literal|0x08
 block|,
-comment|/* [2835] OBJ_X500algorithms */
+comment|/* [2827] OBJ_X500algorithms */
 literal|0x2B
 block|,
-comment|/* [2837] OBJ_org */
-literal|0x2B
-block|,
-literal|0x06
-block|,
-comment|/* [2838] OBJ_dod */
+comment|/* [2829] OBJ_org */
 literal|0x2B
 block|,
 literal|0x06
 block|,
-literal|0x01
-block|,
-comment|/* [2840] OBJ_iana */
+comment|/* [2830] OBJ_dod */
 literal|0x2B
 block|,
 literal|0x06
 block|,
 literal|0x01
 block|,
+comment|/* [2832] OBJ_iana */
+literal|0x2B
+block|,
+literal|0x06
+block|,
 literal|0x01
 block|,
-comment|/* [2843] OBJ_Directory */
+literal|0x01
+block|,
+comment|/* [2835] OBJ_Directory */
 literal|0x2B
 block|,
 literal|0x06
@@ -6107,7 +6090,7 @@ literal|0x01
 block|,
 literal|0x02
 block|,
-comment|/* [2847] OBJ_Management */
+comment|/* [2839] OBJ_Management */
 literal|0x2B
 block|,
 literal|0x06
@@ -6116,7 +6099,7 @@ literal|0x01
 block|,
 literal|0x03
 block|,
-comment|/* [2851] OBJ_Experimental */
+comment|/* [2843] OBJ_Experimental */
 literal|0x2B
 block|,
 literal|0x06
@@ -6125,7 +6108,7 @@ literal|0x01
 block|,
 literal|0x04
 block|,
-comment|/* [2855] OBJ_Private */
+comment|/* [2847] OBJ_Private */
 literal|0x2B
 block|,
 literal|0x06
@@ -6134,7 +6117,7 @@ literal|0x01
 block|,
 literal|0x05
 block|,
-comment|/* [2859] OBJ_Security */
+comment|/* [2851] OBJ_Security */
 literal|0x2B
 block|,
 literal|0x06
@@ -6143,7 +6126,7 @@ literal|0x01
 block|,
 literal|0x06
 block|,
-comment|/* [2863] OBJ_SNMPv2 */
+comment|/* [2855] OBJ_SNMPv2 */
 literal|0x2B
 block|,
 literal|0x06
@@ -6152,17 +6135,17 @@ literal|0x01
 block|,
 literal|0x07
 block|,
-comment|/* [2867] OBJ_Mail */
+comment|/* [2859] OBJ_Mail */
 literal|0x01
 block|,
-comment|/* [2871] OBJ_Enterprises */
+comment|/* [2863] OBJ_Enterprises */
 literal|0xBA
 block|,
 literal|0x82
 block|,
 literal|0x58
 block|,
-comment|/* [2872] OBJ_dcObject */
+comment|/* [2864] OBJ_dcObject */
 literal|0x09
 block|,
 literal|0x92
@@ -6183,7 +6166,7 @@ literal|0x01
 block|,
 literal|0x19
 block|,
-comment|/* [2875] OBJ_domainComponent */
+comment|/* [2867] OBJ_domainComponent */
 literal|0x09
 block|,
 literal|0x92
@@ -6204,7 +6187,124 @@ literal|0x04
 block|,
 literal|0x0D
 block|,
-comment|/* [2885] OBJ_Domain */
+comment|/* [2877] OBJ_Domain */
+literal|0x50
+block|,
+comment|/* [2887] OBJ_joint_iso_ccitt */
+literal|0x55
+block|,
+literal|0x01
+block|,
+literal|0x05
+block|,
+comment|/* [2888] OBJ_selected_attribute_types */
+literal|0x55
+block|,
+literal|0x01
+block|,
+literal|0x05
+block|,
+literal|0x37
+block|,
+comment|/* [2891] OBJ_clearance */
+literal|0x2A
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x86
+block|,
+literal|0xF7
+block|,
+literal|0x0D
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x03
+block|,
+comment|/* [2895] OBJ_md4WithRSAEncryption */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x05
+block|,
+literal|0x05
+block|,
+literal|0x07
+block|,
+literal|0x01
+block|,
+literal|0x0A
+block|,
+comment|/* [2904] OBJ_ac_proxying */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x05
+block|,
+literal|0x05
+block|,
+literal|0x07
+block|,
+literal|0x01
+block|,
+literal|0x0B
+block|,
+comment|/* [2912] OBJ_sinfo_access */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x05
+block|,
+literal|0x05
+block|,
+literal|0x07
+block|,
+literal|0x0A
+block|,
+literal|0x06
+block|,
+comment|/* [2920] OBJ_id_aca_encAttrs */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x48
+block|,
+comment|/* [2928] OBJ_role */
+literal|0x55
+block|,
+literal|0x1D
+block|,
+literal|0x24
+block|,
+comment|/* [2931] OBJ_policy_constraints */
+literal|0x55
+block|,
+literal|0x1D
+block|,
+literal|0x37
+block|,
+comment|/* [2934] OBJ_target_information */
+literal|0x55
+block|,
+literal|0x1D
+block|,
+literal|0x38
+block|,
+comment|/* [2937] OBJ_no_rev_avail */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8115,7 +8215,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"UID"
+literal|"uniqueIdentifier"
 block|,
 literal|"uniqueIdentifier"
 block|,
@@ -13003,23 +13103,15 @@ literal|0
 block|}
 block|,
 block|{
-literal|"id-pda-pseudonym"
+name|NULL
 block|,
-literal|"id-pda-pseudonym"
+name|NULL
 block|,
-name|NID_id_pda_pseudonym
-block|,
-literal|8
-block|,
-operator|&
-operator|(
-name|lvalues
-index|[
-literal|2607
-index|]
-operator|)
+name|NID_undef
 block|,
 literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -13035,7 +13127,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2615
+literal|2607
 index|]
 operator|)
 block|,
@@ -13055,7 +13147,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2623
+literal|2615
 index|]
 operator|)
 block|,
@@ -13075,7 +13167,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2631
+literal|2623
 index|]
 operator|)
 block|,
@@ -13095,7 +13187,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2639
+literal|2631
 index|]
 operator|)
 block|,
@@ -13115,7 +13207,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2647
+literal|2639
 index|]
 operator|)
 block|,
@@ -13135,7 +13227,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2655
+literal|2647
 index|]
 operator|)
 block|,
@@ -13155,7 +13247,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2663
+literal|2655
 index|]
 operator|)
 block|,
@@ -13175,7 +13267,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2671
+literal|2663
 index|]
 operator|)
 block|,
@@ -13195,7 +13287,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2679
+literal|2671
 index|]
 operator|)
 block|,
@@ -13215,7 +13307,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2687
+literal|2679
 index|]
 operator|)
 block|,
@@ -13235,7 +13327,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2695
+literal|2687
 index|]
 operator|)
 block|,
@@ -13255,7 +13347,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2703
+literal|2695
 index|]
 operator|)
 block|,
@@ -13275,7 +13367,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2711
+literal|2703
 index|]
 operator|)
 block|,
@@ -13295,7 +13387,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2719
+literal|2711
 index|]
 operator|)
 block|,
@@ -13315,7 +13407,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2727
+literal|2719
 index|]
 operator|)
 block|,
@@ -13335,7 +13427,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2736
+literal|2728
 index|]
 operator|)
 block|,
@@ -13355,7 +13447,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2745
+literal|2737
 index|]
 operator|)
 block|,
@@ -13375,7 +13467,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2754
+literal|2746
 index|]
 operator|)
 block|,
@@ -13395,7 +13487,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2763
+literal|2755
 index|]
 operator|)
 block|,
@@ -13415,7 +13507,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2772
+literal|2764
 index|]
 operator|)
 block|,
@@ -13435,7 +13527,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2781
+literal|2773
 index|]
 operator|)
 block|,
@@ -13455,7 +13547,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2790
+literal|2782
 index|]
 operator|)
 block|,
@@ -13475,7 +13567,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2799
+literal|2791
 index|]
 operator|)
 block|,
@@ -13495,7 +13587,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2808
+literal|2800
 index|]
 operator|)
 block|,
@@ -13515,7 +13607,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2817
+literal|2809
 index|]
 operator|)
 block|,
@@ -13535,7 +13627,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2826
+literal|2818
 index|]
 operator|)
 block|,
@@ -13555,7 +13647,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2830
+literal|2822
 index|]
 operator|)
 block|,
@@ -13575,7 +13667,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2835
+literal|2827
 index|]
 operator|)
 block|,
@@ -13595,7 +13687,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2837
+literal|2829
 index|]
 operator|)
 block|,
@@ -13615,7 +13707,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2838
+literal|2830
 index|]
 operator|)
 block|,
@@ -13635,7 +13727,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2840
+literal|2832
 index|]
 operator|)
 block|,
@@ -13655,7 +13747,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2843
+literal|2835
 index|]
 operator|)
 block|,
@@ -13675,7 +13767,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2847
+literal|2839
 index|]
 operator|)
 block|,
@@ -13695,7 +13787,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2851
+literal|2843
 index|]
 operator|)
 block|,
@@ -13715,7 +13807,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2855
+literal|2847
 index|]
 operator|)
 block|,
@@ -13735,7 +13827,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2859
+literal|2851
 index|]
 operator|)
 block|,
@@ -13755,7 +13847,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2863
+literal|2855
 index|]
 operator|)
 block|,
@@ -13775,7 +13867,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2867
+literal|2859
 index|]
 operator|)
 block|,
@@ -13795,7 +13887,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2871
+literal|2863
 index|]
 operator|)
 block|,
@@ -13815,7 +13907,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2872
+literal|2864
 index|]
 operator|)
 block|,
@@ -13835,7 +13927,7 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2875
+literal|2867
 index|]
 operator|)
 block|,
@@ -13855,7 +13947,227 @@ operator|&
 operator|(
 name|lvalues
 index|[
-literal|2885
+literal|2877
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"JOINT-ISO-CCITT"
+block|,
+literal|"joint-iso-ccitt"
+block|,
+name|NID_joint_iso_ccitt
+block|,
+literal|1
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2887
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"selected-attribute-types"
+block|,
+literal|"Selected Attribute Types"
+block|,
+name|NID_selected_attribute_types
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2888
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"clearance"
+block|,
+literal|"clearance"
+block|,
+name|NID_clearance
+block|,
+literal|4
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2891
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"RSA-MD4"
+block|,
+literal|"md4WithRSAEncryption"
+block|,
+name|NID_md4WithRSAEncryption
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2895
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ac-proxying"
+block|,
+literal|"ac-proxying"
+block|,
+name|NID_ac_proxying
+block|,
+literal|8
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2904
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"subjectInfoAccess"
+block|,
+literal|"Subject Information Access"
+block|,
+name|NID_sinfo_access
+block|,
+literal|8
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2912
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"id-aca-encAttrs"
+block|,
+literal|"id-aca-encAttrs"
+block|,
+name|NID_id_aca_encAttrs
+block|,
+literal|8
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2920
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"role"
+block|,
+literal|"role"
+block|,
+name|NID_role
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2928
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"policyConstraints"
+block|,
+literal|"X509v3 Policy Constraints"
+block|,
+name|NID_policy_constraints
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2931
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"targetInformation"
+block|,
+literal|"X509v3 AC Targeting"
+block|,
+name|NID_target_information
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2934
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"noRevAvail"
+block|,
+literal|"X509v3 No Revocation Available"
+block|,
+name|NID_no_rev_avail
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|2937
 index|]
 operator|)
 block|,
@@ -14284,6 +14596,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|393
+index|]
+operator|)
+block|,
+comment|/* "JOINT-ISO-CCITT" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|15
 index|]
 operator|)
@@ -14689,6 +15010,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|396
+index|]
+operator|)
+block|,
+comment|/* "RSA-MD4" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|8
 index|]
 operator|)
@@ -14833,15 +15163,6 @@ operator|&
 operator|(
 name|nid_objs
 index|[
-literal|102
-index|]
-operator|)
-block|,
-comment|/* "UID" */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|0
 index|]
 operator|)
@@ -14919,6 +15240,15 @@ index|]
 operator|)
 block|,
 comment|/* "ac-auditEntity" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|397
+index|]
+operator|)
+block|,
+comment|/* "ac-proxying" */
 operator|&
 operator|(
 name|nid_objs
@@ -15045,6 +15375,15 @@ index|]
 operator|)
 block|,
 comment|/* "challengePassword" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|395
+index|]
+operator|)
+block|,
+comment|/* "clearance" */
 operator|&
 operator|(
 name|nid_objs
@@ -15279,6 +15618,15 @@ index|]
 operator|)
 block|,
 comment|/* "id-aca-chargingIdentity" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|399
+index|]
+operator|)
+block|,
+comment|/* "id-aca-encAttrs" */
 operator|&
 operator|(
 name|nid_objs
@@ -15918,15 +16266,6 @@ index|]
 operator|)
 block|,
 comment|/* "id-pda-placeOfBirth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
-literal|350
-index|]
-operator|)
-block|,
-comment|/* "id-pda-pseudonym" */
 operator|&
 operator|(
 name|nid_objs
@@ -16921,6 +17260,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|403
+index|]
+operator|)
+block|,
+comment|/* "noRevAvail" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|72
 index|]
 operator|)
@@ -17164,6 +17512,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|401
+index|]
+operator|)
+block|,
+comment|/* "policyConstraints" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|385
 index|]
 operator|)
@@ -17187,6 +17544,15 @@ index|]
 operator|)
 block|,
 comment|/* "qcStatements" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|400
+index|]
+operator|)
+block|,
+comment|/* "role" */
 operator|&
 operator|(
 name|nid_objs
@@ -17281,6 +17647,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|394
+index|]
+operator|)
+block|,
+comment|/* "selected-attribute-types" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|129
 index|]
 operator|)
@@ -17326,11 +17701,29 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|398
+index|]
+operator|)
+block|,
+comment|/* "subjectInfoAccess" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|82
 index|]
 operator|)
 block|,
 comment|/* "subjectKeyIdentifier" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|402
+index|]
+operator|)
+block|,
+comment|/* "targetInformation" */
 operator|&
 operator|(
 name|nid_objs
@@ -17358,6 +17751,15 @@ index|]
 operator|)
 block|,
 comment|/* "trustRoot" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|102
+index|]
+operator|)
+block|,
+comment|/* "uniqueIdentifier" */
 operator|&
 operator|(
 name|nid_objs
@@ -17961,11 +18363,29 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|394
+index|]
+operator|)
+block|,
+comment|/* "Selected Attribute Types" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|143
 index|]
 operator|)
 block|,
 comment|/* "Strong Extranet ID" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|398
+index|]
+operator|)
+block|,
+comment|/* "Subject Information Access" */
 operator|&
 operator|(
 name|nid_objs
@@ -18011,6 +18431,15 @@ index|]
 operator|)
 block|,
 comment|/* "X509" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|402
+index|]
+operator|)
+block|,
+comment|/* "X509v3 AC Targeting" */
 operator|&
 operator|(
 name|nid_objs
@@ -18105,6 +18534,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|403
+index|]
+operator|)
+block|,
+comment|/* "X509v3 No Revocation Available" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|401
+index|]
+operator|)
+block|,
+comment|/* "X509v3 Policy Constraints" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|84
 index|]
 operator|)
@@ -18164,6 +18611,15 @@ index|]
 operator|)
 block|,
 comment|/* "ac-auditEntity" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|397
+index|]
+operator|)
+block|,
+comment|/* "ac-proxying" */
 operator|&
 operator|(
 name|nid_objs
@@ -18281,6 +18737,15 @@ index|]
 operator|)
 block|,
 comment|/* "challengePassword" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|395
+index|]
+operator|)
+block|,
+comment|/* "clearance" */
 operator|&
 operator|(
 name|nid_objs
@@ -18659,6 +19124,15 @@ index|]
 operator|)
 block|,
 comment|/* "id-aca-chargingIdentity" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|399
+index|]
+operator|)
+block|,
+comment|/* "id-aca-encAttrs" */
 operator|&
 operator|(
 name|nid_objs
@@ -19298,15 +19772,6 @@ index|]
 operator|)
 block|,
 comment|/* "id-pda-placeOfBirth" */
-operator|&
-operator|(
-name|nid_objs
-index|[
-literal|350
-index|]
-operator|)
-block|,
-comment|/* "id-pda-pseudonym" */
 operator|&
 operator|(
 name|nid_objs
@@ -20157,6 +20622,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|393
+index|]
+operator|)
+block|,
+comment|/* "joint-iso-ccitt" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|150
 index|]
 operator|)
@@ -20207,6 +20681,15 @@ index|]
 operator|)
 block|,
 comment|/* "md4" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|396
+index|]
+operator|)
+block|,
+comment|/* "md4WithRSAEncryption" */
 operator|&
 operator|(
 name|nid_objs
@@ -20688,6 +21171,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|400
+index|]
+operator|)
+block|,
+comment|/* "role" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|19
 index|]
 operator|)
@@ -21008,6 +21500,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|393
+index|]
+operator|)
+block|,
+comment|/* OBJ_joint_iso_ccitt              2 */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|11
 index|]
 operator|)
@@ -21067,6 +21568,15 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_iana                         1 3 6 1 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|394
+index|]
+operator|)
+block|,
+comment|/* OBJ_selected_attribute_types     2 5 1 5 */
 operator|&
 operator|(
 name|nid_objs
@@ -21206,6 +21716,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|400
+index|]
+operator|)
+block|,
+comment|/* OBJ_role                         2 5 4 72 */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|82
 index|]
 operator|)
@@ -21323,11 +21842,38 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|401
+index|]
+operator|)
+block|,
+comment|/* OBJ_policy_constraints           2 5 29 36 */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|126
 index|]
 operator|)
 block|,
 comment|/* OBJ_ext_key_usage                2 5 29 37 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|402
+index|]
+operator|)
+block|,
+comment|/* OBJ_target_information           2 5 29 55 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|403
+index|]
+operator|)
+block|,
+comment|/* OBJ_no_rev_avail                 2 5 29 56 */
 operator|&
 operator|(
 name|nid_objs
@@ -21409,6 +21955,15 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_algorithm                    1 3 14 3 2 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|395
+index|]
+operator|)
+block|,
+comment|/* OBJ_clearance                    2 5 1 5 55 */
 operator|&
 operator|(
 name|nid_objs
@@ -22151,6 +22706,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|397
+index|]
+operator|)
+block|,
+comment|/* OBJ_ac_proxying                  1 3 6 1 5 5 7 1 10 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|398
+index|]
+operator|)
+block|,
+comment|/* OBJ_sinfo_access                 1 3 6 1 5 5 7 1 11 */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|164
 index|]
 operator|)
@@ -22664,20 +23237,11 @@ operator|&
 operator|(
 name|nid_objs
 index|[
-literal|350
-index|]
-operator|)
-block|,
-comment|/* OBJ_id_pda_pseudonym             1 3 6 1 5 5 7 9 3 */
-operator|&
-operator|(
-name|nid_objs
-index|[
 literal|351
 index|]
 operator|)
 block|,
-comment|/* OBJ_id_pda_gender                1 3 6 1 5 5 7 9 4 */
+comment|/* OBJ_id_pda_gender                1 3 6 1 5 5 7 9 3 */
 operator|&
 operator|(
 name|nid_objs
@@ -22686,7 +23250,7 @@ literal|352
 index|]
 operator|)
 block|,
-comment|/* OBJ_id_pda_countryOfCitizenship  1 3 6 1 5 5 7 9 5 */
+comment|/* OBJ_id_pda_countryOfCitizenship  1 3 6 1 5 5 7 9 4 */
 operator|&
 operator|(
 name|nid_objs
@@ -22695,7 +23259,7 @@ literal|353
 index|]
 operator|)
 block|,
-comment|/* OBJ_id_pda_countryOfResidence    1 3 6 1 5 5 7 9 6 */
+comment|/* OBJ_id_pda_countryOfResidence    1 3 6 1 5 5 7 9 5 */
 operator|&
 operator|(
 name|nid_objs
@@ -22741,6 +23305,15 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_id_aca_role                  1 3 6 1 5 5 7 10 5 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|399
+index|]
+operator|)
+block|,
+comment|/* OBJ_id_aca_encAttrs              1 3 6 1 5 5 7 10 6 */
 operator|&
 operator|(
 name|nid_objs
@@ -22867,6 +23440,15 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_md2WithRSAEncryption         1 2 840 113549 1 1 2 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|396
+index|]
+operator|)
+block|,
+comment|/* OBJ_md4WithRSAEncryption         1 2 840 113549 1 1 3 */
 operator|&
 operator|(
 name|nid_objs

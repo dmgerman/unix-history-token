@@ -188,7 +188,7 @@ literal|0
 block|,
 name|trust_1oidany
 block|,
-literal|"SSL Client"
+literal|"SSL Server"
 block|,
 name|NID_server_auth
 block|,

@@ -419,8 +419,9 @@ decl_stmt|;
 name|unsigned
 name|char
 modifier|*
-name|pad_data
+name|pad_data_UNUSED
 decl_stmt|;
+comment|/* only for binary compatibility with 0.9.6b */
 name|unsigned
 name|char
 modifier|*
@@ -489,9 +490,11 @@ name|unsigned
 name|int
 name|cert_length
 decl_stmt|;
+name|unsigned
 name|int
 name|csl
 decl_stmt|;
+name|unsigned
 name|int
 name|clear
 decl_stmt|;
@@ -506,6 +509,7 @@ index|[
 name|SSL2_MAX_CERT_CHALLENGE_LENGTH
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|cipher_spec_length
 decl_stmt|;

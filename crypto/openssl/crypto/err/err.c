@@ -3602,7 +3602,9 @@ argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|err
+goto|;
 block|}
 else|else
 name|str
@@ -3628,6 +3630,8 @@ operator||
 name|ERR_TXT_STRING
 argument_list|)
 expr_stmt|;
+name|err
+label|:
 name|va_end
 argument_list|(
 name|args

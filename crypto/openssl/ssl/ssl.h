@@ -1817,7 +1817,7 @@ comment|/* are we the server side? - mostly used by SSL_clear*/
 name|int
 name|new_session
 decl_stmt|;
-comment|/* 1 if we are to use a new session */
+comment|/* 1 if we are to use a new session. 	                 * NB: For servers, the 'new' session may actually be a previously 	                 * cached session or even the previous session */
 name|int
 name|quiet_shutdown
 decl_stmt|;
@@ -3177,6 +3177,22 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
+name|int
+name|SSL_get_rfd
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+name|int
+name|SSL_get_wfd
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*
@@ -3644,12 +3660,6 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-name|void
-name|ERR_load_SSL_strings
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
 name|void
 name|SSL_load_error_strings
 parameter_list|(
@@ -6053,6 +6063,10 @@ name|SSL_R_DECRYPTION_FAILED
 value|147
 define|#
 directive|define
+name|SSL_R_DECRYPTION_FAILED_OR_BAD_RECORD_MAC
+value|1109
+define|#
+directive|define
 name|SSL_R_DH_PUBLIC_VALUE_LENGTH_IS_WRONG
 value|148
 define|#
@@ -6093,6 +6107,10 @@ name|SSL_R_HTTP_REQUEST
 value|156
 define|#
 directive|define
+name|SSL_R_ILLEGAL_PADDING
+value|1110
+define|#
+directive|define
 name|SSL_R_INTERNAL_ERROR
 value|157
 define|#
@@ -6127,6 +6145,10 @@ define|#
 directive|define
 name|SSL_R_LIBRARY_HAS_NO_CIPHERS
 value|161
+define|#
+directive|define
+name|SSL_R_MESSAGE_TOO_LONG
+value|1111
 define|#
 directive|define
 name|SSL_R_MISSING_DH_DSA_CERT

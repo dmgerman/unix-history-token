@@ -2144,6 +2144,12 @@ literal|"decryption failed"
 block|}
 block|,
 block|{
+name|SSL_R_DECRYPTION_FAILED_OR_BAD_RECORD_MAC
+block|,
+literal|"decryption failed or bad record mac"
+block|}
+block|,
+block|{
 name|SSL_R_DH_PUBLIC_VALUE_LENGTH_IS_WRONG
 block|,
 literal|"dh public value length is wrong"
@@ -2204,6 +2210,12 @@ literal|"http request"
 block|}
 block|,
 block|{
+name|SSL_R_ILLEGAL_PADDING
+block|,
+literal|"illegal padding"
+block|}
+block|,
+block|{
 name|SSL_R_INTERNAL_ERROR
 block|,
 literal|"internal error"
@@ -2255,6 +2267,12 @@ block|{
 name|SSL_R_LIBRARY_HAS_NO_CIPHERS
 block|,
 literal|"library has no ciphers"
+block|}
+block|,
+block|{
+name|SSL_R_MESSAGE_TOO_LONG
+block|,
+literal|"message too long"
 block|}
 block|,
 block|{

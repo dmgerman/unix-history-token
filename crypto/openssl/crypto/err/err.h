@@ -306,6 +306,10 @@ name|ERR_LIB_DSO
 value|37
 define|#
 directive|define
+name|ERR_LIB_COMP
+value|41
+define|#
+directive|define
 name|ERR_LIB_USER
 value|128
 define|#
@@ -542,6 +546,15 @@ parameter_list|,
 name|r
 parameter_list|)
 value|ERR_PUT_error(ERR_LIB_DSO,(f),(r),ERR_file_name,__LINE__)
+define|#
+directive|define
+name|COMPerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_COMP,(f),(r),ERR_file_name,__LINE__)
 comment|/* Borland C seems too stupid to be able to shift and do longs in  * the pre-processor :-( */
 define|#
 directive|define
@@ -725,6 +738,10 @@ define|#
 directive|define
 name|ERR_R_DSO_LIB
 value|ERR_LIB_DSO
+define|#
+directive|define
+name|ERR_R_COMP_LIB
+value|ERR_LIB_COMP
 comment|/* fatal error */
 define|#
 directive|define

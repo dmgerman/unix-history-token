@@ -1920,7 +1920,7 @@ break|break;
 case|case
 name|BIO_C_GET_WRITE_BUF_SIZE
 case|:
-name|num
+name|ret
 operator|=
 operator|(
 name|long
@@ -1929,6 +1929,7 @@ name|b
 operator|->
 name|size
 expr_stmt|;
+break|break;
 case|case
 name|BIO_C_MAKE_BIO_PAIR
 case|:

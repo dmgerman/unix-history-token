@@ -1250,27 +1250,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|THREADS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-ifndef|#
-directive|ifndef
-name|_REENTRANT
-define|#
-directive|define
-name|_REENTRANT
-endif|#
-directive|endif
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
 name|sun
 argument_list|)
 operator|&&
@@ -1285,6 +1264,13 @@ name|defined
 argument_list|(
 name|__SVR4
 argument_list|)
+comment|/* include headers first, so our defines don't break it */
+include|#
+directive|include
+file|<stdlib.h>
+include|#
+directive|include
+file|<string.h>
 comment|/* bcopy can handle overlapping moves according to SunOS 4.1.4 manpage */
 define|#
 directive|define

@@ -73,6 +73,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|_M_IX86
 argument_list|)
 operator|||
@@ -143,6 +148,11 @@ directive|if
 name|defined
 argument_list|(
 name|__i386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
 argument_list|)
 operator|||
 name|defined

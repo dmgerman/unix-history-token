@@ -7,6 +7,10 @@ begin_comment
 comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
+begin_comment
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -358,6 +362,11 @@ name|skip
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|got_new_session
+init|=
+literal|0
+decl_stmt|;
 name|RAND_add
 argument_list|(
 operator|&
@@ -411,6 +420,11 @@ operator|->
 name|info_callback
 expr_stmt|;
 comment|/* init things to blank */
+name|s
+operator|->
+name|in_handshake
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -428,11 +442,6 @@ name|SSL_clear
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|in_handshake
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -629,7 +638,22 @@ goto|goto
 name|end
 goto|;
 block|}
-comment|/* Ok, we now need to push on a buffering BIO so that 			 * the output is sent in a way that TCP likes :-) 			 */
+name|s
+operator|->
+name|init_num
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|state
+operator|!=
+name|SSL_ST_RENEGOTIATE
+condition|)
+block|{
+comment|/* Ok, we now need to push on a buffering BIO so that 				 * the output is sent in a way that TCP likes :-) 				 */
 if|if
 condition|(
 operator|!
@@ -650,21 +674,6 @@ goto|goto
 name|end
 goto|;
 block|}
-name|s
-operator|->
-name|init_num
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|->
-name|state
-operator|!=
-name|SSL_ST_RENEGOTIATE
-condition|)
-block|{
 name|ssl3_init_finished_mac
 argument_list|(
 name|s
@@ -688,6 +697,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* s->state == SSL_ST_RENEGOTIATE, 				 * we will just send a HelloRequest */
 name|s
 operator|->
 name|ctx
@@ -770,14 +780,7 @@ name|state
 operator|=
 name|SSL_ST_OK
 expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|end
-goto|;
-comment|/* break; */
+break|break;
 case|case
 name|SSL3_ST_SR_CLNT_HELLO_A
 case|:
@@ -809,6 +812,10 @@ condition|)
 goto|goto
 name|end
 goto|;
+name|got_new_session
+operator|=
+literal|1
+expr_stmt|;
 name|s
 operator|->
 name|state
@@ -1849,13 +1856,20 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|->
-name|new_session
+name|init_num
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|got_new_session
+condition|)
+comment|/* skipped if we just sent a HelloRequest */
+block|{
+comment|/* actually not necessarily a 'new' session  */
 name|s
 operator|->
-name|init_num
+name|new_session
 operator|=
 literal|0
 expr_stmt|;
@@ -1882,10 +1896,6 @@ name|handshake_func
 operator|=
 name|ssl3_accept
 expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|cb
@@ -1900,6 +1910,11 @@ name|SSL_CB_HANDSHAKE_DONE
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+block|}
+name|ret
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|end
@@ -2018,6 +2033,11 @@ block|}
 name|end
 label|:
 comment|/* BIO_flush(s->wbio); */
+name|s
+operator|->
+name|in_handshake
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|cb
@@ -2032,11 +2052,6 @@ name|SSL_CB_ACCEPT_EXIT
 argument_list|,
 name|ret
 argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|in_handshake
-operator|--
 expr_stmt|;
 return|return
 operator|(
@@ -2165,6 +2180,7 @@ decl_stmt|;
 name|long
 name|n
 decl_stmt|;
+comment|/* this function is called when we really expect a Certificate message, 	 * so permit appropriate message length */
 name|n
 operator|=
 name|ssl3_get_message
@@ -2178,8 +2194,32 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-name|SSL3_RT_MAX_PLAIN_LENGTH
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+literal|1024
+operator|*
+literal|30
 argument_list|,
+comment|/* 30k max cert list :-) */
+else|#
+directive|else
+literal|1024
+operator|*
+literal|100
+argument_list|,
+comment|/* 100k max cert list :-) */
+endif|#
+directive|endif
 operator|&
 name|ok
 argument_list|)
@@ -2432,6 +2472,55 @@ name|p
 operator|+=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|client_version
+operator|<
+name|s
+operator|->
+name|version
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_WRONG_VERSION_NUMBER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|->
+name|client_version
+operator|>>
+literal|8
+operator|)
+operator|==
+name|SSL3_VERSION_MAJOR
+condition|)
+block|{
+comment|/* similar to ssl3_get_record, send alert using remote version number */
+name|s
+operator|->
+name|version
+operator|=
+name|s
+operator|->
+name|client_version
+expr_stmt|;
+block|}
+name|al
+operator|=
+name|SSL_AD_PROTOCOL_VERSION
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 comment|/* load the client random */
 name|memcpy
 argument_list|(
@@ -5610,7 +5699,7 @@ name|SSL3_ST_SR_KEY_EXCH_B
 argument_list|,
 name|SSL3_MT_CLIENT_KEY_EXCHANGE
 argument_list|,
-literal|400
+literal|2048
 argument_list|,
 comment|/* ???? */
 operator|&

@@ -2428,7 +2428,7 @@ end_function
 begin_function
 specifier|static
 name|long
-name|round
+name|roundv
 parameter_list|(
 name|LDOUBLE
 name|value
@@ -2622,7 +2622,7 @@ expr_stmt|;
 comment|/* we "cheat" by converting the fractional part to integer by        multiplying by a factor of 10 */
 name|fracpart
 operator|=
-name|round
+name|roundv
 argument_list|(
 operator|(
 name|pow10
