@@ -125,6 +125,7 @@ typedef|typedef
 struct|struct
 name|moduledata
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -223,6 +224,7 @@ modifier|*
 name|md_data
 decl_stmt|;
 comment|/* specific data */
+specifier|const
 name|char
 modifier|*
 name|md_cval
