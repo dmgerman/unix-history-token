@@ -839,6 +839,7 @@ block|{
 name|oldc
 operator|=
 operator|*
+operator|++
 name|p
 expr_stmt|;
 operator|*
