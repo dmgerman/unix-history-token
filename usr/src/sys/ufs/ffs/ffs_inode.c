@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1806,13 +1806,13 @@ name|ovp
 operator|->
 name|v_dirtyblkhd
 operator|.
-name|le_next
+name|lh_first
 operator|||
 name|ovp
 operator|->
 name|v_cleanblkhd
 operator|.
-name|le_next
+name|lh_first
 operator|)
 condition|)
 name|panic
