@@ -180,12 +180,6 @@ ifdef|#
 directive|ifdef
 name|INVARIANTS
 comment|/* Check that we called signotify() enough. */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -240,12 +234,6 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 endif|#
