@@ -10367,8 +10367,13 @@ argument_list|(
 name|fpcurthread
 argument_list|)
 operator|&&
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|cpu_fxsr
 operator|&&
+endif|#
+directive|endif
 operator|(
 operator|(
 name|uintptr_t
@@ -10593,8 +10598,13 @@ argument_list|(
 name|fpcurthread
 argument_list|)
 operator|&&
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|cpu_fxsr
 operator|&&
+endif|#
+directive|endif
 operator|(
 operator|(
 name|uintptr_t
