@@ -163,12 +163,6 @@ directive|include
 file|<dev/aac/aacvar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/aac/aac_cam.h>
-end_include
-
 begin_struct
 struct|struct
 name|aac_cam
@@ -177,7 +171,7 @@ name|device_t
 name|dev
 decl_stmt|;
 name|struct
-name|aac_cam_inf
+name|aac_sim
 modifier|*
 name|inf
 decl_stmt|;
@@ -474,9 +468,14 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|debug_called
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EBUSY
 operator|)
 return|;
 block|}
@@ -516,7 +515,7 @@ modifier|*
 name|camsc
 decl_stmt|;
 name|struct
-name|aac_cam_inf
+name|aac_sim
 modifier|*
 name|inf
 decl_stmt|;
@@ -541,7 +540,7 @@ name|inf
 operator|=
 operator|(
 expr|struct
-name|aac_cam_inf
+name|aac_sim
 operator|*
 operator|)
 name|device_get_ivars

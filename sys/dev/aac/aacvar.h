@@ -185,6 +185,41 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Per-SIM data structure  */
+end_comment
+
+begin_struct
+struct|struct
+name|aac_sim
+block|{
+name|device_t
+name|sim_dev
+decl_stmt|;
+name|int
+name|TargetsPerBus
+decl_stmt|;
+name|int
+name|BusNumber
+decl_stmt|;
+name|int
+name|InitiatorBusId
+decl_stmt|;
+name|struct
+name|aac_softc
+modifier|*
+name|aac_sc
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|aac_sim
+argument_list|)
+name|sim_link
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Per-disk structure  */
 end_comment
 
@@ -735,16 +770,6 @@ parameter_list|)
 value|bus_space_read_1 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|aac_container_tq
-argument_list|,
-name|aac_container
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* Define the OS version specific locks */
 end_comment
@@ -1086,10 +1111,13 @@ index|]
 decl_stmt|;
 comment|/* queue statistics */
 comment|/* connected containters */
-name|struct
-name|aac_container_tq
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|aac_container
+argument_list|)
 name|aac_container_tqh
-decl_stmt|;
+expr_stmt|;
 name|aac_lock_t
 name|aac_container_lock
 decl_stmt|;
@@ -1156,7 +1184,7 @@ name|AAC_AIFFLAGS_RUNNING
 value|(1<< 0)
 define|#
 directive|define
-name|AAC_AIFFLAGS_PENDING
+name|AAC_AIFFLAGS_AIF
 value|(1<< 1)
 define|#
 directive|define
@@ -1166,6 +1194,14 @@ define|#
 directive|define
 name|AAC_AIFFLAGS_EXITED
 value|(1<< 3)
+define|#
+directive|define
+name|AAC_AIFFLAGS_PRINTF
+value|(1<< 4)
+define|#
+directive|define
+name|AAC_AIFFLAGS_PENDING
+value|(AAC_AIFFLAGS_AIF | AAC_AIFFLAGS_PRINTF)
 name|u_int32_t
 name|quirks
 decl_stmt|;
@@ -1191,6 +1227,13 @@ comment|/* Only create pass devices */
 name|u_int32_t
 name|scsi_method_id
 decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|aac_sim
+argument_list|)
+name|aac_sim_tqh
+expr_stmt|;
 block|}
 struct|;
 end_struct
