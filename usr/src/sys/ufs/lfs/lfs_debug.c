@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_debug.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_debug.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -416,7 +416,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%d\t%s%d\t%s%d\t%s%d\n"
+literal|"%s%u\t%s%d\t%s%u\t%s%u\t%s%lu\n"
 argument_list|,
 literal|"mode  "
 argument_list|,
@@ -444,9 +444,6 @@ name|di_gid
 argument_list|,
 literal|"size  "
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|dip
 operator|->
 name|di_size
@@ -457,7 +454,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"inum  %d\n"
+literal|"inum  %ld\n"
 argument_list|,
 name|dip
 operator|->
