@@ -37,6 +37,12 @@ operator|=
 literal|50
 block|,
 index|[
+name|SOUND_MIXER_SYNTH
+index|]
+operator|=
+literal|75
+block|,
+index|[
 name|SOUND_MIXER_PCM
 index|]
 operator|=
@@ -460,7 +466,13 @@ index|[
 name|dev
 index|]
 operator|=
-name|v
+name|l
+operator||
+operator|(
+name|r
+operator|<<
+literal|8
+operator|)
 expr_stmt|;
 return|return
 literal|0

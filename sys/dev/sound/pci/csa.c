@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/sound/pcm/sound.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/sound/chip.h>
 end_include
 
@@ -135,9 +141,6 @@ modifier|*
 name|pcmintr_arg
 decl_stmt|;
 comment|/* pcm intr arg */
-if|#
-directive|if
-name|notyet
 name|device_t
 name|midi
 decl_stmt|;
@@ -152,9 +155,6 @@ modifier|*
 name|midiintr_arg
 decl_stmt|;
 comment|/* midi intr arg */
-endif|#
-directive|endif
-comment|/* notyet */
 name|void
 modifier|*
 name|ih
@@ -436,14 +436,6 @@ case|:
 name|s
 operator|=
 literal|"Crystal Semiconductor CS4615 Audio accelerator"
-expr_stmt|;
-break|break;
-case|case
-name|CS4281_PCI_ID
-case|:
-name|s
-operator|=
-literal|"Crystal Semiconductor CS4281 Audio controller"
 expr_stmt|;
 break|break;
 block|}
@@ -1070,9 +1062,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|notyet
 comment|/* Midi Interface */
 name|func
 operator|=
@@ -1149,9 +1138,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 name|bus_generic_attach
 argument_list|(
 name|dev
@@ -1443,9 +1429,6 @@ operator|=
 name|arg
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|notyet
 case|case
 name|SCF_MIDI
 case|:
@@ -1462,9 +1445,6 @@ operator|=
 name|arg
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* notyet */
 default|default:
 return|return
 operator|(
@@ -1610,9 +1590,6 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|notyet
 case|case
 name|SCF_MIDI
 case|:
@@ -1629,9 +1606,6 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* notyet */
 default|default:
 return|return
 operator|(
@@ -1755,9 +1729,6 @@ operator|->
 name|pcmintr_arg
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|notyet
 if|if
 condition|(
 operator|(
@@ -1783,9 +1754,6 @@ operator|->
 name|midiintr_arg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 comment|/* Throw an eoi. */
 name|csa_writeio
 argument_list|(
@@ -2250,7 +2218,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* notdef */
-comment|/* 	 * Turn off the Processor by turning off the software clock enable flag in  	 * the clock control register. 	 */
+comment|/* 	 * Turn off the Processor by turning off the software clock enable flag in 	 * the clock control register. 	 */
 if|#
 directive|if
 name|notdef
@@ -2987,7 +2955,7 @@ operator|(
 name|EAGAIN
 operator|)
 return|;
-comment|/* 	 * Read the data returned from the AC97 register. 	 * ACSDA = Status Data Register = 474h  	 */
+comment|/* 	 * Read the data returned from the AC97 register. 	 * ACSDA = Status Data Register = 474h 	 */
 operator|*
 name|data
 operator|=
@@ -3471,7 +3439,7 @@ end_comment
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|csa
+name|snd_csa
 argument_list|,
 name|pci
 argument_list|,
@@ -3482,6 +3450,32 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|snd_csa
+argument_list|,
+name|snd_pcm
+argument_list|,
+name|PCM_MINVER
+argument_list|,
+name|PCM_PREFVER
+argument_list|,
+name|PCM_MAXVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|snd_csa
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

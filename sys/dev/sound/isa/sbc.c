@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"isa.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/sound/chip.h>
 end_include
 
@@ -1199,12 +1193,26 @@ block|}
 block|,
 comment|/* ESS1868 */
 block|{
+literal|0x03007316
+block|,
+literal|"ESS ES1869"
+block|}
+block|,
+comment|/* ESS1869 */
+block|{
 literal|0x69187316
 block|,
 literal|"ESS ES1869"
 block|}
 block|,
 comment|/* ESS1869 */
+block|{
+literal|0xabb0110e
+block|,
+literal|"ESS ES1869 (Compaq OEM)"
+block|}
+block|,
+comment|/* CPQb0ab */
 block|{
 literal|0xacb0110e
 block|,
@@ -2308,9 +2316,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|notyet
 comment|/* Midi Interface */
 name|func
 operator|=
@@ -2433,9 +2438,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 comment|/* probe/attach kids */
 name|bus_generic_attach
 argument_list|(
@@ -4111,7 +4113,7 @@ end_comment
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|sbc
+name|snd_sbc
 argument_list|,
 name|isa
 argument_list|,
@@ -4122,6 +4124,32 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|snd_sbc
+argument_list|,
+name|snd_pcm
+argument_list|,
+name|PCM_MINVER
+argument_list|,
+name|PCM_PREFVER
+argument_list|,
+name|PCM_MAXVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|snd_sbc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -167,16 +167,16 @@ name|bufsize
 decl_stmt|;
 specifier|volatile
 name|int
+name|dl
+decl_stmt|;
+comment|/* transfer size */
+specifier|volatile
+name|int
 name|rp
 decl_stmt|,
 name|fp
 decl_stmt|;
 comment|/* pointers to the ready and free area */
-specifier|volatile
-name|int
-name|dl
-decl_stmt|;
-comment|/* transfer size */
 specifier|volatile
 name|int
 name|rl
@@ -190,6 +190,12 @@ name|int_count
 decl_stmt|,
 name|prev_int_count
 decl_stmt|;
+specifier|volatile
+name|u_int32_t
+name|total
+decl_stmt|,
+name|prev_total
+decl_stmt|;
 name|int
 name|chan
 decl_stmt|,
@@ -197,29 +203,21 @@ name|dir
 decl_stmt|;
 comment|/* dma channel */
 name|int
-name|sample_size
+name|fmt
+decl_stmt|,
+name|blksz
+decl_stmt|,
+name|blkcnt
 decl_stmt|;
-comment|/* 1, 2, 4 */
-name|struct
-name|selinfo
-name|sel
-decl_stmt|;
-name|u_long
-name|total
-decl_stmt|;
-comment|/* total bytes processed */
-name|u_long
-name|prev_total
-decl_stmt|;
-comment|/* copy of the above when GETxPTR called */
 name|int
-name|first_poll
+name|underflow
 decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
-name|int
-name|underflow
+name|struct
+name|selinfo
+name|sel
 decl_stmt|;
 block|}
 struct|;
@@ -532,17 +530,8 @@ name|flags
 decl_stmt|;
 name|u_int32_t
 name|format
-decl_stmt|,
-name|hwfmt
 decl_stmt|;
 name|u_int32_t
-name|blocksize
-decl_stmt|,
-name|blocksize2nd
-decl_stmt|;
-name|u_int32_t
-name|fragments
-decl_stmt|,
 name|blocks
 decl_stmt|;
 name|int
@@ -552,6 +541,10 @@ name|snd_dbuf
 name|buffer
 decl_stmt|,
 name|buffer2nd
+decl_stmt|;
+name|snddev_info
+modifier|*
+name|parent
 decl_stmt|;
 name|void
 modifier|*
@@ -637,6 +630,9 @@ decl_stmt|;
 name|pcm_swap_t
 modifier|*
 name|swap
+decl_stmt|;
+name|device_t
+name|dev
 decl_stmt|;
 name|char
 name|status

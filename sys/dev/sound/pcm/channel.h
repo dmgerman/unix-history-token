@@ -389,6 +389,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMTRIG_EMLDMARD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMTRIG_STOP
 value|0
 end_define
@@ -534,8 +541,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHN_F_DEAD
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHN_F_RESET
-value|(CHN_F_BUSY)
+value|(CHN_F_BUSY | CHN_F_DEAD)
 end_define
 
 begin_comment

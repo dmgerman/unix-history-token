@@ -149,6 +149,43 @@ value|0x0400561e
 end_define
 
 begin_comment
+comment|/* PnP IDs */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|isa_pnp_id
+name|gusc_ids
+index|[]
+init|=
+block|{
+block|{
+name|LOGICALID_PCM
+block|,
+literal|"GRV0000 Gravis UltraSound PnP PCM"
+block|}
+block|,
+comment|/* GRV0000 */
+block|{
+name|LOGICALID_OPL
+block|,
+literal|"GRV0003 Gravis UltraSound PnP OPL"
+block|}
+block|,
+comment|/* GRV0003 */
+block|{
+name|LOGICALID_MIDI
+block|,
+literal|"GRV0004 Gravis UltraSound PnP MIDI"
+block|}
+block|,
+comment|/* GRV0004 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Interrupt handler.  */
 end_comment
 
@@ -372,12 +409,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|notyet
-end_if
-
 begin_function_decl
 specifier|static
 name|device_t
@@ -388,15 +419,6 @@ name|scp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notyet */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -440,8 +462,6 @@ name|device_t
 name|child
 decl_stmt|;
 name|u_int32_t
-name|vend_id
-decl_stmt|,
 name|logical_id
 decl_stmt|;
 name|char
@@ -453,25 +473,9 @@ name|sndcard_func
 modifier|*
 name|func
 decl_stmt|;
-name|vend_id
-operator|=
-name|isa_get_vendorid
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vend_id
-operator|==
-literal|0
-condition|)
-return|return
-name|gusisa_probe
-argument_list|(
-name|dev
-argument_list|)
-return|;
+name|int
+name|ret
+decl_stmt|;
 name|logical_id
 operator|=
 name|isa_get_logicalid
@@ -483,14 +487,51 @@ name|s
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Check isapnp ids */
 if|if
 condition|(
-name|vend_id
-operator|==
-literal|0x0100561e
+name|logical_id
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|ret
+operator|=
+name|ISA_PNP_PROBE
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|gusc_ids
+argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+else|else
 block|{
-comment|/* Gravis */
+if|if
+condition|(
+name|logical_id
+operator|==
+literal|0
+condition|)
+return|return
+name|gusisa_probe
+argument_list|(
+name|dev
+argument_list|)
+return|;
+block|}
 switch|switch
 condition|(
 name|logical_id
@@ -566,9 +607,6 @@ name|func
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|notyet
 case|case
 name|LOGICALID_OPL
 case|:
@@ -709,10 +747,6 @@ name|func
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* notyet */
-block|}
 block|}
 if|if
 condition|(
@@ -1272,9 +1306,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|notyet
 comment|/* We can support the CS4231 and MIDI devices.  */
 name|func
 operator|=
@@ -1334,9 +1365,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 name|func
 operator|=
 name|malloc
@@ -1506,6 +1534,14 @@ name|ENXIO
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|scp
+operator|->
+name|irq
+operator|!=
+name|NULL
+condition|)
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -1616,9 +1652,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|notyet
 if|if
 condition|(
 name|scp
@@ -1667,9 +1700,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* notyet */
 block|}
 do|while
 condition|(
@@ -2137,12 +2167,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|notyet
-end_if
-
 begin_function
 specifier|static
 name|device_t
@@ -2260,15 +2284,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notyet */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2323,15 +2338,9 @@ name|lid
 decl_stmt|,
 name|flags
 decl_stmt|;
-if|#
-directive|if
-name|notyet
 name|device_t
 name|dev
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 name|flags
 operator|=
 literal|0
@@ -2803,9 +2812,6 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-if|#
-directive|if
-name|notyet
 case|case
 name|LOGICALID_OPL
 case|:
@@ -3063,9 +3069,6 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* notyet */
 block|}
 return|return
 operator|(
@@ -3091,15 +3094,9 @@ name|lid
 decl_stmt|,
 name|flags
 decl_stmt|;
-if|#
-directive|if
-name|notyet
 name|device_t
 name|dev
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 name|flags
 operator|=
 literal|0
@@ -3330,9 +3327,6 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-if|#
-directive|if
-name|notyet
 case|case
 name|LOGICALID_OPL
 case|:
@@ -3483,9 +3477,6 @@ name|NULL
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* notyet */
 block|}
 return|return
 operator|(
@@ -3630,7 +3621,7 @@ end_comment
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|gusc
+name|snd_gusc
 argument_list|,
 name|isa
 argument_list|,
@@ -3641,6 +3632,32 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|snd_gusc
+argument_list|,
+name|snd_pcm
+argument_list|,
+name|PCM_MINVER
+argument_list|,
+name|PCM_PREFVER
+argument_list|,
+name|PCM_MAXVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|snd_gusc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
