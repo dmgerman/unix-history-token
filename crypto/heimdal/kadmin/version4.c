@@ -62,7 +62,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: version4.c,v 1.26 2002/09/10 15:20:46 joda Exp $"
+literal|"$Id: version4.c,v 1.27 2002/10/21 12:35:07 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3762,6 +3762,37 @@ name|KADM_VERSIZE
 operator|-
 literal|4
 expr_stmt|;
+if|if
+condition|(
+name|authent
+operator|.
+name|length
+operator|>=
+name|MAX_KTXT_LEN
+condition|)
+block|{
+name|krb5_warnx
+argument_list|(
+name|context
+argument_list|,
+literal|"received bad rlen (%lu)"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|rlen
+argument_list|)
+expr_stmt|;
+name|make_you_loose_packet
+argument_list|(
+name|KADM_LENGTH_ERROR
+argument_list|,
+name|reply
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|memcpy
 argument_list|(
 name|authent
