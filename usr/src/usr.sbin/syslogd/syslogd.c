@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.9 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5078,6 +5078,10 @@ block|,
 literal|"syslog"
 block|,
 name|LOG_SYSLOG
+block|,
+literal|"lpr"
+block|,
+name|LOG_LPR
 block|,
 literal|"local0"
 block|,
