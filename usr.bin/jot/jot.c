@@ -1259,7 +1259,7 @@ operator|/
 operator|(
 name|double
 operator|)
-name|ULONG_MAX
+name|UINT_MAX
 expr_stmt|;
 if|if
 condition|(
