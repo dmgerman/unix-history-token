@@ -2221,7 +2221,7 @@ condition|(
 operator|(
 name|kp
 operator|==
-literal|0
+name|NULL
 operator|&&
 name|nentries
 operator|>
@@ -2231,7 +2231,7 @@ operator|||
 operator|(
 name|kp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|nentries
 operator|<
