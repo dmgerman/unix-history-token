@@ -650,7 +650,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%sdrive %s device %s\n"
+literal|"%sdrive %s device /dev/%s\n"
 argument_list|,
 name|prefix
 argument_list|,
