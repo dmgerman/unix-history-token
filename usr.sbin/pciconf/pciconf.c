@@ -651,7 +651,7 @@ name|open
 argument_list|(
 name|_PATH_DEVPCI
 argument_list|,
-name|O_RDWR
+name|O_RDONLY
 argument_list|,
 literal|0
 argument_list|)
