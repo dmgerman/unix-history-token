@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.23 (Berkeley) %G%"
+literal|"@(#)main.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -1192,10 +1198,6 @@ name|path
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -2461,10 +2463,6 @@ name|u_int
 name|len
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|char
 modifier|*
 name|p
