@@ -458,6 +458,9 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Fill as many pages as vm_fault has allocated for us. 	 */
 for|for
 control|(
@@ -488,6 +491,10 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_zero_page
 argument_list|(
 name|m
@@ -496,10 +503,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Switch off pv_entries */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+block|}
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -510,6 +517,7 @@ argument_list|,
 name|PG_ZERO
 argument_list|)
 expr_stmt|;
+comment|/* Switch off pv_entries */
 name|vm_page_unmanage
 argument_list|(
 name|m
@@ -517,9 +525,6 @@ index|[
 name|i
 index|]
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|m
 index|[
@@ -568,6 +573,9 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
