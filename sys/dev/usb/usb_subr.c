@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.71 2000/03/29 18:24:53 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.72 2000/04/14 14:13:56 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -4715,24 +4715,6 @@ name|ifaceno
 operator|=
 name|UHUB_UNK_INTERFACE
 expr_stmt|;
-name|uaa
-operator|.
-name|vendor
-operator|=
-name|UHUB_UNK_VENDOR
-expr_stmt|;
-name|uaa
-operator|.
-name|product
-operator|=
-name|UHUB_UNK_PRODUCT
-expr_stmt|;
-name|uaa
-operator|.
-name|release
-operator|=
-name|UHUB_UNK_RELEASE
-expr_stmt|;
 name|dv
 operator|=
 name|USB_DO_ATTACH
@@ -4860,7 +4842,7 @@ name|int
 name|depth
 parameter_list|,
 name|int
-name|speed
+name|lowspeed
 parameter_list|,
 name|int
 name|port
@@ -4890,7 +4872,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_new_device bus=%p port=%d depth=%d speed=%d\n"
+literal|"usbd_new_device bus=%p port=%d depth=%d lowspeed=%d\n"
 operator|,
 name|bus
 operator|,
@@ -4898,7 +4880,7 @@ name|port
 operator|,
 name|depth
 operator|,
-name|speed
+name|lowspeed
 operator|)
 argument_list|)
 expr_stmt|;
