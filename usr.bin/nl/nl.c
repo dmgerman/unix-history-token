@@ -603,21 +603,13 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"nl: invalid delim argument -- %s\n"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+literal|"invalid delim argument -- %s"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -693,25 +685,15 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"invalid incr argument -- %s\n"
+literal|"invalid incr argument -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|incr
 operator|=
 operator|(
@@ -762,25 +744,15 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"invalid num argument -- %s\n"
+literal|"invalid num argument -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|nblank
 operator|=
 operator|(
@@ -847,25 +819,15 @@ name|FORMAT_RZ
 expr_stmt|;
 block|}
 else|else
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"nl: illegal format -- %s\n"
+literal|"illegal format -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'s'
@@ -923,25 +885,15 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"invalid startnum value -- %s\n"
+literal|"invalid startnum value -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|startnum
 operator|=
 operator|(
@@ -998,25 +950,15 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"invalid width value -- %s\n"
+literal|"invalid width value -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|width
 operator|=
 operator|(
@@ -1033,25 +975,15 @@ operator|>
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"nl: width argument must be> 0 -- %d\n"
+literal|"width argument must be> 0 -- %d"
 argument_list|,
 name|width
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'?'
@@ -1738,14 +1670,11 @@ name|errorbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"nl: %s expr: %s -- %s\n"
+literal|"%s expr: %s -- %s"
 argument_list|,
 name|numbering_properties
 index|[
@@ -1763,22 +1692,14 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"nl: illegal %s line numbering type -- %s\n"
+literal|"illegal %s line numbering type -- %s"
 argument_list|,
 name|numbering_properties
 index|[
@@ -1788,11 +1709,6 @@ operator|.
 name|name
 argument_list|,
 name|argstr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
