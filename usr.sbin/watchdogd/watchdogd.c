@@ -631,8 +631,10 @@ name|mib
 index|[
 literal|3
 index|]
+decl_stmt|;
 name|int
 name|error
+decl_stmt|;
 name|int
 name|len
 decl_stmt|;
