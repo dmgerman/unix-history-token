@@ -9482,7 +9482,7 @@ operator|=
 name|TAILQ_NEXT
 argument_list|(
 name|pv
-operator|->
+argument_list|,
 name|pv_list
 argument_list|)
 control|)
