@@ -48,7 +48,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|\n\ 	_c = intr_disable()
+value|s = intr_disable()
 end_define
 
 begin_define
@@ -58,7 +58,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|\n\ 	intr_restore(_c)
+value|intr_restore(s)
 end_define
 
 begin_define
@@ -68,8 +68,18 @@ name|MCOUNT_DECL
 parameter_list|(
 name|s
 parameter_list|)
-value|register_t c;
+value|register_t s;
 end_define
+
+begin_expr_stmt
+name|_MCOUNT_DECL
+argument_list|(
+name|uintfptr_t
+argument_list|,
+name|uintfptr_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
