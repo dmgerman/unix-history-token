@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fhiIkl:LmopqrRst:v"
+literal|"acdDe:fghiIkl:LmopqrRst:v"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +274,14 @@ case|:
 name|Flags
 operator||=
 name|SHOW_PLIST
+expr_stmt|;
+break|break;
+case|case
+literal|'g'
+case|:
+name|Flags
+operator||=
+name|SHOW_CKSUM
 expr_stmt|;
 break|break;
 case|case
