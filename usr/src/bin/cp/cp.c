@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cp.c	4.2 82/03/31"
+literal|"@(#)cp.c	4.3 82/03/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,7 +191,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|argv
 index|[
@@ -398,7 +398,7 @@ return|;
 block|}
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|to
 argument_list|,
@@ -518,7 +518,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|to
 argument_list|,
@@ -593,7 +593,7 @@ return|;
 block|}
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|to
 argument_list|,
