@@ -18,7 +18,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_comment
@@ -81,11 +99,11 @@ name|int
 name|fd_nfiles
 decl_stmt|;
 comment|/* number of open files allocated */
-name|u_short
+name|int
 name|fd_lastfile
 decl_stmt|;
 comment|/* high-water mark of fd_ofiles */
-name|u_short
+name|int
 name|fd_freefile
 decl_stmt|;
 comment|/* approx. next free file */
@@ -117,6 +135,11 @@ modifier|*
 name|fd_knhash
 decl_stmt|;
 comment|/* hash table for attached knotes */
+name|struct
+name|mtx
+name|fd_mtx
+decl_stmt|;
+comment|/* mtx to protect the members of struct filedesc */
 block|}
 struct|;
 end_struct
@@ -282,6 +305,94 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/* Lock a file descriptor table. */
+end_comment
+
+begin_comment
+comment|/*#define FILEDESC_LOCK_DEBUG*/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FILEDESC_LOCK_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK
+parameter_list|(
+name|fd
+parameter_list|)
+define|\
+value|do {							\ 		printf("FD_LCK: %p %s %d\n",&(fd)->fd_mtx, __FILE__, __LINE__);	\ 		mtx_lock(&(fd)->fd_mtx);			\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_UNLOCK
+parameter_list|(
+name|fd
+parameter_list|)
+define|\
+value|do {							\ 		printf("FD_REL: %p %s %d\n",&(fd)->fd_mtx, __FILE__, __LINE__);	\ 		mtx_unlock(&(fd)->fd_mtx);			\ 	} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK
+parameter_list|(
+name|fd
+parameter_list|)
+value|mtx_lock(&(fd)->fd_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_UNLOCK
+parameter_list|(
+name|fd
+parameter_list|)
+value|mtx_unlock(&(fd)->fd_mtx)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCKED
+parameter_list|(
+name|fd
+parameter_list|)
+value|mtx_owned(&(fd)->fd_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_ASSERT
+parameter_list|(
+name|fd
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(fd)->fd_mtx, (type))
+end_define
 
 begin_decl_stmt
 name|int

@@ -447,6 +447,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Get starting point for the translation. 	 */
+name|FILEDESC_LOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_rootdir
@@ -472,6 +477,11 @@ expr_stmt|;
 name|VREF
 argument_list|(
 name|dp
+argument_list|)
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
 argument_list|)
 expr_stmt|;
 for|for

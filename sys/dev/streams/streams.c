@@ -1071,6 +1071,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|FILEDESC_LOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_fd
@@ -1082,6 +1089,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|)
+expr_stmt|;
 name|ffree
 argument_list|(
 name|fp
@@ -1091,6 +1105,13 @@ return|return
 name|error
 return|;
 block|}
+name|FILEDESC_LOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|)
+expr_stmt|;
 name|fp
 operator|->
 name|f_data
@@ -1120,6 +1141,13 @@ operator|->
 name|f_type
 operator|=
 name|DTYPE_SOCKET
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1454,17 +1482,20 @@ name|fp
 operator|->
 name|f_data
 expr_stmt|;
+comment|/* 	 * mpfixme: lock socketbuffer here 	 */
 if|if
 condition|(
 name|so
 operator|->
 name|so_emuldata
 condition|)
+block|{
 return|return
 name|so
 operator|->
 name|so_emuldata
 return|;
+block|}
 comment|/* Allocate a new one. */
 name|st
 operator|=
@@ -1513,6 +1544,32 @@ name|s_eventmask
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * avoid a race where we loose due to concurrancy issues 	 * of two threads trying to allocate the so_emuldata. 	 */
+if|if
+condition|(
+name|so
+operator|->
+name|so_emuldata
+condition|)
+block|{
+comment|/* lost the race, use the existing emuldata */
+name|FREE
+argument_list|(
+name|st
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|st
+operator|=
+name|so
+operator|->
+name|so_emuldata
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* we won, or there was no race, use our copy */
 name|so
 operator|->
 name|so_emuldata
@@ -1526,6 +1583,7 @@ operator|=
 operator|&
 name|svr4_netops
 expr_stmt|;
+block|}
 return|return
 name|st
 return|;
@@ -1737,11 +1795,6 @@ name|fp
 argument_list|,
 name|td
 argument_list|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function

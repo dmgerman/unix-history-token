@@ -598,6 +598,11 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
+name|FILEDESC_LOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|last
 operator|=
 name|min
@@ -660,6 +665,11 @@ name|fdp
 operator|->
 name|fd_nfiles
 operator|)
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
 expr_stmt|;
 name|sbp
 operator|->

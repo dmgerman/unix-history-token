@@ -546,17 +546,6 @@ name|uap
 decl_stmt|;
 block|{
 name|struct
-name|filedesc
-modifier|*
-name|fdp
-init|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-decl_stmt|;
-name|struct
 name|file
 modifier|*
 name|fp
@@ -644,6 +633,10 @@ operator|=
 name|uap
 operator|->
 name|pos
+expr_stmt|;
+name|fp
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* make sure mapping fits into numeric range etc */
 if|if
@@ -913,34 +906,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Mapping file, get fp for validation. Obtain vnode and make 		 * sure it is of appropriate type. 		 */
-if|if
-condition|(
-operator|(
-operator|(
-name|unsigned
-operator|)
-name|uap
-operator|->
-name|fd
-operator|)
-operator|>=
-name|fdp
-operator|->
-name|fd_nfiles
-operator|||
-operator|(
+comment|/* 		 * Mapping file, get fp for validation. Obtain vnode and make 		 * sure it is of appropriate type. 		 * don't let the descriptor disappear on us if we block 		 */
 name|fp
 operator|=
-name|fdp
-operator|->
-name|fd_ofiles
-index|[
+name|ffind_hold
+argument_list|(
+name|td
+argument_list|,
 name|uap
 operator|->
 name|fd
-index|]
-operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
 operator|==
 name|NULL
 condition|)
@@ -950,7 +930,7 @@ operator|=
 name|EBADF
 expr_stmt|;
 goto|goto
-name|done2
+name|done
 goto|;
 block|}
 if|if
@@ -967,15 +947,9 @@ operator|=
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|done2
+name|done
 goto|;
 block|}
-comment|/* 		 * don't let the descriptor disappear on us if we block 		 */
-name|fhold
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * POSIX shared-memory objects are defined to have 		 * kernel persistence, and are not defined to support 		 * read(2)/write(2) -- or even open(2).  Thus, we can 		 * use MAP_ASYNC to trade on-disk coherence for speed. 		 * The shm_open(3) library routine turns on the FPOSIXSHM 		 * flag to request this behavior. 		 */
 if|if
 condition|(
@@ -1444,8 +1418,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|done2
-label|:
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2279,7 +2251,7 @@ comment|/* 	 * XXX should unmap any regions mapped to this file 	 */
 end_comment
 
 begin_endif
-unit|td->td_proc->p_fd->fd_ofileflags[fd]&= ~UF_MAPPED; }
+unit|FILEDESC_LOCK(p->p_fd); 	td->td_proc->p_fd->fd_ofileflags[fd]&= ~UF_MAPPED; 	FILEDESC_UNLOCK(p->p_fd); }
 endif|#
 directive|endif
 end_endif

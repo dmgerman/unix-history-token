@@ -2108,18 +2108,6 @@ condition|)
 name|bwillwrite
 argument_list|()
 expr_stmt|;
-name|vp
-operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-name|fp
-operator|->
-name|f_data
-expr_stmt|;
-comment|/* XXX needed? */
 name|ioflag
 operator|=
 name|IO_UNIT

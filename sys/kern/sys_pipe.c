@@ -950,6 +950,11 @@ operator|=
 name|fd
 expr_stmt|;
 comment|/* 	 * Warning: once we've gotten past allocation of the fd for the 	 * read-side, we can only drop the read side via fdrop() in order 	 * to avoid races against processes which manage to dup() the read 	 * side while we are blocked trying to allocate the write side. 	 */
+name|FILE_LOCK
+argument_list|(
+name|rf
+argument_list|)
+expr_stmt|;
 name|rf
 operator|->
 name|f_flag
@@ -980,6 +985,11 @@ operator|=
 operator|&
 name|pipeops
 expr_stmt|;
+name|FILE_UNLOCK
+argument_list|(
+name|rf
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|falloc
@@ -998,6 +1008,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|FILEDESC_LOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fdp
@@ -1029,6 +1044,11 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|fdrop
 argument_list|(
 name|rf
@@ -1037,6 +1057,12 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|fdrop
 argument_list|(
 name|rf
@@ -1056,6 +1082,11 @@ name|error
 operator|)
 return|;
 block|}
+name|FILE_LOCK
+argument_list|(
+name|wf
+argument_list|)
+expr_stmt|;
 name|wf
 operator|->
 name|f_flag
@@ -1085,6 +1116,11 @@ name|f_ops
 operator|=
 operator|&
 name|pipeops
+expr_stmt|;
+name|FILE_UNLOCK
+argument_list|(
+name|wf
+argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -2157,6 +2193,11 @@ name|rpipe
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Handle non-blocking mode operation or 			 * wait for more data. 			 */
+name|FILE_LOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -2166,6 +2207,11 @@ operator|&
 name|FNONBLOCK
 condition|)
 block|{
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EAGAIN
@@ -2173,6 +2219,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|rpipe
 operator|->
 name|pipe_state
@@ -3609,6 +3660,11 @@ ifndef|#
 directive|ifndef
 name|PIPE_NODIRECT
 comment|/* 		 * If the transfer is large, we can gain performance if 		 * we do process-to-process copies directly. 		 * If the write is non-blocking, we don't use the 		 * direct write mechanism. 		 * 		 * The direct write mechanism will detect the reader going 		 * away on us. 		 */
+name|FILE_LOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3656,6 +3712,11 @@ name|PIPE_MINDIRECT
 operator|)
 condition|)
 block|{
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|pipe_direct_write
@@ -3672,6 +3733,12 @@ condition|)
 break|break;
 continue|continue;
 block|}
+else|else
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * Pipe buffered writes cannot be coincidental with 		 * direct writes.  We wait until the currently executing 		 * direct write is completed before we start filling the 		 * pipe buffer.  We break out if a signal occurs or the 		 * reader goes away. 		 */
@@ -4129,6 +4196,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * don't block on non-blocking I/O 			 */
+name|FILE_LOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -4138,12 +4210,22 @@ operator|&
 name|FNONBLOCK
 condition|)
 block|{
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EAGAIN
 expr_stmt|;
 break|break;
 block|}
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 comment|/* 			 * We have no more space and have something to offer, 			 * wake up select/poll. 			 */
 name|pipeselwakeup
 argument_list|(
@@ -5391,7 +5473,9 @@ name|struct
 name|pipe
 modifier|*
 name|cpipe
-init|=
+decl_stmt|;
+name|cpipe
+operator|=
 operator|(
 expr|struct
 name|pipe
@@ -5402,7 +5486,7 @@ operator|->
 name|kn_fp
 operator|->
 name|f_data
-decl_stmt|;
+expr_stmt|;
 switch|switch
 condition|(
 name|kn

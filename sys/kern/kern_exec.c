@@ -1131,6 +1131,13 @@ name|argc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For security and other reasons, the file descriptor table cannot 	 * be shared after an exec. 	 */
+name|FILEDESC_LOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1154,6 +1161,13 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|)
+expr_stmt|;
 name|fdfree
 argument_list|(
 name|td
@@ -1166,6 +1180,14 @@ operator|=
 name|tmp
 expr_stmt|;
 block|}
+else|else
+name|FILEDESC_UNLOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|)
+expr_stmt|;
 comment|/* 	 * For security and other reasons, signal handlers cannot 	 * be shared after an exec. The new process gets a copy of the old 	 * handlers. In execsigs(), the new process will have its signals 	 * reset. 	 */
 if|if
 condition|(

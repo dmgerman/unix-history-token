@@ -1360,6 +1360,20 @@ name|fdp
 operator|->
 name|fd_fd
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|fdp
+operator|->
+name|fd_fd
+operator|.
+name|fd_mtx
+argument_list|,
+literal|"struct filedesc"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|fdp
 operator|->
 name|fd_fd
@@ -1952,6 +1966,13 @@ argument_list|(
 literal|"cannot find root vnode"
 argument_list|)
 expr_stmt|;
+name|FILEDESC_LOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_fd
@@ -1984,6 +2005,13 @@ operator|->
 name|p_fd
 operator|->
 name|fd_rdir
+argument_list|)
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|p
+operator|->
+name|p_fd
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

@@ -692,6 +692,15 @@ operator|->
 name|p_ucred
 argument_list|)
 expr_stmt|;
+name|FILEDESC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
+argument_list|)
+expr_stmt|;
 name|um
 operator|->
 name|um_cmode
@@ -706,6 +715,15 @@ operator|->
 name|p_fd
 operator|->
 name|fd_cmask
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Depending on what you think the MNT_LOCAL flag might mean, 	 * you may want the&& to be || on the conditional below. 	 * At the moment it has been defined that the filesystem is 	 * only local if it is all local, ie the MNT_LOCAL flag implies 	 * that the entire namespace is local.  If you think the MNT_LOCAL 	 * flag implies that some of the files might be stored locally 	 * then you will want to change the conditional. 	 */
 if|if

@@ -244,11 +244,15 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/* FMARK/FDEFER kept in f_gcflags */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|FMARK
-value|0x1000
+value|0x1
 end_define
 
 begin_comment
@@ -259,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|FDEFER
-value|0x2000
+value|0x2
 end_define
 
 begin_comment
