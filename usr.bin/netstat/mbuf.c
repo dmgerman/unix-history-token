@@ -338,17 +338,21 @@ name|mbuf_lowm
 decl_stmt|,
 name|clust_lowm
 decl_stmt|;
-name|u_long
+name|unsigned
+name|long
+name|long
 name|totspace
 index|[
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|u_long
 name|totused
 index|[
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|u_long
 name|gentotnum
 decl_stmt|,
 name|gentotfree
@@ -1392,7 +1396,7 @@ block|{
 comment|/* XXX: peak is now wrong. */
 name|printf
 argument_list|(
-literal|"%lu/%lu/%d (current/peak/max):\n"
+literal|"%lu/%lu/%d mbufs in use (current/peak/max):\n"
 argument_list|,
 name|totused
 index|[
@@ -1600,7 +1604,7 @@ name|cflag
 condition|)
 name|printf
 argument_list|(
-literal|"\t%lu%% of mbuf map consumed\n"
+literal|"\t%llu%% of mbuf map consumed\n"
 argument_list|,
 operator|(
 operator|(
@@ -1799,7 +1803,7 @@ block|{
 comment|/* XXX: peak is now wrong. */
 name|printf
 argument_list|(
-literal|"%lu/%lu/%d (current/peak/max):\n"
+literal|"%lu/%lu/%d mbuf clusters in use (current/peak/max)\n"
 argument_list|,
 name|totused
 index|[
@@ -1916,7 +1920,7 @@ name|cflag
 condition|)
 name|printf
 argument_list|(
-literal|"\t%lu%% of cluster map consumed\n"
+literal|"\t%llu%% of cluster map consumed\n"
 argument_list|,
 operator|(
 operator|(
@@ -1938,7 +1942,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%lu KBytes of wired memory reserved (%lu%% in use)\n"
+literal|"%llu KBytes allocated to network "
+literal|"(%lluK mbuf, %lluK mbuf cluster)\n"
 argument_list|,
 operator|(
 name|totspace
@@ -1954,37 +1959,19 @@ operator|)
 operator|/
 literal|1024
 argument_list|,
-operator|(
-operator|(
-name|totused
+name|totspace
 index|[
 literal|0
 index|]
-operator|*
-name|MSIZE
-operator|+
-name|totused
-index|[
-literal|1
-index|]
-operator|*
-name|MCLBYTES
-operator|)
-operator|*
-literal|100
-operator|)
 operator|/
-operator|(
-name|totspace
-index|[
-literal|0
-index|]
-operator|+
+literal|1024
+argument_list|,
 name|totspace
 index|[
 literal|1
 index|]
-operator|)
+operator|/
+literal|1024
 argument_list|)
 expr_stmt|;
 name|printf
