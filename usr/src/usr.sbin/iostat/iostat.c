@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.9 (Berkeley) 83/09/25"
+literal|"@(#)iostat.c	4.10 (Berkeley) 83/10/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,6 +170,14 @@ define|#
 directive|define
 name|X_HZ
 value|9
+block|{
+literal|"_phz"
+block|}
+block|,
+define|#
+directive|define
+name|X_PHZ
+value|10
 ifdef|#
 directive|ifdef
 name|vax
@@ -180,7 +188,7 @@ block|,
 define|#
 directive|define
 name|X_MBDINIT
-value|10
+value|11
 block|{
 literal|"_ubdinit"
 block|}
@@ -188,7 +196,7 @@ block|,
 define|#
 directive|define
 name|X_UBDINIT
-value|11
+value|12
 endif|#
 directive|endif
 ifdef|#
@@ -201,7 +209,7 @@ block|,
 define|#
 directive|define
 name|X_MBDINIT
-value|10
+value|11
 endif|#
 directive|endif
 block|{
@@ -287,6 +295,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|hz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|phz
 decl_stmt|;
 end_decl_stmt
 
@@ -901,6 +915,42 @@ argument_list|,
 sizeof|sizeof
 name|hz
 argument_list|)
+expr_stmt|;
+name|lseek
+argument_list|(
+name|mf
+argument_list|,
+operator|(
+name|long
+operator|)
+name|nl
+index|[
+name|X_PHZ
+index|]
+operator|.
+name|n_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|read
+argument_list|(
+name|mf
+argument_list|,
+operator|&
+name|phz
+argument_list|,
+sizeof|sizeof
+name|phz
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|phz
+condition|)
+name|hz
+operator|=
+name|phz
 expr_stmt|;
 for|for
 control|(
