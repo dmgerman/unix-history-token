@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tput.c	5.5 (Berkeley) %G%"
+literal|"@(#)tput.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,32 +541,15 @@ argument_list|,
 operator|&
 name|t
 argument_list|)
-operator|==
+operator|!=
 operator|-
 literal|1
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tput: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
+name|ospeed
+operator|=
+literal|0
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+else|else
 name|ospeed
 operator|=
 name|cfgetospeed
