@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|FLT_MIN_EXP
-value|-125
+value|(-125)
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|FLT_MIN_10_EXP
-value|-37
+value|(-37)
 end_define
 
 begin_comment
@@ -149,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|DBL_MIN_EXP
-value|-1021
+value|(-1021)
 end_define
 
 begin_define
@@ -163,7 +163,7 @@ begin_define
 define|#
 directive|define
 name|DBL_MIN_10_EXP
-value|-307
+value|(-307)
 end_define
 
 begin_define
