@@ -4919,7 +4919,7 @@ name|CARD_DETACH_CARD
 argument_list|(
 name|sc
 operator|->
-name|cbdev
+name|pccarddev
 argument_list|)
 expr_stmt|;
 elseif|else
