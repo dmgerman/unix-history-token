@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.29 (Berkeley) %G%"
+literal|"@(#)main.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ define|#
 directive|define
 name|_DEFINE
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -4253,15 +4259,29 @@ operator|>
 literal|0
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|TIOCNOTTY
 comment|/* drop our controlling TTY completely if possible */
 if|if
 condition|(
 name|fulldrop
 condition|)
 block|{
+if|#
+directive|if
+name|BSD
+operator|>
+literal|43
+name|daemon
+argument_list|(
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|TIOCNOTTY
 name|fd
 operator|=
 name|open
@@ -4316,14 +4336,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* TIOCNOTTY */
+endif|#
+directive|endif
+comment|/* BSD */
 name|errno
 operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|TIOCNOTTY
 ifdef|#
 directive|ifdef
 name|LOG
