@@ -573,9 +573,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * XXX Should this follow any _VISIBLE tag?  */
-end_comment
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -587,6 +589,11 @@ end_define
 begin_comment
 comment|/* Thread interrupt. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * XXX missing SIGRTMIN, SIGRTMAX.  */
