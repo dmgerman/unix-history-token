@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)zic.c	5.3 (Berkeley) %G%"
+literal|"@(#)zic.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7661,9 +7661,6 @@ name|stdoff
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
 name|starttime
 operator|=
 literal|0
@@ -7672,9 +7669,6 @@ name|startttisstd
 operator|=
 name|FALSE
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined lint */
 for|for
 control|(
 name|i
