@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exp.c	5.2 (Berkeley) %G%"
+literal|"@(#)exp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2539,7 +2539,10 @@ name|ignore
 operator|&
 name|NOGLOB
 condition|?
+name|savestr
+argument_list|(
 name|cp
+argument_list|)
 else|:
 name|globone
 argument_list|(
