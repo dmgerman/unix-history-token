@@ -347,7 +347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Force the trim no matter what*/
+comment|/* Force the trim no matter what */
 end_comment
 
 begin_decl_stmt
@@ -3885,7 +3885,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* 	 * Now t points either to the end of the string (if no time 	 * was provided) or to the letter `T' which separates date 	 * and time in ISO 8601.  The pointer arithmetic is the same for 	 * either case. 	 */
+comment|/* 	 * Now t points either to the end of the string (if no time was 	 * provided) or to the letter `T' which separates date and time in 	 * ISO 8601.  The pointer arithmetic is the same for either case. 	 */
 switch|switch
 condition|(
 name|t
