@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.45 (Berkeley) %G%"
+literal|"@(#)conf.c	6.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1787,6 +1787,13 @@ name|LA_TYPE
 value|LA_FLOAT
 end_define
 
+begin_define
+define|#
+directive|define
+name|LA_AVENRUN
+value|"avenrun"
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2295,6 +2302,43 @@ name|errstring
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|Nl
+index|[
+name|X_AVENRUN
+index|]
+operator|.
+name|n_value
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"getla: nlist(%s, %s) ==> 0\n"
+argument_list|,
+name|_PATH_UNIX
+argument_list|,
+name|LA_AVENRUN
 argument_list|)
 expr_stmt|;
 return|return
