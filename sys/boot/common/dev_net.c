@@ -507,16 +507,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|bootp
-parameter_list|(
-name|int
-name|sock
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
