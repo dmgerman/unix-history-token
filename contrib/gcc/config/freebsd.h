@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: freebsd.h,v 1.11 1999/04/28 18:48:06 obrien Exp $ */
+comment|/* $Id: freebsd.h,v 1.12 1999/04/30 19:12:51 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -147,6 +147,17 @@ define|#
 directive|define
 name|DEFAULT_VTABLE_THUNKS
 value|1
+end_define
+
+begin_comment
+comment|/* Our malloc can allocte pagesized blocks efficiently.  The default size     of 4072 bytes is not optimal on the i386 nor the Alpha. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBSTACK_CHUNK_SIZE
+value|(getpagesize())
 end_define
 
 begin_comment
