@@ -1628,10 +1628,11 @@ expr_stmt|;
 comment|/*      * Set the globals from our tunables.  This is needed because ACPI-CA      * uses UINT8 for some values and we have no tunable_byte.      */
 name|AcpiGbl_AllMethodsSerialized
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|acpi_serialize_methods
+expr_stmt|;
+name|AcpiGbl_EnableInterpreterSlack
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* Start up the ACPI CA subsystem. */
 if|if
