@@ -23137,7 +23137,7 @@ expr_stmt|;
 comment|/* XXX check new internal port. */
 name|outb
 argument_list|(
-literal|0x138
+literal|0x13a
 argument_list|,
 literal|0
 argument_list|)
@@ -23166,10 +23166,10 @@ condition|(
 operator|(
 name|inb
 argument_list|(
-literal|0x138
+literal|0x13a
 argument_list|)
 operator|&
-literal|1
+literal|0x80
 operator|)
 operator|==
 literal|0
