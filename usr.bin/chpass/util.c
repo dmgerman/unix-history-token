@@ -473,9 +473,6 @@ operator|||
 name|month
 operator|>
 literal|12
-operator|||
-operator|!
-name|year
 condition|)
 goto|goto
 name|bad
