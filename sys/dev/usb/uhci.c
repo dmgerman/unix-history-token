@@ -4945,7 +4945,7 @@ name|UHCI_STS_HSE
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: host controller process error\n"
+literal|"%s: host system error\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -4971,7 +4971,7 @@ name|UHCI_STS_HCPE
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: host system error\n"
+literal|"%s: host controller process error\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
