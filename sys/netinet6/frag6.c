@@ -288,6 +288,9 @@ operator|&
 name|tv
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RANDOM_IP_ID
 name|ip6_id
 operator|=
 name|random
@@ -297,6 +300,8 @@ name|tv
 operator|.
 name|tv_usec
 expr_stmt|;
+endif|#
+directive|endif
 name|ip6q
 operator|.
 name|ip6q_next

@@ -602,6 +602,12 @@ begin_comment
 comment|/* statistics */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RANDOM_IP_ID
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
@@ -612,6 +618,11 @@ end_decl_stmt
 begin_comment
 comment|/* fragment identifier */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
