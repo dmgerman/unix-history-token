@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ventel.c	1.2	82/07/29	*/
+comment|/*	ventel.c	1.3	83/06/15	*/
 end_comment
 
 begin_if
@@ -48,6 +48,16 @@ end_define
 begin_comment
 comment|/* ^C */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)ventel.c	1.3 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -99,9 +109,6 @@ name|int
 name|connected
 init|=
 literal|0
-decl_stmt|;
-name|char
-name|c
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -219,8 +226,7 @@ name|read
 argument_list|(
 name|FD
 argument_list|,
-operator|&
-name|c
+name|cp
 argument_list|,
 literal|1
 argument_list|)

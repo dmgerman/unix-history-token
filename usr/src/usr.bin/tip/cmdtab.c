@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmdtab.c	4.4	81/11/29	*/
+comment|/*	cmdtab.c	4.5	83/06/15	*/
 end_comment
 
 begin_include
@@ -13,6 +13,9 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|shell
+argument_list|()
+decl_stmt|,
+name|lcmd
 argument_list|()
 decl_stmt|,
 name|getfl
@@ -63,13 +66,23 @@ index|[]
 init|=
 block|{
 block|{
-literal|'!'
+literal|'%'
 block|,
 name|NORM
 block|,
 literal|"shell"
 block|,
 name|shell
+block|}
+block|,
+block|{
+literal|'!'
+block|,
+name|NORM
+block|,
+literal|"local command"
+block|,
+name|lcmd
 block|}
 block|,
 block|{
@@ -126,7 +139,7 @@ ifdef|#
 directive|ifdef
 name|CONNECT
 block|{
-literal|'%'
+literal|'C'
 block|,
 name|NORM
 block|,

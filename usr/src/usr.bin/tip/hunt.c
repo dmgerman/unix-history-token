@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hunt.c	4.5	81/11/29	*/
+comment|/*	hunt.c	4.6	83/06/15	*/
 end_comment
 
 begin_include
@@ -9,12 +9,35 @@ directive|include
 file|"tip.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|RD
 value|04
 end_define
+
+begin_define
+define|#
+directive|define
+name|EX
+value|01
+end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)hunt.c	4.6 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -75,6 +98,16 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|char
+name|string
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|struct
+name|stat
+name|statbuf
+decl_stmt|;
 name|deadfl
 operator|=
 literal|0
@@ -96,16 +129,6 @@ name|name
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|access
-argument_list|(
-name|cp
-argument_list|,
-name|RD
-argument_list|)
-condition|)
-continue|continue;
 name|uucplock
 operator|=
 name|rindex
@@ -117,6 +140,72 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|uucplock
+argument_list|,
+literal|"ttyd"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* reverse dialin line */
+if|if
+condition|(
+operator|(
+name|stat
+argument_list|(
+name|cp
+argument_list|,
+operator|&
+name|statbuf
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|statbuf
+operator|.
+name|st_mode
+operator|&
+name|EX
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
+continue|continue;
+name|sprintf
+argument_list|(
+name|string
+argument_list|,
+literal|"/usr/lib/uucp/disable %s"
+argument_list|,
+name|uucplock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|system
+argument_list|(
+name|string
+argument_list|)
+condition|)
+continue|continue;
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+comment|/* insure that phone line is dropped */
+block|}
 if|if
 condition|(
 name|mlock
@@ -134,7 +223,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Straight through call units, such as the BIZCOMP 		 *  and the DF, must indicate they're hardwired in 		 *  order to get an open file descriptor placed in FD. 		 * Otherwise, as for a DN-11, the open will have to 		 *  be done in the "open" routine. 		 */
+comment|/* 		 * Straight through call units, such as the BIZCOMP, 		 * VADIC and the DF, must indicate they're hardwired in 		 *  order to get an open file descriptor placed in FD. 		 * Otherwise, as for a DN-11, the open will have to 		 *  be done in the "open" routine. 		 */
 if|if
 condition|(
 operator|!
@@ -178,6 +267,15 @@ argument_list|(
 name|FD
 argument_list|,
 name|TIOCEXCL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCHPCL
 argument_list|,
 literal|0
 argument_list|)

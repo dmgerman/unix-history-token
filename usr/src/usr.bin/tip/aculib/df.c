@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	df.c	4.5	81/11/29	*/
+comment|/*	df.c	4.6	83/06/15	*/
 end_comment
 
 begin_comment
@@ -32,6 +32,16 @@ include|#
 directive|include
 file|<setjmp.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)df.c	4.6 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tipout.c	4.6	82/01/06	*/
+comment|/*	tipout.c	4.7	83/06/15	*/
 end_comment
 
 begin_include
@@ -12,6 +12,16 @@ end_include
 begin_comment
 comment|/*  * tip  *  * lower fork of tip -- handles passive side  *  reading from the remote host  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)tipout.c	4.7 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * TIPOUT wait state routine --  *   sent by TIPIN when it wants to posses the remote host  */
@@ -541,10 +551,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|cp
 operator|<
 literal|' '
+operator|||
+operator|*
+name|cp
+operator|>
+literal|'~'
+operator|)
 operator|&&
 operator|!
 name|any

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucplock.c	4.4	82/07/29	*/
+comment|/*	uucplock.c	4.5	83/06/15	*/
 end_comment
 
 begin_comment
@@ -32,11 +32,11 @@ begin_define
 define|#
 directive|define
 name|SLCKTIME
-value|5400
+value|28800
 end_define
 
 begin_comment
-comment|/* system/device timeout (LCK.. files) in seconds */
+comment|/* system/device timeout (LCK.. files) in seconds (8 hours) */
 end_comment
 
 begin_define
@@ -90,6 +90,16 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)uucplock.c	4.5 %G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*******  *	ulockf(file, atime)  *	char *file;  *	time_t atime;  *  *	ulockf  -  this routine will create a lock file (file).  *	If one already exists, the create time is checked for  *	older than the age time (atime).  *	If it is older, an attempt will be made to unlink it  *	and create a new one.  *  *	return codes:  0  |  FAIL  */
 end_comment
@@ -137,7 +147,7 @@ specifier|static
 name|char
 name|tempfile
 index|[
-literal|30
+name|NAMESIZE
 index|]
 decl_stmt|;
 if|if
