@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readdir.c 1.3 %G%"
+literal|"@(#)readdir.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,45 @@ include|#
 directive|include
 file|<ndir.h>
 end_include
+
+begin_comment
+comment|/*  * read an old stlye directory entry and present it as a new one  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DIRSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DIRSIZ
+value|14
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|olddirect
+block|{
+name|ino_t
+name|d_ino
+decl_stmt|;
+name|char
+name|d_name
+index|[
+name|DIRSIZ
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * get next entry in a directory.  */
