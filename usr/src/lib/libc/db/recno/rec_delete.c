@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_delete.c	5.5 (Berkeley) %G%"
+literal|"@(#)rec_delete.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,7 +440,7 @@ modifier|*
 name|rl
 decl_stmt|;
 specifier|register
-name|index_t
+name|indx_t
 modifier|*
 name|ip
 decl_stmt|,
@@ -649,7 +649,7 @@ name|lower
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|index_t
+name|indx_t
 argument_list|)
 expr_stmt|;
 operator|--

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_search.c	5.7 (Berkeley) %G%"
+literal|"@(#)rec_search.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ name|EPG
 name|e
 decl_stmt|;
 specifier|register
-name|index_t
+name|indx_t
 name|index
 decl_stmt|;
 specifier|register
@@ -118,7 +118,7 @@ decl_stmt|;
 name|pgno_t
 name|pg
 decl_stmt|;
-name|index_t
+name|indx_t
 name|top
 decl_stmt|;
 name|recno_t

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_get.c	5.5 (Berkeley) %G%"
+literal|"@(#)rec_get.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,7 +524,7 @@ decl_stmt|;
 name|recno_t
 name|nrec
 decl_stmt|;
-name|index_t
+name|indx_t
 name|len
 decl_stmt|;
 name|size_t
