@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3371,6 +3371,11 @@ operator|&
 name|bp2
 argument_list|)
 expr_stmt|;
+else|else
+name|bp2
+operator|=
+name|NULL
+expr_stmt|;
 name|cd9660_defattr
 argument_list|(
 name|isodir
@@ -3389,6 +3394,10 @@ argument_list|,
 name|bp2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp2
+condition|)
 name|brelse
 argument_list|(
 name|bp2
