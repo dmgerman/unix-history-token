@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 101 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 103 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -286,7 +286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchParentTree  *  * PARAMETERS:  *TargetName         - Ascii ACPI name to search for  *              *Node               - Starting node where search will begin  *              Type                - Object type to match  *              **ReturnNode        - Where the matched Named Obj is returned  *  * RETURN:      Status  *  * DESCRIPTION: Called when a name has not been found in the current namespace  *              level.  Before adding it or giving up, ACPI scope rules require  *              searching enclosing scopes in cases identified by AcpiNsLocal().  *  *              "A name is located by finding the matching name in the current  *              name space, and then in the parent name space. If the parent  *              name space does not contain the name, the search continues  *              recursively until either the name is found or the name space  *              does not have a parent (the root of the name space).  This  *              indicates that the name is not found" (From ACPI Specification,  *              section 5.3)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchParentTree  *  * PARAMETERS:  *TargetName         - Ascii ACPI name to search for  *              *Node               - Starting node where search will begin  *              Type                - Object type to match  *              **ReturnNode        - Where the matched Node is returned  *  * RETURN:      Status  *  * DESCRIPTION: Called when a name has not been found in the current namespace  *              level.  Before adding it or giving up, ACPI scope rules require  *              searching enclosing scopes in cases identified by AcpiNsLocal().  *  *              "A name is located by finding the matching name in the current  *              name space, and then in the parent name space. If the parent  *              name space does not contain the name, the search continues  *              recursively until either the name is found or the name space  *              does not have a parent (the root of the name space).  This  *              indicates that the name is not found" (From ACPI Specification,  *              section 5.3)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -329,7 +329,7 @@ argument_list|(
 name|Node
 argument_list|)
 expr_stmt|;
-comment|/*      * If there is no parent (i.e., we are at the root) or      * type is "local", we won't be searching the parent tree.      */
+comment|/*      * If there is no parent (i.e., we are at the root) or type is "local",      * we won't be searching the parent tree.      */
 if|if
 condition|(
 operator|!
@@ -399,7 +399,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Searching parent for %4.4s\n"
+literal|"Searching parent [%4.4s] for [%4.4s]\n"
+operator|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|ParentNode
+argument_list|)
 operator|,
 operator|(
 name|char
@@ -410,7 +415,7 @@ name|TargetName
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Search parents until found the target or we have backed up to      * the root      */
+comment|/*      * Search parents until target is found or we have backed up to the root      */
 while|while
 condition|(
 name|ParentNode
@@ -628,7 +633,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The name was not found.  If we are NOT performing the      * first pass (name entry) of loading the namespace, search      * the parent tree (all the way to the root if necessary.)      * We don't want to perform the parent search when the      * namespace is actually being loaded.  We want to perform      * the search when namespace references are being resolved      * (load pass 2) and during the execution phase.      */
+comment|/*      * The name was not found.  If we are NOT performing the first pass      * (name entry) of loading the namespace, search the parent tree (all the      * way to the root if necessary.) We don't want to perform the parent      * search when the namespace is actually being loaded.  We want to perform      * the search when namespace references are being resolved (load pass 2)      * and during the execution phase.      */
 if|if
 condition|(
 operator|(
@@ -644,7 +649,7 @@ name|ACPI_NS_SEARCH_PARENT
 operator|)
 condition|)
 block|{
-comment|/*          * Not found at this level - search parent tree according          * to ACPI specification          */
+comment|/*          * Not found at this level - search parent tree according to the          * ACPI specification          */
 name|Status
 operator|=
 name|AcpiNsSearchParentTree

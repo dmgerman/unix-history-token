@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslglobal.h - Global variable definitions  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslglobal.h - Global variable definitions  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -752,6 +752,18 @@ end_decl_stmt
 begin_comment
 comment|/* Misc */
 end_comment
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|UINT8
+name|ASL_INIT_GLOBAL
+argument_list|(
+name|Gbl_RevisionOverride
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|ASL_EXTERN

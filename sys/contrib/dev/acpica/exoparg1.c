@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 152 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 163 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -64,8 +64,147 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*!  * Naming convention for AML interpreter execution routines.  *  * The routines that begin execution of AML opcodes are named with a common  * convention based upon the number of arguments, the number of target operands,  * and whether or not a value is returned:  *  *      AcpiExOpcode_xA_yT_zR  *  * Where:  *  * xA - ARGUMENTS:    The number of arguments (input operands) that are  *                    required for this opcode type (1 through 6 args).  * yT - TARGETS:      The number of targets (output operands) that are required  *                    for this opcode type (0, 1, or 2 targets).  * zR - RETURN VALUE: Indicates whether this opcode type returns a value  *                    as the function return (0 or 1).  *  * The AcpiExOpcode* functions are called via the Dispatcher component with  * fully resolved operands. !*/
+comment|/*!  * Naming convention for AML interpreter execution routines.  *  * The routines that begin execution of AML opcodes are named with a common  * convention based upon the number of arguments, the number of target operands,  * and whether or not a value is returned:  *  *      AcpiExOpcode_xA_yT_zR  *  * Where:  *  * xA - ARGUMENTS:    The number of arguments (input operands) that are  *                    required for this opcode type (0 through 6 args).  * yT - TARGETS:      The number of targets (output operands) that are required  *                    for this opcode type (0, 1, or 2 targets).  * zR - RETURN VALUE: Indicates whether this opcode type returns a value  *                    as the function return (0 or 1).  *  * The AcpiExOpcode* functions are called via the Dispatcher component with  * fully resolved operands. !*/
 end_comment
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExOpcode_0A_0T_1R  *  * PARAMETERS:  WalkState           - Current state (contains AML opcode)  *  * RETURN:      Status  *  * DESCRIPTION: Execute operator with no operands, one return value  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiExOpcode_0A_0T_1R
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ReturnDesc
+init|=
+name|NULL
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE_STR
+argument_list|(
+literal|"ExOpcode_0A_0T_1R"
+argument_list|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|WalkState
+operator|->
+name|Opcode
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Examine the AML opcode */
+switch|switch
+condition|(
+name|WalkState
+operator|->
+name|Opcode
+condition|)
+block|{
+case|case
+name|AML_TIMER_OP
+case|:
+comment|/*  Timer () */
+comment|/* Create a return object of type Integer */
+name|ReturnDesc
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_INTEGER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ReturnDesc
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+name|ReturnDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+name|AcpiOsGetTimer
+argument_list|()
+expr_stmt|;
+break|break;
+default|default:
+comment|/*  Unknown opcode  */
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiExOpcode_0A_0T_1R: Unknown opcode %X\n"
+operator|,
+name|WalkState
+operator|->
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_BAD_OPCODE
+expr_stmt|;
+break|break;
+block|}
+name|Cleanup
+label|:
+if|if
+condition|(
+operator|!
+name|WalkState
+operator|->
+name|ResultObj
+condition|)
+block|{
+name|WalkState
+operator|->
+name|ResultObj
+operator|=
+name|ReturnDesc
+expr_stmt|;
+block|}
+comment|/* Delete return object on error */
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|ReturnDesc
+argument_list|)
+expr_stmt|;
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiExOpcode_1A_0T_0R  *  * PARAMETERS:  WalkState           - Current state (contains AML opcode)  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 monadic operator with numeric operand on  *              object stack  *  ******************************************************************************/
@@ -173,9 +312,6 @@ name|Status
 operator|=
 name|AcpiExSystemDoSuspend
 argument_list|(
-operator|(
-name|UINT32
-operator|)
 name|Operand
 index|[
 literal|0
@@ -403,7 +539,7 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|UINT32
+name|ACPI_INTEGER
 name|PowerOfTen
 decl_stmt|;
 name|ACPI_INTEGER
@@ -797,7 +933,6 @@ name|void
 operator|)
 name|AcpiUtShortDivide
 argument_list|(
-operator|&
 name|Digit
 argument_list|,
 literal|10
@@ -824,11 +959,10 @@ operator|)
 name|Temp32
 operator|)
 operator|<<
-operator|(
+name|ACPI_MUL_4
+argument_list|(
 name|i
-operator|*
-literal|4
-operator|)
+argument_list|)
 operator|)
 expr_stmt|;
 block|}
@@ -1074,11 +1208,7 @@ argument_list|,
 operator|&
 name|ReturnDesc
 argument_list|,
-literal|10
-argument_list|,
-name|ACPI_UINT32_MAX
-argument_list|,
-name|WalkState
+name|ACPI_EXPLICIT_CONVERT_DECIMAL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1098,11 +1228,7 @@ argument_list|,
 operator|&
 name|ReturnDesc
 argument_list|,
-literal|16
-argument_list|,
-name|ACPI_UINT32_MAX
-argument_list|,
-name|WalkState
+name|ACPI_EXPLICIT_CONVERT_HEX
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1121,8 +1247,6 @@ index|]
 argument_list|,
 operator|&
 name|ReturnDesc
-argument_list|,
-name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1142,18 +1266,18 @@ argument_list|,
 operator|&
 name|ReturnDesc
 argument_list|,
-name|WalkState
+name|ACPI_ANY_BASE
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_SHIFT_LEFT_BIT_OP
 case|:
-comment|/*  ShiftLeftBit (Source, BitNum)  */
+comment|/* ShiftLeftBit (Source, BitNum)  */
 case|case
 name|AML_SHIFT_RIGHT_BIT_OP
 case|:
-comment|/*  ShiftRightBit (Source, BitNum) */
+comment|/* ShiftRightBit (Source, BitNum) */
 comment|/*          * These are two obsolete opcodes          */
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -1346,12 +1470,9 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|ReturnDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
+comment|/*          * Set result to ONES (TRUE) if Value == 0.  Note:          * ReturnDesc->Integer.Value is initially == 0 (FALSE) from above.          */
+if|if
+condition|(
 operator|!
 name|Operand
 index|[
@@ -1361,7 +1482,17 @@ operator|->
 name|Integer
 operator|.
 name|Value
+condition|)
+block|{
+name|ReturnDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+name|ACPI_INTEGER_MAX
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|AML_DECREMENT_OP
@@ -1371,8 +1502,30 @@ case|case
 name|AML_INCREMENT_OP
 case|:
 comment|/* Increment (Operand)  */
-comment|/*          * Since we are expecting a Reference operand, it          * can be either a NS Node or an internal object.          */
+comment|/*          * Create a new integer.  Can't just get the base integer and          * increment it because it may be an Arg or Field.          */
 name|ReturnDesc
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_INTEGER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ReturnDesc
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/*          * Since we are expecting a Reference operand, it can be either a          * NS Node or an internal object.          */
+name|TempDesc
 operator|=
 name|Operand
 index|[
@@ -1383,10 +1536,7 @@ if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
-name|Operand
-index|[
-literal|0
-index|]
+name|TempDesc
 argument_list|)
 operator|==
 name|ACPI_DESC_TYPE_OPERAND
@@ -1395,11 +1545,11 @@ block|{
 comment|/* Internal reference object - prevent deletion */
 name|AcpiUtAddReference
 argument_list|(
-name|ReturnDesc
+name|TempDesc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Convert the ReturnDesc Reference to a Number          * (This removes a reference on the ReturnDesc object)          */
+comment|/*          * Convert the Reference operand to an Integer (This removes a          * reference on the Operand[0] object)          *          * NOTE:  We use LNOT_OP here in order to force resolution of the          * reference operand to an actual integer.          */
 name|Status
 operator|=
 name|AcpiExResolveOperands
@@ -1407,7 +1557,7 @@ argument_list|(
 name|AML_LNOT_OP
 argument_list|,
 operator|&
-name|ReturnDesc
+name|TempDesc
 argument_list|,
 name|WalkState
 argument_list|)
@@ -1445,14 +1595,14 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*          * ReturnDesc is now guaranteed to be an Integer object          * Do the actual increment or decrement          */
+comment|/*          * TempDesc is now guaranteed to be an Integer object --          * Perform the actual increment or decrement          */
 if|if
 condition|(
-name|AML_INCREMENT_OP
-operator|==
 name|WalkState
 operator|->
 name|Opcode
+operator|==
+name|AML_INCREMENT_OP
 condition|)
 block|{
 name|ReturnDesc
@@ -1460,7 +1610,14 @@ operator|->
 name|Integer
 operator|.
 name|Value
-operator|++
+operator|=
+name|TempDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|+
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -1470,10 +1627,23 @@ operator|->
 name|Integer
 operator|.
 name|Value
-operator|--
+operator|=
+name|TempDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|-
+literal|1
 expr_stmt|;
 block|}
-comment|/* Store the result back in the original descriptor */
+comment|/* Finished with this Integer object */
+name|AcpiUtRemoveReference
+argument_list|(
+name|TempDesc
+argument_list|)
+expr_stmt|;
+comment|/*          * Store the result back (indirectly) through the original          * Reference object          */
 name|Status
 operator|=
 name|AcpiExStore
@@ -1493,6 +1663,7 @@ case|case
 name|AML_TYPE_OP
 case|:
 comment|/* ObjectType (SourceObject) */
+comment|/*          * Note: The operand is not resolved at this point because we want to          * get the associated object, not its value.  For example, we don't want          * to resolve a FieldUnit to its value, we want the actual FieldUnit          * object.          */
 comment|/* Get the type of the base object */
 name|Status
 operator|=
@@ -1558,6 +1729,7 @@ case|case
 name|AML_SIZE_OF_OP
 case|:
 comment|/* SizeOf (SourceObject)  */
+comment|/*          * Note: The operand is not resolved at this point because we want to          * get the associated object, not its value.          */
 comment|/* Get the base object */
 name|Status
 operator|=
@@ -1589,12 +1761,20 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*          * Type is guaranteed to be a buffer, string, or package at this          * point (even if the original operand was an object reference, it          * will be resolved and typechecked during operand resolution.)          */
+comment|/*          * The type of the base object must be integer, buffer, string, or          * package.  All others are not supported.          *          * NOTE: Integer is not specifically supported by the ACPI spec,          * but is supported implicitly via implicit operand conversion.          * rather than bother with conversion, we just use the byte width          * global (4 or 8 bytes).          */
 switch|switch
 condition|(
 name|Type
 condition|)
 block|{
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
+name|Value
+operator|=
+name|AcpiGbl_IntegerByteWidth
+expr_stmt|;
+break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
@@ -1637,7 +1817,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"SizeOf, Not Buf/Str/Pkg - found type %s\n"
+literal|"SizeOf - Operand is not Buf/Int/Str/Pkg - found type %s\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 182 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 186 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -198,7 +198,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Destination is not a Reference or Constant object [%p]\n"
+literal|"Target is not a Reference or Constant object - %s [%p]\n"
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|DestDesc
+argument_list|)
 operator|,
 name|DestDesc
 operator|)
@@ -323,7 +328,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"**** Write to Debug Object: ****:\n\n"
+literal|"**** Write to Debug Object: Object %p %s ****:\n\n"
+operator|,
+name|SourceDesc
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|SourceDesc
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -341,6 +353,28 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AcpiUtValidInternalObject
+argument_list|(
+name|SourceDesc
+argument_list|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_DEBUG_OBJECT
+operator|,
+literal|"%p, Invalid Internal Object!\n"
+operator|,
+name|SourceDesc
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE
@@ -352,6 +386,34 @@ block|{
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
+if|if
+condition|(
+name|AcpiGbl_IntegerByteWidth
+operator|==
+literal|4
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_DEBUG_OBJECT
+operator|,
+literal|"0x%8.8X\n"
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|SourceDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
@@ -370,6 +432,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER
@@ -379,7 +442,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DEBUG_OBJECT
 operator|,
-literal|"Length 0x%.2X"
+literal|"[0x%.2X]"
 operator|,
 operator|(
 name|UINT32
@@ -428,7 +491,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DEBUG_OBJECT
 operator|,
-literal|"Length 0x%.2X, \"%s\"\n"
+literal|"[0x%.2X] \"%s\"\n"
 operator|,
 name|SourceDesc
 operator|->
@@ -453,7 +516,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DEBUG_OBJECT
 operator|,
-literal|"Size 0x%.2X Elements Ptr - %p\n"
+literal|"[0x%.2X] Elements Ptr - %p\n"
 operator|,
 name|SourceDesc
 operator|->
@@ -589,8 +652,7 @@ block|{
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/*          * Storing to a package element is not simple.  The source must be          * evaluated and converted to the type of the destination and then the          * source is copied into the destination - we can't just point to the          * source object.          */
-comment|/*          * The object at *(IndexDesc->Reference.Where) is the          * element within the package that is to be modified.          * The parent package object is at IndexDesc->Reference.Object          */
+comment|/*          * Storing to a package element. Copy the object and replace          * any existing object with the new object. No implicit          * conversion is performed.          *          * The object at *(IndexDesc->Reference.Where) is the          * element within the package that is to be modified.          * The parent package object is at IndexDesc->Reference.Object          */
 name|ObjDesc
 operator|=
 operator|*
@@ -602,14 +664,11 @@ operator|.
 name|Where
 operator|)
 expr_stmt|;
-comment|/* Do the conversion/store */
 name|Status
 operator|=
-name|AcpiExStoreObjectToObject
+name|AcpiUtCopyIobjectToIobject
 argument_list|(
 name|SourceDesc
-argument_list|,
-name|ObjDesc
 argument_list|,
 operator|&
 name|NewDesc
@@ -625,34 +684,53 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Could not store object to indexed package element\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * If a new object was created, we must install it as the new          * package element          */
 if|if
 condition|(
-name|NewDesc
-operator|!=
 name|ObjDesc
 condition|)
+block|{
+comment|/* Decrement reference count by the ref count of the parent package */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+operator|(
+name|ACPI_OPERAND_OBJECT
+operator|*
+operator|)
+name|IndexDesc
+operator|->
+name|Reference
+operator|.
+name|Object
+operator|)
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+condition|;
+name|i
+operator|++
+control|)
 block|{
 name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 operator|*
 operator|(
 name|IndexDesc
@@ -664,20 +742,6 @@ operator|)
 operator|=
 name|NewDesc
 expr_stmt|;
-comment|/* If same as the original source, add a reference */
-if|if
-condition|(
-name|NewDesc
-operator|==
-name|SourceDesc
-condition|)
-block|{
-name|AcpiUtAddReference
-argument_list|(
-name|NewDesc
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Increment reference count by the ref count of the parent package -1 */
 for|for
 control|(
@@ -713,13 +777,12 @@ name|NewDesc
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
-comment|/*          * Store into a Buffer (not actually a real BufferField) at a          * location defined by an Index.          *          * The first 8-bit element of the source object is written to the          * 8-bit Buffer location defined by the Index destination object,          * according to the ACPI 2.0 specification.          */
-comment|/*          * Make sure the target is a Buffer          */
+comment|/*          * Store into a Buffer or String (not actually a real BufferField)          * at a location defined by an Index.          *          * The first 8-bit element of the source object is written to the          * 8-bit Buffer location defined by the Index destination object,          * according to the ACPI 2.0 specification.          */
+comment|/*          * Make sure the target is a Buffer or String. An error should          * not happen here, since the ReferenceObject was constructed          * by the INDEX_OP code.          */
 name|ObjDesc
 operator|=
 name|IndexDesc
@@ -730,12 +793,23 @@ name|Object
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
 name|ObjDesc
 argument_list|)
 operator|!=
 name|ACPI_TYPE_BUFFER
+operator|)
+operator|&&
+operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|!=
+name|ACPI_TYPE_STRING
+operator|)
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -774,29 +848,15 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
+case|case
+name|ACPI_TYPE_STRING
+case|:
+comment|/* Note: Takes advantage of common string/buffer fields */
 name|Value
 operator|=
 name|SourceDesc
 operator|->
 name|Buffer
-operator|.
-name|Pointer
-index|[
-literal|0
-index|]
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_TYPE_STRING
-case|:
-name|Value
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|SourceDesc
-operator|->
-name|String
 operator|.
 name|Pointer
 index|[

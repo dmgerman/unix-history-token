@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 145 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 147 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -50,6 +50,84 @@ argument_list|(
 literal|"evxface"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallExceptionHandler  *  * PARAMETERS:  Handler         - Pointer to the handler function for the  *                                event  *  * RETURN:      Status  *  * DESCRIPTION: Saves the pointer to the handler function  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiInstallExceptionHandler
+parameter_list|(
+name|ACPI_EXCEPTION_HANDLER
+name|Handler
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"AcpiInstallExceptionHandler"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Don't allow two handlers. */
+if|if
+condition|(
+name|AcpiGbl_ExceptionHandler
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_ALREADY_EXISTS
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* Install the handler */
+name|AcpiGbl_ExceptionHandler
+operator|=
+name|Handler
+expr_stmt|;
+name|Cleanup
+label|:
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallFixedEventHandler  *  * PARAMETERS:  Event           - Event type to enable.  *              Handler         - Pointer to the handler function for the  *                                event  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Saves the pointer to the handler function and then enables the  *              event.  *  ******************************************************************************/
@@ -825,7 +903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *                                  ACPI_ALL_NOTIFY:  both system and device  *              Handler         - Address of the handler  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for notifies on an ACPI device  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *                                  ACPI_ALL_NOTIFY:  both system and device  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for notifies on an ACPI device  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -931,7 +1009,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      * Root Object      */
+comment|/* Root Object */
 if|if
 condition|(
 name|Device
@@ -1038,7 +1116,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/*      * All Other Objects      */
+comment|/* All Other Objects */
 else|else
 block|{
 comment|/* Notifies allowed on this object? */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbrsdt - ACPI RSDT table utilities  *              $Revision: 12 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbrsdt - ACPI RSDT table utilities  *              $Revision: 13 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -580,6 +580,12 @@ argument_list|(
 operator|&
 name|Address
 argument_list|)
+expr_stmt|;
+name|TableInfo
+operator|.
+name|Type
+operator|=
+name|ACPI_TABLE_XSDT
 expr_stmt|;
 name|Status
 operator|=

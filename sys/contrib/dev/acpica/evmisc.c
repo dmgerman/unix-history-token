@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 75 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvQueueNotifyRequest  *  * PARAMETERS:  *  * RETURN:      None.  *  * DESCRIPTION: Dispatch a device notification event to a previously  *              installed handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvQueueNotifyRequest  *  * PARAMETERS:  Node            - NS node for the notified object  *              NotifyValue     - Value from the Notify() request  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch a device notification event to a previously  *              installed handler.  *  ******************************************************************************/
 end_comment
 
 begin_ifdef
@@ -222,7 +222,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Get the notify object attached to the NS Node      */
+comment|/* Get the notify object attached to the NS Node */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
@@ -406,7 +406,7 @@ operator|!
 name|HandlerObj
 condition|)
 block|{
-comment|/* There is no per-device notify handler for this device */
+comment|/*          * There is no per-device notify handler for this device.          * This may or may not be a problem.          */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -435,7 +435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvNotifyDispatch  *  * PARAMETERS:  *  * RETURN:      None.  *  * DESCRIPTION: Dispatch a device notification event to a previously  *              installed handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvNotifyDispatch  *  * PARAMETERS:  Context         - To be passsed to the notify handler  *  * RETURN:      None.  *  * DESCRIPTION: Dispatch a device notification event to a previously  *              installed handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -608,7 +608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockThread  *  * RETURN:      None  *  * DESCRIPTION: Invoked by SCI interrupt handler upon acquisition of the  *              Global Lock.  Simply signal all threads that are waiting  *              for the lock.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockThread  *  * PARAMETERS:  Context         - From thread interface, not used  *  * RETURN:      None  *  * DESCRIPTION: Invoked by SCI interrupt handler upon acquisition of the  *              Global Lock.  Simply signal all threads that are waiting  *              for the lock.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -662,7 +662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockHandler  *  * RETURN:      Status  *  * DESCRIPTION: Invoked directly from the SCI handler when a global lock  *              release interrupt occurs.  Grab the global lock and queue  *              the global lock thread for execution  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockHandler  *  * PARAMETERS:  Context         - From thread interface, not used  *  * RETURN:      ACPI_INTERRUPT_HANDLED or ACPI_INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Invoked directly from the SCI handler when a global lock  *              release interrupt occurs.  Grab the global lock and queue  *              the global lock thread for execution  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -751,7 +751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitGlobalLockHandler  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for the global lock release event  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitGlobalLockHandler  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for the global lock release event  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -810,7 +810,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvAcquireGlobalLock  *  * RETURN:      Status  *  * DESCRIPTION: Attempt to gain ownership of the Global Lock.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiEvAcquireGlobalLock  *  * PARAMETERS:  Timeout         - Max time to wait for the lock, in millisec.  *  * RETURN:      Status  *  * DESCRIPTION: Attempt to gain ownership of the Global Lock.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -934,7 +934,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvReleaseGlobalLock  *  * DESCRIPTION: Releases ownership of the Global Lock.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvReleaseGlobalLock  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Releases ownership of the Global Lock.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1119,6 +1119,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiHwDisableGpeBlock
+argument_list|,
+name|ACPI_NOT_ISR
 argument_list|)
 expr_stmt|;
 comment|/* Remove SCI handler */
@@ -1152,6 +1154,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiEvDeleteGpeHandlers
+argument_list|,
+name|ACPI_NOT_ISR
 argument_list|)
 expr_stmt|;
 comment|/* Return to original mode if necessary */

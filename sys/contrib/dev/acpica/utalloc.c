@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 135 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 138 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -565,7 +565,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitializeBuffer  *  * PARAMETERS:  RequiredLength      - Length needed  *              Buffer              - Buffer to be validated  *  * RETURN:      Status  *  * DESCRIPTION: Validate that the buffer is of the required length or  *              allocate a new buffer.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitializeBuffer  *  * PARAMETERS:  Buffer              - Buffer to be validated  *              RequiredLength      - Length needed  *  * RETURN:      Status  *  * DESCRIPTION: Validate that the buffer is of the required length or  *              allocate a new buffer.  Returned buffer is always zeroed.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -649,7 +649,7 @@ name|Buffer
 operator|->
 name|Pointer
 operator|=
-name|ACPI_MEM_ALLOCATE
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|RequiredLength
 argument_list|)
@@ -668,21 +668,9 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-comment|/* Clear the buffer */
-name|ACPI_MEMSET
-argument_list|(
-name|Buffer
-operator|->
-name|Pointer
-argument_list|,
-literal|0
-argument_list|,
-name|RequiredLength
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
-comment|/* Validate the size of the buffer */
+comment|/* Existing buffer: Validate the size of the buffer */
 if|if
 condition|(
 name|Buffer
@@ -696,7 +684,20 @@ name|Status
 operator|=
 name|AE_BUFFER_OVERFLOW
 expr_stmt|;
+break|break;
 block|}
+comment|/* Clear the buffer */
+name|ACPI_MEMSET
+argument_list|(
+name|Buffer
+operator|->
+name|Pointer
+argument_list|,
+literal|0
+argument_list|,
+name|RequiredLength
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|Buffer
@@ -982,7 +983,7 @@ name|Size
 operator|+
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEBUG_MEM_BLOCK
+name|ACPI_DEBUG_MEM_HEADER
 argument_list|)
 argument_list|,
 name|Component
@@ -1115,7 +1116,7 @@ name|Size
 operator|+
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEBUG_MEM_BLOCK
+name|ACPI_DEBUG_MEM_HEADER
 argument_list|)
 argument_list|,
 name|Component
@@ -1390,7 +1391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFindAllocation  *  * PARAMETERS:  Allocation             - Address of allocated memory  *  * RETURN:      A list element if found; NULL otherwise.  *  * DESCRIPTION: Searches for an element in the global allocation tracking list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFindAllocation  *  * PARAMETERS:  ListId                  - Memory list to search  *              Allocation              - Address of allocated memory  *  * RETURN:      A list element if found; NULL otherwise.  *  * DESCRIPTION: Searches for an element in the global allocation tracking list.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1470,7 +1471,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTrackAllocation  *  * PARAMETERS:  Allocation          - Address of allocated memory  *              Size                - Size of the allocation  *              AllocType           - MEM_MALLOC or MEM_CALLOC  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None.  *  * DESCRIPTION: Inserts an element into the global allocation tracking list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTrackAllocation  *  * PARAMETERS:  ListId              - Memory list to search  *              Allocation          - Address of allocated memory  *              Size                - Size of the allocation  *              AllocType           - MEM_MALLOC or MEM_CALLOC  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None.  *  * DESCRIPTION: Inserts an element into the global allocation tracking list.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1643,6 +1644,17 @@ argument_list|,
 name|ACPI_MAX_MODULE_NAME
 argument_list|)
 expr_stmt|;
+name|Allocation
+operator|->
+name|Module
+index|[
+name|ACPI_MAX_MODULE_NAME
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Insert at list head */
 if|if
 condition|(
@@ -1706,7 +1718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtRemoveAllocation  *  * PARAMETERS:  Allocation          - Address of allocated memory  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:  *  * DESCRIPTION: Deletes an element from the global allocation tracking list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtRemoveAllocation  *  * PARAMETERS:  ListId              - Memory list to search  *              Allocation          - Address of allocated memory  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:  *  * DESCRIPTION: Deletes an element from the global allocation tracking list.  *  ******************************************************************************/
 end_comment
 
 begin_function

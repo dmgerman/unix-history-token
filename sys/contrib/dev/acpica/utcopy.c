@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 114 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 115 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -997,13 +997,14 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-comment|/*          * Whatever other type -- it is not supported          */
+comment|/* All other types are not supported */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_SUPPORT
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Must COPY string and buffer contents */
 switch|switch
 condition|(
 name|ExternalObject
@@ -1011,7 +1012,6 @@ operator|->
 name|Type
 condition|)
 block|{
-comment|/* Must COPY string and buffer contents */
 case|case
 name|ACPI_TYPE_STRING
 case|:
@@ -1045,11 +1045,9 @@ operator|.
 name|Pointer
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 name|ACPI_MEMCPY
 argument_list|(
@@ -1113,11 +1111,9 @@ operator|.
 name|Pointer
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 name|ACPI_MEMCPY
 argument_list|(
@@ -1181,6 +1177,18 @@ expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
+argument_list|)
+expr_stmt|;
+name|ErrorExit
+label|:
+name|AcpiUtRemoveReference
+argument_list|(
+name|InternalObject
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1844,11 +1852,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 operator|*
 name|ThisTargetPtr
@@ -1952,16 +1958,13 @@ operator|.
 name|Elements
 condition|)
 block|{
-name|ACPI_MEM_FREE
-argument_list|(
-name|TargetObject
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 comment|/*          * Pass the new package object back to the package walk routine          */
 name|State
@@ -1986,6 +1989,18 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+name|ErrorExit
+label|:
+name|AcpiUtRemoveReference
+argument_list|(
+name|TargetObject
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status

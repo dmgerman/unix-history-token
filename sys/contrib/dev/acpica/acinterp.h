@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 149 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 155 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -114,9 +114,8 @@ modifier|*
 modifier|*
 name|ResultDesc
 parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
+name|UINT32
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -133,10 +132,6 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|ResultDesc
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -155,17 +150,42 @@ modifier|*
 name|ResultDesc
 parameter_list|,
 name|UINT32
-name|Base
-parameter_list|,
-name|UINT32
-name|MaxLength
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
+name|Type
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Types for ->String conversion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXPLICIT_BYTE_COPY
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXPLICIT_CONVERT_HEX
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IMPLICIT_CONVERT_HEX
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXPLICIT_CONVERT_DECIMAL
+value|0x00000003
+end_define
 
 begin_function_decl
 name|ACPI_STATUS
@@ -197,7 +217,7 @@ parameter_list|(
 name|ACPI_INTEGER
 name|Integer
 parameter_list|,
-name|UINT32
+name|UINT16
 name|Base
 parameter_list|,
 name|UINT8
@@ -591,17 +611,43 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|BOOLEAN
-name|AcpiExDoLogicalOp
+name|ACPI_STATUS
+name|AcpiExDoLogicalNumericOp
 parameter_list|(
 name|UINT16
 name|Opcode
 parameter_list|,
 name|ACPI_INTEGER
-name|Operand0
+name|Integer0
 parameter_list|,
 name|ACPI_INTEGER
+name|Integer1
+parameter_list|,
+name|BOOLEAN
+modifier|*
+name|LogicalResult
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExDoLogicalOp
+parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|Operand0
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
 name|Operand1
+parameter_list|,
+name|BOOLEAN
+modifier|*
+name|LogicalResult
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -933,7 +979,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiExSystemDoSuspend
 parameter_list|(
-name|UINT32
+name|ACPI_INTEGER
 name|Time
 parameter_list|)
 function_decl|;
@@ -1028,6 +1074,17 @@ end_function_decl
 begin_comment
 comment|/*  * exmonadic - ACPI AML (p-code) execution, monadic operators  */
 end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExOpcode_0A_0T_1R
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -1174,7 +1231,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * exdump - Scanner debug output routines  */
+comment|/*  * exdump - Interpreter debug output routines  */
 end_comment
 
 begin_function_decl
@@ -1183,7 +1240,10 @@ name|AcpiExDumpOperand
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|EntryDesc
+name|ObjDesc
+parameter_list|,
+name|UINT32
+name|Depth
 parameter_list|)
 function_decl|;
 end_function_decl

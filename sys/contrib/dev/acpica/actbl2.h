@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -95,6 +95,13 @@ define|#
 directive|define
 name|FADT2_REVISION_ID
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FADT2_MINUS_REVISION_ID
+value|2
 end_define
 
 begin_pragma
@@ -252,6 +259,88 @@ name|ACPI_GENERIC_ADDRESS
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|FADT_REV2_COMMON
+define|\
+value|UINT32                  V1_FirmwareCtrl;
+comment|/* 32-bit physical address of FACS */
+value|\     UINT32                  V1_Dsdt;
+comment|/* 32-bit physical address of DSDT */
+value|\     UINT8                   Reserved1;
+comment|/* System Interrupt Model isn't used in ACPI 2.0*/
+value|\     UINT8                   Prefer_PM_Profile;
+comment|/* Conveys preferred power management profile to OSPM. */
+value|\     UINT16                  SciInt;
+comment|/* System vector of SCI interrupt */
+value|\     UINT32                  SmiCmd;
+comment|/* Port address of SMI command port */
+value|\     UINT8                   AcpiEnable;
+comment|/* Value to write to smi_cmd to enable ACPI */
+value|\     UINT8                   AcpiDisable;
+comment|/* Value to write to smi_cmd to disable ACPI */
+value|\     UINT8                   S4BiosReq;
+comment|/* Value to write to SMI CMD to enter S4BIOS state */
+value|\     UINT8                   PstateCnt;
+comment|/* Processor performance state control*/
+value|\     UINT32                  V1_Pm1aEvtBlk;
+comment|/* Port address of Power Mgt 1a AcpiEvent Reg Blk */
+value|\     UINT32                  V1_Pm1bEvtBlk;
+comment|/* Port address of Power Mgt 1b AcpiEvent Reg Blk */
+value|\     UINT32                  V1_Pm1aCntBlk;
+comment|/* Port address of Power Mgt 1a Control Reg Blk */
+value|\     UINT32                  V1_Pm1bCntBlk;
+comment|/* Port address of Power Mgt 1b Control Reg Blk */
+value|\     UINT32                  V1_Pm2CntBlk;
+comment|/* Port address of Power Mgt 2 Control Reg Blk */
+value|\     UINT32                  V1_PmTmrBlk;
+comment|/* Port address of Power Mgt Timer Ctrl Reg Blk */
+value|\     UINT32                  V1_Gpe0Blk;
+comment|/* Port addr of General Purpose AcpiEvent 0 Reg Blk */
+value|\     UINT32                  V1_Gpe1Blk;
+comment|/* Port addr of General Purpose AcpiEvent 1 Reg Blk */
+value|\     UINT8                   Pm1EvtLen;
+comment|/* Byte Length of ports at pm1X_evt_blk */
+value|\     UINT8                   Pm1CntLen;
+comment|/* Byte Length of ports at pm1X_cnt_blk */
+value|\     UINT8                   Pm2CntLen;
+comment|/* Byte Length of ports at pm2_cnt_blk */
+value|\     UINT8                   PmTmLen;
+comment|/* Byte Length of ports at pm_tm_blk */
+value|\     UINT8                   Gpe0BlkLen;
+comment|/* Byte Length of ports at gpe0_blk */
+value|\     UINT8                   Gpe1BlkLen;
+comment|/* Byte Length of ports at gpe1_blk */
+value|\     UINT8                   Gpe1Base;
+comment|/* Offset in gpe model where gpe1 events start */
+value|\     UINT8                   CstCnt;
+comment|/* Support for the _CST object and C States change notification.*/
+value|\     UINT16                  Plvl2Lat;
+comment|/* Worst case HW latency to enter/exit C2 state */
+value|\     UINT16                  Plvl3Lat;
+comment|/* Worst case HW latency to enter/exit C3 state */
+value|\     UINT16                  FlushSize;
+comment|/* Number of flush strides that need to be read */
+value|\     UINT16                  FlushStride;
+comment|/* Processor's memory cache line width, in bytes */
+value|\     UINT8                   DutyOffset;
+comment|/* Processor's duty cycle index in processor's P_CNT reg*/
+value|\     UINT8                   DutyWidth;
+comment|/* Processor's duty cycle value bit width in P_CNT register.*/
+value|\     UINT8                   DayAlrm;
+comment|/* Index to day-of-month alarm in RTC CMOS RAM */
+value|\     UINT8                   MonAlrm;
+comment|/* Index to month-of-year alarm in RTC CMOS RAM */
+value|\     UINT8                   Century;
+comment|/* Index to century in RTC CMOS RAM */
+value|\     UINT16                  IapcBootArch;
+end_define
+
+begin_comment
+comment|/* IA-PC Boot Architecture Flags. See Table 5-10 for description*/
+end_comment
+
 begin_comment
 comment|/*  * ACPI 2.0 Fixed ACPI Description Table (FADT)  */
 end_comment
@@ -263,150 +352,7 @@ name|fadt_descriptor_rev2
 block|{
 name|ACPI_TABLE_HEADER_DEF
 comment|/* ACPI common table header */
-name|UINT32
-name|V1_FirmwareCtrl
-decl_stmt|;
-comment|/* 32-bit physical address of FACS */
-name|UINT32
-name|V1_Dsdt
-decl_stmt|;
-comment|/* 32-bit physical address of DSDT */
-name|UINT8
-name|Reserved1
-decl_stmt|;
-comment|/* System Interrupt Model isn't used in ACPI 2.0*/
-name|UINT8
-name|Prefer_PM_Profile
-decl_stmt|;
-comment|/* Conveys preferred power management profile to OSPM. */
-name|UINT16
-name|SciInt
-decl_stmt|;
-comment|/* System vector of SCI interrupt */
-name|UINT32
-name|SmiCmd
-decl_stmt|;
-comment|/* Port address of SMI command port */
-name|UINT8
-name|AcpiEnable
-decl_stmt|;
-comment|/* Value to write to smi_cmd to enable ACPI */
-name|UINT8
-name|AcpiDisable
-decl_stmt|;
-comment|/* Value to write to smi_cmd to disable ACPI */
-name|UINT8
-name|S4BiosReq
-decl_stmt|;
-comment|/* Value to write to SMI CMD to enter S4BIOS state */
-name|UINT8
-name|PstateCnt
-decl_stmt|;
-comment|/* Processor performance state control*/
-name|UINT32
-name|V1_Pm1aEvtBlk
-decl_stmt|;
-comment|/* Port address of Power Mgt 1a AcpiEvent Reg Blk */
-name|UINT32
-name|V1_Pm1bEvtBlk
-decl_stmt|;
-comment|/* Port address of Power Mgt 1b AcpiEvent Reg Blk */
-name|UINT32
-name|V1_Pm1aCntBlk
-decl_stmt|;
-comment|/* Port address of Power Mgt 1a Control Reg Blk */
-name|UINT32
-name|V1_Pm1bCntBlk
-decl_stmt|;
-comment|/* Port address of Power Mgt 1b Control Reg Blk */
-name|UINT32
-name|V1_Pm2CntBlk
-decl_stmt|;
-comment|/* Port address of Power Mgt 2 Control Reg Blk */
-name|UINT32
-name|V1_PmTmrBlk
-decl_stmt|;
-comment|/* Port address of Power Mgt Timer Ctrl Reg Blk */
-name|UINT32
-name|V1_Gpe0Blk
-decl_stmt|;
-comment|/* Port addr of General Purpose AcpiEvent 0 Reg Blk */
-name|UINT32
-name|V1_Gpe1Blk
-decl_stmt|;
-comment|/* Port addr of General Purpose AcpiEvent 1 Reg Blk */
-name|UINT8
-name|Pm1EvtLen
-decl_stmt|;
-comment|/* Byte Length of ports at pm1X_evt_blk */
-name|UINT8
-name|Pm1CntLen
-decl_stmt|;
-comment|/* Byte Length of ports at pm1X_cnt_blk */
-name|UINT8
-name|Pm2CntLen
-decl_stmt|;
-comment|/* Byte Length of ports at pm2_cnt_blk */
-name|UINT8
-name|PmTmLen
-decl_stmt|;
-comment|/* Byte Length of ports at pm_tm_blk */
-name|UINT8
-name|Gpe0BlkLen
-decl_stmt|;
-comment|/* Byte Length of ports at gpe0_blk */
-name|UINT8
-name|Gpe1BlkLen
-decl_stmt|;
-comment|/* Byte Length of ports at gpe1_blk */
-name|UINT8
-name|Gpe1Base
-decl_stmt|;
-comment|/* Offset in gpe model where gpe1 events start */
-name|UINT8
-name|CstCnt
-decl_stmt|;
-comment|/* Support for the _CST object and C States change notification.*/
-name|UINT16
-name|Plvl2Lat
-decl_stmt|;
-comment|/* Worst case HW latency to enter/exit C2 state */
-name|UINT16
-name|Plvl3Lat
-decl_stmt|;
-comment|/* Worst case HW latency to enter/exit C3 state */
-name|UINT16
-name|FlushSize
-decl_stmt|;
-comment|/* Number of flush strides that need to be read */
-name|UINT16
-name|FlushStride
-decl_stmt|;
-comment|/* Processor's memory cache line width, in bytes */
-name|UINT8
-name|DutyOffset
-decl_stmt|;
-comment|/* Processor's duty cycle index in processor's P_CNT reg*/
-name|UINT8
-name|DutyWidth
-decl_stmt|;
-comment|/* Processor's duty cycle value bit width in P_CNT register.*/
-name|UINT8
-name|DayAlrm
-decl_stmt|;
-comment|/* Index to day-of-month alarm in RTC CMOS RAM */
-name|UINT8
-name|MonAlrm
-decl_stmt|;
-comment|/* Index to month-of-year alarm in RTC CMOS RAM */
-name|UINT8
-name|Century
-decl_stmt|;
-comment|/* Index to century in RTC CMOS RAM */
-name|UINT16
-name|IapcBootArch
-decl_stmt|;
-comment|/* IA-PC Boot Architecture Flags. See Table 5-10 for description*/
+name|FADT_REV2_COMMON
 name|UINT8
 name|Reserved2
 decl_stmt|;
@@ -559,6 +505,45 @@ decl_stmt|;
 comment|/* Extended General Purpose AcpiEvent 1 Reg Blk address */
 block|}
 name|FADT_DESCRIPTOR_REV2
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* "Downrevved" ACPI 2.0 FADT descriptor */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|fadt_descriptor_rev2_minus
+block|{
+name|ACPI_TABLE_HEADER_DEF
+comment|/* ACPI common table header */
+name|FADT_REV2_COMMON
+name|UINT8
+name|Reserved2
+decl_stmt|;
+comment|/* Reserved */
+name|UINT32
+name|Flags
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ResetRegister
+decl_stmt|;
+comment|/* Reset register address in GAS format */
+name|UINT8
+name|ResetValue
+decl_stmt|;
+comment|/* Value to write to the ResetRegister port to reset the system. */
+name|UINT8
+name|Reserved7
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* These three bytes must be zero */
+block|}
+name|FADT_DESCRIPTOR_REV2_MINUS
 typedef|;
 end_typedef
 

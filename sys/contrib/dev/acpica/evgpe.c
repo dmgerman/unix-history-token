@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 42 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -119,7 +119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvUpdateGpeEnableMasks  *  * PARAMETERS:  GpeEventInfo            - GPE to update  *  * RETURN:      Status  *  * DESCRIPTION: Updates GPE register enable masks based on the GPE type  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvUpdateGpeEnableMasks  *  * PARAMETERS:  GpeEventInfo            - GPE to update  *              Type                    - What to do: ACPI_GPE_DISABLE or  *                                        ACPI_GPE_ENABLE  *  * RETURN:      Status  *  * DESCRIPTION: Updates GPE register enable masks based on the GPE type  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -294,7 +294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvEnableGpe  *  * PARAMETERS:  GpeEventInfo            - GPE to enable  *  * RETURN:      Status  *  * DESCRIPTION: Enable a GPE based on the GPE type  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvEnableGpe  *  * PARAMETERS:  GpeEventInfo            - GPE to enable  *              WriteToHardware         - Enable now, or just mark data structs  *                                        (WAKE GPEs should be deferred)  *  * RETURN:      Status  *  * DESCRIPTION: Enable a GPE based on the GPE type  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -952,33 +952,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"GPE pair: Status %8.8X%8.8X = %02X, Enable %8.8X%8.8X = %02X\n"
+literal|"Read GPE Register at GPE%X: Status=%02X, Enable=%02X\n"
 operator|,
-name|ACPI_FORMAT_UINT64
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
 name|GpeRegisterInfo
 operator|->
-name|StatusAddress
-operator|.
-name|Address
-argument_list|)
-argument_list|)
+name|BaseGpeNumber
 operator|,
 name|StatusReg
-operator|,
-name|ACPI_FORMAT_UINT64
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|GpeRegisterInfo
-operator|->
-name|EnableAddress
-operator|.
-name|Address
-argument_list|)
-argument_list|)
 operator|,
 name|EnableReg
 operator|)
@@ -1642,7 +1622,7 @@ name|ACPI_GPE_NOTIFY_CHECK
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  * NOT USED, PROTOTYPE ONLY AND WILL PROBABLY BE REMOVED  *  * FUNCTION:    AcpiEvCheckForWakeOnlyGpe  *  * PARAMETERS:  GpeEventInfo    - info for this GPE  *  * RETURN:      Status  *  * DESCRIPTION: Determine if a a GPE is "wake-only".  *  *              Called from Notify() code in interpreter when a "DeviceWake"  *              Notify comes in.  *  ******************************************************************************/
+comment|/*******************************************************************************  * TBD: NOT USED, PROTOTYPE ONLY AND WILL PROBABLY BE REMOVED  *  * FUNCTION:    AcpiEvCheckForWakeOnlyGpe  *  * PARAMETERS:  GpeEventInfo    - info for this GPE  *  * RETURN:      Status  *  * DESCRIPTION: Determine if a a GPE is "wake-only".  *  *              Called from Notify() code in interpreter when a "DeviceWake"  *              Notify comes in.  *  ******************************************************************************/
 end_comment
 
 begin_function

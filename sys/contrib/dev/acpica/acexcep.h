@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -679,7 +679,7 @@ begin_define
 define|#
 directive|define
 name|AE_CODE_AML_MAX
-value|0x0020
+value|0x0021
 end_define
 
 begin_comment

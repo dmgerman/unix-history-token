@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 87 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 88 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1075,7 +1075,7 @@ name|ACPI_TYPE_ANY
 argument_list|,
 name|ChildNode
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -1089,7 +1089,7 @@ name|ChildNode
 expr_stmt|;
 name|ChildNode
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}

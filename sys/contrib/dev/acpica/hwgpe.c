@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwWriteGpeEnableReg  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE to be enabled  *  * RETURN:      Status  *  * DESCRIPTION: Write a GPE enable register.  Note: The bit for this GPE must   *              already be cleared or set in the parent register   *              EnableForRun mask.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwWriteGpeEnableReg  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE to be enabled  *  * RETURN:      Status  *  * DESCRIPTION: Write a GPE enable register.  Note: The bit for this GPE must  *              already be cleared or set in the parent register  *              EnableForRun mask.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -101,7 +101,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwClearGpe  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE to be cleared  *  * RETURN:      StatusStatus  *  * DESCRIPTION: Clear the status bit for a single GPE.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwClearGpe  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE to be cleared  *  * RETURN:      Status  *  * DESCRIPTION: Clear the status bit for a single GPE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -676,14 +676,15 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwDisableAllGpes  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Disable and clear all GPEs  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwDisableAllGpes  *  * PARAMETERS:  Flags           - ACPI_NOT_ISR or ACPI_ISR  *  * RETURN:      Status  *  * DESCRIPTION: Disable and clear all GPEs  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiHwDisableAllGpes
 parameter_list|(
-name|void
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -699,6 +700,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiHwDisableGpeBlock
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 name|Status
@@ -706,6 +709,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiHwClearGpeBlock
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -717,14 +722,15 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwEnableAllRuntimeGpes  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Enable all GPEs of the given type  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwEnableAllRuntimeGpes  *  * PARAMETERS:  Flags           - ACPI_NOT_ISR or ACPI_ISR  *  * RETURN:      Status  *  * DESCRIPTION: Enable all GPEs of the given type  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiHwEnableAllRuntimeGpes
 parameter_list|(
-name|void
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -740,6 +746,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiHwEnableRuntimeGpeBlock
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -751,14 +759,15 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwEnableAllWakeupGpes  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Enable all GPEs of the given type  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwEnableAllWakeupGpes  *  * PARAMETERS:  Flags           - ACPI_NOT_ISR or ACPI_ISR  *  * RETURN:      Status  *  * DESCRIPTION: Enable all GPEs of the given type  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiHwEnableAllWakeupGpes
 parameter_list|(
-name|void
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -774,6 +783,8 @@ operator|=
 name|AcpiEvWalkGpeList
 argument_list|(
 name|AcpiHwEnableWakeupGpeBlock
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

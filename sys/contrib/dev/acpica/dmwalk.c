@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmwalk - AML disassembly tree walk  *              $Revision: 13 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmwalk - AML disassembly tree walk  *              $Revision: 14 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -780,7 +780,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"    External (%s)\n"
+literal|"    External (%s, DeviceObj)\n"
 argument_list|,
 name|AcpiGbl_ExternalList
 operator|->

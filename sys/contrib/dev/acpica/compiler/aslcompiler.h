@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslcompiler.h - common include file  *              $Revision: 129 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslcompiler.h - common include file  *              $Revision: 130 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1415,17 +1415,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|TrDoDefinitionBlock
-parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|TrDoElseif
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*

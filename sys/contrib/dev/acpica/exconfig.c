@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 78 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ name|TableInfo
 operator|.
 name|Type
 operator|=
-literal|5
+name|ACPI_TABLE_SSDT
 expr_stmt|;
 name|TableInfo
 operator|.

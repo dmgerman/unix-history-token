@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: asltypes.h - compiler data types and struct definitions  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: asltypes.h - compiler data types and struct definitions  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -152,6 +152,13 @@ name|NODE_IS_NAME_DECLARATION
 value|0x00010000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NODE_COMPILER_EMITTED
+value|0x00020000
+end_define
+
 begin_comment
 comment|/* Keeps information about individual control methods */
 end_comment
@@ -175,6 +182,15 @@ name|ArgInitialized
 index|[
 name|ACPI_METHOD_NUM_ARGS
 index|]
+decl_stmt|;
+name|UINT32
+name|ValidArgTypes
+index|[
+name|ACPI_METHOD_NUM_ARGS
+index|]
+decl_stmt|;
+name|UINT32
+name|ValidReturnTypes
 decl_stmt|;
 name|UINT32
 name|NumReturnNoValue
@@ -719,6 +735,12 @@ block|,
 name|ASL_MSG_NON_ASCII
 block|,
 name|ASL_MSG_INVALID_TIME
+block|,
+name|ASL_MSG_DUPLICATE_CASE
+block|,
+name|ASL_MSG_NO_CASES
+block|,
+name|ASL_MSG_INVALID_UUID
 block|}
 name|ASL_MESSAGE_IDS
 typedef|;
@@ -988,6 +1010,15 @@ literal|"Invalid characters found in file"
 block|,
 comment|/*    ASL_MSG_INVALID_TIME */
 literal|"Time parameter too long (255 max)"
+block|,
+comment|/*    ASL_MSG_DUPLICATE_CASE */
+literal|"Case value already specified"
+block|,
+comment|/*    ASL_MSG_NO_CASES */
+literal|"No Case() statements under Switch()"
+block|,
+comment|/*    ASL_MSG_INVALID_UUID */
+literal|"UUID string must be of the form \"aabbccdd-eeff-gghh-iijj-kkllmmnnoopp\""
 block|}
 decl_stmt|;
 end_decl_stmt

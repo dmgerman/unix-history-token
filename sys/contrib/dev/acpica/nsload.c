@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -727,7 +727,7 @@ name|StartHandle
 expr_stmt|;
 name|ChildHandle
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|Level
 operator|=
@@ -780,7 +780,7 @@ name|ACPI_TYPE_ANY
 argument_list|,
 name|ChildHandle
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|Dummy
@@ -798,7 +798,7 @@ name|ChildHandle
 expr_stmt|;
 name|ChildHandle
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 87 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 88 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -393,14 +393,6 @@ name|Node
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|_ACPI_ASL_COMPILER
@@ -411,6 +403,7 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
+comment|/*              * Table disassembly:              * Target of Scope() not found.  Generate an External for it, and              * insert the name into the namespace.              */
 name|AcpiDmAddToExternalList
 argument_list|(
 name|Path
@@ -418,10 +411,38 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AE_OK
+name|AcpiNsLookup
+argument_list|(
+name|WalkState
+operator|->
+name|ScopeInfo
+argument_list|,
+name|Path
+argument_list|,
+name|ObjectType
+argument_list|,
+name|ACPI_IMODE_LOAD_PASS1
+argument_list|,
+name|ACPI_NS_SEARCH_PARENT
+argument_list|,
+name|WalkState
+argument_list|,
+operator|&
+operator|(
+name|Node
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
-else|else
+endif|#
+directive|endif
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
 block|{
 name|ACPI_REPORT_NSERROR
 argument_list|(
@@ -430,18 +451,6 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
-block|}
-else|#
-directive|else
-name|ACPI_REPORT_NSERROR
-argument_list|(
-name|Path
-argument_list|,
-name|Status
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|Status

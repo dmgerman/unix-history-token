@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 173 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 176 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpOperand  *  * PARAMETERS:  *ObjDesc          - Pointer to entry to be dumped  *  * RETURN:      Status  *  * DESCRIPTION: Dump an operand object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpOperand  *  * PARAMETERS:  *ObjDesc          - Pointer to entry to be dumped  *  * RETURN:      None  *  * DESCRIPTION: Dump an operand object  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -86,24 +86,16 @@ parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
+parameter_list|,
+name|UINT32
+name|Depth
 parameter_list|)
 block|{
-name|UINT8
-modifier|*
-name|Buf
-init|=
-name|NULL
-decl_stmt|;
 name|UINT32
 name|Length
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Element
-decl_stmt|;
-name|UINT16
-name|ElementIndex
+name|UINT32
+name|Index
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
@@ -135,10 +127,14 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/*          * This usually indicates that something serious is wrong          */
-name|AcpiOsPrintf
+comment|/*          * This could be a null element of a package          */
+name|ACPI_DEBUG_PRINT
 argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Null Object Descriptor\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -212,6 +208,33 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* ObjDesc is a valid object */
+if|if
+condition|(
+name|Depth
+operator|>
+literal|0
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"%*s[%u] %p "
+operator|,
+name|Depth
+operator|,
+literal|" "
+operator|,
+name|Depth
+operator|,
+name|ObjDesc
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -223,6 +246,7 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE
@@ -496,27 +520,30 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|Buf
+name|Index
 operator|=
-name|ObjDesc
-operator|->
-name|Buffer
-operator|.
-name|Pointer
+literal|0
 init|;
+name|Index
+operator|<
 name|Length
-operator|--
 condition|;
+name|Index
 operator|++
-name|Buf
 control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|" %02x"
 argument_list|,
-operator|*
-name|Buf
+name|ObjDesc
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+index|[
+name|Index
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -550,7 +577,7 @@ name|ACPI_TYPE_PACKAGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Package count %X @ %p\n"
+literal|"Package [Len %X] ElementArray %p\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -565,7 +592,7 @@ operator|.
 name|Elements
 argument_list|)
 expr_stmt|;
-comment|/*          * If elements exist, package vector pointer is valid,          * and debug_level exceeds 1, dump package's elements.          */
+comment|/*          * If elements exist, package element pointer is valid,          * and debug_level exceeds 1, dump package's elements.          */
 if|if
 condition|(
 name|ObjDesc
@@ -587,19 +614,11 @@ condition|)
 block|{
 for|for
 control|(
-name|ElementIndex
+name|Index
 operator|=
 literal|0
-operator|,
-name|Element
-operator|=
-name|ObjDesc
-operator|->
-name|Package
-operator|.
-name|Elements
 init|;
-name|ElementIndex
+name|Index
 operator|<
 name|ObjDesc
 operator|->
@@ -607,26 +626,28 @@ name|Package
 operator|.
 name|Count
 condition|;
+name|Index
 operator|++
-name|ElementIndex
-operator|,
-operator|++
-name|Element
 control|)
 block|{
 name|AcpiExDumpOperand
 argument_list|(
-operator|*
-name|Element
+name|ObjDesc
+operator|->
+name|Package
+operator|.
+name|Elements
+index|[
+name|Index
+index|]
+argument_list|,
+name|Depth
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_REGION
@@ -790,13 +811,17 @@ operator|.
 name|StartFieldBitOffset
 argument_list|)
 expr_stmt|;
-name|ACPI_DUMP_STACK_ENTRY
+name|AcpiExDumpOperand
 argument_list|(
 name|ObjDesc
 operator|->
 name|Field
 operator|.
 name|RegionObj
+argument_list|,
+name|Depth
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -878,13 +903,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_DUMP_STACK_ENTRY
+name|AcpiExDumpOperand
 argument_list|(
 name|ObjDesc
 operator|->
 name|BufferField
 operator|.
 name|BufferObj
+argument_list|,
+name|Depth
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -989,7 +1018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpOperands  *  * PARAMETERS:  InterpreterMode      - Load or Exec  *              *Ident              - Identification  *              NumLevels           - # of stack entries to dump above line  *              *Note               - Output notation  *  * DESCRIPTION: Dump the object stack  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpOperands  *  * PARAMETERS:  Operands            - Operand list  *              InterpreterMode     - Load or Exec  *              Ident               - Identification  *              NumLevels           - # of stack entries to dump above line  *              Note                - Output notation  *              ModuleName          - Caller's module name  *              LineNumber          - Caller's invocation line number  *  * DESCRIPTION: Dump the object stack  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1025,11 +1054,6 @@ parameter_list|)
 block|{
 name|ACPI_NATIVE_UINT
 name|i
-decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ObjDesc
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
@@ -1101,18 +1125,14 @@ name|NumLevels
 operator|--
 control|)
 block|{
-name|ObjDesc
-operator|=
-operator|&
+name|AcpiExDumpOperand
+argument_list|(
 name|Operands
 index|[
 name|i
 index|]
-expr_stmt|;
-name|AcpiExDumpOperand
-argument_list|(
-operator|*
-name|ObjDesc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1259,7 +1279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpNode  *  * PARAMETERS:  *Node           - Descriptor to dump  *              Flags               - Force display  *  * DESCRIPTION: Dumps the members of the given.Node  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpNode  *  * PARAMETERS:  *Node               - Descriptor to dump  *              Flags               - Force display  *  * DESCRIPTION: Dumps the members of the given.Node  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1499,7 +1519,8 @@ argument_list|,
 name|Flags
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1947,7 +1968,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiExOutInteger
 argument_list|(
-literal|"AcquisitionDepth"
+literal|"AcquireDepth"
 argument_list|,
 name|ObjDesc
 operator|->
