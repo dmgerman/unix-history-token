@@ -4085,7 +4085,6 @@ name|m_next
 operator|=
 name|m1
 expr_stmt|;
-block|}
 name|m
 operator|->
 name|m_pkthdr
@@ -4094,6 +4093,7 @@ name|len
 operator|=
 name|tmp
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
