@@ -814,6 +814,14 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 		 * Processed all our interrupts.  Now get the sched 		 * lock.  This may take a while and it_need may get 		 * set again, so we have to check it again. 		 */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&
