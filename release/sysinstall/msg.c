@@ -938,7 +938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Put up a message in a popup yes/no box and return 1 for YES, 0 for NO */
+comment|/* Put up a message in a popup yes/no box and return 0 for YES, 1 for NO */
 end_comment
 
 begin_function
@@ -1042,7 +1042,7 @@ name|VAR_NONINTERACTIVE
 argument_list|)
 condition|)
 return|return
-literal|1
+literal|0
 return|;
 comment|/* If non-interactive, return YES all the time */
 name|ret
@@ -1072,7 +1072,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Put up a message in a popup no/yes box and return 1 for YES, 0 for NO */
+comment|/* Put up a message in a popup no/yes box and return 0 for YES, 1 for NO */
 end_comment
 
 begin_function
@@ -1176,7 +1176,7 @@ name|VAR_NONINTERACTIVE
 argument_list|)
 condition|)
 return|return
-literal|0
+literal|1
 return|;
 comment|/* If non-interactive, return NO all the time */
 name|ret
