@@ -1255,10 +1255,23 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|pktlen
+operator|<=
+name|MCLBYTES
+argument_list|,
+operator|(
+literal|"802.11 packet too large: %u"
+operator|,
+name|pktlen
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pktlen
-operator|>
+operator|<=
 name|MHLEN
 condition|)
 name|MGETHDR
