@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mv.c,v 1.19 1998/05/25 22:44:16 steve Exp $"
+literal|"$Id: mv.c,v 1.20 1998/06/09 03:39:38 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1343,14 +1343,20 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s: set owner/group (was: %u/%u)"
+literal|"%s: set owner/group (was: %lu/%lu)"
 argument_list|,
 name|to
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sbp
 operator|->
 name|st_uid
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sbp
 operator|->
 name|st_gid
