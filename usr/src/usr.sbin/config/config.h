@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * config.h	1.5	81/05/22  * Definitions that everybody needs to know  */
+comment|/*  * config.h	1.6	82/07/21  * Definitions that everybody needs to know  */
 end_comment
 
 begin_define
@@ -215,6 +215,10 @@ block|{
 name|char
 modifier|*
 name|op_name
+decl_stmt|;
+name|char
+modifier|*
+name|op_value
 decl_stmt|;
 name|struct
 name|cputype
