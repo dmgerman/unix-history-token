@@ -2595,12 +2595,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Take a look to see if we have external SRAM. 	 * We currently do not attempt to use SRAM that is 	 * shared among multiple controllers. 	 */
-name|ahc_probe_ext_scbram
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2778,6 +2772,24 @@ block|{
 name|u_int8_t
 name|sblkctl
 decl_stmt|;
+name|u_int
+name|dscommand0
+decl_stmt|;
+name|dscommand0
+operator|=
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|DSCOMMAND0
+argument_list|)
+expr_stmt|;
+name|dscommand0
+operator||=
+name|DPARCKEN
+operator||
+name|MPARCKEN
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2791,19 +2803,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|u_int
-name|dscommand0
-decl_stmt|;
 comment|/* 			 * DPARCKEN doesn't work correctly on 			 * some MBs so don't use it. 			 */
-name|dscommand0
-operator|=
-name|ahc_inb
-argument_list|(
-name|ahc
-argument_list|,
-name|DSCOMMAND0
-argument_list|)
-expr_stmt|;
 name|dscommand0
 operator|&=
 operator|~
@@ -2816,9 +2816,8 @@ expr_stmt|;
 name|dscommand0
 operator||=
 name|CACHETHEN
-operator||
-name|MPARCKEN
 expr_stmt|;
+block|}
 name|ahc_outb
 argument_list|(
 name|ahc
@@ -2828,7 +2827,6 @@ argument_list|,
 name|dscommand0
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* See if we have an SEEPROM and perform auto-term */
 name|check_extport
 argument_list|(
@@ -2972,6 +2970,13 @@ operator|=
 name|our_id
 expr_stmt|;
 block|}
+block|}
+comment|/* 	 * Take a look to see if we have external SRAM. 	 * We currently do not attempt to use SRAM that is 	 * shared among multiple controllers. 	 */
+name|ahc_probe_ext_scbram
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: %s "
@@ -2991,7 +2996,6 @@ name|AHC_CHIPID_MASK
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Record our termination setting for the 	 * generic initialization routine. 	 */
 if|if
 condition|(
@@ -3502,6 +3506,7 @@ name|pcheck
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* Clear any resulting parity error */
 name|ahc_outb
 argument_list|(
 name|ahc
@@ -3509,6 +3514,15 @@ argument_list|,
 name|CLRINT
 argument_list|,
 name|CLRPARERR
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRINT
+argument_list|,
+name|CLRBRKADRINT
 argument_list|)
 expr_stmt|;
 comment|/* Now see if we can do fast timing */
@@ -3571,6 +3585,7 @@ name|TRUE
 expr_stmt|;
 name|done
 label|:
+comment|/* Clear any resulting parity error */
 name|ahc_outb
 argument_list|(
 name|ahc
@@ -3578,6 +3593,15 @@ argument_list|,
 name|CLRINT
 argument_list|,
 name|CLRPARERR
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRINT
+argument_list|,
+name|CLRBRKADRINT
 argument_list|)
 expr_stmt|;
 if|if
