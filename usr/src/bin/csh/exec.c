@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	8.1 (Berkeley) %G%"
+literal|"@(#)exec.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,6 +432,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|sigset_t
+name|sigset
+decl_stmt|;
 comment|/*      * Glob the command name. We will search $path even if this does something,      * as in sh but not in csh.  One special case: if there is no PATH, then we      * execute only commands which start with '/'.      */
 name|blk
 index|[
@@ -735,15 +738,20 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*      * We must do this AFTER any possible forking (like `foo` in glob) so that      * this shell can still do subprocesses.      */
-operator|(
-name|void
-operator|)
-name|sigsetmask
+name|sigemptyset
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
-literal|0
+operator|&
+name|sigset
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|sigset
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*      * If no path, no words in path, or a / in the filename then restrict the      * command search.      */
