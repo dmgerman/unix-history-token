@@ -249,7 +249,10 @@ argument_list|)
 operator|==
 name|pci_get_slot
 argument_list|(
-name|child
+name|children
+index|[
+name|i
+index|]
 argument_list|)
 operator|&&
 name|pci_get_devid
