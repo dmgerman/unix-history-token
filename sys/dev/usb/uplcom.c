@@ -713,6 +713,13 @@ block|,
 name|USB_PRODUCT_RATOC_REXUSB60
 block|}
 block|,
+comment|/* ELECOM UC-SGT */
+block|{
+name|USB_VENDOR_ELECOM
+block|,
+name|USB_PRODUCT_ELECOM_UCSGT
+block|}
+block|,
 block|{
 literal|0
 block|,
