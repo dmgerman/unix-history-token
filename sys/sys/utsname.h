@@ -29,7 +29,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* uname(2) is FreeBSD 1.1 compatable */
+comment|/* uname(2) for the FreeBSD 1.1 ABI. */
 end_comment
 
 begin_endif
@@ -51,7 +51,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* Ask and ye shall receive */
+comment|/* User can override. */
 end_comment
 
 begin_endif
@@ -128,7 +128,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Variable record size */
+comment|/* Variable record size. */
 end_comment
 
 begin_function
