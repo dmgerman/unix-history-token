@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.13	%G%	*/
+comment|/*	fs.h	1.14	%G%	*/
 end_comment
 
 begin_comment
@@ -281,6 +281,22 @@ name|short
 name|fs_rps
 decl_stmt|;
 comment|/* disk revolutions per second */
+name|long
+name|fs_bmask
+decl_stmt|;
+comment|/* ``blkoff'' calc of blk offsets */
+name|long
+name|fs_fmask
+decl_stmt|;
+comment|/* ``fragoff'' calc of frag offsets */
+name|short
+name|fs_bshift
+decl_stmt|;
+comment|/* ``lblkno'' calc of logical blkno */
+name|short
+name|fs_fshift
+decl_stmt|;
+comment|/* ``numfrags'' calc number of frags */
 comment|/* sizes determined by number of cylinder groups and their sizes */
 name|daddr_t
 name|fs_csaddr
@@ -755,6 +771,94 @@ value|((bno) * NSPF(fs) % (fs)->fs_nsect * NRPOS / (fs)->fs_nsect)
 end_define
 
 begin_comment
+comment|/*  * The following macros optimize certain frequently calculated  * quantities by using shifts and masks in place of divisions  * modulos and multiplications.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|blkoff
+parameter_list|(
+name|fs
+parameter_list|,
+name|loc
+parameter_list|)
+comment|/* calculates (loc % fs->fs_bsize) */
+define|\
+value|((loc)& ~(fs)->fs_bmask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragoff
+parameter_list|(
+name|fs
+parameter_list|,
+name|loc
+parameter_list|)
+comment|/* calculates (loc % fs->fs_fsize) */
+define|\
+value|((loc)& ~(fs)->fs_fmask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lblkno
+parameter_list|(
+name|fs
+parameter_list|,
+name|loc
+parameter_list|)
+comment|/* calculates (loc / fs->fs_bsize) */
+define|\
+value|((loc)>> (fs)->fs_bshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|numfrags
+parameter_list|(
+name|fs
+parameter_list|,
+name|loc
+parameter_list|)
+comment|/* calculates (loc / fs->fs_fsize) */
+define|\
+value|((loc)>> (fs)->fs_fshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|blkroundup
+parameter_list|(
+name|fs
+parameter_list|,
+name|size
+parameter_list|)
+comment|/* calculates roundup(size, fs->fs_bsize) */
+define|\
+value|(((size) + (fs)->fs_bsize - 1)& (fs)->fs_bmask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragroundup
+parameter_list|(
+name|fs
+parameter_list|,
+name|size
+parameter_list|)
+comment|/* calculates roundup(size, fs->fs_fsize) */
+define|\
+value|(((size) + (fs)->fs_fsize - 1)& (fs)->fs_fmask)
+end_define
+
+begin_comment
 comment|/*  * determining the size of a file block in the file system  */
 end_comment
 
@@ -770,7 +874,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= NDADDR || (ip)->i_size>= ((lbn) + 1) * (fs)->fs_bsize) \ 		? (fs)->fs_bsize \ 		: (roundup((ip)->i_size % (fs)->fs_bsize, (fs)->fs_fsize)))
+value|(((lbn)>= NDADDR || (ip)->i_size>= ((lbn) + 1) * (fs)->fs_bsize) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (ip)->i_size))))
 end_define
 
 begin_define
@@ -785,7 +889,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= NDADDR || (dip)->di_size>= ((lbn) + 1) * (fs)->fs_bsize) \ 		? (fs)->fs_bsize \ 		: (roundup((dip)->di_size % (fs)->fs_bsize, (fs)->fs_fsize)))
+value|(((lbn)>= NDADDR || (dip)->di_size>= ((lbn) + 1) * (fs)->fs_bsize) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (dip)->di_size))))
 end_define
 
 begin_comment
