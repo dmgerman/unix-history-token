@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/scsi/scsi_da.h>
 end_include
 
@@ -1259,12 +1265,9 @@ name|TSTATE_STATES
 value|18
 comment|/* # of states above */
 comment|/* SCSI/CAM specific variables */
-name|unsigned
-name|char
+name|struct
+name|scsi_sense
 name|cam_scsi_sense
-index|[
-literal|16
-index|]
 decl_stmt|;
 name|int
 name|transfer_speed
@@ -3489,29 +3492,11 @@ operator|)
 condition|)
 block|{
 comment|/* Prepare the SCSI command block */
-name|memset
-argument_list|(
-operator|&
 name|sc
 operator|->
 name|cam_scsi_sense
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|cam_scsi_sense
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|cam_scsi_sense
-index|[
-literal|0
-index|]
+operator|.
+name|opcode
 operator|=
 name|REQUEST_SENSE
 expr_stmt|;
@@ -9661,7 +9646,7 @@ argument_list|(
 name|UDMASS_SCSI
 argument_list|,
 operator|(
-literal|"%s: Fetching %d/%db sense data\n"
+literal|"%s: Fetching %db sense data\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -9670,24 +9655,19 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|csio
+name|sc
 operator|->
-name|sense_len
-operator|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_sense_data
-argument_list|)
+name|cam_scsi_sense
+operator|.
+name|length
 operator|)
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|cam_scsi_sense
-index|[
-literal|4
-index|]
+operator|.
+name|length
 operator|=
 name|csio
 operator|->
@@ -9803,13 +9783,14 @@ block|}
 case|case
 name|XPT_RESET_DEV
 case|:
+comment|/* Reset failed */
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|status
 operator|=
-name|CAM_REQ_CMP
+name|CAM_REQ_CMP_ERR
 expr_stmt|;
 name|xpt_done
 argument_list|(
@@ -9960,7 +9941,7 @@ operator|==
 name|SSD_KEY_UNIT_ATTENTION
 condition|)
 block|{
-comment|/* Ignore unit attention errors in the case where 			 * the Unit Attention state is not cleared on 			 * REQUEST SENSE. They will appear again at the next 			 * command. The INQUIRY command succeeded in any case. 			 */
+comment|/* Ignore unit attention errors in the case where 			 * the Unit Attention state is not cleared on 			 * REQUEST SENSE. They will appear again at the next 			 * command. 			 */
 name|ccb
 operator|->
 name|ccb_h
@@ -10220,12 +10201,13 @@ name|rcmd
 operator|=
 name|cmd
 expr_stmt|;
+comment|/* A UFI command is always 12 bytes in length */
+comment|/* XXX cmd[(cmdlen+1)..12] contains garbage */
 operator|*
 name|rcmdlen
 operator|=
 literal|12
 expr_stmt|;
-comment|/* XXX cmd[(cmdlen+1)..12] contains garbage */
 switch|switch
 condition|(
 name|cmd
