@@ -1,66 +1,66 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_physio.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_physio.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"seg.h"
+file|<sys/seg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"trace.h"
+file|<sys/trace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"specdev.h"
+file|<sys/specdev.h>
 end_include
 
 begin_ifdef
@@ -72,7 +72,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_endif
@@ -80,22 +80,35 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|freeswbuf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|buf
 modifier|*
 name|getswbuf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-specifier|static
-name|freeswbuf
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * This routine does device I/O for a user process.  *  * If the user has the proper access privilidges, the process is  * marked 'delayed unlock' and the pages involved in the I/O are  * faulted and locked. After the completion of the I/O, the pages  * are unlocked.  */
@@ -833,20 +846,18 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|freeswbuf
-argument_list|(
-argument|bp
-argument_list|)
-expr|struct
-name|buf
-operator|*
+parameter_list|(
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
 block|{
 name|int
 name|s
@@ -921,7 +932,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Do a read on a device for a user process.  */
