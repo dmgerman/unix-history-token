@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vfsops.c	8.1 (Berkeley) %G%  *  * From:  *	$Id: procfs_vfsops.c,v 3.1 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vfsops.c	8.2 (Berkeley) %G%  *  * From:  *	$Id: procfs_vfsops.c,v 3.1 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -242,14 +242,14 @@ name|size
 operator|=
 sizeof|sizeof
 argument_list|(
-literal|"proc"
+literal|"procfs"
 argument_list|)
 operator|-
 literal|1
 expr_stmt|;
 name|bcopy
 argument_list|(
-literal|"proc"
+literal|"procfs"
 argument_list|,
 name|mp
 operator|->
