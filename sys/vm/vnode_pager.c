@@ -1364,9 +1364,6 @@ name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|address
 operator|<
 literal|0
