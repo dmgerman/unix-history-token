@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.12 (Berkeley) %G%"
+literal|"@(#)scan.c	2.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1730,6 +1730,8 @@ end_block
 begin_decl_stmt
 name|int
 name|lxmatch
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2193,6 +2195,11 @@ literal|"too many characters in character constant"
 argument_list|)
 expr_stmt|;
 block|}
+name|lxmatch
+operator|=
+literal|0
+expr_stmt|;
+comment|/* handshake with yylex() */
 block|}
 end_block
 
@@ -2431,6 +2438,24 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|lxmatch
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* recover from a syntax error that consumes a STRING token */
+name|strflg
+operator|=
+literal|1
+expr_stmt|;
+name|lxstr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
