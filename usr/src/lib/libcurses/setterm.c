@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.1  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.2  */
 end_comment
 
 begin_undef
@@ -182,10 +182,6 @@ block|,
 operator|&
 name|VE
 block|}
-decl_stmt|,
-modifier|*
-name|longname
-argument_list|()
 decl_stmt|,
 modifier|*
 name|tgoto
