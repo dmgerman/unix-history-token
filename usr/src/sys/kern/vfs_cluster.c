@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.31	82/05/31	*/
+comment|/*	vfs_cluster.c	4.32	82/06/01	*/
 end_comment
 
 begin_include
@@ -1646,11 +1646,12 @@ name|dev_t
 operator|)
 name|NODEV
 expr_stmt|;
+name|brealloc
+argument_list|(
 name|bp
-operator|->
-name|b_bcount
-operator|=
+argument_list|,
 name|size
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1723,16 +1724,16 @@ operator|<
 name|bp
 operator|->
 name|b_bcount
-condition|)
-block|{
+operator|||
 name|bp
 operator|->
-name|b_bcount
-operator|=
-name|size
-expr_stmt|;
-return|return;
-block|}
+name|b_dev
+operator|==
+name|NODEV
+condition|)
+goto|goto
+name|allocit
+goto|;
 name|start
 operator|=
 name|bp
