@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.36 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6339,6 +6339,32 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* 			**  If this is a 4xx code and we aren't running 			**  SMTP on our input, bounce this message; 			**  otherwise it disappears without a trace. 			*/
+if|if
+condition|(
+name|fmt
+index|[
+literal|0
+index|]
+operator|==
+literal|'4'
+operator|&&
+name|OpMode
+operator|!=
+name|MD_SMTP
+operator|&&
+name|OpMode
+operator|!=
+name|MD_DAEMON
+condition|)
+block|{
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_FATALERRS
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
