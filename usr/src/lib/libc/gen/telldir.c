@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telldir.c	5.9 (Berkeley) %G%"
+literal|"@(#)telldir.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,11 +299,6 @@ name|dirent
 modifier|*
 name|dp
 decl_stmt|;
-specifier|extern
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
 name|prevlp
 operator|=
 operator|&
@@ -387,11 +382,14 @@ name|dirp
 operator|->
 name|dd_fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|lp
 operator|->
 name|loc_seek
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|dirp
