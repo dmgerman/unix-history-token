@@ -120,10 +120,6 @@ name|int
 name|ske_cpticks
 decl_stmt|;
 comment|/* (j) Ticks of cpu time. */
-name|fixpt_t
-name|ske_pctcpu
-decl_stmt|;
-comment|/* (j) %cpu during p_swtime. */
 block|}
 struct|;
 end_struct
@@ -802,16 +798,12 @@ block|}
 comment|/* 				 * pctcpu is only for ps? 				 * Do it per kse.. and add them up at the end? 				 * XXXKSE 				 */
 name|ke
 operator|->
-name|ke_sched
-operator|->
-name|ske_pctcpu
+name|ke_pctcpu
 operator|=
 operator|(
 name|ke
 operator|->
-name|ke_sched
-operator|->
-name|ske_pctcpu
+name|ke_pctcpu
 operator|*
 name|ccpu
 operator|)
@@ -839,9 +831,7 @@ name|CCPU_SHIFT
 operator|)
 name|ke
 operator|->
-name|ke_sched
-operator|->
-name|ske_pctcpu
+name|ke_pctcpu
 operator|+=
 operator|(
 name|realstathz
@@ -893,9 +883,7 @@ else|#
 directive|else
 name|ke
 operator|->
-name|ke_sched
-operator|->
-name|ske_pctcpu
+name|ke_pctcpu
 operator|+=
 operator|(
 operator|(
@@ -1540,14 +1528,6 @@ name|FIRST_KSE_IN_KSEGRP
 argument_list|(
 name|kg
 argument_list|)
-expr_stmt|;
-name|ke
-operator|->
-name|ke_sched
-operator|->
-name|ske_pctcpu
-operator|=
-literal|0
 expr_stmt|;
 name|ke
 operator|->
@@ -2283,9 +2263,7 @@ return|return
 operator|(
 name|ke
 operator|->
-name|ke_sched
-operator|->
-name|ske_pctcpu
+name|ke_pctcpu
 operator|)
 return|;
 block|}

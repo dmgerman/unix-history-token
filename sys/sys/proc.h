@@ -1433,6 +1433,10 @@ modifier|*
 name|ke_owner
 decl_stmt|;
 comment|/* Always points to the owner */
+name|fixpt_t
+name|ke_pctcpu
+decl_stmt|;
+comment|/* (j) %cpu during p_swtime. */
 name|u_int64_t
 name|ke_uu
 decl_stmt|;
