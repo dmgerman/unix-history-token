@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
