@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: malloc.c,v 1.2 1996/01/19 18:36:54 jdp Exp $"
+literal|"$Id: malloc.c,v 1.1.1.1 1998/03/07 19:24:35 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,7 +520,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|bucket
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|long
 name|n
 decl_stmt|;
 specifier|register
@@ -577,7 +579,7 @@ argument_list|)
 operator|-
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|op
 operator|&
@@ -1927,7 +1929,7 @@ call|)
 argument_list|(
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|pagepool_start
 operator|+
@@ -1968,13 +1970,13 @@ block|}
 name|offset
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|pagepool_start
 operator|-
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|pagepool_start
 operator|&

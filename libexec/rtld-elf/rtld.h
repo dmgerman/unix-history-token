@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: rtld.h,v 1.3 1998/08/21 03:29:40 jb Exp $  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: rtld.h,v 1.4 1998/09/02 02:51:12 jdp Exp $  */
 end_comment
 
 begin_ifndef
@@ -233,6 +233,17 @@ name|relsize
 decl_stmt|;
 comment|/* Size in bytes of relocation info */
 specifier|const
+name|Elf_Rela
+modifier|*
+name|rela
+decl_stmt|;
+comment|/* Relocation entries with addend */
+name|unsigned
+name|long
+name|relasize
+decl_stmt|;
+comment|/* Size in bytes of addend relocation info */
+specifier|const
 name|Elf_Rel
 modifier|*
 name|pltrel
@@ -243,6 +254,17 @@ name|long
 name|pltrelsize
 decl_stmt|;
 comment|/* Size in bytes of PLT relocation info */
+specifier|const
+name|Elf_Rela
+modifier|*
+name|pltrela
+decl_stmt|;
+comment|/* PLT relocation entries with addend */
+name|unsigned
+name|long
+name|pltrelasize
+decl_stmt|;
+comment|/* Size in bytes of PLT addend reloc info */
 specifier|const
 name|Elf_Sym
 modifier|*
@@ -261,7 +283,7 @@ name|strsize
 decl_stmt|;
 comment|/* Size in bytes of string table */
 specifier|const
-name|Elf_Word
+name|Elf_Addr
 modifier|*
 name|buckets
 decl_stmt|;
@@ -272,7 +294,7 @@ name|nbuckets
 decl_stmt|;
 comment|/* Number of buckets */
 specifier|const
-name|Elf_Word
+name|Elf_Addr
 modifier|*
 name|chains
 decl_stmt|;
@@ -413,6 +435,110 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|Elf_Addr
+name|_GLOBAL_OFFSET_TABLE_
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Function declarations.  */
+end_comment
+
+begin_function_decl
+name|int
+name|do_copy_relocations
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|reloc_non_plt
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|Obj_Entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|reloc_plt
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|long
+name|elf_hash
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|Elf_Sym
+modifier|*
+name|find_symdef
+parameter_list|(
+name|unsigned
+name|long
+parameter_list|,
+specifier|const
+name|Obj_Entry
+modifier|*
+parameter_list|,
+specifier|const
+name|Obj_Entry
+modifier|*
+modifier|*
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|Elf_Sym
+modifier|*
+name|symlook_obj
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|,
+specifier|const
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl

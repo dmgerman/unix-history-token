@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: map_object.c,v 1.2 1998/03/06 22:14:53 jdp Exp $  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: map_object.c,v 1.1.1.1 1998/03/07 19:24:35 jdp Exp $  */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ name|obj
 decl_stmt|;
 union|union
 block|{
-name|Elf32_Ehdr
+name|Elf_Ehdr
 name|hdr
 decl_stmt|;
 name|char
@@ -99,15 +99,15 @@ union|;
 name|int
 name|nbytes
 decl_stmt|;
-name|Elf32_Phdr
+name|Elf_Phdr
 modifier|*
 name|phdr
 decl_stmt|;
-name|Elf32_Phdr
+name|Elf_Phdr
 modifier|*
 name|phlimit
 decl_stmt|;
-name|Elf32_Phdr
+name|Elf_Phdr
 modifier|*
 name|segs
 index|[
@@ -117,11 +117,11 @@ decl_stmt|;
 name|int
 name|nsegs
 decl_stmt|;
-name|Elf32_Phdr
+name|Elf_Phdr
 modifier|*
 name|phdyn
 decl_stmt|;
-name|Elf32_Phdr
+name|Elf_Phdr
 modifier|*
 name|phphdr
 decl_stmt|;
@@ -131,31 +131,31 @@ decl_stmt|;
 name|size_t
 name|mapsize
 decl_stmt|;
-name|Elf32_Off
+name|Elf_Off
 name|base_offset
 decl_stmt|;
-name|Elf32_Addr
+name|Elf_Addr
 name|base_vaddr
 decl_stmt|;
-name|Elf32_Addr
+name|Elf_Addr
 name|base_vlimit
 decl_stmt|;
 name|caddr_t
 name|base_addr
 decl_stmt|;
-name|Elf32_Off
+name|Elf_Off
 name|data_offset
 decl_stmt|;
-name|Elf32_Addr
+name|Elf_Addr
 name|data_vaddr
 decl_stmt|;
-name|Elf32_Addr
+name|Elf_Addr
 name|data_vlimit
 decl_stmt|;
 name|caddr_t
 name|data_addr
 decl_stmt|;
-name|Elf32_Addr
+name|Elf_Addr
 name|clear_vaddr
 decl_stmt|;
 name|caddr_t
@@ -164,10 +164,10 @@ decl_stmt|;
 name|size_t
 name|nclear
 decl_stmt|;
-name|Elf32_Addr
+name|Elf_Addr
 name|bss_vaddr
 decl_stmt|;
-name|Elf32_Addr
+name|Elf_Addr
 name|bss_vlimit
 decl_stmt|;
 name|caddr_t
@@ -215,7 +215,7 @@ name|nbytes
 operator|<
 sizeof|sizeof
 argument_list|(
-name|Elf32_Ehdr
+name|Elf_Ehdr
 argument_list|)
 operator|||
 name|u
@@ -283,7 +283,7 @@ index|[
 name|EI_CLASS
 index|]
 operator|!=
-name|ELFCLASS32
+name|ELF_TARG_CLASS
 operator|||
 name|u
 operator|.
@@ -294,7 +294,7 @@ index|[
 name|EI_DATA
 index|]
 operator|!=
-name|ELFDATA2LSB
+name|ELF_TARG_DATA
 condition|)
 block|{
 name|_rtld_error
@@ -373,7 +373,7 @@ name|hdr
 operator|.
 name|e_machine
 operator|!=
-name|EM_386
+name|ELF_TARG_MACH
 condition|)
 block|{
 name|_rtld_error
@@ -396,7 +396,7 @@ name|e_phentsize
 operator|==
 sizeof|sizeof
 argument_list|(
-name|Elf32_Phdr
+name|Elf_Phdr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -416,7 +416,7 @@ name|e_phnum
 operator|*
 sizeof|sizeof
 argument_list|(
-name|Elf32_Phdr
+name|Elf_Phdr
 argument_list|)
 operator|<=
 name|PAGE_SIZE
@@ -438,7 +438,7 @@ name|e_phnum
 operator|*
 sizeof|sizeof
 argument_list|(
-name|Elf32_Phdr
+name|Elf_Phdr
 argument_list|)
 operator|<=
 name|nbytes
@@ -448,7 +448,7 @@ comment|/*      * Scan the program header entries, and save key information.    
 name|phdr
 operator|=
 operator|(
-name|Elf32_Phdr
+name|Elf_Phdr
 operator|*
 operator|)
 operator|(
@@ -572,7 +572,7 @@ literal|0
 index|]
 operator|->
 name|p_align
-operator|<=
+operator|>=
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -584,7 +584,7 @@ literal|1
 index|]
 operator|->
 name|p_align
-operator|<=
+operator|>=
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -1046,7 +1046,7 @@ name|dynamic
 operator|=
 operator|(
 specifier|const
-name|Elf32_Dyn
+name|Elf_Dyn
 operator|*
 operator|)
 operator|(
@@ -1105,7 +1105,7 @@ name|phdr
 operator|=
 operator|(
 specifier|const
-name|Elf32_Phdr
+name|Elf_Phdr
 operator|*
 operator|)
 operator|(
