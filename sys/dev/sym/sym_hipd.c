@@ -1564,6 +1564,12 @@ begin_comment
 comment|/* 16 bytes minimum memory chunk */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__amd64__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1574,6 +1580,27 @@ end_define
 begin_comment
 comment|/* 1 PAGE  maximum */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MEMO_PAGE_ORDER
+value|1
+end_define
+
+begin_comment
+comment|/* 2 PAGEs maximum on amd64 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1624,6 +1651,12 @@ name|MEMO_CLUSTER_MASK
 value|(MEMO_CLUSTER_SIZE-1)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__amd64__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1641,6 +1674,34 @@ name|p
 parameter_list|)
 value|free((p), M_DEVBUF)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|get_pages
+parameter_list|()
+value|contigmalloc(MEMO_CLUSTER_SIZE, M_DEVBUF, \ 				    0, 0, 1LL<< 32, PAGE_SIZE, 1LL<< 32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|free_pages
+parameter_list|(
+name|p
+parameter_list|)
+value|contigfree((p), MEMO_CLUSTER_SIZE, M_DEVBUF)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
