@@ -461,6 +461,9 @@ name|tdev
 init|=
 literal|0
 decl_stmt|;
+name|pid_t
+name|mypid
+decl_stmt|;
 name|char
 name|thiscmd
 index|[
@@ -1494,6 +1497,11 @@ argument_list|,
 name|nprocs
 argument_list|)
 expr_stmt|;
+name|mypid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1576,6 +1584,13 @@ operator|.
 name|ki_ruid
 expr_stmt|;
 comment|/* real uid */
+if|if
+condition|(
+name|thispid
+operator|==
+name|mypid
+condition|)
+continue|continue;
 name|matched
 operator|=
 literal|1
