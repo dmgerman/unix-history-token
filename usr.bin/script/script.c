@@ -1023,7 +1023,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: script [-a] [-q] [-k] [-t time] [file] [command]\n"
+literal|"usage: script [-akq] [-t time] [file [command ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
