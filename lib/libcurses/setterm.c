@@ -715,8 +715,11 @@ literal|0
 expr_stmt|;
 switch|switch
 condition|(
-name|baudrate
-argument_list|()
+name|cfgetospeed
+argument_list|(
+operator|&
+name|__baset
+argument_list|)
 condition|)
 block|{
 case|case
