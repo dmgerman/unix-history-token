@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ch2rst.c	1.4	84/04/07  *  * Font translation to Imagen-style fonts (RST format) from character format.  *  *	Use:	ch2rst  [ -i  -s ]  charfile> rstfile  *  *		Takes input from charfile (which must be in the format written  *	by rst2ch), converts to rst format and writes to stdout.  If charfile  *	is missing, stdin is read.  The -i flag tells ch2rst to ignore the  *	character codes at the start of each glyph definition, and pack the  *	glyphs in consecutive code positions starting with 0.  The -s flag  *	forces ch2rst to NOT trim off any white space in the glyph map.  This  *	is usefull to make stipples of fixed size.  */
+comment|/*	ch2rst.c	1.5	85/01/31  *  * Font translation to Imagen-style fonts (RST format) from character format.  *  *	Use:	ch2rst  [ -i  -s ]  charfile> rstfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to rst format and writes to  *	stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2rst to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2rst to NOT trim off any white space in  *	the glyph map.  This is usefull to make stipples of fixed size.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -77,14 +71,6 @@ end_define
 begin_function_decl
 name|char
 modifier|*
-name|rdchar
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|malloc
 parameter_list|()
 function_decl|;
@@ -116,10 +102,6 @@ end_comment
 begin_decl_stmt
 name|double
 name|widthtofix
-init|=
-literal|1.0
-operator|/
-name|FIXPIX
 decl_stmt|;
 end_decl_stmt
 
@@ -130,8 +112,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|code
-decl_stmt|,
-name|codeindex
 decl_stmt|;
 end_decl_stmt
 
@@ -251,7 +231,7 @@ name|j
 decl_stmt|;
 specifier|register
 name|int
-name|k
+name|codeindex
 decl_stmt|;
 specifier|register
 name|char
@@ -370,6 +350,15 @@ name|filep
 operator|=
 name|stdin
 expr_stmt|;
+name|widthtofix
+operator|=
+operator|(
+literal|1.0
+operator|/
+name|FIXPIX
+operator|)
+expr_stmt|;
+comment|/* default fix conversion factor */
 name|codeindex
 operator|=
 literal|0
@@ -737,9 +726,11 @@ operator|)
 operator|!=
 name|RES
 condition|)
-name|error
+name|fprintf
 argument_list|(
-literal|"wrong resolution in Font file."
+name|stderr
+argument_list|,
+literal|"ch2rst: Warning, wrong resolution (%d).\n"
 argument_list|,
 name|p
 operator|.
@@ -747,14 +738,7 @@ name|p_res
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|error
-argument_list|(
-literal|"unknown input descriptor, \"%s\""
-argument_list|,
-name|ebuff
-argument_list|)
-expr_stmt|;
+comment|/* ignore unrecognized fields */
 block|}
 else|else
 block|{
@@ -786,19 +770,17 @@ if|if
 condition|(
 name|ignorecode
 condition|)
-name|i
-operator|=
 name|codeindex
 operator|++
 expr_stmt|;
 else|else
-name|i
+name|codeindex
 operator|=
 name|code
 expr_stmt|;
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_pwidth
@@ -893,15 +875,15 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|j
+name|i
 operator|=
 literal|0
 init|;
-name|j
+name|i
 operator|<
 name|width
 condition|;
-name|j
+name|i
 operator|++
 operator|,
 name|chp
@@ -923,7 +905,7 @@ literal|'x'
 case|:
 name|refh
 operator|=
-name|j
+name|i
 expr_stmt|;
 name|refv
 operator|=
@@ -940,7 +922,7 @@ literal|'X'
 case|:
 name|refh
 operator|=
-name|j
+name|i
 expr_stmt|;
 name|refv
 operator|=
@@ -968,23 +950,23 @@ name|length
 expr_stmt|;
 if|if
 condition|(
-name|j
+name|i
 operator|<
 name|minh
 condition|)
 name|minh
 operator|=
-name|j
+name|i
 expr_stmt|;
 if|if
 condition|(
-name|j
+name|i
 operator|>
 name|maxh
 condition|)
 name|maxh
 operator|=
-name|j
+name|i
 expr_stmt|;
 break|break;
 default|default:
@@ -999,7 +981,7 @@ expr_stmt|;
 block|}
 comment|/* switch */
 block|}
-comment|/* for j */
+comment|/* for i */
 if|if
 condition|(
 name|fgets
@@ -1083,7 +1065,7 @@ expr_stmt|;
 block|}
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_height
@@ -1096,7 +1078,7 @@ name|minv
 expr_stmt|;
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_width
@@ -1109,7 +1091,7 @@ name|minh
 expr_stmt|;
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_up
@@ -1120,7 +1102,7 @@ name|minv
 expr_stmt|;
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_left
@@ -1131,14 +1113,14 @@ name|minh
 expr_stmt|;
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_bitp
 operator|=
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_height
@@ -1147,7 +1129,7 @@ operator|(
 operator|(
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_width
@@ -1163,14 +1145,14 @@ operator|=
 operator|(
 name|glyphs
 index|[
-name|i
+name|codeindex
 index|]
 operator|=
 name|malloc
 argument_list|(
 name|g
 index|[
-name|i
+name|codeindex
 index|]
 operator|.
 name|g_bitp
@@ -1181,15 +1163,15 @@ literal|1
 expr_stmt|;
 for|for
 control|(
-name|k
+name|i
 operator|=
 name|minv
 init|;
-name|k
+name|i
 operator|<=
 name|maxv
 condition|;
-name|k
+name|i
 operator|++
 control|)
 block|{
@@ -1203,7 +1185,7 @@ index|]
 operator|+
 name|width
 operator|*
-name|k
+name|i
 operator|+
 name|minh
 expr_stmt|;
@@ -1263,7 +1245,7 @@ name|bitwidth
 expr_stmt|;
 block|}
 block|}
-comment|/* for */
+comment|/* for i */
 block|}
 comment|/* else */
 block|}
@@ -1273,15 +1255,11 @@ condition|(
 name|ignorecode
 condition|)
 block|{
-name|i
-operator|=
-name|codeindex
-expr_stmt|;
 name|p
 operator|.
 name|p_last
 operator|=
-name|i
+name|codeindex
 operator|-
 literal|1
 expr_stmt|;
@@ -1325,13 +1303,13 @@ name|i
 expr_stmt|;
 for|for
 control|(
-name|j
+name|i
 operator|=
 literal|0
 init|;
 name|glyphs
 index|[
-name|j
+name|i
 index|]
 operator|==
 operator|(
@@ -1340,7 +1318,7 @@ operator|*
 operator|)
 literal|0
 condition|;
-name|j
+name|i
 operator|++
 control|)
 empty_stmt|;
@@ -1348,7 +1326,7 @@ name|p
 operator|.
 name|p_first
 operator|=
-name|j
+name|i
 expr_stmt|;
 block|}
 name|bitwidth
@@ -1607,6 +1585,7 @@ name|g_bitp
 expr_stmt|;
 block|}
 block|}
+comment|/* for i */
 name|fflush
 argument_list|(
 name|stdout
@@ -1657,15 +1636,24 @@ operator|.
 name|g_bitp
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	vwrite (buffer, buffer_size)  |  | Results:	writes out character array "buffer" of size "buffer_size"  |		to standard output in small enough chunks that a pipe could  |		handle them.  |  | Bugs:	this routine shouldn't be needed  *----------------------------------------------------------------------------*/
+end_comment
 
 begin_macro
 name|vwrite
 argument_list|(
 argument|buf
 argument_list|,
-argument|usize
+argument|bufsize
 argument_list|)
 end_macro
 
@@ -1678,7 +1666,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|usize
+name|bufsize
 decl_stmt|;
 end_decl_stmt
 
@@ -1691,7 +1679,7 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
-name|usize
+name|bufsize
 condition|)
 block|{
 name|buf
@@ -1700,13 +1688,13 @@ name|tsize
 expr_stmt|;
 name|tsize
 operator|=
-name|usize
+name|bufsize
 operator|>
 name|BUFSIZ
 condition|?
 name|BUFSIZ
 else|:
-name|usize
+name|bufsize
 expr_stmt|;
 if|if
 condition|(
@@ -1738,13 +1726,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|usize
+name|bufsize
 operator|-=
 name|tsize
 expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	error (format_string, argument1, argument2.... )  |  | Results:	fprints a message to standard error, then exits with error  |		code 1  |  | Side Efct:	This routine does NOT return  *----------------------------------------------------------------------------*/
+end_comment
 
 begin_comment
 comment|/*VARARGS1*/
@@ -1805,15 +1797,15 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|8
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	wr2, wr3, wr4 (and wr1)  |  | Results:	writes out 2, 3, or 4 byte integers in RST byte order, using  |		the wr1() routine, which writes one byte to standard output.  *----------------------------------------------------------------------------*/
+end_comment
 
 begin_macro
 name|wr2
