@@ -352,10 +352,6 @@ name|mtx
 name|uc_lock
 decl_stmt|;
 comment|/* Spin lock on this cpu's bucket */
-name|int
-name|uc_count
-decl_stmt|;
-comment|/* Highest value ub_ptr can have */
 name|uma_bucket_t
 name|uc_freebucket
 decl_stmt|;
@@ -571,6 +567,14 @@ name|int
 name|uz_recurse
 decl_stmt|;
 comment|/* Allocation recursion count */
+name|uint16_t
+name|uz_fills
+decl_stmt|;
+comment|/* Outstanding bucket fills */
+name|uint16_t
+name|uz_count
+decl_stmt|;
+comment|/* Highest value ub_ptr can have */
 comment|/* 	 * This HAS to be the last item because we adjust the zone size 	 * based on NCPU and then allocate the space for the zones. 	 */
 name|struct
 name|uma_cache
