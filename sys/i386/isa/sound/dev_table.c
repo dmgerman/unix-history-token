@@ -303,6 +303,8 @@ name|hw_config
 parameter_list|)
 block|{
 name|int
+name|r
+decl_stmt|,
 name|i
 decl_stmt|,
 name|n
@@ -324,7 +326,7 @@ operator|!
 name|unit
 condition|)
 return|return
-name|TRUE
+literal|0
 return|;
 for|for
 control|(
@@ -438,6 +440,9 @@ comment|/* 							 * Mark as not 							 * detected 							 */
 elseif|else
 if|if
 condition|(
+operator|(
+name|r
+operator|=
 name|sound_drivers
 index|[
 name|drv
@@ -447,9 +452,10 @@ name|probe
 argument_list|(
 name|hw_config
 argument_list|)
+operator|)
 condition|)
 return|return
-literal|1
+name|r
 return|;
 name|snd_installed_cards
 index|[
@@ -466,7 +472,7 @@ literal|0
 return|;
 block|}
 return|return
-name|FALSE
+literal|0
 return|;
 block|}
 end_function
