@@ -76,6 +76,12 @@ directive|include
 file|<machine/perfmon.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/specialreg.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
