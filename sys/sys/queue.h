@@ -82,7 +82,7 @@ name|TRASHIT
 parameter_list|(
 name|x
 parameter_list|)
-value|do {(x) = (void *)-1} while (0)
+value|do {(x) = (void *)-1;} while (0)
 end_define
 
 begin_define
