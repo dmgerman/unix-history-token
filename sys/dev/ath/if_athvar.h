@@ -634,8 +634,18 @@ comment|/* tx VEOL support */
 name|sc_hastpc
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* per-packet TPC support */
+name|sc_ledstate
+range|:
+literal|1
+decl_stmt|,
+comment|/* LED on/off state */
+name|sc_blinking
+range|:
+literal|1
+decl_stmt|;
+comment|/* LED blink operation active */
 comment|/* rate tables */
 specifier|const
 name|HAL_RATE_TABLE
@@ -671,20 +681,31 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* IEEE to h/w rate table ix */
+struct|struct
+block|{
 name|u_int8_t
+name|ieeerate
+decl_stmt|;
+comment|/* IEEE rate */
+name|u_int8_t
+name|flags
+decl_stmt|;
+comment|/* radiotap flags */
+name|u_int16_t
+name|ledon
+decl_stmt|;
+comment|/* softled on time */
+name|u_int16_t
+name|ledoff
+decl_stmt|;
+comment|/* softled off time */
+block|}
 name|sc_hwmap
 index|[
 literal|32
 index|]
-decl_stmt|;
-comment|/* h/w rate ix to IEEE table */
-name|u_int8_t
-name|sc_hwflags
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* " " " to radiotap flags */
+struct|;
+comment|/* h/w rate ix mappings */
 name|u_int8_t
 name|sc_protrix
 decl_stmt|;
@@ -708,18 +729,43 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* bit map of key cache use */
-name|u_int32_t
-name|sc_beacons
-decl_stmt|;
-comment|/* beacon count for LED mgmt */
-name|u_int16_t
-name|sc_ledstate
-decl_stmt|;
-comment|/* LED on/off state */
-name|u_int16_t
+name|u_int
 name|sc_ledpin
 decl_stmt|;
 comment|/* GPIO pin for driving LED */
+name|u_int
+name|sc_ledon
+decl_stmt|;
+comment|/* pin setting for LED on */
+name|u_int
+name|sc_ledidle
+decl_stmt|;
+comment|/* idle polling interval */
+name|u_int32_t
+name|sc_ipackets
+decl_stmt|;
+comment|/* last data packet count */
+name|int
+name|sc_ledevent
+decl_stmt|;
+comment|/* time of last LED event */
+name|u_int8_t
+name|sc_rxrate
+decl_stmt|;
+comment|/* current rx rate for LED */
+name|u_int8_t
+name|sc_txrate
+decl_stmt|;
+comment|/* current tx rate for LED */
+name|u_int16_t
+name|sc_ledoff
+decl_stmt|;
+comment|/* off time for current blink */
+name|struct
+name|callout
+name|sc_ledtimer
+decl_stmt|;
+comment|/* led off timer */
 name|struct
 name|bpf_if
 modifier|*
