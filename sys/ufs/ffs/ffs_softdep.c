@@ -7651,8 +7651,12 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"softdep_setup_allocext: lbn %d> NXADDR"
+literal|"softdep_setup_allocext: lbn %lld> NXADDR"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|lbn
 argument_list|)
 expr_stmt|;
