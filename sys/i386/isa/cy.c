@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.7.4.4 1997/07/17 15:29:35 nate Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.7.4.5 1997/07/17 15:50:19 nate Exp $  */
 end_comment
 
 begin_include
@@ -6506,6 +6506,7 @@ name|DMBIS
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * XXX should disallow changing MCR_RTS if CS_RTS_IFLOW is set.  The 	 * changes get undone on the next call to comparam(). 	 */
 case|case
 name|TIOCCDTR
 case|:
@@ -6973,7 +6974,6 @@ operator|=
 name|ibuf
 expr_stmt|;
 comment|/* 			 * There is now room for another low-level buffer full 			 * of input, so enable RTS if it is now disabled and 			 * there is room in the high-level buffer. 			 */
-comment|/* 			 * XXX this used not to look at CS_RTS_IFLOW.  The 			 * change is to allow full control of MCR_RTS via 			 * ioctls after turning CS_RTS_IFLOW off.  Check 			 * for races.  We shouldn't allow the ioctls while 			 * CS_RTS_IFLOW is on. 			 */
 if|if
 condition|(
 operator|(
@@ -8584,14 +8584,25 @@ name|cflag
 operator|&
 name|CRTS_IFLOW
 condition|)
+block|{
 name|com
 operator|->
 name|state
 operator||=
 name|CS_RTS_IFLOW
 expr_stmt|;
-comment|/* XXX - secondary changes? */
-else|else
+comment|/* 		* If CS_RTS_IFLOW just changed from off to on, the change 		* needs to be propagated to MCR_RTS.  This isn't urgent, 		* so do it later by calling comstart() instead of repeating 		* a lot of code from comstart() here. 		*/
+block|}
+elseif|else
+if|if
+condition|(
+name|com
+operator|->
+name|state
+operator|&
+name|CS_RTS_IFLOW
+condition|)
+block|{
 name|com
 operator|->
 name|state
@@ -8599,6 +8610,29 @@ operator|&=
 operator|~
 name|CS_RTS_IFLOW
 expr_stmt|;
+comment|/* 		 * CS_RTS_IFLOW just changed from on to off.  Force MCR_RTS 		 * on here, since comstart() won't do it later. 		 */
+if|#
+directive|if
+literal|0
+block|outb(com->modem_ctl_port, com->mcr_image |= MCR_RTS);
+else|#
+directive|else
+name|cd_outb
+argument_list|(
+name|iobase
+argument_list|,
+name|CD1400_MSVR1
+argument_list|,
+name|com
+operator|->
+name|mcr_image
+operator||=
+name|MCR_RTS
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 comment|/* 	 * Set up state to handle output flow control. 	 * XXX - worth handling MDMBUF (DCD) flow control at the lowest level? 	 * Now has 10+ msec latency, while CTS flow has 50- usec latency. 	 */
 name|com
 operator|->
@@ -8738,6 +8772,11 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|comstart
+argument_list|(
+name|tp
 argument_list|)
 expr_stmt|;
 return|return
@@ -8970,7 +9009,6 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 		 * XXX don't raise MCR_RTS if CTS_RTS_IFLOW is off.  Set it 		 * appropriately in comparam() if RTS-flow is being changed. 		 * Check for races. 		 */
 if|if
 condition|(
 operator|!
@@ -8989,6 +9027,12 @@ operator|<
 name|com
 operator|->
 name|ihighwater
+operator|&&
+name|com
+operator|->
+name|state
+operator|&
+name|CS_RTS_IFLOW
 condition|)
 if|#
 directive|if
