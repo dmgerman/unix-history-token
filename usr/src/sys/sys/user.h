@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	6.6	84/08/28	*/
+comment|/*	user.h	6.7	85/02/15	*/
 end_comment
 
 begin_ifdef
@@ -186,7 +186,7 @@ name|short
 name|u_gid
 decl_stmt|;
 comment|/* effective group id */
-name|int
+name|short
 name|u_groups
 index|[
 name|NGROUPS
