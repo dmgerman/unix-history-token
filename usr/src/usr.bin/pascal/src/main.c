@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,10 +491,18 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-comment|/* pdx is currently supported only on the vax */
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+comment|/* pdx is currently supported on the vax and the tahoe */
 name|opt
 argument_list|(
 literal|'g'
@@ -504,7 +512,6 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
 while|while
 condition|(
 name|argc
