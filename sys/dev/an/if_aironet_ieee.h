@@ -1162,7 +1162,7 @@ decl_stmt|;
 name|u_int16_t
 name|an_spare
 index|[
-literal|13
+literal|19
 index|]
 decl_stmt|;
 block|}
@@ -2169,7 +2169,7 @@ comment|/* 0x7F */
 name|u_int16_t
 name|an_spare
 index|[
-literal|8
+literal|18
 index|]
 decl_stmt|;
 block|}
