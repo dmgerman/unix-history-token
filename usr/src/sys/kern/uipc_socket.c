@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.20	81/12/21	*/
+comment|/*	uipc_socket.c	4.21	81/12/22	*/
 end_comment
 
 begin_include
@@ -744,11 +744,27 @@ argument_list|(
 name|SOSTAT
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|sb
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sb
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 return|return
 operator|(
-name|EOPNOTSUPP
+literal|0
 operator|)
 return|;
+comment|/* XXX */
 block|}
 end_block
 
