@@ -279,7 +279,7 @@ begin_decl_stmt
 name|int
 name|Oflag
 init|=
-literal|1
+literal|2
 decl_stmt|;
 end_decl_stmt
 

@@ -3574,11 +3574,11 @@ name|newfs_data
 operator|.
 name|newfs_ufs
 operator|.
-name|ufs2
+name|ufs1
 condition|?
-literal|"-O2"
-else|:
 literal|"-O1"
+else|:
+literal|"-O2"
 argument_list|,
 name|pi
 operator|->

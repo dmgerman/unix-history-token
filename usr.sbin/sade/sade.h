@@ -1633,7 +1633,7 @@ name|Boolean
 name|softupdates
 decl_stmt|;
 name|Boolean
-name|ufs2
+name|ufs1
 decl_stmt|;
 block|}
 name|newfs_ufs
