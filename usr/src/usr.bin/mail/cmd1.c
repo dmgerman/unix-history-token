@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.20 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1209,37 +1209,9 @@ argument_list|(
 name|pipestop
 argument_list|)
 condition|)
-block|{
-if|if
-condition|(
-name|obuf
-operator|!=
-name|stdout
-condition|)
-block|{
-name|pipef
-operator|=
-name|NULL
-expr_stmt|;
-name|Pclose
-argument_list|(
-name|obuf
-argument_list|)
-expr_stmt|;
-block|}
-name|signal
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+goto|goto
+name|close_pipe
+goto|;
 if|if
 condition|(
 name|value
@@ -1374,11 +1346,6 @@ name|stdout
 expr_stmt|;
 block|}
 else|else
-block|{
-name|pipef
-operator|=
-name|obuf
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -1386,7 +1353,6 @@ argument_list|,
 name|brokpipe
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 for|for
@@ -1466,6 +1432,8 @@ name|NOSTR
 argument_list|)
 expr_stmt|;
 block|}
+name|close_pipe
+label|:
 if|if
 condition|(
 name|obuf
@@ -1473,16 +1441,19 @@ operator|!=
 name|stdout
 condition|)
 block|{
-name|pipef
-operator|=
-name|NULL
+comment|/* 		 * Ignore SIGPIPE so it can't cause a duplicate close. 		 */
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
 expr_stmt|;
 name|Pclose
 argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-block|}
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -1490,6 +1461,7 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1499,7 +1471,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Respond to a broken pipe signal --  * probably caused by using quitting more.  */
+comment|/*  * Respond to a broken pipe signal --  * probably caused by quitting more.  */
 end_comment
 
 begin_macro

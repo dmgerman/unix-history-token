@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.19 (Berkeley) %G%"
+literal|"@(#)aux.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,10 +161,13 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|exit
+name|fflush
 argument_list|(
-literal|1
+name|stdout
 argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -1025,7 +1028,7 @@ condition|(
 operator|(
 name|fi
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|cp
 argument_list|,
@@ -1061,7 +1064,7 @@ argument_list|(
 literal|"Too much \"sourcing\" going on.\n"
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fi
 argument_list|)
@@ -1158,7 +1161,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|fclose
+name|Fclose
 argument_list|(
 name|input
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.20 (Berkeley) %G%"
+literal|"@(#)send.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1502,7 +1502,7 @@ condition|(
 operator|(
 name|postage
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|_PATH_MAIL_LOG
 argument_list|,
@@ -1535,7 +1535,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|postage
 argument_list|)
@@ -1654,7 +1654,7 @@ label|:
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|mtf
 argument_list|)
@@ -1885,7 +1885,7 @@ condition|(
 operator|(
 name|nfo
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempMail
 argument_list|,
@@ -1912,7 +1912,7 @@ condition|(
 operator|(
 name|nfi
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempMail
 argument_list|,
@@ -1931,7 +1931,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|nfo
 argument_list|)
@@ -2052,7 +2052,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|nfo
 argument_list|)
@@ -2060,7 +2060,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|nfi
 argument_list|)
@@ -2079,7 +2079,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|nfo
 argument_list|)
@@ -2087,7 +2087,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fi
 argument_list|)
@@ -2541,7 +2541,7 @@ condition|(
 operator|(
 name|fo
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|name
 argument_list|,
@@ -2655,7 +2655,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fo
 argument_list|)

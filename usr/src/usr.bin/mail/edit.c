@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.14 (Berkeley) %G%"
+literal|"@(#)edit.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,7 +429,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fp
 argument_list|)
@@ -542,7 +542,7 @@ condition|(
 operator|(
 name|nf
 operator|=
-name|fdopen
+name|Fdopen
 argument_list|(
 name|t
 argument_list|,
@@ -668,8 +668,40 @@ name|ferror
 argument_list|(
 name|nf
 argument_list|)
-operator|||
-name|fclose
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|Fclose
+argument_list|(
+name|nf
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|tempEdit
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|tempEdit
+argument_list|)
+expr_stmt|;
+name|nf
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|Fclose
 argument_list|(
 name|nf
 argument_list|)
@@ -832,7 +864,7 @@ condition|(
 operator|(
 name|nf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempEdit
 argument_list|,

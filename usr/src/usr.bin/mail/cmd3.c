@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.23 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,7 +521,7 @@ condition|(
 operator|(
 name|f
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|_PATH_HELP
 argument_list|,
@@ -561,7 +561,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|f
 argument_list|)

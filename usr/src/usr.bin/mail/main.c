@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.26 (Berkeley) %G%"
+literal|"@(#)main.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -595,7 +595,7 @@ argument_list|(
 name|_PATH_MASTER_RC
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Expand returns a savestr, but load only uses the file name 	 * for fopen, so it's save to do this. 	 */
+comment|/* 	 * Expand returns a savestr, but load only uses the file name 	 * for fopen, so it's safe to do this. 	 */
 name|load
 argument_list|(
 name|expand

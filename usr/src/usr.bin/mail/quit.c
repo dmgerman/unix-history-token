@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.14 (Berkeley) %G%"
+literal|"@(#)quit.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,7 +167,7 @@ block|}
 comment|/* 	 * See if there any messages to save in mbox.  If no, we 	 * can save copying mbox to /tmp and back. 	 * 	 * Check also to see if any files need to be preserved. 	 * Delete all untouched messages to keep them out of mbox. 	 * If all the messages are to be preserved, just exit with 	 * a message. 	 */
 name|fbuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|mailname
 argument_list|,
@@ -226,7 +226,7 @@ argument_list|)
 expr_stmt|;
 name|rbuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempResid
 argument_list|,
@@ -328,7 +328,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|fclose
+name|Fclose
 argument_list|(
 name|rbuf
 argument_list|)
@@ -338,7 +338,7 @@ condition|(
 operator|(
 name|rbuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempResid
 argument_list|,
@@ -512,7 +512,7 @@ condition|(
 operator|(
 name|readstat
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|Tflag
 argument_list|,
@@ -647,7 +647,7 @@ name|Tflag
 operator|!=
 name|NOSTR
 condition|)
-name|fclose
+name|Fclose
 argument_list|(
 name|readstat
 argument_list|)
@@ -682,7 +682,7 @@ argument_list|,
 name|mailname
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -708,7 +708,7 @@ argument_list|(
 name|rbuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -746,7 +746,7 @@ condition|(
 operator|(
 name|obuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempQuit
 argument_list|,
@@ -762,7 +762,7 @@ argument_list|(
 name|tempQuit
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -774,7 +774,7 @@ condition|(
 operator|(
 name|ibuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempQuit
 argument_list|,
@@ -795,12 +795,12 @@ argument_list|(
 name|tempQuit
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -817,7 +817,7 @@ condition|(
 operator|(
 name|abuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|mbox
 argument_list|,
@@ -851,7 +851,7 @@ argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|abuf
 argument_list|)
@@ -870,24 +870,24 @@ argument_list|(
 name|tempQuit
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -907,7 +907,7 @@ condition|(
 operator|(
 name|obuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|mbox
 argument_list|,
@@ -923,12 +923,12 @@ argument_list|(
 name|mbox
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -951,7 +951,7 @@ condition|(
 operator|(
 name|obuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|mbox
 argument_list|,
@@ -967,7 +967,7 @@ argument_list|(
 name|mbox
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1035,17 +1035,17 @@ argument_list|(
 name|mbox
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1108,7 +1108,7 @@ name|ibuf
 argument_list|)
 expr_stmt|;
 block|}
-name|fclose
+name|Fclose
 argument_list|(
 name|ibuf
 argument_list|)
@@ -1137,19 +1137,19 @@ argument_list|(
 name|mbox
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -1186,7 +1186,7 @@ argument_list|(
 name|rbuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1205,7 +1205,7 @@ condition|)
 block|{
 name|abuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|mailname
 argument_list|,
@@ -1244,7 +1244,7 @@ argument_list|,
 name|abuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|rbuf
 argument_list|)
@@ -1254,7 +1254,7 @@ argument_list|(
 name|abuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|abuf
 argument_list|)
@@ -1264,7 +1264,7 @@ argument_list|(
 name|mailname
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1274,7 +1274,7 @@ block|}
 name|demail
 argument_list|()
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1293,7 +1293,7 @@ name|fbuf
 operator|!=
 name|NULL
 condition|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1344,7 +1344,7 @@ condition|(
 operator|(
 name|obuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|mailname
 argument_list|,
@@ -1472,7 +1472,7 @@ argument_list|(
 name|mailname
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -1542,7 +1542,7 @@ argument_list|(
 name|mailname
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -1560,12 +1560,12 @@ name|res
 operator|!=
 name|NULL
 condition|)
-name|fclose
+name|Fclose
 argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -1674,7 +1674,7 @@ condition|(
 operator|(
 name|readstat
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|Tflag
 argument_list|,
@@ -1812,7 +1812,7 @@ name|Tflag
 operator|!=
 name|NOSTR
 condition|)
-name|fclose
+name|Fclose
 argument_list|(
 name|readstat
 argument_list|)
@@ -1876,7 +1876,7 @@ condition|(
 operator|(
 name|obuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempname
 argument_list|,
@@ -1906,7 +1906,7 @@ condition|(
 operator|(
 name|ibuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|mailname
 argument_list|,
@@ -1922,7 +1922,7 @@ argument_list|(
 name|mailname
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -1973,12 +1973,12 @@ argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -1988,7 +1988,7 @@ condition|(
 operator|(
 name|ibuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempname
 argument_list|,
@@ -2041,7 +2041,7 @@ condition|(
 operator|(
 name|obuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|mailname
 argument_list|,
@@ -2191,7 +2191,7 @@ argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|ibuf
 argument_list|)
@@ -2224,7 +2224,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.21 (Berkeley) %G%"
+literal|"@(#)collect.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -366,7 +366,7 @@ condition|(
 operator|(
 name|collf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempMail
 argument_list|,
@@ -1032,7 +1032,7 @@ condition|(
 operator|(
 name|fbuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|cp
 argument_list|,
@@ -1103,7 +1103,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1117,7 +1117,7 @@ operator|+=
 name|t
 expr_stmt|;
 block|}
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1247,7 +1247,7 @@ condition|(
 operator|(
 name|fbuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|_PATH_TILDE
 argument_list|,
@@ -1286,7 +1286,7 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fbuf
 argument_list|)
@@ -1406,7 +1406,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fclose
+name|Fclose
 argument_list|(
 name|collf
 argument_list|)
@@ -1615,7 +1615,7 @@ condition|(
 operator|(
 name|of
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|name
 argument_list|,
@@ -1695,7 +1695,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|of
 argument_list|)
@@ -1708,7 +1708,7 @@ operator|)
 return|;
 block|}
 block|}
-name|fclose
+name|Fclose
 argument_list|(
 name|of
 argument_list|)
@@ -1809,7 +1809,7 @@ name|collf
 operator|=
 name|nf
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|fp
 argument_list|)
@@ -1881,7 +1881,7 @@ condition|(
 operator|(
 name|nf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempEdit
 argument_list|,
@@ -1937,7 +1937,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|nf
 argument_list|)
@@ -1968,7 +1968,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|nf
 argument_list|)
@@ -1997,7 +1997,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fp
 argument_list|)
@@ -2553,7 +2553,7 @@ argument_list|)
 expr_stmt|;
 name|dbuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|cp
 argument_list|,
@@ -2598,7 +2598,7 @@ argument_list|,
 name|dbuf
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|dbuf
 argument_list|)

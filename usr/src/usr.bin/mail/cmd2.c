@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	5.13 (Berkeley) %G%"
+literal|"@(#)cmd2.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,7 +626,7 @@ condition|(
 operator|(
 name|obuf
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|file
 argument_list|,
@@ -704,7 +704,7 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -743,7 +743,7 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-name|fclose
+name|Fclose
 argument_list|(
 name|obuf
 argument_list|)

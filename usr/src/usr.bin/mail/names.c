@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)names.c	5.15 (Berkeley) %G%"
+literal|"@(#)names.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -933,7 +933,7 @@ condition|(
 operator|(
 name|fout
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|tempEdit
 argument_list|,
@@ -988,12 +988,18 @@ expr_stmt|;
 name|senderr
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|Fclose
+argument_list|(
+name|fout
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cant
 goto|;
 block|}
-else|else
-block|{
 name|fprintf
 argument_list|(
 name|fout
@@ -1081,12 +1087,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fout
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 		 * Now either copy "image" to the desired file 		 * or give it as the standard input to the desired 		 * program as appropriate. 		 */
 if|if
@@ -1101,7 +1106,7 @@ name|char
 modifier|*
 name|shell
 decl_stmt|;
-comment|/* XXX, can't really reuse the same image file */
+comment|/* 			 * XXX 			 * We can't really reuse the same image file, 			 * because multiple piped recipients will 			 * share the same lseek location and trample 			 * on one another. 			 */
 if|if
 condition|(
 operator|(
@@ -1174,12 +1179,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|f
+decl_stmt|;
 if|if
 condition|(
 operator|(
 name|fout
 operator|=
-name|fopen
+name|Fopen
 argument_list|(
 name|fname
 argument_list|,
@@ -1202,11 +1210,36 @@ goto|goto
 name|cant
 goto|;
 block|}
+if|if
+condition|(
+operator|(
+name|f
+operator|=
+name|dup
+argument_list|(
+name|image
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"dup"
+argument_list|)
+expr_stmt|;
+name|fin
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
 name|fin
 operator|=
 name|Fdopen
 argument_list|(
-name|image
+name|f
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1228,7 +1261,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fout
 argument_list|)
@@ -1286,7 +1319,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fout
 argument_list|)
@@ -1294,7 +1327,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|Fclose
 argument_list|(
 name|fin
 argument_list|)
