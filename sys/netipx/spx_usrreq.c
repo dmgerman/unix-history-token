@@ -2482,6 +2482,14 @@ name|s_cwmx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Trim Acked data from output queue. 	 */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2519,7 +2527,7 @@ operator|->
 name|si_ack
 argument_list|)
 condition|)
-name|sbdroprecord
+name|sbdroprecord_locked
 argument_list|(
 operator|&
 name|so
@@ -2530,7 +2538,7 @@ expr_stmt|;
 else|else
 break|break;
 block|}
-name|sowwakeup
+name|sowwakeup_locked
 argument_list|(
 name|so
 argument_list|)
