@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.13 (Berkeley) %G%"
+literal|"@(#)main.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -788,7 +788,7 @@ name|msg
 argument_list|(
 literal|"Date of last level %c dump: %s\n"
 argument_list|,
-name|incno
+name|lastincno
 argument_list|,
 name|prdate
 argument_list|(
