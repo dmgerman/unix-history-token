@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.140 1998/08/02 06:56:40 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.141 1998/08/07 18:42:49 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -32,6 +32,23 @@ include|#
 directive|include
 file|<sys/un.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOALIAS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<alias.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1052,6 +1069,14 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOALIAS
+name|PacketAliasInit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|label
 operator|=
 name|ProcessArgs
