@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.7	81/03/16	*/
+comment|/*	conf.c	4.8	81/11/12	*/
 end_comment
 
 begin_include
@@ -262,10 +262,33 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|rkopen
+name|mtstrategy
 argument_list|()
 decl_stmt|,
+name|mtopen
+argument_list|()
+decl_stmt|,
+name|mtclose
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|rkstrategy
+argument_list|()
+decl_stmt|,
+name|rkopen
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|udstrategy
+argument_list|()
+decl_stmt|,
+name|udopen
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -324,6 +347,22 @@ block|,
 name|tsopen
 block|,
 name|tsclose
+block|,
+literal|"mt"
+block|,
+name|mtstrategy
+block|,
+name|mtopen
+block|,
+name|mtclose
+block|,
+literal|"ra"
+block|,
+name|udstrategy
+block|,
+name|udopen
+block|,
+name|nullsys
 block|,
 literal|0
 block|,

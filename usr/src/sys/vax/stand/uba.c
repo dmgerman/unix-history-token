@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.4	81/04/03	*/
+comment|/*	uba.c	4.5	81/11/12	*/
 end_comment
 
 begin_include
@@ -97,30 +97,14 @@ name|temp
 decl_stmt|,
 name|reg
 decl_stmt|;
-if|if
-condition|(
-name|bdp
-operator|==
-literal|2
-condition|)
-block|{
-name|reg
-operator|=
+specifier|static
+name|int
+name|lastreg
+init|=
 literal|128
 operator|+
 literal|64
-expr_stmt|;
-comment|/* for stupid ts-11 */
-name|bdp
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|reg
-operator|=
-literal|0
-expr_stmt|;
+decl_stmt|;
 name|v
 operator|=
 name|btop
@@ -153,6 +137,31 @@ name|o
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|bdp
+operator|==
+literal|2
+condition|)
+block|{
+name|reg
+operator|=
+name|lastreg
+expr_stmt|;
+name|lastreg
+operator|+=
+name|npf
+expr_stmt|;
+name|bdp
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|reg
+operator|=
+literal|0
 expr_stmt|;
 name|pte
 operator|=
