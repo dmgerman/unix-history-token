@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ascii magic -- file types that we know based on keywords  * that can appear anywhere in the file.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
+comment|/*  * ASCII magic -- file types that we know based on keywords  * that can appear anywhere in the file.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
 end_comment
 
 begin_include
@@ -57,7 +57,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: ascmagic.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $"
+literal|"@(#)$Id: ascmagic.c,v 1.2 1995/05/30 06:29:59 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,8 +107,6 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|isblock
-decl_stmt|,
 name|has_escapes
 init|=
 literal|0
@@ -137,7 +135,44 @@ name|names
 modifier|*
 name|p
 decl_stmt|;
-comment|/* these are easy, do them first */
+comment|/* 	 * Do the tar test first, because if the first file in the tar 	 * archive starts with a dot, we can confuse it with an nroff file. 	 */
+switch|switch
+condition|(
+name|is_tar
+argument_list|(
+name|buf
+argument_list|,
+name|nbytes
+argument_list|)
+condition|)
+block|{
+case|case
+literal|1
+case|:
+name|ckfputs
+argument_list|(
+literal|"tar archive"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+case|case
+literal|2
+case|:
+name|ckfputs
+argument_list|(
+literal|"POSIX tar archive"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 comment|/* 	 * for troff, look for . + letter + letter or .\"; 	 * this must be done to disambiguate tar archives' ./file 	 * and other trash from real troff input. 	 */
 if|if
 condition|(
@@ -198,27 +233,25 @@ operator|)
 operator|&&
 name|isascii
 argument_list|(
-operator|*
-operator|(
 name|tp
-operator|+
+index|[
 literal|1
-operator|)
+index|]
 argument_list|)
 operator|&&
 operator|(
 name|isalnum
 argument_list|(
-operator|*
-operator|(
 name|tp
-operator|+
+index|[
 literal|1
-operator|)
+index|]
 argument_list|)
 operator|||
-operator|*
 name|tp
+index|[
+literal|1
+index|]
 operator|==
 literal|'"'
 operator|)
@@ -253,22 +286,18 @@ operator|)
 operator|&&
 name|isascii
 argument_list|(
-operator|*
-operator|(
 name|buf
-operator|+
+index|[
 literal|1
-operator|)
+index|]
 argument_list|)
 operator|&&
 name|isspace
 argument_list|(
-operator|*
-operator|(
 name|buf
-operator|+
+index|[
 literal|1
-operator|)
+index|]
 argument_list|)
 condition|)
 block|{
@@ -405,43 +434,6 @@ return|;
 block|}
 block|}
 block|}
-switch|switch
-condition|(
-name|is_tar
-argument_list|(
-name|buf
-argument_list|,
-name|nbytes
-argument_list|)
-condition|)
-block|{
-case|case
-literal|1
-case|:
-name|ckfputs
-argument_list|(
-literal|"tar archive"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-case|case
-literal|2
-case|:
-name|ckfputs
-argument_list|(
-literal|"POSIX tar archive"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 for|for
 control|(
 name|i
@@ -461,23 +453,21 @@ condition|(
 operator|!
 name|isascii
 argument_list|(
-operator|*
-operator|(
 name|buf
-operator|+
+index|[
 name|i
-operator|)
+index|]
 argument_list|)
 condition|)
 return|return
 literal|0
 return|;
-comment|/* not all ascii */
+comment|/* not all ASCII */
 block|}
-comment|/* all else fails, but it is ascii... */
+comment|/* all else fails, but it is ASCII... */
 name|ckfputs
 argument_list|(
-literal|"ascii text"
+literal|"ASCII text"
 argument_list|,
 name|stdout
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * compress routines:  *	zmagic() - returns 0 if not recognized, uncompresses and prints  *		   information if recognized  *	uncompress(method, old, n, newch) - uncompress old into new,  *					    using method, return sizeof new  * $Id: compress.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $  */
+comment|/*  * compress routines:  *	zmagic() - returns 0 if not recognized, uncompresses and prints  *		   information if recognized  *	uncompress(method, old, n, newch) - uncompress old into new,  *					    using method, return sizeof new  * $Id: compress.c,v 1.2 1995/05/30 06:30:00 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -81,6 +81,7 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* compressed */
 block|{
 literal|"\037\213"
 block|,
@@ -89,7 +90,7 @@ block|,
 block|{
 literal|"gzip"
 block|,
-literal|"-dq"
+literal|"-cdq"
 block|,
 name|NULL
 block|}
@@ -97,7 +98,42 @@ block|,
 literal|1
 block|}
 block|,
-comment|/*      * XXX pcat does not work, cause I don't know how to make it read stdin,      * so we use gzip      */
+comment|/* gzipped */
+block|{
+literal|"\037\236"
+block|,
+literal|2
+block|,
+block|{
+literal|"gzip"
+block|,
+literal|"-cdq"
+block|,
+name|NULL
+block|}
+block|,
+literal|1
+block|}
+block|,
+comment|/* frozen */
+block|{
+literal|"\037\240"
+block|,
+literal|2
+block|,
+block|{
+literal|"gzip"
+block|,
+literal|"-cdq"
+block|,
+name|NULL
+block|}
+block|,
+literal|1
+block|}
+block|,
+comment|/* SCO LZH */
+comment|/* the standard pack utilities do not accept standard input */
 block|{
 literal|"\037\036"
 block|,
@@ -106,14 +142,16 @@ block|,
 block|{
 literal|"gzip"
 block|,
-literal|"-dq"
+literal|"-cdq"
 block|,
 name|NULL
 block|}
 block|,
 literal|0
 block|}
-block|, }
+block|,
+comment|/* packed */
+block|}
 struct|;
 end_struct
 
