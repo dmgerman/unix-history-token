@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	6.7	84/09/10	*/
+comment|/*	tty_pty.c	6.8	84/12/20	*/
 end_comment
 
 begin_comment
@@ -2104,11 +2104,13 @@ condition|)
 block|{
 while|while
 condition|(
+operator|(
 name|pti
 operator|->
 name|pt_flags
 operator|&
 name|PF_REMOTE
+operator|)
 operator|&&
 name|tp
 operator|->
