@@ -239,29 +239,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|vfs_init_t
 name|ffs_init
-parameter_list|(
-name|struct
-name|vfsconf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|vfs_uninit_t
 name|ffs_uninit
-parameter_list|(
-name|struct
-name|vfsconf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

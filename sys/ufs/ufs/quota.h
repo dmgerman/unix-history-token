@@ -732,27 +732,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|vfs_quotactl_t
 name|ufs_quotactl
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|uid_t
-parameter_list|,
-name|caddr_t
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#

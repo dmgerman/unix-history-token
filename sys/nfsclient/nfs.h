@@ -1022,29 +1022,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|vfs_init_t
 name|nfs_init
-parameter_list|(
-name|struct
-name|vfsconf
-modifier|*
-name|vfsp
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|vfs_uninit_t
 name|nfs_uninit
-parameter_list|(
-name|struct
-name|vfsconf
-modifier|*
-name|vfsp
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int

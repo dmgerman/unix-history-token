@@ -560,38 +560,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|vfs_root_t
 name|ufs_root
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|vfs_start_t
 name|ufs_start
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
