@@ -19,6 +19,12 @@ directive|include
 file|"wdc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_atapi.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -15,6 +15,12 @@ directive|include
 file|"wcd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_atapi.h"
+end_include
+
 begin_if
 if|#
 directive|if
