@@ -3906,13 +3906,6 @@ name|b_iocmd
 operator|=
 name|BIO_WRITE
 expr_stmt|;
-name|bp
-operator|->
-name|b_spc
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* not used, but NULL-out anyway */
 name|pmap_qenter
 argument_list|(
 operator|(
