@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dset.c,v 1.12 1998/06/08 06:44:05 charnier Exp $"
+literal|"$Id: dset.c,v 1.13 1998/06/28 19:06:17 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,8 +180,16 @@ block|}
 block|,
 define|#
 directive|define
-name|N_TABNULL
+name|N_TABCAM
 value|3
+block|{
+literal|"_isa_devtab_cam"
+block|}
+block|,
+define|#
+directive|define
+name|N_TABNULL
+value|4
 block|{
 literal|"_isa_devtab_null"
 block|}
