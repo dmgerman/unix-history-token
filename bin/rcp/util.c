@@ -632,6 +632,7 @@ name|lostconn
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 if|if
