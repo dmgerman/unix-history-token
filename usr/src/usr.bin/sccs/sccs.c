@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.45 %G%"
+literal|"@(#)sccs.c	1.46 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1755,9 +1755,13 @@ expr_stmt|;
 comment|/* get all the files that we unedited successfully */
 if|if
 condition|(
-name|i
+name|np
 operator|>
-literal|0
+operator|&
+name|ap
+index|[
+literal|1
+index|]
 condition|)
 name|rval
 operator|=
@@ -2274,6 +2278,7 @@ argument_list|(
 name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 end_block
 
@@ -2300,10 +2305,6 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-specifier|register
-name|char
-name|c
 decl_stmt|;
 name|char
 name|buf
@@ -2735,10 +2736,6 @@ name|struct
 name|direct
 name|dir
 decl_stmt|;
-name|struct
-name|stat
-name|stbuf
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2837,6 +2834,10 @@ while|while
 condition|(
 name|fread
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|dir
 argument_list|,
@@ -3144,11 +3145,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|tfp
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 specifier|register
 name|char
@@ -4268,6 +4264,10 @@ begin_comment
 comment|/* **  USRERR -- issue user-level error ** **	Parameters: **		f -- format string. **		p1-p3 -- parameters to a printf. ** **	Returns: **		-1 ** **	Side Effects: **		none. */
 end_comment
 
+begin_comment
+comment|/*VARARGS1*/
+end_comment
+
 begin_macro
 name|usrerr
 argument_list|(
@@ -4333,6 +4333,10 @@ end_escape
 
 begin_comment
 comment|/* **  SYSERR -- print system-generated error. ** **	Parameters: **		f -- format string to a printf. **		p1, p2, p3 -- parameters to f. ** **	Returns: **		never. ** **	Side Effects: **		none. */
+end_comment
+
+begin_comment
+comment|/*VARARGS1*/
 end_comment
 
 begin_macro
@@ -4405,7 +4409,7 @@ else|else
 block|{
 name|perror
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
