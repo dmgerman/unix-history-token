@@ -276,6 +276,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|struct
+name|mem_range_softc
+name|mem_range_softc
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
