@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: deflate.c,v 1.1 1997/12/03 10:23:45 brian Exp $  */
+comment|/*  * $Id: deflate.c,v 1.2 1997/12/03 23:27:57 brian Exp $  */
 end_comment
 
 begin_include
@@ -1610,6 +1610,8 @@ name|int
 name|res
 decl_stmt|,
 name|flush
+decl_stmt|,
+name|expect_error
 decl_stmt|;
 name|u_char
 modifier|*
@@ -1818,6 +1820,10 @@ name|flush
 operator|=
 name|Z_NO_FLUSH
 expr_stmt|;
+name|expect_error
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -1850,6 +1856,15 @@ name|Z_STREAM_END
 condition|)
 break|break;
 comment|/* Done */
+if|if
+condition|(
+name|expect_error
+operator|&&
+name|res
+operator|==
+name|Z_BUF_ERROR
+condition|)
+break|break;
 name|LogPrintf
 argument_list|(
 name|LogERROR
@@ -1990,6 +2005,21 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|InputState
+operator|.
+name|cx
+operator|.
+name|avail_in
+operator|==
+literal|0
+condition|)
+comment|/*          * This seems to be a bug in libz !  If inflate() finished          * with 0 avail_in and 0 avail_out *and* this is the end of          * our input *and* inflate() *has* actually written all the          * output it's going to, it *doesn't* return Z_STREAM_END !          * When we subsequently call it with no more input, it gives          * us Z_BUF_ERROR :-(  It seems pretty safe to ignore this          * error (the dictionary seems to stay in sync).  In the worst          * case, we'll drop the next compressed packet and do a          * CcpReset() then.          */
+name|expect_error
+operator|=
+literal|1
+expr_stmt|;
 comment|/* overflow */
 name|InputState
 operator|.
