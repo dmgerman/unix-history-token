@@ -41,6 +41,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"mbcache.h"
+end_include
+
 begin_comment
 comment|/* Grep.c expects the matchers vector to be terminated    by an entry with a NULL compile, and to contain at least    an entry named "default". */
 end_comment
@@ -83,6 +89,10 @@ specifier|const
 operator|*
 operator|,
 name|size_t
+operator|,
+expr|struct
+name|mb_cache
+operator|*
 operator|,
 name|size_t
 operator|*
