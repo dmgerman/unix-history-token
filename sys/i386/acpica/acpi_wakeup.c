@@ -556,7 +556,7 @@ operator|=
 name|read_eflags
 argument_list|()
 expr_stmt|;
-name|disable_intr
+name|ACPI_DISABLE_IRQS
 argument_list|()
 expr_stmt|;
 comment|/* Create Identity Mapping */
@@ -889,12 +889,6 @@ name|acpi_printcpu
 argument_list|()
 expr_stmt|;
 comment|/* Call ACPICA to enter the desired sleep state */
-name|ACPI_DISABLE_IRQS
-argument_list|()
-expr_stmt|;
-name|ACPI_FLUSH_CPU_CACHE
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|state
@@ -917,9 +911,6 @@ name|AcpiEnterSleepState
 argument_list|(
 name|state
 argument_list|)
-expr_stmt|;
-name|ACPI_ENABLE_IRQS
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
