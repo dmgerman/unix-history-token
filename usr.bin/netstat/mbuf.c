@@ -453,7 +453,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%u/%u mapped pages in use\n"
+literal|"%u/%u mbuf clusters in use\n"
 argument_list|,
 name|mbstat
 operator|.
