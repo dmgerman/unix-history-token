@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.51 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -800,20 +800,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|daemon
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|decode
 name|__P
@@ -1162,6 +1148,9 @@ condition|(
 operator|!
 name|Debug
 condition|)
+operator|(
+name|void
+operator|)
 name|daemon
 argument_list|(
 literal|0
