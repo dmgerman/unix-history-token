@@ -335,6 +335,24 @@ begin_comment
 comment|/* __FOOCPU__&& __BAROS__ */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ZEROSIZEPTR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ZEROSIZEPTR
+value|((void *)(1<< (malloc_pageshift - 1)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * No user serviceable parts behind this point.  */
 end_comment
@@ -4542,6 +4560,16 @@ name|r
 operator|=
 literal|0
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|size
+condition|)
+name|r
+operator|=
+name|ZEROSIZEPTR
+expr_stmt|;
 else|else
 name|r
 operator|=
@@ -4617,8 +4645,12 @@ operator|--
 expr_stmt|;
 return|return;
 block|}
-else|else
-block|{
+if|if
+condition|(
+name|ptr
+operator|!=
+name|ZEROSIZEPTR
+condition|)
 name|ifree
 argument_list|(
 name|ptr
@@ -4633,7 +4665,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|malloc_active
 operator|--
 expr_stmt|;
@@ -4717,6 +4748,16 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|ptr
+operator|==
+name|ZEROSIZEPTR
+condition|)
+name|ptr
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
 name|malloc_sysv
 operator|&&
 operator|!
@@ -4731,6 +4772,23 @@ expr_stmt|;
 name|r
 operator|=
 literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|size
+condition|)
+block|{
+name|ifree
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+name|ZEROSIZEPTR
 expr_stmt|;
 block|}
 elseif|else
