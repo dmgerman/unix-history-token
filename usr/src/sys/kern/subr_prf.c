@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.32 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.30.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -610,7 +610,8 @@ directive|else
 function|uprintf
 parameter_list|(
 name|fmt
-comment|/*, va_alist */
+parameter_list|,
+name|va_alist
 parameter_list|)
 name|char
 modifier|*
@@ -788,7 +789,8 @@ parameter_list|(
 name|tpr
 parameter_list|,
 name|fmt
-comment|/*, va_alist */
+parameter_list|,
+name|va_alist
 parameter_list|)
 name|tpr_t
 name|tpr
@@ -921,7 +923,8 @@ parameter_list|(
 name|tp
 parameter_list|,
 name|fmt
-comment|/*, va_alist */
+parameter_list|,
+name|va_alist
 parameter_list|)
 name|struct
 name|tty
@@ -999,7 +1002,8 @@ parameter_list|(
 name|level
 parameter_list|,
 name|fmt
-comment|/*, va_alist */
+parameter_list|,
+name|va_alist
 parameter_list|)
 name|int
 name|level
@@ -1183,7 +1187,8 @@ directive|else
 function|addlog
 parameter_list|(
 name|fmt
-comment|/*, va_alist */
+parameter_list|,
+name|va_alist
 parameter_list|)
 name|char
 modifier|*
@@ -1287,7 +1292,8 @@ directive|else
 function|printf
 parameter_list|(
 name|fmt
-comment|/*, va_alist */
+parameter_list|,
+name|va_alist
 parameter_list|)
 name|char
 modifier|*
