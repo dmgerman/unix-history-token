@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.66 1999/07/22 15:57:37 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.67 1999/07/22 16:10:40 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,12 +485,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nsock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|maxsock
 decl_stmt|;
 end_decl_stmt
@@ -572,6 +566,23 @@ literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SANITY_CHECK
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|nsock
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -1376,9 +1387,14 @@ operator|&
 name|allsock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SANITY_CHECK
 name|nsock
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|signalpipe
@@ -1425,6 +1441,9 @@ decl_stmt|;
 name|fd_set
 name|readable
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SANITY_CHECK
 if|if
 condition|(
 name|nsock
@@ -1447,6 +1466,8 @@ name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|readable
 operator|=
 name|allsock
@@ -5419,6 +5440,9 @@ name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
+name|nsock
+operator|++
+expr_stmt|;
 endif|#
 directive|endif
 name|FD_SET
@@ -5430,9 +5454,6 @@ argument_list|,
 operator|&
 name|allsock
 argument_list|)
-expr_stmt|;
-name|nsock
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -5591,6 +5612,9 @@ name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
+name|nsock
+operator|--
+expr_stmt|;
 endif|#
 directive|endif
 name|FD_CLR
@@ -5602,9 +5626,6 @@ argument_list|,
 operator|&
 name|allsock
 argument_list|)
-expr_stmt|;
-name|nsock
-operator|--
 expr_stmt|;
 if|if
 condition|(
