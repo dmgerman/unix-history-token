@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.21 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -249,6 +255,11 @@ name|vnodelst
 name|mnt_vnodelist
 decl_stmt|;
 comment|/* list of vnodes this mount */
+name|struct
+name|lock
+name|mnt_lock
+decl_stmt|;
+comment|/* mount structure lock */
 name|int
 name|mnt_flag
 decl_stmt|;
@@ -459,7 +470,7 @@ value|0x0000ffff
 end_define
 
 begin_comment
-comment|/*  * filesystem control flags.  *  * MNT_MLOCK lock the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
+comment|/*  * External filesystem control flags.  */
 end_comment
 
 begin_define
@@ -506,48 +517,8 @@ begin_comment
 comment|/* force unmount or readonly change */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MNT_MLOCK
-value|0x00100000
-end_define
-
 begin_comment
-comment|/* lock so that subtree is stable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_MWAIT
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* someone is waiting for lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_MPBUSY
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* scan of mount point in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_MPWANT
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* waiting for mount point */
+comment|/*  * Internal filesystem control flags.  *  * MNT_UNMOUNT locks the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
 end_comment
 
 begin_define
@@ -564,12 +535,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNT_WANTRDWR
+name|MNT_MWAIT
 value|0x02000000
 end_define
 
 begin_comment
-comment|/* want upgrade to read/write */
+comment|/* waiting for unmount to finish */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_WANTRDWR
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* upgrade to read/write requested */
 end_comment
 
 begin_comment
@@ -1335,8 +1317,31 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|vfs_busy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|simplelock
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|vfs_export
-comment|/* process mount export info */
 name|__P
 argument_list|(
 operator|(
@@ -1358,29 +1363,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mount
-modifier|*
-name|vfs_getvfs
-name|__P
-argument_list|(
-operator|(
-name|fsid_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* return vfs given fsid */
-end_comment
-
-begin_decl_stmt
-name|struct
 name|netcred
 modifier|*
 name|vfs_export_lookup
-comment|/* lookup host in fs export list */
 name|__P
 argument_list|(
 operator|(
@@ -1414,27 +1399,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* create a unique fsid */
-end_comment
-
 begin_decl_stmt
-name|int
-name|vfs_lock
+name|struct
+name|mount
+modifier|*
+name|vfs_getvfs
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|mount
+name|fsid_t
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* lock a vfs */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1450,10 +1428,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* is a vfs mounted on vp */
-end_comment
-
 begin_decl_stmt
 name|int
 name|vfs_mountroot
@@ -1466,14 +1440,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* find and mount root filesystem */
-end_comment
-
 begin_decl_stmt
 name|int
 name|vfs_rootmountalloc
-comment|/* alloc root mount structure */
 name|__P
 argument_list|(
 operator|(
@@ -1494,21 +1463,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|vfs_unlock
+name|vfs_unbusy
 name|__P
 argument_list|(
 operator|(
 expr|struct
 name|mount
 operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* unlock a vfs */
-end_comment
 
 begin_decl_stmt
 name|void
@@ -1522,10 +1491,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* unmount all filesystems */
-end_comment
-
 begin_extern
 extern|extern	CIRCLEQ_HEAD(mntlist
 operator|,
@@ -1538,9 +1503,13 @@ name|mountlist
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* mounted filesystem list */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|mountlist_slock
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1787,38 +1787,6 @@ return|;
 block|}
 if|if
 condition|(
-name|vfs_busy
-argument_list|(
-name|mp
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|vn_close
-argument_list|(
-name|vp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|,
-name|p
-operator|->
-name|p_ucred
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-block|}
-if|if
-condition|(
 operator|*
 name|vpp
 operator|!=
@@ -2082,11 +2050,6 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|vfs_unbusy
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2160,23 +2123,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_MPBUSY
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"quotaoff: not busy"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3234,23 +3180,6 @@ decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* 	 * Check if the mount point has any quotas. 	 * If not, simply return. 	 */
-if|if
-condition|(
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_MPBUSY
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"qsync: not busy"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
