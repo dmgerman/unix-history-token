@@ -359,6 +359,8 @@ name|soo_ioctl
 block|,
 name|soo_poll
 block|,
+name|soo_stat
+block|,
 name|svr4_soo_close
 block|}
 decl_stmt|;
