@@ -51,11 +51,21 @@ directive|ifdef
 name|_BSD_WCHAR_T_
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_ANSI_SOURCE
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -205,6 +215,7 @@ operator|(
 name|int
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
@@ -332,6 +343,7 @@ operator|,
 name|int
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
@@ -387,6 +399,7 @@ operator|(
 name|long
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
@@ -402,6 +415,7 @@ operator|,
 name|long
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
@@ -562,10 +576,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* These are currently just stubs. */
-end_comment
-
 begin_decl_stmt
 name|int
 name|mblen
@@ -654,11 +664,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_ANSI_SOURCE
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
@@ -694,27 +714,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|double
 name|drand48
@@ -745,7 +744,51 @@ end_decl_stmt
 
 begin_decl_stmt
 name|long
+name|jrand48
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|short
+index|[
+literal|3
+index|]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|lcong48
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|short
+index|[
+literal|7
+index|]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
 name|lrand48
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|mrand48
 name|__P
 argument_list|(
 operator|(
@@ -772,20 +815,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|mrand48
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|jrand48
+name|unsigned
+name|short
+modifier|*
+name|seed48
 name|__P
 argument_list|(
 operator|(
@@ -806,40 +839,6 @@ name|__P
 argument_list|(
 operator|(
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|short
-modifier|*
-name|seed48
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-name|short
-index|[
-literal|3
-index|]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|lcong48
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-name|short
-index|[
-literal|7
-index|]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1474,6 +1473,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !_ANSI_SOURCE&& !_POSIX_SOURCE */
+end_comment
+
 begin_macro
 name|__END_DECLS
 end_macro
@@ -1484,7 +1487,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _STDLIB_H_ */
+comment|/* !_STDLIB_H_ */
 end_comment
 
 end_unit
