@@ -3372,7 +3372,7 @@ operator|(
 name|ifp
 operator|->
 name|if_flags
-operator|&&
+operator|&
 name|IFF_PPROMISC
 operator|)
 operator|==
