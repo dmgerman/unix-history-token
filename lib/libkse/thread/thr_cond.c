@@ -78,7 +78,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Check if a pointer to a condition variable attribute structure was 		 * passed by the caller:  		 */
+comment|/* 		 * Check if a pointer to a condition variable attribute 		 * structure was passed by the caller:  		 */
 if|if
 condition|(
 name|cond_attr
@@ -402,7 +402,7 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
-comment|/* Queue the running thread for the condition variable: */
+comment|/* 			 * Queue the running thread for the condition 			 * variable: 			 */
 name|_thread_queue_enq
 argument_list|(
 operator|&
@@ -421,6 +421,16 @@ name|pthread_mutex_unlock
 argument_list|(
 name|mutex
 argument_list|)
+expr_stmt|;
+comment|/* Wait forever: */
+name|_thread_run
+operator|->
+name|wakeup_time
+operator|.
+name|tv_sec
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thread_kern_sched_state
@@ -578,7 +588,7 @@ name|timeout
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Queue the running thread for the condition variable: */
+comment|/* 			 * Queue the running thread for the condition 			 * variable: 			 */
 name|_thread_queue_enq
 argument_list|(
 operator|&
@@ -607,7 +617,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Cannot unlock the mutex, so remove the running 				 * thread from the condition variable queue:  				 */
+comment|/* 				 * Cannot unlock the mutex, so remove the 				 * running thread from the condition 				 * variable queue:  				 */
 name|_thread_queue_deq
 argument_list|(
 operator|&
@@ -874,7 +884,7 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
-comment|/* Enter a loop to bring all threads off the condition queue: */
+comment|/* 		 * Enter a loop to bring all threads off the 		 * condition queue: 		 */
 while|while
 condition|(
 operator|(
