@@ -165,7 +165,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|if (des_setkey(buf)) \ 		err("des_setkey", 0);
+value|if (des_setkey(buf)) \ 		err(0, "des_setkey");
 end_define
 
 begin_define
@@ -176,7 +176,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|if (des_cipher(buf, buf, 0L, (inverse ? -1 : 1))) \ 		err("des_cipher", 0);
+value|if (des_cipher(buf, buf, 0L, (inverse ? -1 : 1))) \ 		err(0, "des_cipher");
 end_define
 
 begin_else
@@ -193,7 +193,7 @@ name|buf
 parameter_list|)
 value|{						\ 				char bits1[64];
 comment|/* bits of key */
-value|\ 				expand(buf, bits1);			\ 				if (setkey(bits1))			\ 					err("setkey", 0);		\ 			}
+value|\ 				expand(buf, bits1);			\ 				if (setkey(bits1))			\ 					err(0, "setkey");		\ 			}
 end_define
 
 begin_define
@@ -205,7 +205,7 @@ name|buf
 parameter_list|)
 value|{						\ 				char bits1[64];
 comment|/* bits of message */
-value|\ 				expand(buf, bits1);			\ 				if (encrypt(bits1, inverse))		\ 					err("encrypt", 0);		\ 				compress(bits1, buf);			\ 			}
+value|\ 				expand(buf, bits1);			\ 				if (encrypt(bits1, inverse))		\ 					err(0, "encrypt");		\ 				compress(bits1, buf);			\ 			}
 end_define
 
 begin_endif
