@@ -1875,6 +1875,21 @@ operator|)
 return|;
 default|default:
 comment|/* Any other return value is an error. */
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"gzip decompression failed (%s)"
+argument_list|,
+name|state
+operator|->
+name|stream
+operator|.
+name|msg
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fatal
 goto|;
