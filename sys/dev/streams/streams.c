@@ -802,6 +802,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|streams
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * We only need open() and close() routines.  open() calls socreate()  * to allocate a "real" object behind the stream and mallocs some state  * info for use by the svr4 emulator;  close() deallocates the state  * information and passes the underlying object to the normal socket close  * routine.  */
 end_comment
