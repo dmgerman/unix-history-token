@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.6 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
+comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.7 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -289,6 +289,7 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2354,7 +2355,8 @@ argument_list|(
 name|dcscan
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|,
@@ -4807,7 +4809,8 @@ argument_list|(
 name|ttrstrt
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|tp
 argument_list|,
@@ -5358,11 +5361,21 @@ begin_comment
 comment|/*  * This is called by timeout() periodically.  * Check to see if modem status bits have changed.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|dcscan
-parameter_list|()
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 block|{
 specifier|register
 name|dcregs
@@ -5524,7 +5537,8 @@ argument_list|(
 name|dcscan
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|,
