@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.33 1996/09/19 18:20:47 nate Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.34 1996/10/02 05:01:17 dyson Exp $ */
 end_comment
 
 begin_comment
@@ -3850,7 +3850,13 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|ioflag
+operator|&
+name|IO_SYNC
+condition|)
 block|{
 name|TIMEVAL_TO_TIMESPEC
 argument_list|(
