@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)drtest.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)drtest.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,19 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
@@ -49,14 +49,6 @@ begin_function_decl
 name|char
 modifier|*
 name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|prompt
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -96,18 +88,11 @@ argument_list|)
 expr_stmt|;
 name|again
 label|:
-name|cp
-operator|=
-name|prompt
-argument_list|(
-literal|"Enable debugging (1=bse, 2=ecc, 3=bse+ecc)? "
-argument_list|)
-expr_stmt|;
 name|debug
 operator|=
-name|atoi
+name|getdebug
 argument_list|(
-name|cp
+literal|"Enable debugging (1=bse, 2=ecc, 3=bse+ecc)? "
 argument_list|)
 expr_stmt|;
 if|if
@@ -122,8 +107,12 @@ literal|0
 expr_stmt|;
 name|fd
 operator|=
-name|getdevice
-argument_list|()
+name|getfile
+argument_list|(
+literal|"Device to read?"
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -202,7 +191,7 @@ name|fd
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|lastsector
@@ -277,113 +266,22 @@ goto|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Prompt and verify a device name from the user.  */
-end_comment
-
 begin_macro
-name|getdevice
-argument_list|()
+name|getdebug
+argument_list|(
+argument|msg
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-specifier|register
-name|struct
-name|devsw
-modifier|*
-name|dp
-decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
-name|top
-label|:
-name|cp
-operator|=
-name|prompt
-argument_list|(
-literal|"Device to read? "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|open
-argument_list|(
-name|cp
-argument_list|,
-literal|2
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Known devices are: "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|dp
-operator|=
-name|devsw
-init|;
-name|dp
-operator|->
-name|dv_name
-condition|;
-name|dp
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%s "
-argument_list|,
-name|dp
-operator|->
-name|dv_name
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|top
-goto|;
-block|}
-return|return
-operator|(
-name|fd
-operator|)
-return|;
-block|}
-end_block
-
-begin_function
-name|char
-modifier|*
-name|prompt
-parameter_list|(
-name|msg
-parameter_list|)
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-block|{
-specifier|static
 name|char
 name|buf
 index|[
@@ -404,11 +302,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|atoi
+argument_list|(
 name|buf
+argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Allocate memory on a page-aligned address.  * Round allocated chunk to a page multiple to  * ease next request.  */
