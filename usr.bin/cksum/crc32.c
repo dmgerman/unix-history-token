@@ -555,6 +555,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 name|u_long
 name|crc32_total
@@ -563,30 +569,28 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
+name|int
 name|crc32
-argument_list|(
+parameter_list|(
 name|fd
-argument_list|,
+parameter_list|,
 name|cval
-argument_list|,
+parameter_list|,
 name|clen
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|fd
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|u_long
 modifier|*
 name|cval
 decl_stmt|,
-modifier|*
+decl|*
 name|clen
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -610,10 +614,6 @@ name|len
 decl_stmt|,
 name|nr
 decl_stmt|;
-name|FILE
-modifier|*
-name|in
-decl_stmt|;
 name|len
 operator|=
 literal|0
@@ -625,6 +625,7 @@ name|crc32_total
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|nr
 operator|=
 name|read
@@ -638,6 +639,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 for|for
 control|(

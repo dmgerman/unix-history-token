@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chat.c,v 1.8 1997/06/24 06:52:33 charnier Exp $"
+literal|"$Id: chat.c,v 1.9 1997/08/22 15:24:36 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1576,8 +1576,6 @@ decl_stmt|;
 block|{
 name|int
 name|linect
-decl_stmt|,
-name|len
 decl_stmt|,
 name|sendflg
 decl_stmt|;

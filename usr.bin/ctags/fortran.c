@@ -402,11 +402,13 @@ control|)
 continue|continue;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|lbp
 operator|+
 literal|1
+operator|)
 condition|)
 continue|continue;
 operator|*
