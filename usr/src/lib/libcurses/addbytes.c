@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	8.2 (Berkeley) %G%"
+literal|"@(#)addbytes.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,6 +261,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+return|return
+operator|(
+name|ERR
+operator|)
+return|;
 block|}
 else|else
 block|{
