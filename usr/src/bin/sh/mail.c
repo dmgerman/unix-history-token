@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mail.c	8.1 (Berkeley) %G%"
+literal|"@(#)mail.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,9 @@ name|chkmail
 parameter_list|(
 name|silent
 parameter_list|)
+name|int
+name|silent
+decl_stmt|;
 block|{
 specifier|register
 name|int

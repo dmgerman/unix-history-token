@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.3 (Berkeley) %G%"
+literal|"@(#)main.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,12 +56,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -69,6 +63,18 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -147,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|"var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"show.h"
 end_include
 
 begin_include
@@ -251,71 +263,50 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function_decl
+begin_decl_stmt
 name|STATIC
 name|void
 name|read_profile
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
+begin_decl_stmt
 name|STATIC
-name|void
-name|read_profile
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+name|find_dot_file
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Main routine.  We initialize things, parse the arguments, execute  * profiles if we're a login shell, and then call cmdloop to execute  * commands.  The setjmp call sets up the location to jump to when an  * exception occurs.  When an exception occurs the variable "state"  * is used to figure out how far we had gotten.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -688,6 +679,10 @@ argument_list|(
 name|exitstatus
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -701,6 +696,9 @@ name|cmdloop
 parameter_list|(
 name|top
 parameter_list|)
+name|int
+name|top
+decl_stmt|;
 block|{
 name|union
 name|node
@@ -1010,7 +1008,7 @@ comment|/*  * Take commands from a file.  To be compatable we should do a path  
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|char
 modifier|*
 name|find_dot_file
@@ -1119,24 +1117,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|dotcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|exitstatus
 operator|=
@@ -1186,33 +1182,33 @@ return|return
 name|exitstatus
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|exitcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
 name|stoppedjobs
 argument_list|()
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|argc
@@ -1234,8 +1230,12 @@ argument_list|(
 name|exitstatus
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#

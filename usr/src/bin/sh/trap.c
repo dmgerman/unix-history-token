@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trap.c	8.2 (Berkeley) %G%"
+literal|"@(#)trap.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,24 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -60,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|"jobs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"show.h"
 end_include
 
 begin_include
@@ -102,12 +126,6 @@ begin_include
 include|#
 directive|include
 file|"mystring.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_comment
@@ -240,24 +258,22 @@ begin_comment
 comment|/*  * The trap builtin.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|trapcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -431,7 +447,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Clear traps on a fork.  */
@@ -518,17 +534,22 @@ comment|/*  * Set the signal handler for the specified signal.  The routine figu
 end_comment
 
 begin_function
-name|int
+name|long
 name|setsignal
 parameter_list|(
 name|signo
 parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|int
 name|action
 decl_stmt|;
 name|sig_t
 name|sigact
+init|=
+name|SIG_DFL
 decl_stmt|;
 name|char
 modifier|*
@@ -786,7 +807,7 @@ name|action
 expr_stmt|;
 return|return
 operator|(
-name|int
+name|long
 operator|)
 name|signal
 argument_list|(
@@ -808,6 +829,9 @@ name|getsigaction
 parameter_list|(
 name|signo
 parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|struct
 name|sigaction
@@ -839,6 +863,9 @@ literal|"Sigaction system call failed"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|sig_t
+operator|)
 name|sa
 operator|.
 name|sa_handler
@@ -856,6 +883,9 @@ name|ignoresig
 parameter_list|(
 name|signo
 parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -970,6 +1000,12 @@ argument_list|(
 argument|signo
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|signo
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1111,6 +1147,9 @@ name|setinteractive
 parameter_list|(
 name|on
 parameter_list|)
+name|int
+name|on
+decl_stmt|;
 block|{
 specifier|static
 name|int
@@ -1155,6 +1194,9 @@ name|exitshell
 parameter_list|(
 name|status
 parameter_list|)
+name|int
+name|status
+decl_stmt|;
 block|{
 name|struct
 name|jmploc
