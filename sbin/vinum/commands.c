@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: commands.c,v 1.3 1998/12/28 16:32:39 peter Exp $ */
+comment|/* $Id: commands.c,v 1.5 1999/01/18 03:36:32 grog Exp grog $ */
 end_comment
 
 begin_include
@@ -482,6 +482,9 @@ name|_ioctl_reply
 modifier|*
 name|reply
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|reply
 operator|=
 operator|(
@@ -495,7 +498,7 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
+operator|<
 literal|1
 condition|)
 block|{
@@ -504,9 +507,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Expecting 1 parameter, not %d\n"
-argument_list|,
-name|argc
+literal|"Usage: read drive [drive ...]\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -518,16 +519,39 @@ argument_list|,
 literal|"read "
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* each drive name */
 name|strcat
 argument_list|(
 name|buffer
 argument_list|,
 name|argv
 index|[
-literal|0
+name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|strcat
+argument_list|(
+name|buffer
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ioctl
@@ -541,8 +565,10 @@ argument_list|)
 condition|)
 block|{
 comment|/* can't get config? */
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Can't configure: %s (%d)\n"
 argument_list|,
 name|strerror
@@ -1288,7 +1314,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"what do you want to remove?\n"
+literal|"Usage: rm object [object...]\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1579,10 +1605,18 @@ argument_list|,
 literal|"configuration obliterated"
 argument_list|)
 expr_stmt|;
+name|start_daemon
+argument_list|()
+expr_stmt|;
+comment|/* then restart the daemon */
 block|}
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* Initialize a plex */
+end_comment
 
 begin_function
 name|void
@@ -1793,83 +1827,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|message
-operator|->
-name|index
-operator|=
-name|plexno
-expr_stmt|;
-comment|/* pass object number */
-name|message
-operator|->
-name|type
-operator|=
-name|plex_object
-expr_stmt|;
-comment|/* and type of object */
-name|message
-operator|->
-name|state
-operator|=
-name|object_initializing
-expr_stmt|;
-name|message
-operator|->
-name|force
-operator|=
-literal|1
-expr_stmt|;
-comment|/* insist */
-name|ioctl
-argument_list|(
-name|superdev
-argument_list|,
-name|VINUM_SETSTATE
-argument_list|,
-name|message
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|reply
-operator|.
-name|error
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-operator||
-name|LOG_KERN
-argument_list|,
-literal|"can't initialize %s: %s"
-argument_list|,
-name|plex
-operator|.
-name|name
-argument_list|,
-name|reply
-operator|.
-name|msg
-index|[
-literal|0
-index|]
-condition|?
-name|reply
-operator|.
-name|msg
-else|:
-name|strerror
-argument_list|(
-name|reply
-operator|.
-name|error
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|pid
 operator|=
 name|fork
@@ -1953,7 +1910,7 @@ operator|++
 control|)
 block|{
 comment|/* initialize each subdisk */
-comment|/* We already have the plex data in global 			 * plex from the call to find_object */
+comment|/* We already have the plex data in global 		     * plex from the call to find_object */
 name|pid
 operator|=
 name|fork
@@ -1992,7 +1949,7 @@ argument_list|(
 name|filename
 argument_list|,
 name|VINUM_DIR
-literal|"/sd/%s"
+literal|"/rsd/%s"
 argument_list|,
 name|sd
 operator|.
@@ -2013,7 +1970,7 @@ name|LOG_INFO
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"initializing subdisk %s\n"
+literal|"initializing subdisk %s"
 argument_list|,
 name|filename
 argument_list|)
@@ -2043,7 +2000,7 @@ name|LOG_ERR
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"can't open subdisk %s: %s\n"
+literal|"can't open subdisk %s: %s"
 argument_list|,
 name|filename
 argument_list|,
@@ -2099,7 +2056,7 @@ name|LOG_ERR
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"can't write subdisk %s: %s\n"
+literal|"can't write subdisk %s: %s"
 argument_list|,
 name|filename
 argument_list|,
@@ -2131,9 +2088,48 @@ name|LOG_INFO
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"subdisk %s initialized\n"
+literal|"subdisk %s initialized"
 argument_list|,
 name|filename
+argument_list|)
+expr_stmt|;
+comment|/* Bring the subdisk up */
+name|message
+operator|->
+name|index
+operator|=
+name|sd
+operator|.
+name|sdno
+expr_stmt|;
+comment|/* pass object number */
+name|message
+operator|->
+name|type
+operator|=
+name|sd_object
+expr_stmt|;
+comment|/* and type of object */
+name|message
+operator|->
+name|state
+operator|=
+name|object_up
+expr_stmt|;
+name|message
+operator|->
+name|force
+operator|=
+literal|1
+expr_stmt|;
+comment|/* insist */
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_SETSTATE
+argument_list|,
+name|message
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2226,80 +2222,13 @@ operator|==
 literal|0
 condition|)
 block|{
-for|for
-control|(
-name|sdno
-operator|=
-literal|0
-init|;
-name|sdno
-operator|<
-name|plex
-operator|.
-name|subdisks
-condition|;
-name|sdno
-operator|++
-control|)
-block|{
-comment|/* bring the subdisks up */
-name|get_plex_sd_info
-argument_list|(
-operator|&
-name|sd
-argument_list|,
-name|plexno
-argument_list|,
-name|sdno
-argument_list|)
-expr_stmt|;
-comment|/* get the SD info again */
-name|message
-operator|->
-name|index
-operator|=
-name|sd
-operator|.
-name|sdno
-expr_stmt|;
-comment|/* pass object number */
-name|message
-operator|->
-name|type
-operator|=
-name|sd_object
-expr_stmt|;
-comment|/* and type of object */
-name|message
-operator|->
-name|state
-operator|=
-name|object_up
-expr_stmt|;
-name|message
-operator|->
-name|force
-operator|=
-literal|1
-expr_stmt|;
-comment|/* insist */
-name|ioctl
-argument_list|(
-name|superdev
-argument_list|,
-name|VINUM_SETSTATE
-argument_list|,
-name|message
-argument_list|)
-expr_stmt|;
-block|}
 name|syslog
 argument_list|(
 name|LOG_INFO
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"plex %s initialized\n"
+literal|"plex %s initialized"
 argument_list|,
 name|plex
 operator|.
@@ -2314,7 +2243,7 @@ name|LOG_ERR
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"couldn't initialize plex %s, %d processes died\n"
+literal|"couldn't initialize plex %s, %d processes died"
 argument_list|,
 name|plex
 operator|.
@@ -2330,12 +2259,19 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|close
 argument_list|(
 name|plexfh
 argument_list|)
 expr_stmt|;
 comment|/* we don't need this any more */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* give them a chance to print */
 block|}
 block|}
 block|}
@@ -2472,6 +2408,13 @@ name|state
 operator|=
 name|object_up
 expr_stmt|;
+name|message
+operator|->
+name|force
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't force it, use a larger hammer */
 name|ioctl
 argument_list|(
 name|superdev
@@ -2504,7 +2447,7 @@ operator|&&
 operator|(
 name|type
 operator|==
-name|plex_object
+name|sd_object
 operator|)
 condition|)
 name|continue_revive
@@ -3665,6 +3608,9 @@ index|]
 decl_stmt|;
 name|int
 name|sdno
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|plexno
@@ -3927,6 +3873,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|sdno
+operator|=
+name|msg
+operator|.
+name|index
+expr_stmt|;
+comment|/* note the subdisk number for later */
 break|break;
 case|case
 name|plex_object
@@ -3950,13 +3903,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|plexno
-operator|=
-name|msg
-operator|.
-name|index
-expr_stmt|;
-comment|/* note the plex number, we'll need it again */
 break|break;
 case|case
 name|volume_object
@@ -4014,7 +3960,7 @@ condition|)
 comment|/* reviving */
 name|continue_revive
 argument_list|(
-name|plexno
+name|sdno
 argument_list|)
 expr_stmt|;
 comment|/* continue the revive */
@@ -5252,6 +5198,219 @@ argument_list|,
 literal|"replace function not implemented yet\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Primitive help function */
+end_comment
+
+begin_function
+name|void
+name|vinum_help
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+block|{
+name|char
+name|commands
+index|[]
+init|=
+block|{
+literal|"COMMANDS\n"
+literal|"     create description-file\n"
+literal|"               Create a volume as described in description-file\n"
+literal|"     attach plex volume [rename]\n"
+literal|"     attach subdisk plex [offset] [rename]\n"
+literal|"               Attach a plex to a volume, or a subdisk to a plex.\n"
+literal|"     debug\n"
+literal|"               Cause the volume manager to enter the kernel debugger.\n"
+literal|"     detach [plex | subdisk]\n"
+literal|"      Detach a plex or subdisk from the volume or plex to which it is at-\n"
+literal|"      tached.\n"
+literal|"     info [-v]\n"
+literal|"               List information about volume manager state.\n"
+literal|"     init [-v]\n"
+literal|"               Initialize a plex by writing zeroes to all its subdisks.\n"
+literal|"     label volume\n"
+literal|"               Create a volume label\n"
+literal|"     list [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
+literal|"               List information about specified objects\n"
+literal|"     l [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
+literal|"               List information about specified objects (alternative to\n"
+literal|"               list command)\n"
+literal|"     ld [-r] [-s] [-v] [-V] [volume]\n"
+literal|"               List information about drives\n"
+literal|"     ls [-r] [-s] [-v] [-V] [subdisk]\n"
+literal|"               List information about subdisks\n"
+literal|"     lp [-r] [-s] [-v] [-V] [plex]\n"
+literal|"               List information about plexes\n"
+literal|"     lv [-r] [-s] [-v] [-V] [volume]\n"
+literal|"               List information about volumes\n"
+literal|"     makedev\n"
+literal|"               Remake the device nodes in /dev/vinum.\n"
+literal|"     read disk-partition\n"
+literal|"               Read the vinum configuration from the specified disk partition.\n"
+literal|"     rename [-r] [drive | subdisk | plex | volume] newname\n"
+literal|"               Change the name of the specified object.\n"
+literal|"     replace [subdisk | plex] newobject\n"
+literal|"               Replace the object with an identical other object.  XXX not im-\n"
+literal|"               plemented yet.\n"
+literal|"     resetconfig\n"
+literal|"               Reset the complete vinum configuration.\n"
+literal|"     resetstats [-r] [volume | plex | subdisk]\n"
+literal|"               Reset statistisc counters for the specified objects, or for all\n"
+literal|"               objects if none are specified.\n"
+literal|"     rm [-f] [-r] volume | plex | subdisk\n"
+literal|"               Remove an object\n"
+literal|"     setdaemon options\n"
+literal|"               set the daemon options\n"
+literal|"     start [volume | plex | subdisk]\n"
+literal|"               Allow the system to access the objects\n"
+literal|"     stop [-f] [volume | plex | subdisk]\n"
+literal|"               Terminate access the objects\n"
+block|}
+decl_stmt|;
+name|puts
+argument_list|(
+name|commands
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Set daemon options.  * XXX quick and dirty: use a bitmap, which requires  * knowing which bit does what.  FIXME */
+end_comment
+
+begin_function
+name|void
+name|vinum_setdaemon
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+block|{
+name|int
+name|options
+decl_stmt|;
+switch|switch
+condition|(
+name|argc
+condition|)
+block|{
+case|case
+literal|0
+case|:
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_GETDAEMON
+argument_list|,
+operator|&
+name|options
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't set daemon options: %s (%d)\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Options mask: %d\n"
+argument_list|,
+name|options
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|options
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_SETDAEMON
+argument_list|,
+operator|&
+name|options
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't set daemon options: %s (%d)\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: \tsetdaemon [<bitmask>]\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
