@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -416,12 +416,17 @@ name|if_nextfree
 operator|=
 name|LFS_UNUSED_INUM
 expr_stmt|;
-operator|++
 name|ip
 operator|->
 name|i_blocks
+operator|+=
+name|btodb
+argument_list|(
+name|fs
+operator|->
+name|lfs_bsize
+argument_list|)
 expr_stmt|;
-comment|/* XXX This may not be right. */
 name|ip
 operator|->
 name|i_size
