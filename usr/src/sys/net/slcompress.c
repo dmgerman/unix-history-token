@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)slcompress.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)slcompress.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -257,6 +257,12 @@ operator|->
 name|last_xmit
 operator|=
 literal|255
+expr_stmt|;
+name|comp
+operator|->
+name|flags
+operator|=
+name|SLF_TOSS
 expr_stmt|;
 block|}
 end_function
