@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)signal.c	5.5 (Berkeley) %G%"
+literal|"@(#)signal.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +283,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_function
+specifier|static
+name|int
+name|purgeandquit
+parameter_list|()
+block|{
+name|purge
+argument_list|()
+expr_stmt|;
+comment|/* purge buffered output */
+name|quit
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Set up the signal handlers.  */
 end_comment
@@ -319,7 +335,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|quit
+name|purgeandquit
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.6 (Berkeley) %G%"
+literal|"@(#)output.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,6 +408,24 @@ name|screen_trashed
 operator|=
 literal|1
 expr_stmt|;
+name|ob
+operator|=
+name|obuf
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Purge any pending output.  */
+end_comment
+
+begin_macro
+name|purge
+argument_list|()
+end_macro
+
+begin_block
+block|{
 name|ob
 operator|=
 name|obuf
