@@ -1,18 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.64.2.2 1999/05/24 10:09:26 luigi Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: ipfw.c,v 1.68 1999/06/02 05:59:48 ru Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
@@ -102,19 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -133,12 +147,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
 end_include
 
 begin_include
@@ -890,7 +898,7 @@ condition|)
 name|setservent
 argument_list|(
 literal|1
-comment|/*stayopen*/
+comment|/*stay open*/
 argument_list|)
 expr_stmt|;
 name|printf
@@ -8452,7 +8460,7 @@ condition|)
 block|{
 name|show_usage
 argument_list|(
-literal|"Bad arguments"
+literal|"bad arguments"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8923,7 +8931,7 @@ else|else
 block|{
 name|show_usage
 argument_list|(
-literal|"Bad arguments"
+literal|"bad arguments"
 argument_list|)
 expr_stmt|;
 block|}
