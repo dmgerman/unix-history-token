@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.2	%H%	*/
+comment|/*	kern_synch.c	3.3	%H%	*/
 end_comment
 
 begin_include
@@ -56,21 +56,6 @@ include|#
 directive|include
 file|"../h/pte.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FASTVAX
-end_ifdef
-
-begin_asm
-asm|asm(" .globl _eintr");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -321,9 +306,6 @@ return|return;
 comment|/* 	 * If priority was low (>PZERO) and 	 * there has been a signal, 	 * execute non-local goto to 	 * the qsav location. 	 * (see trap1/trap.c) 	 */
 name|psig
 label|:
-ifndef|#
-directive|ifndef
-name|FASTVAX
 name|longjmp
 argument_list|(
 name|u
@@ -331,21 +313,6 @@ operator|.
 name|u_qsav
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-asm|asm(".set U_SSAV,140");
-asm|asm("movl _u+U_SSAV,fp");
-asm|asm("movl _u+U_SSAV+4,sp");
-asm|asm("movl _u+U_SSAV+8,r11");
-name|u
-operator|.
-name|u_error
-operator|=
-name|EINTR
-expr_stmt|;
-asm|asm("jmp _eintr");
-endif|#
-directive|endif
 comment|/*NOTREACHED*/
 block|}
 end_block
