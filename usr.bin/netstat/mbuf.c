@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbuf.c,v 1.8 1997/08/17 09:12:43 peter Exp $"
+literal|"$Id: mbuf.c,v 1.9 1997/11/10 08:03:36 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,6 +324,10 @@ name|name
 index|[
 literal|3
 index|]
+decl_stmt|,
+name|nmbclusters
+decl_stmt|,
+name|nmbclen
 decl_stmt|;
 name|size_t
 name|mbstatlen
@@ -379,6 +383,49 @@ block|{
 name|warn
 argument_list|(
 literal|"sysctl: retrieving mbstat"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|name
+index|[
+literal|2
+index|]
+operator|=
+name|KIPC_NMBCLUSTERS
+expr_stmt|;
+name|nmbclen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctl
+argument_list|(
+name|name
+argument_list|,
+literal|3
+argument_list|,
+operator|&
+name|nmbclusters
+argument_list|,
+operator|&
+name|nmbclen
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"sysctl: retrieving nmbclusters"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -556,7 +603,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%lu/%lu mbuf clusters in use\n"
+literal|"%lu/%lu/%lu mbuf clusters in use (current/peak/max)\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -569,6 +616,8 @@ argument_list|,
 name|mbstat
 operator|.
 name|m_clusters
+argument_list|,
+name|nmbclusters
 argument_list|)
 expr_stmt|;
 name|totmem
