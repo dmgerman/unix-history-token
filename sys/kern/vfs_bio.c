@@ -9885,7 +9885,7 @@ operator|->
 name|b_bufsize
 condition|)
 block|{
-name|atomic_add_int
+name|atomic_subtract_int
 argument_list|(
 operator|&
 name|bufmallocspace
