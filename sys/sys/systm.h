@@ -1480,6 +1480,7 @@ name|getenv
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|name
@@ -1494,6 +1495,7 @@ name|getenv_int
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|name
@@ -1512,6 +1514,7 @@ name|getenv_quad
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|name
