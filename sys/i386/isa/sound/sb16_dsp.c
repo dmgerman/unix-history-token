@@ -1996,7 +1996,7 @@ name|__FreeBSD__
 argument_list|)
 name|printk
 argument_list|(
-literal|"sbxvo0:<%s>"
+literal|"sbxvi0:<%s>"
 argument_list|,
 name|sb16_dsp_operations
 operator|.
