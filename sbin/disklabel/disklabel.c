@@ -2290,6 +2290,10 @@ name|nboot
 operator|=
 literal|0
 expr_stmt|;
+name|bsdp
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|i
