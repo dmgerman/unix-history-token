@@ -357,14 +357,12 @@ begin_comment
 comment|/*  * Wait here until we see an incoming http request  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|wait_connection
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|lg
@@ -414,18 +412,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print timestamp for HTTP HEAD and GET  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|http_date
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|time_t
 name|tl
@@ -472,20 +470,20 @@ argument_list|)
 expr_stmt|;
 comment|//return(buff);
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Send data to the open socket  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|http_output
-argument_list|(
-argument|char *html
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|html
+parameter_list|)
 block|{
 name|write
 argument_list|(
@@ -509,20 +507,20 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create and write the log information to file  * Log file format is one line per entry  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|log_line
-argument_list|(
-argument|char *req
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|req
+parameter_list|)
 block|{
 name|char
 name|log_buff
@@ -717,18 +715,16 @@ name|env_host
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * We have a connection.  Identify what type of request GET, HEAD, CGI, etc   * and do what needs to be done  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|http_request
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|fd
@@ -1537,13 +1533,14 @@ name|con_sock
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Simple httpd server for use in PicoBSD or other embedded application.   * Should satisfy simple httpd needs.  For more demanding situations  * apache is probably a better (but much larger) choice.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
