@@ -512,9 +512,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 name|suser
 argument_list|(
 name|p
@@ -526,7 +523,6 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(
