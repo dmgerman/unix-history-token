@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.19 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3036,9 +3036,9 @@ operator|->
 name|msg_flags
 operator|!=
 name|MSG_COMPAT
-condition|)
 endif|#
 directive|endif
+condition|)
 block|{
 name|error
 operator|=
