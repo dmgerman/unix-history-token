@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2736,8 +2742,11 @@ name|ue_device
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" at %ld.%09ld, %s, %s:\n"
+literal|" at %jd.%09ld, %s, %s:\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|timespec
 operator|->
 name|tv_sec
@@ -2880,7 +2889,6 @@ name|printf
 argument_list|(
 literal|" bus=%d"
 argument_list|,
-operator|&
 name|event
 operator|->
 name|u
@@ -2911,7 +2919,6 @@ name|printf
 argument_list|(
 literal|" cookie=%u devname=%s"
 argument_list|,
-operator|&
 name|event
 operator|->
 name|u
@@ -2922,7 +2929,6 @@ name|ue_cookie
 operator|.
 name|cookie
 argument_list|,
-operator|&
 name|event
 operator|->
 name|u
