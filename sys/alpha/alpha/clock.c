@@ -415,6 +415,7 @@ literal|"alpha"
 block|,
 comment|/* name */
 literal|800
+block|,
 comment|/* quality */
 block|}
 decl_stmt|;
