@@ -434,7 +434,7 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Initialize the locks.  Recursive acquisition of the vm page 	 * queue free mutex begins in contigmalloc1().   	 */
+comment|/* 	 * Initialize the locks. 	 */
 name|mtx_init
 argument_list|(
 operator|&
@@ -456,8 +456,6 @@ literal|"vm page queue free mutex"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_RECURSE
-operator||
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
