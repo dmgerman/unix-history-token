@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printdata.c	5.1 (Berkeley) %G%"
+literal|"@(#)printdata.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,18 @@ begin_include
 include|#
 directive|include
 file|"object.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/process.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/pxinfo.h"
 end_include
 
 begin_define
@@ -200,54 +212,6 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_comment
-comment|/*  * print count words starting at address  */
-end_comment
-
-begin_macro
-name|printndata
-argument_list|(
-argument|count
-argument_list|,
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ADDRESS
-name|addr
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|printdata
-argument_list|(
-name|addr
-argument_list|,
-name|addr
-operator|+
-operator|(
-name|count
-operator|-
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

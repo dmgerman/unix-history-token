@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)frame.c	5.1 (Berkeley) %G%"
+literal|"@(#)frame.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"frame.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/process.rep"
 end_include
 
 begin_comment

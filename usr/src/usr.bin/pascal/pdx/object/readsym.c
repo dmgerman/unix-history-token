@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readsym.c	5.1 (Berkeley) %G%"
+literal|"@(#)readsym.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,11 +162,6 @@ name|t
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-operator|(
-name|isvaxpx
-operator|)
 if|if
 condition|(
 name|t
@@ -187,8 +182,6 @@ operator|=
 name|HEADER_BYTES
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|s
 operator|=
 name|findblock

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assign.c	5.1 (Berkeley) %G%"
+literal|"@(#)assign.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,18 @@ begin_include
 include|#
 directive|include
 file|"tree.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/process.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/pxinfo.h"
 end_include
 
 begin_macro
@@ -206,17 +218,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|panic
-argument_list|(
-literal|"bad size %d"
-argument_list|,
-name|varsize
-argument_list|)
-expr_stmt|;
+goto|goto
+name|othersize
+goto|;
+comment|/* 				panic("bad size %d", varsize); 				*/
 block|}
 block|}
 else|else
 block|{
+name|othersize
+label|:
 name|sp
 operator|-=
 name|varsize
@@ -230,6 +241,14 @@ argument_list|,
 name|varsize
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|downalignstack
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_block

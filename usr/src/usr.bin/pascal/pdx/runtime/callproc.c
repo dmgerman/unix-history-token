@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)callproc.c	5.1 (Berkeley) %G%"
+literal|"@(#)callproc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,23 @@ name|retaddr
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_decl_stmt
+name|BOOLEAN
+name|didret
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Controlling logic of procedure calling.  * Calling a procedure before ever executing the program must  * be special cased.  */
 end_comment
@@ -149,10 +166,35 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|SYM
 modifier|*
 name|proc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+specifier|register
+name|int
+name|tmpsp
+decl_stmt|,
+name|tmptmp
+decl_stmt|;
+specifier|extern
+name|BOOLEAN
+name|shouldrestart
+decl_stmt|;
+if|if
+condition|(
+name|shouldrestart
+condition|)
+block|{
+name|initstart
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|pc
@@ -206,6 +248,22 @@ name|symbol
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|tahoe
+name|doret
+argument_list|(
+name|process
+argument_list|)
+expr_stmt|;
+name|tmpsp
+operator|=
+name|process
+operator|->
+name|sp
+expr_stmt|;
+endif|#
+directive|endif
 name|pushargs
 argument_list|(
 name|proc
@@ -213,6 +271,27 @@ argument_list|,
 name|arglist
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|tmptmp
+operator|=
+name|tmpsp
+expr_stmt|;
+name|tmpsp
+operator|=
+name|process
+operator|->
+name|sp
+expr_stmt|;
+name|process
+operator|->
+name|sp
+operator|=
+name|tmptmp
+expr_stmt|;
+endif|#
+directive|endif
 name|pushenv
 argument_list|(
 name|proc
@@ -224,6 +303,17 @@ operator|.
 name|codeloc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|process
+operator|->
+name|sp
+operator|=
+name|tmpsp
+expr_stmt|;
+endif|#
+directive|endif
 name|pushframe
 argument_list|(
 name|proc
@@ -272,6 +362,12 @@ name|savesp
 operator|=
 name|sp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+comment|/* 	 * evalargs hopefully keeps stack aligned, so we won't bother 	 * aligning it afterwards, neither will we align process->sp 	 * after subtracting args_size. 	 */
+endif|#
+directive|endif
 name|evalargs
 argument_list|(
 name|proc
@@ -525,7 +621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Simulate a CALL instruction by pushing the appropriate  * stack frame information.  *  * Massage register 10 appropriately since it contains the  * stack frame pointer.  */
+comment|/*  * Simulate a CALL instruction by pushing the appropriate  * stack frame information.  *  * Massage register 10 or 11 appropriately since it contains the  * stack frame pointer.  */
 end_comment
 
 begin_function
@@ -655,6 +751,22 @@ name|callframe
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|process
+operator|->
+name|reg
+index|[
+literal|11
+index|]
+operator|=
+name|process
+operator|->
+name|sp
+expr_stmt|;
+else|#
+directive|else
 name|process
 operator|->
 name|reg
@@ -666,6 +778,8 @@ name|process
 operator|->
 name|sp
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -729,6 +843,16 @@ block|{
 name|int
 name|len
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|doret
+argument_list|(
+name|process
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"%s returns "
@@ -767,6 +891,22 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|len
+operator|=
+operator|(
+name|len
+operator|+
+literal|3
+operator|)
+operator|&
+operator|~
+literal|3
+expr_stmt|;
+endif|#
+directive|endif
 name|sp
 operator|+=
 name|len
@@ -812,6 +952,18 @@ name|ADDRESS
 name|newpc
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|tahoe
+comment|/* this should be done somewhere else, but... */
+name|INTFP
+operator|=
+name|process
+operator|->
+name|fp
+expr_stmt|;
+endif|#
+directive|endif
 name|push
 argument_list|(
 name|ADDRESS
@@ -877,6 +1029,22 @@ name|pc
 operator|=
 name|newpc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|process
+operator|->
+name|reg
+index|[
+literal|12
+index|]
+operator|=
+name|pc
+operator|+
+name|ENDOFF
+expr_stmt|;
+else|#
+directive|else
 name|process
 operator|->
 name|reg
@@ -888,6 +1056,8 @@ name|pc
 operator|+
 name|ENDOFF
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -970,6 +1140,24 @@ argument_list|(
 name|ADDRESS
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|p
+operator|->
+name|reg
+index|[
+literal|12
+index|]
+operator|=
+name|pc
+operator|+
+literal|1
+operator|+
+name|ENDOFF
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|filename

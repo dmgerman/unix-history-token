@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	5.1 (Berkeley) %G%"
+literal|"@(#)tree.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,9 +323,6 @@ block|{
 name|NODE
 modifier|*
 name|p1
-decl_stmt|,
-modifier|*
-name|q
 decl_stmt|;
 name|p1
 operator|=
@@ -1947,12 +1944,6 @@ name|RECORD
 argument_list|)
 expr_stmt|;
 comment|/*      * Don't do this for compiled code.      */
-if|#
-directive|if
-operator|(
-operator|!
-name|isvax
-operator|)
 for|for
 control|(
 name|s
@@ -2001,8 +1992,6 @@ name|symbol
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printerror.c	5.1 (Berkeley) %G%"
+literal|"@(#)printerror.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,23 @@ directive|include
 file|"process/process.rep"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_decl_stmt
+name|BOOLEAN
+name|shouldrestart
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|printerror
 argument_list|()
@@ -100,13 +117,6 @@ specifier|register
 name|PROCESS
 modifier|*
 name|p
-decl_stmt|;
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|int
-name|c
 decl_stmt|;
 name|p
 operator|=
@@ -186,24 +196,31 @@ argument_list|,
 name|cursource
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|errnum
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
+name|putchar
 argument_list|(
-literal|":  %s"
-argument_list|,
-name|pxerrmsg
-index|[
-name|errnum
-index|]
+literal|'\n'
 argument_list|)
 expr_stmt|;
-block|}
+name|printlines
+argument_list|(
+name|curline
+argument_list|,
+name|curline
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+comment|/* 	 * this px is no good; it is easier to kill it and start 	 * a new one than to make it recover... 	 * make runtime/callproc.c know it too. 	 */
+name|shouldrestart
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
+name|erecover
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -219,7 +236,6 @@ argument_list|,
 name|cursource
 argument_list|)
 expr_stmt|;
-block|}
 name|putchar
 argument_list|(
 literal|'\n'
@@ -235,6 +251,7 @@ expr_stmt|;
 name|erecover
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_block
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trinfo.c	5.1 (Berkeley) %G%"
+literal|"@(#)trinfo.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|"tree/tree.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/process.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/pxinfo.h"
 end_include
 
 begin_comment
@@ -612,6 +624,14 @@ name|sp
 operator|+=
 name|n
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|alignstack
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tp
@@ -706,6 +726,14 @@ name|sp
 operator|+=
 name|n
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|alignstack
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"after "

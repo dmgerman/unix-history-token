@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)resume.c	5.1 (Berkeley) %G%"
+literal|"@(#)resume.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,11 +83,19 @@ directive|include
 file|"pxinfo.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_function_decl
 name|LOCAL
@@ -102,6 +110,56 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCREG
+value|11
+end_define
+
+begin_comment
+comment|/* where px holds virtual pc (see interp.sed) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCREG
+value|12
+end_define
+
+begin_comment
+comment|/* where px holds virtual pc (see interp.sed) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
 begin_decl_stmt
 name|LOCAL
 name|ADDRESS
@@ -109,6 +167,11 @@ modifier|*
 name|pcaddr
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Resume execution, set (get) pcode location counter before (after) resuming.  */
@@ -125,9 +188,6 @@ specifier|register
 name|PROCESS
 modifier|*
 name|p
-decl_stmt|;
-name|int
-name|oldsigno
 decl_stmt|;
 name|p
 operator|=
@@ -204,7 +264,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|ifdef vax
+else|vax || tahoe
 if|if
 condition|(
 name|p
@@ -226,7 +286,7 @@ name|p
 operator|->
 name|reg
 index|[
-literal|11
+name|PCREG
 index|]
 expr_stmt|;
 block|}
@@ -245,9 +305,20 @@ name|pcframe
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|pcframe
+operator|+=
+literal|14
+expr_stmt|;
+else|#
+directive|else
 name|pcframe
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 name|pc
 operator|=
 name|fetchpc
@@ -299,20 +370,6 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p
-operator|->
-name|status
-operator|==
-name|STOPPED
-condition|)
-block|{
-name|errnum
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 do|while
 condition|(
@@ -345,20 +402,31 @@ comment|/*      * If px implements a breakpoint by executing a halt instruction 
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_comment
-comment|/*  * Find the location in the Pascal object where execution was suspended.  *  * We basically walk back through the frames looking for saved  * register 11's.  Each time we find one, we remember it.  When we reach  * the frame associated with the interpreter procedure, the most recently  * saved register 11 is the one we want.  */
+comment|/*  * Find the location in the Pascal object where execution was suspended.  *  * We basically walk back through the frames looking for saved  * register PCREG's.  Each time we find one, we remember it.  When we reach  * the frame associated with the interpreter procedure, the most recently  * saved register PCREG is the one we want.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 name|int
 name|fr_handler
 decl_stmt|;
@@ -410,8 +478,34 @@ name|int
 name|fr_savpc
 decl_stmt|;
 comment|/* saved program counter */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|tahoe
+name|int
+name|fr_savpc
+decl_stmt|;
+comment|/* saved program counter */
+name|unsigned
+name|short
+name|fr_mask
+decl_stmt|;
+comment|/* register save mask */
+name|unsigned
+name|short
+name|fr_removed
+decl_stmt|;
+comment|/* (nargs+1)*4 */
+name|unsigned
+name|int
+name|fr_savfp
+decl_stmt|;
+comment|/* saved frame pointer */
+endif|#
+directive|endif
 block|}
-name|Vaxframe
+name|Stkframe
 typedef|;
 end_typedef
 
@@ -444,9 +538,24 @@ name|PROCESS
 modifier|*
 name|p
 decl_stmt|;
-name|Vaxframe
-name|vframe
+name|Stkframe
+name|sframe
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+define|#
+directive|define
+name|PCREGLOC
+value|(-1)
+else|#
+directive|else
+define|#
+directive|define
+name|PCREGLOC
+value|(sizeof sframe/sizeof(ADDRESS))
+endif|#
+directive|endif
 name|ADDRESS
 modifier|*
 name|savfp
@@ -464,7 +573,7 @@ name|p
 operator|->
 name|reg
 index|[
-literal|11
+name|PCREG
 index|]
 expr_stmt|;
 if|if
@@ -493,22 +602,31 @@ name|p
 operator|->
 name|fp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|savfp
+operator|-=
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|dread
 argument_list|(
 operator|&
-name|vframe
+name|sframe
 argument_list|,
 name|savfp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|vframe
+name|sframe
 argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|vframe
+name|sframe
 operator|.
 name|fr_savfp
 operator|!=
@@ -517,7 +635,7 @@ name|int
 operator|)
 name|framep
 operator|&&
-name|vframe
+name|sframe
 operator|.
 name|fr_savfp
 operator|!=
@@ -528,9 +646,9 @@ if|if
 condition|(
 name|regsaved
 argument_list|(
-name|vframe
+name|sframe
 argument_list|,
-literal|11
+name|PCREG
 argument_list|)
 condition|)
 block|{
@@ -541,7 +659,7 @@ name|r
 argument_list|,
 name|savfp
 operator|+
-literal|5
+name|PCREGLOC
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -563,27 +681,36 @@ operator|(
 name|ADDRESS
 operator|*
 operator|)
-name|vframe
+name|sframe
 operator|.
 name|fr_savfp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|savfp
+operator|-=
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|dread
 argument_list|(
 operator|&
-name|vframe
+name|sframe
 argument_list|,
 name|savfp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|vframe
+name|sframe
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|vframe
+name|sframe
 operator|.
 name|fr_savfp
 operator|==
@@ -602,9 +729,9 @@ if|if
 condition|(
 name|regsaved
 argument_list|(
-name|vframe
+name|sframe
 argument_list|,
-literal|11
+name|PCREG
 argument_list|)
 condition|)
 block|{
@@ -615,7 +742,7 @@ name|r
 argument_list|,
 name|savfp
 operator|+
-literal|5
+name|PCREGLOC
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -713,26 +840,6 @@ argument_list|,
 literal|"\nProgram error"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|errnum
-operator|!=
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" -- %s"
-argument_list|,
-name|pxerrmsg
-index|[
-name|errnum
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|stderr

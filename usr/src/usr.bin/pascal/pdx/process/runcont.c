@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runcont.c	5.1 (Berkeley) %G%"
+literal|"@(#)runcont.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,11 +226,6 @@ name|outfile
 operator|=
 name|NIL
 expr_stmt|;
-if|#
-directive|if
-operator|(
-name|isvaxpx
-operator|)
 name|argv
 index|[
 literal|0
@@ -276,21 +271,6 @@ operator|=
 literal|3
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|argv
-index|[
-literal|0
-index|]
-operator|=
-name|objname
-expr_stmt|;
-name|argc
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -567,13 +547,6 @@ name|intr
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|succeeds
-value|== TRUE
-end_define
 
 begin_define
 define|#

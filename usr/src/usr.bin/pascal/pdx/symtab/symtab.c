@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	5.1 (Berkeley) %G%"
+literal|"@(#)symtab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -788,9 +788,6 @@ block|{
 name|SYM
 modifier|*
 name|s
-decl_stmt|,
-modifier|*
-name|t
 decl_stmt|;
 name|SYM
 modifier|*

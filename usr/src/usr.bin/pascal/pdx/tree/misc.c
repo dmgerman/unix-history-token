@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.1 (Berkeley) %G%"
+literal|"@(#)misc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +292,7 @@ name|char
 modifier|*
 name|maintainer
 init|=
-literal|"linton@ucbvax"
+literal|"4bsd-bugs@Berkeley.EDU"
 decl_stmt|;
 name|puts
 argument_list|(

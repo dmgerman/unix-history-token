@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstatus.c	5.1 (Berkeley) %G%"
+literal|"@(#)pstatus.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,11 +266,6 @@ block|}
 block|}
 else|else
 block|{
-if|#
-directive|if
-operator|(
-name|isvaxpx
-operator|)
 name|printf
 argument_list|(
 literal|"location %d\n"
@@ -278,17 +273,6 @@ argument_list|,
 name|pc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"location 0x%x\n"
-argument_list|,
-name|pc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_block

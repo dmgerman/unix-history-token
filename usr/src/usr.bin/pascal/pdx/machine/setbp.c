@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setbp.c	5.1 (Berkeley) %G%"
+literal|"@(#)setbp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"process/process.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/pxinfo.h"
 end_include
 
 begin_define
@@ -153,7 +159,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|short
+name|unsigned
+name|char
 name|w
 decl_stmt|;
 name|short

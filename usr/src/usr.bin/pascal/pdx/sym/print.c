@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.1 (Berkeley) %G%"
+literal|"@(#)print.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,11 +246,6 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|SYM
-modifier|*
-name|t
-decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -292,6 +287,14 @@ name|sp
 operator|+=
 name|len
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|alignstack
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|printval
 argument_list|(
 name|s

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bp.c	5.1 (Berkeley) %G%"
+literal|"@(#)bp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,12 +295,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|BPINFO
-modifier|*
-name|p
-decl_stmt|;
-name|p
-operator|=
+operator|(
+name|void
+operator|)
 name|newbp
 argument_list|(
 name|addr

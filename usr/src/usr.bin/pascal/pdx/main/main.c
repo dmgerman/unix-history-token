@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,9 +147,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|catcherrs
+ifdef|#
+directive|ifdef
+name|lint
+name|syserr
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|catchsigs
 argument_list|()
 expr_stmt|;

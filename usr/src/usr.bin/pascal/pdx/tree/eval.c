@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.1 (Berkeley) %G%"
+literal|"@(#)eval.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|"tree.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/process.rep"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"process/pxinfo.h"
 end_include
 
 begin_define
@@ -490,6 +502,15 @@ name|sp
 operator|+=
 name|len
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|alignstack
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|tahoe
 break|break;
 block|}
 case|case
@@ -504,6 +525,10 @@ name|long
 name|i
 decl_stmt|;
 comment|/* index - lower bound */
+name|long
+name|evalindex
+parameter_list|()
+function_decl|;
 name|n
 operator|=
 name|pop
@@ -601,9 +626,6 @@ name|ADDRESS
 name|addr
 decl_stmt|,
 name|len
-decl_stmt|;
-name|long
-name|i
 decl_stmt|;
 name|addr
 operator|=
@@ -1158,6 +1180,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|addr
 operator|==
 operator|-
@@ -1765,6 +1790,18 @@ block|{
 name|BOOLEAN
 name|success
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+specifier|register
+name|char
+modifier|*
+name|savesp
+init|=
+name|sp
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sp
@@ -1798,6 +1835,35 @@ name|sp
 operator|+=
 name|len
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+name|alignstack
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|>=
+operator|&
+name|stack
+index|[
+name|STACKSIZE
+index|]
+condition|)
+block|{
+name|success
+operator|=
+name|FALSE
+expr_stmt|;
+name|sp
+operator|=
+name|savesp
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
 name|success
 operator|=
 name|TRUE

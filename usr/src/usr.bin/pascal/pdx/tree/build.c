@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)build.c	5.1 (Berkeley) %G%"
+literal|"@(#)build.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,20 +109,9 @@ name|NODE
 modifier|*
 name|p
 decl_stmt|;
-name|NODE
-modifier|*
-name|p1
-decl_stmt|,
-modifier|*
-name|p2
-decl_stmt|;
 specifier|register
 name|ARGLIST
 name|ap
-decl_stmt|;
-name|SYM
-modifier|*
-name|s
 decl_stmt|;
 name|p
 operator|=
@@ -162,8 +151,6 @@ name|p
 operator|->
 name|left
 operator|=
-name|p1
-operator|=
 name|nextarg
 argument_list|(
 name|ap
@@ -175,8 +162,6 @@ expr_stmt|;
 name|p
 operator|->
 name|right
-operator|=
-name|p2
 operator|=
 name|nextarg
 argument_list|(
@@ -193,8 +178,6 @@ case|:
 name|p
 operator|->
 name|left
-operator|=
-name|p1
 operator|=
 name|nextarg
 argument_list|(
