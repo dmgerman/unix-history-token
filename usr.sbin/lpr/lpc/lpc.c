@@ -732,7 +732,13 @@ name|num
 operator|==
 literal|0
 condition|)
-return|return;
+name|quit
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 operator|(
