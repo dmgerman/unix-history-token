@@ -26031,9 +26031,9 @@ operator|&=
 operator|~
 name|CONF_ENABLE_IPV6
 expr_stmt|;
-break|break;
 endif|#
 directive|endif
+break|break;
 default|default:
 name|rv
 operator|=
