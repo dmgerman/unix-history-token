@@ -54,7 +54,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * i386 machine dependent routines for kvm.  Hopefully, the forthcoming  * vm code will one day obsolete this module.  */
+comment|/*  * AMD64 machine dependent routines for kvm.  Hopefully, the forthcoming  * vm code will one day obsolete this module.  */
 end_comment
 
 begin_include
@@ -142,7 +142,7 @@ name|btop
 parameter_list|(
 name|x
 parameter_list|)
-value|(i386_btop(x))
+value|(amd64_btop(x))
 end_define
 
 begin_define
@@ -152,7 +152,7 @@ name|ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|(i386_ptob(x))
+value|(amd64_ptob(x))
 end_define
 
 begin_endif
