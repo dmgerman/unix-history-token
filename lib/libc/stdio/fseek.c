@@ -465,13 +465,7 @@ literal|0
 operator|&&
 name|curoff
 operator|>
-operator|(
-name|ltest
-condition|?
-name|LONG_MAX
-else|:
 name|OFF_MAX
-operator|)
 operator|-
 name|offset
 condition|)
@@ -726,13 +720,7 @@ name|st
 operator|.
 name|st_size
 operator|>
-operator|(
-name|ltest
-condition|?
-name|LONG_MAX
-else|:
 name|OFF_MAX
-operator|)
 operator|-
 name|offset
 condition|)
