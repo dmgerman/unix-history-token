@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.3 (Berkeley) %G%"
+literal|"@(#)man.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,7 +135,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* this array maps a character (ex: '4') to an offset in dirlist */
+comment|/* this array maps a character (ex: '4') to an offset in stanlist */
 end_comment
 
 begin_define
@@ -190,7 +190,6 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|something_meaningful
 block|{
 name|char
 modifier|*
@@ -206,11 +205,11 @@ end_typedef
 
 begin_decl_stmt
 name|DIR
-name|dirlist
+name|stanlist
 index|[]
 init|=
 block|{
-comment|/* sub-directory list */
+comment|/* standard sub-directory list */
 literal|"notused"
 block|,
 literal|""
@@ -251,11 +250,45 @@ literal|"cat3f"
 block|,
 literal|"3rd (F)"
 block|,
-literal|"new"
+literal|"cat.new"
 block|,
 literal|"new"
+block|,
+literal|"cat.old"
 block|,
 literal|"old"
+block|,
+name|NULL
+block|,
+name|NULL
+block|, }
+decl_stmt|,
+name|sec1list
+index|[]
+init|=
+block|{
+comment|/* section one list */
+literal|"notused"
+block|,
+literal|""
+block|,
+literal|"cat1"
+block|,
+literal|"1st"
+block|,
+literal|"cat8"
+block|,
+literal|"8th"
+block|,
+literal|"cat6"
+block|,
+literal|"6th"
+block|,
+literal|"cat.new"
+block|,
+literal|"new"
+block|,
+literal|"cat.old"
 block|,
 literal|"old"
 block|,
@@ -265,6 +298,18 @@ name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|DIR
+modifier|*
+name|dirlist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of directories to search */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -647,6 +692,7 @@ operator|++
 name|defpath
 control|)
 empty_stmt|;
+comment|/* Gentlemen... start your kludges! */
 for|for
 control|(
 init|;
@@ -665,6 +711,10 @@ name|manpath
 operator|=
 name|DEF_PATH
 expr_stmt|;
+name|dirlist
+operator|=
+name|stanlist
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -672,10 +722,31 @@ operator|*
 name|argv
 condition|)
 block|{
-comment|/* hardwired section numbers, fix here if they change */
+comment|/* 		 * Section 1 requests are really for section 1, 6, 8, new and 		 * old.  Since new and old aren't broken up into a directory 		 * of cat[1-8], we just pretend that they are a subdirectory 		 * of /usr/man.  Should be fixed -- make new and old full 		 * structures just like local is, get rid of "sec1list" and 		 * dirlist. 		 */
 case|case
 literal|'1'
 case|:
+if|if
+condition|(
+operator|!
+operator|(
+operator|*
+name|argv
+operator|)
+index|[
+literal|1
+index|]
+condition|)
+block|{
+name|dirlist
+operator|=
+name|sec1list
+expr_stmt|;
+goto|goto
+name|numtest
+goto|;
+block|}
+break|break;
 case|case
 literal|'2'
 case|:
@@ -724,6 +795,7 @@ name|numtest
 goto|;
 block|}
 break|break;
+comment|/* sect. 3 requests are for either section 3, or section 3F. */
 case|case
 literal|'3'
 case|:
@@ -769,7 +841,7 @@ name|stderr
 argument_list|,
 literal|"man: what do you want from the %s section of the manual?\n"
 argument_list|,
-name|dirlist
+name|stanlist
 index|[
 name|section
 index|]
@@ -837,7 +909,7 @@ name|stderr
 argument_list|,
 literal|"man: what do you want from the %s section of the manual?\n"
 argument_list|,
-name|dirlist
+name|stanlist
 index|[
 name|S_THREEF
 index|]
@@ -853,6 +925,7 @@ expr_stmt|;
 block|}
 block|}
 break|break;
+comment|/* 		 * Requests for the local section can have subsection numbers 		 * appended to them, i.e. "local3" is really local/cat3. 		 */
 case|case
 literal|'l'
 case|:
@@ -1039,12 +1112,12 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-name|dirlist
+name|stanlist
 index|[
 name|S_NEW
 index|]
 operator|.
-name|name
+name|msg
 argument_list|)
 condition|)
 block|{
@@ -1078,12 +1151,12 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-name|dirlist
+name|stanlist
 index|[
 name|S_OLD
 index|]
 operator|.
-name|name
+name|msg
 argument_list|)
 condition|)
 block|{
@@ -1107,7 +1180,7 @@ name|stderr
 argument_list|,
 literal|"man: what do you want from the %s section of the manual?\n"
 argument_list|,
-name|dirlist
+name|stanlist
 index|[
 name|section
 index|]
@@ -1124,6 +1197,7 @@ block|}
 block|}
 break|break;
 block|}
+comment|/* 		 * This is really silly, but I wanted to put out rational 		 * errors, not just "I couldn't find it."  This if statement 		 * knows an awful lot about what gets assigned to what in 		 * the switch statement we just passed through.  Sorry. 		 */
 if|if
 condition|(
 operator|!
@@ -1150,12 +1224,29 @@ argument_list|,
 operator|*
 name|argv
 argument_list|,
-name|dirlist
+name|stanlist
 index|[
 name|section
 index|]
 operator|.
 name|msg
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dirlist
+operator|==
+name|sec1list
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"No entry for %s in the 1st section of the manual.\n"
+argument_list|,
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1185,7 +1276,7 @@ argument_list|,
 operator|*
 name|argv
 argument_list|,
-name|dirlist
+name|stanlist
 index|[
 name|section
 index|]
@@ -1201,6 +1292,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * manual --  *	given a section number and a file name go through the directory  *	list and find a file that matches.  */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -1278,22 +1373,21 @@ name|section
 operator|==
 name|NO_SECTION
 condition|)
-block|{
 for|for
 control|(
 name|dir
 operator|=
 name|dirlist
-operator|+
-literal|1
 init|;
+operator|(
+operator|++
 name|dir
+operator|)
 operator|->
 name|name
 condition|;
-operator|++
-name|dir
 control|)
+block|{
 if|if
 condition|(
 name|find
@@ -1320,7 +1414,7 @@ name|find
 argument_list|(
 name|beg
 argument_list|,
-name|dirlist
+name|stanlist
 index|[
 name|section
 index|]
@@ -1349,6 +1443,10 @@ block|}
 comment|/*NOTREACHED*/
 block|}
 end_block
+
+begin_comment
+comment|/*  * find --  *	given a directory path, a sub-directory and a file name,  *	see if a file exists in ${directory}/${dir}/{file name}  *	or in ${directory}/${dir}/${machine}/${file name}.  */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -1467,6 +1565,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * show --  *	display the file  */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -1628,6 +1730,10 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*  * usage --  *	print out a usage message and die  */
+end_comment
 
 begin_expr_stmt
 specifier|static
