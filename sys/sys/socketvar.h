@@ -85,7 +85,7 @@ comment|/* time to linger while closing */
 name|short
 name|so_state
 decl_stmt|;
-comment|/* internal state flags SS_* */
+comment|/* (b) internal state flags SS_* */
 name|int
 name|so_qstate
 decl_stmt|;
@@ -246,6 +246,7 @@ name|so_rcv
 struct|,
 name|so_snd
 struct|;
+comment|/*  * Constants for sb_flags field of struct sockbuf.  */
 define|#
 directive|define
 name|SB_MAX
