@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.4 (Berkeley) %G%"
+literal|"@(#)inet.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,11 +631,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return true if a route to subnet of route rt should be sent to dst.  * Send it only if dst is on the same logical network,  * or the route is the "internal" route for the net.  */
+comment|/*  * Return true if a route to subnet/host of route rt should be sent to dst.  * Send it only if dst is on the same logical network if not "internal",  * otherwise only if the route is the "internal" route for the logical net.  */
 end_comment
 
 begin_macro
-name|inet_sendsubnet
+name|inet_sendroute
 argument_list|(
 argument|rt
 argument_list|,

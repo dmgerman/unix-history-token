@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.11 (Berkeley) %G%"
+literal|"@(#)input.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -612,6 +612,7 @@ operator|==
 literal|0
 operator|||
 operator|(
+operator|(
 name|rt
 operator|->
 name|rt_state
@@ -620,6 +621,15 @@ name|RTS_INTERFACE
 operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+name|rt
+operator|->
+name|rt_metric
+operator|>=
+name|ifp
+operator|->
+name|int_metric
 condition|)
 name|addrouteforif
 argument_list|(
@@ -668,12 +678,28 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|ifp
 operator|=
 name|if_ifwithdstaddr
 argument_list|(
 name|from
 argument_list|)
+operator|)
+operator|&&
+operator|(
+name|rt
+operator|==
+literal|0
+operator|||
+name|rt
+operator|->
+name|rt_metric
+operator|>=
+name|ifp
+operator|->
+name|int_metric
+operator|)
 condition|)
 name|addrouteforif
 argument_list|(
@@ -978,6 +1004,26 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 			 * Adjust metric according to incoming interface. 			 */
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|n
+operator|->
+name|rip_metric
+operator|<
+name|HOPCNT_INFINITY
+condition|)
+name|n
+operator|->
+name|rip_metric
+operator|+=
+name|ifp
+operator|->
+name|int_metric
+expr_stmt|;
 name|rt
 operator|=
 name|rtlookup
@@ -1013,6 +1059,31 @@ name|RTS_INTERFACE
 operator|)
 condition|)
 block|{
+comment|/* 				 * If we're hearing a logical network route 				 * back from a peer to which we sent it, 				 * ignore it. 				 */
+if|if
+condition|(
+name|rt
+operator|&&
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_SUBNET
+operator|&&
+call|(
+modifier|*
+name|afp
+operator|->
+name|af_sendroute
+call|)
+argument_list|(
+name|rt
+argument_list|,
+name|from
+argument_list|)
+condition|)
+continue|continue;
+comment|/* 				 * Look for an equivalent route that includes 				 * this one before adding this route. 				 */
 name|rt
 operator|=
 name|rtfind
@@ -1036,14 +1107,6 @@ name|rt
 operator|->
 name|rt_router
 argument_list|)
-operator|&&
-name|rt
-operator|->
-name|rt_metric
-operator|<=
-name|n
-operator|->
-name|rip_metric
 condition|)
 continue|continue;
 if|if
@@ -1113,7 +1176,7 @@ condition|(
 name|rt
 operator|->
 name|rt_metric
-operator|==
+operator|>=
 name|HOPCNT_INFINITY
 condition|)
 name|rt
@@ -1175,6 +1238,12 @@ operator|==
 name|n
 operator|->
 name|rip_metric
+operator|&&
+name|n
+operator|->
+name|rip_metric
+operator|<
+name|HOPCNT_INFINITY
 operator|)
 condition|)
 block|{

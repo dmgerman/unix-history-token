@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	5.4 (Berkeley) %G%"
+literal|"@(#)af.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,7 @@ decl_stmt|,
 name|inet_rtflags
 argument_list|()
 decl_stmt|,
-name|inet_sendsubnet
+name|inet_sendroute
 argument_list|()
 decl_stmt|,
 name|inet_canon
@@ -86,7 +86,7 @@ define|#
 directive|define
 name|INET
 define|\
-value|{ inet_hash,		inet_netmatch,		inet_output, \ 	  inet_portmatch,	inet_portcheck,		inet_checkhost, \ 	  inet_rtflags,		inet_sendsubnet,	inet_canon, \ 	  inet_format \ 	}
+value|{ inet_hash,		inet_netmatch,		inet_output, \ 	  inet_portmatch,	inet_portcheck,		inet_checkhost, \ 	  inet_rtflags,		inet_sendroute,		inet_canon, \ 	  inet_format \ 	}
 end_define
 
 begin_decl_stmt

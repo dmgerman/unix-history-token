@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,14 @@ comment|/* 1 if we are a gateway to parts beyond */
 end_comment
 
 begin_decl_stmt
+name|int
+name|debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|rip
 modifier|*
@@ -132,12 +140,15 @@ name|packet
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|hup
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|rtdeleteall
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -362,6 +373,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|debug
+operator|++
+expr_stmt|;
 name|setlogmask
 argument_list|(
 name|LOG_DEBUG
@@ -413,13 +427,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|DEBUG
 if|if
 condition|(
-operator|!
 name|tracepackets
+operator|==
+literal|0
+operator|&&
+name|debug
+operator|==
+literal|0
 condition|)
 block|{
 name|int
@@ -531,8 +547,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Any extra argument is considered 	 * a tracing log file. 	 */
 if|if
 condition|(
@@ -665,6 +679,13 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|hup
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|rtdeleteall
 argument_list|)
 expr_stmt|;
 name|timer

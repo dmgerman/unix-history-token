@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.6 (Berkeley) %G%"
+literal|"@(#)output.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,6 +271,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|struct
 name|interface
 modifier|*
@@ -286,6 +287,7 @@ name|rt_entry
 modifier|*
 name|rt
 decl_stmt|;
+specifier|register
 name|struct
 name|netinfo
 modifier|*
@@ -334,7 +336,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|sendsubnet
+name|sendroute
 function_decl|)
 parameter_list|()
 init|=
@@ -345,7 +347,7 @@ operator|->
 name|sa_family
 index|]
 operator|.
-name|af_sendsubnet
+name|af_sendroute
 function_decl|;
 name|int
 name|npackets
@@ -407,7 +409,7 @@ operator|->
 name|rt_forw
 control|)
 block|{
-comment|/* 		 * Don't resend the information 		 * on the network from which it was received. 		 */
+comment|/* 		 * Don't resend the information on the network 		 * from which it was received (unless sending 		 * in response to a query). 		 */
 if|if
 condition|(
 name|ifp
@@ -454,21 +456,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|&&
-operator|(
-name|ifp
-operator|->
-name|int_flags
-operator|&
-name|IFF_SUBNET
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
 name|rt
 operator|->
 name|rt_dst
@@ -484,7 +471,7 @@ if|if
 condition|(
 call|(
 modifier|*
-name|sendsubnet
+name|sendroute
 call|)
 argument_list|(
 name|rt
@@ -587,9 +574,7 @@ name|rt
 operator|->
 name|rt_metric
 operator|+
-name|rt
-operator|->
-name|rt_ifmetric
+literal|1
 argument_list|,
 name|HOPCNT_INFINITY
 argument_list|)
