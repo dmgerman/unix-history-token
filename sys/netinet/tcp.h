@@ -366,8 +366,12 @@ begin_define
 define|#
 directive|define
 name|TCP_MINMSSOVERLOAD
-value|1000
+value|0
 end_define
+
+begin_comment
+comment|/* XXX: Disabled until refined */
+end_comment
 
 begin_comment
 comment|/*  * Default maximum segment size for TCP6.  * With an IP6 MSS of 1280, this is 1220,  * but 1024 is probably more convenient. (xxx kazu in doubt)  * This should be defined as MIN(1024, IP6_MSS - sizeof (struct tcpip6hdr))  */
