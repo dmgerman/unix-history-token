@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All right
 end_comment
 
 begin_comment
-comment|/*  * alpha-specific module functionality.  *  */
+comment|/*  * ofw-specific module functionality.  *  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libalpha.h"
+file|"libofw.h"
 end_include
 
 begin_comment
@@ -37,12 +37,12 @@ end_comment
 
 begin_function
 name|int
-name|alpha_autoload
+name|ofw_autoload
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* XXX use PnP to locate stuff here */
+comment|/* XXX Call some machdep autoload routine? */
 return|return
 operator|(
 literal|0

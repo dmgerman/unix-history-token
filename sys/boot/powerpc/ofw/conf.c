@@ -12,14 +12,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libalpha/libalpha.h"
+file|"libofw.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|LOADER_NET_SUPPORT
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -60,15 +63,21 @@ argument_list|(
 name|LOADER_CDROM_SUPPORT
 argument_list|)
 operator|&
-name|srmdisk
+name|ofwdisk
 block|,
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|LOADER_NET_SUPPORT
+argument_list|)
 operator|&
-name|netdev
+name|ofwnet
+block|,
+operator|&
+name|ofwnet
 block|,
 endif|#
 directive|endif
@@ -87,7 +96,7 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
-name|LOADER_DISK_SUPPORT
+name|LOADER_UFS_SUPPORT
 operator|&
 name|ufs_fsops
 block|,
@@ -125,11 +134,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOADER_NET_SUPPORT
-end_ifdef
+begin_decl_stmt
+specifier|extern
+name|struct
+name|netif_driver
+name|of_net
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -139,21 +150,21 @@ name|netif_drivers
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|LOADER_NET_SUPPORT
 operator|&
-name|srmnet
+name|of_net
 block|,
+endif|#
+directive|endif
 name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* Exported for alpha only */
+comment|/* Exported for PowerPC only */
 end_comment
 
 begin_comment
@@ -164,7 +175,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|file_format
-name|alpha_elf
+name|powerpc_elf
 decl_stmt|;
 end_decl_stmt
 
@@ -176,9 +187,7 @@ name|file_formats
 index|[]
 init|=
 block|{
-operator|&
-name|alpha_elf
-block|,
+comment|/*&powerpc_elf,*/
 name|NULL
 block|}
 decl_stmt|;
@@ -192,7 +201,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|console
-name|promconsole
+name|ofwconsole
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +214,7 @@ index|[]
 init|=
 block|{
 operator|&
-name|promconsole
+name|ofwconsole
 block|,
 name|NULL
 block|}

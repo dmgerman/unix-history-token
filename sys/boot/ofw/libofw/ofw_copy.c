@@ -16,12 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libalpha.h"
+file|"libofw.h"
 end_include
 
 begin_function
 name|ssize_t
-name|alpha_copyin
+name|ofw_copyin
 parameter_list|(
 specifier|const
 name|void
@@ -59,7 +59,7 @@ end_function
 
 begin_function
 name|ssize_t
-name|alpha_copyout
+name|ofw_copyout
 parameter_list|(
 specifier|const
 name|vm_offset_t
@@ -97,7 +97,7 @@ end_function
 
 begin_function
 name|ssize_t
-name|alpha_readin
+name|ofw_readin
 parameter_list|(
 specifier|const
 name|int
