@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.7 (Berkeley) 83/01/16"
+literal|"@(#)ftpd.c	4.8 (Berkeley) 83/01/18"
 decl_stmt|;
 end_decl_stmt
 
