@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.3 %G%"
+literal|"@(#)main.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,24 +27,6 @@ end_empty
 begin_comment
 comment|/*  * UNIX shell  *  * S. R. Bourne  * Bell Telephone Laboratories  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sym.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"timeout.h"
-end_include
 
 begin_include
 include|#
@@ -68,6 +50,30 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sym.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"timeout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -94,7 +100,7 @@ index|[
 literal|20
 index|]
 init|=
-literal|"/tmp/sh-"
+name|_PATH_TMPOUT
 decl_stmt|;
 end_decl_stmt
 

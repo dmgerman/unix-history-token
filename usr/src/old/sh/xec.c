@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xec.c	4.6 %G%"
+literal|"@(#)xec.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|"sym.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -1182,7 +1188,7 @@ name|rename
 argument_list|(
 name|chkopen
 argument_list|(
-name|devnull
+name|_PATH_DEVNULL
 argument_list|)
 argument_list|,
 literal|0

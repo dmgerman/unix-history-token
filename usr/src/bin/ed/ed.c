@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ed.c	4.7 (Berkeley) %G%"
+literal|"@(#)ed.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,7 +428,7 @@ name|char
 name|tfname
 index|[]
 init|=
-literal|"/tmp/eXXXXX"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msg.c	4.5 %G%"
+literal|"@(#)msg.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,14 +321,6 @@ name|MSG
 name|sptbnl
 init|=
 literal|" \t\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MSG
-name|defpath
-init|=
-literal|":/bin:/usr/bin"
 decl_stmt|;
 end_decl_stmt
 

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.13 (Berkeley) %G%"
+literal|"@(#)tar.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -533,7 +539,7 @@ name|char
 name|tname
 index|[]
 init|=
-literal|"/tmp/tarXXXXXX"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 
@@ -549,7 +555,7 @@ name|char
 name|magtape
 index|[]
 init|=
-literal|"/dev/rmt8"
+name|_PATH_MAGTAPE
 decl_stmt|;
 end_decl_stmt
 

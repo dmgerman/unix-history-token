@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)service.c	4.6 %G%"
+literal|"@(#)service.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|"errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_function_decl
@@ -359,7 +365,7 @@ decl|==0
 name|THEN
 decl|return
 argument_list|(
-name|defpath
+name|_PATH_DEFPATH
 argument_list|)
 decl_stmt|;
 name|ELSE
@@ -915,7 +921,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"/bin/csh"
+name|_PATH_CSHELL
 expr_stmt|;
 name|newt
 index|[
@@ -926,7 +932,7 @@ name|cp
 expr_stmt|;
 name|execve
 argument_list|(
-literal|"/bin/csh"
+name|_PATH_CSHELL
 argument_list|,
 name|newt
 argument_list|,

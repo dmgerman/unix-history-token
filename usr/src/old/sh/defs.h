@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.4	85/03/19	*/
+comment|/*	defs.h	4.5	89/05/08	*/
 end_comment
 
 begin_empty
@@ -1037,12 +1037,6 @@ end_decl_stmt
 begin_decl_stmt
 name|STRING
 name|pidadr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MSG
-name|defpath
 decl_stmt|;
 end_decl_stmt
 

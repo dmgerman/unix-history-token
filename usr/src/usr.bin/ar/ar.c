@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	5.3 (Berkeley) %G%"
+literal|"@(#)ar.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<ar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -306,9 +312,7 @@ name|char
 modifier|*
 name|tmpnam
 init|=
-block|{
-literal|"/tmp/vXXXXX"
-block|}
+name|_PATH_TMP1
 decl_stmt|;
 end_decl_stmt
 
@@ -317,9 +321,7 @@ name|char
 modifier|*
 name|tmp1nam
 init|=
-block|{
-literal|"/tmp/v1XXXXX"
-block|}
+name|_PATH_TMP2
 decl_stmt|;
 end_decl_stmt
 
@@ -328,9 +330,7 @@ name|char
 modifier|*
 name|tmp2nam
 init|=
-block|{
-literal|"/tmp/v2XXXXX"
-block|}
+name|_PATH_TMP3
 decl_stmt|;
 end_decl_stmt
 
