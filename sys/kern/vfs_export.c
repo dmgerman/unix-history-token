@@ -4814,12 +4814,6 @@ argument_list|,
 name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_flag
-operator||=
-name|P_BUFEXHAUST
-expr_stmt|;
 for|for
 control|(
 init|;
