@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -68,6 +68,67 @@ include|#
 directive|include
 file|<ufs/ufs/inode.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_decl_stmt
+name|int
+name|doreallocblks
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug13
+init|=
+block|{
+literal|"doreallocblks"
+block|,
+operator|&
+name|doreallocblks
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* XXX for cluster_write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|doreallocblks
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Local declarations  */
@@ -2206,6 +2267,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|doreallocblks
+operator|||
 operator|(
 name|lbn
 operator|+
