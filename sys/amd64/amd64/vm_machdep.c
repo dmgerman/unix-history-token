@@ -2124,9 +2124,6 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 comment|/* 	 * Attempt to maintain approximately 1/2 of our free pages in a 	 * PG_ZERO'd state.   Add some hysteresis to (attempt to) avoid 	 * generally zeroing a page when the system is near steady-state. 	 * Otherwise we might get 'flutter' during disk I/O / IPC or  	 * fast sleeps.  We also do not want to be continuously zeroing 	 * pages because doing so may flush our L1 and L2 caches too much. 	 */
 if|if
 condition|(
@@ -2193,11 +2190,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|zero_state
 operator|=
 literal|0
@@ -2357,11 +2349,6 @@ name|PQ_PRIME2
 operator|)
 operator|&
 name|PQ_L2_MASK
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(

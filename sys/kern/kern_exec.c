@@ -1708,8 +1708,6 @@ name|imgp
 decl_stmt|;
 block|{
 name|int
-name|s
-decl_stmt|,
 name|rv
 decl_stmt|,
 name|i
@@ -1748,11 +1746,6 @@ argument_list|,
 operator|&
 name|object
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -1996,11 +1989,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2026,11 +2014,6 @@ name|ma
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|pmap_kenter
