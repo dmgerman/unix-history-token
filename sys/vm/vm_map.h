@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lockmgr.h>
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -360,7 +360,7 @@ name|header
 decl_stmt|;
 comment|/* List of entries */
 name|struct
-name|lock
+name|sx
 name|lock
 decl_stmt|;
 comment|/* Lock for map data */
