@@ -220,6 +220,9 @@ return|;
 case|case
 literal|0x25008086
 case|:
+case|case
+literal|0x25018086
+case|:
 return|return
 operator|(
 literal|"Intel 82820 host to AGP bridge"
@@ -558,6 +561,10 @@ case|case
 literal|0x25008086
 case|:
 comment|/* i820 */
+case|case
+literal|0x25018086
+case|:
+comment|/* i820 */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -675,6 +682,10 @@ expr_stmt|;
 break|break;
 case|case
 literal|0x25008086
+case|:
+comment|/* i820 */
+case|case
+literal|0x25018086
 case|:
 comment|/* i820 */
 case|case
@@ -841,6 +852,10 @@ argument_list|)
 expr_stmt|;
 case|case
 literal|0x25008086
+case|:
+comment|/* i820 */
+case|case
+literal|0x25018086
 case|:
 comment|/* i820 */
 name|printf
