@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vmparam.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vmparam.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -169,7 +169,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Default sizes of swap allocation chunks (see dmap.h).  * The actual values may be changed in vminit() based on MAXDSIZ.  * With MAXDSIZ of 16Mb and NDMAP of 38, dmmax will be 1024.  */
+comment|/*  * Default sizes of swap allocation chunks (see dmap.h).  * The actual values may be changed in vminit() based on MAXDSIZ.  * With MAXDSIZ of 16Mb and NDMAP of 38, dmmax will be 1024.  * DMMIN should be at least ctod(1) so that vtod() works.  * vminit() ensures this.  */
 end_comment
 
 begin_define
@@ -228,6 +228,28 @@ value|(4*NPTEPG)
 end_define
 
 begin_comment
+comment|/*  * PTEs for system V compatible shared memory.  * This is basically slop for kmempt which we actually allocate (malloc) from.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHMMAXPGS
+value|512
+end_define
+
+begin_comment
+comment|/*  * Boundary at which to place first MAPMEM segment if not explicitly  * specified.  Should be a power of two.  This allows some slop for  * the data segment to grow underneath the first mapped segment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMSEG
+value|0x200000
+end_define
+
+begin_comment
 comment|/*  * The size of the clock loop.  */
 end_comment
 
@@ -276,7 +298,7 @@ value|60
 end_define
 
 begin_comment
-comment|/*  * Klustering constants.  Klustering is the gathering  * of pages together for pagein/pageout, while clustering  * is the treatment of hardware page size as though it were  * larger than it really is.  *  * KLMAX gives maximum cluster size in CLSIZE page (cluster-page)  * units.  Note that KLMAX*CLSIZE must be<= DMMIN in dmap.h.  */
+comment|/*  * Klustering constants.  Klustering is the gathering  * of pages together for pagein/pageout, while clustering  * is the treatment of hardware page size as though it were  * larger than it really is.  *  * KLMAX gives maximum cluster size in CLSIZE page (cluster-page)  * units.  Note that ctod(KLMAX*CLSIZE) must be<= DMMIN in dmap.h.  * ctob(KLMAX) should also be less than MAXPHYS (in vm_swp.c) to  * avoid "big push" panics.  */
 end_comment
 
 begin_define
