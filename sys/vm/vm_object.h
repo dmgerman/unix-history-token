@@ -286,17 +286,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|OBJ_OPT
-value|0x1000
-end_define
-
-begin_comment
-comment|/* I/O optimization */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|OBJ_ONEMAPPING
 value|0x2000
 end_define
@@ -437,19 +426,6 @@ parameter_list|)
 define|\
 value|mtx_unlock((object) == kmem_object ?&kmem_object->mtx :&Giant)
 end_define
-
-begin_function_decl
-name|void
-name|vm_freeze_copyopts
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -686,19 +662,6 @@ parameter_list|,
 name|vm_pindex_t
 parameter_list|,
 name|boolean_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_object_pmap_copy_1
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_pindex_t
 parameter_list|)
 function_decl|;
 end_function_decl

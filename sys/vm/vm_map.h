@@ -1367,26 +1367,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|vm_uiomove
-parameter_list|(
-name|vm_map_t
-parameter_list|,
-name|vm_object_t
-parameter_list|,
-name|off_t
-parameter_list|,
-name|int
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
