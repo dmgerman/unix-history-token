@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -219,6 +219,26 @@ argument_list|,
 literal|':'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"chompheader: syntax error, line \"%s\""
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|fvalue
 operator|=
 operator|&
