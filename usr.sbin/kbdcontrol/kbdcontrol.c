@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdcontrol.c,v 1.2 1994/10/25 20:50:41 swallace Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdcontrol.c,v 1.3 1995/01/12 11:44:42 sos Exp $  */
 end_comment
 
 begin_include
@@ -121,14 +121,14 @@ begin_decl_stmt
 name|char
 name|fkey_table
 index|[
-literal|60
+literal|96
 index|]
 index|[
 name|MAXFK
 index|]
 init|=
 block|{
-comment|/* 00-03 */
+comment|/* 01-04 */
 literal|"\033[M"
 block|,
 literal|"\033[N"
@@ -137,7 +137,7 @@ literal|"\033[O"
 block|,
 literal|"\033[P"
 block|,
-comment|/* 04-07 */
+comment|/* 05-08 */
 literal|"\033[Q"
 block|,
 literal|"\033[R"
@@ -146,7 +146,7 @@ literal|"\033[S"
 block|,
 literal|"\033[T"
 block|,
-comment|/* 08-0B */
+comment|/* 09-12 */
 literal|"\033[U"
 block|,
 literal|"\033[V"
@@ -155,61 +155,25 @@ literal|"\033[W"
 block|,
 literal|"\033[X"
 block|,
-comment|/* 0C-0F */
-literal|"\033[W"
-block|,
-literal|"\033[X"
-block|,
+comment|/* 13-16 */
 literal|"\033[Y"
 block|,
 literal|"\033[Z"
 block|,
-comment|/* 10-13 */
 literal|"\033[a"
 block|,
 literal|"\033[b"
 block|,
+comment|/* 17-20 */
 literal|"\033[c"
 block|,
 literal|"\033[d"
 block|,
-comment|/* 14-17 */
 literal|"\033[e"
 block|,
 literal|"\033[f"
 block|,
-literal|"\033[g"
-block|,
-literal|"\033[h"
-block|,
-comment|/* 18-1B */
-literal|"\033[g"
-block|,
-literal|"\033[h"
-block|,
-literal|"\033[i"
-block|,
-literal|"\033[j"
-block|,
-comment|/* 1C-1F */
-literal|"\033[k"
-block|,
-literal|"\033[l"
-block|,
-literal|"\033[m"
-block|,
-literal|"\033[n"
-block|,
-comment|/* 20-23 */
-literal|"\033[o"
-block|,
-literal|"\033[p"
-block|,
-literal|"\033[q"
-block|,
-literal|"\033[r"
-block|,
-comment|/* 24-27 */
+comment|/* 21-24 */
 literal|"\033[g"
 block|,
 literal|"\033[h"
@@ -218,7 +182,7 @@ literal|"\033[i"
 block|,
 literal|"\033[j"
 block|,
-comment|/* 28-2B */
+comment|/* 25-28 */
 literal|"\033[k"
 block|,
 literal|"\033[l"
@@ -227,7 +191,7 @@ literal|"\033[m"
 block|,
 literal|"\033[n"
 block|,
-comment|/* 2C-2F */
+comment|/* 29-32 */
 literal|"\033[o"
 block|,
 literal|"\033[p"
@@ -236,7 +200,43 @@ literal|"\033[q"
 block|,
 literal|"\033[r"
 block|,
-comment|/* 30-33 */
+comment|/* 33-36 */
+literal|"\033[s"
+block|,
+literal|"\033[t"
+block|,
+literal|"\033[u"
+block|,
+literal|"\033[v"
+block|,
+comment|/* 37-40 */
+literal|"\033[w"
+block|,
+literal|"\033[x"
+block|,
+literal|"\033[y"
+block|,
+literal|"\033[z"
+block|,
+comment|/* 41-44 */
+literal|"\033[@"
+block|,
+literal|"\033[["
+block|,
+literal|"\033[\\"
+block|,
+literal|"\033[]"
+block|,
+comment|/* 45-48 */
+literal|"\033[^"
+block|,
+literal|"\033[_"
+block|,
+literal|"\033[`"
+block|,
+literal|"\033["
+block|,
+comment|/* 49-52 */
 literal|"\033[H"
 block|,
 literal|"\033[A"
@@ -245,16 +245,16 @@ literal|"\033[I"
 block|,
 literal|"-"
 block|,
-comment|/* 34-37 */
+comment|/* 53-56 */
 literal|"\033[D"
 block|,
-literal|"\177"
+literal|"\033[E"
 block|,
 literal|"\033[C"
 block|,
 literal|"+"
 block|,
-comment|/* 38-3B */
+comment|/* 57-60 */
 literal|"\033[F"
 block|,
 literal|"\033[B"
@@ -262,7 +262,88 @@ block|,
 literal|"\033[G"
 block|,
 literal|"\033[L"
-block|}
+block|,
+comment|/* 61-64 */
+literal|"\033[J"
+block|,
+literal|"\033[K"
+block|,
+literal|"\033[}"
+block|,
+literal|""
+block|,
+comment|/* 65-68 */
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+comment|/* 69-72 */
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+comment|/* 73-76 */
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+comment|/* 77-80 */
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+comment|/* 81-84 */
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+comment|/* 85-88 */
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+comment|/* 89-92 */
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+comment|/* 93-96 */
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|, 	}
 decl_stmt|;
 end_decl_stmt
 
@@ -774,6 +855,14 @@ name|TDBG
 case|:
 return|return
 name|DBG
+operator||
+literal|0x100
+return|;
+case|case
+name|TSUSP
+case|:
+return|return
+name|SUSP
 operator||
 literal|0x100
 return|;
