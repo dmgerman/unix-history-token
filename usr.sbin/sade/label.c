@@ -1885,7 +1885,7 @@ begin_define
 define|#
 directive|define
 name|PART_OFF
-value|40
+value|38
 end_define
 
 begin_define

@@ -2834,10 +2834,6 @@ name|i
 operator|++
 control|)
 block|{
-name|Chunk
-modifier|*
-name|c1
-decl_stmt|;
 name|Disk
 modifier|*
 name|d

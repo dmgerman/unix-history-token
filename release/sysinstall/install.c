@@ -2998,12 +2998,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|kstat
 operator|=
 name|kget
 argument_list|(
 literal|"/boot/kernel.conf"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|msgConfirm
