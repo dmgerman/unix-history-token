@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.6.1-20000608"
+value|"sym-1.6.2-20000614"
 end_define
 
 begin_comment
@@ -4112,7 +4112,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Some poor sync table that refers to Tekram NVRAM layout.  */
+comment|/*  *  Some poor and bogus sync table that refers to Tekram NVRAM layout.  */
 end_comment
 
 begin_ifdef
@@ -12184,7 +12184,16 @@ argument_list|,
 name|nvram
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  For now, guess PPR support from the period. 		 */
+comment|/* 		 *  For now, guess PPR/DT support from the period  		 *  and BUS width. 		 */
+if|if
+condition|(
+name|np
+operator|->
+name|features
+operator|&
+name|FE_ULTRA3
+condition|)
+block|{
 if|if
 condition|(
 name|tp
@@ -12196,6 +12205,16 @@ operator|.
 name|period
 operator|<=
 literal|9
+operator|&&
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|user
+operator|.
+name|width
+operator|==
+name|BUS_16_BIT
 condition|)
 block|{
 name|tp
@@ -12220,6 +12239,7 @@ name|np
 operator|->
 name|maxoffs_dt
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
