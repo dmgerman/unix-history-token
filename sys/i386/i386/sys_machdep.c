@@ -2185,7 +2185,7 @@ name|proc_ldt
 modifier|*
 name|pldt
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|i386_ldt_args
@@ -2285,7 +2285,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Treat this as a special case, so userland needn't 			 * know magic number NLDT. 		 	 */
+comment|/* 			 * Treat this as a special case, so userland needn't 			 * know magic number NLDT. 			 */
 name|uap
 operator|->
 name|start

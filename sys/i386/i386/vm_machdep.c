@@ -961,7 +961,7 @@ name|mdp2
 operator|->
 name|md_ldt
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
