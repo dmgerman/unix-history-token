@@ -662,6 +662,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|noguestmkd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MKD command is disabled for anon users. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|noguestmod
 init|=
 literal|1
@@ -1646,7 +1658,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46a:AdDElmoOp:rRSt:T:u:Uv"
+literal|"46a:AdDElmMoOp:rRSt:T:u:Uv"
 argument_list|)
 operator|)
 operator|!=
@@ -1737,6 +1749,14 @@ case|:
 name|noguestmod
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|noguestmkd
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -11389,6 +11409,22 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|guest
+operator|&&
+name|noguestmkd
+condition|)
+name|reply
+argument_list|(
+literal|550
+argument_list|,
+literal|"%s: permission denied"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|mkdir
