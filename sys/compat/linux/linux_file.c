@@ -155,29 +155,11 @@ directive|include
 file|"opt_compat.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|COMPAT_LINUX32
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/../linux/linux.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/../linux/linux_proto.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifdef
 
 begin_include
 include|#
@@ -189,6 +171,23 @@ begin_include
 include|#
 directive|include
 file|<machine/../linux32/linux32_proto.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux/linux.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/../linux/linux_proto.h>
 end_include
 
 begin_endif
@@ -4013,9 +4012,15 @@ decl_stmt|;
 block|}
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|COMPAT_LINUX32
+argument_list|)
 name|__packed
 endif|#
 directive|endif
@@ -4241,7 +4246,10 @@ argument_list|(
 name|__amd64__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|COMPAT_LINUX32
+argument_list|)
 operator|)
 end_if
 
@@ -4267,9 +4275,15 @@ decl_stmt|;
 block|}
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|COMPAT_LINUX32
+argument_list|)
 name|__packed
 endif|#
 directive|endif
@@ -5261,7 +5275,10 @@ argument_list|(
 name|__amd64__
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|COMPAT_LINUX32
+argument_list|)
 operator|)
 end_if
 
