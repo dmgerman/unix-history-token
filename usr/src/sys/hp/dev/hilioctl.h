@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilioctl.h 1.10 92/01/21$  *  *	@(#)hilioctl.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilioctl.h 1.10 92/01/21$  *  *	@(#)hilioctl.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -150,39 +150,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ORIGINAL_HP_CODE_ASSUMES_COMPILER_PADS_TO_EVEN
-end_ifdef
+begin_comment
+comment|/*  * The HP compiler (at least as of HP-UX 7.X) pads odd sized structures  * to a short boundary.  To avoid issues of whether our compiler pads  * and, if so to what boundary, we explicitly state the values for  * troublesome ioctls:  *  *	HILID (HILIOCID)	_IOR('h',0x03, struct _hilbuf11),  *	EFTRRT (HILIOCRRT)	_IOR('H',0x31, struct _hilbuf5).  */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|HILID
-value|_IOR('h',0x03, struct _hilbuf11)
+value|0x400C6803
 end_define
 
 begin_comment
 comment|/* Identify& describe */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HILID
-value|0x400c6803
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -503,16 +484,16 @@ begin_comment
 comment|/* Read configuration code. */
 end_comment
 
-begin_comment
-comment|/*#define EFTRRT  _IOR('H',0x31,struct _hilbuf5)/* Read the real time. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|EFTRRT
 value|0x40064831
 end_define
+
+begin_comment
+comment|/* Read the real time. */
+end_comment
 
 begin_define
 define|#
@@ -570,14 +551,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HILIOCID
-value|_IOR('h',0x03, struct _hilbuf11)
+name|OHILIOCID
+value|0x400B6803
 end_define
+
+begin_comment
+comment|/* XXX compat */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|OHILIOCID
+name|HILIOCID
 value|HILID
 end_define
 
@@ -640,8 +625,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|OHILIOCRRT
+value|0x40054831
+end_define
+
+begin_comment
+comment|/* XXX compat */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HILIOCRRT
-value|_IOR('H',0x31,struct _hilbuf5)
+value|EFTRRT
 end_define
 
 begin_define
