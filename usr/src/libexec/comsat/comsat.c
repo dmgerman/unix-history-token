@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.10 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -739,6 +739,9 @@ name|uf
 argument_list|,
 name|utmp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|statbf
 operator|.
 name|st_size
@@ -787,8 +790,11 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|off_t
 name|offset
+decl_stmt|,
+name|atol
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -882,7 +888,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|off_t
 name|offset
 decl_stmt|;
 end_decl_stmt
@@ -1192,7 +1198,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|off_t
 name|offset
 decl_stmt|;
 end_decl_stmt
@@ -1250,9 +1256,6 @@ name|fseek
 argument_list|(
 name|fi
 argument_list|,
-operator|(
-name|long
-operator|)
 name|offset
 argument_list|,
 name|L_SET
