@@ -115,7 +115,7 @@ name|vinumstrategy
 block|,
 literal|"vinum"
 block|,
-name|NULL
+name|noparms
 block|,
 name|CDEV_MAJOR
 block|,
@@ -1046,6 +1046,12 @@ block|}
 block|}
 endif|#
 directive|endif
+name|cdevsw_remove
+argument_list|(
+operator|&
+name|vinum_cdevsw
+argument_list|)
+expr_stmt|;
 name|log
 argument_list|(
 name|LOG_INFO
