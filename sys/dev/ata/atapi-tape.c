@@ -739,7 +739,7 @@ name|DEVSTAT_TYPE_SEQUENTIAL
 operator||
 name|DEVSTAT_TYPE_IF_IDE
 argument_list|,
-literal|0x170
+name|DEVSTAT_PRIORITY_TAPE
 argument_list|)
 expr_stmt|;
 name|dev

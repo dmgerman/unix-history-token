@@ -1166,7 +1166,7 @@ name|DEVSTAT_TYPE_CDROM
 operator||
 name|DEVSTAT_TYPE_IF_IDE
 argument_list|,
-literal|0x178
+name|DEVSTAT_PRIORITY_CD
 argument_list|)
 expr_stmt|;
 block|}

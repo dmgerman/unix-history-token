@@ -490,7 +490,7 @@ name|DEVSTAT_TYPE_DIRECT
 operator||
 name|DEVSTAT_TYPE_IF_IDE
 argument_list|,
-literal|0x174
+name|DEVSTAT_PRIORITY_WFD
 argument_list|)
 expr_stmt|;
 name|dev
