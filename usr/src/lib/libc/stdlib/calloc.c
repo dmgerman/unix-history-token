@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -20,50 +24,51 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calloc.c	5.2 (Berkeley) %G%"
+literal|"@(#)calloc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
 
 begin_comment
-comment|/*  * Calloc - allocate and clear memory block  */
+comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_function
 name|char
 modifier|*
 name|calloc
 parameter_list|(
-name|num
+name|nelem
 parameter_list|,
-name|size
+name|elsize
 parameter_list|)
-specifier|register
-name|unsigned
-name|num
+name|u_int
+name|nelem
 decl_stmt|,
-name|size
+name|elsize
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|malloc
+argument_list|()
 decl_stmt|;
-name|size
+name|elsize
 operator|*=
-name|num
+name|nelem
 expr_stmt|;
 if|if
 condition|(
@@ -71,14 +76,14 @@ name|p
 operator|=
 name|malloc
 argument_list|(
-name|size
+name|elsize
 argument_list|)
 condition|)
 name|bzero
 argument_list|(
 name|p
 argument_list|,
-name|size
+name|elsize
 argument_list|)
 expr_stmt|;
 return|return
@@ -89,14 +94,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|cfree
 argument_list|(
 argument|p
 argument_list|,
-argument|num
+argument|nelem
 argument_list|,
-argument|size
+argument|elsize
 argument_list|)
 end_macro
 
@@ -108,14 +117,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|num
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|size
+name|u_int
+name|nelem
+decl_stmt|,
+name|elsize
 decl_stmt|;
 end_decl_stmt
 
