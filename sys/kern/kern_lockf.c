@@ -559,17 +559,6 @@ name|start
 operator|+
 name|oadd
 expr_stmt|;
-if|if
-condition|(
-name|end
-operator|<
-name|start
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 block|}
 comment|/* 	 * Avoid the common case of unlocking when inode has no locks. 	 */
 if|if
