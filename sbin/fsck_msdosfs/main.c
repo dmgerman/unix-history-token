@@ -119,6 +119,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|force
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force check even the fs is clean */
+end_comment
+
+begin_decl_stmt
+name|int
 name|preen
 decl_stmt|;
 end_decl_stmt
@@ -135,16 +145,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* device is opened read only (supersedes above) */
-end_comment
-
-begin_decl_stmt
-name|int
-name|force
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* force check even the fs is clean */
 end_comment
 
 begin_decl_stmt
