@@ -347,6 +347,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TR_REG_CSPF_A
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
 name|TR_REG_ADDRINTA
 value|0x98
 end_define
@@ -370,6 +377,13 @@ define|#
 directive|define
 name|TR_REG_STOPB
 value|0xb8
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_REG_CSPF_B
+value|0xbc
 end_define
 
 begin_define
