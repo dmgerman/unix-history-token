@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.15 (Berkeley) 84/02/24"
+literal|"@(#)docmd.c	4.16 (Berkeley) 84/03/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,9 +334,16 @@ expr_stmt|;
 comment|/* destination is a directory */
 if|if
 condition|(
-operator|!
 name|nflag
 condition|)
+name|printf
+argument_list|(
+literal|"updating host %s\n"
+argument_list|,
+name|rhost
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 if|if
 condition|(
