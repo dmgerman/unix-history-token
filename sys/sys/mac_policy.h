@@ -103,7 +103,19 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|sbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
 struct_decl|;
 end_struct_decl
 
@@ -122,6 +134,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|sysctl_req
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|thread
 struct_decl|;
 end_struct_decl
 
