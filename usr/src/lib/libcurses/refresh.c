@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	8.1 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1615,6 +1615,10 @@ condition|)
 block|{
 while|while
 condition|(
+name|wx
+operator|<=
+name|lch
+operator|&&
 name|memcmp
 argument_list|(
 name|nsp
@@ -1628,10 +1632,6 @@ argument_list|)
 argument_list|)
 operator|==
 literal|0
-operator|&&
-name|wx
-operator|<=
-name|lch
 condition|)
 block|{
 name|nsp
