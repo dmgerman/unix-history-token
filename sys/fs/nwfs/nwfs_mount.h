@@ -117,6 +117,13 @@ name|NWFS_MOUNT_HAVE_NLS
 value|0x0080
 end_define
 
+begin_define
+define|#
+directive|define
+name|NWFS_VOLNAME_LEN
+value|48
+end_define
+
 begin_comment
 comment|/* Layout of the mount control block for a netware file system. */
 end_comment
@@ -141,7 +148,7 @@ decl_stmt|;
 name|u_char
 name|mounted_vol
 index|[
-name|NCP_VOLNAME_LEN
+name|NWFS_VOLNAME_LEN
 operator|+
 literal|1
 index|]
