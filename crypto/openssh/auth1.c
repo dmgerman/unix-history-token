@@ -1616,6 +1616,9 @@ block|{
 name|krb5_data
 name|tgt
 decl_stmt|;
+name|u_int
+name|tgtlen
+decl_stmt|;
 name|tgt
 operator|.
 name|data
@@ -1623,10 +1626,14 @@ operator|=
 name|packet_get_string
 argument_list|(
 operator|&
+name|tgtlen
+argument_list|)
+expr_stmt|;
 name|tgt
 operator|.
 name|length
-argument_list|)
+operator|=
+name|tgtlen
 expr_stmt|;
 if|if
 condition|(
