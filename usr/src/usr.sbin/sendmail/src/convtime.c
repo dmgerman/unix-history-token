@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)convtime.c	6.3 (Berkeley) %G%"
+literal|"@(#)convtime.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,13 +88,19 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|isascii
-argument_list|(
+operator|(
 name|c
 operator|=
 operator|*
 name|p
 operator|++
+operator|)
+operator|!=
+literal|'\0'
+operator|&&
+name|isascii
+argument_list|(
+name|c
 argument_list|)
 operator|&&
 name|isdigit

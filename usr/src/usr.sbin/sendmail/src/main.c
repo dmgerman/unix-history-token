@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.67 (Berkeley) %G%"
+literal|"@(#)main.c	6.68 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3133,7 +3133,7 @@ case|case
 name|MD_INITALIAS
 case|:
 comment|/* initialize alias database */
-name|initaliases
+name|initmaps
 argument_list|(
 name|TRUE
 argument_list|,
@@ -3152,7 +3152,7 @@ comment|/* don't open alias database -- done in srvrsmtp */
 break|break;
 default|default:
 comment|/* open the alias database */
-name|initaliases
+name|initmaps
 argument_list|(
 name|FALSE
 argument_list|,

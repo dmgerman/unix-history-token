@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	6.2 (Berkeley) %G%"
+literal|"@(#)stab.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,7 +387,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  STABAPPLY -- apply function to all stab entries ** **	Parameters: **		func -- the function to apply.  It will be given one **			parameter (the stab entry). ** **	Returns: **		none. */
+comment|/* **  STABAPPLY -- apply function to all stab entries ** **	Parameters: **		func -- the function to apply.  It will be given one **			parameter (the stab entry). **		arg -- an arbitrary argument, passed to func. ** **	Returns: **		none. */
 end_comment
 
 begin_function_decl
@@ -395,6 +395,8 @@ name|void
 name|stabapply
 parameter_list|(
 name|func
+parameter_list|,
+name|arg
 parameter_list|)
 function_decl|void
 parameter_list|(
@@ -408,10 +410,18 @@ argument_list|(
 operator|(
 name|STAB
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|arg
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -461,11 +471,37 @@ name|s
 operator|->
 name|s_next
 control|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|38
+argument_list|,
+literal|90
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"stabapply: trying %d/%s\n"
+argument_list|,
+name|s
+operator|->
+name|s_type
+argument_list|,
+name|s
+operator|->
+name|s_name
+argument_list|)
+expr_stmt|;
 name|func
 argument_list|(
 name|s
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

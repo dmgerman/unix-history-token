@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.58 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.59 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.58 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.59 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2009,7 +2009,7 @@ operator|.
 name|e_flags
 expr_stmt|;
 comment|/* 	**  Make sure the alias database is open. 	*/
-name|initaliases
+name|initmaps
 argument_list|(
 name|FALSE
 argument_list|,
