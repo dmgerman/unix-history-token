@@ -1191,9 +1191,11 @@ name|port
 argument_list|,
 name|protos
 operator|==
+operator|(
 name|TCP
 operator||
 name|UDP
+operator|)
 condition|?
 literal|0
 else|:

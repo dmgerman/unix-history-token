@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -292,10 +298,12 @@ parameter_list|()
 block|{
 if|if
 condition|(
+operator|(
 name|num_devices
 operator|=
 name|getnumdevs
 argument_list|()
+operator|)
 operator|<
 literal|0
 condition|)

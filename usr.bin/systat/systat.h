@@ -112,6 +112,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*   * If we are started with privileges, use a kmem interface for netstat handling,  * otherwise use sysctl.  * In case of many open sockets, the sysctl handling might become slow.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|use_kvm
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -146,6 +157,18 @@ define|#
 directive|define
 name|UDP
 value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETSYSCTL
+parameter_list|(
+name|name
+parameter_list|,
+name|var
+parameter_list|)
+value|getsysctl(name,&(var), sizeof(var))
 end_define
 
 begin_define
