@@ -1765,13 +1765,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WI_PORTTYPE_IBSS
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
 name|WI_PORTTYPE_BSS
 value|0x1
 end_define
@@ -1788,6 +1781,13 @@ define|#
 directive|define
 name|WI_PORTTYPE_ADHOC
 value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_PORTTYPE_IBSS
+value|0x4
 end_define
 
 begin_define
