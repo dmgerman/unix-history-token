@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: time.c,v 1.7 1998/07/24 07:19:29 phk Exp $"
+literal|"$Id: time.c,v 1.8 1998/07/27 16:08:58 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,7 +243,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:o:l"
+literal|"lao:"
 argument_list|)
 operator|)
 operator|!=
@@ -261,17 +261,6 @@ block|{
 case|case
 literal|'a'
 case|:
-if|if
-condition|(
-name|ofn
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-name|ofn
-operator|=
-name|optarg
-expr_stmt|;
 name|aflag
 operator|=
 literal|1
@@ -280,13 +269,6 @@ break|break;
 case|case
 literal|'o'
 case|:
-if|if
-condition|(
-name|ofn
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 name|ofn
 operator|=
 name|optarg
@@ -869,7 +851,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: time [-l] [-{o|a} file] command\n"
+literal|"usage: time [-l] [-a] [-o file] command\n"
 argument_list|)
 expr_stmt|;
 name|exit
