@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * VAX UNIBUS adapter definitions  */
+comment|/*  * VAX UNIBUS adapter registers  */
 end_comment
 
 begin_comment
@@ -179,6 +179,322 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
+
+begin_comment
+comment|/*  * DWBUA hardware registers.  */
+end_comment
+
+begin_struct
+struct|struct
+name|dwbua_regs
+block|{
+name|int
+name|pad1
+index|[
+literal|456
+index|]
+decl_stmt|;
+comment|/* actually bii regs + pad */
+name|int
+name|bua_csr
+decl_stmt|;
+comment|/* control and status register */
+name|int
+name|bua_offset
+decl_stmt|;
+comment|/* vector offset register */
+name|int
+name|bua_fubar
+decl_stmt|;
+comment|/* failed UNIBUS address register */
+name|int
+name|bua_bifar
+decl_stmt|;
+comment|/* BI failed address register */
+name|int
+name|bua_udiag
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* micro diagnostics (R/O) */
+name|int
+name|pad2
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* dpr[0] is for DDP; dpr's 1 through 5 are for BPD's 1 through 5 */
+name|int
+name|bua_dpr
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* data path registers */
+name|int
+name|pad3
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|int
+name|bua_bdps
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/* buffered data path space */
+comment|/*???*/
+name|int
+name|pad4
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|struct
+name|pte
+name|bua_map
+index|[
+name|UBAPAGES
+index|]
+decl_stmt|;
+comment|/* unibus map registers */
+name|int
+name|pad5
+index|[
+name|UBAIOPAGES
+index|]
+decl_stmt|;
+comment|/* no maps for device address space */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DWBUA
+end_ifdef
+
+begin_comment
+comment|/* bua_csr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_ERR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* composite error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_BIF
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* BI failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_SSYNTO
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* slave sync timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_UIE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* unibus interlock error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_IVMR
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* invalid map register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_BADBDP
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* bad BDP select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_BUAEIE
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* bua error interrupt enable (?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_UPI
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* unibus power init */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_UREGDUMP
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* microdiag register dump */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUACSR_IERRNO
+value|0x000000ff
+end_define
+
+begin_comment
+comment|/* mask for internal errror number */
+end_comment
+
+begin_comment
+comment|/* bua_offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUAOFFSET_MASK
+value|0x00003e00
+end_define
+
+begin_comment
+comment|/* hence max offset = 15872 */
+end_comment
+
+begin_comment
+comment|/* bua_dpr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUADPR_DPSEL
+value|0x00e00000
+end_define
+
+begin_comment
+comment|/* data path select (?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUADPR_PURGE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* purge bdp */
+end_comment
+
+begin_comment
+comment|/* bua_map -- in particular, those bits that are not in DW780s& DW750s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUAMR_IOADR
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* I/O address space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUAMR_LAE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* longword access enable */
+end_comment
+
+begin_comment
+comment|/* I see no reason to use either one, though ... act 6 Aug 1987 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBA_PURGEBUA
+parameter_list|(
+name|uba
+parameter_list|,
+name|bdp
+parameter_list|)
+define|\
+value|(((struct dwbua_regs *)(uba))->bua_dpr[bdp] |= BUADPR_PURGE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UBA_PURGEBUA
+parameter_list|(
+name|uba
+parameter_list|,
+name|bdp
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * DW780/DW750 hardware registers  */
@@ -853,9 +1169,15 @@ begin_comment
 comment|/*  * Macros for fast buffered data path purging in time-critical routines.  *  * Too bad C pre-processor doesn't have the power of LISP in macro  * expansion...  */
 end_comment
 
+begin_comment
+comment|/* THIS IS WRONG, should use pointer to uba_hd */
+end_comment
+
 begin_if
 if|#
 directive|if
+name|DWBUA
+operator|||
 name|DW780
 operator|||
 name|DW750
@@ -870,7 +1192,7 @@ name|uba
 parameter_list|,
 name|bdp
 parameter_list|)
-value|{ \ 	switch (cpu) { \ 	case VAX_8600: case VAX_780: UBA_PURGE780((uba), (bdp)); break; \ 	case VAX_750: UBA_PURGE750((uba), (bdp)); break; \ 	} \ }
+value|{ \ 	switch (cpu) { \ 	case VAX_8200: UBA_PURGEBUA(uba, bdp); break; \ 	case VAX_8600: case VAX_780: UBA_PURGE780((uba), (bdp)); break; \ 	case VAX_750: UBA_PURGE750((uba), (bdp)); break; \ 	} \ }
 end_define
 
 begin_else
@@ -935,7 +1257,7 @@ begin_define
 define|#
 directive|define
 name|UBAMR_SBIPFN
-value|0x000fffff
+value|0x001fffff
 end_define
 
 begin_comment
@@ -969,6 +1291,13 @@ define|#
 directive|define
 name|NBDP780
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|NBDPBUA
+value|5
 end_define
 
 begin_define
@@ -1155,6 +1484,31 @@ parameter_list|(
 name|i
 parameter_list|)
 value|(0x20100000+(i)*0x40000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX8200
+end_if
+
+begin_comment
+comment|/* BEWARE, argument is node, not ubanum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMEM8200
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x20400000+(i)*0x40000)
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -137,6 +137,24 @@ comment|/* buffered data path regs free */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* given a pointer to uba_regs, find DWBUA registers */
+end_comment
+
+begin_comment
+comment|/* this should be replaced with a union in uba_hd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUA
+parameter_list|(
+name|uba
+parameter_list|)
+value|((struct dwbua_regs *)(uba))
+end_define
 
 begin_comment
 comment|/*  * Per-controller structure.  * (E.g. one for each disk and tape controller, and other things  * which use and release buffered data paths.)  *  * If a controller has devices attached, then there are  * cross-referenced uba_drive structures.  * This structure is the one which is queued in unibus resource wait,  * and saves the information about unibus resources which are used.  * The queue of devices waiting to transfer is also attached here.  */
@@ -553,7 +571,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * UNIbus device address space is mapped by UMEMmap  * into virtual address umem[][].  * The IO page is mapped to the last 8K of each.  * This should be enlarged for the Q22 bus.  */
+comment|/*  * UNIBUS device address space is mapped by UMEMmap  * into virtual address umem[][].  * The IO page is mapped to the last 8K of each.  * This should be enlarged for the Q22 bus.  */
 end_comment
 
 begin_decl_stmt
@@ -590,7 +608,7 @@ comment|/* uba device addr space */
 end_comment
 
 begin_comment
-comment|/*  * Since some VAXen vector their unibus interrupts  * just adjacent to the system control block, we must  * allocate space there when running on ``any'' cpu.  This space is  * used for the vectors for uba0 and uba1 on all cpu's but 8600's.  */
+comment|/*  * Since some VAXen vector their unibus interrupts  * just adjacent to the system control block, we must  * allocate space there when running on ``any'' cpu.  This space is  * used for the vectors for all ubas.  */
 end_comment
 
 begin_function_decl
@@ -600,43 +618,32 @@ function_decl|(
 modifier|*
 name|UNIvec
 index|[]
+index|[
+literal|128
+index|]
 function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* unibus vec for uba0 */
+comment|/* unibus vec for ubas */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|NUBA
-operator|>
-literal|1
-end_if
 
 begin_function_decl
 specifier|extern
 name|int
 function_decl|(
 modifier|*
-name|UNI1vec
-index|[]
+name|eUNIvec
 function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* unibus vec for uba1 */
+comment|/* end of unibus vec */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
