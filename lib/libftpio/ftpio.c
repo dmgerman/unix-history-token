@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.9 1996/08/03 11:58:53 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.10 1996/08/21 01:12:10 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -3566,6 +3566,11 @@ name|errno
 operator|=
 name|i
 expr_stmt|;
+operator|*
+name|seekto
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|i
 return|;
@@ -3574,7 +3579,7 @@ elseif|else
 if|if
 condition|(
 name|i
-operator|!=
+operator|==
 literal|350
 condition|)
 operator|*
