@@ -747,6 +747,9 @@ argument_list|()
 condition|)
 block|{
 comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrunqueue ourselves but before we 		 * mi_switch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
+name|clear_resched
+argument_list|()
+expr_stmt|;
 name|DROP_GIANT_NOSWITCH
 argument_list|()
 expr_stmt|;

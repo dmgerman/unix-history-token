@@ -497,6 +497,9 @@ argument_list|()
 condition|)
 block|{
 comment|/* 		 * Since we are curproc, a clock interrupt could 		 * change our priority without changing run queues 		 * (the running process is not kept on a run queue). 		 * If this happened after we setrunqueue ourselves but 		 * before we switch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
+name|clear_resched
+argument_list|()
+expr_stmt|;
 name|DROP_GIANT_NOSWITCH
 argument_list|()
 expr_stmt|;
