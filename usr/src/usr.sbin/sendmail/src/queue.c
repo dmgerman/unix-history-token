@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.20 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.21 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.20 (Berkeley) %G%"
+literal|"@(#)queue.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1331,6 +1331,20 @@ endif|#
 directive|endif
 endif|DAEMON
 end_endif
+
+begin_comment
+comment|/* 	**  Make sure the alias database is open. 	*/
+end_comment
+
+begin_expr_stmt
+name|initaliases
+argument_list|(
+name|AliasFile
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/

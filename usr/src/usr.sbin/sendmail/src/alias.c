@@ -75,7 +75,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.12 (Berkeley) %G%	(with DBM)"
+literal|"@(#)alias.c	5.13 (Berkeley) %G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,7 +91,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.12 (Berkeley) %G%	(without DBM)"
+literal|"@(#)alias.c	5.13 (Berkeley) %G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -492,6 +492,21 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
+specifier|static
+name|bool
+name|initialized
+init|=
+name|FALSE
+decl_stmt|;
+if|if
+condition|(
+name|initialized
+condition|)
+return|return;
+name|initialized
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 name|aliasfile
