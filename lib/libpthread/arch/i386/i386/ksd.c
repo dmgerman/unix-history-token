@@ -118,7 +118,18 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|initialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+specifier|static
 name|void
 name|initialize
 parameter_list|(

@@ -116,6 +116,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Double underscore versions are cancellation points.  Single underscore  * versions are not and are provided for libc internal usage (which  * shouldn't introduce cancellation points).  */
+end_comment
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__pthread_cond_wait
+argument_list|,
+name|pthread_cond_wait
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__pthread_cond_timedwait
+argument_list|,
+name|pthread_cond_timedwait
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -132,26 +156,6 @@ argument_list|(
 name|_pthread_cond_destroy
 argument_list|,
 name|pthread_cond_destroy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_pthread_cond_wait
-argument_list|,
-name|pthread_cond_wait
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_pthread_cond_timedwait
-argument_list|,
-name|pthread_cond_timedwait
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -539,29 +543,17 @@ decl_stmt|;
 name|int
 name|seqno
 decl_stmt|;
-name|_thr_enter_cancellation_point
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cond
 operator|==
 name|NULL
 condition|)
-block|{
-name|_thr_leave_cancellation_point
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 comment|/* 	 * If the condition variable is statically initialized, 	 * perform the dynamic initialization: 	 */
 if|if
 condition|(
@@ -583,18 +575,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|_thr_leave_cancellation_point
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|rval
 operator|)
 return|;
-block|}
 comment|/* 	 * Enter a loop waiting for a condition signal or broadcast 	 * to wake up this thread.  A loop is needed in case the waiting 	 * thread is interrupted by a signal to execute a signal handler. 	 * It is not (currently) possible to remain in the waiting queue 	 * while running a handler.  Instead, the thread is interrupted 	 * and backed out of the waiting queue prior to executing the 	 * signal handler. 	 */
 do|do
 block|{
@@ -1091,11 +1076,6 @@ literal|0
 operator|)
 condition|)
 do|;
-name|_thr_leave_cancellation_point
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -1217,11 +1197,6 @@ argument_list|,
 literal|"cv_timedwait: locklevel is not zero!"
 argument_list|)
 expr_stmt|;
-name|_thr_enter_cancellation_point
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|abstime
@@ -1246,18 +1221,11 @@ name|tv_nsec
 operator|>=
 literal|1000000000
 condition|)
-block|{
-name|_thr_leave_cancellation_point
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 comment|/* 	 * If the condition variable is statically initialized, perform dynamic 	 * initialization. 	 */
 if|if
 condition|(
@@ -1279,18 +1247,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|_thr_leave_cancellation_point
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|rval
 operator|)
 return|;
-block|}
 comment|/* 	 * Enter a loop waiting for a condition signal or broadcast 	 * to wake up this thread.  A loop is needed in case the waiting 	 * thread is interrupted by a signal to execute a signal handler. 	 * It is not (currently) possible to remain in the waiting queue 	 * while running a handler.  Instead, the thread is interrupted 	 * and backed out of the waiting queue prior to executing the 	 * signal handler. 	 */
 do|do
 block|{
@@ -1823,11 +1784,6 @@ literal|0
 operator|)
 condition|)
 do|;
-name|_thr_leave_cancellation_point
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* Return the completion status: */
 return|return
 operator|(
