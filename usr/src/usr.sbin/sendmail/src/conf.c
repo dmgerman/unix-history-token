@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.177 (Berkeley) %G%"
+literal|"@(#)conf.c	8.178 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -819,7 +819,7 @@ name|strcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"prog, P=/bin/sh, F=lsoD, T=X-Unix, A=sh -c $u"
+literal|"prog, P=/bin/sh, F=lsoD, T=DNS/RFC822/X-Unix, A=sh -c $u"
 argument_list|)
 expr_stmt|;
 name|makemailer
@@ -831,7 +831,7 @@ name|strcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"*file*, P=[FILE], F=lsDFMPEou, T=X-Unix, A=FILE"
+literal|"*file*, P=[FILE], F=lsDFMPEou, T=DNS/RFC822/X-Unix, A=FILE"
 argument_list|)
 expr_stmt|;
 name|makemailer
