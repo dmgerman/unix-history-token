@@ -756,6 +756,14 @@ name|swap_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|vm_object
+name|swap_zone_obj
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * pagerops for OBJT_SWAP - "swap pager".  Some ops are also global procedure  * calls hooked from other parts of the VM system and do not appear here.  * (see vm/swap_pager.h).  */
 end_comment
@@ -1531,7 +1539,8 @@ name|uma_zone_set_obj
 argument_list|(
 name|swap_zone
 argument_list|,
-name|NULL
+operator|&
+name|swap_zone_obj
 argument_list|,
 name|n
 argument_list|)

@@ -446,8 +446,11 @@ directive|define
 name|VM_OBJECT_LOCK_INIT
 parameter_list|(
 name|object
+parameter_list|,
+name|type
 parameter_list|)
-value|mtx_init(&(object)->mtx, "vm object", \ 					    NULL, MTX_DEF | MTX_DUPOK)
+define|\
+value|mtx_init(&(object)->mtx, "vm object", \ 					    (type), MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define

@@ -9207,7 +9207,7 @@ operator|++
 expr_stmt|;
 name|kva
 operator|=
-name|kmem_alloc_pageable
+name|kmem_alloc_nofault
 argument_list|(
 name|kernel_map
 argument_list|,
@@ -9249,6 +9249,8 @@ block|{
 name|VM_OBJECT_LOCK_INIT
 argument_list|(
 name|obj
+argument_list|,
+literal|"uma object"
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate

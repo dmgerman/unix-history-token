@@ -552,6 +552,8 @@ expr_stmt|;
 name|VM_OBJECT_LOCK_INIT
 argument_list|(
 name|object
+argument_list|,
+literal|"standard object"
 argument_list|)
 expr_stmt|;
 comment|/* These are true for any object that has been freed */
@@ -804,6 +806,8 @@ name|VM_OBJECT_LOCK_INIT
 argument_list|(
 operator|&
 name|kernel_object_store
+argument_list|,
+literal|"kernel object"
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
@@ -820,19 +824,12 @@ argument_list|,
 name|kernel_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The kmem object's mutex is given a unique name, instead of 	 * "vm object", to avoid false reports of lock-order reversal 	 * with a system map mutex. 	 */
-name|mtx_init
+name|VM_OBJECT_LOCK_INIT
 argument_list|(
-name|VM_OBJECT_MTX
-argument_list|(
-name|kmem_object
-argument_list|)
+operator|&
+name|kmem_object_store
 argument_list|,
 literal|"kmem object"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
