@@ -4233,6 +4233,14 @@ name|IFT_IEEE1394
 case|:
 ifdef|#
 directive|ifdef
+name|IFT_L2VLAN
+case|case
+name|IFT_L2VLAN
+case|:
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|IFT_IEEE80211
 case|case
 name|IFT_IEEE80211
