@@ -18,7 +18,7 @@ name|void
 name|AcpiOsPrintf
 parameter_list|(
 specifier|const
-name|NATIVE_CHAR
+name|char
 modifier|*
 name|Format
 parameter_list|,
@@ -55,7 +55,7 @@ name|void
 name|AcpiOsVprintf
 parameter_list|(
 specifier|const
-name|NATIVE_CHAR
+name|char
 modifier|*
 name|Format
 parameter_list|,

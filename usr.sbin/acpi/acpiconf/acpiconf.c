@@ -54,13 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acfreebsd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/actypes.h>
+file|<contrib/dev/acpica/acpi.h>
 end_include
 
 begin_define

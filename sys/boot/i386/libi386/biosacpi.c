@@ -27,6 +27,12 @@ directive|include
 file|"acfreebsd.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|ACPI_SYSTEM_XFACE
+end_define
+
 begin_include
 include|#
 directive|include

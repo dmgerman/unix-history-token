@@ -95,7 +95,7 @@ begin_function
 name|UINT32
 name|AcpiOsGetLine
 parameter_list|(
-name|NATIVE_CHAR
+name|char
 modifier|*
 name|Buffer
 parameter_list|)
@@ -177,7 +177,7 @@ parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|NATIVE_CHAR
+name|char
 modifier|*
 name|Message
 parameter_list|)
@@ -227,7 +227,7 @@ name|ACPI_SIGNAL_FATAL_INFO
 modifier|*
 name|fatal
 decl_stmt|;
-name|NATIVE_CHAR
+name|char
 modifier|*
 name|message
 decl_stmt|;
@@ -276,7 +276,7 @@ case|:
 name|message
 operator|=
 operator|(
-name|NATIVE_CHAR
+name|char
 operator|*
 operator|)
 name|Info
