@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.18 1994/12/27 23:26:51 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.19 1995/01/29 02:31:35 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -208,15 +208,6 @@ argument_list|(
 literal|"root"
 argument_list|)
 expr_stmt|;
-name|debug_fd
-operator|=
-name|open
-argument_list|(
-literal|"/dev/ttyv1"
-argument_list|,
-name|O_WRONLY
-argument_list|)
-expr_stmt|;
 name|setbuf
 argument_list|(
 name|stdin
@@ -236,24 +227,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|debug_fd
-operator|=
-name|open
-argument_list|(
-literal|"sysinstall.debug"
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_CREAT
-operator||
-name|O_TRUNC
-argument_list|,
-literal|0644
 argument_list|)
 expr_stmt|;
 block|}
