@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7 1999/01/12 16:43:52 eivind Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.8 1999/01/27 22:42:24 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -127,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_bdg.h"
 end_include
 
 begin_ifdef
