@@ -557,6 +557,9 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
+name|g_topology_assert
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|EV_NEW_CLASS
