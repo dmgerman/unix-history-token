@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NecBSD: bsvar.h,v 1.2 1997/10/31 17:43:41 honda Exp $	*/
+end_comment
+
+begin_comment
 comment|/*	$NetBSD$	*/
 end_comment
 
@@ -1047,9 +1051,8 @@ decl_stmt|;
 name|u_int
 name|bounce_size
 decl_stmt|;
-name|u_int8_t
-modifier|*
-name|sm_vaddr
+name|u_long
+name|sm_offset
 decl_stmt|;
 comment|/***************************************** 	 * target inq data 	 *****************************************/
 name|u_int8_t
@@ -1247,11 +1250,10 @@ modifier|*
 name|sc_hw
 decl_stmt|;
 comment|/* hw selection */
-name|u_int8_t
-modifier|*
-name|sm_vaddr
+name|u_long
+name|sm_offset
 decl_stmt|;
-comment|/* smit buffer */
+comment|/* smit buffer offset */
 name|u_int
 name|sc_RSTdelay
 decl_stmt|;
@@ -1264,7 +1266,7 @@ name|sc_iobase
 decl_stmt|;
 comment|/* iobase for FreeBSD */
 name|u_int32_t
-name|sc_irqmasks
+name|sc_irq
 decl_stmt|;
 comment|/* irq */
 name|u_int

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NecBSD: bsif.h,v 1.5 1997/10/23 20:52:34 honda Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) HONDA Naofumi, KATO Takenori, 1996.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *   notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * The name of the author may not be used to endorse or promote products  * derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -34,7 +38,7 @@ define|#
 directive|define
 name|OS_DEPEND_MISC_HEADER
 define|\
-value|pisa_device_handle_t sc_pdv;		\ 	bus_chipset_tag_t sc_bc;		\ 	bus_io_handle_t sc_ioh;			\ 	bus_io_handle_t sc_delayioh;		\ 	bus_mem_handle_t sc_memh;
+value|pisa_device_handle_t sc_dh;		\ 	bus_space_tag_t sc_iot;			\ 	bus_space_tag_t sc_memt;		\ 	bus_space_handle_t sc_ioh;		\ 	bus_space_handle_t sc_delaybah;		\ 	bus_space_handle_t sc_memh;		\ 	bus_dma_tag_t sc_dmat;
 end_define
 
 begin_endif
@@ -226,6 +230,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/isa/isadmavar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/isa/isadmareg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -405,14 +427,14 @@ begin_define
 define|#
 directive|define
 name|BUS_IO_DELAY
-value|((void) bus_io_read_1(bsc->sc_bc, bsc->sc_delayioh, 0))
+value|((void) bus_space_read_1(bsc->sc_iot, bsc->sc_delaybah, 0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|BUS_IO_WEIGHT
-value|(bus_io_write_1(bsc->sc_bc, bsc->sc_delayioh, 0, 0))
+value|(bus_space_write_1(bsc->sc_iot, bsc->sc_delaybah, 0, 0))
 end_define
 
 begin_define
@@ -422,7 +444,7 @@ name|BUS_IOR
 parameter_list|(
 name|offs
 parameter_list|)
-value|(BUS_IO_DELAY, bus_io_read_1(bsc->sc_bc, bsc->sc_ioh, (offs)))
+value|(bus_space_read_1(bsc->sc_iot, bsc->sc_ioh, (offs)))
 end_define
 
 begin_define
@@ -434,7 +456,7 @@ name|offs
 parameter_list|,
 name|val
 parameter_list|)
-value|(BUS_IO_DELAY, bus_io_write_1(bsc->sc_bc, bsc->sc_ioh, (offs), (val)))
+value|(bus_space_write_1(bsc->sc_iot, bsc->sc_ioh, (offs), (val)))
 end_define
 
 begin_include
@@ -452,25 +474,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/isa/scsi_dvcfg.h>
+file|<i386/Cbus/dev/scsi_dvcfg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bsvar.h>
+file|<i386/Cbus/dev/bs/bsvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bshw.h>
+file|<i386/Cbus/dev/bs/bshw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/isa/bs/bsfunc.h>
+file|<i386/Cbus/dev/bs/bsfunc.h>
 end_include
 
 begin_endif
@@ -777,18 +799,10 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|bsprobe
+name|bsintr
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|device
-operator|*
-operator|,
-expr|struct
-name|device
-operator|*
-operator|,
 name|void
 operator|*
 operator|)
@@ -797,20 +811,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|bsattach
+name|int
+name|bsprint
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|device
-operator|*
-operator|,
-expr|struct
-name|device
-operator|*
-operator|,
 name|void
+operator|*
+operator|,
+specifier|const
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -913,7 +923,7 @@ name|softintr
 parameter_list|(
 name|y
 parameter_list|)
-value|ipending |= (y)
+value|ipending |= (1<< y)
 end_define
 
 begin_endif
