@@ -1710,7 +1710,10 @@ operator|+
 operator|(
 name|x
 operator|.
-name|l
+name|s
+index|[
+literal|0
+index|]
 operator|<<
 name|shift
 operator|)
