@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#) (Berkeley) 82/02/28"
+literal|"@(#) (Berkeley) 82/03/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,32 +260,8 @@ block|}
 block|,
 define|#
 directive|define
-name|SGROUP
-value|13
-block|{
-literal|"_groups"
-block|}
-block|,
-define|#
-directive|define
-name|SCHANS
-value|14
-block|{
-literal|"_chans"
-block|}
-block|,
-define|#
-directive|define
-name|SSCHANS
-value|15
-block|{
-literal|"_schans"
-block|}
-block|,
-define|#
-directive|define
 name|SNPROC
-value|16
+value|13
 block|{
 literal|"_nproc"
 block|}
@@ -293,7 +269,7 @@ block|,
 define|#
 directive|define
 name|SNTEXT
-value|17
+value|14
 block|{
 literal|"_ntext"
 block|}
@@ -301,7 +277,7 @@ block|,
 define|#
 directive|define
 name|SNFILE
-value|18
+value|15
 block|{
 literal|"_nfile"
 block|}
@@ -309,7 +285,7 @@ block|,
 define|#
 directive|define
 name|SNINODE
-value|19
+value|16
 block|{
 literal|"_ninode"
 block|}
@@ -317,7 +293,7 @@ block|,
 define|#
 directive|define
 name|SNSWAPMAP
-value|20
+value|17
 block|{
 literal|"_nswapmap"
 block|}
@@ -325,7 +301,7 @@ block|,
 define|#
 directive|define
 name|SPTY
-value|21
+value|18
 block|{
 literal|"_pt_tty"
 block|}
@@ -2172,7 +2148,7 @@ name|struct
 name|tty
 name|dz_tty
 index|[
-literal|64
+literal|128
 index|]
 decl_stmt|;
 name|int
@@ -2381,9 +2357,12 @@ name|fc
 argument_list|,
 name|dz_tty
 argument_list|,
+name|ndz
+operator|*
 sizeof|sizeof
 argument_list|(
-name|dz_tty
+expr|struct
+name|tty
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2529,9 +2508,12 @@ name|fc
 argument_list|,
 name|dz_tty
 argument_list|,
+name|ndz
+operator|*
 sizeof|sizeof
 argument_list|(
-name|dz_tty
+expr|struct
+name|tty
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2602,7 +2584,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"16 pty lines\n"
+literal|"32 pty lines\n"
 argument_list|)
 expr_stmt|;
 name|lseek
@@ -2628,9 +2610,12 @@ name|fc
 argument_list|,
 name|dz_tty
 argument_list|,
+literal|32
+operator|*
 sizeof|sizeof
 argument_list|(
-name|dz_tty
+expr|struct
+name|tty
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2645,7 +2630,7 @@ operator|<
 operator|&
 name|dz_tty
 index|[
-literal|16
+literal|32
 index|]
 condition|;
 name|tp
