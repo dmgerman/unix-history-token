@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.22 1995/04/24 21:50:11 jkh Exp $"
+literal|"$Id: perform.c,v 1.23 1995/04/26 11:43:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -904,7 +904,7 @@ literal|'z'
 argument_list|)
 condition|)
 comment|/* Compress/gzip? */
-name|stnrcat
+name|strncat
 argument_list|(
 name|cmd
 argument_list|,
