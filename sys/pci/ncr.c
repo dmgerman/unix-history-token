@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.15 1995/02/02 12:36:16 davidg Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.16 1995/02/02 13:12:15 davidg Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NCR_PATCHLEVEL
-value|"pl4 95/01/27"
+value|"pl6 95/02/02"
 end_define
 
 begin_define
@@ -2195,6 +2195,10 @@ comment|/* 	**	controller chip dependent maximal transfer width. 	*/
 name|u_char
 name|maxwide
 decl_stmt|;
+comment|/* 	**	option for M_IDENTIFY message: enables disconnecting 	*/
+name|u_char
+name|disc
+decl_stmt|;
 comment|/* 	**	lockout of execption handler call while starting command. 	*/
 name|u_char
 name|lock
@@ -3154,7 +3158,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.15 1995/02/02 12:36:16 davidg Exp $\n"
+literal|"\n$Id: ncr.c,v 1.16 1995/02/02 13:12:15 davidg Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -9162,11 +9166,17 @@ argument_list|,
 name|CRST
 argument_list|)
 expr_stmt|;
-comment|/* 	**	process the reset exception, 	**	if interrupts are not enabled yet. 	*/
+comment|/* 	**	process the reset exception, 	**	if interrupts are not enabled yet. 	**	than enable disconnects. 	*/
 name|ncr_exception
 argument_list|(
 name|np
 argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|disc
+operator|=
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -9447,16 +9457,14 @@ endif|#
 directive|endif
 argument|};
 comment|/*---------------------------------------------------- 	** 	**	Build the identify / tag / sdtr message 	** 	**---------------------------------------------------- 	*/
+argument|idmsg = M_IDENTIFY | xp->LUN;
 ifndef|#
 directive|ifndef
 name|NCR_NO_DISCONNECT
-argument|idmsg = (cp==&np->ccb ? M_IDENTIFY :
-literal|0xc0
-argument|) | xp->LUN;
-else|#
-directive|else
-comment|/*--------------------------------------------------------------------- 	** Some users have problems with this driver. 	** I assume that the current problems relate to a conflict between 	** a disconnect and an immediately following reconnect operation. 	** With this option you can prevent the driver from using disconnects. 	** If this removes the problems, I would know where to search further.. 	** Of course this is no solution. 	** Without disconnects the performance will be severely degraded. 	** But it may help to trace down the core problem. 	**--------------------------------------------------------------------- 	*/
-argument|idmsg = M_IDENTIFY | xp->LUN;
+comment|/*--------------------------------------------------------------------- 	** Some users have problems with this driver. 	** I assume that the current problems relate to a conflict between 	** a disconnect and an immediately following reconnect operation. 	** With this option one can prevent the driver from using disconnects. 	** Without disconnects the performance will be severely degraded. 	** But it may help to trace down the core problem. 	**--------------------------------------------------------------------- 	*/
+argument|if ((cp!=&np->ccb)&& (np->disc)) 		idmsg |=
+literal|0x40
+argument|;
 endif|#
 directive|endif
 argument|cp -> scsi_smsg [
@@ -9848,6 +9856,10 @@ literal|4
 argument|; 		}; 	};
 comment|/* 	**	Reinitialize usrwide. 	**	Have to renegotiate wide mode. 	*/
 argument|usrwide = (SCSI_NCR_MAX_WIDE); 	if (usrwide> np->maxwide) usrwide=np->maxwide;
+comment|/* 	**	Disable disconnects. 	*/
+argument|np->disc =
+literal|0
+argument|;
 comment|/* 	**	Fill in target structure. 	*/
 argument|for (i=
 literal|0
