@@ -2126,8 +2126,6 @@ parameter_list|(
 name|struct
 name|pccard_devinfo
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2168,22 +2166,6 @@ begin_comment
 comment|/* Interrupt handler */
 end_comment
 
-begin_function_decl
-specifier|static
-name|void
-name|siosuspend
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Suspend driver */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2199,8 +2181,6 @@ name|siounload
 block|,
 name|card_intr
 block|,
-name|siosuspend
-block|,
 literal|0
 block|,
 comment|/* Attributes - presently unused */
@@ -2213,7 +2193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	Initialize the device - called from Slot manager.  *  *	If first is set, then check for the device's existence  *	before initializing it.  Once initialized, the device table may  *	be set up.  */
+comment|/*  *	Initialize the device - called from Slot manager.  */
 end_comment
 
 begin_function
@@ -2224,17 +2204,9 @@ name|struct
 name|pccard_devinfo
 modifier|*
 name|devi
-parameter_list|,
-name|int
-name|first
 parameter_list|)
 block|{
 comment|/* validate unit number. */
-if|if
-condition|(
-name|first
-condition|)
-block|{
 if|if
 condition|(
 name|devi
@@ -2269,7 +2241,7 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/* 		 * Probe the device. If a value is returned, the 		 * device was found at the location. 		 */
+comment|/* 	 * Probe the device. If a value is returned, the 	 * device was found at the location. 	 */
 if|if
 condition|(
 name|sioprobe
@@ -2304,8 +2276,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-comment|/* 	 * XXX TODO: 	 * If it was initialized before, the device structure 	 * should also be initialized.  We should 	 * reset (and possibly restart) the hardware, but 	 * I am not sure of the best way to do this... 	 */
 return|return
 operator|(
 literal|0
@@ -2541,35 +2511,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	Called when a power down is requested. Shuts down the  *	device and configures the device as unavailable (but  *	still loaded...). A resume is done by calling  *	sioinit with first=0. This is called when the user suspends  *	the system, or the APM code suspends the system.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|siosuspend
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-name|devi
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"sio%d: suspending\n"
-argument_list|,
-name|devi
-operator|->
-name|isahd
-operator|.
-name|id_unit
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -207,8 +207,6 @@ parameter_list|(
 name|struct
 name|pccard_devinfo
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 comment|/* init/enable driver */
@@ -236,18 +234,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* interrupt handler */
-name|void
-function_decl|(
-modifier|*
-name|suspend
-function_decl|)
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* Suspend driver */
 name|int
 name|attr
 decl_stmt|;

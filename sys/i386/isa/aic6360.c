@@ -3870,8 +3870,6 @@ parameter_list|(
 name|struct
 name|pccard_devinfo
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3911,21 +3909,6 @@ begin_comment
 comment|/* Interrupt handler */
 end_comment
 
-begin_function_decl
-name|void
-name|aicsuspend
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Suspend driver */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -3941,8 +3924,6 @@ name|aicunload
 block|,
 name|aic_card_intr
 block|,
-name|aicsuspend
-block|,
 literal|0
 block|,
 comment|/* Attributes - presently unused */
@@ -3954,7 +3935,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Initialize the device - called from Slot manager.  *  * if first is set, then initially check for  * the device's existence before initialising it.  * Once initialised, the device table may be set up.  */
+comment|/*  * Initialize the device - called from Slot manager.  */
 end_comment
 
 begin_function
@@ -3965,9 +3946,6 @@ name|struct
 name|pccard_devinfo
 modifier|*
 name|devi
-parameter_list|,
-name|int
-name|first
 parameter_list|)
 block|{
 specifier|static
@@ -3978,11 +3956,6 @@ name|NAIC
 index|]
 decl_stmt|;
 comment|/* validate unit number */
-if|if
-condition|(
-name|first
-condition|)
-block|{
 if|if
 condition|(
 name|devi
@@ -4036,7 +4009,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * Probe the device. If a value is returned, the 		 * device was found at the location. 		 */
+comment|/* 	 * Probe the device. If a value is returned, the 	 * device was found at the location. 	 */
 if|if
 condition|(
 name|aicprobe
@@ -4071,8 +4044,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-comment|/* 	 * XXX TODO: 	 * If it was already inited before, the device structure 	 * should be already initialised. Here we should 	 * reset (and possibly restart) the hardware, but 	 * I am not sure of the best way to do this... 	 */
 name|already_aicinit
 index|[
 name|devi
@@ -4168,34 +4139,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Called when a power down is wanted. Shuts down the  * device and configures the device as unavailable (but  * still loaded...). A resume is done by calling  * feinit with first=0. This is called when the user suspends  * the system, or the APM code suspends the system.  */
-end_comment
-
-begin_function
-name|void
-name|aicsuspend
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-name|devi
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"aic%d: suspending\n"
-argument_list|,
-name|devi
-operator|->
-name|isahd
-operator|.
-name|id_unit
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
