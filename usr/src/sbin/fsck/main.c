@@ -10,7 +10,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.30 (Berkeley) %G%"
+literal|"@(#)main.c	2.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9360,6 +9360,23 @@ name|dp
 operator|->
 name|d_reclen
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|idesc
+operator|->
+name|id_loc
+operator|%
+name|DIRBLKSIZ
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|dp
+operator|)
+return|;
 name|ndp
 operator|=
 operator|(
@@ -9378,23 +9395,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|idesc
-operator|->
-name|id_filesize
-operator|<=
-literal|0
-operator|&&
-name|idesc
-operator|->
-name|id_loc
-operator|%
-name|DIRBLKSIZ
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
 name|idesc
 operator|->
 name|id_loc
@@ -9415,7 +9415,6 @@ name|ndp
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|size
