@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c	5.2 (Berkeley) %G%"
+literal|"@(#)asjxxx.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1227,12 +1227,8 @@ block|{
 if|if
 condition|(
 name|intdest
-operator|->
-name|s_value
-operator|>
+operator|==
 name|dest
-operator|->
-name|s_value
 condition|)
 break|break;
 comment|/* beyond destination */
@@ -1319,12 +1315,8 @@ block|{
 if|if
 condition|(
 name|intdest
-operator|->
-name|s_value
-operator|<=
+operator|==
 name|dest
-operator|->
-name|s_value
 condition|)
 break|break;
 comment|/* beyond destination */
