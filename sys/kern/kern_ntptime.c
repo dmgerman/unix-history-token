@@ -1061,7 +1061,7 @@ name|ntv
 operator|.
 name|freq
 operator|*
-literal|1000
+literal|1000LL
 operator|)
 operator|<<
 literal|16
@@ -1309,7 +1309,7 @@ argument_list|(
 operator|(
 name|time_freq
 operator|/
-literal|1000
+literal|1000LL
 operator|)
 operator|<<
 literal|16
@@ -1386,7 +1386,7 @@ argument_list|(
 operator|(
 name|pps_freq
 operator|/
-literal|1000
+literal|1000LL
 operator|)
 operator|<<
 literal|16
