@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_cb.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_cb.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -73,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/in.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/mtpr.h"
 end_include
 
 begin_comment

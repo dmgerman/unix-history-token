@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"machine/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"if.h"
 end_include
 
@@ -155,9 +161,6 @@ name|inet
 condition|?
 endif|#
 directive|endif
-include|#
-directive|include
-file|"machine/mtpr.h"
 include|#
 directive|include
 file|"slcompress.h"
