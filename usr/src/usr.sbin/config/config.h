@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * config.h	1.2	81/02/25  * Definitions that everybody needs to know  */
+comment|/*  * config.h	1.3	81/03/06  * Definitions that everybody needs to know  */
 end_comment
 
 begin_define
@@ -48,6 +48,13 @@ define|#
 directive|define
 name|INVISIBLE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TO_NEXUS
+value|-1
 end_define
 
 begin_struct
@@ -125,6 +132,16 @@ name|int
 name|d_slave
 decl_stmt|;
 comment|/* Slave number */
+define|#
+directive|define
+name|QUES
+value|-1
+comment|/* -1 means '?' */
+define|#
+directive|define
+name|UNKNOWN
+value|-2
+comment|/* -2 means not set yet */
 name|bool
 name|d_dk
 decl_stmt|;
@@ -159,11 +176,27 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_struct
+struct|struct
+name|cputype
+block|{
 name|char
 modifier|*
-name|cpu_type
-decl_stmt|,
+name|cpu_name
+decl_stmt|;
+name|struct
+name|cputype
+modifier|*
+name|cpu_next
+decl_stmt|;
+block|}
+modifier|*
+name|cputype
+struct|;
+end_struct
+
+begin_decl_stmt
+name|char
 modifier|*
 name|ident
 decl_stmt|,
@@ -245,6 +278,20 @@ begin_decl_stmt
 name|char
 modifier|*
 name|PREFIX
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|hz
+decl_stmt|,
+name|timezone
+decl_stmt|,
+name|hadtz
+decl_stmt|,
+name|maxusers
+decl_stmt|,
+name|dst
 decl_stmt|;
 end_decl_stmt
 
