@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c	5.1 (Berkeley) %G%"
+literal|"@(#)asjxxx.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,7 +673,7 @@ expr_stmt|;
 block|}
 name|flushfield
 argument_list|(
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 argument_list|)

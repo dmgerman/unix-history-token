@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c	5.1 (Berkeley) %G%"
+literal|"@(#)asparse.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -651,7 +651,7 @@ name|shift
 expr_stmt|;
 name|flushfield
 argument_list|(
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 argument_list|)
@@ -1289,7 +1289,7 @@ name|NLOC
 expr_stmt|;
 name|flushfield
 argument_list|(
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 argument_list|)
@@ -1332,7 +1332,7 @@ name|IBYTE
 case|:
 name|curlen
 operator|=
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 expr_stmt|;
@@ -1344,7 +1344,7 @@ name|IWORD
 case|:
 name|curlen
 operator|=
-name|NBPW
+name|NBWD
 operator|/
 literal|2
 expr_stmt|;
@@ -1356,7 +1356,7 @@ name|IINT
 case|:
 name|curlen
 operator|=
-name|NBPW
+name|NBWD
 expr_stmt|;
 goto|goto
 name|elist
@@ -1366,7 +1366,7 @@ name|ILONG
 case|:
 name|curlen
 operator|=
-name|NBPW
+name|NBWD
 expr_stmt|;
 goto|goto
 name|elist
@@ -1517,7 +1517,7 @@ name|curlen
 condition|)
 block|{
 case|case
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 case|:
@@ -1527,7 +1527,7 @@ name|TYPB
 expr_stmt|;
 break|break;
 case|case
-name|NBPW
+name|NBWD
 operator|/
 literal|2
 case|:
@@ -1537,7 +1537,7 @@ name|TYPW
 expr_stmt|;
 break|break;
 case|case
-name|NBPW
+name|NBWD
 case|:
 name|reloc_how
 operator|=
@@ -1673,7 +1673,7 @@ condition|(
 operator|(
 name|curlen
 operator|==
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 operator|)
@@ -1728,7 +1728,7 @@ name|ospace
 label|:
 name|flushfield
 argument_list|(
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 argument_list|)
@@ -1902,7 +1902,7 @@ argument_list|)
 expr_stmt|;
 name|flushfield
 argument_list|(
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 argument_list|)
@@ -1974,7 +1974,7 @@ name|mystrlen
 decl_stmt|;
 name|flushfield
 argument_list|(
-name|NBPW
+name|NBWD
 operator|/
 literal|4
 argument_list|)
