@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.17 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -807,9 +807,6 @@ name|cp
 decl_stmt|;
 name|off_t
 name|offset
-decl_stmt|,
-name|atol
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1289,7 +1286,7 @@ argument_list|,
 name|L_SET
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Print the first 7 lines or 560 characters of the new mail 	 * (whichever comes first).  Skip header crap other than 	 * From, Subject, To, and Date. 	 */
+comment|/* 	 * Print the first 7 lines or 560 characters of the new mail 	 * (whichever comes first).  Skip header crap other than 	 * From, Subject, To, and Date. 	 */
 name|linecnt
 operator|=
 literal|7
@@ -1427,8 +1424,11 @@ name|charcnt
 control|)
 block|{
 name|ch
-operator|&=
-literal|0x7f
+operator|=
+name|toascii
+argument_list|(
+name|ch
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
