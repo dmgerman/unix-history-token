@@ -51,6 +51,14 @@ name|packetAliasMode
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|skinnyPort
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Prototypes */
 end_comment
@@ -1192,6 +1200,27 @@ parameter_list|,
 name|struct
 name|in_addr
 name|_original_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Skinny routines */
+end_comment
+
+begin_function_decl
+name|void
+name|AliasHandleSkinny
+parameter_list|(
+name|struct
+name|ip
+modifier|*
+name|_pip
+parameter_list|,
+name|struct
+name|alias_link
+modifier|*
+name|_link
 parameter_list|)
 function_decl|;
 end_function_decl

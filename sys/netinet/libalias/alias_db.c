@@ -891,6 +891,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|unsigned
+name|int
+name|skinnyPort
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TCP port used by the Skinny     */
+end_comment
+
+begin_comment
+comment|/* protocol.                       */
+end_comment
+
 begin_comment
 comment|/* Internal utility routines (used only in alias_db.c)  Lookup table starting points:     StartPointIn()           -- link table initial search point for                                 incoming packets     StartPointOut()          -- link table initial search point for                                 outgoing packets  Miscellaneous:     SeqDiff()                -- difference between two TCP sequences     ShowAliasStats()         -- send alias statistics to a monitor file */
 end_comment
@@ -10223,6 +10240,22 @@ name|num
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|PacketAliasSetSkinnyPort
+parameter_list|(
+name|unsigned
+name|int
+name|port
+parameter_list|)
+block|{
+name|skinnyPort
+operator|=
+name|port
+expr_stmt|;
 block|}
 end_function
 

@@ -5208,6 +5208,20 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"skinny_port"
+block|,
+name|NULL
+block|,
+name|nat_SkinnyPort
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"TCP port used by Skinny Station protocol"
+block|,
+literal|"nat skinny_port [port]"
+block|}
+block|,
+block|{
 literal|"same_ports"
 block|,
 name|NULL
