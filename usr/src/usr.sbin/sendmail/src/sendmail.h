@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.5		%G%"
+literal|"@(#)sendmail.h	4.6		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1429,6 +1429,32 @@ end_define
 
 begin_comment
 comment|/* conditional fi */
+end_comment
+
+begin_comment
+comment|/* bracket characters for host name lookup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HOSTBEGIN
+value|'\034'
+end_define
+
+begin_comment
+comment|/* hostname lookup begin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HOSTEND
+value|'\035'
+end_define
+
+begin_comment
+comment|/* hostname lookup end */
 end_comment
 
 begin_comment
