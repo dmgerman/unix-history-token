@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.4 1997/07/12 10:51:54 peter Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.5 1997/07/14 09:06:46 peter Exp $  */
 end_comment
 
 begin_include
@@ -944,9 +944,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sysctlbyname
 argument_list|(
-literal|"kern.smp_active"
+literal|"machdep.smp_active"
 argument_list|,
 operator|&
 name|smpmode
@@ -960,6 +961,24 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|sysctlbyname
+argument_list|(
+literal|"smp.smp_active"
+argument_list|,
+operator|&
+name|smpmode
+argument_list|,
+operator|&
+name|modelen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+operator|)
 operator|||
 name|modelen
 operator|!=
