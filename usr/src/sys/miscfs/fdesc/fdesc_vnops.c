@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.14 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.15 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -296,6 +296,14 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|fdhashhead
 modifier|*
 name|fc
@@ -366,6 +374,8 @@ operator|->
 name|fd_vnode
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -639,9 +649,15 @@ argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -752,9 +768,15 @@ name|v_type
 operator|=
 name|VDIR
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -844,9 +866,15 @@ name|v_type
 operator|=
 name|VFIFO
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -995,9 +1023,15 @@ name|v_type
 operator|=
 name|VLNK
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -3477,14 +3511,14 @@ begin_define
 define|#
 directive|define
 name|fdesc_lock
-value|((int (*) __P((struct  vop_lock_args *)))nullop)
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_unlock
-value|((int (*) __P((struct  vop_unlock_args *)))nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_define
@@ -3505,7 +3539,8 @@ begin_define
 define|#
 directive|define
 name|fdesc_islocked
-value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+define|\
+value|((int (*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
