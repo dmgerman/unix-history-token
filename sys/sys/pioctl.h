@@ -132,6 +132,72 @@ begin_comment
 comment|/* Get flags */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|S_EXEC
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* stop-on-exec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_SIG
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* stop-on-signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_SCE
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* stop on syscall entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_SCX
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* stop on syscall exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_CORE
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* stop on coredump */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_EXIT
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* stop on exit */
+end_comment
+
 begin_comment
 comment|/*  * If PF_LINGER is set in procp->p_pfsflags, then the last close  * of a /proc/<pid>/mem file will nto clear out the stops and continue  * the process.  */
 end_comment
