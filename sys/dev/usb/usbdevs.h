@@ -34,11 +34,7 @@ value|0x040a
 end_define
 
 begin_comment
-comment|/* Eastman Kodak */
-end_comment
-
-begin_comment
-comment|/* Computer Access Technology Corporation */
+comment|/* Eastman Kodak Corp. */
 end_comment
 
 begin_define
@@ -49,7 +45,18 @@ value|0x0423
 end_define
 
 begin_comment
-comment|/* CATC */
+comment|/* Computer Access Technology Corp. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_GRAVIS
+value|0x0428
+end_define
+
+begin_comment
+comment|/* Advanced Gravis Computer Tech. Ltd. */
 end_comment
 
 begin_define
@@ -60,7 +67,7 @@ value|0x0440
 end_define
 
 begin_comment
-comment|/* Nanao */
+comment|/* NANAO Corp. */
 end_comment
 
 begin_define
@@ -77,12 +84,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_VENDOR_UNIXTAR
+name|USB_VENDOR_TI
 value|0x0451
 end_define
 
 begin_comment
-comment|/* Unixtar */
+comment|/* Texas Instruments */
 end_comment
 
 begin_define
@@ -93,7 +100,7 @@ value|0x0458
 end_define
 
 begin_comment
-comment|/* Genius */
+comment|/* KYE Systems Corp. */
 end_comment
 
 begin_define
@@ -115,7 +122,7 @@ value|0x0461
 end_define
 
 begin_comment
-comment|/* Kensington */
+comment|/* Primax Electronics */
 end_comment
 
 begin_define
@@ -126,11 +133,18 @@ value|0x046a
 end_define
 
 begin_comment
-comment|/* Cherry */
+comment|/* Cherry Mikroschalter GmbH */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_LOGITECH
+value|0x046d
+end_define
+
 begin_comment
-comment|/* Behavior Technology Corporation */
+comment|/* Logitech Inc. */
 end_comment
 
 begin_define
@@ -141,7 +155,7 @@ value|0x046e
 end_define
 
 begin_comment
-comment|/* BTC */
+comment|/* Behavior Tech. Computer */
 end_comment
 
 begin_define
@@ -163,7 +177,7 @@ value|0x0478
 end_define
 
 begin_comment
-comment|/* Connectix */
+comment|/* Connectix Corp. */
 end_comment
 
 begin_define
@@ -180,12 +194,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_STMICRO
+value|0x0483
+end_define
+
+begin_comment
+comment|/* STMicroelectronics */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_ACER
 value|0x04a5
 end_define
 
 begin_comment
-comment|/* Acer Peripherals */
+comment|/* Acer Peripheral Inc. */
 end_comment
 
 begin_define
@@ -207,7 +232,7 @@ value|0x04b8
 end_define
 
 begin_comment
-comment|/* Epson */
+comment|/* Seiko Epson Corp. */
 end_comment
 
 begin_define
@@ -218,7 +243,7 @@ value|0x04c1
 end_define
 
 begin_comment
-comment|/* 3Com */
+comment|/* U.S. Robotics */
 end_comment
 
 begin_define
@@ -229,7 +254,7 @@ value|0x04c8
 end_define
 
 begin_comment
-comment|/* Konica Corporation */
+comment|/* Konica Corp. */
 end_comment
 
 begin_define
@@ -246,12 +271,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_BROTHER
+value|0x04f9
+end_define
+
+begin_comment
+comment|/* Brother Industries Corp. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_JAZZ
 value|0x04fa
 end_define
 
 begin_comment
-comment|/* Jazz */
+comment|/* Dallas Semiconductor */
 end_comment
 
 begin_define
@@ -262,18 +298,18 @@ value|0x0529
 end_define
 
 begin_comment
-comment|/* Aladdin Knowledge Systems */
+comment|/* Fast Security AG */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|USB_VENDOR_VISION
-value|0x0553
+value|0x0533
 end_define
 
 begin_comment
-comment|/* Vision */
+comment|/* Alcatel Mobile Phones */
 end_comment
 
 begin_define
@@ -284,7 +320,7 @@ value|0x0557
 end_define
 
 begin_comment
-comment|/* ATen */
+comment|/* ATEN International Corp. Ltd. */
 end_comment
 
 begin_define
@@ -295,7 +331,18 @@ value|0x0565
 end_define
 
 begin_comment
-comment|/* Peracom */
+comment|/* Peracom Networks Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_WACOM
+value|0x056a
+end_define
+
+begin_comment
+comment|/* WACOM Corp. Ltd. */
 end_comment
 
 begin_define
@@ -317,7 +364,7 @@ value|0x056e
 end_define
 
 begin_comment
-comment|/* Agiler */
+comment|/* Elecom Corp. Ltd. */
 end_comment
 
 begin_define
@@ -339,7 +386,7 @@ value|0x059b
 end_define
 
 begin_comment
-comment|/* Iomega */
+comment|/* Iomega Corp. */
 end_comment
 
 begin_define
@@ -361,18 +408,18 @@ value|0x05ab
 end_define
 
 begin_comment
-comment|/* Belkin */
+comment|/* In-System Design */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USB_VENDOR_LOGITECH
+name|USB_VENDOR_APPLE
 value|0x05ac
 end_define
 
 begin_comment
-comment|/* Logitech */
+comment|/* Apple Computer */
 end_comment
 
 begin_define
@@ -444,23 +491,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_VENDOR_ENTREGA
-value|0x1645
-end_define
-
-begin_comment
-comment|/* Entrega */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|USB_VENDOR_INSIDEOUT
 value|0x1608
 end_define
 
 begin_comment
 comment|/* Inside Out Networks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_ENTREGA
+value|0x1645
+end_define
+
+begin_comment
+comment|/* Entrega */
 end_comment
 
 begin_define
@@ -550,13 +597,28 @@ comment|/* Andromeda hub */
 end_comment
 
 begin_comment
-comment|/* Unixtar products */
+comment|/* Gravis products */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_UNIXTAR_UTUSB41
+name|USB_PRODUCT_GRAVIS_GAMEPADPRO
+value|0x4001
+end_define
+
+begin_comment
+comment|/* GamePad Pro */
+end_comment
+
+begin_comment
+comment|/* Unixtar/Texas Instruments products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_TI_UTUSB41
 value|0x1446
 end_define
 
@@ -608,16 +670,38 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_MICROSOFT_KEYBOARD
-value|0x0009
+name|USB_PRODUCT_MICROSOFT_NATURALKBD
+value|0x000b
 end_define
 
 begin_comment
-comment|/* Keyboard */
+comment|/* Natural Keyboard Elite */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MICROSOFT_DDS80
+value|0x0014
+end_define
+
+begin_comment
+comment|/* Digital Sound System 80 */
 end_comment
 
 begin_comment
 comment|/* Kensington products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_KENSINGTON_COMFORT
+value|0x4d01
+end_define
+
+begin_comment
+comment|/* Comfort */
 end_comment
 
 begin_define
@@ -658,7 +742,7 @@ comment|/* My3000 hub */
 end_comment
 
 begin_comment
-comment|/* Behavior Technology Corporation products */
+comment|/* Behavior Technology Computer products */
 end_comment
 
 begin_define
@@ -711,6 +795,21 @@ end_define
 
 begin_comment
 comment|/* QuickCam */
+end_comment
+
+begin_comment
+comment|/* STMicroelectronics products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_STMICRO_COMMUNICATOR
+value|0x7554
+end_define
+
+begin_comment
+comment|/* USB Communicator */
 end_comment
 
 begin_comment
@@ -785,11 +884,11 @@ value|0x3021
 end_define
 
 begin_comment
-comment|/* U.S.Robotics Voice Faxmodem Pro */
+comment|/* U.S.Robotics 56000 Voice Faxmodem Pro */
 end_comment
 
 begin_comment
-comment|/* Konica Corporation Products */
+comment|/* Konica Corp. Products */
 end_comment
 
 begin_define
@@ -816,6 +915,21 @@ end_define
 
 begin_comment
 comment|/* E-USB Bridge */
+end_comment
+
+begin_comment
+comment|/* Brother Industries products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_BROTHER_HL1050
+value|0x0002
+end_define
+
+begin_comment
+comment|/* HL-1050 laser printer */
 end_comment
 
 begin_comment
@@ -855,7 +969,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_VISION_CAMERA
+name|USB_PRODUCT_VISION_VC6452V002
 value|0x0002
 end_define
 
@@ -891,6 +1005,21 @@ end_define
 
 begin_comment
 comment|/* Serial Converter */
+end_comment
+
+begin_comment
+comment|/* Wacom products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_WACOM_CT0405U
+value|0x0000
+end_define
+
+begin_comment
+comment|/* CT-0405-U Tablet */
 end_comment
 
 begin_comment
@@ -1012,12 +1141,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_LOGITECH_MOUSE1
+name|USB_PRODUCT_LOGITECH_M4848
 value|0x0301
 end_define
 
 begin_comment
-comment|/* mouse */
+comment|/* M4848 mouse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LOGITECH_USBPS2
+value|0xc001
+end_define
+
+begin_comment
+comment|/* USB-PS/2 mouse */
 end_comment
 
 begin_comment

@@ -61,7 +61,7 @@ name|USB_PRODUCT_KODAK_DC260
 block|,
 literal|0
 block|,
-literal|"Eastman Kodak"
+literal|"Eastman Kodak Corp."
 block|,
 literal|"Digital Science DC260"
 block|, 	}
@@ -73,19 +73,31 @@ name|USB_PRODUCT_CATC_ANDROMEDA
 block|,
 literal|0
 block|,
-literal|"CATC"
+literal|"Computer Access Technology Corp."
 block|,
 literal|"Andromeda hub"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_UNIXTAR
+name|USB_VENDOR_GRAVIS
 block|,
-name|USB_PRODUCT_UNIXTAR_UTUSB41
+name|USB_PRODUCT_GRAVIS_GAMEPADPRO
 block|,
 literal|0
 block|,
-literal|"Unixtar"
+literal|"Advanced Gravis Computer Tech. Ltd."
+block|,
+literal|"GamePad Pro"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_TI
+block|,
+name|USB_PRODUCT_TI_UTUSB41
+block|,
+literal|0
+block|,
+literal|"Texas Instruments"
 block|,
 literal|"UT-USB41 hub"
 block|, 	}
@@ -97,7 +109,7 @@ name|USB_PRODUCT_GENIUS_NICHE
 block|,
 literal|0
 block|,
-literal|"Genius"
+literal|"KYE Systems Corp."
 block|,
 literal|"Niche mouse"
 block|, 	}
@@ -109,7 +121,7 @@ name|USB_PRODUCT_GENIUS_FLIGHT2000
 block|,
 literal|0
 block|,
-literal|"Genius"
+literal|"KYE Systems Corp."
 block|,
 literal|"Flight 2000 joystick"
 block|, 	}
@@ -129,13 +141,37 @@ block|,
 block|{
 name|USB_VENDOR_MICROSOFT
 block|,
-name|USB_PRODUCT_MICROSOFT_KEYBOARD
+name|USB_PRODUCT_MICROSOFT_NATURALKBD
 block|,
 literal|0
 block|,
 literal|"Microsoft"
 block|,
-literal|"Keyboard"
+literal|"Natural Keyboard Elite"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MICROSOFT
+block|,
+name|USB_PRODUCT_MICROSOFT_DDS80
+block|,
+literal|0
+block|,
+literal|"Microsoft"
+block|,
+literal|"Digital Sound System 80"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_KENSINGTON
+block|,
+name|USB_PRODUCT_KENSINGTON_COMFORT
+block|,
+literal|0
+block|,
+literal|"Primax Electronics"
+block|,
+literal|"Comfort"
 block|, 	}
 block|,
 block|{
@@ -145,7 +181,7 @@ name|USB_PRODUCT_KENSINGTON_MOUSEINABOX
 block|,
 literal|0
 block|,
-literal|"Kensington"
+literal|"Primax Electronics"
 block|,
 literal|"Mouse-in-a-Box"
 block|, 	}
@@ -157,7 +193,7 @@ name|USB_PRODUCT_CHERRY_MY3000KBD
 block|,
 literal|0
 block|,
-literal|"Cherry"
+literal|"Cherry Mikroschalter GmbH"
 block|,
 literal|"My3000 keyboard"
 block|, 	}
@@ -169,7 +205,7 @@ name|USB_PRODUCT_CHERRY_MY3000HUB
 block|,
 literal|0
 block|,
-literal|"Cherry"
+literal|"Cherry Mikroschalter GmbH"
 block|,
 literal|"My3000 hub"
 block|, 	}
@@ -181,7 +217,7 @@ name|USB_PRODUCT_BTC_BTC7932
 block|,
 literal|0
 block|,
-literal|"BTC"
+literal|"Behavior Tech. Computer"
 block|,
 literal|"Keyboard with mouse port"
 block|, 	}
@@ -217,9 +253,21 @@ name|USB_PRODUCT_CONNECTIX_QUICKCAM
 block|,
 literal|0
 block|,
-literal|"Connectix"
+literal|"Connectix Corp."
 block|,
 literal|"QuickCam"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_STMICRO
+block|,
+name|USB_PRODUCT_STMICRO_COMMUNICATOR
+block|,
+literal|0
+block|,
+literal|"STMicroelectronics"
+block|,
+literal|"USB Communicator"
 block|, 	}
 block|,
 block|{
@@ -241,7 +289,7 @@ name|USB_PRODUCT_ACER_ACERSCAN_C310U
 block|,
 literal|0
 block|,
-literal|"Acer Peripherals"
+literal|"Acer Peripheral Inc."
 block|,
 literal|"Acerscan C310U"
 block|, 	}
@@ -265,7 +313,7 @@ name|USB_PRODUCT_EPSON_PRINTER3
 block|,
 literal|0
 block|,
-literal|"Epson"
+literal|"Seiko Epson Corp."
 block|,
 literal|"ISD USB Smart Cable"
 block|, 	}
@@ -277,9 +325,9 @@ name|USB_PRODUCT_3COM_USR56K
 block|,
 literal|0
 block|,
-literal|"3Com"
+literal|"U.S. Robotics"
 block|,
-literal|"U.S.Robotics Voice Faxmodem Pro"
+literal|"U.S.Robotics 56000 Voice Faxmodem Pro"
 block|, 	}
 block|,
 block|{
@@ -289,7 +337,7 @@ name|USB_PRODUCT_KONICA_CAMERA
 block|,
 literal|0
 block|,
-literal|"Konica Corporation"
+literal|"Konica Corp."
 block|,
 literal|"Digital Color Camera"
 block|, 	}
@@ -307,13 +355,25 @@ literal|"E-USB Bridge"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_BROTHER
+block|,
+name|USB_PRODUCT_BROTHER_HL1050
+block|,
+literal|0
+block|,
+literal|"Brother Industries Corp."
+block|,
+literal|"HL-1050 laser printer"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_JAZZ
 block|,
 name|USB_PRODUCT_JAZZ_J6502
 block|,
 literal|0
 block|,
-literal|"Jazz"
+literal|"Dallas Semiconductor"
 block|,
 literal|"J-6502 speakers"
 block|, 	}
@@ -325,7 +385,7 @@ name|USB_PRODUCT_AKS_USBHASP
 block|,
 literal|0
 block|,
-literal|"Aladdin Knowledge Systems"
+literal|"Fast Security AG"
 block|,
 literal|"USB-HASP 0.06"
 block|, 	}
@@ -333,11 +393,11 @@ block|,
 block|{
 name|USB_VENDOR_VISION
 block|,
-name|USB_PRODUCT_VISION_CAMERA
+name|USB_PRODUCT_VISION_VC6452V002
 block|,
 literal|0
 block|,
-literal|"Vision"
+literal|"Alcatel Mobile Phones"
 block|,
 literal|"VC6452V002 Camera"
 block|, 	}
@@ -349,7 +409,7 @@ name|USB_PRODUCT_ATEN_UC1284
 block|,
 literal|0
 block|,
-literal|"ATen"
+literal|"ATEN International Corp. Ltd."
 block|,
 literal|"Parallel printer adapter"
 block|, 	}
@@ -361,9 +421,21 @@ name|USB_PRODUCT_PERACOM_SERIAL1
 block|,
 literal|0
 block|,
-literal|"Peracom"
+literal|"Peracom Networks Inc."
 block|,
 literal|"Serial Converter"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_WACOM
+block|,
+name|USB_PRODUCT_WACOM_CT0405U
+block|,
+literal|0
+block|,
+literal|"WACOM Corp. Ltd."
+block|,
+literal|"CT-0405-U Tablet"
 block|, 	}
 block|,
 block|{
@@ -397,7 +469,7 @@ name|USB_PRODUCT_AGILER_MOUSE29UO
 block|,
 literal|0
 block|,
-literal|"Agiler"
+literal|"Elecom Corp. Ltd."
 block|,
 literal|"mouse 29UO"
 block|, 	}
@@ -421,7 +493,7 @@ name|USB_PRODUCT_IOMEGA_ZIP100
 block|,
 literal|0
 block|,
-literal|"Iomega"
+literal|"Iomega Corp."
 block|,
 literal|"Zip 100"
 block|, 	}
@@ -445,7 +517,7 @@ name|USB_PRODUCT_BELKIN_F5U002
 block|,
 literal|0
 block|,
-literal|"Belkin"
+literal|"In-System Design"
 block|,
 literal|"Parallel printer adapter"
 block|, 	}
@@ -457,7 +529,7 @@ name|USB_PRODUCT_LOGITECH_M2452
 block|,
 literal|0
 block|,
-literal|"Logitech"
+literal|"Logitech Inc."
 block|,
 literal|"M2452 keyboard"
 block|, 	}
@@ -465,13 +537,25 @@ block|,
 block|{
 name|USB_VENDOR_LOGITECH
 block|,
-name|USB_PRODUCT_LOGITECH_MOUSE1
+name|USB_PRODUCT_LOGITECH_M4848
 block|,
 literal|0
 block|,
-literal|"Logitech"
+literal|"Logitech Inc."
 block|,
-literal|"mouse"
+literal|"M4848 mouse"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_USBPS2
+block|,
+literal|0
+block|,
+literal|"Logitech Inc."
+block|,
+literal|"USB-PS/2 mouse"
 block|, 	}
 block|,
 block|{
@@ -601,7 +685,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Eastman Kodak"
+literal|"Eastman Kodak Corp."
 block|,
 name|NULL
 block|, 	}
@@ -613,7 +697,19 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"CATC"
+literal|"Computer Access Technology Corp."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_GRAVIS
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Advanced Gravis Computer Tech. Ltd."
 block|,
 name|NULL
 block|, 	}
@@ -625,7 +721,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Nanao"
+literal|"NANAO Corp."
 block|,
 name|NULL
 block|, 	}
@@ -643,13 +739,13 @@ name|NULL
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_UNIXTAR
+name|USB_VENDOR_TI
 block|,
 literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Unixtar"
+literal|"Texas Instruments"
 block|,
 name|NULL
 block|, 	}
@@ -661,7 +757,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Genius"
+literal|"KYE Systems Corp."
 block|,
 name|NULL
 block|, 	}
@@ -685,7 +781,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Kensington"
+literal|"Primax Electronics"
 block|,
 name|NULL
 block|, 	}
@@ -697,7 +793,19 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Cherry"
+literal|"Cherry Mikroschalter GmbH"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Logitech Inc."
 block|,
 name|NULL
 block|, 	}
@@ -709,7 +817,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"BTC"
+literal|"Behavior Tech. Computer"
 block|,
 name|NULL
 block|, 	}
@@ -733,7 +841,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Connectix"
+literal|"Connectix Corp."
 block|,
 name|NULL
 block|, 	}
@@ -751,13 +859,25 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_STMICRO
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"STMicroelectronics"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ACER
 block|,
 literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Acer Peripherals"
+literal|"Acer Peripheral Inc."
 block|,
 name|NULL
 block|, 	}
@@ -781,7 +901,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Epson"
+literal|"Seiko Epson Corp."
 block|,
 name|NULL
 block|, 	}
@@ -793,7 +913,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"3Com"
+literal|"U.S. Robotics"
 block|,
 name|NULL
 block|, 	}
@@ -805,7 +925,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Konica Corporation"
+literal|"Konica Corp."
 block|,
 name|NULL
 block|, 	}
@@ -823,13 +943,25 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_BROTHER
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Brother Industries Corp."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_JAZZ
 block|,
 literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Jazz"
+literal|"Dallas Semiconductor"
 block|,
 name|NULL
 block|, 	}
@@ -841,7 +973,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Aladdin Knowledge Systems"
+literal|"Fast Security AG"
 block|,
 name|NULL
 block|, 	}
@@ -853,7 +985,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Vision"
+literal|"Alcatel Mobile Phones"
 block|,
 name|NULL
 block|, 	}
@@ -865,7 +997,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"ATen"
+literal|"ATEN International Corp. Ltd."
 block|,
 name|NULL
 block|, 	}
@@ -877,7 +1009,19 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Peracom"
+literal|"Peracom Networks Inc."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_WACOM
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"WACOM Corp. Ltd."
 block|,
 name|NULL
 block|, 	}
@@ -901,7 +1045,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Agiler"
+literal|"Elecom Corp. Ltd."
 block|,
 name|NULL
 block|, 	}
@@ -925,7 +1069,7 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Iomega"
+literal|"Iomega Corp."
 block|,
 name|NULL
 block|, 	}
@@ -949,19 +1093,19 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Belkin"
+literal|"In-System Design"
 block|,
 name|NULL
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_LOGITECH
+name|USB_VENDOR_APPLE
 block|,
 literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Logitech"
+literal|"Apple Computer"
 block|,
 name|NULL
 block|, 	}
@@ -1039,18 +1183,6 @@ name|NULL
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_ENTREGA
-block|,
-literal|0
-block|,
-name|USB_KNOWNDEV_NOPROD
-block|,
-literal|"Entrega"
-block|,
-name|NULL
-block|, 	}
-block|,
-block|{
 name|USB_VENDOR_INSIDEOUT
 block|,
 literal|0
@@ -1058,6 +1190,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Inside Out Networks"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ENTREGA
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Entrega"
 block|,
 name|NULL
 block|, 	}

@@ -126,9 +126,9 @@ block|}
 block|}
 block|,
 block|{
-name|USB_VENDOR_UNIXTAR
+name|USB_VENDOR_TI
 block|,
-name|USB_PRODUCT_UNIXTAR_UTUSB41
+name|USB_PRODUCT_TI_UTUSB41
 block|,
 literal|0x100
 block|,
