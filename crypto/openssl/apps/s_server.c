@@ -171,23 +171,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OPENSSL_SYS_WINDOWS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<conio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|OPENSSL_SYS_WINCE
 end_ifdef
 
@@ -4628,9 +4611,17 @@ name|BIO
 modifier|*
 name|sbio
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|OPENSSL_SYS_WINDOWS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MSDOS
+argument_list|)
 name|struct
 name|timeval
 name|tv
@@ -4937,9 +4928,19 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|OPENSSL_SYS_WINDOWS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MSDOS
+argument_list|)
 name|FD_SET
 argument_list|(
 name|fileno
@@ -4962,10 +4963,18 @@ name|readfds
 argument_list|)
 expr_stmt|;
 comment|/* Note: under VMS with SOCKETSHR the second parameter is 			 * currently of type (int *) whereas under other systems 			 * it is (void *) if you don't have a cast it will choke 			 * the compiler: if you do have a cast then you can either 			 * go for (int *) or (void *). 			 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|OPENSSL_SYS_WINDOWS
-comment|/* Under Windows we can't select on stdin: only 			 * on sockets. As a workaround we timeout the select every 			 * second and check for any keypress. In a proper Windows 			 * application we wouldn't do this because it is inefficient. 			 */
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MSDOS
+argument_list|)
+comment|/* Under DOS (non-djgpp) and Windows we can't select on stdin: only 			 * on sockets. As a workaround we timeout the select every 			 * second and check for any keypress. In a proper Windows 			 * application we wouldn't do this because it is inefficient. 			 */
 name|tv
 operator|.
 name|tv_sec
@@ -6260,6 +6269,37 @@ argument_list|,
 literal|"Peer has incorrect TLSv1 block padding\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_KRB5
+if|if
+condition|(
+name|con
+operator|->
+name|kssl_ctx
+operator|->
+name|client_princ
+operator|!=
+name|NULL
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_s_out
+argument_list|,
+literal|"Kerberos peer principal is %s\n"
+argument_list|,
+name|con
+operator|->
+name|kssl_ctx
+operator|->
+name|client_princ
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* OPENSSL_NO_KRB5 */
 return|return
 operator|(
 literal|1

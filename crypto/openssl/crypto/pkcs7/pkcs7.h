@@ -621,6 +621,14 @@ define|#
 directive|define
 name|PKCS7_NOSMIMECAP
 value|0x200
+define|#
+directive|define
+name|PKCS7_NOOLDMIMETYPE
+value|0x400
+define|#
+directive|define
+name|PKCS7_CRLFEOL
+value|0x800
 comment|/* Flags: for compatibility with older code */
 define|#
 directive|define

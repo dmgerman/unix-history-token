@@ -1146,8 +1146,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"Error converting key\n"
-argument_list|,
-name|outfile
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors
@@ -1289,8 +1287,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"Error encrypting key\n"
-argument_list|,
-name|outfile
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors
@@ -1517,8 +1513,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"Error reading key\n"
-argument_list|,
-name|outfile
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors
@@ -1590,8 +1584,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"Error decrypting key\n"
-argument_list|,
-name|outfile
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors
@@ -1623,8 +1615,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"Error converting key\n"
-argument_list|,
-name|outfile
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors

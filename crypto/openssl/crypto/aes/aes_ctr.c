@@ -58,7 +58,7 @@ comment|/* NOTE: CTR mode is big-endian.  The rest of the AES code  * is endian-
 end_comment
 
 begin_comment
-comment|/* increment counter (128-bit int) by 2^64 */
+comment|/* increment counter (128-bit int) by 1 */
 end_comment
 
 begin_function
@@ -76,7 +76,119 @@ name|unsigned
 name|long
 name|c
 decl_stmt|;
-comment|/* Grab 3rd dword of counter and increment */
+comment|/* Grab bottom dword of counter and increment */
+ifdef|#
+directive|ifdef
+name|L_ENDIAN
+name|c
+operator|=
+name|GETU32
+argument_list|(
+name|counter
+operator|+
+literal|0
+argument_list|)
+expr_stmt|;
+name|c
+operator|++
+expr_stmt|;
+name|PUTU32
+argument_list|(
+name|counter
+operator|+
+literal|0
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|c
+operator|=
+name|GETU32
+argument_list|(
+name|counter
+operator|+
+literal|12
+argument_list|)
+expr_stmt|;
+name|c
+operator|++
+expr_stmt|;
+name|PUTU32
+argument_list|(
+name|counter
+operator|+
+literal|12
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* if no overflow, we're done */
+if|if
+condition|(
+name|c
+condition|)
+return|return;
+comment|/* Grab 1st dword of counter and increment */
+ifdef|#
+directive|ifdef
+name|L_ENDIAN
+name|c
+operator|=
+name|GETU32
+argument_list|(
+name|counter
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+name|c
+operator|++
+expr_stmt|;
+name|PUTU32
+argument_list|(
+name|counter
+operator|+
+literal|4
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|c
+operator|=
+name|GETU32
+argument_list|(
+name|counter
+operator|+
+literal|8
+argument_list|)
+expr_stmt|;
+name|c
+operator|++
+expr_stmt|;
+name|PUTU32
+argument_list|(
+name|counter
+operator|+
+literal|8
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* if no overflow, we're done */
+if|if
+condition|(
+name|c
+condition|)
+return|return;
+comment|/* Grab 2nd dword of counter and increment */
 ifdef|#
 directive|ifdef
 name|L_ENDIAN
@@ -186,7 +298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The input encrypted as though 128bit counter mode is being  * used.  The extra state information to record how much of the  * 128bit block we have used is contained in *num, and the  * encrypted counter is kept in ecount_buf.  Both *num and  * ecount_buf must be initialised with zeros before the first  * call to AES_ctr128_encrypt().  */
+comment|/* The input encrypted as though 128bit counter mode is being  * used.  The extra state information to record how much of the  * 128bit block we have used is contained in *num, and the  * encrypted counter is kept in ecount_buf.  Both *num and  * ecount_buf must be initialised with zeros before the first  * call to AES_ctr128_encrypt().  *  * This algorithm assumes that the counter is in the x lower bits  * of the IV (ivec), and that the application has full control over  * overflow and the rest of the IV.  This implementation takes NO  * responsability for checking that the counter doesn't overflow  * into the rest of the IV when incremented.  */
 end_comment
 
 begin_function
@@ -216,7 +328,7 @@ name|key
 parameter_list|,
 name|unsigned
 name|char
-name|counter
+name|ivec
 index|[
 name|AES_BLOCK_SIZE
 index|]
@@ -285,7 +397,7 @@ condition|)
 block|{
 name|AES_encrypt
 argument_list|(
-name|counter
+name|ivec
 argument_list|,
 name|ecount_buf
 argument_list|,
@@ -294,7 +406,7 @@ argument_list|)
 expr_stmt|;
 name|AES_ctr128_inc
 argument_list|(
-name|counter
+name|ivec
 argument_list|)
 expr_stmt|;
 block|}

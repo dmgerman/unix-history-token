@@ -332,7 +332,7 @@ operator|<
 literal|0
 operator|||
 name|type
-operator|>
+operator|>=
 name|CRYPTO_NUM_LOCKS
 condition|)
 block|{

@@ -990,7 +990,6 @@ name|n
 operator|*
 literal|2
 decl_stmt|;
-name|unsigned
 name|int
 name|c1
 decl_stmt|,
@@ -1980,6 +1979,9 @@ if|if
 condition|(
 name|ln
 operator|<
+operator|(
+name|BN_ULONG
+operator|)
 name|c1
 condition|)
 block|{

@@ -1864,11 +1864,6 @@ name|X509_V_FLAG_CRL_CHECK_ALL
 condition|)
 name|last
 operator|=
-literal|0
-expr_stmt|;
-else|else
-name|last
-operator|=
 name|sk_X509_num
 argument_list|(
 name|ctx
@@ -1877,6 +1872,11 @@ name|chain
 argument_list|)
 operator|-
 literal|1
+expr_stmt|;
+else|else
+name|last
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2899,6 +2899,7 @@ goto|goto
 name|end
 goto|;
 block|}
+elseif|else
 if|if
 condition|(
 name|X509_verify

@@ -229,6 +229,20 @@ name|NULL
 block|}
 block|,
 block|{
+name|X509_TRUST_OBJECT_SIGN
+block|,
+literal|0
+block|,
+name|trust_1oidany
+block|,
+literal|"Object Signer"
+block|,
+name|NID_code_sign
+block|,
+name|NULL
+block|}
+block|,
+block|{
 name|X509_TRUST_OCSP_SIGN
 block|,
 literal|0

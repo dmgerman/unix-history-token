@@ -94,7 +94,7 @@ name|flags
 operator|&
 name|ENGINE_METHOD_RSA
 operator|)
-operator|&
+operator|&&
 operator|!
 name|ENGINE_set_default_RSA
 argument_list|(
@@ -116,7 +116,7 @@ name|flags
 operator|&
 name|ENGINE_METHOD_DSA
 operator|)
-operator|&
+operator|&&
 operator|!
 name|ENGINE_set_default_DSA
 argument_list|(
@@ -138,7 +138,7 @@ name|flags
 operator|&
 name|ENGINE_METHOD_DH
 operator|)
-operator|&
+operator|&&
 operator|!
 name|ENGINE_set_default_DH
 argument_list|(
@@ -157,7 +157,7 @@ name|flags
 operator|&
 name|ENGINE_METHOD_RAND
 operator|)
-operator|&
+operator|&&
 operator|!
 name|ENGINE_set_default_RAND
 argument_list|(

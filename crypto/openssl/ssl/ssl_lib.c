@@ -1759,6 +1759,27 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_KRB5
+if|if
+condition|(
+name|s
+operator|->
+name|kssl_ctx
+operator|!=
+name|NULL
+condition|)
+name|kssl_ctx_free
+argument_list|(
+name|s
+operator|->
+name|kssl_ctx
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* OPENSSL_NO_KRB5 */
 name|OPENSSL_free
 argument_list|(
 name|s

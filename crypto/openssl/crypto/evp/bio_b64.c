@@ -767,13 +767,32 @@ operator|->
 name|next_bio
 argument_list|)
 condition|)
+block|{
 name|ctx
 operator|->
 name|cont
 operator|=
 name|i
 expr_stmt|;
-comment|/* else we should continue when called again */
+comment|/* If buffer empty break */
+if|if
+condition|(
+name|ctx
+operator|->
+name|tmp_len
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* Fall through and process what we have */
+else|else
+name|i
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* else we retry and add more data to buffer */
+else|else
 break|break;
 block|}
 name|i
@@ -781,6 +800,12 @@ operator|+=
 name|ctx
 operator|->
 name|tmp_len
+expr_stmt|;
+name|ctx
+operator|->
+name|tmp_len
+operator|=
+name|i
 expr_stmt|;
 comment|/* We need to scan, a line at a time until we 		 * have a valid line if we are starting. */
 if|if
@@ -1050,6 +1075,14 @@ index|]
 operator|)
 condition|)
 block|{
+comment|/* Check buffer full */
+if|if
+condition|(
+name|i
+operator|==
+name|B64_BLOCK_SIZE
+condition|)
+block|{
 name|ctx
 operator|->
 name|tmp_nl
@@ -1062,6 +1095,7 @@ name|tmp_len
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1121,6 +1155,25 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* If buffer isn't full and we can retry then 		 * restart to read in more data. 		 */
+elseif|else
+if|if
+condition|(
+operator|(
+name|i
+operator|<
+name|B64_BLOCK_SIZE
+operator|)
+operator|&&
+operator|(
+name|ctx
+operator|->
+name|cont
+operator|>
+literal|0
+operator|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|BIO_get_flags
@@ -1330,13 +1383,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 name|ctx
 operator|->
-name|cont
+name|tmp_len
 operator|=
-name|i
+literal|0
 expr_stmt|;
+block|}
 name|ctx
 operator|->
 name|buf_off
@@ -2245,13 +2298,9 @@ name|i
 operator|<
 literal|0
 condition|)
-block|{
-name|ret
-operator|=
+return|return
 name|i
-expr_stmt|;
-break|break;
-block|}
+return|;
 block|}
 if|if
 condition|(

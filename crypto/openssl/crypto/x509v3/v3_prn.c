@@ -845,6 +845,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|indent
+operator|&&
 name|BIO_printf
 argument_list|(
 name|bp
@@ -915,7 +917,9 @@ name|ex
 argument_list|,
 name|flag
 argument_list|,
-literal|12
+name|indent
+operator|+
+literal|4
 argument_list|)
 condition|)
 block|{

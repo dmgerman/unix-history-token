@@ -3410,6 +3410,20 @@ operator|==
 name|md_type
 condition|)
 break|break;
+comment|/* Workaround for some broken clients that put the signature 		 * OID instead of the digest OID in digest_alg->algorithm 		 */
+if|if
+condition|(
+name|EVP_MD_pkey_type
+argument_list|(
+name|EVP_MD_CTX_md
+argument_list|(
+name|mdc
+argument_list|)
+argument_list|)
+operator|==
+name|md_type
+condition|)
+break|break;
 name|btmp
 operator|=
 name|BIO_next

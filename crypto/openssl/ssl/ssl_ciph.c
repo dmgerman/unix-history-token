@@ -3556,7 +3556,7 @@ name|multi
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Now search for the cipher alias in the ca_list. Be careful 			 * with the strncmp, because the "buflen" limitation 			 * will make the rule "ADH:SOME" and the cipher 			 * "ADH-MY-CIPHER" look like a match for buflen=3. 			 * So additionally check whether the cipher name found 			 * has the correct length. We can save a strlen() call: 			 * just checking for the '\0' at the right place is 			 * sufficient, we have to strncmp() anyway. 			 */
+comment|/* 			 * Now search for the cipher alias in the ca_list. Be careful 			 * with the strncmp, because the "buflen" limitation 			 * will make the rule "ADH:SOME" and the cipher 			 * "ADH-MY-CIPHER" look like a match for buflen=3. 			 * So additionally check whether the cipher name found 			 * has the correct length. We can save a strlen() call: 			 * just checking for the '\0' at the right place is 			 * sufficient, we have to strncmp() anyway. (We cannot 			 * use strcmp(), because buf is not '\0' terminated.) 			 */
 name|j
 operator|=
 name|found
@@ -3573,20 +3573,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|ca_list
-index|[
-name|j
-index|]
-operator|->
-name|name
-index|[
-name|buflen
-index|]
-operator|==
-literal|'\0'
-operator|)
-operator|&&
 operator|!
 name|strncmp
 argument_list|(
@@ -3601,6 +3587,20 @@ name|name
 argument_list|,
 name|buflen
 argument_list|)
+operator|&&
+operator|(
+name|ca_list
+index|[
+name|j
+index|]
+operator|->
+name|name
+index|[
+name|buflen
+index|]
+operator|==
+literal|'\0'
+operator|)
 condition|)
 block|{
 name|found

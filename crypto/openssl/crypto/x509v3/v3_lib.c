@@ -814,6 +814,10 @@ name|idx
 operator|=
 name|i
 expr_stmt|;
+name|found_ex
+operator|=
+name|ex
+expr_stmt|;
 break|break;
 block|}
 elseif|else

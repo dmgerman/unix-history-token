@@ -147,7 +147,7 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-comment|/*  * Key managment tools  */
+comment|/*  * Key management tools  */
 typedef|typedef
 name|KEY
 modifier|*

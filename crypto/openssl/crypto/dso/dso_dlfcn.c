@@ -304,6 +304,24 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_SUNOS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DLOPEN_FLAG
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -314,6 +332,11 @@ end_define
 begin_comment
 comment|/* Hope this works everywhere else */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

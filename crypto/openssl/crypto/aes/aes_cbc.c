@@ -153,8 +153,7 @@ literal|0
 init|;
 name|n
 operator|<
-sizeof|sizeof
-name|tmp
+name|AES_BLOCK_SIZE
 condition|;
 operator|++
 name|n
@@ -276,7 +275,7 @@ name|out
 argument_list|,
 name|tmp
 argument_list|,
-name|len
+name|AES_BLOCK_SIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -285,8 +284,7 @@ name|ivec
 argument_list|,
 name|tmp
 argument_list|,
-sizeof|sizeof
-name|tmp
+name|AES_BLOCK_SIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -306,8 +304,7 @@ name|tmp
 argument_list|,
 name|in
 argument_list|,
-sizeof|sizeof
-name|tmp
+name|AES_BLOCK_SIZE
 argument_list|)
 expr_stmt|;
 name|AES_decrypt
@@ -375,8 +372,7 @@ name|tmp
 argument_list|,
 name|in
 argument_list|,
-sizeof|sizeof
-name|tmp
+name|AES_BLOCK_SIZE
 argument_list|)
 expr_stmt|;
 name|AES_decrypt
@@ -417,8 +413,7 @@ name|ivec
 argument_list|,
 name|tmp
 argument_list|,
-sizeof|sizeof
-name|tmp
+name|AES_BLOCK_SIZE
 argument_list|)
 expr_stmt|;
 block|}

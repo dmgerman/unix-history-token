@@ -504,6 +504,11 @@ name|RSA_FLAG_SIGN_VER
 value|0x40
 define|#
 directive|define
+name|RSA_FLAG_NO_BLINDING
+value|0x80
+comment|/* new with 0.9.6j and 0.9.7b; the built-in                                               * RSA implementation now uses blinding by                                               * default (ignoring RSA_FLAG_BLINDING),                                               * but other engines might not need it                                               */
+define|#
+directive|define
 name|RSA_PKCS1_PADDING
 value|1
 define|#
