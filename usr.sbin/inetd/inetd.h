@@ -576,7 +576,8 @@ name|int
 operator|,
 name|int
 operator|,
-name|int
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
