@@ -4,21 +4,6 @@ comment|/* Definitions of target machine for GNU compiler for Intel 80386    run
 end_comment
 
 begin_comment
-comment|/* This goes away when the math-emulator is fixed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_CPU_DEFAULT
-value|0400
-end_define
-
-begin_comment
-comment|/* TARGET_NO_FANCY_MATH_387 */
-end_comment
-
-begin_comment
 comment|/* This is tested by i386gas.h.  */
 end_comment
 
@@ -54,6 +39,136 @@ directive|include
 file|"i386/perform.h"
 end_include
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* This was cloned from ../netbsd.h.  It and several other things in    this file should be in ../freebsd.h.  */
+end_comment
+
+begin_comment
+comment|/* FREEBSD_NATIVE is defined when gcc is integrated into the FreeBSD    source tree so it can be configured appropriately without using    the GNU configure/build mechanism. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_NATIVE
+end_ifdef
+
+begin_comment
+comment|/* Look for the include files in the system-defined places.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPLUSPLUS_INCLUDE_DIR
+value|"/usr/include/g++"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCC_INCLUDE_DIR
+value|"/usr/include"
+end_define
+
+begin_comment
+comment|/* FreeBSD has GCC_INCLUDE_DIR first.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCLUDE_DEFAULTS
+define|\
+value|{					\     { GCC_INCLUDE_DIR, 0, 0 },		\     { GPLUSPLUS_INCLUDE_DIR, 1, 1 },	\     { 0, 0, 0 }				\   }
+end_define
+
+begin_comment
+comment|/* Under FreeBSD, the normal location of the compiler back ends is the    /usr/libexec directory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STANDARD_EXEC_PREFIX
+value|"/usr/libexec/"
+end_define
+
+begin_comment
+comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STANDARD_STARTFILE_PREFIX
+value|"/usr/lib/"
+end_define
+
+begin_comment
+comment|/* On FreeBSD, gcc is called 'cc' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCC_NAME
+value|"cc"
+end_define
+
+begin_comment
+comment|/* FreeBSD is 4.4BSD derived */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bsd4_4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FREEBSD_NATIVE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_PROFILER_EPILOGUE
+value|010000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_PROFILER_EPILOGUE
+value|(target_flags& MASK_PROFILER_EPILOGUE)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_SWITCHES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_SWITCHES
+define|\
+value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE},		\      { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE},
+end_define
+
+begin_escape
+end_escape
+
 begin_undef
 undef|#
 directive|undef
@@ -64,7 +179,14 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__FreeBSD__ -D__386BSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Di386 -D__FreeBSD__=2 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|" %| %{fpic:-k} %{fPIC:-k}"
 end_define
 
 begin_comment
@@ -77,6 +199,49 @@ directive|define
 name|LIB_SPEC
 value|"%{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}"
 end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+define|\
+value|"%{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*} \    %{p:-Bstatic} %{pg:-Bstatic} %{Z}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_LIBGCC_SPECIAL_1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{pg:gcrt0.o%s}%{!pg:%{p:mcrt0.o%s}%{!p:%{static:scrt0.o%s}%{!static:crt0.o%s}}}"
+end_define
+
+begin_comment
+comment|/* This goes away when the math emulator is fixed.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+value|(MASK_NO_FANCY_MATH_387 | 0301)
+end_define
+
+begin_escape
+end_escape
 
 begin_undef
 undef|#
@@ -114,14 +279,14 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE
-value|"short unsigned int"
+value|"int"
 end_define
 
 begin_define
 define|#
 directive|define
 name|WCHAR_UNSIGNED
-value|1
+value|0
 end_define
 
 begin_undef
@@ -134,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE_SIZE
-value|16
+value|BITS_PER_WORD
 end_define
 
 begin_define
@@ -143,20 +308,26 @@ directive|define
 name|HAVE_ATEXIT
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_PUTENV
+end_define
+
 begin_comment
-comment|/* There are conflicting reports about whether this system uses    a different assembler syntax.  wilson@cygnus.com says # is right.  */
+comment|/* Override the default comment-starter of "/".  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|COMMENT_BEGIN
+name|ASM_COMMENT_START
 end_undef
 
 begin_define
 define|#
 directive|define
-name|COMMENT_BEGIN
+name|ASM_COMMENT_START
 value|"#"
 end_define
 
@@ -243,15 +414,18 @@ name|DEFAULT_PCC_STRUCT_RETURN
 value|0
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* Profiling routines, partially copied from i386/osfrose.h.  */
+comment|/* Tell final.c that we don't need a label passed to mcount.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NO_PROFILE_DATA
+end_define
+
 begin_comment
-comment|/* Redefine this to use %eax instead of %edx.  */
+comment|/* Redefine this to not pass an unused label in %edx.  */
 end_comment
 
 begin_undef
@@ -270,12 +444,32 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%eax\n",		\ 	       LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%eax\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
+value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mcount\n");					\ }
 end_define
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_PROFILER_EPILOGUE
+parameter_list|(
+name|FILE
+parameter_list|)
+define|\
+value|{									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (flag_pic)							\ 	fprintf (FILE, "\tcall *mexitcount@GOT(%%ebx)\n");		\       else								\ 	fprintf (FILE, "\tcall mexitcount\n");				\     }									\ }
+end_define
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/*  * Some imports from svr4.h in support of shared libraries.  * Currently, we need the DECLARE_OBJECT_SIZE stuff.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+end_define
 
 begin_comment
 comment|/* Define the strings used for the special svr4 .type and .size directives.    These strings generally do not vary from one system running svr4 to    another, but if a given system (e.g. m88k running svr) needs to use    different pseudo-op names for these, they may be overridden in the    file which includes this one.  */
@@ -294,6 +488,45 @@ directive|define
 name|SIZE_ASM_OP
 value|".size"
 end_define
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
+end_define
+
+begin_comment
+comment|/* This is how we tell the assembler that a symbol is weak.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* not ready for this yet - work in progress. 	 * We should probably update gas in the FreeBSD source to something 	 * more recent, so that this is recognised. Our LD handles it already. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_WEAKEN_LABEL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|do { fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The following macro defines the format used to output the second    operand of the .type assembler directive.  Different svr4 assemblers    expect various different forms for this operand.  The one given here    is just a default.  You may need to override it in your machine-    specific tm.h file (depending upon the particulars of your assembler).  */
@@ -413,116 +646,6 @@ parameter_list|)
 define|\
 value|do {									\     if (!flag_inhibit_size_directive)					\       {									\         char label[256];						\ 	static int labelno;						\ 	labelno++;							\ 	ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",");						\ 	assemble_name (FILE, label);					\         fprintf (FILE, "-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
 end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|" %| %{fpic:-k} %{fPIC:-k}"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*}"
-end_define
-
-begin_comment
-comment|/* This is defined when gcc is compiled in the BSD-directory-tree, and must  * make up for the gap to all the stuff done in the GNU-makefiles.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREEBSD_NATIVE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|INCLUDE_DEFAULTS
-value|{ \ 	{ "/usr/include", 0 }, \ 	{ "/usr/include/g++", 1 }, \ 	{ 0, 0} \ 	}
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|MD_EXEC_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MD_EXEC_PREFIX
-value|"/usr/libexec/"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|STANDARD_STARTFILE_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STANDARD_STARTFILE_PREFIX
-value|"/usr/lib"
-end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is very wrong!!! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_TARGET_MACHINE
-value|"i386-unknown-freebsd_1.0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPLUSPLUS_INCLUDE_DIR
-value|"/usr/local/lib/gcc-lib/i386-unknown-freebsd_1.0/2.5.8/include"
-end_define
-
-begin_define
-define|#
-directive|define
-name|TOOL_INCLUDE_DIR
-value|"/usr/local/i386-unknown-freebsd_1.0/include"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GCC_INCLUDE_DIR
-value|"/usr/local/lib/gcc-lib/i386-unknown-freebsd_1.0/2.5.8/include"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FREEBSD_NATIVE */
-end_comment
 
 end_unit
 

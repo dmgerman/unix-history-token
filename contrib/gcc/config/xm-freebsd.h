@@ -8,6 +8,16 @@ comment|/* This file defines machine-independent things specific to a host    ru
 end_comment
 
 begin_comment
+comment|/* FreeBSD has putenv.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PUTENV
+end_define
+
+begin_comment
 comment|/* FreeBSD has strerror.  */
 end_comment
 
