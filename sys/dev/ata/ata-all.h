@@ -1871,6 +1871,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ata_test_lun
+parameter_list|(
+name|u_int32_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ata_free_lun
 parameter_list|(
