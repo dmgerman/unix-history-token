@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)screen.c	5.5 (Berkeley) %G%"
+literal|"@(#)screen.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -730,13 +730,6 @@ literal|"dumb:co#80:hc:"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get size of the screen. 	 */
-if|if
-condition|(
-name|sc_height
-operator|==
-operator|-
-literal|1
-condition|)
 ifdef|#
 directive|ifdef
 name|TIOCGWINSZ
@@ -1609,8 +1602,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|short_file
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Move cursor to lower left corner of screen.  */
+comment|/* if file less than a screen */
 end_comment
 
 begin_macro
@@ -1620,6 +1619,21 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|short_file
+condition|)
+block|{
+name|putchr
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+name|flush
+argument_list|()
+expr_stmt|;
+block|}
+else|else
 name|tputs
 argument_list|(
 name|sc_lower_left

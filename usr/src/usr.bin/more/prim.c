@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prim.c	5.6 (Berkeley) %G%"
+literal|"@(#)prim.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,7 +241,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Display n lines, scrolling forward, starting at position pos in the  * input file.  "force" means display the n lines even if we hit end of  * file.  "only_last" means display only the last screenful if n> screen  * size.  */
+comment|/*  * Display n lines, scrolling forward, starting at position pos in the  * input file.  "only_last" means display only the last screenful if  * n> screen size.  */
 end_comment
 
 begin_expr_stmt
@@ -250,8 +250,6 @@ argument_list|(
 name|n
 argument_list|,
 name|pos
-argument_list|,
-name|force
 argument_list|,
 name|only_last
 argument_list|)
@@ -269,18 +267,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|force
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|only_last
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|short_file
+decl_stmt|;
 specifier|static
 name|int
 name|first_time
@@ -334,10 +330,6 @@ expr_stmt|;
 name|home
 argument_list|()
 expr_stmt|;
-name|force
-operator|=
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -367,10 +359,6 @@ argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
-name|force
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|top_scroll
@@ -396,13 +384,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-while|while
-condition|(
+for|for
+control|(
+name|short_file
+operator|=
+literal|0
+init|;
 operator|--
 name|n
 operator|>=
 literal|0
-condition|)
+condition|;
+control|)
 block|{
 comment|/* 		 * Read the next line of input. 		 */
 name|pos
@@ -419,28 +412,38 @@ operator|==
 name|NULL_POSITION
 condition|)
 block|{
-comment|/* 			 * End of file: stop here unless the top line  			 * is still empty, or "force" is true. 			 */
+comment|/* 			 * end of file; copy the table if the file was 			 * too small for an entire screen. 			 */
 name|eof
 operator|=
 literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|force
-operator|&&
 name|position
 argument_list|(
 name|TOP
 argument_list|)
-operator|!=
+operator|==
 name|NULL_POSITION
 condition|)
-break|break;
-name|line
-operator|=
-name|NULL
+block|{
+name|copytable
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|position
+argument_list|(
+name|TOP
+argument_list|)
+condition|)
+name|short_file
+operator|=
+literal|1
+expr_stmt|;
+block|}
+break|break;
 block|}
 comment|/* 		 * Add the position of the next line to the position table. 		 * Display the current line on the screen. 		 */
 name|add_forw_pos
@@ -526,8 +529,6 @@ name|n
 argument_list|,
 name|pos
 argument_list|,
-name|force
-argument_list|,
 name|only_last
 argument_list|)
 specifier|register
@@ -539,12 +540,6 @@ end_expr_stmt
 begin_decl_stmt
 name|off_t
 name|pos
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|force
 decl_stmt|;
 end_decl_stmt
 
@@ -607,19 +602,7 @@ name|pos
 operator|==
 name|NULL_POSITION
 condition|)
-block|{
-comment|/* 			 * Beginning of file: stop here unless "force" is true. 			 */
-if|if
-condition|(
-operator|!
-name|force
-condition|)
 break|break;
-name|line
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* 		 * Add the position of the previous line to the position table. 		 * Display the line on the screen. 		 */
 name|add_back_pos
 argument_list|(
@@ -732,8 +715,6 @@ name|n
 argument_list|,
 name|pos
 argument_list|,
-literal|0
-argument_list|,
 name|only_last
 argument_list|)
 expr_stmt|;
@@ -791,8 +772,6 @@ name|n
 argument_list|,
 name|pos
 argument_list|,
-literal|0
-argument_list|,
 name|only_last
 argument_list|)
 expr_stmt|;
@@ -829,8 +808,6 @@ operator|-
 literal|1
 argument_list|,
 name|pos
-argument_list|,
-literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -918,8 +895,6 @@ operator|-
 literal|1
 argument_list|,
 name|pos
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1219,8 +1194,6 @@ argument_list|(
 name|BOTTOM_PLUS_ONE
 argument_list|)
 argument_list|,
-literal|1
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1322,8 +1295,6 @@ argument_list|(
 name|nline
 argument_list|,
 name|npos
-argument_list|,
-literal|1
 argument_list|,
 literal|0
 argument_list|)
