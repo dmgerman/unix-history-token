@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.11	81/11/30	*/
+comment|/*	param.c	4.12	82/04/03	*/
 end_comment
 
 begin_include
@@ -154,7 +154,7 @@ begin_decl_stmt
 name|int
 name|nfile
 init|=
-literal|8
+literal|16
 operator|*
 operator|(
 name|NPROC
