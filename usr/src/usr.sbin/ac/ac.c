@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ac.c	4.3 (Berkeley) %G%"
+literal|"@(#)ac.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,11 +63,15 @@ name|LMAX
 value|sizeof(ibuf.ut_line)
 end_define
 
+begin_comment
+comment|/* #define	TSIZE	1000 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TSIZE
-value|1000
+value|6242
 end_define
 
 begin_define
@@ -661,6 +665,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	if (ibuf.ut_line[0]=='t') 		i = (ibuf.ut_line[3]-'0')*10 + (ibuf.ut_line[4]-'0'); 	else 		i = TSIZE-1; 	if (i<0 || i>=TSIZE) 		i = TSIZE-1; 	*/
+comment|/* 	 * Correction contributed by Phyllis Kantar @ Rand-unix 	 * 	 * Fixes long standing problem with tty names other than 00-99 	 */
 if|if
 condition|(
 name|ibuf
@@ -672,6 +678,7 @@ index|]
 operator|==
 literal|'t'
 condition|)
+block|{
 name|i
 operator|=
 operator|(
@@ -684,8 +691,21 @@ index|]
 operator|-
 literal|'0'
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ibuf
+operator|.
+name|ut_line
+index|[
+literal|4
+index|]
+condition|)
+name|i
+operator|=
+name|i
 operator|*
-literal|10
+literal|79
 operator|+
 operator|(
 name|ibuf
@@ -698,6 +718,7 @@ operator|-
 literal|'0'
 operator|)
 expr_stmt|;
+block|}
 else|else
 name|i
 operator|=
@@ -715,12 +736,23 @@ name|i
 operator|>=
 name|TSIZE
 condition|)
+block|{
 name|i
 operator|=
 name|TSIZE
 operator|-
 literal|1
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"ac: Bad tty name: %s\n"
+argument_list|,
+name|ibuf
+operator|.
+name|ut_line
+argument_list|)
+expr_stmt|;
+block|}
 name|tp
 operator|=
 operator|&
