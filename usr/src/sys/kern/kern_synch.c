@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -671,16 +671,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * We're only looking at 7 bits of the address; everything is  * aligned to 4, lots of things are aligned to greater powers  * of 2.  Shift right by 8, i.e. drop the bottom 256 worth.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TABLESIZE
-value|64
+value|128
 end_define
-
-begin_comment
-comment|/* Must be power of 2. */
-end_comment
 
 begin_define
 define|#
@@ -689,7 +689,7 @@ name|LOOKUP
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)x& (TABLESIZE - 1))
+value|(((int)(x)>> 8)& (TABLESIZE - 1))
 end_define
 
 begin_struct
