@@ -4030,7 +4030,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle our once-per-second timeout event. We do two things:  * we decrement link->loopCount for those links being muted due to  * a detected loopback condition, and we remove any hosts from  * the hashtable whom we haven't heard from in a long while.  *  * If the node has the NG_INVALID flag set, out job is to kill it.  */
+comment|/*  * Handle our once-per-second timeout event. We do two things:  * we decrement link->loopCount for those links being muted due to  * a detected loopback condition, and we remove any hosts from  * the hashtable whom we haven't heard from in a long while.  *  * If the node has the NG_INVALID flag set, our job is to kill it.  */
 end_comment
 
 begin_function
