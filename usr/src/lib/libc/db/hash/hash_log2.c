@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_log2.c	5.3 (Berkeley) %G%"
+literal|"@(#)hash_log2.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,30 +41,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"hash.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"page.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"extern.h"
 end_include
 
 begin_function
