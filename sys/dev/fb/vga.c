@@ -4773,7 +4773,6 @@ block|{
 name|DCC_MONO
 block|,
 name|DCC_EGA80
-comment|/* CGA emulation */
 block|}
 block|,
 block|{
@@ -4810,7 +4809,6 @@ block|}
 block|,
 block|{
 name|DCC_EGA80
-comment|/* CGA emulation */
 block|,
 name|DCC_MONO
 block|}
@@ -4830,7 +4828,7 @@ block|,
 block|{
 name|DCC_EGAMONO
 block|,
-name|DCC_CGA40
+name|DCC_CGA80
 block|}
 block|,     }
 struct|;
