@@ -1010,17 +1010,20 @@ argument_list|,
 literal|"no name"
 argument_list|)
 expr_stmt|;
-block|}
+else|else
 name|captain
 index|[
-sizeof|sizeof
+name|strlen
+argument_list|(
 name|captain
+argument_list|)
 operator|-
 literal|1
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 name|Write
 argument_list|(
 name|W_CAPTAIN
