@@ -209,7 +209,6 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-name|__dead
 name|void
 name|abort
 name|__P
@@ -223,7 +222,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|int
 name|abs
 name|__P
@@ -349,7 +347,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|div_t
 name|div
 name|__P
@@ -365,7 +362,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|exit
 name|__P
@@ -407,7 +403,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|long
 name|labs
 name|__P
@@ -421,7 +416,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|ldiv_t
 name|ldiv
 name|__P

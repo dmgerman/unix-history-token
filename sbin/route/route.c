@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.13 1996/08/13 22:20:20 julian Exp $"
+literal|"$Id: route.c,v 1.14 1996/08/19 18:52:49 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -577,7 +577,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|__dead
 name|void
 name|usage
 name|__P
@@ -593,7 +592,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|__dead
 name|void
 name|usage
 parameter_list|(

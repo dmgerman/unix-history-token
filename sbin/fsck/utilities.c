@@ -2625,7 +2625,6 @@ comment|/* VARARGS1 */
 end_comment
 
 begin_function
-name|__dead
 name|void
 name|errexit
 parameter_list|(
@@ -2824,7 +2823,6 @@ comment|/*  * Stub for routines from kernel.  */
 end_comment
 
 begin_function
-name|__dead
 name|void
 ifdef|#
 directive|ifdef

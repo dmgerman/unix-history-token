@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_msdos.c,v 1.3 1994/11/01 23:51:42 wollman Exp $"
+literal|"$Id: mount_msdos.c,v 1.4 1996/05/13 17:56:34 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,7 +180,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|__dead
 name|void
 name|usage
 name|__P

@@ -33,7 +33,6 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-name|__dead
 name|void
 name|err
 name|__P
@@ -53,7 +52,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|verr
 name|__P
@@ -73,7 +71,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|errx
 name|__P
@@ -93,7 +90,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|verrx
 name|__P
@@ -197,13 +193,10 @@ argument_list|(
 operator|(
 name|void
 argument_list|(
-argument|*
+operator|*
 argument_list|)
-name|__P
 argument_list|(
-operator|(
 name|int
-operator|)
 argument_list|)
 operator|)
 argument_list|)

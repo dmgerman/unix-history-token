@@ -179,7 +179,6 @@ block|}
 end_function
 
 begin_function
-name|__dead
 name|void
 ifdef|#
 directive|ifdef
@@ -258,7 +257,6 @@ block|}
 end_function
 
 begin_function
-name|__dead
 name|void
 name|verr
 parameter_list|(
@@ -376,7 +374,6 @@ block|}
 end_function
 
 begin_function
-name|__dead
 name|void
 if|#
 directive|if
@@ -455,7 +452,6 @@ block|}
 end_function
 
 begin_function
-name|__dead
 name|void
 name|verrx
 parameter_list|(

@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_nfs.c,v 1.13 1996/05/13 17:43:06 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -858,7 +858,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|usage
 name|__P
@@ -867,6 +866,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -4090,7 +4090,6 @@ block|}
 end_function
 
 begin_function
-name|__dead
 name|void
 name|usage
 parameter_list|()

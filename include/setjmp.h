@@ -225,7 +225,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|longjmp
 name|__P
@@ -261,7 +260,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|siglongjmp
 name|__P
@@ -314,7 +312,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|_longjmp
 name|__P

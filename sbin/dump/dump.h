@@ -792,7 +792,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|Exit
 name|__P
@@ -802,6 +801,7 @@ name|int
 name|status
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -1381,7 +1381,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|__dead
 name|void
 name|exit
 parameter_list|()

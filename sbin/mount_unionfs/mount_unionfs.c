@@ -150,7 +150,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|__dead
 name|void
 name|usage
 name|__P

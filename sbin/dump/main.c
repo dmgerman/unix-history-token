@@ -349,7 +349,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|__dead
 name|void
 name|missingarg
 name|__P
@@ -361,6 +360,7 @@ name|char
 operator|*
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -2538,7 +2538,6 @@ end_function
 
 begin_function
 specifier|static
-name|__dead
 name|void
 name|missingarg
 parameter_list|(

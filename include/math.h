@@ -277,9 +277,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_comment
+comment|/*  * Most of these functions have the side effect of setting errno, except  * in the (broken) BSD libm, so they not declared as __pure2.  */
+end_comment
+
 begin_decl_stmt
 name|__BEGIN_DECLS
-name|__pure
 name|double
 name|acos
 name|__P
@@ -292,7 +295,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|asin
 name|__P
@@ -305,7 +307,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|atan
 name|__P
@@ -318,7 +319,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|atan2
 name|__P
@@ -333,7 +333,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|ceil
 name|__P
@@ -346,7 +345,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|cos
 name|__P
@@ -359,7 +357,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|cosh
 name|__P
@@ -372,7 +369,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|exp
 name|__P
@@ -385,7 +381,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|fabs
 name|__P
@@ -398,7 +393,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|floor
 name|__P
@@ -411,7 +405,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|fmod
 name|__P
@@ -440,8 +433,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* fundamentally !__pure2 */
+end_comment
+
 begin_decl_stmt
-name|__pure
 name|double
 name|ldexp
 name|__P
@@ -456,7 +452,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|log
 name|__P
@@ -469,7 +464,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|log10
 name|__P
@@ -496,8 +490,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* fundamentally !__pure2 */
+end_comment
+
 begin_decl_stmt
-name|__pure
 name|double
 name|pow
 name|__P
@@ -512,7 +509,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|sin
 name|__P
@@ -525,7 +521,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|sinh
 name|__P
@@ -538,7 +533,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|sqrt
 name|__P
@@ -551,7 +545,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|tan
 name|__P
@@ -564,7 +557,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|tanh
 name|__P
@@ -575,6 +567,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * These functions are non-ANSI so they can be "right".  The ones that  * don't set errno in [lib]msun are declared as __pure2.  */
+end_comment
 
 begin_if
 if|#
@@ -593,7 +589,6 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-name|__pure
 name|double
 name|acosh
 name|__P
@@ -606,7 +601,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|asinh
 name|__P
@@ -619,7 +613,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|atanh
 name|__P
@@ -643,7 +636,6 @@ comment|/* we can't describe cabs()'s argument properly */
 end_comment
 
 begin_decl_stmt
-name|__pure
 name|double
 name|cbrt
 name|__P
@@ -652,11 +644,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|copysign
 name|__P
@@ -667,11 +659,11 @@ operator|,
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|drem
 name|__P
@@ -686,7 +678,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|erf
 name|__P
@@ -699,7 +690,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|erfc
 name|__P
@@ -708,11 +698,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|expm1
 name|__P
@@ -721,11 +711,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|int
 name|finite
 name|__P
@@ -734,11 +724,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|hypot
 name|__P
@@ -767,7 +757,6 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-name|__pure
 name|double
 name|infnan
 name|__P
@@ -785,7 +774,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|__pure
 name|int
 name|isinf
 name|__P
@@ -794,11 +782,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|int
 name|isnan
 name|__P
@@ -807,11 +795,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|j0
 name|__P
@@ -824,7 +812,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|j1
 name|__P
@@ -837,7 +824,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|jn
 name|__P
@@ -852,7 +838,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|lgamma
 name|__P
@@ -865,7 +850,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|log1p
 name|__P
@@ -874,11 +858,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|logb
 name|__P
@@ -887,11 +871,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|rint
 name|__P
@@ -900,11 +884,11 @@ operator|(
 name|double
 operator|)
 argument_list|)
+name|__pure2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|scalb
 name|__P
@@ -919,7 +903,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|y0
 name|__P
@@ -932,7 +915,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|y1
 name|__P
@@ -945,7 +927,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__pure
 name|double
 name|yn
 name|__P
@@ -974,7 +955,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MATH_H_ */
+comment|/* !_MATH_H_ */
 end_comment
 
 end_unit

@@ -1626,7 +1626,6 @@ block|}
 end_function
 
 begin_function
-name|__dead
 name|void
 name|usage
 parameter_list|()

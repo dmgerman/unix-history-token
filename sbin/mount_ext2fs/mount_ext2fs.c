@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_ext2fs.c,v 1.3 1996/07/23 19:29:27 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|__dead
 name|void
 name|usage
 name|__P

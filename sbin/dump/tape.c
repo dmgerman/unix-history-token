@@ -2905,7 +2905,6 @@ block|}
 end_function
 
 begin_function
-name|__dead
 name|void
 name|Exit
 parameter_list|(

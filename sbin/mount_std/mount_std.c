@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_std.c,v 1.1 1996/05/13 17:43:16 wollman Exp $"
+literal|"$Id: mount_std.c,v 1.2 1996/05/14 15:16:49 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|__dead
 name|void
 name|usage
 name|__P

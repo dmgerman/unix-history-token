@@ -177,7 +177,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__dead
 name|void
 name|done
 name|__P
@@ -186,6 +185,7 @@ operator|(
 name|int
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 

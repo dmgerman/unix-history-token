@@ -3755,7 +3755,6 @@ comment|/*  * Clean up and exit  */
 end_comment
 
 begin_function
-name|__dead
 name|void
 name|done
 parameter_list|(
