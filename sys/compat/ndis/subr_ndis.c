@@ -5408,6 +5408,7 @@ operator|(
 name|NDIS_STATUS_FAILURE
 operator|)
 return|;
+comment|/* Don't let the device map more ports than we have. */
 if|if
 condition|(
 name|rman_get_size
@@ -5416,7 +5417,7 @@ name|sc
 operator|->
 name|ndis_res_io
 argument_list|)
-operator|!=
+operator|<
 name|numports
 condition|)
 return|return
