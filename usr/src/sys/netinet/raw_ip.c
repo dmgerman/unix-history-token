@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -271,7 +271,7 @@ operator|->
 name|inp_laddr
 operator|.
 name|s_addr
-operator|==
+operator|!=
 name|ip
 operator|->
 name|ip_dst
@@ -292,7 +292,7 @@ operator|->
 name|inp_faddr
 operator|.
 name|s_addr
-operator|==
+operator|!=
 name|ip
 operator|->
 name|ip_src
