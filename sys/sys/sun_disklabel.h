@@ -205,6 +205,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -218,6 +224,11 @@ literal|512
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
