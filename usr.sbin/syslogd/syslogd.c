@@ -5702,6 +5702,15 @@ name|send_to_all
 condition|)
 break|break;
 block|}
+name|dprintf
+argument_list|(
+literal|"lsent/l: %d/%d\n"
+argument_list|,
+name|lsent
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lsent
@@ -5714,6 +5723,43 @@ name|e
 init|=
 name|errno
 decl_stmt|;
+name|logerror
+argument_list|(
+literal|"sendto"
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|e
+expr_stmt|;
+switch|switch
+condition|(
+name|errno
+condition|)
+block|{
+case|case
+name|EHOSTUNREACH
+case|:
+case|case
+name|EHOSTDOWN
+case|:
+break|break;
+comment|/* case EBADF: */
+comment|/* case EACCES: */
+comment|/* case ENOTSOCK: */
+comment|/* case EFAULT: */
+comment|/* case EMSGSIZE: */
+comment|/* case EAGAIN: */
+comment|/* case ENOBUFS: */
+comment|/* case ECONNREFUSED: */
+default|default:
+name|dprintf
+argument_list|(
+literal|"removing entry\n"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5724,21 +5770,14 @@ operator|->
 name|f_file
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-name|e
-expr_stmt|;
 name|f
 operator|->
 name|f_type
 operator|=
 name|F_UNUSED
 expr_stmt|;
-name|logerror
-argument_list|(
-literal|"sendto"
-argument_list|)
-expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 break|break;
