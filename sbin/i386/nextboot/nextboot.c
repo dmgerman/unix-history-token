@@ -133,14 +133,14 @@ begin_define
 define|#
 directive|define
 name|ENABLE_MAGIC
-value|0xdeafc0de
+value|0xfadefeed
 end_define
 
 begin_define
 define|#
 directive|define
 name|DISABLE_MAGIC
-value|0xdeadc0de
+value|0xfadefade
 end_define
 
 begin_decl_stmt
