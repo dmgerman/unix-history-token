@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -176,6 +176,8 @@ block|,
 name|nfs_statfs
 block|,
 name|nfs_sync
+block|,
+name|nfs_vget
 block|,
 name|nfs_fhtovp
 block|,
@@ -2991,10 +2993,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_FSYNC
-expr_stmt|;
-name|USES_VOP_ISLOCKED
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -3096,6 +3094,47 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * NFS flat namespace lookup.  * Currently unsupported.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|int
+name|nfs_vget
+parameter_list|(
+name|mp
+parameter_list|,
+name|ino
+parameter_list|,
+name|vpp
+parameter_list|)
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * At this point, this should never happen  */
