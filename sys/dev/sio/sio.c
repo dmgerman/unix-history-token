@@ -4734,13 +4734,6 @@ block|{
 name|enable_intr
 argument_list|()
 expr_stmt|;
-name|free
-argument_list|(
-name|com
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Leave i/o resources allocated if this is a `cn'-level 		 * console, so that other devices can't snarf them. 		 */
 if|if
 condition|(
@@ -6654,13 +6647,6 @@ argument_list|,
 sizeof|sizeof
 expr|*
 name|tp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|com
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|splx
