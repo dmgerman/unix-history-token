@@ -3067,7 +3067,7 @@ name|message
 operator|->
 name|blocksize
 operator|=
-literal|0
+name|DEFAULT_REVIVE_BLOCKSIZE
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -4810,14 +4810,21 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|plex
 operator|.
 name|organization
 operator|!=
 name|plex_concat
+operator|)
+comment|/* not a cat plex, */
+operator|&&
+operator|(
+operator|!
+name|force
+operator|)
 condition|)
 block|{
-comment|/* not a cat plex, */
 name|fprintf
 argument_list|(
 name|stderr
@@ -11521,6 +11528,11 @@ name|argv0
 index|[]
 parameter_list|)
 block|{
+name|Verbose
+operator|=
+name|vflag
+expr_stmt|;
+comment|/* accept -v for verbose */
 if|if
 condition|(
 name|argc
@@ -11598,7 +11610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common code for rebuildparity and checkparity.  * We bend the meanings of some flags here:  *  * -v: Report incorrect parity on rebuild.  * -f: Start from beginning of the plex.  */
+comment|/*  * Common code for rebuildparity and checkparity.  * We bend the meanings of some flags here:  *  * -v: Report incorrect parity on rebuild.  * -V: Show running count of position being checked.  * -f: Start from beginning of the plex.  */
 end_comment
 
 begin_function
