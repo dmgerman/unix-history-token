@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)mem.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)mem.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -309,11 +309,8 @@ else|:
 name|PG_KW
 operator|)
 expr_stmt|;
-name|load_cr3
-argument_list|(
-name|_cr3
+name|tlbflush
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|o
 operator|=

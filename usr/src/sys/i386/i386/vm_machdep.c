@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -80,24 +80,6 @@ include|#
 directive|include
 file|"buf.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"dbg.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|load_cr3
-parameter_list|(
-name|s
-parameter_list|)
-value|{long phys; \ 	phys = (long)(s)
-comment|/*| 0x80000000 */
-value|;\ 	__asm ( "movl %0,%%eax; movl %%eax,%%cr3" : : "g" (phys) : "ax" ) ; }
-end_define
 
 begin_comment
 comment|/*  * Set a red zone in the kernel stack after the u. area.  */
@@ -305,14 +287,8 @@ name|pte
 expr_stmt|;
 endif|#
 directive|endif
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|tlbflush
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -499,14 +475,8 @@ name|pte
 operator||=
 name|tprot
 expr_stmt|;
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|tlbflush
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -582,14 +552,8 @@ operator||=
 name|tprot
 expr_stmt|;
 block|}
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|tlbflush
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -679,7 +643,6 @@ operator|-
 name|nlen
 expr_stmt|;
 block|}
-comment|/*pg("setptlr(%x,%x), was %d",region, nlen, olen);*/
 if|if
 condition|(
 operator|(
@@ -730,7 +693,6 @@ name|pcb_p1lr
 operator|-
 name|change
 expr_stmt|;
-comment|/*printf("p0b %x p0l %x", u.u_pcb.pcb_p0br, u.u_pcb.pcb_p0lr); printf("p1b %x p1l %x pte %x", u.u_pcb.pcb_p1br, u.u_pcb.pcb_p1lr, pte);*/
 do|do
 block|{
 operator|*
@@ -751,14 +713,8 @@ name|change
 condition|)
 do|;
 comment|/* short cut newptes */
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|tlbflush
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -850,14 +806,8 @@ name|pte
 operator|++
 expr_stmt|;
 block|}
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|tlbflush
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -974,14 +924,8 @@ operator|-=
 name|NBPG
 expr_stmt|;
 block|}
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|tlbflush
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -1145,7 +1089,6 @@ operator|->
 name|p_ssize
 argument_list|)
 condition|)
-comment|/* { dprintf(DPHYS,"vtopte %x %x\n", vtopte(p, page), *(int *)vtopte(p, page) );*/
 return|return
 operator|(
 operator|(
@@ -1167,7 +1110,6 @@ operator|==
 name|PG_UW
 operator|)
 return|;
-comment|/*}*/
 return|return
 operator|(
 literal|0
@@ -1227,7 +1169,6 @@ specifier|extern
 name|long
 name|Syssize
 decl_stmt|;
-comment|/*dprintf(DPHYS,"kernacc %x count %d rw %d", addr, count, rw);*/
 if|if
 condition|(
 name|count
@@ -1323,13 +1264,11 @@ name|pd_v
 operator|==
 literal|0
 condition|)
-comment|/*{ dprintf(DPHYS,"nope pde %x, idx %x\n", pde, ix);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/*}*/
 name|ix
 operator|=
 name|btop
@@ -1364,13 +1303,11 @@ operator|)
 operator|&
 name|Syssize
 condition|)
-comment|/*{ dprintf(DPHYS,"nope cnt %x\n", cnt);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/*}*/
 name|cnt
 operator|-=
 name|ix
@@ -1402,13 +1339,11 @@ operator|==
 literal|0
 comment|/*|| (rw == B_WRITE&& pte->pg_prot == 1)*/
 condition|)
-comment|/*{ dprintf(DPHYS,"nope pte %x %x, idx %x\n", pte, *(int *)pte, ix);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/*} dprintf(DPHYS,"yup\n");*/
 return|return
 operator|(
 literal|1
@@ -1462,7 +1397,6 @@ decl_stmt|,
 name|probew
 argument_list|()
 decl_stmt|;
-comment|/*dprintf(DPHYS,"useracc %x count %d rw %d", addr, count, rw);*/
 if|if
 condition|(
 name|count
@@ -1508,13 +1442,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/*{ dprintf(DPHYS,"nope %x\n", addr);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/*}*/
 name|addr2
 operator|=
 operator|(
@@ -1534,7 +1466,6 @@ operator|<
 name|addr
 condition|)
 do|;
-comment|/*dprintf(DPHYS,"yup\n", addr);*/
 return|return
 operator|(
 literal|1
@@ -1763,7 +1694,6 @@ name|vtopde
 parameter_list|()
 function_decl|;
 extern|extern Sysbase;
-comment|/*pg("initpdt");*/
 comment|/* clear entire map */
 name|pde
 operator|=
@@ -1870,7 +1800,6 @@ index|]
 operator|.
 name|pg_pfnum
 expr_stmt|;
-comment|/*printf("%d.u. pde %x pfnum %x virt %x\n", p->p_pid, pde, pde->pd_pfnum, p->p_addr);*/
 comment|/* otherwise, fill in user map */
 name|k
 operator|=
@@ -1914,7 +1843,6 @@ operator|->
 name|p_dsize
 argument_list|)
 expr_stmt|;
-comment|/*dprintf(DEXPAND,"textdata 0 to %d\n",sz-1);*/
 for|for
 control|(
 name|i
@@ -1955,7 +1883,6 @@ index|]
 operator|.
 name|pg_pfnum
 expr_stmt|;
-comment|/*dprintf(DEXPAND,"%d.pde %x pf %x\n", p->p_pid, pde, *(int *)pde);*/
 block|}
 comment|/* 	 * Bogus!  The kernelmap may map unused PT pages 	 * (since we don't shrink PTs) so we need to skip over 	 * those PDEs.  We should really free the unused PT 	 * pages in expand(). 	 */
 name|sz
@@ -2005,7 +1932,6 @@ name|Sysbase
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*dprintf(DEXPAND,"zero %d upto %d\n", i, sz-1);*/
 for|for
 control|(
 init|;
@@ -2019,8 +1945,6 @@ operator|,
 name|pde
 operator|++
 control|)
-comment|/* definite bug here... does not hit all entries, but point moot due to bzero above XXX*/
-block|{
 operator|*
 operator|(
 name|int
@@ -2030,8 +1954,6 @@ name|pde
 operator|=
 literal|0
 expr_stmt|;
-comment|/*pg("pde %x pf %x", pde, *(int *)pde);*/
-block|}
 comment|/* stack and u-area */
 name|sz
 operator|=
@@ -2048,7 +1970,6 @@ name|Sysbase
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*dprintf(DEXPAND,"stack %d upto %d\n", i, sz-1);*/
 for|for
 control|(
 init|;
@@ -2086,7 +2007,6 @@ index|]
 operator|.
 name|pg_pfnum
 expr_stmt|;
-comment|/*pg("pde %x pf %x", pde, *(int *)pde);*/
 block|}
 return|return
 operator|(
@@ -2610,14 +2530,8 @@ block|}
 end_while
 
 begin_expr_stmt
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|tlbflush
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -2830,14 +2744,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|tlbflush
+argument_list|()
 expr_stmt|;
 block|}
 end_block

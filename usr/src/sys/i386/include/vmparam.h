@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)vmparam.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)vmparam.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -437,7 +437,7 @@ parameter_list|,
 name|prot
 parameter_list|)
 define|\
-value|(*(int *)(pte) = ((pfnum)<<PGSHIFT) | (prot))
+value|{(*(int *)(pte) = ((pfnum)<<PGSHIFT) | (prot)); tlbflush(); }
 end_define
 
 begin_comment
@@ -467,6 +467,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * inline assembler macros  */
+end_comment
+
+begin_comment
 comment|/*  * Flush MMU TLB  */
 end_comment
 
@@ -475,9 +479,43 @@ define|#
 directive|define
 name|tlbflush
 parameter_list|()
-value|asm(" movl %cr3,%eax; movl %eax,%cr3 "
-comment|/*, "ax" */
-value|)
+value|asm(" movl %%cr3,%%eax; movl %%eax,%%cr3 " ::: "ax")
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|I386_CR3PAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|I386_CR3PAT
+value|0x0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_cr3
+parameter_list|()
+value|({u_long rtn; \ 	asm (" movl %%cr3,%%eax; movl %%eax,%0 " \ 		: "=g" (rtn) \ 		: \ 		: "ax"); \ 	rtn; \ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|load_cr3
+parameter_list|(
+name|s
+parameter_list|)
+value|({ u_long val; \ 	val = (s) | I386_CR3PAT; \ 	asm ("movl %0,%%eax; movl %%eax,%%cr3" \ 		:  \ 		: "g" (val) \ 		: "ax"); \ })
 end_define
 
 end_unit
