@@ -1132,7 +1132,7 @@ name|sprintf
 argument_list|(
 name|specname
 argument_list|,
-literal|"%sr%s"
+literal|"%s%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
@@ -7034,7 +7034,7 @@ name|namebuf
 argument_list|,
 name|BBSIZE
 argument_list|,
-literal|"%sr%s"
+literal|"%s%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
