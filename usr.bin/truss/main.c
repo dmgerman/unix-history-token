@@ -4,7 +4,7 @@ comment|/*  * The main module for truss.  Suprisingly simple, but, then, the oth
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: main.c,v 1.1 1997/12/06 05:23:03 sef Exp $  */
 end_comment
 
 begin_include
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
