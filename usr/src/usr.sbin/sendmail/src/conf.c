@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.83 (Berkeley) %G%"
+literal|"@(#)conf.c	8.84 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3811,6 +3811,9 @@ operator|>
 literal|1000
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
 name|syslog
 argument_list|(
 name|LOG_ALERT
@@ -3822,6 +3825,8 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 block|}
@@ -4557,6 +4562,63 @@ endif|#
 directive|endif
 block|}
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  FSYNC -- dummy fsync */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEEDFSYNC
+end_ifdef
+
+begin_macro
+name|fsync
+argument_list|(
+argument|fd
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|fd
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+ifdef|#
+directive|ifdef
+name|O_SYNC
+return|return
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|O_SYNC
+argument_list|)
+return|;
+else|#
+directive|else
+comment|/* nothing we can do */
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+block|}
+end_block
 
 begin_endif
 endif|#

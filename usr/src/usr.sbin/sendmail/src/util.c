@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.35 (Berkeley) %G%"
+literal|"@(#)util.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5145,6 +5145,9 @@ break|break;
 block|}
 name|printit
 label|:
+ifdef|#
+directive|ifdef
+name|LOG
 if|if
 condition|(
 name|logit
@@ -5159,6 +5162,8 @@ name|buf
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"%s\n"

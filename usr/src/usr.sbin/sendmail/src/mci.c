@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.12 (Berkeley) %G%"
+literal|"@(#)mci.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1232,6 +1232,9 @@ argument_list|)
 expr_stmt|;
 name|printit
 label|:
+ifdef|#
+directive|ifdef
+name|LOG
 if|if
 condition|(
 name|logit
@@ -1246,6 +1249,8 @@ name|buf
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"%s\n"

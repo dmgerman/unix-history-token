@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.30 (Berkeley) %G%"
+literal|"@(#)headers.c	8.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2163,6 +2163,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
 name|char
 modifier|*
 name|name
@@ -2614,6 +2617,8 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

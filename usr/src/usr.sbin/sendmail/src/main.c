@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.53 (Berkeley) %G%"
+literal|"@(#)main.c	8.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,6 +843,12 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|LOG
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|LOG_MAIL
 end_ifdef
 
@@ -872,6 +878,11 @@ name|LOG_PID
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4417,6 +4428,9 @@ argument_list|,
 literal|"+debugging"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -4430,6 +4444,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|XLA
