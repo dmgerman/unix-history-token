@@ -8590,7 +8590,9 @@ name|ppr_options
 expr_stmt|;
 if|if
 condition|(
-name|dosync
+name|use_ppr
+operator|==
+literal|0
 condition|)
 name|ppr_options
 operator|=
