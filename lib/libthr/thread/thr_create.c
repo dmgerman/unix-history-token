@@ -333,17 +333,13 @@ return|;
 block|}
 block|}
 comment|/* Initialise the thread structure: */
-name|memset
+name|init_td_common
 argument_list|(
 name|new_thread
+argument_list|,
+name|pattr
 argument_list|,
 literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pthread
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|new_thread
@@ -363,21 +359,6 @@ operator|->
 name|arg
 operator|=
 name|arg
-expr_stmt|;
-name|new_thread
-operator|->
-name|cancelflags
-operator|=
-name|PTHREAD_CANCEL_ENABLE
-operator||
-name|PTHREAD_CANCEL_DEFERRED
-expr_stmt|;
-comment|/* 	 * Write a magic value to the thread structure 	 * to help identify valid ones: 	 */
-name|new_thread
-operator|->
-name|magic
-operator|=
-name|PTHREAD_MAGIC
 expr_stmt|;
 comment|/* Initialise the machine context: */
 name|getcontext
@@ -488,23 +469,6 @@ name|ret
 operator|)
 return|;
 block|}
-comment|/* Copy the thread attributes: */
-name|memcpy
-argument_list|(
-operator|&
-name|new_thread
-operator|->
-name|attr
-argument_list|,
-name|pattr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pthread_attr
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check if this thread is to inherit the scheduling 	 * attributes from its parent: 	 */
 if|if
 condition|(
@@ -580,41 +544,6 @@ expr_stmt|;
 name|new_thread
 operator|->
 name|inherited_priority
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Initialize joiner to NULL (no joiner): */
-name|new_thread
-operator|->
-name|joiner
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Initialize the mutex queue: */
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|new_thread
-operator|->
-name|mutexq
-argument_list|)
-expr_stmt|;
-comment|/* Initialise hooks in the thread structure: */
-name|new_thread
-operator|->
-name|specific
-operator|=
-name|NULL
-expr_stmt|;
-name|new_thread
-operator|->
-name|cleanup
-operator|=
-name|NULL
-expr_stmt|;
-name|new_thread
-operator|->
-name|flags
 operator|=
 literal|0
 expr_stmt|;
