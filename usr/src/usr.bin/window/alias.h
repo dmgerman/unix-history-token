@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)alias.h	3.2 %G%  */
+comment|/*  * @(#)alias.h	3.3 %G%  */
 end_comment
 
 begin_define
@@ -23,6 +23,28 @@ directive|define
 name|a_buf
 value|r_val.v_str
 end_define
+
+begin_define
+define|#
+directive|define
+name|a_flags
+value|r_val.v_type
+end_define
+
+begin_comment
+comment|/* a_flags bits, must not interfere with v_type values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_INUSE
+value|0x010
+end_define
+
+begin_comment
+comment|/* already inuse */
+end_comment
 
 begin_define
 define|#

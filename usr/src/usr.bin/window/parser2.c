@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser2.c	3.6 %G%"
+literal|"@(#)parser2.c	3.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -745,6 +745,31 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|a
+operator|->
+name|a_flags
+operator|&
+name|A_INUSE
+condition|)
+name|p_error
+argument_list|(
+literal|"%s: Recursive alias."
+argument_list|,
+name|a
+operator|->
+name|a_name
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|a
+operator|->
+name|a_flags
+operator||=
+name|A_INUSE
+expr_stmt|;
+if|if
+condition|(
 name|dolongcmd
 argument_list|(
 name|a
@@ -761,6 +786,14 @@ condition|)
 name|p_memerror
 argument_list|()
 expr_stmt|;
+name|a
+operator|->
+name|a_flags
+operator|&=
+operator|~
+name|A_INUSE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|p_abort
