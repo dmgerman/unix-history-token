@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/bn.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/crypto.h>
 end_include
 
@@ -73,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openssl/crypto/bn/bn_lcl.h"
 end_include
 
 begin_include
