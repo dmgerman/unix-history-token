@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_input.c	7.15.1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_input.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -160,10 +160,6 @@ name|tcp_saveti
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern	tcpnodelack;
-end_extern
-
 begin_function_decl
 name|struct
 name|tcpcb
@@ -174,7 +170,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Insert segment ti into reassembly queue of tcp with  * control block tp.  Return TH_FIN if reassembly now includes  * a segment with FIN.  The macro form does the common case inline  * (segment is the next to be received on an established connection,  * and the queue is empty), avoiding linkage into and removal  * from the queue and repetition of various conversions.  */
+comment|/*  * Insert segment ti into reassembly queue of tcp with  * control block tp.  Return TH_FIN if reassembly now includes  * a segment with FIN.  The macro form does the common case inline  * (segment is the next to be received on an established connection,  * and the queue is empty), avoiding linkage into and removal  * from the queue and repetition of various conversions.  * Set DELACK for segments received in order, but ack immediately  * when segments are out of order (so fast retransmit can work).  */
 end_comment
 
 begin_define
@@ -192,7 +188,7 @@ name|so
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else \ 		(flags) = tcp_reass((tp), (ti)); \ }
+value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		tp->t_flags |= TF_DELACK; \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (ti)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
 end_define
 
 begin_expr_stmt
@@ -4173,25 +4169,6 @@ name|so
 argument_list|,
 name|tiflags
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tcpnodelack
-operator|==
-literal|0
-condition|)
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|TF_DELACK
-expr_stmt|;
-else|else
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|TF_ACKNOW
 expr_stmt|;
 comment|/* 		 * Note the amount of data that peer has sent into 		 * our window, in order to estimate the sender's 		 * buffer size. 		 */
 name|len
