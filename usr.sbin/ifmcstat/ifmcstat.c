@@ -1021,7 +1021,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LIST_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|ifnet
@@ -1031,7 +1031,7 @@ argument_list|)
 condition|)
 name|ifmp
 operator|=
-name|LIST_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|ifnet
@@ -1156,7 +1156,7 @@ name|nextmulti
 label|:
 name|ifmp
 operator|=
-name|LIST_NEXT
+name|TAILQ_NEXT
 argument_list|(
 operator|&
 name|ifm

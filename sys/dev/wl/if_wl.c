@@ -9256,7 +9256,7 @@ operator|&&
 name|__FreeBSD_version
 operator|>=
 literal|300000
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

@@ -1011,7 +1011,7 @@ for|for
 control|(
 name|ifma
 operator|=
-name|LIST_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -1029,7 +1029,7 @@ literal|0
 condition|;
 name|ifma
 operator|=
-name|LIST_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|ifma
 argument_list|,

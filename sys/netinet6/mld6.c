@@ -819,7 +819,7 @@ name|if_index
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

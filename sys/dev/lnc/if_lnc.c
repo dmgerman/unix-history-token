@@ -1129,7 +1129,7 @@ argument_list|,
 name|MULTICAST_FILTER_LEN
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

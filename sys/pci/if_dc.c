@@ -4737,7 +4737,7 @@ argument_list|,
 name|DC_NETCFG_RX_ALLMULTI
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -5108,7 +5108,7 @@ operator|)
 condition|)
 return|return;
 comment|/* now program new ones */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -5457,7 +5457,7 @@ operator|)
 condition|)
 return|return;
 comment|/* now program new ones */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -5798,7 +5798,7 @@ argument_list|,
 name|DC_NETCFG_RX_ALLMULTI
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

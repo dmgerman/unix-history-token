@@ -2597,7 +2597,7 @@ name|wx_nmca
 operator|=
 literal|0
 expr_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

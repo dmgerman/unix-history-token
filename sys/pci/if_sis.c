@@ -2411,7 +2411,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -2644,7 +2644,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* now program new ones */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

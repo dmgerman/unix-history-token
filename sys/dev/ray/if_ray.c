@@ -10233,7 +10233,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * The multicast list is only 16 items long so use promiscuous 	 * mode and don't bother updating the multicast list. 	 */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -10323,7 +10323,7 @@ name|bufp
 operator|=
 name|RAY_HOST_TO_ECF_BASE
 expr_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

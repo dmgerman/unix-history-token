@@ -7668,7 +7668,7 @@ operator|->
 name|all_mcasts
 condition|)
 block|{
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

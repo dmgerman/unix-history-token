@@ -1785,7 +1785,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* now program new ones */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

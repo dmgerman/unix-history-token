@@ -639,7 +639,7 @@ operator|->
 name|if_prefixhead
 argument_list|)
 expr_stmt|;
-name|LIST_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|ifp
@@ -5321,7 +5321,7 @@ modifier|*
 name|ifma
 decl_stmt|;
 comment|/* 	 * If the matching multicast address already exists 	 * then don't add a new one, just add a reference 	 */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -5486,7 +5486,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|LIST_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|ifp
@@ -5515,7 +5515,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -5618,7 +5618,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|LIST_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|ifp
@@ -5696,7 +5696,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -5761,8 +5761,13 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|LIST_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_multiaddrs
+argument_list|,
 name|ifma
 argument_list|,
 name|ifma_link
@@ -5799,7 +5804,7 @@ return|return
 literal|0
 return|;
 comment|/* 	 * Now look for the link-layer address which corresponds to 	 * this network address.  It had been squirreled away in 	 * ifma->ifma_lladdr for this purpose (so we don't have 	 * to call ifp->if_resolvemulti() again), and we saved that 	 * value in sa above.  If some nasty deleted the 	 * link-layer address out from underneath us, we can deal because 	 * the address we stored was is not the same as the one which was 	 * in the record for the link-layer address.  (So we don't complain 	 * in that case.) 	 */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -5851,8 +5856,13 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|LIST_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_multiaddrs
+argument_list|,
 name|ifma
 argument_list|,
 name|ifma_link
@@ -6147,7 +6157,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

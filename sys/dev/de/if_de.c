@@ -15912,7 +15912,7 @@ name|multicnt
 operator|=
 literal|0
 expr_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -15999,7 +15999,7 @@ name|tulip_setupdata
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
@@ -16375,7 +16375,7 @@ literal|0
 condition|)
 block|{
 comment|/* 	     * Else can get perfect filtering for 16 addresses. 	     */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

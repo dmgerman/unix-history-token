@@ -4013,7 +4013,7 @@ condition|)
 goto|goto
 name|set_mib
 goto|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

@@ -2018,7 +2018,7 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|multiaddr
 argument_list|,

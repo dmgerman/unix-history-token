@@ -6152,7 +6152,7 @@ name|ac_if
 expr_stmt|;
 name|maddr
 operator|=
-name|LIST_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|ifp
@@ -6173,7 +6173,7 @@ name|NULL
 condition|;
 name|maddr
 operator|=
-name|LIST_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|maddr
 argument_list|,
@@ -6347,7 +6347,7 @@ name|i
 decl_stmt|;
 name|maddr
 operator|=
-name|LIST_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|scp
@@ -6423,7 +6423,7 @@ name|AF_LINK
 condition|)
 name|maddr
 operator|=
-name|LIST_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|maddr
 argument_list|,

@@ -477,7 +477,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Now program new ones. */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,

@@ -140,7 +140,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|LIST_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|ifmultihead
 argument_list|,
@@ -1252,7 +1252,7 @@ begin_struct
 struct|struct
 name|ifmultiaddr
 block|{
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|ifmultiaddr
 argument_list|)

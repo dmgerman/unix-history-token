@@ -3134,7 +3134,7 @@ operator|~
 name|IFF_ALLMULTI
 expr_stmt|;
 comment|/* Loop through multicast addresses */
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
