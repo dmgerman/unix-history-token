@@ -1547,7 +1547,7 @@ argument_list|(
 name|date
 argument_list|)
 argument_list|,
-literal|"%b %e  total"
+literal|"%Ef  total"
 argument_list|,
 name|localtime
 argument_list|(
