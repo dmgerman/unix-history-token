@@ -2306,6 +2306,9 @@ name|gctl_req
 modifier|*
 name|req
 decl_stmt|;
+name|int
+name|nerror
+decl_stmt|;
 name|req
 operator|=
 operator|(
@@ -2434,6 +2437,12 @@ block|}
 name|g_waitidle
 argument_list|()
 expr_stmt|;
+name|nerror
+operator|=
+name|req
+operator|->
+name|nerror
+expr_stmt|;
 name|gctl_free
 argument_list|(
 name|req
@@ -2441,8 +2450,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|req
-operator|->
 name|nerror
 operator|)
 return|;
