@@ -610,6 +610,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ENOTSUP
+value|EOPNOTSUPP
+end_define
+
+begin_comment
+comment|/* Operation not supported */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EPFNOSUPPORT
 value|46
 end_define
