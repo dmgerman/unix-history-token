@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.8 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.9 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -89,17 +89,6 @@ include|#
 directive|include
 file|<signal.h>
 end_include
-
-begin_expr_stmt
-name|int
-argument_list|(
-operator|*
-name|signal
-argument_list|()
-argument_list|)
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -714,23 +703,6 @@ begin_comment
 comment|/* prefix for dialups */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAXFSTAB
-value|32
-end_define
-
-begin_decl_stmt
-name|struct
-name|fstab
-name|fstab
-index|[
-name|MAXFSTAB
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|struct
 name|fstab
@@ -743,12 +715,6 @@ end_function_decl
 begin_comment
 comment|/* search in fs_file and fs_spec */
 end_comment
-
-begin_decl_stmt
-name|int
-name|nfstab
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  *	The contents of the file NINCREM is maintained both on  *	a linked list, and then (eventually) arrayified.  */
