@@ -1648,6 +1648,12 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|maxretry
+init|=
+literal|10000
+decl_stmt|;
+comment|/* large, arbitrarily chosen */
 if|if
 condition|(
 operator|!
@@ -1663,6 +1669,8 @@ operator|(
 literal|0
 operator|)
 return|;
+name|loop1
+label|:
 comment|/* 	 * MARK/SCAN initialization to avoid infinite loops 	 */
 name|s
 operator|=
@@ -1707,7 +1715,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Flush all dirty buffers associated with a block device. 	 */
-name|loop
+name|loop2
 label|:
 name|s
 operator|=
@@ -1844,9 +1852,10 @@ argument_list|)
 expr_stmt|;
 block|}
 goto|goto
-name|loop
+name|loop2
 goto|;
 block|}
+comment|/* 	 * If synchronous the caller expects us to completely resolve all 	 * dirty buffers in the system.  Wait for in-progress I/O to 	 * complete (which could include background bitmap writes), then 	 * retry if dirty blocks still exist. 	 */
 if|if
 condition|(
 name|ap
@@ -1892,9 +1901,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 operator|!
@@ -1907,24 +1913,31 @@ name|v_dirtyblkhd
 argument_list|)
 condition|)
 block|{
-name|vprint
-argument_list|(
-literal|"spec_fsync: dirty"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|--
+name|maxretry
+operator|!=
+literal|0
+condition|)
+block|{
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
 goto|goto
-name|loop
+name|loop1
 goto|;
 block|}
-endif|#
-directive|endif
+name|vprint
+argument_list|(
+literal|"spec_fsync: giving up on dirty"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(
