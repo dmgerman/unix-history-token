@@ -8,7 +8,7 @@ comment|/*  *  *  dpt.h:	Definitions and constants used by the SCSI side of the 
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt.h,v 1.4 1998/08/05 00:54:37 eivind Exp $"
+empty|#ident "$Id: dpt.h,v 1.2 1998/09/15 08:33:31 gibbs Exp $"
 end_empty
 
 begin_ifndef
@@ -284,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|DPT_MAX_SEGS
-value|1024
+value|32
 end_define
 
 begin_comment
@@ -4271,6 +4271,9 @@ decl_stmt|;
 name|struct
 name|scsi_sense_data
 name|sense_data
+decl_stmt|;
+name|u_int8_t
+name|tag
 decl_stmt|;
 name|u_int8_t
 name|retries

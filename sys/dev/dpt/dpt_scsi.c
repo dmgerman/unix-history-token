@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.13 1998/09/15 08:33:31 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.14 1998/09/15 22:05:40 gibbs Exp $"
 end_empty
 
 begin_define
@@ -1733,6 +1733,14 @@ operator|->
 name|state
 operator|=
 name|DCCB_FREE
+expr_stmt|;
+name|next_ccb
+operator|->
+name|tag
+operator|=
+name|dpt
+operator|->
+name|total_dccbs
 expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -3705,7 +3713,46 @@ name|cp_identify
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * XXX JGibbs 		 * These are supposedly used for tagged queuing. 		 * We should honor the tag type in the incoming CCB, but 		 * I don't have DPT documentation to ensure that I do 		 * this correctly. 		 */
+if|if
+condition|(
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_TAG_ACTION_VALID
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|eccb
+operator|->
+name|cp_msg
+index|[
+literal|0
+index|]
+operator|=
+name|csio
+operator|->
+name|tag_action
+expr_stmt|;
+name|eccb
+operator|->
+name|cp_msg
+index|[
+literal|1
+index|]
+operator|=
+name|dccb
+operator|->
+name|tag
+expr_stmt|;
+block|}
+else|else
+block|{
 name|eccb
 operator|->
 name|cp_msg
@@ -3724,6 +3771,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|eccb
 operator|->
 name|cp_msg
@@ -5972,6 +6020,36 @@ operator|.
 name|queuesiz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dpt
+operator|->
+name|max_dccbs
+operator|>
+literal|256
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dpt%d: Max CCBs reduced from %d to "
+literal|"256 due to tag algorithm\n"
+argument_list|,
+name|dpt
+operator|->
+name|unit
+argument_list|,
+name|dpt
+operator|->
+name|max_dccbs
+argument_list|)
+expr_stmt|;
+name|dpt
+operator|->
+name|max_dccbs
+operator|=
+literal|256
+expr_stmt|;
+block|}
 name|dpt
 operator|->
 name|hostid
@@ -7322,6 +7400,20 @@ case|case
 name|HA_CP_RESET_NA
 case|:
 comment|/* XXX ??? */
+if|if
+condition|(
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_STATUS_MASK
+operator|)
+operator|==
+name|CAM_REQ_INPROG
+condition|)
 name|ccb
 operator|->
 name|ccb_h
@@ -7428,7 +7520,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"dpt%d: Undocumented Error %x"
+literal|"dpt%d: Undocumented Error %x\n"
 argument_list|,
 name|dpt
 operator|->
@@ -7534,10 +7626,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"CCB 0x%x - timed out\n"
+literal|"CCB %p - timed out\n"
 argument_list|,
 operator|(
-name|intptr_t
+name|void
+operator|*
 operator|)
 name|dccb
 argument_list|)
@@ -7571,10 +7664,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"CCB 0x%x - timed out CCB already completed\n"
+literal|"CCB %p - timed out CCB already completed\n"
 argument_list|,
 operator|(
-name|intptr_t
+name|void
+operator|*
 operator|)
 name|dccb
 argument_list|)
@@ -7619,18 +7713,6 @@ operator|.
 name|status
 operator|=
 name|CAM_CMD_TIMEOUT
-expr_stmt|;
-name|dptfreeccb
-argument_list|(
-name|dpt
-argument_list|,
-name|dccb
-argument_list|)
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|ccb
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
