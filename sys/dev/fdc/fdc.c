@@ -429,6 +429,9 @@ block|,
 comment|/* FDT_144M */
 name|fd_searchlist_288m
 block|,
+comment|/* FDT_288M_1 (mapped to FDT_288M) */
+name|fd_searchlist_288m
+block|,
 comment|/* FDT_288M */
 block|}
 decl_stmt|;
