@@ -2685,7 +2685,8 @@ modifier|*
 name|kg
 parameter_list|)
 block|{
-if|if
+comment|/* XXX Fixme, use a linear algorithm and not a while loop. */
+while|while
 condition|(
 operator|(
 name|kg
