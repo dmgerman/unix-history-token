@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c 1.4 %G%"
+literal|"@(#)scanner.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,24 +233,6 @@ name|curinclindex
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|private
-name|Boolean
-name|firsttoken
-init|=
-name|true
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|private
-name|Boolean
-name|firstinit
-init|=
-name|true
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|private
 name|Token
@@ -428,46 +410,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-name|runfirst
-condition|)
-block|{
-name|firstinit
-operator|=
-name|false
-expr_stmt|;
-name|firsttoken
-operator|=
-name|false
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|firstinit
-name|and
-name|isterm
-argument_list|(
-name|in
-argument_list|)
-condition|)
-block|{
-name|firstinit
-operator|=
-name|false
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"> "
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -526,18 +468,6 @@ name|in
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|firsttoken
-condition|)
-block|{
-name|firsttoken
-operator|=
-name|false
-expr_stmt|;
-block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"> "
@@ -548,7 +478,6 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|line
 operator|=
