@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_SETJMP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -26,11 +32,15 @@ begin_comment
 comment|/*  * jmp_buf and sigjmp_buf are encapsulated in different structs to force  * compile-time diagnostics for mismatches.  The structs are the same  * internally to avoid some run-time errors for mismatches.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_typedef
 typedef|typedef

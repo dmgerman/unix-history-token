@@ -15,9 +15,21 @@ directive|define
 name|_MACHINE_SETJMP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_comment
 comment|/*  * IA64 assembler doesn't like C style comments.  This also means we can't  * include other include files to get things like the roundup2() macro.  *  * NOTE:  Actual register storage must start on a 16 byte boundary.  Both  * setjmp and longjmp make that adjustment before referencing the contents  * of jmp_buf.  The macro JMPBUF_ADDR_OF() allows someone to get the address  * of an individual item saved in jmp_buf.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -31,11 +43,29 @@ parameter_list|)
 value|(((x)+((y)-1))&(~((y)-1)))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_JMPBUF_ALIGNMENT
+value|0x10
+end_define
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
 name|JMPBUF_ALIGNMENT
-value|0x10
+value|_JMPBUF_ALIGNMENT
 end_define
 
 begin_define
@@ -345,12 +375,43 @@ name|J_SIGMASK
 value|0x1e8
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_J_END
+value|0x1f0
+end_define
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
 name|J_END
-value|0x1f0
+value|_J_END
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * XXX this check is wrong, since LOCORE is in the application namespace and  * applications shouldn't be able to affect the implementation.  One workaround  * would be to only check LOCORE if _KERNEL is defined, but unfortunately  * LOCORE is used outside of the kernel.  The best solution would be to rename  * LOCORE to _LOCORE, so that it can be used in userland to safely affect the  * implementation.  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -362,11 +423,15 @@ begin_comment
 comment|/*  * jmp_buf and sigjmp_buf are encapsulated in different structs to force  * compile-time diagnostics for mismatches.  The structs are the same  * internally to avoid some run-time errors for mismatches.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_typedef
 typedef|typedef
@@ -374,11 +439,11 @@ struct|struct
 name|_sigjmp_buf
 block|{
 name|char
-name|Buffer
+name|_Buffer
 index|[
-name|J_END
+name|_J_END
 operator|+
-name|JMPBUF_ALIGNMENT
+name|_JMPBUF_ALIGNMENT
 index|]
 decl_stmt|;
 block|}
@@ -400,11 +465,11 @@ struct|struct
 name|_jmp_buf
 block|{
 name|char
-name|Buffer
+name|_Buffer
 index|[
-name|J_END
+name|_J_END
 operator|+
-name|JMPBUF_ALIGNMENT
+name|_JMPBUF_ALIGNMENT
 index|]
 decl_stmt|;
 block|}
