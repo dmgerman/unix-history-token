@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 79 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 80 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -247,13 +247,25 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Could not map memory at %p for length %X\n"
+literal|"Could not map memory at %8.8X%8.8X for length %X\n"
 operator|,
+name|ACPI_HIDWORD
+argument_list|(
 name|Address
 operator|->
 name|Pointer
 operator|.
 name|Physical
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|Address
+operator|->
+name|Pointer
+operator|.
+name|Physical
+argument_list|)
 operator|,
 sizeof|sizeof
 argument_list|(
@@ -721,17 +733,29 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Could not map memory for table [%4.4s] at %p for length %X\n"
+literal|"Could not map memory for table [%4.4s] at %8.8X%8.8X for length %X\n"
 operator|,
 name|Header
 operator|->
 name|Signature
 operator|,
+name|ACPI_HIDWORD
+argument_list|(
 name|Address
 operator|->
 name|Pointer
 operator|.
 name|Physical
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|Address
+operator|->
+name|Pointer
+operator|.
+name|Physical
+argument_list|)
 operator|,
 name|Header
 operator|->
