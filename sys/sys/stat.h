@@ -709,5 +709,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _SYS_STAT_H_ */
+end_comment
+
 end_unit
 
