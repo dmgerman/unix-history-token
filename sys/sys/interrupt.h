@@ -294,36 +294,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|SWI_CAMNET
+name|SWI_CAMBIO
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWI_CAMBIO
+name|SWI_VM
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWI_VM
+name|SWI_CLOCK
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWI_CLOCK
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
 name|SWI_TQ_FAST
-value|6
+value|5
 end_define
 
 begin_define
