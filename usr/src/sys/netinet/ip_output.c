@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	6.1	83/07/29	*/
+comment|/*	ip_output.c	6.2	83/10/22	*/
 end_comment
 
 begin_include
@@ -394,7 +394,11 @@ name|ro_rt
 operator|->
 name|rt_flags
 operator|&
+operator|(
 name|RTF_GATEWAY
+operator||
+name|RTF_HOST
+operator|)
 condition|)
 name|dst
 operator|=
