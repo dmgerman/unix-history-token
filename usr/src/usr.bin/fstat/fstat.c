@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.43 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,12 +122,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kinfo_proc.h>
 end_include
 
 begin_include
@@ -241,7 +235,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<kvm.h>
 end_include
 
 begin_include
@@ -253,7 +259,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kvm.h>
+file|<paths.h>
 end_include
 
 begin_include
@@ -266,18 +272,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include

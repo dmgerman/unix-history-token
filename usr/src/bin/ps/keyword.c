@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.14 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -68,12 +74,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
 end_include
 
 begin_include
@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo_proc.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_endif
