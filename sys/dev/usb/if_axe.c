@@ -3803,7 +3803,7 @@ name|m_pkthdr
 operator|.
 name|len
 argument_list|,
-literal|0
+name|USBD_FORCE_SHORT_XFER
 argument_list|,
 literal|10000
 argument_list|,
