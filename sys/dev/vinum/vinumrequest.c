@@ -21,6 +21,16 @@ directive|include
 file|<sys/resourcevar.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|abs
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)< 0) ? -(x) : (x))
+end_define
+
 begin_function_decl
 name|enum
 name|requeststatus
