@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -815,6 +815,20 @@ parameter_list|)
 value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) enodev, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
+begin_include
+include|#
+directive|include
+file|"cfb.h"
+end_include
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|cfb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|cdevsw
@@ -926,6 +940,14 @@ name|bpf
 argument_list|)
 block|,
 comment|/* 12: berkeley packet filter */
+name|cdev_pm_init
+argument_list|(
+name|NCFB
+argument_list|,
+name|cfb
+argument_list|)
+block|,
+comment|/* 13: color frame buffer */
 block|}
 decl_stmt|;
 end_decl_stmt

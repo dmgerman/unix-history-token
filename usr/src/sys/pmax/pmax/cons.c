@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.1 90/07/09$  *  *	@(#)cons.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.1 90/07/09$  *  *	@(#)cons.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -202,6 +202,21 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+include|#
+directive|include
+file|"cfb.h"
+if|#
+directive|if
+name|NCFB
+operator|>
+literal|0
+name|cfbPutc
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|int
 name|s
 decl_stmt|;
@@ -240,6 +255,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
