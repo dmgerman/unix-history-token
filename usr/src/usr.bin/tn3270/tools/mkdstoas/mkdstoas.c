@@ -110,7 +110,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t0x%2x,"
+literal|"\t0x%02x,"
 argument_list|,
 name|ebcasc
 index|[
@@ -159,7 +159,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t0x%2x,"
+literal|"\t0x%02x,"
 argument_list|,
 literal|' '
 argument_list|)
