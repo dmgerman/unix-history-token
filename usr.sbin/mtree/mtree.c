@@ -134,6 +134,8 @@ decl_stmt|,
 name|sflag
 decl_stmt|,
 name|uflag
+decl_stmt|,
+name|Uflag
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +203,9 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|status
+decl_stmt|;
 name|dir
 operator|=
 name|NULL
@@ -220,7 +225,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdef:iK:k:np:rs:ux"
+literal|"cdef:iK:k:np:rs:Uux"
 argument_list|)
 operator|)
 operator|!=
@@ -429,6 +434,18 @@ name|optarg
 argument_list|)
 expr_stmt|;
 case|case
+literal|'U'
+case|:
+name|Uflag
+operator|=
+literal|1
+expr_stmt|;
+name|uflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|uflag
@@ -523,10 +540,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
-argument_list|(
+name|status
+operator|=
 name|verify
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Uflag
+operator|&
+operator|(
+name|status
+operator|==
+name|MISMATCHEXIT
+operator|)
+condition|)
+name|status
+operator|=
+literal|0
+expr_stmt|;
+name|exit
+argument_list|(
+name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -545,7 +580,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mtree [-cdeinrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
+literal|"usage: mtree [-cdeinrUux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
 argument_list|)
 expr_stmt|;
 name|exit
