@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rtprio.c,v 1.5 1997/10/13 11:24:01 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +252,9 @@ condition|)
 block|{
 case|case
 name|RTP_PRIO_REALTIME
+case|:
+case|case
+name|RTP_PRIO_FIFO
 case|:
 name|printf
 argument_list|(
