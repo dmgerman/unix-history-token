@@ -43,7 +43,11 @@ value|USRSTACK
 end_define
 
 begin_comment
-comment|/* #undef FLOAT_INFO	/* No float info yet */
+comment|/* #undef FLOAT_INFO */
+end_comment
+
+begin_comment
+comment|/* No float info yet */
 end_comment
 
 begin_define
