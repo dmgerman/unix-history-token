@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-nfs.c,v 1.63 96/12/10 23:18:07 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-nfs.c,v 1.65 97/08/17 13:24:22 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|u_int32_t
 name|xid_map_find
 parameter_list|(
 specifier|const
@@ -199,6 +199,9 @@ parameter_list|,
 specifier|const
 name|struct
 name|ip
+modifier|*
+parameter_list|,
+name|u_int32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -266,7 +269,7 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
-name|int32_t
+name|u_int32_t
 name|proc
 decl_stmt|;
 name|nfserr
@@ -304,7 +307,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.nfs> %s.%x: reply %s %d"
+literal|"%s.nfs> %s.%u: reply %s %d"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -356,7 +359,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%x> %s.%x: reply %s %d"
+literal|"%s.%u> %s.%u: reply %s %d"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -404,28 +407,22 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-name|proc
-operator|=
+if|if
+condition|(
 name|xid_map_find
 argument_list|(
 name|rp
 argument_list|,
 name|ip
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|proc
-operator|>=
-literal|0
+argument_list|)
 condition|)
 name|interp_reply
 argument_list|(
 name|rp
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
 name|proc
 argument_list|,
 name|length
@@ -921,7 +918,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%x> %s.nfs: %d"
+literal|"%s.%u> %s.nfs: %d"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -958,7 +955,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%x> %s.%x: %d"
+literal|"%s.%u> %s.%u: %d"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -2210,12 +2207,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns NFSPROC_xxx or -1 on failure */
+comment|/* Returns true and sets proc success or false on failure */
 end_comment
 
 begin_function
 specifier|static
-name|int32_t
+name|u_int32_t
 name|xid_map_find
 parameter_list|(
 specifier|const
@@ -2229,6 +2226,10 @@ name|struct
 name|ip
 modifier|*
 name|ip
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|proc
 parameter_list|)
 block|{
 name|int
@@ -2309,14 +2310,16 @@ name|xid_map_hint
 operator|=
 name|i
 expr_stmt|;
-return|return
-operator|(
-operator|(
-name|int32_t
-operator|)
+operator|*
+name|proc
+operator|=
 name|xmep
 operator|->
 name|proc
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
@@ -2342,8 +2345,7 @@ do|;
 comment|/* search failed */
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 block|}

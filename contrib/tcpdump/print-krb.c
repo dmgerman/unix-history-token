@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Initial contribution from John Hawkinson (jhawk@mit.edu).  */
+comment|/*  * Copyright (c) 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Initial contribution from John Hawkinson (jhawk@mit.edu).  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-krb.c,v 1.8 96/12/10 23:17:39 leres Exp $"
+literal|"@(#) $Header: print-krb.c,v 1.9 97/04/26 14:01:45 leres Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,10 +570,6 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-name|ep
-operator|==
-name|NULL
-operator|||
 name|s
 operator|<
 name|ep
@@ -685,22 +681,8 @@ expr_stmt|;
 define|#
 directive|define
 name|PRINT
-value|if ((cp=c_print(cp, snapend))==NULL) goto trunc
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+value|if ((cp = c_print(cp, snapend)) == NULL) goto trunc
 name|PRINT
-expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 name|putchar
 argument_list|(
@@ -708,13 +690,6 @@ literal|'.'
 argument_list|)
 expr_stmt|;
 name|PRINT
-expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 name|putchar
 argument_list|(
@@ -774,7 +749,7 @@ decl_stmt|;
 define|#
 directive|define
 name|PRINT
-value|if ((cp=c_print(cp, snapend))==NULL) goto trunc
+value|if ((cp = c_print(cp, snapend)) == NULL) goto trunc
 comment|/*  True if struct krb is little endian */
 define|#
 directive|define
@@ -884,11 +859,10 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/* ctime */
-name|TCHECK2
+name|TCHECK
 argument_list|(
+operator|*
 name|cp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -902,21 +876,7 @@ operator|*
 literal|5
 argument_list|)
 expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|PRINT
-expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 name|putchar
 argument_list|(
@@ -933,11 +893,10 @@ name|cp
 operator|+=
 literal|2
 expr_stmt|;
-name|TCHECK2
+name|TCHECK
 argument_list|(
+operator|*
 name|cp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -949,20 +908,12 @@ name|cp
 operator|++
 argument_list|)
 expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|PRINT
 expr_stmt|;
-name|TCHECK2
+name|TCHECK
 argument_list|(
+operator|*
 name|cp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -974,11 +925,10 @@ name|cp
 operator|++
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|TCHECK
 argument_list|(
+operator|*
 name|cp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -987,13 +937,6 @@ literal|" (%d)"
 argument_list|,
 operator|*
 name|cp
-argument_list|)
-expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1021,9 +964,13 @@ expr_stmt|;
 comment|/* timestamp + n + exp + kvno */
 name|TCHECK2
 argument_list|(
+operator|*
 name|cp
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -1040,13 +987,6 @@ argument_list|(
 literal|" (%d)"
 argument_list|,
 name|len
-argument_list|)
-expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1074,9 +1014,13 @@ expr_stmt|;
 comment|/* timestamp */
 name|TCHECK2
 argument_list|(
+operator|*
 name|cp
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1101,13 +1045,6 @@ expr_stmt|;
 name|cp
 operator|+=
 literal|4
-expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 name|PRINT
 expr_stmt|;

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: parsenfsfh.c,v 1.12 96/12/10 23:25:50 leres Exp $ (LBL)"
+literal|"@(#) $Header: parsenfsfh.c,v 1.14 97/06/15 13:20:27 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,11 +43,22 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MEMORY_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<memory.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1588,6 +1599,7 @@ name|fsidp
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* just use the whole thing */
 name|memcpy
 argument_list|(
 operator|(
@@ -1596,12 +1608,15 @@ operator|*
 operator|)
 name|fsidp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|fh
 argument_list|,
 literal|14
 argument_list|)
 expr_stmt|;
-comment|/* just use the whole thing */
 block|}
 else|else
 block|{
@@ -1636,6 +1651,10 @@ operator|*
 operator|)
 name|tempa
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|fh
 argument_list|,
 literal|14

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: interface.h,v 1.100 96/12/10 22:55:04 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: interface.h,v 1.105 97/04/26 13:39:58 leres Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -58,6 +58,17 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
+name|aflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* translate network and broadcast addresses */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|dflag
 decl_stmt|;
 end_decl_stmt
@@ -75,6 +86,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* print ethernet header */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't translate "foreign" IP address */
 end_comment
 
 begin_decl_stmt
@@ -690,16 +712,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int32_t
-name|gmt2local
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|fn_print
 parameter_list|(
@@ -760,19 +772,6 @@ modifier|*
 name|dnaddr_string
 parameter_list|(
 name|u_short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|savestr
-parameter_list|(
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1453,6 +1452,46 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|ppp_bsdos_if_print
+parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|raw_if_print
+parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|rip_print
 parameter_list|(
 specifier|const
@@ -1468,6 +1507,26 @@ begin_function_decl
 specifier|extern
 name|void
 name|sl_if_print
+parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|sl_bsdos_if_print
 parameter_list|(
 name|u_char
 modifier|*

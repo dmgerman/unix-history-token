@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-isoclns.c,v 1.14 96/12/10 23:26:56 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-isoclns.c,v 1.15 96/12/31 21:27:41 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -662,7 +662,7 @@ while|while
 condition|(
 operator|--
 name|length
-operator|>=
+operator|!=
 literal|0
 condition|)
 name|printf
@@ -1346,6 +1346,9 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|int
+operator|)
 operator|--
 name|len
 operator|>=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: nfsfh.h,v 1.5 96/08/20 14:33:23 leres Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
+comment|/*  * $Header: nfsfh.h,v 1.6 96/12/16 03:40:31 leres Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a.fsid_code == b.fsid_code)&&\ 			 dev_eq(a.fsid_dev, b.fsid_dev))
+value|((a.fsid_code == b.fsid_code)&&\ 			 dev_eq(a.Fsid_dev, b.Fsid_dev))
 end_define
 
 begin_function_decl
