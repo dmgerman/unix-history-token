@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runcont.c 1.2 %G%"
+literal|"@(#)runcont.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,13 @@ begin_decl_stmt
 name|LOCAL
 name|String
 name|outfile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LOCAL
+name|PROCESS
+name|pbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -407,6 +414,16 @@ index|]
 operator|=
 name|NIL
 expr_stmt|;
+name|process
+operator|=
+operator|&
+name|pbuf
+expr_stmt|;
+name|initcache
+argument_list|(
+name|process
+argument_list|)
+expr_stmt|;
 name|start
 argument_list|(
 name|argv
@@ -521,7 +538,6 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-operator|&
 name|intr
 argument_list|)
 expr_stmt|;
@@ -616,7 +632,6 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-operator|&
 name|intr
 argument_list|)
 expr_stmt|;
@@ -634,7 +649,6 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-operator|&
 name|dbintr
 argument_list|)
 expr_stmt|;

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c 1.5 %G%"
+literal|"@(#)start.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,13 +102,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|LOCAL
-name|PROCESS
-name|pbuf
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|start
 argument_list|(
@@ -144,11 +137,6 @@ name|char
 modifier|*
 name|cmd
 decl_stmt|;
-name|process
-operator|=
-operator|&
-name|pbuf
-expr_stmt|;
 name|setsigtrace
 argument_list|()
 expr_stmt|;

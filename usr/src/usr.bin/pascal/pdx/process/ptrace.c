@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ptrace.c 1.2 %G%"
+literal|"@(#)ptrace.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2315,6 +2315,59 @@ comment|/*NOTREACHED*/
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Initialize the instruction cache for a process.  * This is particularly necessary after the program has been remade.  */
+end_comment
+
+begin_macro
+name|initcache
+argument_list|(
+argument|process
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|PROCESS
+modifier|*
+name|process
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|CSIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|process
+operator|->
+name|word
+index|[
+name|i
+index|]
+operator|.
+name|addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_block
 
 begin_comment
 comment|/*  * Swap file numbers so as to redirect standard input and output.  */
