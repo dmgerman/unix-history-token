@@ -85,6 +85,18 @@ name|CROSS_INCLUDE_DIR
 value|PREFIX"/include"
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STANDARD_INCLUDE_DIR
+value|PREFIX"/include"
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -131,6 +143,24 @@ directive|define
 name|STANDARD_STARTFILE_PREFIX
 value|PREFIX"/lib/"
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CROSS_COMPILE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CROSS_STARTFILE_PREFIX
+value|PREFIX"/lib/"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
