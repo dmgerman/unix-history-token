@@ -83,7 +83,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.40 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.41 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -98,7 +98,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.40 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.41 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.40 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.41 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.40 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.41 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1821,6 +1821,17 @@ name|af
 argument_list|)
 expr_stmt|;
 comment|/* add distinguished entries and close the database */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|ADF_VALID
+argument_list|,
+name|ad
+operator|->
+name|ad_flags
+argument_list|)
+condition|)
 name|ad
 operator|->
 name|ad_class
@@ -3168,7 +3179,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"readaliases: cannot create %s"
+literal|"ndbm_arebuild: cannot create %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -3190,6 +3201,8 @@ operator|->
 name|ad_flags
 operator||=
 name|ADF_WRITABLE
+operator||
+name|ADF_VALID
 expr_stmt|;
 comment|/* read and store the aliases */
 name|readaliases
@@ -3844,6 +3857,28 @@ operator|->
 name|ad_name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|ad
+operator|->
+name|ad_name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|".db"
+argument_list|)
+expr_stmt|;
 name|db
 operator|=
 name|dbopen
@@ -3872,7 +3907,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"readaliases: cannot create %s"
+literal|"hash_arebuild: cannot create %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -3890,6 +3925,8 @@ operator|->
 name|ad_flags
 operator||=
 name|ADF_WRITABLE
+operator||
+name|ADF_VALID
 expr_stmt|;
 comment|/* read and store the aliases */
 name|readaliases
@@ -4288,6 +4325,8 @@ operator|->
 name|ad_flags
 operator||=
 name|ADF_WRITABLE
+operator||
+name|ADF_VALID
 expr_stmt|;
 block|}
 end_function
@@ -4646,7 +4685,6 @@ operator|->
 name|ad_name
 argument_list|)
 expr_stmt|;
-comment|/* nothing */
 block|}
 end_function
 
@@ -5275,6 +5313,8 @@ operator|->
 name|ad_flags
 operator||=
 name|ADF_WRITABLE
+operator||
+name|ADF_VALID
 expr_stmt|;
 comment|/* read and store aliases */
 name|readaliases
