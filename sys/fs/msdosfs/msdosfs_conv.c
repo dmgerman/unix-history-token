@@ -7189,7 +7189,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"msdosfs: file name %zd too long\n"
+literal|"msdosfs: file name %zu too long\n"
 argument_list|,
 name|nambuf_len
 argument_list|)
