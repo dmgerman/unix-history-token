@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.15.2.7 1998/03/09 11:48:27 jkh Exp $"
+literal|"$Id: inetd.c,v 1.15.2.8 1998/07/18 11:10:26 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2402,7 +2402,7 @@ expr|struct
 name|timezone
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2432,7 +2432,7 @@ expr|struct
 name|timezone
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2924,6 +2924,10 @@ argument_list|,
 name|sep
 operator|->
 name|se_proto
+argument_list|,
+name|sep
+operator|->
+name|se_class
 argument_list|)
 expr_stmt|;
 if|if
@@ -3664,7 +3668,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s/%s: login class error, service ignored"
+literal|"%s/%s: %s: login class error, service ignored"
 argument_list|,
 name|new
 operator|->
@@ -3673,6 +3677,10 @@ argument_list|,
 name|new
 operator|->
 name|se_proto
+argument_list|,
+name|new
+operator|->
+name|se_class
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -8575,7 +8583,7 @@ expr|struct
 name|timezone
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -9053,11 +9061,11 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
-literal|"%s: %s proto=%s accept=%d max=%d user=%s group=%s class=%s builtin=%x server=%s\n"
+literal|"%s: %s proto=%s accept=%d max=%d user=%s group=%s class=%s builtin=%p server=%s\n"
 argument_list|,
 else|#
 directive|else
-literal|"%s: %s proto=%s accept=%d max=%d user=%s group=%s builtin=%x server=%s\n"
+literal|"%s: %s proto=%s accept=%d max=%d user=%s group=%s builtin=%p server=%s\n"
 argument_list|,
 endif|#
 directive|endif
@@ -9097,7 +9105,8 @@ argument_list|,
 endif|#
 directive|endif
 operator|(
-name|int
+name|void
+operator|*
 operator|)
 name|sep
 operator|->
