@@ -7015,14 +7015,6 @@ name|bios_smap
 modifier|*
 name|smap
 decl_stmt|;
-comment|/* 	 * Change the mapping of the page at address zero from r/o to r/w 	 * so that vm86 can scribble on this page.  Note that this page is 	 * not in the general free page pool. 	 */
-name|pmap_kenter
-argument_list|(
-name|KERNBASE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|hasbrokenint12
 operator|=
 literal|0
