@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c	5.4 (Berkeley) %G%"
+literal|"@(#)const.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1193,6 +1193,39 @@ block|,
 literal|'c'
 block|,
 literal|'e'
+block|,
+literal|'\0'
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Char
+name|STRnoambiguous
+index|[]
+init|=
+block|{
+literal|'n'
+block|,
+literal|'o'
+block|,
+literal|'a'
+block|,
+literal|'m'
+block|,
+literal|'b'
+block|,
+literal|'i'
+block|,
+literal|'g'
+block|,
+literal|'u'
+block|,
+literal|'o'
+block|,
+literal|'u'
+block|,
+literal|'s'
 block|,
 literal|'\0'
 block|}
