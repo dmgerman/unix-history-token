@@ -136,21 +136,18 @@ name|arpcom
 decl_stmt|;
 comment|/* ethernet common */
 name|int
-name|base_addr
-decl_stmt|;
-name|int
-name|irq
-decl_stmt|;
-name|int
 name|io_rid
-decl_stmt|;
-name|int
-name|irq_rid
 decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|io_res
+decl_stmt|;
+name|int
+name|io_off
+decl_stmt|;
+name|int
+name|irq_rid
 decl_stmt|;
 name|struct
 name|resource
