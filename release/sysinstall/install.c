@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.118 1996/08/03 10:11:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.119 1996/09/29 10:03:30 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1616,15 +1616,7 @@ if|if
 condition|(
 operator|!
 name|mediaDevice
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Finally, you must specify an installation medium."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 operator|!
 name|dmenuOpenSimple
 argument_list|(
@@ -1633,16 +1625,12 @@ name|MenuMedia
 argument_list|,
 name|FALSE
 argument_list|)
-operator|||
-operator|!
-name|mediaDevice
 condition|)
 return|return
 name|DITEM_FAILURE
 operator||
 name|DITEM_RECREATE
 return|;
-block|}
 if|if
 condition|(
 name|DITEM_STATUS
@@ -1660,6 +1648,9 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
@@ -1676,6 +1667,9 @@ name|DITEM_RECREATE
 return|;
 block|}
 else|else
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Congratulations!  You now have FreeBSD installed on your system.\n\n"
@@ -1706,7 +1700,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Does this system have a network interface card?"
+literal|"Would you like to configure any SLIP/PPP or network interface devices?"
 argument_list|)
 condition|)
 block|{
@@ -1745,6 +1739,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1761,6 +1758,9 @@ argument_list|,
 literal|"YES"
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1774,6 +1774,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1786,6 +1789,9 @@ name|configNFSServer
 argument_list|(
 name|self
 argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1802,6 +1808,9 @@ argument_list|,
 literal|"YES"
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1814,6 +1823,9 @@ name|configApache
 argument_list|(
 name|self
 argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1845,6 +1857,9 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1875,6 +1890,9 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1913,6 +1931,9 @@ literal|"/usr/X11R6"
 argument_list|)
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1932,6 +1953,9 @@ condition|(
 name|cdromMounted
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1950,12 +1974,15 @@ name|self
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"The FreeBSD package collection is a collection of over 450 ready-to-run\n"
+literal|"The FreeBSD package collection is a collection of over 550 ready-to-run\n"
 literal|"applications, from text editors to games to WEB servers.  Would you like\n"
 literal|"to browse the collection now?"
 argument_list|)
@@ -2249,6 +2276,9 @@ name|void
 parameter_list|)
 block|{
 comment|/* Final menu of last resort */
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

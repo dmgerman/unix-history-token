@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.63 1996/08/01 10:58:54 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.64 1996/09/26 21:07:08 pst Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -553,13 +553,6 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
-name|WINDOW
-modifier|*
-name|old
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 name|int
 name|ret
 init|=
@@ -643,11 +636,6 @@ name|COLS
 argument_list|)
 expr_stmt|;
 block|}
-name|restorescr
-argument_list|(
-name|old
-argument_list|)
-expr_stmt|;
 return|return
 name|ret
 return|;
