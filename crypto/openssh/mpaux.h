@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * mpaux.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sun Jul 16 04:29:30 1995 ylo  *   * This file contains various auxiliary functions related to multiple  * precision integers.  */
+comment|/*  *  * mpaux.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Sun Jul 16 04:29:30 1995 ylo  *  * This file contains various auxiliary functions related to multiple  * precision integers.  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: mpaux.h,v 1.5 1999/11/24 19:53:48 markus Exp $"); */
+comment|/* RCSID("$Id: mpaux.h,v 1.6 2000/04/14 10:30:32 markus Exp $"); */
 end_comment
 
 begin_ifndef

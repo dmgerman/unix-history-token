@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * ttymodes.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  * 	SGTTY stuff contributed by Janne Snabb<snabb@niksula.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Tue Mar 21 15:42:09 1995 ylo  *   */
+comment|/*  *  * ttymodes.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * 	SGTTY stuff contributed by Janne Snabb<snabb@niksula.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Tue Mar 21 15:42:09 1995 ylo  *  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: ttymodes.h,v 1.6 1999/11/24 19:53:54 markus Exp $"); */
+comment|/* RCSID("$Id: ttymodes.h,v 1.7 2000/04/14 10:30:34 markus Exp $"); */
 end_comment
 
 begin_comment

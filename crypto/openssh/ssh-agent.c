@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh-agent.c,v 1.26 2000/03/16 20:56:14 markus Exp $	*/
+comment|/*	$OpenBSD: ssh-agent.c,v 1.31 2000/04/29 18:11:52 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-agent.c,v 1.26 2000/03/16 20:56:14 markus Exp $"
+literal|"$OpenBSD: ssh-agent.c,v 1.31 2000/04/29 18:11:52 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/md5.h>
+file|<openssl/md5.h>
 end_include
 
 begin_typedef
@@ -175,7 +175,7 @@ comment|/* pid of shell == parent of agent */
 end_comment
 
 begin_decl_stmt
-name|int
+name|pid_t
 name|parent_pid
 init|=
 operator|-
@@ -932,7 +932,7 @@ argument_list|(
 name|n
 argument_list|)
 condition|)
-name|error
+name|log
 argument_list|(
 literal|"Warning: identity keysize mismatch: actual %d, announced %d"
 argument_list|,
@@ -2377,6 +2377,28 @@ name|type
 operator|=
 name|AUTH_UNUSED
 expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|sockets
+index|[
+name|i
+index|]
+operator|.
+name|input
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|sockets
+index|[
+name|i
+index|]
+operator|.
+name|output
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|buffer_consume
@@ -2465,6 +2487,28 @@ name|type
 operator|=
 name|AUTH_UNUSED
 expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|sockets
+index|[
+name|i
+index|]
+operator|.
+name|input
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|sockets
+index|[
+name|i
+index|]
+operator|.
+name|output
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|buffer_append
@@ -2520,6 +2564,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|parent_pid
+operator|!=
+operator|-
+literal|1
+operator|&&
 name|kill
 argument_list|(
 name|parent_pid
@@ -2899,6 +2948,7 @@ literal|1
 condition|)
 block|{
 comment|/* XXX PID_MAX check too */
+comment|/* Yes, PID_MAX check please */
 name|fprintf
 argument_list|(
 name|stderr

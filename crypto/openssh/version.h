@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION
-value|"OpenSSH-1.2.3"
+value|"OpenSSH-2.1"
 end_define
 
 end_unit

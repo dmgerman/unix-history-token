@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * cipher.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Apr 19 16:50:42 1995 ylo  *   */
+comment|/*  *  * cipher.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Wed Apr 19 16:50:42 1995 ylo  *  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: cipher.h,v 1.11 2000/03/22 09:55:10 markus Exp $"); */
+comment|/* RCSID("$Id: cipher.h,v 1.17 2000/05/08 17:12:15 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -22,17 +22,40 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ssl/des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ssl/blowfish.h>
+file|<openssl/blowfish.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/rc4.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/cast.h>
 end_include
 
 begin_comment
 comment|/* Cipher types.  New types can be added, but old types should not be removed    for compatibility.  The maximum allowed value is 31. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CIPHER_ILLEGAL
+value|-2
+end_define
+
+begin_comment
+comment|/* No valid cipher selected. */
 end_comment
 
 begin_define
@@ -119,6 +142,49 @@ name|SSH_CIPHER_BLOWFISH
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSH_CIPHER_RESERVED
+value|7
+end_define
+
+begin_comment
+comment|/* these ciphers are used in SSH2: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CIPHER_BLOWFISH_CBC
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_CIPHER_3DES_CBC
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_CIPHER_ARCFOUR
+value|10
+end_define
+
+begin_comment
+comment|/* Alleged RC4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CIPHER_CAST128_CBC
+value|11
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -165,6 +231,24 @@ decl_stmt|;
 block|}
 name|bf
 struct|;
+struct|struct
+block|{
+name|CAST_KEY
+name|key
+decl_stmt|;
+name|unsigned
+name|char
+name|iv
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|cast
+struct|;
+name|RC4_KEY
+name|rc4
+decl_stmt|;
 block|}
 name|u
 union|;
@@ -181,6 +265,22 @@ begin_function_decl
 name|unsigned
 name|int
 name|cipher_mask
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|cipher_mask1
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|cipher_mask2
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -218,6 +318,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* returns 1 if all ciphers are supported (ssh2 only) */
+end_comment
+
+begin_function_decl
+name|int
+name|ciphers_valid
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|names
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Selects the cipher to use and sets the key.  If for_encryption is true,  * the key is setup for encryption; otherwise it is setup for decryption.  */
 end_comment
 
@@ -240,9 +356,38 @@ name|key
 parameter_list|,
 name|int
 name|keylen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cipher_set_key_iv
+parameter_list|(
+name|CipherContext
+modifier|*
+name|context
 parameter_list|,
 name|int
-name|for_encryption
+name|cipher
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|keylen
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|iv
+parameter_list|,
+name|int
+name|ivlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,9 +411,6 @@ specifier|const
 name|char
 modifier|*
 name|passphrase
-parameter_list|,
-name|int
-name|for_encryption
 parameter_list|)
 function_decl|;
 end_function_decl

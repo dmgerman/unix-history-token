@@ -101,6 +101,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|key_type
+parameter_list|(
+name|Key
+modifier|*
+name|k
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|key_write
 parameter_list|(
@@ -116,16 +128,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|unsigned
 name|int
 name|key_read
 parameter_list|(
 name|Key
 modifier|*
 name|key
-parameter_list|,
-name|unsigned
-name|int
-name|bits
 parameter_list|,
 name|char
 modifier|*

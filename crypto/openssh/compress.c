@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * compress.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Oct 25 22:12:46 1995 ylo  *   * Interface to packet compression for ssh.  *   */
+comment|/*  *  * compress.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Wed Oct 25 22:12:46 1995 ylo  *  * Interface to packet compression for ssh.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: compress.c,v 1.5 2000/03/16 20:56:14 markus Exp $"
+literal|"$Id: compress.c,v 1.7 2000/04/14 10:30:31 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -312,33 +312,6 @@ name|avail_out
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|Z_STREAM_END
-case|:
-name|fatal
-argument_list|(
-literal|"buffer_compress: deflate returned Z_STREAM_END"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-case|case
-name|Z_STREAM_ERROR
-case|:
-name|fatal
-argument_list|(
-literal|"buffer_compress: deflate returned Z_STREAM_ERROR"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-case|case
-name|Z_BUF_ERROR
-case|:
-name|fatal
-argument_list|(
-literal|"buffer_compress: deflate returned Z_BUF_ERROR"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 default|default:
 name|fatal
 argument_list|(
@@ -411,6 +384,13 @@ argument_list|(
 name|input_buffer
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* Set up fixed-size output buffer. */
 name|incoming_stream
 operator|.
 name|next_out
@@ -431,12 +411,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 name|status
 operator|=
 name|inflate
@@ -471,68 +445,12 @@ operator|.
 name|avail_out
 argument_list|)
 expr_stmt|;
-name|incoming_stream
-operator|.
-name|next_out
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|buf
-expr_stmt|;
-name|incoming_stream
-operator|.
-name|avail_out
-operator|=
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 break|break;
-case|case
-name|Z_STREAM_END
-case|:
-name|fatal
-argument_list|(
-literal|"buffer_uncompress: inflate returned Z_STREAM_END"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-case|case
-name|Z_DATA_ERROR
-case|:
-name|fatal
-argument_list|(
-literal|"buffer_uncompress: inflate returned Z_DATA_ERROR"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-case|case
-name|Z_STREAM_ERROR
-case|:
-name|fatal
-argument_list|(
-literal|"buffer_uncompress: inflate returned Z_STREAM_ERROR"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 case|case
 name|Z_BUF_ERROR
 case|:
 comment|/* 			 * Comments in zlib.h say that we should keep calling 			 * inflate() until we get an error.  This appears to 			 * be the error that we get. 			 */
 return|return;
-case|case
-name|Z_MEM_ERROR
-case|:
-name|fatal
-argument_list|(
-literal|"buffer_uncompress: inflate returned Z_MEM_ERROR"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 default|default:
 name|fatal
 argument_list|(
@@ -541,6 +459,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 block|}
 block|}

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * ssh.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 17 17:09:37 1995 ylo  *   * Generic header file for ssh.  *   */
+comment|/*  *  * ssh.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Fri Mar 17 17:09:37 1995 ylo  *  * Generic header file for ssh.  *  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: ssh.h,v 1.34 2000/03/23 22:15:33 markus Exp $"); */
+comment|/* RCSID("$Id: ssh.h,v 1.45 2000/05/08 17:12:16 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -32,7 +32,7 @@ file|"cipher.h"
 end_include
 
 begin_comment
-comment|/*  * The default cipher used if IDEA is not supported by the remote host. It is  * recommended that this be one of the mandatory ciphers (DES, 3DES), though  * that is not required.  */
+comment|/*  * XXX  * The default cipher used if IDEA is not supported by the remote host. It is  * recommended that this be one of the mandatory ciphers (DES, 3DES), though  * that is not required.  */
 end_comment
 
 begin_define
@@ -87,25 +87,39 @@ value|100
 end_define
 
 begin_comment
-comment|/*  * Major protocol version.  Different version indicates major incompatiblity  * that prevents communication.  */
+comment|/*  * Major protocol version.  Different version indicates major incompatiblity  * that prevents communication.  *  * Minor protocol version.  Different version indicates minor incompatibility  * that does not prevent interoperation.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PROTOCOL_MAJOR
+name|PROTOCOL_MAJOR_1
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROTOCOL_MINOR_1
+value|5
+end_define
+
 begin_comment
-comment|/*  * Minor protocol version.  Different version indicates minor incompatibility  * that does not prevent interoperation.  */
+comment|/* We support both SSH1 and SSH2 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PROTOCOL_MINOR
-value|5
+name|PROTOCOL_MAJOR_2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTOCOL_MINOR_2
+value|0
 end_define
 
 begin_comment
@@ -144,6 +158,13 @@ name|SSH_SYSTEM_HOSTFILE
 value|ETCDIR "/ssh_known_hosts"
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSH_SYSTEM_HOSTFILE2
+value|ETCDIR "/ssh_known_hosts2"
+end_define
+
 begin_comment
 comment|/*  * Of these, ssh_host_key must be readable only by root, whereas ssh_config  * should be world-readable.  */
 end_comment
@@ -167,6 +188,13 @@ define|#
 directive|define
 name|HOST_CONFIG_FILE
 value|ETCDIR "/ssh_config"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_DSA_KEY_FILE
+value|ETCDIR "/ssh_host_dsa_key"
 end_define
 
 begin_define
@@ -209,6 +237,13 @@ name|SSH_USER_HOSTFILE
 value|"~/.ssh/known_hosts"
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSH_USER_HOSTFILE2
+value|"~/.ssh/known_hosts2"
+end_define
+
 begin_comment
 comment|/*  * Name of the default file containing client-side authentication key. This  * file should only be readable by the user him/herself.  */
 end_comment
@@ -218,6 +253,13 @@ define|#
 directive|define
 name|SSH_CLIENT_IDENTITY
 value|".ssh/identity"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_CLIENT_ID_DSA
+value|".ssh/id_dsa"
 end_define
 
 begin_comment
@@ -240,6 +282,13 @@ define|#
 directive|define
 name|SSH_USER_PERMITTED_KEYS
 value|".ssh/authorized_keys"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_USER_PERMITTED_KEYS2
+value|".ssh/authorized_keys2"
 end_define
 
 begin_comment
@@ -989,7 +1038,7 @@ begin_function_decl
 name|void
 name|record_login
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -1026,7 +1075,7 @@ begin_function_decl
 name|void
 name|record_logout
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -1342,91 +1391,6 @@ name|prompt
 parameter_list|,
 name|int
 name|from_stdin
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Saves the authentication (private) key in a file, encrypting it with  * passphrase.  The identification of the file (lowest 64 bits of n) will  * precede the key to provide identification of the key without needing a  * passphrase.  */
-end_comment
-
-begin_function_decl
-name|int
-name|save_private_key
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|passphrase
-parameter_list|,
-name|RSA
-modifier|*
-name|private_key
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|comment
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Loads the public part of the key file (public key and comment). Returns 0  * if an error occurred; zero if the public key was successfully read.  The  * comment of the key is returned in comment_return if it is non-NULL; the  * caller must free the value with xfree.  */
-end_comment
-
-begin_function_decl
-name|int
-name|load_public_key
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
-name|RSA
-modifier|*
-name|pub
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|comment_return
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Loads the private key from the file.  Returns 0 if an error is encountered  * (file does not exist or is not readable, or passphrase is bad). This  * initializes the private key.  The comment of the key is returned in  * comment_return if it is non-NULL; the caller must free the value with  * xfree.  */
-end_comment
-
-begin_function_decl
-name|int
-name|load_private_key
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|passphrase
-parameter_list|,
-name|RSA
-modifier|*
-name|private_key
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|comment_return
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1766,499 +1730,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*---------------- definitions for channels ------------------*/
+comment|/* ---- misc */
 end_comment
-
-begin_comment
-comment|/* Sets specific protocol options. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_set_options
-parameter_list|(
-name|int
-name|hostname_in_open
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Allocate a new channel object and set its type and socket.  Remote_name  * must have been allocated with xmalloc; this will free it when the channel  * is freed.  */
-end_comment
-
-begin_function_decl
-name|int
-name|channel_allocate
-parameter_list|(
-name|int
-name|type
-parameter_list|,
-name|int
-name|sock
-parameter_list|,
-name|char
-modifier|*
-name|remote_name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Free the channel and close its socket. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_free
-parameter_list|(
-name|int
-name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Add any bits relevant to channels in select bitmasks. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_prepare_select
-parameter_list|(
-name|fd_set
-modifier|*
-name|readset
-parameter_list|,
-name|fd_set
-modifier|*
-name|writeset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * After select, perform any appropriate operations for channels which have  * events pending.  */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_after_select
-parameter_list|(
-name|fd_set
-modifier|*
-name|readset
-parameter_list|,
-name|fd_set
-modifier|*
-name|writeset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* If there is data to send to the connection, send some of it now. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_output_poll
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * This is called when a packet of type CHANNEL_DATA has just been received.  * The message type has already been consumed, but channel number and data is  * still there.  */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_input_data
-parameter_list|(
-name|int
-name|payload_len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Returns true if no channel has too much buffered data. */
-end_comment
-
-begin_function_decl
-name|int
-name|channel_not_very_much_buffered_data
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* This is called after receiving CHANNEL_CLOSE. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_input_close
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* This is called after receiving CHANNEL_CLOSE_CONFIRMATION. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_input_close_confirmation
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* This is called after receiving CHANNEL_OPEN_CONFIRMATION. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_input_open_confirmation
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* This is called after receiving CHANNEL_OPEN_FAILURE from the other side. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_input_open_failure
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* This closes any sockets that are listening for connections; this removes    any unix domain sockets. */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_stop_listening
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Closes the sockets of all channels.  This is used to close extra file  * descriptors after a fork.  */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_close_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Returns the maximum file descriptor number used by the channels. */
-end_comment
-
-begin_function_decl
-name|int
-name|channel_max_fd
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Returns true if there is still an open channel over the connection. */
-end_comment
-
-begin_function_decl
-name|int
-name|channel_still_open
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Returns a string containing a list of all open channels.  The list is  * suitable for displaying to the user.  It uses crlf instead of newlines.  * The caller should free the string with xfree.  */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|channel_open_message
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Initiate forwarding of connections to local port "port" through the secure  * channel to host:port from remote side.  This never returns if there was an  * error.  */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_request_local_forwarding
-parameter_list|(
-name|u_short
-name|port
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|host
-parameter_list|,
-name|u_short
-name|remote_port
-parameter_list|,
-name|int
-name|gateway_ports
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Initiate forwarding of connections to port "port" on remote host through  * the secure channel to host:port from local side.  This never returns if  * there was an error.  This registers that open requests for that port are  * permitted.  */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_request_remote_forwarding
-parameter_list|(
-name|u_short
-name|port
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|host
-parameter_list|,
-name|u_short
-name|remote_port
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Permits opening to any host/port in SSH_MSG_PORT_OPEN.  This is usually  * called by the server, because the user could connect to any port anyway,  * and the server has no way to know but to trust the client anyway.  */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_permit_all_opens
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * This is called after receiving CHANNEL_FORWARDING_REQUEST.  This initates  * listening for the port, and sends back a success reply (or disconnect  * message if there was an error).  This never returns if there was an error.  */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_input_port_forward_request
-parameter_list|(
-name|int
-name|is_root
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * This is called after receiving PORT_OPEN message.  This attempts to  * connect to the given host:port, and sends back CHANNEL_OPEN_CONFIRMATION  * or CHANNEL_OPEN_FAILURE.  */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_input_port_open
-parameter_list|(
-name|int
-name|payload_len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Creates a port for X11 connections, and starts listening for it. Returns  * the display name, or NULL if an error was encountered.  */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|x11_create_display
-parameter_list|(
-name|int
-name|screen
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Creates an internet domain socket for listening for X11 connections.  * Returns a suitable value for the DISPLAY variable, or NULL if an error  * occurs.  */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|x11_create_display_inet
-parameter_list|(
-name|int
-name|screen
-parameter_list|,
-name|int
-name|x11_display_offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * This is called when SSH_SMSG_X11_OPEN is received.  The packet contains  * the remote channel number.  We should do whatever we want, and respond  * with either SSH_MSG_OPEN_CONFIRMATION or SSH_MSG_OPEN_FAILURE.  */
-end_comment
-
-begin_function_decl
-name|void
-name|x11_input_open
-parameter_list|(
-name|int
-name|payload_len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Requests forwarding of X11 connections.  This should be called on the  * client only.  */
-end_comment
-
-begin_function_decl
-name|void
-name|x11_request_forwarding
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Requests forwarding for X11 connections, with authentication spoofing.  * This should be called in the client only.  */
-end_comment
-
-begin_function_decl
-name|void
-name|x11_request_forwarding_with_spoofing
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|proto
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Sends a message to the server to request authentication fd forwarding. */
-end_comment
-
-begin_function_decl
-name|void
-name|auth_request_forwarding
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Returns the name of the forwarded authentication socket.  Returns NULL if  * there is no forwarded authentication socket.  The returned value points to  * a static buffer.  */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|auth_get_socket_name
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * This if called to process SSH_CMSG_AGENT_REQUEST_FORWARDING on the server.  * This starts forwarding authentication requests.  */
-end_comment
-
-begin_function_decl
-name|void
-name|auth_input_request_forwarding
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
-name|pw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* This is called to process an SSH_SMSG_AGENT_OPEN message. */
-end_comment
-
-begin_function_decl
-name|void
-name|auth_input_open_request
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Returns true if the given string matches the pattern (which may contain ?  * and * as wildcards), and zero if it does not match.  */
-end_comment
-
-begin_function_decl
-name|int
-name|match_pattern
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|pattern
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Expands tildes in the file name.  Returns data allocated by xmalloc.  * Warning: this calls getpw*.  */
@@ -2288,7 +1761,7 @@ begin_function_decl
 name|void
 name|server_loop
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 name|int
@@ -2299,6 +1772,15 @@ name|fdout
 parameter_list|,
 name|int
 name|fderr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|server_loop2
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2505,6 +1987,9 @@ name|unsigned
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
+name|buflen
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * hostfile.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Thu Jun 29 07:10:56 1995 ylo  *   * Functions for manipulating the known hosts files.  *   */
+comment|/*  *  * hostfile.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Thu Jun 29 07:10:56 1995 ylo  *  * Functions for manipulating the known hosts files.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: hostfile.c,v 1.14 2000/03/23 22:15:33 markus Exp $"
+literal|"$OpenBSD: hostfile.c,v 1.18 2000/04/29 18:11:52 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -38,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/rsa.h>
+file|<openssl/rsa.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ssl/dsa.h>
+file|<openssl/dsa.h>
 end_include
 
 begin_include
@@ -112,65 +112,21 @@ name|cp
 operator|++
 control|)
 empty_stmt|;
-comment|/* Get number of bits. */
-if|if
-condition|(
-operator|*
-name|cp
-operator|<
-literal|'0'
-operator|||
-operator|*
-name|cp
-operator|>
-literal|'9'
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Bad bit count... */
-for|for
-control|(
 name|bits
 operator|=
-literal|0
-init|;
-operator|*
-name|cp
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|cp
-operator|<=
-literal|'9'
-condition|;
-name|cp
-operator|++
-control|)
-name|bits
-operator|=
-literal|10
-operator|*
-name|bits
-operator|+
-operator|*
-name|cp
-operator|-
-literal|'0'
-expr_stmt|;
-if|if
-condition|(
-operator|!
 name|key_read
 argument_list|(
 name|ret
 argument_list|,
-name|bits
-argument_list|,
 operator|&
 name|cp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bits
+operator|==
+literal|0
 condition|)
 return|return
 literal|0
@@ -347,7 +303,7 @@ name|n
 argument_list|)
 condition|)
 block|{
-name|error
+name|log
 argument_list|(
 literal|"Warning: %s, line %d: keysize mismatch for host %s: "
 literal|"actual %d vs. announced %d."
@@ -370,7 +326,7 @@ argument_list|,
 name|bits
 argument_list|)
 expr_stmt|;
-name|error
+name|log
 argument_list|(
 literal|"Warning: replace %d with %d in %s, line %d."
 argument_list|,
@@ -720,7 +676,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Open the file for appending. */
+comment|/* XXX ? */
 name|f
 operator|=
 name|fopen
@@ -757,13 +713,6 @@ name|f
 argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 name|success
 operator|=
 literal|1
@@ -773,11 +722,19 @@ else|else
 block|{
 name|error
 argument_list|(
-literal|"add_host_to_hostfile: saving key failed"
+literal|"add_host_to_hostfile: saving key in %s failed"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Close the file. */
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|f

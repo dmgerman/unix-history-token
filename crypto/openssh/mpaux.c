@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * mpaux.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sun Jul 16 04:29:30 1995 ylo  *   * This file contains various auxiliary functions related to multiple  * precision integers.  *  */
+comment|/*  *  * mpaux.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Sun Jul 16 04:29:30 1995 ylo  *  * This file contains various auxiliary functions related to multiple  * precision integers.  * */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mpaux.c,v 1.9 1999/12/08 22:37:42 markus Exp $"
+literal|"$Id: mpaux.c,v 1.12 2000/04/14 10:30:32 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<ssl/bn.h>
+file|<openssl/bn.h>
 end_include
 
 begin_include
@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/md5.h>
+file|<openssl/md5.h>
 end_include
 
 begin_function

@@ -8,7 +8,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-skey.c,v 1.5 1999/12/06 19:04:57 deraadt Exp $"
+literal|"$Id: auth-skey.c,v 1.6 2000/04/14 10:30:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,7 +32,7 @@ file|<sha1.h>
 end_include
 
 begin_comment
-comment|/*   * try skey authentication,  * return 1 on success, 0 on failure, -1 if skey is not available   */
+comment|/*  * try skey authentication,  * return 1 on success, 0 on failure, -1 if skey is not available  */
 end_comment
 
 begin_function

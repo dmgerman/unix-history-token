@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * getput.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Jun 28 22:36:30 1995 ylo  *   * Macros for storing and retrieving data in msb first and lsb first order.  *   */
+comment|/*  *  * getput.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Wed Jun 28 22:36:30 1995 ylo  *  * Macros for storing and retrieving data in msb first and lsb first order.  *  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: getput.h,v 1.2 1999/11/24 00:26:02 deraadt Exp $"); */
+comment|/* RCSID("$Id: getput.h,v 1.3 2000/04/14 10:30:31 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -30,7 +30,7 @@ name|GET_32BIT
 parameter_list|(
 name|cp
 parameter_list|)
-value|(((unsigned long)(unsigned char)(cp)[0]<< 24) | \   		       ((unsigned long)(unsigned char)(cp)[1]<< 16) | \ 		       ((unsigned long)(unsigned char)(cp)[2]<< 8) | \ 		       ((unsigned long)(unsigned char)(cp)[3]))
+value|(((unsigned long)(unsigned char)(cp)[0]<< 24) | \ 		       ((unsigned long)(unsigned char)(cp)[1]<< 16) | \ 		       ((unsigned long)(unsigned char)(cp)[2]<< 8) | \ 		       ((unsigned long)(unsigned char)(cp)[3]))
 end_define
 
 begin_define

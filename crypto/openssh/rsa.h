@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * rsa.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar  3 22:01:06 1995 ylo  *   * RSA key generation, encryption and decryption.  *  */
+comment|/*  *  * rsa.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Fri Mar  3 22:01:06 1995 ylo  *  * RSA key generation, encryption and decryption.  * */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: rsa.h,v 1.4 1999/11/24 19:53:50 markus Exp $"); */
+comment|/* RCSID("$Id: rsa.h,v 1.6 2000/04/14 10:30:32 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -22,13 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ssl/bn.h>
+file|<openssl/bn.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ssl/rsa.h>
+file|<openssl/rsa.h>
 end_include
 
 begin_comment

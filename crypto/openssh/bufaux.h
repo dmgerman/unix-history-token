@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * bufaux.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Mar 29 02:18:23 1995 ylo  *   */
+comment|/*  *  * bufaux.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Wed Mar 29 02:18:23 1995 ylo  *  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: bufaux.h,v 1.4 1999/11/24 19:53:44 markus Exp $"); */
+comment|/* RCSID("$Id: bufaux.h,v 1.6 2000/04/14 10:30:30 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -44,6 +44,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|buffer_put_bignum2
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|,
+name|BIGNUM
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Retrieves an BIGNUM from the buffer. */
 end_comment
@@ -51,6 +66,21 @@ end_comment
 begin_function_decl
 name|int
 name|buffer_get_bignum
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|,
+name|BIGNUM
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|buffer_get_bignum2
 parameter_list|(
 name|Buffer
 modifier|*
@@ -172,6 +202,22 @@ parameter_list|,
 name|unsigned
 name|int
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|buffer_put_cstring
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl

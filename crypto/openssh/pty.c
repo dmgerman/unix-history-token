@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * pty.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 17 04:37:25 1995 ylo  *   * Allocating a pseudo-terminal, and making it the controlling tty.  *   */
+comment|/*  *  * pty.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Fri Mar 17 04:37:25 1995 ylo  *  * Allocating a pseudo-terminal, and making it the controlling tty.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: pty.c,v 1.12 2000/02/15 16:52:58 markus Exp $"
+literal|"$Id: pty.c,v 1.13 2000/04/14 10:30:32 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
