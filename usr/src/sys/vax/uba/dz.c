@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.1	%H%	*/
+comment|/*	dz.c	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"../h/pdma.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/bk.h"
 end_include
 
 begin_define
@@ -242,6 +248,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|dzxint
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ttrstrt
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1185,12 +1198,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|VOID
+begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|spl5
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_while
 while|while
@@ -1228,12 +1243,14 @@ expr_stmt|;
 block|}
 end_while
 
-begin_function_decl
-name|VOID
+begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|spl0
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 operator|(
@@ -1581,7 +1598,37 @@ condition|)
 continue|continue;
 end_if
 
-begin_expr_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BERKNET
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|tp
+operator|->
+name|t_line
+operator|==
+name|BNETLDIS
+condition|)
+block|{
+name|c
+operator|&=
+literal|0177
+expr_stmt|;
+name|NETINPUT
+argument_list|(
+name|c
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
 operator|(
 operator|*
 name|linesw
@@ -1599,7 +1646,7 @@ operator|,
 name|tp
 operator|)
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_comment
 unit|} }
@@ -1650,6 +1697,34 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
+name|cmd
+operator|=
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_ioctl
+operator|)
+operator|(
+name|tp
+operator|,
+name|cmd
+operator|,
+name|addr
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|==
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 name|ttioccomm
@@ -2014,15 +2089,6 @@ expr_stmt|;
 name|int
 name|sps
 decl_stmt|;
-extern|extern ttrstrt(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|dp
 operator|=
 operator|&
@@ -2033,26 +2099,17 @@ operator|-
 name|dz_tty
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dzaddr
 operator|=
 name|dp
 operator|->
 name|p_addr
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sps
 operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|tp
@@ -2070,9 +2127,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|tp
@@ -2131,9 +2185,6 @@ name|t_outq
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|tp
@@ -2147,9 +2198,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|tp
@@ -2230,18 +2278,12 @@ name|out
 goto|;
 block|}
 block|}
-end_if
-
-begin_expr_stmt
 name|tp
 operator|->
 name|t_state
 operator||=
 name|BUSY
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dp
 operator|->
 name|p_end
@@ -2256,18 +2298,12 @@ name|t_outq
 operator|.
 name|c_cf
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dp
 operator|->
 name|p_end
 operator|+=
 name|cc
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dzaddr
 operator|->
 name|dztcr
@@ -2284,23 +2320,17 @@ operator|%
 literal|8
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|out
 label|:
-end_label
-
-begin_expr_stmt
 name|splx
 argument_list|(
 name|sps
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Stop output on a line.  * Assume call is made at spl6.  */
 end_comment
 
@@ -2309,12 +2339,12 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_expr_stmt
-unit|dzstop
-operator|(
+name|dzstop
+argument_list|(
 name|tp
-operator|,
+argument_list|,
 name|flag
-operator|)
+argument_list|)
 specifier|register
 expr|struct
 name|tty
