@@ -2047,7 +2047,7 @@ name|nfs_prev_nfsclnt_sy_call
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|TAILQ_ISEMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|nfs_reqq
