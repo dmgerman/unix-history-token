@@ -780,7 +780,7 @@ name|error
 operator|=
 name|eaccess
 argument_list|(
-literal|"test2"
+literal|"test1"
 argument_list|,
 name|R_OK
 argument_list|)
@@ -957,6 +957,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|error
 condition|)
 block|{
