@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.11 1998/11/13 13:23:36 gibbs Exp $  */
+comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.12 1998/12/04 22:54:44 archie Exp $  */
 end_comment
 
 begin_comment
@@ -4654,9 +4654,6 @@ name|bt_hccb
 modifier|*
 name|hccb
 decl_stmt|;
-name|u_int16_t
-name|targ_mask
-decl_stmt|;
 comment|/* 		 * get a bccb to use. 		 */
 if|if
 condition|(
@@ -4779,16 +4776,6 @@ name|sdstat
 operator|=
 literal|0
 expr_stmt|;
-name|targ_mask
-operator|=
-operator|(
-literal|0x01
-operator|<<
-name|hccb
-operator|->
-name|target_id
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|ccb
@@ -4843,7 +4830,9 @@ name|flags
 operator|&
 name|CAM_DIR_IN
 operator|)
-operator|!=
+condition|?
+literal|1
+else|:
 literal|0
 expr_stmt|;
 name|hccb
@@ -4859,7 +4848,9 @@ name|flags
 operator|&
 name|CAM_DIR_OUT
 operator|)
-operator|!=
+condition|?
+literal|1
+else|:
 literal|0
 expr_stmt|;
 name|hccb
@@ -6365,7 +6356,7 @@ name|hccb
 operator|.
 name|opcode
 operator|=
-name|INITIATOR_SG_CCB
+name|INITIATOR_CCB
 expr_stmt|;
 name|bccb
 operator|->
@@ -8278,6 +8269,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|cmd_complete
+decl_stmt|;
 comment|/* No data returned to start */
 name|reply_buf_size
 operator|=
@@ -8288,6 +8282,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|intstat
+operator|=
+literal|0
+expr_stmt|;
+name|cmd_complete
 operator|=
 literal|0
 expr_stmt|;
@@ -8432,7 +8430,13 @@ operator||
 name|CMD_COMPLETE
 operator|)
 condition|)
+block|{
+name|cmd_complete
+operator|=
+literal|1
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|bt
@@ -8447,6 +8451,10 @@ operator|=
 name|bt
 operator|->
 name|latched_status
+expr_stmt|;
+name|cmd_complete
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -8517,6 +8525,10 @@ block|}
 comment|/* 	 * The BOP_MODIFY_IO_ADDR does not issue a CMD_COMPLETE, but 	 * it should update the status register.  So, we wait for 	 * the CMD_REG_BUSY status to clear and check for a command 	 * failure. 	 */
 if|if
 condition|(
+name|cmd_complete
+operator|==
+literal|0
+operator|&&
 name|opcode
 operator|==
 name|BOP_MODIFY_IO_ADDR
@@ -8618,6 +8630,10 @@ block|}
 comment|/* 	 * For all other commands, we wait for any output data 	 * and the final comand completion interrupt. 	 */
 while|while
 condition|(
+name|cmd_complete
+operator|==
+literal|0
+operator|&&
 operator|--
 name|cmd_timeout
 condition|)
