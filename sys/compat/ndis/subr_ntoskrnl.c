@@ -147,6 +147,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|__regparm
+value|__attribute__((regparm(3)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|FUNC
 value|void(*)(void)
 end_define
@@ -399,27 +406,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
+name|__regparm
 specifier|static
 name|int64_t
 name|_allshr
 parameter_list|(
 name|int64_t
 parameter_list|,
-name|int
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
+name|__regparm
 specifier|static
 name|int64_t
 name|_allshl
 parameter_list|(
 name|int64_t
 parameter_list|,
-name|int
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -464,27 +471,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
+name|__regparm
 specifier|static
 name|uint64_t
 name|_aullshr
 parameter_list|(
 name|uint64_t
 parameter_list|,
-name|int
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
+name|__regparm
 specifier|static
 name|uint64_t
 name|_aullshl
 parameter_list|(
 name|uint64_t
 parameter_list|,
-name|int
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -673,7 +680,7 @@ end_function_decl
 begin_function_decl
 name|__stdcall
 specifier|static
-name|void
+name|uint32_t
 name|ntoskrnl_interlock_inc
 parameter_list|(
 comment|/*volatile uint32_t * */
@@ -685,7 +692,7 @@ end_function_decl
 begin_function_decl
 name|__stdcall
 specifier|static
-name|void
+name|uint32_t
 name|ntoskrnl_interlock_dec
 parameter_list|(
 comment|/*volatile uint32_t * */
@@ -725,7 +732,7 @@ begin_function_decl
 name|__stdcall
 specifier|static
 name|void
-name|ntoskrnl_create_lock
+name|ntoskrnl_init_lock
 parameter_list|(
 name|kspin_lock
 modifier|*
@@ -783,7 +790,7 @@ name|ntoskrnl_interlock
 argument_list|,
 literal|"ntoskrnllock"
 argument_list|,
-name|MTX_NETWORK_LOCK
+literal|"ntoskrnl interlock"
 argument_list|,
 name|MTX_DEF
 operator||
@@ -1643,7 +1650,7 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
+name|__regparm
 specifier|static
 name|int64_t
 name|_allshl
@@ -1655,7 +1662,7 @@ parameter_list|)
 name|int64_t
 name|a
 decl_stmt|;
-name|int
+name|uint8_t
 name|b
 decl_stmt|;
 block|{
@@ -1670,7 +1677,7 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
+name|__regparm
 specifier|static
 name|uint64_t
 name|_aullshl
@@ -1682,7 +1689,7 @@ parameter_list|)
 name|uint64_t
 name|a
 decl_stmt|;
-name|int
+name|uint8_t
 name|b
 decl_stmt|;
 block|{
@@ -1697,7 +1704,7 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
+name|__regparm
 specifier|static
 name|int64_t
 name|_allshr
@@ -1709,7 +1716,7 @@ parameter_list|)
 name|int64_t
 name|a
 decl_stmt|;
-name|int
+name|uint8_t
 name|b
 decl_stmt|;
 block|{
@@ -1724,7 +1731,7 @@ block|}
 end_function
 
 begin_function
-name|__stdcall
+name|__regparm
 specifier|static
 name|uint64_t
 name|_aullshr
@@ -1736,7 +1743,7 @@ parameter_list|)
 name|uint64_t
 name|a
 decl_stmt|;
-name|int
+name|uint8_t
 name|b
 decl_stmt|;
 block|{
@@ -2600,7 +2607,7 @@ end_function
 begin_function
 name|__stdcall
 specifier|static
-name|void
+name|uint32_t
 name|ntoskrnl_interlock_inc
 parameter_list|(
 comment|/*addend*/
@@ -2633,14 +2640,19 @@ operator|&
 name|ntoskrnl_interlock
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|*
+name|addend
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 name|__stdcall
 specifier|static
-name|void
+name|uint32_t
 name|ntoskrnl_interlock_dec
 parameter_list|(
 comment|/*addend*/
@@ -2673,7 +2685,12 @@ operator|&
 name|ntoskrnl_interlock
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|*
+name|addend
+operator|)
+return|;
 block|}
 end_function
 
@@ -2770,11 +2787,15 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The KeInitializeSpinLock(), KefAcquireSpinLockAtDpcLevel()  * and KefReleaseSpinLockFromDpcLevel() appear to be analagous  * to splnet()/splx() in their use. We can't create a new mutex  * lock here because there is no complimentary KeFreeSpinLock()  * function. For now, what we do is initialize the lock with  * a pointer to the ntoskrnl interlock mutex.  */
+end_comment
+
 begin_function
 name|__stdcall
 specifier|static
 name|void
-name|ntoskrnl_create_lock
+name|ntoskrnl_init_lock
 parameter_list|(
 name|lock
 parameter_list|)
@@ -2783,57 +2804,14 @@ modifier|*
 name|lock
 decl_stmt|;
 block|{
-name|struct
-name|mtx
-modifier|*
-name|mtx
-decl_stmt|;
-name|mtx
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mtx
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mtx
-operator|==
-name|NULL
-condition|)
-return|return;
-name|mtx_init
-argument_list|(
-name|mtx
-argument_list|,
-literal|"ntoslock"
-argument_list|,
-literal|"ntoskrnl spinlock"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_RECURSE
-operator||
-name|MTX_DUPOK
-argument_list|)
-expr_stmt|;
 operator|*
 name|lock
 operator|=
 operator|(
 name|kspin_lock
 operator|)
-name|mtx
+operator|&
+name|ntoskrnl_interlock
 expr_stmt|;
 return|return;
 block|}
@@ -3388,7 +3366,7 @@ block|,
 operator|(
 name|FUNC
 operator|)
-name|ntoskrnl_create_lock
+name|ntoskrnl_init_lock
 block|}
 block|,
 comment|/* 	 * This last entry is a catch-all for any function we haven't 	 * implemented yet. The PE import list patching routine will 	 * use it for any function that doesn't have an explicit match 	 * in this table. 	 */

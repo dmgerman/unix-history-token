@@ -4822,6 +4822,12 @@ name|sc
 operator|->
 name|ndis_dev
 expr_stmt|;
+name|block
+operator|->
+name|nmb_img
+operator|=
+name|img
+expr_stmt|;
 return|return
 operator|(
 literal|0

@@ -5081,6 +5081,9 @@ name|struct
 name|nte_head
 name|nmb_timerlist
 decl_stmt|;
+name|vm_offset_t
+name|nmb_img
+decl_stmt|;
 block|}
 struct|;
 end_struct
