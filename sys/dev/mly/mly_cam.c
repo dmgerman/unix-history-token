@@ -1674,6 +1674,34 @@ operator||=
 name|CCB_TRANS_TQ_VALID
 expr_stmt|;
 comment|/* convert speed (MHz) to usec */
+if|if
+condition|(
+name|sc
+operator|->
+name|mly_btl
+index|[
+name|bus
+index|]
+index|[
+name|target
+index|]
+operator|.
+name|mb_speed
+operator|==
+literal|0
+condition|)
+block|{
+name|cts
+operator|->
+name|sync_period
+operator|=
+literal|1000000
+operator|/
+literal|5
+expr_stmt|;
+block|}
+else|else
+block|{
 name|cts
 operator|->
 name|sync_period
@@ -1692,6 +1720,7 @@ index|]
 operator|.
 name|mb_speed
 expr_stmt|;
+block|}
 comment|/* convert bus width to CAM internal encoding */
 switch|switch
 condition|(
