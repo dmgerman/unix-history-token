@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.5 %G%"
+literal|"@(#)nl.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,9 +647,15 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|PI0
+ifdef|#
+directive|ifdef
+name|OBJ
 name|genmx
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+endif|OBJ
 endif|#
 directive|endif
 block|}
