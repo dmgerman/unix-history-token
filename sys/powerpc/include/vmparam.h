@@ -184,6 +184,16 @@ value|20
 end_define
 
 begin_comment
+comment|/*  * Use the direct-mapped BAT registers for UMA small allocs. This  * takes pressure off the small amount of available KVA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_MD_SMALL_ALLOC
+end_define
+
+begin_comment
 comment|/*  * Would like to have MAX addresses = 0, but this doesn't (currently) work  */
 end_comment
 
