@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.5 1996/03/13 08:04:29 pst Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.6 1996/08/09 06:00:53 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,6 +791,9 @@ condition|(
 name|pe
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|socket
@@ -803,7 +806,32 @@ name|pe
 operator|->
 name|p_proto
 argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|sockerrno
+operator|=
+name|errno
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|sndsock
+operator|=
+name|socket
+argument_list|(
+name|AF_INET
+argument_list|,
+name|SOCK_RAW
+argument_list|,
+name|IPPROTO_RAW
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
 name|sockerrno
 operator|=
 name|errno
@@ -1796,22 +1824,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|sndsock
-operator|=
-name|socket
-argument_list|(
-name|AF_INET
-argument_list|,
-name|SOCK_RAW
-argument_list|,
-name|IPPROTO_RAW
-argument_list|)
-operator|)
 operator|<
 literal|0
 condition|)
 block|{
+name|errno
+operator|=
+name|sockerrno
+expr_stmt|;
 name|perror
 argument_list|(
 literal|"traceroute: raw socket"
