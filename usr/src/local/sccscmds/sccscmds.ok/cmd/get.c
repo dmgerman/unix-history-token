@@ -11,6 +11,12 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dir.h>
+end_include
+
 begin_expr_stmt
 name|SCCSID
 argument_list|(
@@ -108,7 +114,9 @@ begin_decl_stmt
 name|char
 name|Gfile
 index|[
-literal|16
+name|MAXNAMLEN
+operator|+
+literal|3
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2411,10 +2419,16 @@ begin_decl_stmt
 name|char
 name|Mod
 index|[
-literal|16
+name|MAXNAMLEN
+operator|+
+literal|3
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* should be as large as Gfile? */
+end_comment
 
 begin_decl_stmt
 name|char
