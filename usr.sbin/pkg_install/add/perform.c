@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.18 1995/04/22 07:40:54 jkh Exp $"
+literal|"$Id: perform.c,v 1.19 1995/04/22 13:58:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1070,9 +1070,31 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|Verbose
+condition|)
 name|printf
 argument_list|(
 literal|"and was not found%s.\n"
+argument_list|,
+name|Force
+condition|?
+literal|" (proceeding anyway)"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Package dependency on %s from %s not found%s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|,
+name|PkgName
 argument_list|,
 name|Force
 condition|?
