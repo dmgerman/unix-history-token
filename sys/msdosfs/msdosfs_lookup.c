@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.26 1998/09/13 15:40:31 dt Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.27 1998/12/07 21:58:35 archie Exp $ */
 end_comment
 
 begin_comment
@@ -3947,6 +3947,8 @@ name|dentp
 decl_stmt|;
 name|int
 name|blsize
+decl_stmt|,
+name|win95
 decl_stmt|;
 name|u_long
 name|cn
@@ -3959,6 +3961,10 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|win95
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Read through the directory looking for Win'95 entries 	 * Note: Error currently handled just as EOF			XXX 	 */
 for|for
 control|(
@@ -3989,7 +3995,9 @@ name|blsize
 argument_list|)
 condition|)
 return|return
-literal|0
+operator|(
+name|win95
+operator|)
 return|;
 if|if
 condition|(
@@ -4016,7 +4024,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|win95
+operator|)
 return|;
 block|}
 for|for
@@ -4067,7 +4077,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|win95
+operator|)
 return|;
 block|}
 if|if
@@ -4103,6 +4115,10 @@ return|return
 literal|1
 return|;
 block|}
+name|win95
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|brelse
 argument_list|(
