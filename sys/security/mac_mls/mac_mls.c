@@ -855,12 +855,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|single
+name|effective
 parameter_list|,
 name|struct
 name|mac_mls
@@ -871,17 +871,17 @@ block|{
 name|KASSERT
 argument_list|(
 operator|(
-name|single
+name|effective
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_single_in_range: a not single"
+literal|"mac_mls_effective_in_range: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -898,7 +898,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_single_in_range: b not range"
+literal|"mac_mls_effective_in_range: b not range"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -912,17 +912,17 @@ operator|->
 name|mm_rangehigh
 argument_list|,
 operator|&
-name|single
+name|effective
 operator|->
-name|mm_single
+name|mm_effective
 argument_list|)
 operator|&&
 name|mac_mls_dominate_element
 argument_list|(
 operator|&
-name|single
+name|effective
 operator|->
-name|mm_single
+name|mm_effective
 argument_list|,
 operator|&
 name|range
@@ -942,7 +942,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 parameter_list|(
 name|struct
 name|mac_mls
@@ -962,13 +962,13 @@ name|a
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_dominate_single: a not single"
+literal|"mac_mls_dominate_effective: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -979,13 +979,13 @@ name|b
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_dominate_single: b not single"
+literal|"mac_mls_dominate_effective: b not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -996,12 +996,12 @@ argument_list|(
 operator|&
 name|a
 operator|->
-name|mm_single
+name|mm_effective
 argument_list|,
 operator|&
 name|b
 operator|->
-name|mm_single
+name|mm_effective
 argument_list|)
 operator|)
 return|;
@@ -1068,7 +1068,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_equal_single
+name|mac_mls_equal_effective
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1088,13 +1088,13 @@ name|a
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_equal_single: a not single"
+literal|"mac_mls_equal_effective: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1105,13 +1105,13 @@ name|b
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_equal_single: b not single"
+literal|"mac_mls_equal_effective: b not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1122,12 +1122,12 @@ argument_list|(
 operator|&
 name|a
 operator|->
-name|mm_single
+name|mm_effective
 argument_list|,
 operator|&
 name|b
 operator|->
-name|mm_single
+name|mm_effective
 argument_list|)
 operator|)
 return|;
@@ -1151,13 +1151,13 @@ name|mac_mls
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 if|if
 condition|(
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_type
 operator|==
@@ -1244,12 +1244,12 @@ literal|"mac_mls_subject_privileged: subject doesn't have both labels"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* If the single is EQUAL, it's ok. */
+comment|/* If the effective is EQUAL, it's ok. */
 if|if
 condition|(
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_type
 operator|==
@@ -1334,14 +1334,14 @@ name|mac_mls
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 block|{
 switch|switch
 condition|(
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_type
 condition|)
@@ -1363,7 +1363,7 @@ if|if
 condition|(
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_level
 operator|!=
@@ -1374,7 +1374,7 @@ name|MAC_MLS_BIT_SET_EMPTY
 argument_list|(
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_compartments
 argument_list|)
@@ -1399,7 +1399,7 @@ if|if
 condition|(
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_type
 operator|!=
@@ -1713,7 +1713,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_set_single
+name|mac_mls_set_effective
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1733,7 +1733,7 @@ parameter_list|)
 block|{
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_type
 operator|=
@@ -1741,7 +1741,7 @@ name|type
 expr_stmt|;
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_level
 operator|=
@@ -1757,7 +1757,7 @@ name|memcpy
 argument_list|(
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_compartments
 argument_list|,
@@ -1767,7 +1767,7 @@ sizeof|sizeof
 argument_list|(
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 operator|.
 name|mme_compartments
 argument_list|)
@@ -1777,7 +1777,7 @@ name|mac_mls
 operator|->
 name|mm_flags
 operator||=
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 expr_stmt|;
 block|}
 end_function
@@ -1843,7 +1843,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1863,29 +1863,29 @@ name|labelfrom
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_copy_single: labelfrom not single"
+literal|"mac_mls_copy_effective: labelfrom not effective"
 operator|)
 argument_list|)
 expr_stmt|;
 name|labelto
 operator|->
-name|mm_single
+name|mm_effective
 operator|=
 name|labelfrom
 operator|->
-name|mm_single
+name|mm_effective
 expr_stmt|;
 name|labelto
 operator|->
 name|mm_flags
 operator||=
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 expr_stmt|;
 block|}
 end_function
@@ -1912,9 +1912,9 @@ name|source
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -2329,7 +2329,7 @@ name|mac_mls
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 block|{
 if|if
@@ -2341,7 +2341,7 @@ argument_list|,
 operator|&
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 argument_list|)
 operator|==
 operator|-
@@ -2863,12 +2863,12 @@ modifier|*
 name|rangelow
 decl_stmt|,
 modifier|*
-name|single
+name|effective
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|single
+name|effective
 operator|=
 name|strsep
 argument_list|(
@@ -2881,11 +2881,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|single
+name|effective
 operator|==
 literal|'\0'
 condition|)
-name|single
+name|effective
 operator|=
 name|NULL
 expr_stmt|;
@@ -3002,7 +3002,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|single
+name|effective
 operator|!=
 name|NULL
 condition|)
@@ -3014,9 +3014,9 @@ argument_list|(
 operator|&
 name|mac_mls
 operator|->
-name|mm_single
+name|mm_effective
 argument_list|,
-name|single
+name|effective
 argument_list|)
 expr_stmt|;
 if|if
@@ -3032,7 +3032,7 @@ name|mac_mls
 operator|->
 name|mm_flags
 operator||=
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 expr_stmt|;
 block|}
 if|if
@@ -3417,7 +3417,7 @@ name|mls_type
 operator|=
 name|MAC_MLS_TYPE_LOW
 expr_stmt|;
-name|mac_mls_set_single
+name|mac_mls_set_effective
 argument_list|(
 name|mac_mls
 argument_list|,
@@ -3471,7 +3471,7 @@ argument_list|(
 name|label
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_single
+name|mac_mls_set_effective
 argument_list|(
 name|mac_mls
 argument_list|,
@@ -3545,7 +3545,7 @@ argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3605,7 +3605,7 @@ argument_list|(
 name|mntlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3619,7 +3619,7 @@ argument_list|(
 name|fslabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3668,7 +3668,7 @@ argument_list|(
 name|fslabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_single
+name|mac_mls_set_effective
 argument_list|(
 name|mac_mls
 argument_list|,
@@ -3686,7 +3686,7 @@ argument_list|(
 name|mntlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_single
+name|mac_mls_set_effective
 argument_list|(
 name|mac_mls
 argument_list|,
@@ -3811,7 +3811,7 @@ argument_list|(
 name|direntlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3879,7 +3879,7 @@ argument_list|(
 name|vlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3996,7 +3996,7 @@ name|EOPNOTSUPP
 condition|)
 block|{
 comment|/* Fall back to the fslabel. */
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4074,12 +4074,12 @@ operator|&
 name|MAC_MLS_FLAGS_BOTH
 operator|)
 operator|!=
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mac_mls_associated_vnode_extattr: not single\n"
+literal|"mac_mls_associated_vnode_extattr: not effective\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4088,7 +4088,7 @@ name|EPERM
 operator|)
 return|;
 block|}
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 operator|&
 name|temp
@@ -4152,7 +4152,7 @@ argument_list|(
 name|vlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4255,7 +4255,7 @@ argument_list|(
 name|vlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4293,7 +4293,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4376,7 +4376,7 @@ name|source
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 operator|)
 operator|==
 literal|0
@@ -4386,7 +4386,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4478,7 +4478,7 @@ argument_list|(
 name|inplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4536,7 +4536,7 @@ argument_list|(
 name|mbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4591,7 +4591,7 @@ argument_list|(
 name|socketlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4646,7 +4646,7 @@ argument_list|(
 name|pipelabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4704,7 +4704,7 @@ argument_list|(
 name|newsocketlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4878,7 +4878,7 @@ argument_list|(
 name|socketpeerlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4940,7 +4940,7 @@ argument_list|(
 name|newsocketpeerlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4995,7 +4995,7 @@ argument_list|(
 name|bpflabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5053,7 +5053,7 @@ name|type
 operator|=
 name|MAC_MLS_TYPE_LOW
 expr_stmt|;
-name|mac_mls_set_single
+name|mac_mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -5132,7 +5132,7 @@ argument_list|(
 name|ipqlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5191,7 +5191,7 @@ name|datagramlabel
 argument_list|)
 expr_stmt|;
 comment|/* Just use the head, since we require them all to match. */
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5249,7 +5249,7 @@ argument_list|(
 name|fragmentlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5307,7 +5307,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5431,7 +5431,7 @@ argument_list|(
 name|mbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_single
+name|mac_mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -5493,7 +5493,7 @@ argument_list|(
 name|mbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5551,7 +5551,7 @@ argument_list|(
 name|mbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5619,7 +5619,7 @@ argument_list|(
 name|newmbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5677,7 +5677,7 @@ argument_list|(
 name|newmbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_single
+name|mac_mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5737,7 +5737,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_equal_single
+name|mac_mls_equal_effective
 argument_list|(
 name|a
 argument_list|,
@@ -5923,7 +5923,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_single
+name|mac_mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -5979,7 +5979,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_single
+name|mac_mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -6124,7 +6124,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_mls_equal_single
+name|mac_mls_equal_effective
 argument_list|(
 name|a
 argument_list|,
@@ -6187,7 +6187,7 @@ argument_list|(
 name|newlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for the credential, it may be 	 * an update of single, range, or both. 	 */
+comment|/* 	 * If there is an MLS label update for the credential, it may be 	 * an update of effective, range, or both. 	 */
 name|error
 operator|=
 name|mls_atmostflags
@@ -6216,7 +6216,7 @@ operator|&
 name|MAC_MLS_FLAGS_BOTH
 condition|)
 block|{
-comment|/* 		 * If the change request modifies both the MLS label single 		 * and range, check that the new single will be in the 		 * new range. 		 */
+comment|/* 		 * If the change request modifies both the MLS label effective 		 * and range, check that the new effective will be in the 		 * new range. 		 */
 if|if
 condition|(
 operator|(
@@ -6230,7 +6230,7 @@ operator|==
 name|MAC_MLS_FLAGS_BOTH
 operator|&&
 operator|!
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -6242,17 +6242,17 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 		 * To change the MLS single label on a credential, the 		 * new single label must be in the current range. 		 */
+comment|/* 		 * To change the MLS effective label on a credential, the 		 * new effective label must be in the current range. 		 */
 if|if
 condition|(
 name|new
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 operator|&&
 operator|!
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -6377,7 +6377,7 @@ comment|/* XXX: range */
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -6450,7 +6450,7 @@ argument_list|(
 name|newlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for the interface, it may 	 * be an update of single, range, or both. 	 */
+comment|/* 	 * If there is an MLS label update for the interface, it may 	 * be an update of effective, range, or both. 	 */
 name|error
 operator|=
 name|mls_atmostflags
@@ -6545,7 +6545,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|p
 argument_list|,
@@ -6620,7 +6620,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_equal_single
+name|mac_mls_equal_effective
 argument_list|(
 name|p
 argument_list|,
@@ -6693,7 +6693,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -6822,7 +6822,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -6902,7 +6902,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -6985,14 +6985,14 @@ argument_list|(
 name|pipelabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for a pipe, it must be a 	 * single update. 	 */
+comment|/* 	 * If there is an MLS label update for a pipe, it must be a 	 * effective update. 	 */
 name|error
 operator|=
 name|mls_atmostflags
 argument_list|(
 name|new
 argument_list|,
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7008,7 +7008,7 @@ comment|/* 	 * To perform a relabel of a pipe (MLS label or not), MLS must 	 * a
 if|if
 condition|(
 operator|!
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|obj
 argument_list|,
@@ -7027,14 +7027,14 @@ name|new
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 block|{
 comment|/* 		 * To change the MLS label on a pipe, the new pipe label 		 * must be in the subject range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -7141,7 +7141,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7221,7 +7221,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7299,7 +7299,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7314,7 +7314,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7392,7 +7392,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7407,7 +7407,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7488,7 +7488,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7503,7 +7503,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7583,7 +7583,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_equal_single
+name|mac_mls_equal_effective
 argument_list|(
 name|p
 argument_list|,
@@ -7661,14 +7661,14 @@ argument_list|(
 name|socketlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for the socket, it may be 	 * an update of single. 	 */
+comment|/* 	 * If there is an MLS label update for the socket, it may be 	 * an update of effective. 	 */
 name|error
 operator|=
 name|mls_atmostflags
 argument_list|(
 name|new
 argument_list|,
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7680,11 +7680,11 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * To relabel a socket, the old socket single must be in the subject 	 * range. 	 */
+comment|/* 	 * To relabel a socket, the old socket effective must be in the subject 	 * range. 	 */
 if|if
 condition|(
 operator|!
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|obj
 argument_list|,
@@ -7703,14 +7703,14 @@ name|new
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 block|{
-comment|/* 		 * To relabel a socket, the new socket single must be in 		 * the subject range. 		 */
+comment|/* 		 * To relabel a socket, the new socket effective must be in 		 * the subject range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -7815,7 +7815,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7893,7 +7893,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7901,7 +7901,7 @@ name|subj
 argument_list|)
 operator|||
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7979,7 +7979,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8057,7 +8057,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8145,7 +8145,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8238,7 +8238,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8260,7 +8260,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8341,7 +8341,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8427,7 +8427,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8555,7 +8555,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8636,7 +8636,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8727,7 +8727,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8820,7 +8820,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8842,7 +8842,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8923,7 +8923,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9006,7 +9006,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9102,7 +9102,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9125,7 +9125,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9221,7 +9221,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9250,7 +9250,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9337,7 +9337,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9423,7 +9423,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9501,7 +9501,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9579,7 +9579,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9662,14 +9662,14 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for the vnode, it must be a 	 * single label. 	 */
+comment|/* 	 * If there is an MLS label update for the vnode, it must be a 	 * effective label. 	 */
 name|error
 operator|=
 name|mls_atmostflags
 argument_list|(
 name|new
 argument_list|,
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -9685,7 +9685,7 @@ comment|/* 	 * To perform a relabel of the vnode (MLS label or not), MLS must 	 
 if|if
 condition|(
 operator|!
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|old
 argument_list|,
@@ -9704,14 +9704,14 @@ name|new
 operator|->
 name|mm_flags
 operator|&
-name|MAC_MLS_FLAG_SINGLE
+name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 block|{
 comment|/* 		 * To change the MLS label on a vnode, the new vnode label 		 * must be in the subject range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_mls_single_in_range
+name|mac_mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -9831,7 +9831,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9853,7 +9853,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9949,7 +9949,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9978,7 +9978,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10057,7 +10057,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10143,7 +10143,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10234,7 +10234,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10316,7 +10316,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10397,7 +10397,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10481,7 +10481,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10567,7 +10567,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10650,7 +10650,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10736,7 +10736,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_single
+name|mac_mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,

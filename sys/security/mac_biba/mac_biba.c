@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001-2003 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -913,13 +913,13 @@ name|mac_biba
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_single_in_range: mac_biba not single"
+literal|"mac_biba_effective_in_range: mac_biba not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -928,7 +928,7 @@ operator|=
 operator|&
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 expr_stmt|;
 return|return
 operator|(
@@ -999,12 +999,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 parameter_list|(
 name|struct
 name|mac_biba
 modifier|*
-name|single
+name|effective
 parameter_list|,
 name|struct
 name|mac_biba
@@ -1015,17 +1015,17 @@ block|{
 name|KASSERT
 argument_list|(
 operator|(
-name|single
+name|effective
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_single_in_range: a not single"
+literal|"mac_biba_effective_in_range: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1042,7 +1042,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_single_in_range: b not range"
+literal|"mac_biba_effective_in_range: b not range"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1056,17 +1056,17 @@ operator|->
 name|mb_rangehigh
 argument_list|,
 operator|&
-name|single
+name|effective
 operator|->
-name|mb_single
+name|mb_effective
 argument_list|)
 operator|&&
 name|mac_biba_dominate_element
 argument_list|(
 operator|&
-name|single
+name|effective
 operator|->
-name|mb_single
+name|mb_effective
 argument_list|,
 operator|&
 name|range
@@ -1086,7 +1086,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 parameter_list|(
 name|struct
 name|mac_biba
@@ -1106,13 +1106,13 @@ name|a
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_dominate_single: a not single"
+literal|"mac_biba_dominate_effective: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1123,13 +1123,13 @@ name|b
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_dominate_single: b not single"
+literal|"mac_biba_dominate_effective: b not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1140,12 +1140,12 @@ argument_list|(
 operator|&
 name|a
 operator|->
-name|mb_single
+name|mb_effective
 argument_list|,
 operator|&
 name|b
 operator|->
-name|mb_single
+name|mb_effective
 argument_list|)
 operator|)
 return|;
@@ -1212,7 +1212,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_biba_equal_single
+name|mac_biba_equal_effective
 parameter_list|(
 name|struct
 name|mac_biba
@@ -1232,13 +1232,13 @@ name|a
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_equal_single: a not single"
+literal|"mac_biba_equal_effective: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1249,13 +1249,13 @@ name|b
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_equal_single: b not single"
+literal|"mac_biba_equal_effective: b not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1266,12 +1266,12 @@ argument_list|(
 operator|&
 name|a
 operator|->
-name|mb_single
+name|mb_effective
 argument_list|,
 operator|&
 name|b
 operator|->
-name|mb_single
+name|mb_effective
 argument_list|)
 operator|)
 return|;
@@ -1295,13 +1295,13 @@ name|mac_biba
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 condition|)
 if|if
 condition|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_type
 operator|==
@@ -1388,12 +1388,12 @@ literal|"mac_biba_subject_privileged: subject doesn't have both labels"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* If the single is EQUAL, it's ok. */
+comment|/* If the effective is EQUAL, it's ok. */
 if|if
 condition|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_type
 operator|==
@@ -1464,7 +1464,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_biba_high_single
+name|mac_biba_high_effective
 parameter_list|(
 name|struct
 name|mac_biba
@@ -1479,13 +1479,13 @@ name|mac_biba
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_equal_single: mac_biba not single"
+literal|"mac_biba_equal_effective: mac_biba not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1493,7 +1493,7 @@ return|return
 operator|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_type
 operator|==
@@ -1520,14 +1520,14 @@ name|mac_biba
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 condition|)
 block|{
 switch|switch
 condition|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_type
 condition|)
@@ -1549,7 +1549,7 @@ if|if
 condition|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_grade
 operator|!=
@@ -1560,7 +1560,7 @@ name|MAC_BIBA_BIT_SET_EMPTY
 argument_list|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_compartments
 argument_list|)
@@ -1585,7 +1585,7 @@ if|if
 condition|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_type
 operator|!=
@@ -1899,7 +1899,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_biba_set_single
+name|mac_biba_set_effective
 parameter_list|(
 name|struct
 name|mac_biba
@@ -1919,7 +1919,7 @@ parameter_list|)
 block|{
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_type
 operator|=
@@ -1927,7 +1927,7 @@ name|type
 expr_stmt|;
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_grade
 operator|=
@@ -1943,7 +1943,7 @@ name|memcpy
 argument_list|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_compartments
 argument_list|,
@@ -1953,7 +1953,7 @@ sizeof|sizeof
 argument_list|(
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 operator|.
 name|mbe_compartments
 argument_list|)
@@ -1963,7 +1963,7 @@ name|mac_biba
 operator|->
 name|mb_flags
 operator||=
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 expr_stmt|;
 block|}
 end_function
@@ -2029,7 +2029,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 parameter_list|(
 name|struct
 name|mac_biba
@@ -2049,29 +2049,29 @@ name|labelfrom
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_biba_copy_single: labelfrom not single"
+literal|"mac_biba_copy_effective: labelfrom not effective"
 operator|)
 argument_list|)
 expr_stmt|;
 name|labelto
 operator|->
-name|mb_single
+name|mb_effective
 operator|=
 name|labelfrom
 operator|->
-name|mb_single
+name|mb_effective
 expr_stmt|;
 name|labelto
 operator|->
 name|mb_flags
 operator||=
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 expr_stmt|;
 block|}
 end_function
@@ -2098,9 +2098,9 @@ name|source
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 condition|)
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -2515,7 +2515,7 @@ name|mac_biba
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 condition|)
 block|{
 if|if
@@ -2527,7 +2527,7 @@ argument_list|,
 operator|&
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 argument_list|)
 operator|==
 operator|-
@@ -3049,12 +3049,12 @@ modifier|*
 name|rangelow
 decl_stmt|,
 modifier|*
-name|single
+name|effective
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|single
+name|effective
 operator|=
 name|strsep
 argument_list|(
@@ -3067,11 +3067,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|single
+name|effective
 operator|==
 literal|'\0'
 condition|)
-name|single
+name|effective
 operator|=
 name|NULL
 expr_stmt|;
@@ -3188,7 +3188,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|single
+name|effective
 operator|!=
 name|NULL
 condition|)
@@ -3200,9 +3200,9 @@ argument_list|(
 operator|&
 name|mac_biba
 operator|->
-name|mb_single
+name|mb_effective
 argument_list|,
-name|single
+name|effective
 argument_list|)
 expr_stmt|;
 if|if
@@ -3218,7 +3218,7 @@ name|mac_biba
 operator|->
 name|mb_flags
 operator||=
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 expr_stmt|;
 block|}
 if|if
@@ -3574,7 +3574,7 @@ name|biba_type
 operator|=
 name|MAC_BIBA_TYPE_HIGH
 expr_stmt|;
-name|mac_biba_set_single
+name|mac_biba_set_effective
 argument_list|(
 name|mac_biba
 argument_list|,
@@ -3628,7 +3628,7 @@ argument_list|(
 name|label
 argument_list|)
 expr_stmt|;
-name|mac_biba_set_single
+name|mac_biba_set_effective
 argument_list|(
 name|mac_biba
 argument_list|,
@@ -3702,7 +3702,7 @@ argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3762,7 +3762,7 @@ argument_list|(
 name|mntlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3776,7 +3776,7 @@ argument_list|(
 name|fslabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3825,7 +3825,7 @@ argument_list|(
 name|fslabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_set_single
+name|mac_biba_set_effective
 argument_list|(
 name|mac_biba
 argument_list|,
@@ -3843,7 +3843,7 @@ argument_list|(
 name|mntlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_set_single
+name|mac_biba_set_effective
 argument_list|(
 name|mac_biba
 argument_list|,
@@ -4036,7 +4036,7 @@ argument_list|(
 name|vlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4153,7 +4153,7 @@ name|EOPNOTSUPP
 condition|)
 block|{
 comment|/* Fall back to the fslabel. */
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4231,12 +4231,12 @@ operator|&
 name|MAC_BIBA_FLAGS_BOTH
 operator|)
 operator|!=
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mac_biba_associate_vnode_extattr: not single\n"
+literal|"mac_biba_associate_vnode_extattr: not effective\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4245,7 +4245,7 @@ name|EPERM
 operator|)
 return|;
 block|}
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 operator|&
 name|temp
@@ -4309,7 +4309,7 @@ argument_list|(
 name|vlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4412,7 +4412,7 @@ argument_list|(
 name|vlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4450,7 +4450,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4533,7 +4533,7 @@ name|source
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|)
 operator|==
 literal|0
@@ -4543,7 +4543,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4635,7 +4635,7 @@ argument_list|(
 name|inplabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4693,7 +4693,7 @@ argument_list|(
 name|mbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4748,7 +4748,7 @@ argument_list|(
 name|socketlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4803,7 +4803,7 @@ argument_list|(
 name|pipelabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4861,7 +4861,7 @@ argument_list|(
 name|newsocketlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5035,7 +5035,7 @@ argument_list|(
 name|socketpeerlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5097,7 +5097,7 @@ argument_list|(
 name|newsocketpeerlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5152,7 +5152,7 @@ argument_list|(
 name|bpflabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5437,7 +5437,7 @@ block|}
 block|}
 name|set
 label|:
-name|mac_biba_set_single
+name|mac_biba_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -5516,7 +5516,7 @@ argument_list|(
 name|ipqlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5575,7 +5575,7 @@ name|datagramlabel
 argument_list|)
 expr_stmt|;
 comment|/* Just use the head, since we require them all to match. */
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5633,7 +5633,7 @@ argument_list|(
 name|fragmentlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5691,7 +5691,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5815,7 +5815,7 @@ argument_list|(
 name|mbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_set_single
+name|mac_biba_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -5877,7 +5877,7 @@ argument_list|(
 name|mbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5935,7 +5935,7 @@ argument_list|(
 name|mbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -6003,7 +6003,7 @@ argument_list|(
 name|newmbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -6061,7 +6061,7 @@ argument_list|(
 name|newmbuflabel
 argument_list|)
 expr_stmt|;
-name|mac_biba_copy_single
+name|mac_biba_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -6121,7 +6121,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_biba_equal_single
+name|mac_biba_equal_effective
 argument_list|(
 name|a
 argument_list|,
@@ -6307,7 +6307,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_biba_set_single
+name|mac_biba_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -6363,7 +6363,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_biba_set_single
+name|mac_biba_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -6508,7 +6508,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_biba_equal_single
+name|mac_biba_equal_effective
 argument_list|(
 name|a
 argument_list|,
@@ -6571,7 +6571,7 @@ argument_list|(
 name|newlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a Biba label update for the credential, it may 	 * be an update of the single, range, or both. 	 */
+comment|/* 	 * If there is a Biba label update for the credential, it may 	 * be an update of the effective, range, or both. 	 */
 name|error
 operator|=
 name|biba_atmostflags
@@ -6600,7 +6600,7 @@ operator|&
 name|MAC_BIBA_FLAGS_BOTH
 condition|)
 block|{
-comment|/* 		 * If the change request modifies both the Biba label 		 * single and range, check that the new single will be 		 * in the new range. 		 */
+comment|/* 		 * If the change request modifies both the Biba label 		 * effective and range, check that the new effective will be 		 * in the new range. 		 */
 if|if
 condition|(
 operator|(
@@ -6614,7 +6614,7 @@ operator|==
 name|MAC_BIBA_FLAGS_BOTH
 operator|&&
 operator|!
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -6626,17 +6626,17 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 		 * To change the Biba single label on a credential, the 		 * new single label must be in the current range. 		 */
+comment|/* 		 * To change the Biba effective label on a credential, the 		 * new effective label must be in the current range. 		 */
 if|if
 condition|(
 name|new
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 operator|&&
 operator|!
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -6761,7 +6761,7 @@ comment|/* XXX: range */
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -6834,7 +6834,7 @@ argument_list|(
 name|newlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a Biba label update for the interface, it may 	 * be an update of the single, range, or both. 	 */
+comment|/* 	 * If there is a Biba label update for the interface, it may 	 * be an update of the effective, range, or both. 	 */
 name|error
 operator|=
 name|biba_atmostflags
@@ -6938,7 +6938,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|p
 argument_list|,
@@ -7013,7 +7013,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_biba_equal_single
+name|mac_biba_equal_effective
 argument_list|(
 name|p
 argument_list|,
@@ -7105,7 +7105,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_high_single
+name|mac_biba_high_effective
 argument_list|(
 name|obj
 argument_list|)
@@ -7227,7 +7227,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7356,7 +7356,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7436,7 +7436,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7519,14 +7519,14 @@ argument_list|(
 name|pipelabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a Biba label update for a pipe, it must be a 	 * single update. 	 */
+comment|/* 	 * If there is a Biba label update for a pipe, it must be a 	 * effective update. 	 */
 name|error
 operator|=
 name|biba_atmostflags
 argument_list|(
 name|new
 argument_list|,
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7542,7 +7542,7 @@ comment|/* 	 * To perform a relabel of a pipe (Biba label or not), Biba must 	 *
 if|if
 condition|(
 operator|!
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|obj
 argument_list|,
@@ -7561,14 +7561,14 @@ name|new
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 condition|)
 block|{
 comment|/* 		 * To change the Biba label on a pipe, the new pipe label 		 * must be in the subject range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -7675,7 +7675,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7755,7 +7755,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7833,7 +7833,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7848,7 +7848,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7926,7 +7926,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7941,7 +7941,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8022,7 +8022,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8037,7 +8037,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8117,7 +8117,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_biba_equal_single
+name|mac_biba_equal_effective
 argument_list|(
 name|p
 argument_list|,
@@ -8195,14 +8195,14 @@ argument_list|(
 name|socketlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a Biba label update for the socket, it may be 	 * an update of single. 	 */
+comment|/* 	 * If there is a Biba label update for the socket, it may be 	 * an update of effective. 	 */
 name|error
 operator|=
 name|biba_atmostflags
 argument_list|(
 name|new
 argument_list|,
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -8214,11 +8214,11 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * To relabel a socket, the old socket single must be in the subject 	 * range. 	 */
+comment|/* 	 * To relabel a socket, the old socket effective must be in the subject 	 * range. 	 */
 if|if
 condition|(
 operator|!
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|obj
 argument_list|,
@@ -8237,14 +8237,14 @@ name|new
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 condition|)
 block|{
-comment|/* 		 * To relabel a socket, the new socket single must be in 		 * the subject range. 		 */
+comment|/* 		 * To relabel a socket, the new socket effective must be in 		 * the subject range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -8349,7 +8349,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8519,7 +8519,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_high_single
+name|mac_biba_high_effective
 argument_list|(
 name|obj
 argument_list|)
@@ -8676,7 +8676,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_biba_high_single
+name|mac_biba_high_effective
 argument_list|(
 name|obj
 argument_list|)
@@ -8947,7 +8947,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9025,7 +9025,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9113,7 +9113,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9206,7 +9206,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9228,7 +9228,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9309,7 +9309,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9395,7 +9395,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9523,7 +9523,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9604,7 +9604,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9695,7 +9695,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9788,7 +9788,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9810,7 +9810,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9891,7 +9891,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9974,7 +9974,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10070,7 +10070,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10093,7 +10093,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10189,7 +10189,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10218,7 +10218,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10305,7 +10305,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10391,7 +10391,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10469,7 +10469,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10547,7 +10547,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10630,14 +10630,14 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a Biba label update for the vnode, it must be a 	 * single label. 	 */
+comment|/* 	 * If there is a Biba label update for the vnode, it must be a 	 * effective label. 	 */
 name|error
 operator|=
 name|biba_atmostflags
 argument_list|(
 name|new
 argument_list|,
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -10653,7 +10653,7 @@ comment|/* 	 * To perform a relabel of the vnode (Biba label or not), Biba must 
 if|if
 condition|(
 operator|!
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|old
 argument_list|,
@@ -10672,14 +10672,14 @@ name|new
 operator|->
 name|mb_flags
 operator|&
-name|MAC_BIBA_FLAG_SINGLE
+name|MAC_BIBA_FLAG_EFFECTIVE
 condition|)
 block|{
 comment|/* 		 * To change the Biba label on a vnode, the new vnode label 		 * must be in the subject range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_biba_single_in_range
+name|mac_biba_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -10799,7 +10799,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10821,7 +10821,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10917,7 +10917,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10946,7 +10946,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11025,7 +11025,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11111,7 +11111,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11202,7 +11202,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11284,7 +11284,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11365,7 +11365,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11449,7 +11449,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11535,7 +11535,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11618,7 +11618,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -11704,7 +11704,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_biba_dominate_single
+name|mac_biba_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
