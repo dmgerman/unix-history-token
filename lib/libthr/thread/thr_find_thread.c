@@ -41,12 +41,6 @@ condition|(
 name|pthread
 operator|==
 name|NULL
-operator|||
-name|pthread
-operator|->
-name|magic
-operator|!=
-name|PTHREAD_MAGIC
 condition|)
 return|return
 operator|(
@@ -56,6 +50,10 @@ return|;
 name|THREAD_LIST_LOCK
 expr_stmt|;
 comment|/* Search for the specified thread: */
+name|pthread1
+operator|=
+name|NULL
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|pthread1
@@ -75,6 +73,23 @@ break|break;
 block|}
 name|THREAD_LIST_UNLOCK
 expr_stmt|;
+if|if
+condition|(
+name|pthread1
+operator|!=
+name|NULL
+operator|&&
+name|pthread1
+operator|->
+name|magic
+operator|!=
+name|PTHREAD_MAGIC
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* Return zero if the thread exists: */
 return|return
 operator|(
