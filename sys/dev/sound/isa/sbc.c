@@ -1199,6 +1199,13 @@ block|}
 block|,
 comment|/* ESS1868 */
 block|{
+literal|0x03007316
+block|,
+literal|"ESS ES1869"
+block|}
+block|,
+comment|/* ESS1869 */
+block|{
 literal|0x69187316
 block|,
 literal|"ESS ES1869"
