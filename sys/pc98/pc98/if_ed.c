@@ -184,6 +184,23 @@ directive|include
 file|<dev/ed/if_edreg.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDISA
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The ed device requires the old isa compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1516,6 +1533,8 @@ name|isa_driver
 name|eddriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|ed_probe
 block|,
 name|ed_attach_isa
@@ -1527,6 +1546,16 @@ comment|/* We are ultra sensitive */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|ed
+argument_list|,
+name|eddriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Interrupt conversion table for WD/SMC ASIC/83C584  * (IRQ* are defined in icu.h)  */
