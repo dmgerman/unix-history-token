@@ -500,6 +500,12 @@ name|array
 decl_stmt|,
 name|disk
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ar_table
+condition|)
+return|return;
 for|for
 control|(
 name|array
