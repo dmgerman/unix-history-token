@@ -1034,6 +1034,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PFIL_HOOKS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pfil_head
+name|inet_pfil_hook
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|in_delayed_cksum
