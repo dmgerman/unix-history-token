@@ -18717,8 +18717,11 @@ operator|!=
 name|CODE_FOR_nothing
 condition|)
 block|{
-comment|/* We think we may be able to do this with a scc insn.  Emit the 	 comparison and then the scc insn.  	 compare_from_rtx may call emit_queue, which would be deleted below 	 if the scc insn fails.  So call it ourselves before setting LAST.  */
+comment|/* We think we may be able to do this with a scc insn.  Emit the 	 comparison and then the scc insn.  	 compare_from_rtx may call emit_queue, which would be deleted below 	 if the scc insn fails.  So call it ourselves before setting LAST. 	 Likewise for do_pending_stack_adjust.  */
 name|emit_queue
+argument_list|()
+expr_stmt|;
+name|do_pending_stack_adjust
 argument_list|()
 expr_stmt|;
 name|last

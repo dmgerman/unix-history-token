@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Top level of GNU C compiler    Copyright (C) 1987, 88, 89, 92-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Top level of GNU C compiler    Copyright (C) 1987, 88, 89, 92-99, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -14706,19 +14706,6 @@ name|rtl_dump_file
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TIMEVAR
-argument_list|(
-name|cse_time
-argument_list|,
-name|delete_trivially_dead_insns
-argument_list|(
-name|insns
-argument_list|,
-name|max_reg_num
-argument_list|()
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tem
@@ -14743,6 +14730,20 @@ name|JUMP_NOOP_MOVES
 argument_list|,
 operator|!
 name|JUMP_AFTER_REGSCAN
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Run this after jump optmizations remove all the unreachable code 	 so that unreachable code will not keep values live.  */
+name|TIMEVAR
+argument_list|(
+name|cse_time
+argument_list|,
+name|delete_trivially_dead_insns
+argument_list|(
+name|insns
+argument_list|,
+name|max_reg_num
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -17207,6 +17208,9 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|int
+name|numopts
+decl_stmt|;
 name|long
 name|k
 decl_stmt|;
@@ -17319,6 +17323,13 @@ name|indep_options
 operator|=
 name|f_options
 expr_stmt|;
+name|numopts
+operator|=
+name|NUM_ELEM
+argument_list|(
+name|f_options
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'W'
@@ -17326,6 +17337,13 @@ case|:
 name|indep_options
 operator|=
 name|W_options
+expr_stmt|;
+name|numopts
+operator|=
+name|NUM_ELEM
+argument_list|(
+name|W_options
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -17369,10 +17387,7 @@ for|for
 control|(
 name|k
 operator|=
-name|NUM_ELEM
-argument_list|(
-name|indep_options
-argument_list|)
+name|numopts
 init|;
 name|k
 operator|--
