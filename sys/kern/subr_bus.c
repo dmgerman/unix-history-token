@@ -10704,7 +10704,7 @@ return|return;
 name|indentprintf
 argument_list|(
 operator|(
-literal|"driver %s: softc size = %d\n"
+literal|"driver %s: softc size = %zd\n"
 operator|,
 name|driver
 operator|->
