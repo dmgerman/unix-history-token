@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: df.c,v 1.17 1997/08/07 21:31:00 steve Exp $"
+literal|"$Id: df.c,v 1.18 1997/10/12 13:55:43 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,9 +321,9 @@ name|i
 decl_stmt|,
 name|maxwidth
 decl_stmt|,
-name|width
-decl_stmt|,
 name|rv
+decl_stmt|,
+name|width
 decl_stmt|;
 name|char
 modifier|*
@@ -1576,7 +1576,9 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1606,7 +1608,9 @@ name|rfd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 name|sfsp
@@ -1800,7 +1804,9 @@ name|rfd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
