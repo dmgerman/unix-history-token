@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/vmmeter.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vmmeter.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -160,13 +160,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
+file|<vm/vm_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_include
@@ -440,9 +440,8 @@ literal|"Going nowhere without my init!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXXXKSE */
-comment|/* MUST abort all other threads before proceeding past this point */
-comment|/* are we a task leader? */
+comment|/* 	 * XXXXKSE: MUST abort all other threads before proceeding past here. 	 */
+comment|/* Are we a task leader? */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1402,7 +1401,7 @@ operator|->
 name|p_cru
 argument_list|)
 expr_stmt|;
-comment|/* 	 * notify interested parties of our demise. 	 */
+comment|/* 	 * Notify interested parties of our demise. 	 */
 name|KNOTE
 argument_list|(
 operator|&
@@ -1656,7 +1655,7 @@ name|COMPAT_43
 end_ifdef
 
 begin_comment
-comment|/*  * MPSAFE, the dirty work is handled by wait1().  */
+comment|/*  * MPSAFE.  The dirty work is handled by wait1().  */
 end_comment
 
 begin_function
@@ -1734,7 +1733,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * MPSAFE, the dirty work is handled by wait1().  */
+comment|/*  * MPSAFE.  The dirty work is handled by wait1().  */
 end_comment
 
 begin_function
