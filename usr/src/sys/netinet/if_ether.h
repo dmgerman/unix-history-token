@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -261,48 +261,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Internet to ethernet address resolution table.  */
-end_comment
-
-begin_struct
-struct|struct
-name|arptab
-block|{
-name|struct
-name|in_addr
-name|at_iaddr
-decl_stmt|;
-comment|/* internet address */
-name|u_char
-name|at_enaddr
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* ethernet address */
-name|u_char
-name|at_timer
-decl_stmt|;
-comment|/* minutes since last reference */
-name|u_char
-name|at_flags
-decl_stmt|;
-comment|/* flags */
-name|struct
-name|mbuf
-modifier|*
-name|at_hold
-decl_stmt|;
-comment|/* last packet until resolved/timeout */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* XXX: only used to define SIOCGARP, which is no longer supported */
-end_comment
-
 begin_struct
 struct|struct
 name|llinfo_arp
@@ -437,6 +395,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|ifqueue
+name|arpintrq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|llinfo_arp
 modifier|*
 name|arptnew
@@ -463,13 +428,47 @@ comment|/* head of the llinfo queue */
 end_comment
 
 begin_decl_stmt
-name|int
-name|ether_output
+name|void
+name|arpwhohas
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ifnet
+name|arpcom
+operator|*
+operator|,
+expr|struct
+name|in_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|arpintr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|arpresolve
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|arpcom
+operator|*
+operator|,
+expr|struct
+name|rtentry
 operator|*
 operator|,
 expr|struct
@@ -480,43 +479,6 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-expr|struct
-name|rtentry
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ether_input
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|,
-expr|struct
-name|ether_header
-operator|*
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|ether_sprintf
-name|__P
-argument_list|(
-operator|(
 name|u_char
 operator|*
 operator|)
@@ -545,31 +507,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|ifqueue
-name|arpintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX These probably belong elsewhere */
-end_comment
-
-begin_decl_stmt
-name|void
-name|in_arpinput
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|arpwhohas
 name|__P
@@ -581,6 +518,42 @@ operator|*
 operator|,
 expr|struct
 name|in_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ether_addmulti
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|,
+expr|struct
+name|arpcom
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ether_delmulti
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|,
+expr|struct
+name|arpcom
 operator|*
 operator|)
 argument_list|)
@@ -628,12 +601,6 @@ comment|/* ptr to next ether_multi */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * Structure used by macros below to remember position when stepping through  * all of the ether_multi records.  */
@@ -722,11 +689,6 @@ comment|/* struct ether_multi *enm; */
 define|\
 value|{ \ 	(step).e_enm = (ac)->ac_multiaddrs; \ 	ETHER_NEXT_MULTI((step), (enm)); \ }
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
