@@ -402,7 +402,7 @@ expr_stmt|;
 comment|/* 	 * Use caller-saved regs 14/15 to hold params that _ctx_start 	 * will use to invoke the user-supplied func 	 */
 name|mc
 operator|->
-name|mc_lr
+name|mc_srr0
 operator|=
 operator|(
 name|uint32_t
