@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.2 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1103,16 +1103,16 @@ name|pmap_bootstrap_alloc
 parameter_list|(
 name|size
 parameter_list|)
-block|{
-name|vm_offset_t
-name|val
-decl_stmt|;
 name|int
-name|i
+name|size
 decl_stmt|;
+block|{
 specifier|extern
 name|boolean_t
 name|vm_page_startup_initialized
+decl_stmt|;
+name|vm_offset_t
+name|val
 decl_stmt|;
 if|if
 condition|(
