@@ -3312,6 +3312,10 @@ name|lhrp
 operator|=
 name|hrp
 expr_stmt|;
+if|if
+condition|(
+name|res
+condition|)
 name|freeaddrinfo
 argument_list|(
 name|res
