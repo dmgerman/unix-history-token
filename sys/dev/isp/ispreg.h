@@ -5619,7 +5619,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP2100_NVRAM_NODE_NAME
+name|ISP2100_NVRAM_PORT_NAME
 parameter_list|(
 name|c
 parameter_list|)
@@ -5634,6 +5634,16 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(c)[26]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_NVRAM_NODE_NAME
+parameter_list|(
+name|c
+parameter_list|)
+value|(\ 		(((u_int64_t)(c)[30])<< 56) | \ 		(((u_int64_t)(c)[31])<< 48) | \ 		(((u_int64_t)(c)[32])<< 40) | \ 		(((u_int64_t)(c)[33])<< 32) | \ 		(((u_int64_t)(c)[34])<< 24) | \ 		(((u_int64_t)(c)[35])<< 16) | \ 		(((u_int64_t)(c)[36])<<  8) | \ 		(((u_int64_t)(c)[37])<<  0))
 end_define
 
 begin_define
