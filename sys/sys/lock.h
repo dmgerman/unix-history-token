@@ -210,19 +210,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LI_SLEPT
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* Lock instance has been slept with. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LI_EXCLUSIVE
-value|0x00020000
+value|0x00010000
 end_define
 
 begin_comment
@@ -823,18 +812,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|witness_list
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|witness_sleep
+name|witness_warn
 parameter_list|(
 name|int
 parameter_list|,
@@ -846,7 +824,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|int
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -899,6 +877,43 @@ ifdef|#
 directive|ifdef
 name|WITNESS
 end_ifdef
+
+begin_comment
+comment|/* Flags for witness_warn(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WARN_GIANTOK
+value|0x01
+end_define
+
+begin_comment
+comment|/* Giant is exempt from this check. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WARN_PANIC
+value|0x02
+end_define
+
+begin_comment
+comment|/* Panic if check fails. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WARN_SLEEPOK
+value|0x04
+end_define
+
+begin_comment
+comment|/* Sleepable locks are exempt from check. */
+end_comment
 
 begin_define
 define|#
@@ -993,14 +1008,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|WITNESS_SLEEP
+name|WITNESS_WARN
 parameter_list|(
-name|check
+name|flags
 parameter_list|,
 name|lock
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 define|\
-value|witness_sleep((check), (lock), __FILE__, __LINE__)
+value|witness_warn((flags), (lock), (fmt), ## __VA_ARGS__)
 end_define
 
 begin_define
@@ -1154,11 +1173,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|WITNESS_SLEEP
+name|WITNESS_WARN
 parameter_list|(
-name|check
+name|flags
 parameter_list|,
 name|lock
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 end_define
 
