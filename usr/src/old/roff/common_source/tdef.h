@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tdef.h	4.4 %G%  */
+comment|/*	tdef.h	4.5	83/08/11	*/
 end_comment
 
 begin_define

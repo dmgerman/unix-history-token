@@ -8,7 +8,7 @@ end_expr_stmt
 
 begin_for
 for|for 4.2
-comment|/* @(#)r.h	1.1 (Berkeley) %G% */
+comment|/*	r.h	1.2	83/08/11	*/
 include|#
 directive|include
 file|<stdio.h>

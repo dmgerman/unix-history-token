@@ -8,20 +8,42 @@ end_expr_stmt
 
 begin_for
 for|for 4.2
-comment|/* @(#)rlook.c	1.1 (Berkeley) %G% */
+ifndef|#
+directive|ifndef
+name|lint
+for|static char sccsid[] = "@(#)rlook.c	1.2 (Berkeley) %G%"
+empty_stmt|;
+end_for
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
 define|#
 directive|define
 name|NULL
 value|0
+end_define
+
+begin_define
 define|#
 directive|define
 name|EOS
 value|0
+end_define
+
+begin_define
 define|#
 directive|define
 name|HSHSIZ
 value|101
-for|struct	nlist
+end_define
+
+begin_struct
+struct|struct
+name|nlist
 block|{
 name|char
 modifier|*
@@ -40,11 +62,8 @@ modifier|*
 name|next
 decl_stmt|;
 block|}
-end_for
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+struct|;
+end_struct
 
 begin_decl_stmt
 name|struct

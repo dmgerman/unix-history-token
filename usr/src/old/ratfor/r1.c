@@ -8,21 +8,45 @@ end_expr_stmt
 
 begin_for
 for|for 4.2
-comment|/* @(#)r1.c	1.2 (Berkeley) %G% */
+ifndef|#
+directive|ifndef
+name|lint
+for|static char sccsid[] = "@(#)r1.c	1.3 (Berkeley) %G%"
+empty_stmt|;
+end_for
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
 include|#
 directive|include
 file|"r.h"
+end_include
+
+begin_define
 define|#
 directive|define
 name|wasbreak
 value|brkused[brkptr]==1 || brkused[brkptr]==3
+end_define
+
+begin_define
 define|#
 directive|define
 name|wasnext
 value|brkused[brkptr]==2 || brkused[brkptr]==3
-for|int	transfer	= 0
-empty_stmt|;
-end_for
+end_define
+
+begin_decl_stmt
+name|int
+name|transfer
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 1 if just finished retrun, break, next */

@@ -8,13 +8,30 @@ end_expr_stmt
 
 begin_for
 for|for 4.2
-comment|/* @(#)r2.c	1.1 (Berkeley) %G% */
+ifndef|#
+directive|ifndef
+name|lint
+for|static char sccsid[] = "@(#)r2.c	1.2 (Berkeley) %G%"
+empty_stmt|;
+end_for
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
 include|#
 directive|include
 file|"r.h"
-for|extern int hollerith
-empty_stmt|;
-end_for
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|hollerith
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
