@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
 end_include
 
 begin_include
