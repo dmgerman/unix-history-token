@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwupdate.c	3.22 (Berkeley) %G%"
+literal|"@(#)wwupdate.c	3.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,8 +180,12 @@ name|scan_top
 else|:
 literal|0
 decl_stmt|;
+comment|/* 			 * t1 is one past the first touched row, 			 * t2 is on the last touched row. 			 */
 for|for
 control|(
+name|t1
+operator|--
+operator|,
 name|n
 operator|=
 literal|1
@@ -200,6 +204,7 @@ condition|)
 name|n
 operator|++
 expr_stmt|;
+comment|/* 			 * If we can't clreos then we try for clearing 			 * the whole screen. 			 */
 if|if
 condition|(
 name|check_clreos
@@ -458,6 +463,7 @@ name|didit
 init|=
 literal|0
 decl_stmt|;
+comment|/* 		 * gain is the advantage of clearing all the lines. 		 * best_gain is the advantage of clearing to eos 		 * at best_row and u->best_col. 		 * simple_gain is the advantage of using only clreol. 		 * We use g> best_gain because u->best_col can be 		 * undefined when u->best_gain is 0 so we can't use it. 		 */
 for|for
 control|(
 name|j
@@ -495,7 +501,7 @@ expr_stmt|;
 if|if
 condition|(
 name|g
-operator|>=
+operator|>
 name|best_gain
 condition|)
 block|{
