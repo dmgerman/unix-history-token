@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	3.4	%H%	*/
+comment|/*	inode.h	3.5	%H%	*/
 end_comment
 
 begin_comment
@@ -118,8 +118,7 @@ index|]
 decl_stmt|;
 comment|/* if normal file/directory */
 name|daddr_t
-name|I_last
-name|bnor
+name|I_lastr
 decl_stmt|;
 comment|/* last read (for read-ahead) */
 block|}
