@@ -1115,8 +1115,6 @@ name|ngmn_connect
 block|,
 name|ngmn_rcvdata
 block|,
-name|ngmn_rcvdata
-block|,
 name|ngmn_disconnect
 block|,
 name|NULL
