@@ -1035,7 +1035,7 @@ argument_list|(
 name|LogCCP
 argument_list|,
 literal|"MPPE: MasterKey is invalid,"
-literal|" MPPE is capable only with CHAP81 authentication\n"
+literal|" MPPE is available only with CHAP81 authentication\n"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1392,9 +1392,9 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
-literal|"MPPE: InitInput: MasterKey is invalid!!!!\n"
+literal|"MPPE: Cannot initialise without CHAP81\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1601,9 +1601,9 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
-literal|"MPPE: InitOutput: MasterKey is invalid!!!!\n"
+literal|"MPPE: Cannot initialise without CHAP81\n"
 argument_list|)
 expr_stmt|;
 return|return

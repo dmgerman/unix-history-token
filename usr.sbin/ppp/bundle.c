@@ -425,6 +425,12 @@ directive|include
 file|"server.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mppe.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -561,14 +567,18 @@ block|{
 case|case
 name|PHASE_DEAD
 case|:
-name|log_DisplayPrompts
-argument_list|()
-expr_stmt|;
 name|bundle
 operator|->
 name|phase
 operator|=
 name|new
+expr_stmt|;
+name|MPPE_MasterKeyValid
+operator|=
+literal|0
+expr_stmt|;
+name|log_DisplayPrompts
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
