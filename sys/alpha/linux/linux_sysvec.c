@@ -447,9 +447,13 @@ operator|+
 operator|(
 name|imgp
 operator|->
+name|args
+operator|->
 name|argc
 operator|+
 name|imgp
+operator|->
+name|args
 operator|->
 name|envc
 operator|+
@@ -667,6 +671,8 @@ name|register_t
 operator|)
 name|imgp
 operator|->
+name|args
+operator|->
 name|argc
 expr_stmt|;
 return|return
@@ -755,7 +761,7 @@ name|rpath
 init|=
 name|NULL
 decl_stmt|;
-name|linux_emul_find
+name|linux_emul_convpath
 argument_list|(
 name|FIRST_THREAD_IN_PROC
 argument_list|(
@@ -764,11 +770,11 @@ operator|->
 name|proc
 argument_list|)
 argument_list|,
-name|NULL
-argument_list|,
 name|imgp
 operator|->
 name|interpreter_name
+argument_list|,
+name|UIO_SYSSPACE
 argument_list|,
 operator|&
 name|rpath

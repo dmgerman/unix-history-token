@@ -607,9 +607,13 @@ operator|+
 operator|(
 name|imgp
 operator|->
+name|args
+operator|->
 name|argc
 operator|+
 name|imgp
+operator|->
+name|args
 operator|->
 name|envc
 operator|+
@@ -826,6 +830,8 @@ operator|(
 name|register_t
 operator|)
 name|imgp
+operator|->
+name|args
 operator|->
 name|argc
 expr_stmt|;

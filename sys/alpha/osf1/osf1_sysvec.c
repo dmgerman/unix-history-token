@@ -352,9 +352,13 @@ operator|+
 operator|(
 name|imgp
 operator|->
+name|args
+operator|->
 name|argc
 operator|+
 name|imgp
+operator|->
+name|args
 operator|->
 name|envc
 operator|+
@@ -401,6 +405,8 @@ name|ARG_MAX
 operator|-
 name|imgp
 operator|->
+name|args
+operator|->
 name|stringspace
 operator|)
 argument_list|,
@@ -414,6 +420,8 @@ expr_stmt|;
 name|destp
 operator|-=
 name|imgp
+operator|->
+name|args
 operator|->
 name|stringspace
 expr_stmt|;
@@ -554,6 +562,8 @@ operator|(
 name|long
 operator|)
 name|imgp
+operator|->
+name|args
 operator|->
 name|argc
 expr_stmt|;

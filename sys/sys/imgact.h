@@ -15,12 +15,63 @@ directive|define
 name|_SYS_IMGACT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|MAXSHELLCMDLEN
 value|128
 end_define
+
+begin_struct
+struct|struct
+name|image_args
+block|{
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+comment|/* pointer to string buffer */
+name|char
+modifier|*
+name|begin_argv
+decl_stmt|;
+comment|/* beginning of argv in buf */
+name|char
+modifier|*
+name|begin_envv
+decl_stmt|;
+comment|/* beginning of envv in buf */
+name|char
+modifier|*
+name|endp
+decl_stmt|;
+comment|/* current `end' pointer of arg& env strings */
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+comment|/* pointer to filename of executable (system space) */
+name|int
+name|stringspace
+decl_stmt|;
+comment|/* space left in arg& env buffer */
+name|int
+name|argc
+decl_stmt|;
+comment|/* count of argument strings */
+name|int
+name|envc
+decl_stmt|;
+comment|/* count of environment strings */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -32,18 +83,6 @@ modifier|*
 name|proc
 decl_stmt|;
 comment|/* our process struct */
-name|char
-modifier|*
-modifier|*
-name|userspace_argv
-decl_stmt|;
-comment|/* system call argument */
-name|char
-modifier|*
-modifier|*
-name|userspace_envv
-decl_stmt|;
-comment|/* system call argument */
 name|struct
 name|label
 modifier|*
@@ -74,36 +113,6 @@ modifier|*
 name|image_header
 decl_stmt|;
 comment|/* head of file to exec */
-name|char
-modifier|*
-name|stringbase
-decl_stmt|;
-comment|/* base address of tmp string storage */
-name|char
-modifier|*
-name|stringp
-decl_stmt|;
-comment|/* current 'end' pointer of tmp strings */
-name|char
-modifier|*
-name|endargs
-decl_stmt|;
-comment|/* end of argv vector */
-name|int
-name|stringspace
-decl_stmt|;
-comment|/* space left in tmp string storage area */
-name|int
-name|argc
-decl_stmt|,
-name|envc
-decl_stmt|;
-comment|/* count of argument and environment strings */
-name|char
-modifier|*
-name|argv0
-decl_stmt|;
-comment|/* Replacement for argv[0] when interpreting */
 name|unsigned
 name|long
 name|entry_addr
@@ -135,11 +144,6 @@ modifier|*
 name|firstpage
 decl_stmt|;
 comment|/* first page that we mapped */
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-comment|/* pointer to filename of executable (user space) */
 name|unsigned
 name|long
 name|ps_strings
@@ -148,6 +152,12 @@ comment|/* PS_STRINGS for BSD/OS binaries */
 name|size_t
 name|auxarg_size
 decl_stmt|;
+name|struct
+name|image_args
+modifier|*
+name|args
+decl_stmt|;
+comment|/* system call arguments */
 block|}
 struct|;
 end_struct
@@ -195,17 +205,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|exec_extract_strings
-parameter_list|(
-name|struct
-name|image_params
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|exec_new_vmspace
 parameter_list|(
 name|struct
@@ -242,6 +241,42 @@ name|exec_shell_imgact
 parameter_list|(
 name|struct
 name|image_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|exec_copyin_args
+parameter_list|(
+name|struct
+name|image_args
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|uio_seg
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|exec_free_args
+parameter_list|(
+name|struct
+name|image_args
 modifier|*
 parameter_list|)
 function_decl|;

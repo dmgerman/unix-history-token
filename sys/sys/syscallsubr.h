@@ -81,6 +81,12 @@ name|msqid_ds
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|image_args
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|kern___getcwd
@@ -245,19 +251,10 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|char
+name|struct
+name|image_args
 modifier|*
-name|fname
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|envv
+name|args
 parameter_list|,
 name|struct
 name|mac

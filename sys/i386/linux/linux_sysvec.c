@@ -1136,6 +1136,8 @@ operator|+
 operator|(
 name|imgp
 operator|->
+name|args
+operator|->
 name|argc
 operator|+
 literal|1
@@ -1190,6 +1192,8 @@ operator|*
 name|stack_base
 operator|=
 name|imgp
+operator|->
+name|args
 operator|->
 name|argc
 expr_stmt|;
@@ -1268,9 +1272,13 @@ operator|+
 operator|(
 name|imgp
 operator|->
+name|args
+operator|->
 name|argc
 operator|+
 name|imgp
+operator|->
+name|args
 operator|->
 name|envc
 operator|+
@@ -1487,6 +1495,8 @@ operator|(
 name|register_t
 operator|)
 name|imgp
+operator|->
+name|args
 operator|->
 name|argc
 expr_stmt|;

@@ -991,33 +991,6 @@ name|a_out
 operator|.
 name|a_data
 expr_stmt|;
-comment|/* copy in arguments and/or environment from old process */
-name|error
-operator|=
-name|exec_extract_strings
-argument_list|(
-name|gz
-operator|->
-name|ip
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|gz
-operator|->
-name|where
-operator|=
-name|__LINE__
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack) 	 */
 name|exec_new_vmspace
 argument_list|(

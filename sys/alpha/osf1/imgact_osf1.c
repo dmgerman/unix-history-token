@@ -422,9 +422,11 @@ name|exec_path
 expr_stmt|;
 name|path_not_saved
 operator|=
-name|copyinstr
+name|copystr
 argument_list|(
 name|imgp
+operator|->
+name|args
 operator|->
 name|fname
 argument_list|,
@@ -714,21 +716,6 @@ name|eap
 operator|->
 name|entry
 expr_stmt|;
-comment|/* copy in arguments and/or environment from old process */
-name|error
-operator|=
-name|exec_extract_strings
-argument_list|(
-name|imgp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|bail
-goto|;
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack). 	 */
 name|exec_new_vmspace
 argument_list|(
