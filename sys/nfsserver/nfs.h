@@ -1351,7 +1351,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|nfs_rephead
 parameter_list|(
 name|int
@@ -1360,16 +1362,7 @@ name|struct
 name|nfsrv_descript
 modifier|*
 parameter_list|,
-name|struct
-name|nfssvc_sock
-modifier|*
-parameter_list|,
 name|int
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
 parameter_list|,
 name|struct
 name|mbuf
@@ -1624,10 +1617,6 @@ name|nfsrv_getcache
 parameter_list|(
 name|struct
 name|nfsrv_descript
-modifier|*
-parameter_list|,
-name|struct
-name|nfssvc_sock
 modifier|*
 parameter_list|,
 name|struct

@@ -150,6 +150,14 @@ begin_comment
 comment|/*  * Now for the macros that do the simple stuff and call the functions  * for the hard stuff.  * These macros use several vars. declared in nfsm_reqhead and these  * vars. must not be used elsewhere unless you are careful not to corrupt  * them. The vars. starting with pN and tN (N=1,2,3,..) are temporaries  * that may be used so long as the value is not expected to retained  * after a macro.  * I know, this is kind of dorkey, but it makes the actual op functions  * fairly clean and deals with the mess caused by the xdr discriminating  * unions.  */
 end_comment
 
+begin_comment
+comment|/* *********************************** */
+end_comment
+
+begin_comment
+comment|/* Request generation phase macros */
+end_comment
+
 begin_function_decl
 name|int
 name|nfsm_fhtom_xx
@@ -179,6 +187,173 @@ name|bpos
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|nfsm_v3attrbuild_xx
+parameter_list|(
+name|struct
+name|vattr
+modifier|*
+name|va
+parameter_list|,
+name|int
+name|full
+parameter_list|,
+name|u_int32_t
+modifier|*
+modifier|*
+name|tl
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mb
+parameter_list|,
+name|caddr_t
+modifier|*
+name|bpos
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nfsm_strtom_xx
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|a
+parameter_list|,
+name|int
+name|s
+parameter_list|,
+name|int
+name|m
+parameter_list|,
+name|u_int32_t
+modifier|*
+modifier|*
+name|tl
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mb
+parameter_list|,
+name|caddr_t
+modifier|*
+name|bpos
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|nfsm_bcheck
+parameter_list|(
+name|t1
+parameter_list|,
+name|mreq
+parameter_list|)
+define|\
+value|do { \ 	if (t1) { \ 		error = t1; \ 		m_freem(mreq); \ 		goto nfsmout; \ 	} \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_fhtom
+parameter_list|(
+name|v
+parameter_list|,
+name|v3
+parameter_list|)
+define|\
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_fhtom_xx((v), (v3),&tl,&mb,&bpos); \ 	nfsm_bcheck(t1, mreq); \ } while (0)
+end_define
+
+begin_comment
+comment|/* If full is true, set all fields, otherwise just set mode and time fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nfsm_v3attrbuild
+parameter_list|(
+name|a
+parameter_list|,
+name|full
+parameter_list|)
+define|\
+value|nfsm_v3attrbuild_xx(a, full,&tl,&mb,&bpos)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_uiotom
+parameter_list|(
+name|p
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|do { \ 	int t1; \ 	t1 = nfsm_uiotombuf((p),&mb, (s),&bpos); \ 	nfsm_bcheck(t1, mreq); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_strtom
+parameter_list|(
+name|a
+parameter_list|,
+name|s
+parameter_list|,
+name|m
+parameter_list|)
+define|\
+value|do { \ 	int t1; \ 	t1 = nfsm_strtom_xx((a), (s), (m),&tl,&mb,&bpos); \ 	nfsm_bcheck(t1, mreq); \ } while (0)
+end_define
+
+begin_comment
+comment|/* *********************************** */
+end_comment
+
+begin_comment
+comment|/* Send the request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nfsm_request
+parameter_list|(
+name|v
+parameter_list|,
+name|t
+parameter_list|,
+name|p
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|do { \ 	error = nfs_request((v), mreq, (t), (p), (c),&mrep,&md,&dpos); \ 	if (error != 0) { \ 		if (error& NFSERR_RETERR) \ 			error&= ~NFSERR_RETERR; \ 		else \ 			goto nfsmout; \ 	} \ } while (0)
+end_define
+
+begin_comment
+comment|/* *********************************** */
+end_comment
+
+begin_comment
+comment|/* Reply interpretation phase macros */
+end_comment
 
 begin_function_decl
 name|int
@@ -250,36 +425,6 @@ parameter_list|,
 name|caddr_t
 modifier|*
 name|dpos
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nfsm_v3attrbuild_xx
-parameter_list|(
-name|struct
-name|vattr
-modifier|*
-name|va
-parameter_list|,
-name|int
-name|full
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mb
-parameter_list|,
-name|caddr_t
-modifier|*
-name|bpos
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -381,52 +526,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|nfsm_strtom_xx
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|a
-parameter_list|,
-name|int
-name|s
-parameter_list|,
-name|int
-name|m
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mb
-parameter_list|,
-name|caddr_t
-modifier|*
-name|bpos
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|nfsm_fhtom
-parameter_list|(
-name|v
-parameter_list|,
-name|v3
-parameter_list|)
-define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_fhtom_xx((v), (v3),&tl,&mb,&bpos); \ 	if (t1) { \ 		error = t1; \ 		m_freem(mreq); \ 		goto nfsmout; \ 	} \ } while (0)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -441,7 +540,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_mtofh_xx((d),&(v), (v3),&(f),&tl,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		m_freem(mrep); \ 		goto nfsmout; \ 	} \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_mtofh_xx((d),&(v), (v3),&(f),&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_define
@@ -456,7 +555,7 @@ parameter_list|,
 name|v3
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_getfh_xx(&(f),&(s), (v3),&tl,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		m_freem(mrep); \ 		goto nfsmout; \ 	} \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_getfh_xx(&(f),&(s), (v3),&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_define
@@ -469,7 +568,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_loadattr_xx(&v, a,&tl,&md,&dpos); \ 	if (t1 != 0) { \ 		error = t1; \ 		m_freem(mrep); \ 		goto nfsmout; \ 	} \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_loadattr_xx(&v, a,&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_define
@@ -482,7 +581,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_postop_attr_xx(&v,&f,&tl,&md,&dpos); \ 	if (t1 != 0) { \ 		error = t1; \ 		m_freem(mrep); \ 		goto nfsmout; \ 	} \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_postop_attr_xx(&v,&f,&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_comment
@@ -513,69 +612,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_wcc_data_xx(&v,&f,&tl,&md,&dpos); \ 	if (t1 != 0) { \ 		error = t1; \ 		m_freem(mrep); \ 		goto nfsmout; \ 	} \ } while (0)
-end_define
-
-begin_comment
-comment|/* If full is true, set all fields, otherwise just set mode and time fields */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|nfsm_v3attrbuild
-parameter_list|(
-name|a
-parameter_list|,
-name|full
-parameter_list|)
-define|\
-value|do { \ 	nfsm_v3attrbuild_xx(a, full,&tl,&mb,&bpos); \ } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_uiotom
-parameter_list|(
-name|p
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_uiotombuf((p),&mb, (s),&bpos); \ 	if (t1 != 0) { \ 		error = t1; \ 		m_freem(mreq); \ 		goto nfsmout; \ 	} \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_request
-parameter_list|(
-name|v
-parameter_list|,
-name|t
-parameter_list|,
-name|p
-parameter_list|,
-name|c
-parameter_list|)
-define|\
-value|do { \ 	error = nfs_request((v), mreq, (t), (p), (c),&mrep,&md,&dpos); \ 	if (error != 0) { \ 		if (error& NFSERR_RETERR) \ 			error&= ~NFSERR_RETERR; \ 		else \ 			goto nfsmout; \ 	} \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_strtom
-parameter_list|(
-name|a
-parameter_list|,
-name|s
-parameter_list|,
-name|m
-parameter_list|)
-define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_strtom_xx((a), (s), (m),&tl,&mb,&bpos); \ 	if (t1 != 0) { \ 		error = t1; \ 		m_freem(mreq); \ 		goto nfsmout; \ 	} \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_wcc_data_xx(&v,&f,&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_endif

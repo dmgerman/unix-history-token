@@ -928,12 +928,11 @@ argument_list|,
 name|xfer
 argument_list|)
 expr_stmt|;
-name|NFSMADV
-argument_list|(
 name|mp2
-argument_list|,
+operator|->
+name|m_data
+operator|+=
 name|xfer
-argument_list|)
 expr_stmt|;
 name|mp2
 operator|->

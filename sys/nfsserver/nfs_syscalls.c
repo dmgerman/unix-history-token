@@ -1786,8 +1786,6 @@ name|nfsrv_getcache
 argument_list|(
 name|nd
 argument_list|,
-name|slp
-argument_list|,
 operator|&
 name|mreq
 argument_list|)

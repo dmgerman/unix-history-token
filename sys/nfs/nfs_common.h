@@ -65,19 +65,6 @@ parameter_list|)
 value|txdr_unsigned(nfsv3_type[((int32_t)(a))])
 end_define
 
-begin_define
-define|#
-directive|define
-name|NFSMADV
-parameter_list|(
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|do { \ 		(m)->m_data += (s); \ 	} while (0)
-end_define
-
 begin_function_decl
 name|int
 name|nfs_adv
@@ -96,6 +83,43 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|u_quad_t
+name|nfs_curusec
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|nfsm_disct
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|caddr_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* ****************************** */
+end_comment
+
+begin_comment
+comment|/* Build request/reply phase macros */
+end_comment
 
 begin_function_decl
 name|void
@@ -117,6 +141,27 @@ name|bpos
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|nfsm_build
+parameter_list|(
+name|c
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|(c)nfsm_build_xx((s),&mb,&bpos)
+end_define
+
+begin_comment
+comment|/* ****************************** */
+end_comment
+
+begin_comment
+comment|/* Interpretation phase macros */
+end_comment
 
 begin_function_decl
 name|void
@@ -159,11 +204,11 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
-name|mb
+name|md
 parameter_list|,
 name|caddr_t
 modifier|*
-name|bpos
+name|dpos
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -193,46 +238,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|u_quad_t
-name|nfs_curusec
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|nfsm_disct
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-parameter_list|,
-name|caddr_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Error check helpers */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|nfsm_build
+name|nfsm_dcheck
 parameter_list|(
-name|c
+name|t1
 parameter_list|,
-name|s
+name|mrep
 parameter_list|)
 define|\
-value|(c)nfsm_build_xx((s),&mb,&bpos)
+value|do { \ 	if (t1 != 0) { \ 		error = t1; \ 		m_freem((mrep)); \ 		(mrep) = NULL; \ 		goto nfsmout; \ 	} \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_dcheckp
+parameter_list|(
+name|retp
+parameter_list|,
+name|mrep
+parameter_list|)
+define|\
+value|do { \ 	if (retp == NULL) { \ 		error = EBADRPC; \ 		m_freem((mrep)); \ 		(mrep) = NULL; \ 		goto nfsmout; \ 	} \ } while (0)
 end_define
 
 begin_define
@@ -245,7 +278,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|({ \ 	void *ret; \ 	ret = nfsm_dissect_xx((s),&md,&dpos); \ 	if (ret == NULL) { \ 		error = EBADRPC; \ 		m_freem(mrep); \ 		mrep = NULL; \ 		goto nfsmout; \ 	} \ 	(c)ret; \ })
+value|({ \ 	void *ret; \ 	ret = nfsm_dissect_xx((s),&md,&dpos); \ 	nfsm_dcheckp(ret, mrep); \ 	(c)ret; \ })
 end_define
 
 begin_define
@@ -258,7 +291,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_strsiz_xx(&(s), (m),&tl,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		m_freem(mrep); \ 		mrep = NULL; \ 		goto nfsmout; \ 	} \ } while(0)
+value|do { \ 	int t1; \ 	t1 = nfsm_strsiz_xx(&(s), (m),&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while(0)
 end_define
 
 begin_define
@@ -271,7 +304,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do {\ 	int32_t t1; \ 	if ((s)> 0&& (t1 = nfsm_mbuftouio(&md, (p), (s),&dpos)) != 0) { \ 		error = t1; \ 		m_freem(mrep); \ 		mrep = NULL; \ 		goto nfsmout; \ 	} \ } while (0)
+value|do {\ 	int32_t t1 = 0; \ 	if ((s)> 0) \ 		t1 = nfsm_mbuftouio(&md, (p), (s),&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_define
@@ -292,7 +325,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_adv_xx((s),&tl,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		m_freem(mrep); \ 		mrep = NULL; \ 		goto nfsmout; \ 	} \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_adv_xx((s),&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_endif

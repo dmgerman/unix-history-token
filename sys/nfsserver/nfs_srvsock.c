@@ -383,7 +383,9 @@ comment|/*  * Generate the rpc reply header  * siz arg. is used to decide if add
 end_comment
 
 begin_function
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|nfs_rephead
 parameter_list|(
 name|int
@@ -394,19 +396,8 @@ name|nfsrv_descript
 modifier|*
 name|nd
 parameter_list|,
-name|struct
-name|nfssvc_sock
-modifier|*
-name|slp
-parameter_list|,
 name|int
 name|err
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mrq
 parameter_list|,
 name|struct
 name|mbuf
@@ -786,19 +777,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-empty_stmt|;
 block|}
-if|if
-condition|(
-name|mrq
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|mrq
-operator|=
-name|mreq
-expr_stmt|;
 operator|*
 name|mbp
 operator|=
@@ -824,6 +803,9 @@ operator|.
 name|srvrpc_errs
 operator|++
 expr_stmt|;
+return|return
+name|mreq
+return|;
 block|}
 end_function
 
