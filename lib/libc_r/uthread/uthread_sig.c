@@ -2683,6 +2683,11 @@ argument_list|,
 literal|"Invalid signal frame in signal handler"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We're coming from the kernel scheduler; clear the in 	 * scheduler flag: 	 */
+name|_thread_kern_in_sched
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Check the threads previous state: */
 if|if
 condition|(
