@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_6.c	1.1 83/10/28"
+literal|"@(#)pl_6.c	1.2 83/10/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,11 +159,6 @@ operator|>=
 literal|3
 condition|)
 block|{
-operator|*
-name|repairs
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 name|c
@@ -435,6 +430,7 @@ condition|(
 operator|!
 name|c
 condition|)
+block|{
 name|Signal
 argument_list|(
 literal|"Repairs completed."
@@ -447,7 +443,27 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+operator|*
+name|repairs
+operator|=
+literal|2
+expr_stmt|;
 block|}
+else|else
+block|{
+operator|*
+name|repairs
+operator|=
+literal|0
+expr_stmt|;
+name|draw_stat
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+name|draw_slot
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_5.c	1.1 83/10/28"
+literal|"@(#)pl_5.c	1.2 83/10/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,26 +102,6 @@ block|{
 name|Signal
 argument_list|(
 literal|"Unable to move"
-argument_list|,
-operator|(
-expr|struct
-name|ship
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|*
-name|movebuf
-condition|)
-block|{
-name|Signal
-argument_list|(
-literal|"Already moved."
 argument_list|,
 operator|(
 expr|struct
@@ -1109,6 +1089,9 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+name|draw_slot
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 

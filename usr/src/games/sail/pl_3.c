@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_3.c	1.5 83/10/28"
+literal|"@(#)pl_3.c	1.6 83/10/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -1119,6 +1119,9 @@ literal|"left"
 argument_list|)
 expr_stmt|;
 block|}
+name|draw_stat
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
