@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.21.2.5 1995/11/17 23:04:04 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.21.2.6 1995/11/18 10:02:10 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -1452,6 +1452,7 @@ name|chunk
 modifier|*
 name|c1
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2020,6 +2021,7 @@ name|chunk
 modifier|*
 name|c1
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2082,6 +2084,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.19.2.2 1995/06/05 02:24:27 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.20 1995/06/11 19:29:34 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -90,6 +90,7 @@ value|84
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|chunk_n
@@ -121,6 +122,7 @@ name|disk
 modifier|*
 name|Open_Disk
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -143,6 +145,7 @@ name|disk
 modifier|*
 name|Int_Open_Disk
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1651,6 +1654,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|b
@@ -1731,10 +1735,12 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|b1
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|b2

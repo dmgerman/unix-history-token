@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.14.2.2 1995/06/05 02:24:25 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.15 1995/06/11 19:29:32 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -339,7 +339,7 @@ if|if
 condition|(
 name|c1
 operator|->
-name|private
+name|private_data
 operator|&&
 name|c1
 operator|->
@@ -354,7 +354,7 @@ call|)
 argument_list|(
 name|c1
 operator|->
-name|private
+name|private_data
 argument_list|)
 expr_stmt|;
 if|if
@@ -450,7 +450,7 @@ if|if
 condition|(
 name|c1
 operator|->
-name|private
+name|private_data
 operator|&&
 name|c1
 operator|->
@@ -458,7 +458,7 @@ name|private_clone
 condition|)
 name|c2
 operator|->
-name|private
+name|private_data
 operator|=
 name|c2
 operator|->
@@ -466,7 +466,7 @@ name|private_clone
 argument_list|(
 name|c2
 operator|->
-name|private
+name|private_data
 argument_list|)
 expr_stmt|;
 name|c2
@@ -523,6 +523,7 @@ parameter_list|,
 name|u_long
 name|size
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -989,6 +990,7 @@ parameter_list|,
 name|u_long
 name|size
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
