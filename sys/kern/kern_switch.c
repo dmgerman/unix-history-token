@@ -425,7 +425,6 @@ condition|)
 block|{
 name|pri
 operator|=
-operator|(
 name|RQB_FFS
 argument_list|(
 name|rqb
@@ -435,9 +434,6 @@ index|[
 name|i
 index|]
 argument_list|)
-operator|-
-literal|1
-operator|)
 operator|+
 operator|(
 name|i
