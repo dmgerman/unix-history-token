@@ -1272,17 +1272,7 @@ operator|-
 literal|8
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"D<%03x>=%d,%d\n"
-argument_list|,
-name|vector
-argument_list|,
-name|mid
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
+comment|/*	printf("D<%03x>=%d,%d\n", vector, mid, irq); */
 while|while
 condition|(
 name|sc
@@ -1463,17 +1453,7 @@ name|MCPCIA_VECWIDTH_PER_INTPIN
 operator|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"E<%03x>=%d,%d\n"
-argument_list|,
-name|vector
-argument_list|,
-name|mid
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
+comment|/*	printf("E<%03x>=%d,%d\n", vector, mid, irq); */
 while|while
 condition|(
 name|sc
