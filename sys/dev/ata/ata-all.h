@@ -1175,6 +1175,10 @@ name|u_int8_t
 name|sense_key
 decl_stmt|;
 comment|/* ATAPI request sense key */
+name|u_int8_t
+name|sense_cmd
+decl_stmt|;
+comment|/* ATAPI saved command */
 block|}
 name|atapi
 struct|;
