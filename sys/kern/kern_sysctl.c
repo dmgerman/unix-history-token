@@ -280,7 +280,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * If this oid has a number OID_AUTO, give it a number which 	 * is greater than any current oid.  Make sure it is at least 	 * 100 to leave space for pre-assigned oid numbers. 	 */
+comment|/* 	 * If this oid has a number OID_AUTO, give it a number which 	 * is greater than any current oid. 	 * NOTE: DO NOT change the starting value here, change it in 	 *<sys/sysctl.h>, and make sure it is at least 256 to 	 * accomodate e.g. net.inet.raw as a static sysctl node. 	 */
 if|if
 condition|(
 name|oidp
@@ -294,7 +294,7 @@ specifier|static
 name|int
 name|newoid
 init|=
-literal|100
+name|CTL_AUTO_START
 decl_stmt|;
 name|oidp
 operator|->
@@ -312,6 +312,26 @@ condition|)
 name|panic
 argument_list|(
 literal|"out of oids"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|oidp
+operator|->
+name|oid_number
+operator|>=
+name|CTL_AUTO_START
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"static sysctl oid too high: %d"
+argument_list|,
+name|oidp
+operator|->
+name|oid_number
 argument_list|)
 expr_stmt|;
 block|}

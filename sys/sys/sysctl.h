@@ -268,6 +268,17 @@ name|OID_AUTO
 value|(-1)
 end_define
 
+begin_comment
+comment|/*  * The starting number for dynamically-assigned entries.  WARNING!  * ALL static sysctl entries should have numbers LESS than this!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_AUTO_START
+value|0x100
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
