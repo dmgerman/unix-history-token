@@ -649,6 +649,10 @@ name|stack_t
 name|td_sigstk
 decl_stmt|;
 comment|/* (k) Stack ptr and on-stack flag. */
+name|int
+name|td_kflags
+decl_stmt|;
+comment|/* (c) Flags for KSE threading. */
 define|#
 directive|define
 name|td_endzero
@@ -1083,6 +1087,39 @@ end_define
 
 begin_comment
 comment|/* Awaiting interrupt. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDK_KSEREL
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Blocked in msleep on kg->kg_completed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDK_KSERELSIG
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Blocked in msleep on p->p_siglist. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDK_WAKEUP
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Thread has been woken by kse_wakeup. */
 end_comment
 
 begin_define
@@ -4723,6 +4760,18 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_upcall_check
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
