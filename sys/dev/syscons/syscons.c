@@ -14794,7 +14794,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|SC_NO_SYSMOUSE
+name|SC_NO_CUTPASTE
 if|if
 condition|(
 name|ISMOUSEAVAIL
