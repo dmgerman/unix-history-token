@@ -961,6 +961,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ofilemode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* respect umask even for unsucessful ld's */
+end_comment
+
+begin_decl_stmt
+name|int
 name|infil
 decl_stmt|;
 end_decl_stmt
@@ -1877,13 +1887,7 @@ name|chmod
 argument_list|(
 name|ofilename
 argument_list|,
-literal|0777
-operator|&
-operator|~
-name|umask
-argument_list|(
-literal|0
-argument_list|)
+name|ofilemode
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4463,6 +4467,16 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
+name|ofilemode
+operator|=
+literal|0777
+operator|&
+operator|~
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|biofd
 operator|=
 name|creat
@@ -4470,6 +4484,8 @@ argument_list|(
 name|ofilename
 argument_list|,
 literal|0666
+operator|&
+name|ofilemode
 argument_list|)
 expr_stmt|;
 if|if
@@ -4505,6 +4521,51 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* kludge */
+block|}
+else|else
+block|{
+name|struct
+name|stat
+name|mybuf
+decl_stmt|;
+comment|/* kls kludge */
+name|fstat
+argument_list|(
+name|biofd
+argument_list|,
+operator|&
+name|mybuf
+argument_list|)
+expr_stmt|;
+comment|/* suppose file exists, wrong*/
+if|if
+condition|(
+name|mybuf
+operator|.
+name|st_mode
+operator|&
+literal|0111
+condition|)
+block|{
+comment|/* mode, ld fails? */
+name|chmod
+argument_list|(
+name|ofilename
+argument_list|,
+name|mybuf
+operator|.
+name|st_mode
+operator|&
+literal|0666
+argument_list|)
+expr_stmt|;
+name|ofilemode
+operator|=
+name|mybuf
+operator|.
+name|st_mode
+expr_stmt|;
+block|}
 block|}
 name|tout
 operator|=
