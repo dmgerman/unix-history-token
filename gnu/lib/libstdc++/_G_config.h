@@ -50,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|_G_VTABLE_LABEL_PREFIX
-value|"_vt."
+value|"_vt$"
 end_define
 
 begin_else
