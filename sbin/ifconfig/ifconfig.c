@@ -5110,6 +5110,7 @@ name|ether_status
 ifdef|#
 directive|ifdef
 name|USE_VLANS
+operator|&&
 name|afp
 operator|->
 name|af_status
