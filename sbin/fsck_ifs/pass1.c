@@ -762,6 +762,7 @@ block|}
 comment|/* 		 * Fake ndb value so direct/indirect block checks below 		 * will detect any garbage after symlink string. 		 */
 if|if
 condition|(
+operator|(
 name|dp
 operator|->
 name|di_size
@@ -769,6 +770,13 @@ operator|<
 name|sblock
 operator|.
 name|fs_maxsymlinklen
+operator|)
+operator|||
+name|dp
+operator|->
+name|di_blocks
+operator|==
+literal|0
 condition|)
 block|{
 name|ndb

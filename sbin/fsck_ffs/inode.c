@@ -194,6 +194,7 @@ name|mode
 operator|==
 name|IFLNK
 operator|&&
+operator|(
 name|dp
 operator|->
 name|di_size
@@ -201,6 +202,13 @@ operator|<
 name|sblock
 operator|.
 name|fs_maxsymlinklen
+operator|||
+name|dp
+operator|->
+name|di_blocks
+operator|==
+literal|0
+operator|)
 operator|)
 condition|)
 return|return
