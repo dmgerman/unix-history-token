@@ -169,10 +169,14 @@ parameter_list|)
 value|(mtx_unowned((m)) ? NULL \ 	: (struct thread *)((m)->mtx_lock& MTX_FLAGMASK))
 end_define
 
+begin_comment
+comment|/* XXXKSE This test will change. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|thread_runnable
+name|thread_running
 parameter_list|(
 name|td
 parameter_list|)
@@ -364,10 +368,9 @@ operator|=
 name|pri
 expr_stmt|;
 comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
-comment|/* XXXKSE this test is not sufficient */
 if|if
 condition|(
-name|thread_runnable
+name|thread_running
 argument_list|(
 name|td
 argument_list|)
@@ -2472,7 +2475,7 @@ operator|!=
 operator|&
 name|Giant
 operator|&&
-name|thread_runnable
+name|thread_running
 argument_list|(
 name|owner
 argument_list|)
@@ -2493,7 +2496,7 @@ argument_list|)
 operator|==
 name|owner
 operator|&&
-name|thread_runnable
+name|thread_running
 argument_list|(
 name|owner
 argument_list|)
