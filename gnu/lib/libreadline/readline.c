@@ -1188,6 +1188,12 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|rl_prompt
+operator|!=
+name|NULL
+condition|)
 name|rl_visible_prompt_length
 operator|=
 name|rl_expand_prompt
