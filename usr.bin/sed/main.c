@@ -346,7 +346,7 @@ name|fflag
 decl_stmt|;
 name|char
 modifier|*
-name|tmp_arg
+name|temp_arg
 decl_stmt|;
 operator|(
 name|void
