@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.8 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
+comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.9 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
 end_comment
 
 begin_ifndef
@@ -330,6 +330,28 @@ end_define
 begin_comment
 comment|/* negotiate connection requests */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TPOPT_DISC_REASON
+value|0xe00
+end_define
+
+begin_struct
+struct|struct
+name|tp_disc_reason
+block|{
+name|struct
+name|cmsghdr
+name|dr_hdr
+decl_stmt|;
+name|u_int
+name|dr_reason
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*   ***********************flags**********************************  */
