@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.8 (Berkeley) %G%"
+literal|"@(#)route.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1316,6 +1316,11 @@ decl_stmt|;
 name|int
 name|subnetshift
 decl_stmt|;
+name|char
+modifier|*
+name|ns_print
+parameter_list|()
+function_decl|;
 switch|switch
 condition|(
 name|sa
@@ -2293,12 +2298,18 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+switch|switch
 condition|(
 name|errno
-operator|==
-name|ESRCH
 condition|)
+block|{
+case|case
+name|ESRCH
+case|:
 name|fprintf
 argument_list|(
 name|stderr
@@ -2306,13 +2317,10 @@ argument_list|,
 literal|"not in table\n"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|errno
-operator|==
+break|break;
+case|case
 name|EBUSY
-condition|)
+case|:
 name|fprintf
 argument_list|(
 name|stderr
@@ -2320,13 +2328,10 @@ argument_list|,
 literal|"entry in use\n"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|errno
-operator|==
+break|break;
+case|case
 name|ENOBUFS
-condition|)
+case|:
 name|fprintf
 argument_list|(
 name|stderr
@@ -2334,12 +2339,14 @@ argument_list|,
 literal|"routing table overflow\n"
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+default|default:
 name|perror
 argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
