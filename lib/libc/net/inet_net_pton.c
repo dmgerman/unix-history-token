@@ -833,10 +833,6 @@ comment|/* If imputed mask is narrower than specified octets, widen. */
 if|if
 condition|(
 name|bits
-operator|>=
-literal|8
-operator|&&
-name|bits
 operator|<
 operator|(
 operator|(
