@@ -26,6 +26,9 @@ comment|/* the executable file */
 name|Pmem
 block|,
 comment|/* the process's memory image */
+name|Pcmdline
+block|,
+comment|/* command line */
 name|Pprocstat
 block|,
 comment|/* the process's status */
