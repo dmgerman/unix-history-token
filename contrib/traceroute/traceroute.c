@@ -3641,9 +3641,7 @@ name|from
 operator|->
 name|sin_addr
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|IP_HDRINCL
+comment|/* Check the source address (-s), if any, is valid */
 if|if
 condition|(
 name|bind
@@ -3687,8 +3685,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
