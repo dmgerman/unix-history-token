@@ -964,6 +964,9 @@ name|arpcom
 name|arpcom
 decl_stmt|;
 name|device_t
+name|aue_dev
+decl_stmt|;
+name|device_t
 name|aue_miibus
 decl_stmt|;
 name|usbd_device_handle

@@ -596,6 +596,9 @@ name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
+name|device_t
+name|cue_dev
+decl_stmt|;
 name|usbd_device_handle
 name|cue_udev
 decl_stmt|;
