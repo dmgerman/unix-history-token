@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.10	83/02/16	*/
+comment|/*	hp.c	4.11	83/02/16	*/
 end_comment
 
 begin_comment
@@ -2836,7 +2836,7 @@ name|io
 operator|->
 name|i_flgs
 operator|&
-name|F_ECCLIM
+name|F_ECCLM
 operator|)
 operator|&&
 name|ecccnt
