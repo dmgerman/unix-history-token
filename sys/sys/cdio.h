@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id$  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.16 1997/02/22 09:44:53 peter Exp $  */
 end_comment
 
 begin_comment
@@ -461,6 +461,31 @@ define|#
 directive|define
 name|CDIOREADTOCENTRYS
 value|_IOWR('c',5,struct ioc_read_toc_entry)
+end_define
+
+begin_struct
+struct|struct
+name|ioc_read_toc_single_entry
+block|{
+name|u_char
+name|address_format
+decl_stmt|;
+name|u_char
+name|track
+decl_stmt|;
+name|struct
+name|cd_toc_entry
+name|entry
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CDIOREADTOCENTRY
+value|_IOWR('c',6,struct ioc_read_toc_single_entry)
 end_define
 
 begin_struct
