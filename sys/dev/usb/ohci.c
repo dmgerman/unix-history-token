@@ -5589,8 +5589,14 @@ literal|"BUFFER_OVERRUN"
 block|,
 literal|"BUFFER_UNDERRUN"
 block|,
+literal|"reserved"
+block|,
+literal|"reserved"
+block|,
 literal|"NOT_ACCESSED"
-block|, }
+block|,
+literal|"NOT_ACCESSED"
+block|}
 decl_stmt|;
 end_decl_stmt
 
