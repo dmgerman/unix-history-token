@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -109,6 +115,12 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -131,6 +143,42 @@ include|#
 directive|include
 file|<getopt.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|MAXLOGNAME
+operator|-
+literal|1
+operator|)
+operator|>
+name|UT_NAMESIZE
+end_if
+
+begin_define
+define|#
+directive|define
+name|LOGNAMESIZE
+value|UT_NAMESIZE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOGNAMESIZE
+value|(MAXLOGNAME-1)
+end_define
 
 begin_endif
 endif|#
@@ -235,7 +283,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: atrun.c,v 1.8 1997/02/22 14:20:54 peter Exp $"
+literal|"$Id: atrun.c,v 1.9 1997/03/28 15:48:03 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,7 +431,14 @@ decl_stmt|;
 name|char
 name|mailbuf
 index|[
-literal|9
+name|LOGNAMESIZE
+operator|+
+literal|1
+index|]
+decl_stmt|,
+name|fmt
+index|[
+literal|49
 index|]
 decl_stmt|;
 name|char
@@ -776,13 +831,24 @@ operator|~
 name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|fmt
+argument_list|,
+literal|49
+argument_list|,
+literal|"#!/bin/sh\n# atrun uid=%%ld gid=%%ld\n# mail %%%ds %%d"
+argument_list|,
+name|LOGNAMESIZE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fscanf
 argument_list|(
 name|stream
 argument_list|,
-literal|"#!/bin/sh\n# atrun uid=%ld gid=%ld\n# mail %8s %d"
+name|fmt
 argument_list|,
 operator|&
 name|nuid
