@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuclean.c	5.5 (Berkeley) %G%"
+literal|"@(#)uuclean.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,13 @@ name|int
 name|checkprefix
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeb
+name|Now
 decl_stmt|;
 end_decl_stmt
 
