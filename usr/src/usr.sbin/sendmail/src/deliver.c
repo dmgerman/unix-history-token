@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.54 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2842,6 +2842,22 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* compute effective uid/gid when sending */
+comment|/* XXX perhaps this should be to->q_mailer != LocalMailer ?? */
+comment|/* XXX perhaps it should be a mailer flag? */
+if|if
+condition|(
+name|to
+operator|->
+name|q_mailer
+operator|==
+name|ProgMailer
+operator|||
+name|to
+operator|->
+name|q_mailer
+operator|==
+name|FileMailer
+condition|)
 name|ctladdr
 operator|=
 name|getctladdr
@@ -3324,6 +3340,31 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	**  Call the mailer. 	**	The argument vector gets built, pipes 	**	are created as necessary, and we fork& exec as 	**	appropriate. 	**	If we are running SMTP, we just need to clean up. 	*/
+comment|/*XXX this seems a bit wierd */
+if|if
+condition|(
+name|ctladdr
+operator|==
+name|NULL
+operator|&&
+name|bitset
+argument_list|(
+name|QGOODUID
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+argument_list|)
+condition|)
+name|ctladdr
+operator|=
+operator|&
+name|e
+operator|->
+name|e_from
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
