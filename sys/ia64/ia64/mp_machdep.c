@@ -72,6 +72,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -139,7 +151,7 @@ begin_function
 name|void
 name|ipi_selected
 parameter_list|(
-name|u_int32_t
+name|u_int
 name|cpus
 parameter_list|,
 name|u_int64_t
