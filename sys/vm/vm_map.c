@@ -1638,6 +1638,19 @@ name|vm_map_t
 name|map
 parameter_list|)
 block|{
+comment|/* 	 * Acquire and release Giant to prevent a wakeup() from being 	 * performed (and lost) between the vm_map_unlock() and the 	 * tsleep() in vm_map_unlock_and_wait(). 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|&
