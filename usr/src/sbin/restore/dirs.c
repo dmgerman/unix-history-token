@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.2 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1378,6 +1378,10 @@ name|loc
 decl_stmt|,
 name|i
 decl_stmt|;
+specifier|extern
+name|int
+name|Bcvt
+decl_stmt|;
 if|if
 condition|(
 name|cvtflag
@@ -1466,6 +1470,23 @@ operator|+
 name|loc
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|Bcvt
+condition|)
+block|{
+name|swabst
+argument_list|(
+literal|"l2s"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|dp
+argument_list|)
+expr_stmt|;
+block|}
 name|i
 operator|=
 name|DIRBLKSIZ
