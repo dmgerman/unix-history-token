@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.12 (Berkeley) 4.12"
+literal|"@(#)login.c	4.13 (Berkeley) 4.13"
 decl_stmt|;
 end_decl_stmt
 
@@ -633,11 +633,6 @@ name|ldisc
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|zero
-init|=
-literal|0
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|UNAME
@@ -753,8 +748,7 @@ literal|0
 argument_list|,
 name|TIOCLSET
 argument_list|,
-operator|&
-name|zero
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1844,6 +1838,17 @@ argument_list|)
 expr_stmt|;
 name|setgid
 argument_list|(
+name|pwd
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
+name|inigrp
+argument_list|(
+name|utmp
+operator|.
+name|ut_name
+argument_list|,
 name|pwd
 operator|->
 name|pw_gid
