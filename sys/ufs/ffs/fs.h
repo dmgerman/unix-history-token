@@ -278,8 +278,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FFS_MAXID
+name|FFS_ADJ_NDIR
 value|7
+end_define
+
+begin_comment
+comment|/* adjust number of directories */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_ADJ_NBFREE
+value|8
+end_define
+
+begin_comment
+comment|/* adjust number of free blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_ADJ_NIFREE
+value|9
+end_define
+
+begin_comment
+comment|/* adjust number of free inodes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_ADJ_NFFREE
+value|10
+end_define
+
+begin_comment
+comment|/* adjust number of free frags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_ADJ_NUMCLUSTERS
+value|11
+end_define
+
+begin_comment
+comment|/* adjust number of free clusters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_MAXID
+value|12
 end_define
 
 begin_comment

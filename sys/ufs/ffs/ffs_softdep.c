@@ -3206,6 +3206,48 @@ begin_comment
 comment|/* DEBUG */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_ffs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|compute_summary_at_mount
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Whether to recompute the summary at mount time */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_ffs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|compute_summary_at_mount
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|compute_summary_at_mount
+argument_list|,
+literal|0
+argument_list|,
+literal|"Recompute summary at mount"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Add an item to the end of the work queue.  * This routine requires that the lock be held.  * This is the only routine that adds items to the list.  * The following routine is the only one that removes items  * and does so in order from first to last.  */
 end_comment
@@ -5818,9 +5860,13 @@ name|mnt_flag
 operator||=
 name|MNT_SOFTDEP
 expr_stmt|;
-comment|/* 	 * When doing soft updates, the counters in the 	 * superblock may have gotten out of sync, so we have 	 * to scan the cylinder groups and recalculate them. 	 */
+comment|/* 	 * When doing soft updates, the counters in the 	 * superblock may have gotten out of sync. Recomputation 	 * can take a long time and can be deferred for background 	 * fsck.  However, the old behavior of scanning the cylinder 	 * groups and recalculating them at mount time is available 	 * by setting vfs.ffs.compute_summary_at_mount to one. 	 */
 if|if
 condition|(
+name|compute_summary_at_mount
+operator|==
+literal|0
+operator|||
 name|fs
 operator|->
 name|fs_clean
