@@ -894,6 +894,11 @@ name|T_DMMU_PROT
 operator||
 name|T_KERNEL
 case|:
+case|case
+name|T_IMMU_MISS
+operator||
+name|T_KERNEL
+case|:
 name|error
 operator|=
 name|trap_mmu_fault
