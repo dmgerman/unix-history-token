@@ -1044,7 +1044,7 @@ block|{
 block|{
 name|USB_VENDOR_ASAHIOPTICAL
 block|,
-name|USB_PRODUCT_ASAHIOPTICAL_OPTIO230
+name|PID_WILDCARD
 block|,
 name|RID_WILDCARD
 block|,
