@@ -1232,6 +1232,13 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+name|kbd
+operator|==
+name|NULL
+condition|)
+return|return;
 name|tpmrate
 operator|=
 name|rate
@@ -1262,8 +1269,6 @@ operator|)
 operator|&
 name|tpmrate
 operator|)
-operator|==
-literal|0
 condition|)
 name|printf
 argument_list|(

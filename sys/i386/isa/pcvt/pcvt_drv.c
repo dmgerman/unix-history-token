@@ -541,9 +541,16 @@ name|_DEV_KBD_KBDREG_H_
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
 name|kbd
-operator|=
+operator|==
 name|NULL
+condition|)
+block|{
+name|reset_keyboard
+operator|=
+literal|0
 expr_stmt|;
 name|kbd_configure
 argument_list|(
@@ -598,11 +605,6 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|reset_keyboard
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -3413,6 +3415,10 @@ return|;
 case|case
 name|KBDIO_UNLOADING
 case|:
+name|reset_keyboard
+operator|=
+literal|0
+expr_stmt|;
 name|kbd
 operator|=
 name|NULL
@@ -4411,10 +4417,18 @@ block|}
 ifdef|#
 directive|ifdef
 name|_DEV_KBD_KBDREG_H_
-name|kbd
+comment|/* 	 * Don't reset the keyboard via `kbdio' just yet. 	 * The system clock has not been calibrated... 	 */
+name|reset_keyboard
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
+if|if
+condition|(
+name|kbd
+operator|==
+name|NULL
+condition|)
+block|{
 name|kbd_configure
 argument_list|(
 name|KB_CONF_PROBE_ONLY
@@ -4460,11 +4474,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't reset the keyboard via `kbdio' just yet. 	 * The system clock has not been calibrated... 	 */
-name|reset_keyboard
-operator|=
-literal|0
-expr_stmt|;
+block|}
 if|#
 directive|if
 name|PCVT_SCANSET
