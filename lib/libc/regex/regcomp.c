@@ -1156,11 +1156,13 @@ name|cflags
 parameter_list|)
 name|regex_t
 modifier|*
+name|__restrict
 name|preg
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|pattern
 decl_stmt|;
 name|int

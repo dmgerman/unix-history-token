@@ -741,11 +741,13 @@ parameter_list|)
 specifier|const
 name|regex_t
 modifier|*
+name|__restrict
 name|preg
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|string
 decl_stmt|;
 name|size_t
@@ -753,7 +755,9 @@ name|nmatch
 decl_stmt|;
 name|regmatch_t
 name|pmatch
-index|[]
+index|[
+name|__restrict
+index|]
 decl_stmt|;
 name|int
 name|eflags

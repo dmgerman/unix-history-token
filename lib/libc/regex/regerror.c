@@ -330,10 +330,12 @@ decl_stmt|;
 specifier|const
 name|regex_t
 modifier|*
+name|__restrict
 name|preg
 decl_stmt|;
 name|char
 modifier|*
+name|__restrict
 name|errbuf
 decl_stmt|;
 name|size_t
