@@ -1498,7 +1498,7 @@ operator|-
 name|j
 argument_list|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|j
 operator|++
