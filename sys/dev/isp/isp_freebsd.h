@@ -405,6 +405,60 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Locking macros...  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISP_LOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_enter(&(x)->isp_osinfo.lock, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_UNLOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_exit(&(x)->isp_osinfo.lock, MTX_DEF)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISP_LOCK
+value|isp_lock
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_UNLOCK
+value|isp_unlock
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Required Macros/Defines  */
 end_comment
 
@@ -469,6 +523,19 @@ define|#
 directive|define
 name|USEC_DELAY
 value|DELAY
+end_define
+
+begin_define
+define|#
+directive|define
+name|USEC_SLEEP
+parameter_list|(
+name|isp
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|ISP_UNLOCK(isp);	\ 	DELAY(x);		\ 	ISP_LOCK(isp)
 end_define
 
 begin_define
@@ -1222,60 +1289,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Locking macros...  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_SMPLOCK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISP_LOCK
-parameter_list|(
-name|x
-parameter_list|)
-value|mtx_enter(&(x)->isp_osinfo.lock, MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_UNLOCK
-parameter_list|(
-name|x
-parameter_list|)
-value|mtx_exit(&(x)->isp_osinfo.lock, MTX_DEF)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_LOCK
-value|isp_lock
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_UNLOCK
-value|isp_unlock
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Platform private flags  */
