@@ -1183,9 +1183,6 @@ name|sadb_msg
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-literal|1
 name|m
 operator|=
 name|m_pullup
@@ -1215,11 +1212,6 @@ return|return
 name|ENOBUFS
 return|;
 block|}
-else|#
-directive|else
-comment|/* don't bother pulling it up just for stats */
-endif|#
-directive|endif
 block|}
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key_debug.h,v 1.10 2001/08/05 08:37:52 itojun Exp $	*/
+comment|/*	$KAME: key_debug.h,v 1.11 2002/11/05 03:48:34 itojun Exp $	*/
 end_comment
 
 begin_comment
