@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 John Dyson  * Copyright (c) 2001 Matt Dillon  *  * All Rights Reserved.  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE  * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
+comment|/*-  * Copyright (c) 1994 John Dyson  * Copyright (c) 2001 Matt Dillon  *  * All Rights Reserved.  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE  * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  * from: FreeBSD: .../i386/vm_machdep.c,v 1.165 2001/07/04 23:27:04 dillon  */
 end_comment
 
 begin_include
@@ -264,7 +264,9 @@ operator|!
 name|idlezero_enable
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* 	 * Attempt to maintain approximately 1/2 of our free pages in a 	 * PG_ZERO'd state.   Add some hysteresis to (attempt to) avoid 	 * generally zeroing a page when the system is near steady-state. 	 * Otherwise we might get 'flutter' during disk I/O / IPC or  	 * fast sleeps.  We also do not want to be continuously zeroing 	 * pages because doing so may flush our L1 and L2 caches too much. 	 */
 if|if
@@ -281,7 +283,9 @@ name|v_free_count
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -295,10 +299,14 @@ name|v_free_count
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -434,13 +442,15 @@ name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Called by vm_page_free to hint that a new page is available */
+comment|/* Called by vm_page_free to hint that a new page is available. */
 end_comment
 
 begin_function
@@ -478,11 +488,6 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|proc
 modifier|*
 name|p
@@ -491,12 +496,14 @@ name|struct
 name|rtprio
 name|rtp
 decl_stmt|;
-name|int
-name|pages
-init|=
-literal|0
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|int
+name|pages
+decl_stmt|,
 name|pri
 decl_stmt|;
 name|td
@@ -520,6 +527,10 @@ operator|.
 name|type
 operator|=
 name|RTP_PRIO_IDLE
+expr_stmt|;
+name|pages
+operator|=
+literal|0
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
