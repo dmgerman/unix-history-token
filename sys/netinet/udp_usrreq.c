@@ -1513,11 +1513,6 @@ goto|goto
 name|badheadlocked
 goto|;
 block|}
-name|INP_UNLOCK
-argument_list|(
-name|last
-argument_list|)
-expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
@@ -1539,6 +1534,11 @@ argument_list|(
 expr|struct
 name|udphdr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|INP_UNLOCK
+argument_list|(
+name|last
 argument_list|)
 expr_stmt|;
 return|return;
