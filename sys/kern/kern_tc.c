@@ -51,12 +51,6 @@ directive|include
 file|<sys/timex.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
 begin_comment
 comment|/*  * Implement a dummy timecounter which we can use until we get a real one  * in the air.  This allows the console and other early stuff to use  * time services.  */
 end_comment
