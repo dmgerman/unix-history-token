@@ -661,6 +661,18 @@ name|u_int
 name|td_critnest
 decl_stmt|;
 comment|/* (k) Critical section nest level. */
+name|sigset_t
+name|td_oldsigmask
+decl_stmt|;
+comment|/* (c) Saved mask from pre sigpause. */
+name|sigset_t
+name|td_sigmask
+decl_stmt|;
+comment|/* (c) Current signal mask. */
+name|sigset_t
+name|td_siglist
+decl_stmt|;
+comment|/* (c) Sigs arrived, not delivered. */
 define|#
 directive|define
 name|td_endzero
@@ -768,6 +780,17 @@ end_struct
 
 begin_comment
 comment|/* flags kept in td_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_OLDMASK
+value|0x000001
+end_define
+
+begin_comment
+comment|/* Need to restore mask after suspend. */
 end_comment
 
 begin_define
@@ -932,7 +955,18 @@ value|0x010000
 end_define
 
 begin_comment
-comment|/* Process needs to yield. */
+comment|/* Thread needs to yield. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_NEEDSIGCHK
+value|0x020000
+end_define
+
+begin_comment
+comment|/* Thread may need signal delivery. */
 end_comment
 
 begin_define
@@ -1882,16 +1916,16 @@ modifier|*
 name|p_tracecred
 decl_stmt|;
 comment|/* (o) Credentials to trace with. */
-name|sigset_t
-name|p_siglist
-decl_stmt|;
-comment|/* (c) Sigs arrived, not delivered. */
 name|struct
 name|vnode
 modifier|*
 name|p_textvp
 decl_stmt|;
 comment|/* (b) Vnode of executable. */
+name|sigset_t
+name|p_siglist
+decl_stmt|;
+comment|/* (c) Sigs not delivered to a td. */
 name|char
 name|p_lock
 decl_stmt|;
@@ -1910,10 +1944,6 @@ name|int
 name|p_sigparent
 decl_stmt|;
 comment|/* (c) Signal to parent on exit. */
-name|sigset_t
-name|p_oldsigmask
-decl_stmt|;
-comment|/* (c) Saved mask from pre sigpause. */
 name|int
 name|p_sig
 decl_stmt|;
@@ -1963,16 +1993,12 @@ comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
 name|p_endzero
-value|p_sigmask
+value|p_sigstk
 comment|/* The following fields are all copied upon creation in fork. */
 define|#
 directive|define
 name|p_startcopy
 value|p_endzero
-name|sigset_t
-name|p_sigmask
-decl_stmt|;
-comment|/* (c) Current signal mask. */
 name|stack_t
 name|p_sigstk
 decl_stmt|;
@@ -2411,19 +2437,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_OLDMASK
-value|0x2000000
-end_define
-
-begin_comment
-comment|/* Need to restore mask after suspend. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|P_ALTSTACK
-value|0x4000000
+value|0x2000000
 end_define
 
 begin_comment
@@ -2434,7 +2449,7 @@ begin_define
 define|#
 directive|define
 name|P_INEXEC
-value|0x8000000
+value|0x4000000
 end_define
 
 begin_comment
@@ -2531,17 +2546,6 @@ end_define
 
 begin_comment
 comment|/* Process is being swapped. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_NEEDSIGCHK
-value|0x02000
-end_define
-
-begin_comment
-comment|/* Process may need signal delivery. */
 end_comment
 
 begin_define
