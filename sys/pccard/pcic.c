@@ -2772,37 +2772,6 @@ literal|"Unknown!"
 expr_stmt|;
 break|break;
 block|}
-ifndef|#
-directive|ifndef
-name|PCIC_NOCLRREGS
-comment|/* 		 *	clear out the registers. 		 */
-for|for
-control|(
-name|i
-operator|=
-literal|2
-init|;
-name|i
-operator|<
-literal|0x40
-condition|;
-name|i
-operator|++
-control|)
-name|sp
-operator|->
-name|putb
-argument_list|(
-name|sp
-argument_list|,
-name|i
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCIC_NOCLRREGS */
 comment|/* 		 *	OK it seems we have a PCIC or lookalike. 		 *	Allocate a slot and initialise the data structures. 		 */
 name|validslots
 operator|++
