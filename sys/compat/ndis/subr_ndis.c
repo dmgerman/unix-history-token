@@ -9098,7 +9098,7 @@ operator|==
 name|TRUE
 condition|)
 block|{
-name|mtx_pool_lock
+name|mtx_pool_unlock
 argument_list|(
 name|ndis_mtxpool
 argument_list|,
