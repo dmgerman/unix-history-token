@@ -132,6 +132,8 @@ name|kw_s
 block|,
 name|kw_v
 block|,
+name|kw_w
+block|,
 name|kw_round
 block|,
 comment|/* round robin */

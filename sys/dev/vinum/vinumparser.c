@@ -599,7 +599,12 @@ argument_list|)
 block|,
 name|flagkeypair
 argument_list|(
-argument|r
+name|r
+argument_list|)
+block|,
+name|flagkeypair
+argument_list|(
+argument|w
 argument_list|)
 block|}
 decl_stmt|;
