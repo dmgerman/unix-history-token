@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  * from: hp300/hp300/clock.c	7.19 (Berkeley) 2/18/93  *  *	@(#)clock.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  * from: hp300/hp300/clock.c	7.19 (Berkeley) 2/18/93  *  *	@(#)clock.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -514,19 +514,6 @@ operator|==
 name|LUNA_II
 condition|)
 block|{
-if|#
-directive|if
-literal|1
-comment|/* not yet */
-name|printf
-argument_list|(
-literal|"WARNING: not supported resettodr() at LUNA2 yet.\n"
-argument_list|)
-expr_stmt|;
-return|return;
-else|#
-directive|else
-comment|/* bbc2->cal_ctl_? |= BBC_WRT; */
 name|bbc2
 operator|->
 name|cal_sec
@@ -574,15 +561,8 @@ operator|=
 name|tmptr
 operator|->
 name|tm_year
-block|)
-empty_stmt|;
-comment|/* bbc2->cal_ctl_?&= ~BBC_WRT; */
-endif|#
-directive|endif
+expr_stmt|;
 block|}
-end_block
-
-begin_else
 else|else
 endif|#
 directive|endif
@@ -667,18 +647,16 @@ operator|~
 name|BBC_WRT
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_function
-unit|}  struct
+name|struct
 name|bbc_tm
 modifier|*
 name|gmt_to_bbc
@@ -1292,6 +1270,60 @@ operator|=
 literal|1
 expr_stmt|;
 return|return;
+block|}
+end_block
+
+begin_define
+define|#
+directive|define
+name|LUNA1_HZ
+value|60
+end_define
+
+begin_macro
+name|modify_clock_param
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|extern
+name|int
+name|hz
+decl_stmt|,
+name|tick
+decl_stmt|,
+name|tickadj
+decl_stmt|;
+if|if
+condition|(
+name|machineid
+operator|==
+name|LUNA_I
+condition|)
+block|{
+name|hz
+operator|=
+name|LUNA1_HZ
+expr_stmt|;
+name|tick
+operator|=
+literal|1000000
+operator|/
+name|hz
+expr_stmt|;
+name|tickadj
+operator|=
+literal|30000
+operator|/
+operator|(
+literal|60
+operator|*
+name|hz
+operator|)
+expr_stmt|;
+comment|/* can adjust 30ms in 60s */
+block|}
 block|}
 end_block
 
