@@ -275,6 +275,11 @@ name|char
 modifier|*
 modifier|*
 name|argv
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|envp
 parameter_list|)
 block|{
 name|struct
@@ -304,6 +309,8 @@ name|argc
 argument_list|,
 operator|++
 name|argv
+argument_list|,
+name|envp
 argument_list|)
 return|;
 block|}
