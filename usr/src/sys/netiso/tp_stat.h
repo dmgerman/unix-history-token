@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_stat.h	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_stat.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -300,15 +300,13 @@ directive|define
 name|NRTT_CATEGORIES
 value|4
 comment|/*  The 4 categories are: 	 * 0 --> tp_flags: ~TPF_PEER_ON_SAMENET |  TPF_NL_PDN 	 * 1 --> tp_flags: ~TPF_PEER_ON_SAMENET | ~TPF_NL_PDN 	 * 2 --> tp_flags:  TPF_PEER_ON_SAMENET | ~TPF_NL_PDN 	 * 3 --> tp_flags:  TPF_PEER_ON_SAMENET |  TPF_NL_PDN 	 */
-name|struct
-name|timeval
+name|int
 name|ts_rtt
 index|[
 name|NRTT_CATEGORIES
 index|]
 decl_stmt|;
-name|struct
-name|timeval
+name|int
 name|ts_rtv
 index|[
 name|NRTT_CATEGORIES
@@ -422,8 +420,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/*  		 * tps_sendtime: Each call to tp_sbsend() is timed.  For 		 * Each window size, we keep the running average of the time 		 * taken by tp_sbsend() for each window size. 		 */
-name|struct
-name|timeval
+name|int
 name|tps_sendtime
 index|[
 name|TP_PM_MAX

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -180,42 +180,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Has TP been initialized? */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * retransmission control and performance measurement   */
-end_comment
-
-begin_struct
-struct|struct
-name|tp_rtc
-block|{
-name|struct
-name|tp_rtc
-modifier|*
-name|tprt_next
-decl_stmt|;
-comment|/* ptr to next rtc structure in the list */
-name|SeqNum
-name|tprt_seq
-decl_stmt|;
-comment|/* seq # of this TPDU */
-name|int
-name|tprt_eot
-decl_stmt|;
-comment|/* Will this TPDU have the eot bit set? */
-name|int
-name|tprt_octets
-decl_stmt|;
-comment|/* # octets in this TPDU */
-name|struct
-name|mbuf
-modifier|*
-name|tprt_data
-decl_stmt|;
-comment|/* ptr to the octets of data */
 block|}
 struct|;
 end_struct
@@ -438,6 +402,10 @@ name|tp_fcredit
 decl_stmt|;
 comment|/* current remote credit in # packets */
 name|u_short
+name|tp_ssthresh
+decl_stmt|;
+comment|/* cong_win threshold for slow start 										 * exponential to linear switch 										 */
+name|u_short
 name|tp_cong_win
 decl_stmt|;
 comment|/* congestion window : set to 1 on 										 * source quench 										 * Minimizes the amount of retrans- 										 * missions (independently of the 										 * retrans strategy).  Increased 										 * by one for each good ack received. 										 * Minimizes the amount sent in a 										 * regular tp_send() also. 										 */
@@ -641,26 +609,34 @@ name|int
 name|tp_l_tpdusize
 decl_stmt|;
 comment|/* whereas tp_tpdusize is log2(the negotiated max size) 		 * l_tpdusize is the size we'll use when sending, in # chars 		 */
-name|struct
-name|timeval
+name|int
 name|tp_rtv
 decl_stmt|;
 comment|/* max round-trip time variance */
-name|struct
-name|timeval
+name|int
 name|tp_rtt
 decl_stmt|;
 comment|/* smoothed round-trip time */
-name|struct
-name|timeval
-name|tp_rttemit
-index|[
-name|TP_RTT_NUM
-operator|+
-literal|1
-index|]
+name|SeqNum
+name|tp_rttseq
 decl_stmt|;
-comment|/* times that the last TP_RTT_NUM DT_TPDUs were emitted */
+comment|/* packet being timed */
+name|int
+name|tp_rttemit
+decl_stmt|;
+comment|/* when emitted, in ticks */
+name|int
+name|tp_idle
+decl_stmt|;
+comment|/* last activity, in ticks */
+name|short
+name|tp_rxtcur
+decl_stmt|;
+comment|/* current retransmit value */
+name|short
+name|tp_rxtshift
+decl_stmt|;
+comment|/* log(2) of rexmt exp. backoff */
 name|unsigned
 name|tp_sendfcc
 range|:
@@ -939,16 +915,16 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|timeval
-name|time
+name|tp_refinfo
+name|tp_refinfo
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|tp_refinfo
-name|tp_refinfo
+name|timeval
+name|time
 decl_stmt|;
 end_decl_stmt
 
