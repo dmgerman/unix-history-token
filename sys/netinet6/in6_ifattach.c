@@ -616,10 +616,6 @@ decl_stmt|;
 name|u_int32_t
 name|val32
 decl_stmt|;
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
 comment|/* If there's no hisotry, start with a random seed. */
 name|bzero
 argument_list|(
@@ -665,20 +661,10 @@ name|i
 operator|++
 control|)
 block|{
-name|microtime
-argument_list|(
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
 name|val32
 operator|=
-name|random
+name|arc4random
 argument_list|()
-operator|^
-name|tv
-operator|.
-name|tv_usec
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -852,20 +838,10 @@ argument_list|,
 literal|"generate_tmp_ifid: computed MD5 value is zero.\n"
 argument_list|)
 expr_stmt|;
-name|microtime
-argument_list|(
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
 name|val32
 operator|=
-name|random
+name|arc4random
 argument_list|()
-operator|^
-name|tv
-operator|.
-name|tv_usec
 expr_stmt|;
 name|val32
 operator|=

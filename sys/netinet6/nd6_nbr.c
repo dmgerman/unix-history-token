@@ -4790,7 +4790,7 @@ literal|0
 condition|)
 name|ntick
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|%
 operator|(
@@ -4805,7 +4805,7 @@ operator|=
 operator|*
 name|tick
 operator|+
-name|random
+name|arc4random
 argument_list|()
 operator|%
 operator|(

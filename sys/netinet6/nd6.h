@@ -842,7 +842,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((MIN_RANDOM_FACTOR * (x>> 10)) + (random()& \ 		((MAX_RANDOM_FACTOR - MIN_RANDOM_FACTOR) * (x>> 10)))) /1000)
+value|(((MIN_RANDOM_FACTOR * (x>> 10)) + (arc4random()& \ 		((MAX_RANDOM_FACTOR - MIN_RANDOM_FACTOR) * (x>> 10)))) /1000)
 end_define
 
 begin_expr_stmt

@@ -36,7 +36,7 @@ name|MLD6_RANDOM_DELAY
 parameter_list|(
 name|X
 parameter_list|)
-value|(random() % (X) + 1)
+value|(arc4random() % (X) + 1)
 end_define
 
 begin_comment
