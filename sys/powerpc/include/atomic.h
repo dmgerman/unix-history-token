@@ -811,7 +811,12 @@ comment|/* spin if failed */
 literal|"eieio\n"
 comment|/* memory barrier */
 literal|"sync\n"
+literal|"b 3f\n\t"
+comment|/* we've succeeded */
 literal|"2:\t\n"
+literal|"xor %0,%0,%0\t\n"
+comment|/* failure, so return 0 */
+literal|"3:\t\n"
 operator|:
 literal|"=&r"
 operator|(
