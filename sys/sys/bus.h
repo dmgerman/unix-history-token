@@ -454,7 +454,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Add a resource entry or modify an existing entry if one exists with   * the same type and rid.  */
+comment|/*  * Add a resource entry or modify an existing entry if one exists with  * the same type and rid.  */
 end_comment
 
 begin_function_decl
@@ -555,7 +555,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Implement BUS_ALLOC_RESOURCE by looking up a resource from the list   * and passing the allocation up to the parent of bus. This assumes  * that the first entry of device_get_ivars(child) is a struct  * resource_list. This also handles 'passthrough' allocations where a  * child is a remote descendant of bus by passing the allocation up to   * the parent of bus.  */
+comment|/*  * Implement BUS_ALLOC_RESOURCE by looking up a resource from the list  * and passing the allocation up to the parent of bus. This assumes  * that the first entry of device_get_ivars(child) is a struct  * resource_list. This also handles 'passthrough' allocations where a  * child is a remote descendant of bus by passing the allocation up to  * the parent of bus.  */
 end_comment
 
 begin_function_decl
