@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
 end_include
 
@@ -215,6 +221,17 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|argc
