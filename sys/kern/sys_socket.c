@@ -1000,6 +1000,9 @@ name|fp
 operator|->
 name|f_data
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -1019,6 +1022,9 @@ operator|->
 name|st_mode
 operator|=
 name|S_IFSOCK
+expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
 expr_stmt|;
 comment|/* 	 * If SBS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 * 	 * XXXRW: perhaps should lock socket buffer so st_size result 	 * is consistent. 	 */
 comment|/* Unlocked read. */
@@ -1114,8 +1120,8 @@ name|so_cred
 operator|->
 name|cr_gid
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 call|(
 modifier|*
 name|so
@@ -1131,6 +1137,13 @@ name|so
 argument_list|,
 name|ub
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}

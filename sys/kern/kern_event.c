@@ -4276,6 +4276,7 @@ name|kqueue
 modifier|*
 name|kq
 decl_stmt|;
+comment|/* Unlocked read. */
 name|kq
 operator|=
 name|fp
