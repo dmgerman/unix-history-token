@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dfa.h - declarations for GNU deterministic regexp compiler    Copyright (C) 1988 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* dfa.h - declarations for GNU deterministic regexp compiler    Copyright (C) 1988, 1998 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA */
 end_comment
 
 begin_comment
@@ -8,12 +8,114 @@ comment|/* Written June, 1988 by Mike Haertel */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* FIXME:    2.  We should not export so much of the DFA internals.    In addition to clobbering modularity, we eat up valuable    name space. */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PARAMS
+end_undef
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PTR_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PTR_T
+end_define
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|ptr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|PARAMS
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PTR_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PTR_T
+end_define
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|ptr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|PARAMS
+parameter_list|(
+name|x
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Number of bits in an unsigned char. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CHARBITS
+end_ifndef
 
 begin_define
 define|#
@@ -21,6 +123,11 @@ directive|define
 name|CHARBITS
 value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* First integer value that is greater than any character code. */
@@ -37,12 +144,23 @@ begin_comment
 comment|/* INTBITS need not be exact, just a lower bound. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INTBITS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|INTBITS
 value|(CHARBITS * sizeof (int))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Number of ints required to hold a bit for every character. */
@@ -583,97 +701,103 @@ begin_comment
 comment|/* Entry points. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_comment
 comment|/* dfasyntax() takes two arguments; the first sets the syntax bits described    earlier in this file, and the second sets the case-folding flag. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dfasyntax
-parameter_list|(
+name|PARAMS
+argument_list|(
+operator|(
+name|reg_syntax_t
+operator|,
 name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Compile the given string of the given length into the given struct dfa.    Final argument is a flag specifying whether to build a searching or an    exact matcher. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dfacomp
-parameter_list|(
+name|PARAMS
+argument_list|(
+operator|(
 name|char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|size_t
-parameter_list|,
-name|struct
+operator|,
+expr|struct
 name|dfa
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Execute the given struct dfa on the buffer of characters.  The    first char * points to the beginning, and the second points to the    first character after the end of the buffer, which must be a writable    place so a sentinel end-of-buffer marker can be stored there.  The    second-to-last argument is a flag telling whether to allow newlines to    be part of a string matching the regexp.  The next-to-last argument,    if non-NULL, points to a place to increment every time we see a    newline.  The final argument, if non-NULL, points to a flag that will    be set if further examination by a backtracking matcher is needed in    order to verify backreferencing; otherwise the flag will be cleared.    Returns NULL if no match is found, or a pointer to the first    character after the first& shortest matching string in the buffer. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|dfaexec
-parameter_list|(
-name|struct
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
 name|dfa
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
-parameter_list|,
+operator|,
 name|int
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Free the storage held by the components of a struct dfa. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dfafree
-parameter_list|(
-name|struct
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
 name|dfa
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Entry points for people who know what they're doing. */
@@ -683,77 +807,89 @@ begin_comment
 comment|/* Initialize the components of a struct dfa. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dfainit
-parameter_list|(
-name|struct
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
 name|dfa
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Incrementally parse a string of given length into a struct dfa. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dfaparse
-parameter_list|(
+name|PARAMS
+argument_list|(
+operator|(
 name|char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|size_t
-parameter_list|,
-name|struct
+operator|,
+expr|struct
 name|dfa
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Analyze a parsed regexp; second argument tells whether to build a searching    or an exact matcher. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dfaanalyze
-parameter_list|(
-name|struct
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
 name|dfa
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Compute, for each possible character, the transitions out of a given    state, storing them in an array of integers. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dfastate
-parameter_list|(
+name|PARAMS
+argument_list|(
+operator|(
 name|int
-parameter_list|,
-name|struct
+operator|,
+expr|struct
 name|dfa
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
 index|[]
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Error handling. */
@@ -763,77 +899,20 @@ begin_comment
 comment|/* dfaerror() is called by the regexp routines whenever an error occurs.  It    takes a single argument, a NUL-terminated string describing the error.    The default dfaerror() prints the error message to stderr and exits.    The user can provide a different dfafree() if so desired. */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|dfaerror
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! __STDC__ */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|void
-name|dfasyntax
-argument_list|()
-decl_stmt|,
-name|dfacomp
-argument_list|()
-decl_stmt|,
-name|dfafree
-argument_list|()
-decl_stmt|,
-name|dfainit
-argument_list|()
-decl_stmt|,
-name|dfaparse
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|dfaanalyze
-argument_list|()
-decl_stmt|,
-name|dfastate
-argument_list|()
-decl_stmt|,
 name|dfaerror
-argument_list|()
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|dfaexec
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! __STDC__ */
-end_comment
 
 end_unit
 
