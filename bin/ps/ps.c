@@ -202,6 +202,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lomac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ps.h"
 end_include
 
