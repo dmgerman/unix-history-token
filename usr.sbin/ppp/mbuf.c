@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.7 1997/06/09 03:27:29 brian Exp $  *  */
+comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.3.6.2 1997/06/10 09:44:01 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"server.h"
 end_include
 
 begin_struct
@@ -194,6 +200,9 @@ name|mbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ServerClose
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -237,6 +246,9 @@ literal|"failed to allocate memory: %d\n"
 argument_list|,
 name|cnt
 argument_list|)
+expr_stmt|;
+name|ServerClose
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
