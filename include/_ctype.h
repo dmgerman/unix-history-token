@@ -415,7 +415,7 @@ name|c
 parameter_list|,
 name|f
 parameter_list|)
-value|(!!__maskrune((c),(f))
+value|(!!__maskrune((c),(f)))
 define|#
 directive|define
 name|isalnum
