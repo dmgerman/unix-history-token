@@ -1293,8 +1293,6 @@ name|inc
 decl_stmt|,
 name|j
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|size
@@ -2246,8 +2244,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Must propogate errors to all the components. 	 */
 if|if
 condition|(
@@ -3174,8 +3170,6 @@ argument_list|(
 name|size
 argument_list|)
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 while|while
 condition|(
 name|len
