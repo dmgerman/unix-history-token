@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)kdb.c	7.4 (Berkeley) %G%  *  * KDB50/MSCP device driver  */
+comment|/*  *	@(#)kdb.c	7.5 (Berkeley) %G%  *  * KDB50/MSCP device driver  */
 end_comment
 
 begin_comment
-comment|/*  * TODO  *	rethink BI software interface  *	performance: would testing contiguity in kdbmap be worthwhile?  *	write bad block forwarding code  */
+comment|/*  * TODO  *	rethink BI software interface  *	write bad block forwarding code  */
 end_comment
 
 begin_include
@@ -277,7 +277,7 @@ name|short
 name|ki_wticks
 decl_stmt|;
 comment|/* watchdog timer ticks */
-comment|/* 	 * KDB PTEs must be contiguous.  Some I/O is done on addresses 	 * for which this is true (PTEs in Sysmap and Usrptmap), but 	 * other transfers may have PTEs that are scattered in physical 	 * space.  Ki_map maps a physically contiguous PTE space used 	 * for these tranfsers. 	 */
+comment|/* 	 * KDB PTEs must be contiguous.  Some I/O is done on addresses 	 * for which this is true (PTEs in Sysmap and Usrptmap), but 	 * other transfers may have PTEs that are scattered in physical 	 * space.  Ki_map maps a physically contiguous PTE space used 	 * for these transfers. 	 */
 define|#
 directive|define
 name|KI_MAPSIZ
@@ -294,8 +294,10 @@ name|KI_PTES
 value|256
 name|struct
 name|pte
-modifier|*
 name|ki_pte
+index|[
+name|KI_PTES
+index|]
 decl_stmt|;
 comment|/* contiguous PTE space */
 name|long
@@ -1272,35 +1274,6 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-name|ki
-operator|->
-name|ki_pte
-operator|=
-operator|(
-expr|struct
-name|pte
-operator|*
-operator|)
-name|malloc
-argument_list|(
-call|(
-name|u_long
-call|)
-argument_list|(
-name|KI_PTES
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pte
-argument_list|)
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ki
@@ -1308,14 +1281,38 @@ operator|->
 name|ki_map
 operator|==
 name|NULL
-operator|||
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"kdb%d: cannot get memory for ptes\n"
+argument_list|,
+name|kdbnum
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ki
+operator|->
+name|ki_ptephys
+operator|=
+name|PHYS
+argument_list|(
+name|long
+argument_list|,
 name|ki
 operator|->
 name|ki_pte
-operator|==
-name|NULL
-condition|)
-return|return;
+argument_list|)
+expr_stmt|;
+comment|/* kvtophys(ki->ki_pte) */
+name|ki
+operator|->
+name|ki_flags
+operator|=
+name|KDB_ALIVE
+expr_stmt|;
+comment|/* THE FOLLOWING IS ONLY NEEDED TO CIRCUMVENT A BUG IN rminit */
 name|bzero
 argument_list|(
 operator|(
@@ -1332,41 +1329,6 @@ argument_list|(
 expr|struct
 name|map
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ki
-operator|->
-name|ki_pte
-argument_list|,
-name|KI_PTES
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pte
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ki
-operator|->
-name|ki_flags
-operator|=
-name|KDB_ALIVE
-expr_stmt|;
-name|ki
-operator|->
-name|ki_ptephys
-operator|=
-name|kvtophys
-argument_list|(
-name|ki
-operator|->
-name|ki_pte
 argument_list|)
 expr_stmt|;
 name|rminit
@@ -1866,7 +1828,7 @@ default|default:
 comment|/* 			 * In service, or something else equally unusable. 			 */
 name|printf
 argument_list|(
-literal|"kdb%d: unit %d off line: "
+literal|"kdb%d: unit %d off line:"
 argument_list|,
 name|ki
 operator|->
@@ -1890,7 +1852,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"kdb%d: unable to get unit status: "
+literal|"kdb%d: unable to get unit status:"
 argument_list|,
 name|ki
 operator|->
@@ -4217,7 +4179,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Service the drive at the head of the queue.  We take exactly 	 * one transfer from this drive, then move it to the end of the 	 * controller queue, so as to get more drive overlap. 	 */
+comment|/* 	 * Service the drive at the head of the queue.  It may not 	 * need anything; eventually this will finish up the close 	 * protocol, but that is yet to be implemented here. 	 */
 if|if
 condition|(
 operator|(
@@ -4235,7 +4197,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Get the first request from the drive queue.  There must be 	 * one, or something is rotten. 	 */
 if|if
 condition|(
 operator|(
@@ -4248,11 +4209,27 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"kdbstart: bp==NULL\n"
-argument_list|)
+block|{
+name|dp
+operator|->
+name|b_active
+operator|=
+literal|0
 expr_stmt|;
+name|ki
+operator|->
+name|ki_tab
+operator|.
+name|b_actf
+operator|=
+name|dp
+operator|->
+name|b_forw
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
 if|if
 condition|(
 name|ki
@@ -5834,7 +5811,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"kdb%d: attempt to bring %s%d on line failed: "
+literal|"kdb%d: attempt to bring %s%d on line failed:"
 argument_list|,
 name|ui
 operator|->
@@ -6044,7 +6021,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"kdb%d: attempt to get status for %s%d failed: "
+literal|"kdb%d: attempt to get status for %s%d failed:"
 argument_list|,
 name|ui
 operator|->
