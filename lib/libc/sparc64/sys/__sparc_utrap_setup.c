@@ -144,6 +144,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|__sparc_utrap_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(constructor
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
 begin_function
 name|void
 name|__sparc_utrap_setup
