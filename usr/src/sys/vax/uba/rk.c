@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.29	81/03/11	*/
+comment|/*	rk.c	4.30	81/03/17	*/
 end_comment
 
 begin_include
@@ -2442,7 +2442,7 @@ name|b_flags
 operator|&
 name|B_READ
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 goto|goto
