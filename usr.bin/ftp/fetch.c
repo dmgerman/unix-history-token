@@ -1272,7 +1272,19 @@ condition|(
 name|len
 operator|<
 literal|0
-operator|||
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Failed to format HTTP request"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup_url_get
+goto|;
+block|}
+if|if
+condition|(
 name|write
 argument_list|(
 name|s
