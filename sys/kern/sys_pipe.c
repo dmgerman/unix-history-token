@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.46 1998/12/07 21:58:29 archie Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.46.2.1 1999/02/06 03:30:10 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -194,6 +194,9 @@ expr|struct
 name|ucred
 operator|*
 name|cred
+operator|,
+name|int
+name|flags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -220,6 +223,9 @@ expr|struct
 name|ucred
 operator|*
 name|cred
+operator|,
+name|int
+name|flags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1380,6 +1386,8 @@ parameter_list|,
 name|uio
 parameter_list|,
 name|cred
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|file
@@ -1395,6 +1403,9 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 name|struct
@@ -3061,6 +3072,8 @@ parameter_list|,
 name|uio
 parameter_list|,
 name|cred
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|file
@@ -3076,6 +3089,9 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 name|int
