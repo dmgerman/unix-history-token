@@ -83,7 +83,7 @@ operator|=
 name|_thread_sys_fork
 argument_list|()
 operator|)
-operator|<=
+operator|!=
 literal|0
 condition|)
 block|{
