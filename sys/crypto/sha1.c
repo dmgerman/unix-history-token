@@ -242,20 +242,17 @@ parameter_list|)
 value|{ \ 	ctxt->m.b8[(COUNT % 64)] = (x);		\ 	COUNT++;				\ 	COUNT %= 64;				\ 	if (COUNT % 64 == 0)			\ 		sha1_step(ctxt);		\      }
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sha1_step
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sha1_ctxt
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

@@ -142,20 +142,17 @@ directive|ifndef
 name|db_set_single_step
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|db_set_single_step
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_regs_t
-operator|*
+modifier|*
 name|regs
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -168,20 +165,17 @@ directive|ifndef
 name|db_clear_single_step
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|db_clear_single_step
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_regs_t
-operator|*
+modifier|*
 name|regs
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -194,20 +188,17 @@ directive|ifdef
 name|notused
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|db_single_step
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_regs_t
-operator|*
+modifier|*
 name|regs
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

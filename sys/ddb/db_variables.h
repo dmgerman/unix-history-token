@@ -33,19 +33,20 @@ begin_typedef
 typedef|typedef
 name|int
 name|db_varfcn_t
-name|__P
-typedef|((struct
+parameter_list|(
+name|struct
 name|db_variable
 modifier|*
 name|vp
-typedef|,
+parameter_list|,
 name|db_expr_t
 modifier|*
 name|valuep
-typedef|,
+parameter_list|,
 name|int
 name|op
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_struct
@@ -108,22 +109,19 @@ name|db_eregs
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|db_read_variable
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|db_variable
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|db_expr_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

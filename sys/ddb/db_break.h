@@ -98,17 +98,14 @@ name|db_breakpoint_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|db_clear_breakpoints
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -116,47 +113,38 @@ directive|ifdef
 name|SOFTWARE_SSTEP
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|db_delete_temp_breakpoint
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_breakpoint_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 name|db_breakpoint_t
 name|db_find_breakpoint_here
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_addr_t
 name|addr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|db_set_breakpoints
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -164,17 +152,14 @@ directive|ifdef
 name|SOFTWARE_SSTEP
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|db_breakpoint_t
 name|db_set_temp_breakpoint
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_addr_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
