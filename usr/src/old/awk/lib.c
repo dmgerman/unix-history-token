@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lib.c	4.9 (Berkeley) %G%"
+literal|"@(#)lib.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,11 +28,33 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -57,6 +79,24 @@ include|#
 directive|include
 file|"ctype.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|error
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1568,16 +1608,33 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_decl_stmt
+name|int
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|error
 argument_list|(
-argument|isfatal
+name|int
+name|isfatal
 argument_list|,
-argument|fmt
+specifier|const
+name|char
+operator|*
+name|fmt
+argument_list|,
+operator|...
 argument_list|)
-end_macro
-
-begin_decl_stmt
+else|#
+directive|else
+name|error
+argument_list|(
+name|isfatal
+argument_list|,
+name|fmt
+argument_list|,
+name|va_alist
+argument_list|)
 name|int
 name|isfatal
 decl_stmt|;
@@ -1590,11 +1647,23 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|va_dcl
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_block
 block|{
 name|va_list
 name|ap
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -1602,6 +1671,15 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
