@@ -4503,7 +4503,7 @@ argument_list|(
 name|b
 argument_list|)
 argument_list|,
-literal|"%*dK"
+literal|"%*dk"
 argument_list|,
 name|w
 operator|-
