@@ -2637,6 +2637,20 @@ operator|&
 name|VROOT
 condition|)
 block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|==
+name|NULL
+condition|)
+comment|/* forced unmount */
+return|return
+operator|(
+name|EBADF
+operator|)
+return|;
 name|vp
 operator|=
 name|vp
