@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.9 (Berkeley) %G%"
+literal|"@(#)ls.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3927,10 +3927,6 @@ name|uid_t
 name|uid
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|_pw_stayopen
-decl_stmt|;
 specifier|static
 struct|struct
 name|ncache
@@ -3964,10 +3960,6 @@ name|ncache
 modifier|*
 name|cp
 decl_stmt|;
-name|_pw_stayopen
-operator|=
-literal|1
-expr_stmt|;
 name|cp
 operator|=
 name|c_uid
