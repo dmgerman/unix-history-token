@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.1 (Berkeley) %G%"
+literal|"@(#)main.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,7 +812,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Berkeley Pascal PXP -- Version 1.1 (%s)\n\n%s  %s\n\n"
+literal|"Berkeley Pascal PXP -- Version %s\n\n%s  %s\n\n"
 argument_list|,
 name|version
 argument_list|,
