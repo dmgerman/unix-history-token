@@ -858,19 +858,18 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Page faults need interrupts diasabled until later, 			 * and we shouldn't enable interrupts while holding a 			 * spin lock. 			 */
+comment|/* 			 * Page faults need interrupts diasabled until later, 			 * and we shouldn't enable interrupts while in a 			 * critical section. 			 */
 if|if
 condition|(
 name|type
 operator|!=
 name|T_PAGEFLT
 operator|&&
-name|PCPU_GET
-argument_list|(
-name|spinlocks
-argument_list|)
+name|td
+operator|->
+name|td_critnest
 operator|==
-name|NULL
+literal|0
 condition|)
 name|enable_intr
 argument_list|()
@@ -894,7 +893,7 @@ operator|==
 name|T_PAGEFLT
 condition|)
 block|{
-comment|/* 		 * For some Cyrix CPUs, %cr2 is clobbered by 		 * interrupts.  This problem is worked around by using 		 * an interrupt gate for the pagefault handler.  We 		 * are finally ready to read %cr2 and then must 		 * reenable interrupts. 		 * 		 * If we get a page fault while holding a spin lock, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
+comment|/* 		 * For some Cyrix CPUs, %cr2 is clobbered by 		 * interrupts.  This problem is worked around by using 		 * an interrupt gate for the pagefault handler.  We 		 * are finally ready to read %cr2 and then must 		 * reenable interrupts. 		 * 		 * If we get a page fault while in a critical section, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
 name|eva
 operator|=
 name|rcr2
@@ -902,12 +901,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|spinlocks
-argument_list|)
+name|td
+operator|->
+name|td_critnest
 operator|==
-name|NULL
+literal|0
 condition|)
 name|enable_intr
 argument_list|()
