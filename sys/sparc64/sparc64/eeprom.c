@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resource.h>
 end_include
 
@@ -78,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mk48txx/mk48txxreg.h>
+file|<dev/mk48txx/mk48txxvar.h>
 end_include
 
 begin_include
@@ -97,12 +91,8 @@ begin_define
 define|#
 directive|define
 name|IDPROM_OFFSET
-value|(8 * 1024 - 40)
+value|40
 end_define
-
-begin_comment
-comment|/* XXX - get nvram size from driver */
-end_comment
 
 begin_function
 name|int
@@ -154,40 +144,38 @@ name|eeprom_attach
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|,
-name|bus_space_tag_t
-name|bt
-parameter_list|,
-name|bus_space_handle_t
-name|bh
 parameter_list|)
 block|{
+name|struct
+name|mk48txx_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|struct
 name|timespec
 name|ts
 decl_stmt|;
-name|struct
-name|idprom
-modifier|*
-name|idp
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|model
+name|u_int32_t
+name|h
 decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-name|u_int32_t
-name|h
-decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
-name|model
+name|sc
+operator|->
+name|sc_model
 operator|=
 name|ofw_bus_get_model
 argument_list|(
@@ -203,6 +191,19 @@ literal|"eeprom_attach: no model property"
 argument_list|)
 expr_stmt|;
 comment|/* Our TOD clock year 0 is 1968 */
+name|sc
+operator|->
+name|sc_year0
+operator|=
+literal|1968
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Default register read/write functions are used. */
 if|if
 condition|(
 operator|(
@@ -211,14 +212,6 @@ operator|=
 name|mk48txx_attach
 argument_list|(
 name|dev
-argument_list|,
-name|bt
-argument_list|,
-name|bh
-argument_list|,
-name|model
-argument_list|,
-literal|1968
 argument_list|)
 operator|)
 operator|!=
@@ -229,9 +222,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Can't attach %s tod clock"
-argument_list|,
-name|model
+literal|"cannot attach time of day clock\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -240,32 +231,23 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* XXX: register clock device */
-comment|/* Get the host ID from the prom. */
-name|idp
-operator|=
-operator|(
-expr|struct
-name|idprom
-operator|*
-operator|)
-operator|(
-operator|(
-name|u_long
-operator|)
-name|bh
-operator|+
-name|IDPROM_OFFSET
-operator|)
-expr_stmt|;
+comment|/* 	 * Get the hostid from the NVRAM. This serves no real purpose other 	 * than being able to display it below as not all sparc64 models 	 * have an `eeprom' device and even some that do store the hostid 	 * elsewhere. The hostid in the NVRAM of the MK48Txx reads all zero 	 * on the latter models. A generic way to retrieve the hostid is to 	 * use the `idprom' node. 	 */
 name|h
 operator|=
 name|bus_space_read_1
 argument_list|(
-name|bt
+name|sc
+operator|->
+name|sc_bst
 argument_list|,
-name|bh
+name|sc
+operator|->
+name|sc_bsh
 argument_list|,
+name|sc
+operator|->
+name|sc_nvramsz
+operator|-
 name|IDPROM_OFFSET
 operator|+
 name|offsetof
@@ -297,10 +279,18 @@ name|h
 operator||=
 name|bus_space_read_1
 argument_list|(
-name|bt
+name|sc
+operator|->
+name|sc_bst
 argument_list|,
-name|bh
+name|sc
+operator|->
+name|sc_bsh
 argument_list|,
+name|sc
+operator|->
+name|sc_nvramsz
+operator|-
 name|IDPROM_OFFSET
 operator|+
 name|offsetof
@@ -326,7 +316,12 @@ literal|8
 operator|)
 expr_stmt|;
 block|}
-comment|/* XXX: register host id */
+if|if
+condition|(
+name|h
+operator|!=
+literal|0
+condition|)
 name|device_printf
 argument_list|(
 name|dev

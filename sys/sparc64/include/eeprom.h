@@ -15,19 +15,6 @@ directive|define
 name|_MACHINE_EEPROM_H_
 end_define
 
-begin_struct
-struct|struct
-name|eeprom_softc
-block|{
-name|struct
-name|mk48txx_softc
-modifier|*
-name|sc_mksoftc
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -49,10 +36,6 @@ name|int
 name|eeprom_attach
 parameter_list|(
 name|device_t
-parameter_list|,
-name|bus_space_tag_t
-parameter_list|,
-name|bus_space_handle_t
 parameter_list|)
 function_decl|;
 end_function_decl
