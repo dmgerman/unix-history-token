@@ -380,6 +380,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|p
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|linenum
