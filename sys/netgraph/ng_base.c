@@ -4748,7 +4748,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hook
+name|hook2
 operator|==
 name|NULL
 condition|)
