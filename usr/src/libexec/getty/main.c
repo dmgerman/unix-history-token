@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.19 (Berkeley) %G%"
+literal|"@(#)main.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,25 +304,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|defstrs
-index|[
-name|TABBUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|tabent
-index|[
-name|TABBUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|tabstrs
 index|[
 name|TABBUFSIZ
 index|]
@@ -1025,8 +1007,6 @@ argument_list|(
 literal|"default"
 argument_list|,
 name|defent
-argument_list|,
-name|defstrs
 argument_list|)
 expr_stmt|;
 name|gendefaults
@@ -1063,8 +1043,6 @@ argument_list|(
 name|tname
 argument_list|,
 name|tabent
-argument_list|,
-name|tabstrs
 argument_list|)
 expr_stmt|;
 if|if
