@@ -21,6 +21,31 @@ begin_comment
 comment|/* from "snd.h" */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"snd.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NSND
+operator|>
+literal|0
+end_if
+
+begin_error
+error|#
+directive|error
+error|Can't have both Luigi's (pcm0) and voxware (snd0) at the same time.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
