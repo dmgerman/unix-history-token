@@ -1923,6 +1923,7 @@ literal|1
 operator|)
 return|;
 default|default:
+break|break;
 block|}
 if|if
 condition|(

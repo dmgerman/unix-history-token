@@ -1883,6 +1883,8 @@ name|FTS_SKIP
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -2387,6 +2389,7 @@ literal|0
 expr_stmt|;
 comment|/* fall through */
 default|default:
+break|break;
 block|}
 name|maxinode
 operator|=
