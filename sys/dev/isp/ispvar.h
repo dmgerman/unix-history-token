@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.8 1999/01/10 02:51:48 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.9 1999/01/30 07:29:00 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_01_29_99 */
+comment|/* release_02_05_99 */
 end_comment
 
 begin_comment
@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|5
+value|6
 end_define
 
 begin_comment
@@ -563,7 +563,7 @@ begin_define
 define|#
 directive|define
 name|DPARM_DEFAULT
-value|(0xFFFF& ~DPARM_QFRZ)
+value|(0xFF00& ~DPARM_QFRZ)
 end_define
 
 begin_define
@@ -1087,6 +1087,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISP_CFG_NONVRAM
+value|0x40
+end_define
+
+begin_comment
+comment|/* ignore NVRAM */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISP_FW_REV
 parameter_list|(
 name|maj
@@ -1469,6 +1480,12 @@ typedef|typedef
 enum|enum
 block|{
 name|ISPASYNC_NEW_TGT_PARAMS
+block|,
+name|ISPASYNC_LOOP_DOWN
+block|,
+comment|/* Obvious FC only */
+name|ISPASYNC_LOOP_UP
+comment|/* Obvious FC only */
 block|}
 name|ispasync_t
 typedef|;
