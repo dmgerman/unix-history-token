@@ -877,21 +877,22 @@ name|aac_ioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|aac_ioctl_sendfib
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|aac_softc
-modifier|*
+operator|*
 name|sc
-parameter_list|,
+argument_list|,
 name|caddr_t
 name|ufib
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__unused
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
