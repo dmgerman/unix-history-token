@@ -194,27 +194,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|ptrace_write_u
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
-name|vm_offset_t
-name|off
-operator|,
-name|long
-name|data
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_else
 else|#
 directive|else
