@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.44 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|DELIMCHARS
-value|"()<>,;\"\r\n"
+value|"()<>,;\r\n"
 end_define
 
 begin_comment
