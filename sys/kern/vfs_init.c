@@ -372,7 +372,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Fill in, with slot 0 being panic */
+comment|/* Fill in, with slot 0 being to return EOPNOTSUPP */
 name|opv_desc_vector
 operator|=
 operator|*
@@ -387,7 +387,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|vop_panic
+name|vop_eopnotsupp
 expr_stmt|;
 for|for
 control|(
