@@ -207,10 +207,6 @@ name|fixpt_t
 name|ke_pctcpu
 decl_stmt|;
 comment|/* (j) %cpu during p_swtime. */
-name|u_char
-name|ke_oncpu
-decl_stmt|;
-comment|/* (j) Which cpu we are on. */
 name|char
 name|ke_rqindex
 decl_stmt|;
@@ -2165,13 +2161,6 @@ operator|=
 operator|&
 name|thread0
 expr_stmt|;
-name|kse0
-operator|.
-name|ke_oncpu
-operator|=
-name|NOCPU
-expr_stmt|;
-comment|/* wrong.. can we use PCPU(cpuid) yet? */
 name|kse0
 operator|.
 name|ke_state
