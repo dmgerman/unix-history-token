@@ -100,62 +100,50 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 name|unsigned
 name|long
 name|htonl
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|unsigned
 name|short
 name|htons
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|short
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|unsigned
 name|long
 name|ntohl
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|unsigned
 name|short
 name|ntohs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|short
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|__END_DECLS
@@ -173,7 +161,12 @@ name|long
 name|__x
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|lint
 asm|__asm ("rorl $16, %1" : "=r" (__x) : "0" (__x));
+endif|#
+directive|endif
 return|return
 name|__x
 return|;
@@ -192,6 +185,9 @@ name|long
 name|__x
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|lint
 if|#
 directive|if
 name|defined
@@ -244,6 +240,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_return
 return|return
 name|__x
@@ -262,7 +263,12 @@ name|short
 name|__x
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|lint
 asm|__asm ("xchgb %h1, %b1" : "=q" (__x) : "0" (__x));
+endif|#
+directive|endif
 return|return
 name|__x
 return|;
