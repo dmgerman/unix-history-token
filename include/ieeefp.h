@@ -35,26 +35,15 @@ directive|include
 file|<machine/ieeefp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/floatingpoint.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__i386__ */
-end_comment
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_IEEEFP_INLINED_
+argument_list|)
+end_if
 
 begin_function_decl
 name|__BEGIN_DECLS
@@ -127,7 +116,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ */
+comment|/* !_IEEEFP_INLINED_ */
 end_comment
 
 begin_endif
