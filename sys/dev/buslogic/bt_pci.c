@@ -460,9 +460,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rman_get_start
+argument_list|(
 name|bt
 operator|->
-name|bsh
+name|port
+argument_list|)
 operator|!=
 name|bt_iop_from_bio
 argument_list|(
