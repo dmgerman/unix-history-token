@@ -367,12 +367,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %9qu  %9qu\n"
+literal|" %9llu  %9llu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mifp
 operator|->
 name|m6_pkt_in
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mifp
 operator|->
 name|m6_pkt_out
@@ -527,8 +537,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %9qu"
+literal|" %9llu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mfc
 operator|.
 name|mf6c_pkt_cnt
@@ -732,8 +747,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu multicast forwarding cache lookup%s\n"
+literal|" %10llu multicast forwarding cache lookup%s\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_mfc_lookups
@@ -748,8 +768,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu multicast forwarding cache miss%s\n"
+literal|" %10llu multicast forwarding cache miss%s\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_mfc_misses
@@ -764,8 +789,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu upcall%s to mrouted\n"
+literal|" %10llu upcall%s to mrouted\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_upcalls
@@ -780,8 +810,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu upcall queue overflow%s\n"
+literal|" %10llu upcall llueue overflow%s\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_upq_ovflw
@@ -796,8 +831,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu upcall%s dropped due to full socket buffer\n"
+literal|" %10llu upcall%s dropped due to full socket buffer\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_upq_sockfull
@@ -812,8 +852,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu cache cleanup%s\n"
+literal|" %10llu cache cleanup%s\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_cache_cleanups
@@ -828,8 +873,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu datagram%s with no route for origin\n"
+literal|" %10llu datagram%s with no route for origin\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_no_route
@@ -844,8 +894,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu datagram%s arrived with bad tunneling\n"
+literal|" %10llu datagram%s arrived with bad tunneling\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_bad_tunnel
@@ -860,8 +915,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu datagram%s could not be tunneled\n"
+literal|" %10llu datagram%s could not be tunneled\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_cant_tunnel
@@ -876,8 +936,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu datagram%s arrived on wrong interface\n"
+literal|" %10llu datagram%s arrived on wrong interface\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_wrong_if
@@ -892,8 +957,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu datagram%s selectively dropped\n"
+literal|" %10llu datagram%s selectively dropped\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_drop_sel
@@ -908,8 +978,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu datagram%s dropped due to queue overflow\n"
+literal|" %10llu datagram%s dropped due to llueue overflow\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_q_overflow
@@ -924,8 +999,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10qu datagram%s dropped for being too large\n"
+literal|" %10llu datagram%s dropped for being too large\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|mrtstat
 operator|.
 name|mrt6s_pkt2large

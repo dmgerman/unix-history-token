@@ -437,7 +437,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nMulticast Forwarding Cache\n"
+literal|"\nIPv4 Multicast Forwarding Cache\n"
 literal|" Origin          Group            "
 literal|" Packets In-Vif  Out-Vifs:Ttls\n"
 argument_list|)
@@ -591,7 +591,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No multicast routing compiled into this system.\n"
+literal|"No IPv4 multicast routing compiled into this system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -615,7 +615,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"multicast forwarding:\n"
+literal|"IPv4 multicast forwarding:\n"
 argument_list|)
 expr_stmt|;
 name|printf
