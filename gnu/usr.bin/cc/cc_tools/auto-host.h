@@ -1,11 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* auto-host.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
 comment|/* config.in.  Generated automatically from configure.in by autoheader.  */
 end_comment
+
+begin_comment
+comment|/* Define if you can safely include both<string.h> and<strings.h>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRING_WITH_STRINGS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if printf supports "%p".  */
@@ -24,6 +39,30 @@ end_comment
 
 begin_comment
 comment|/* #undef ENABLE_CHECKING */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if NLS is requested.  */
+end_comment
+
+begin_comment
+comment|/* #undef ENABLE_NLS */
+end_comment
+
+begin_comment
+comment|/* Define as 1 if you have catgets and don't want to use GNU gettext.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CATGETS */
+end_comment
+
+begin_comment
+comment|/* Define as 1 if you have gettext and don't want to use GNU gettext.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETTEXT */
 end_comment
 
 begin_comment
@@ -65,12 +104,39 @@ comment|/* #undef HAVE_GAS_BALIGN_AND_P2ALIGN */
 end_comment
 
 begin_comment
+comment|/* Define if your assembler supports .subsection and .subsection -1 starts    emitting at the beginning of your section */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GAS_SUBSECTION_ORDERING */
+end_comment
+
+begin_comment
+comment|/* Define if your assembler uses the old HImode fild and fist notation.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GAS_FILDS_FISTS */
+end_comment
+
+begin_comment
 comment|/* Define if you have a working<inttypes.h> header file.  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_INTTYPES_H */
 end_comment
+
+begin_comment
+comment|/* Define if your locale.h file contains LC_MESSAGES.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LC_MESSAGES
+value|1
+end_define
 
 begin_comment
 comment|/* Whether malloc must be declared even if<stdlib.h> is included.  */
@@ -161,6 +227,14 @@ comment|/* #undef NEED_DECLARATION_ATOL */
 end_comment
 
 begin_comment
+comment|/* Whether atof must be declared even if<stdlib.h> is included.  */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_DECLARATION_ATOF */
+end_comment
+
+begin_comment
 comment|/* Whether sbrk must be declared even if<stdlib.h> is included.  */
 end_comment
 
@@ -182,6 +256,22 @@ end_comment
 
 begin_comment
 comment|/* #undef NEED_DECLARATION_STRERROR */
+end_comment
+
+begin_comment
+comment|/* Whether strsignal must be declared even if<string.h> is included.  */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_DECLARATION_STRSIGNAL */
+end_comment
+
+begin_comment
+comment|/* Whether strstr must be declared even if<string.h> is included.  */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_DECLARATION_STRSTR */
 end_comment
 
 begin_comment
@@ -223,11 +313,114 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you want expensive run-time checks. */
+comment|/* Whether putc_unlocked must be declared even if<stdio.h> is included.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_DECLARATION_PUTC_UNLOCKED
+value|1
+end_define
+
+begin_comment
+comment|/* Whether fputs_unlocked must be declared even if<stdio.h> is included.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_DECLARATION_FPUTS_UNLOCKED
+value|1
+end_define
+
+begin_comment
+comment|/* Define to enable the use of a default assembler. */
 end_comment
 
 begin_comment
-comment|/* #undef ENABLE_CHECKING */
+comment|/* #undef DEFAULT_ASSEMBLER */
+end_comment
+
+begin_comment
+comment|/* Define to enable the use of a default linker. */
+end_comment
+
+begin_comment
+comment|/* #undef DEFAULT_LINKER */
+end_comment
+
+begin_comment
+comment|/* Define if host mkdir takes a single argument. */
+end_comment
+
+begin_comment
+comment|/* #undef MKDIR_TAKES_ONE_ARG */
+end_comment
+
+begin_comment
+comment|/* Define to the name of the distribution.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"gcc"
+end_define
+
+begin_comment
+comment|/* Define to the version of the distribution.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"2.95.2"
+end_define
+
+begin_comment
+comment|/* Define if using alloca.c.  */
+end_comment
+
+begin_comment
+comment|/* #undef C_ALLOCA */
+end_comment
+
+begin_comment
+comment|/* Define to empty if the keyword does not work.  */
+end_comment
+
+begin_comment
+comment|/* #undef const */
+end_comment
+
+begin_comment
+comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.    This function is required for alloca.c support on those systems.  */
+end_comment
+
+begin_comment
+comment|/* #undef CRAY_STACKSEG_END */
+end_comment
+
+begin_comment
+comment|/* Define if you have alloca, as a function or macro.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ALLOCA
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have<alloca.h> and it should be used (not on Ultrix).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ALLOCA_H */
 end_comment
 
 begin_comment
@@ -236,6 +429,36 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_DOPRNT */
+end_comment
+
+begin_comment
+comment|/* Define if you have a working `mmap' system call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MMAP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have<sys/wait.h> that is POSIX.1 compatible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_WAIT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have<vfork.h>.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_VFORK_H */
 end_comment
 
 begin_comment
@@ -248,6 +471,46 @@ directive|define
 name|HAVE_VPRINTF
 value|1
 end_define
+
+begin_comment
+comment|/* Define as __inline if that's what the C compiler calls it.  */
+end_comment
+
+begin_comment
+comment|/* #undef inline */
+end_comment
+
+begin_comment
+comment|/* Define to `long' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef off_t */
+end_comment
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef pid_t */
+end_comment
+
+begin_comment
+comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef size_t */
+end_comment
+
+begin_comment
+comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.  STACK_DIRECTION> 0 => grows toward higher addresses  STACK_DIRECTION< 0 => grows toward lower addresses  STACK_DIRECTION = 0 => direction of growth unknown  */
+end_comment
+
+begin_comment
+comment|/* #undef STACK_DIRECTION */
+end_comment
 
 begin_comment
 comment|/* Define if you have the ANSI C header files.  */
@@ -281,6 +544,38 @@ directive|define
 name|TIME_WITH_SYS_TIME
 value|1
 end_define
+
+begin_comment
+comment|/* Define vfork as fork if vfork does not work.  */
+end_comment
+
+begin_comment
+comment|/* #undef vfork */
+end_comment
+
+begin_comment
+comment|/* Define if you have the __argz_count function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ARGZ_COUNT */
+end_comment
+
+begin_comment
+comment|/* Define if you have the __argz_next function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ARGZ_NEXT */
+end_comment
+
+begin_comment
+comment|/* Define if you have the __argz_stringify function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ARGZ_STRINGIFY */
+end_comment
 
 begin_comment
 comment|/* Define if you have the atoll function.  */
@@ -343,6 +638,52 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the dcgettext function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DCGETTEXT */
+end_comment
+
+begin_comment
+comment|/* Define if you have the fputc_unlocked function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FPUTC_UNLOCKED */
+end_comment
+
+begin_comment
+comment|/* Define if you have the fputs_unlocked function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FPUTS_UNLOCKED */
+end_comment
+
+begin_comment
+comment|/* Define if you have the getcwd function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETCWD
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getpagesize function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPAGESIZE
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the getrlimit function.  */
 end_comment
 
@@ -398,6 +739,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the munmap function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MUNMAP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the popen function.  */
 end_comment
 
@@ -407,6 +759,14 @@ directive|define
 name|HAVE_POPEN
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the putc_unlocked function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PUTC_UNLOCKED */
+end_comment
 
 begin_comment
 comment|/* Define if you have the putenv function.  */
@@ -431,6 +791,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the setenv function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETENV
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the setlocale function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETLOCALE
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the setrlimit function.  */
 end_comment
 
@@ -442,6 +824,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the stpcpy function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STPCPY */
+end_comment
+
+begin_comment
+comment|/* Define if you have the strcasecmp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCASECMP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the strchr function.  */
 end_comment
 
@@ -449,6 +850,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRCHR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strdup function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRDUP
 value|1
 end_define
 
@@ -475,6 +887,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the strsignal function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRSIGNAL
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the strtoul function.  */
 end_comment
 
@@ -497,6 +920,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<argz.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ARGZ_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<direct.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DIRECT_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<fcntl.h> header file.  */
 end_comment
 
@@ -515,6 +954,36 @@ begin_define
 define|#
 directive|define
 name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<locale.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOCALE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<malloc.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MALLOC_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<nl_types.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NL_TYPES_H
 value|1
 end_define
 
@@ -607,6 +1076,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<sys/stat.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<sys/time.h> header file.  */
 end_comment
 
@@ -625,17 +1105,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_TIMES_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<sys/wait.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_WAIT_H
 value|1
 end_define
 
@@ -662,11 +1131,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<wait.h> header file.  */
+comment|/* Define if you have the i library (-li).  */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_WAIT_H */
+comment|/* #undef HAVE_LIBI */
 end_comment
 
 end_unit
