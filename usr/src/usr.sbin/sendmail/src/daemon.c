@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.76 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.77 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.76 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.77 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1080,11 +1080,24 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|syserr
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|2
+condition|)
+name|syslog
 argument_list|(
-literal|"554 makeconnection: service \"smtp\" unknown"
+name|LOG_ERR
+argument_list|,
+literal|"makeconnection: service \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|port
 operator|=
 name|htons
