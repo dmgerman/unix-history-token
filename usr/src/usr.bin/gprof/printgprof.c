@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.7 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -711,7 +711,7 @@ name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-comment|/* 	 *	Now, sort by time + childtime. 	 *	include the cycle headers hiding out past nl[nname]. 	 *	don't include the dummy hiding at nl[nname]. 	 */
+comment|/* 	 *	Now, sort by time + childtime. 	 *	sorting both the regular function names 	 *	and cycle headers. 	 */
 name|timesortnlp
 operator|=
 operator|(
@@ -723,7 +723,7 @@ name|calloc
 argument_list|(
 name|nname
 operator|+
-name|cyclemax
+name|ncycle
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -748,7 +748,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[doarcs] ran out of memory for sorting\n"
+literal|"%s: ran out of memory for sorting\n"
+argument_list|,
+name|whoami
 argument_list|)
 expr_stmt|;
 block|}
@@ -786,7 +788,7 @@ literal|1
 init|;
 name|index
 operator|<=
-name|cyclemax
+name|ncycle
 condition|;
 name|index
 operator|++
@@ -794,20 +796,16 @@ control|)
 block|{
 name|timesortnlp
 index|[
-operator|(
 name|nname
-operator|-
-literal|1
-operator|)
 operator|+
 name|index
+operator|-
+literal|1
 index|]
 operator|=
 operator|&
-name|nl
+name|cyclenl
 index|[
-name|nname
-operator|+
 name|index
 index|]
 expr_stmt|;
@@ -818,7 +816,7 @@ name|timesortnlp
 argument_list|,
 name|nname
 operator|+
-name|cyclemax
+name|ncycle
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -839,7 +837,7 @@ name|index
 operator|<
 name|nname
 operator|+
-name|cyclemax
+name|ncycle
 condition|;
 name|index
 operator|++
@@ -876,7 +874,7 @@ name|index
 operator|<
 name|nname
 operator|+
-name|cyclemax
+name|ncycle
 condition|;
 name|index
 operator|++

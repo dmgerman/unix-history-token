@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.10 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,6 +26,15 @@ include|#
 directive|include
 file|"gprof.h"
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|whoami
+init|=
+literal|"gprof"
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -232,8 +241,6 @@ block|}
 block|}
 do|while
 condition|(
-name|sflag
-operator|&&
 operator|*
 name|argv
 operator|++
@@ -272,7 +279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up string and symbol tables from a.out.  *	and optionally the text space.  * On return symbol table is sorted by value.  */
+comment|/*      * Set up string and symbol tables from a.out.      *	and optionally the text space.      * On return symbol table is sorted by value.      */
 end_comment
 
 begin_macro
@@ -338,7 +345,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: bad format\n"
+literal|"%s: %s: bad format\n"
+argument_list|,
+name|whoami
 argument_list|,
 name|a_outname
 argument_list|)
@@ -497,7 +506,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: no string table (old format?)\n"
+literal|"%s: %s: no string table (old format?)\n"
+argument_list|,
+name|whoami
 argument_list|,
 name|a_outname
 argument_list|)
@@ -530,7 +541,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: no room for %d bytes of string table"
+literal|"%s: %s: no room for %d bytes of string table"
+argument_list|,
+name|whoami
 argument_list|,
 name|a_outname
 argument_list|,
@@ -571,7 +584,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: error reading string table\n"
+literal|"%s: %s: error reading string table\n"
+argument_list|,
+name|whoami
 argument_list|,
 name|a_outname
 argument_list|)
@@ -697,7 +712,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: no symbols\n"
+literal|"%s: %s: no symbols\n"
+argument_list|,
+name|whoami
 argument_list|,
 name|a_outname
 argument_list|)
@@ -706,20 +723,11 @@ name|done
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 *	ask also for CYCLEFRACTION extra namelist entries for  	 *	cycle entries.  these hide out at the end of the namelist 	 *	and aren't accessed unless the whole namelist (nname+ncycles) 	 *	is sorted and searched. 	 */
-name|ncycles
-operator|=
-name|nname
-operator|*
-name|CYCLEFRACTION
-expr_stmt|;
 name|askfor
 operator|=
 name|nname
 operator|+
 literal|1
-operator|+
-name|ncycles
 expr_stmt|;
 name|nl
 operator|=
@@ -748,7 +756,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"prof: No room for %d bytes of symbol table\n"
+literal|"%s: No room for %d bytes of symbol table\n"
+argument_list|,
+name|whoami
 argument_list|,
 name|askfor
 operator|*
@@ -989,7 +999,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"gprof: ran out room for %d bytes of text space:  "
+literal|"%s: ran out room for %d bytes of text space:  "
+argument_list|,
+name|whoami
+argument_list|,
+name|xbuf
+operator|.
+name|a_text
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -997,10 +1013,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"can't do -c\n"
-argument_list|,
-name|xbuf
-operator|.
-name|a_text
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1044,7 +1056,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"couldn't read text space:  "
+literal|"%s: couldn't read text space:  "
+argument_list|,
+name|whoami
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1052,10 +1066,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"can't do -c\n"
-argument_list|,
-name|xbuf
-operator|.
-name|a_text
 argument_list|)
 expr_stmt|;
 name|free
@@ -1831,7 +1841,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"prof: No room for %d sample pc's\n"
+literal|"%s: No room for %d sample pc's\n"
+argument_list|,
+name|whoami
 argument_list|,
 name|sampbytes
 operator|/
@@ -1904,7 +1916,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"prof: unexpected EOF after reading %d/%d samples\n"
+literal|"%s: unexpected EOF after reading %d/%d samples\n"
+argument_list|,
+name|whoami
 argument_list|,
 operator|--
 name|i
@@ -2365,7 +2379,7 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* 	 *	can't have any `funny characters in name, 	 *	where `funny' includes	`.', .o file names 	 *			and	`$', pascal labels. 	 */
+comment|/* 	 *	can't have any `funny' characters in name, 	 *	where `funny' includes	`.', .o file names 	 *			and	`$', pascal labels. 	 */
 for|for
 control|(
 name|name

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.10 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.11 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -38,6 +38,17 @@ include|#
 directive|include
 file|"gcrt0.h"
 end_include
+
+begin_comment
+comment|/*      *	who am i, for error messages.      */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|whoami
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*      *	ticks per second      */
@@ -164,7 +175,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The symbol table;  * for each external in the specified file we gather  * its address, the number of calls and compute its share of cpu time.  */
+comment|/*      * The symbol table;      * for each external in the specified file we gather      * its address, the number of calls and compute its share of cpu time.      */
 end_comment
 
 begin_struct
@@ -287,29 +298,23 @@ value|-1
 end_define
 
 begin_comment
-comment|/*       *	the number of cycles is estimated as this fraction of nnames      *	ncycles, the number of allocated cycle namelist entries,      *	not to be confused with cyclemax, the number of discovered cycles.      */
+comment|/*       *	namelist entries for cycle headers.      *	the number of discovered cycles.      */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CYCLEFRACTION
-value|( 0.10 )
-end_define
-
 begin_decl_stmt
-name|int
-name|ncycles
+name|nltype
+modifier|*
+name|cyclenl
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* maximum allocated cycle headers */
+comment|/* cycle header namelist */
 end_comment
 
 begin_decl_stmt
 name|int
-name|cyclemax
+name|ncycle
 decl_stmt|;
 end_decl_stmt
 
@@ -318,7 +323,7 @@ comment|/* number of cycles discovered */
 end_comment
 
 begin_comment
-comment|/*  * The header on the gmon.out file.  * gmon.out consists of one of these headers,  * and then an array of ncnt samples  * representing the discretized program counter values.  *	this should be a struct phdr, but since everything is done  *	as UNITs, this is in UNITs too.  */
+comment|/*      * The header on the gmon.out file.      * gmon.out consists of one of these headers,      * and then an array of ncnt samples      * representing the discretized program counter values.      *	this should be a struct phdr, but since everything is done      *	as UNITs, this is in UNITs too.      */
 end_comment
 
 begin_struct
@@ -354,7 +359,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Each discretized pc sample has  * a count of the number of samples in its range  */
+comment|/*      * Each discretized pc sample has      * a count of the number of samples in its range      */
 end_comment
 
 begin_decl_stmt

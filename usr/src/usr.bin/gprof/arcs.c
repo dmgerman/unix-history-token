@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arcs.c	1.5 (Berkeley) %G%"
+literal|"@(#)arcs.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,13 +281,6 @@ name|topsortnlp
 decl_stmt|;
 name|long
 name|index
-decl_stmt|;
-name|nltype
-modifier|*
-name|childp
-decl_stmt|;
-name|double
-name|share
 decl_stmt|;
 comment|/* 	 *	initialize various things: 	 *	    zero out child times. 	 *	    count self-recursive calls. 	 *	    indicate that nothing is on cycles. 	 */
 for|for
@@ -597,13 +590,49 @@ operator|+=
 literal|1
 control|)
 block|{
-name|parentp
-operator|=
+name|propagate
+argument_list|(
 name|topsortnlp
 index|[
 name|index
 index|]
+argument_list|)
 expr_stmt|;
+block|}
+name|printgprof
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|propagate
+argument_list|(
+argument|parentp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|nltype
+modifier|*
+name|parentp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|arctype
+modifier|*
+name|arcp
+decl_stmt|;
+name|nltype
+modifier|*
+name|childp
+decl_stmt|;
+name|double
+name|share
+decl_stmt|;
+comment|/* 	 *	gather time from children of this parent. 	 */
 for|for
 control|(
 name|arcp
@@ -639,7 +668,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[doarcs] "
+literal|"[propagate] "
 argument_list|)
 expr_stmt|;
 name|printname
@@ -739,7 +768,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[doarcs]\t it's a call into cycle %d\n"
+literal|"[propagate]\t it's a call into cycle %d\n"
 argument_list|,
 name|childp
 operator|->
@@ -765,7 +794,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[doarcs] toporder botches\n"
+literal|"[propagate] toporder botches\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -793,13 +822,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[doarcs] toporder botches\n"
+literal|"[propagate] toporder botches\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 		 *	distribute time for this arc 		 */
+comment|/* 	     *	distribute time for this arc 	     */
 name|arcp
 operator|->
 name|arc_time
@@ -878,7 +907,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[doarcs]\t "
+literal|"[propagate]\t "
 argument_list|)
 expr_stmt|;
 name|printname
@@ -901,7 +930,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[doarcs]\t this is %d arcs of the %d calls\n"
+literal|"[propagate]\t this is %d arcs of the %d calls\n"
 argument_list|,
 name|arcp
 operator|->
@@ -914,7 +943,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[doarcs]\t so this gives %8.2f+%8.2f to %s\n"
+literal|"[propagate]\t so this gives %8.2f+%8.2f to %s\n"
 argument_list|,
 name|arcp
 operator|->
@@ -939,7 +968,7 @@ name|childtime
 operator|+=
 name|share
 expr_stmt|;
-comment|/* 		 *	add this share to the cycle header, if any 		 */
+comment|/* 	     *	add this share to the cycle header, if any 	     */
 if|if
 condition|(
 name|parentp
@@ -961,7 +990,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[doarcs]\t and to cycle %d\n"
+literal|"[propagate]\t and to cycle %d\n"
 argument_list|,
 name|parentp
 operator|->
@@ -982,10 +1011,6 @@ name|share
 expr_stmt|;
 block|}
 block|}
-block|}
-name|printgprof
-argument_list|()
-expr_stmt|;
 block|}
 end_block
 
@@ -1033,7 +1058,7 @@ name|long
 name|callsamong
 decl_stmt|;
 comment|/* 	 *	Count the number of cycles, and initialze the cycle lists 	 */
-name|cyclemax
+name|ncycle
 operator|=
 literal|0
 expr_stmt|;
@@ -1067,38 +1092,60 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|cyclemax
+name|ncycle
 operator|+=
 literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 *	cyclenl is indexed by cycle number: 	 *	i.e. it is origin 1, not origin 0. 	 */
+name|cyclenl
+operator|=
+operator|(
+name|nltype
+operator|*
+operator|)
+name|calloc
+argument_list|(
+name|ncycle
+operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nltype
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|cyclemax
-operator|>
-name|ncycles
+name|cyclenl
+operator|==
+literal|0
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"prof: %d cycles in %d names exceeds %f%%\n"
+literal|"%s: No room for %d bytes of cycle headers\n"
 argument_list|,
-name|cyclemax
+name|whoami
 argument_list|,
-name|nname
-argument_list|,
-name|CYCLEFRACTION
+operator|(
+name|ncycle
+operator|+
+literal|1
+operator|)
 operator|*
-literal|100.0
+sizeof|sizeof
+argument_list|(
+name|nltype
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|done
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 *	now link cycles to true cycleheads, 	 *	number them, accumulate the data for the cycle 	 */
@@ -1144,10 +1191,8 @@ expr_stmt|;
 name|cyclenlp
 operator|=
 operator|&
-name|nl
+name|cyclenl
 index|[
-name|nname
-operator|+
 name|cycle
 index|]
 expr_stmt|;
