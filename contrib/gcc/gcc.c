@@ -19399,11 +19399,9 @@ argument_list|(
 name|specs_file
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|specs_file
-condition|)
-block|{
+ifdef|#
+directive|ifdef
+name|XXX_THIS_DUMPS_CORE
 comment|/* We need to check standard_exec_prefix/just_machine_suffix/specs       for any override of as, ld and libraries. */
 name|specs_file
 operator|=
@@ -19468,7 +19466,8 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 comment|/* If not cross-compiling, look for startfiles in the standard places.  */
 comment|/* The fact that these are done here, after reading the specs file,      means that it cannot be found in these directories.      But that's okay.  It should never be there anyway.  */
 if|if
