@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.1 82/03/05"
+literal|"@(#)ls.c	4.2 82/03/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -718,10 +718,8 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-operator|==
-literal|0
 condition|)
-continue|continue;
+block|{
 name|fp
 operator|->
 name|fname
@@ -738,6 +736,7 @@ expr_stmt|;
 name|fp
 operator|++
 expr_stmt|;
+block|}
 name|argv
 operator|++
 expr_stmt|;
@@ -1678,6 +1677,14 @@ literal|0
 operator|)
 return|;
 block|}
+name|fp
+operator|->
+name|fsize
+operator|=
+name|stb
+operator|.
+name|st_size
+expr_stmt|;
 switch|switch
 condition|(
 name|stb
@@ -1827,14 +1834,6 @@ operator|=
 name|stb
 operator|.
 name|st_gid
-expr_stmt|;
-name|fp
-operator|->
-name|fsize
-operator|=
-name|stb
-operator|.
-name|st_size
 expr_stmt|;
 if|if
 condition|(
