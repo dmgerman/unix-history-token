@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ehcireg.h,v 1.13 2001/11/23 01:16:27 augustss Exp $	*/
+comment|/*	$NetBSD: ehcireg.h,v 1.15 2004/06/12 16:02:42 mycroft Exp $	*/
 end_comment
 
 begin_comment
@@ -1538,7 +1538,7 @@ name|EHCI_QH_GET_CTL
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 26)& 0x01)
+value|(((x)>> 27)& 0x01)
 comment|/* control endpoint */
 define|#
 directive|define
