@@ -921,7 +921,7 @@ begin_define
 define|#
 directive|define
 name|STATE_MAXSIZE
-value|(2 * PAGE_SIZE)
+value|PAGE_SIZE
 end_define
 
 begin_function_decl
@@ -4755,20 +4755,6 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Get a second page to support STATE_MAXSIZE. */
-operator|(
-name|void
-operator|)
-name|vm86_addpage
-argument_list|(
-operator|&
-name|vesa_vmcontext
-argument_list|,
-literal|2
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
