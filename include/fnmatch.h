@@ -87,6 +87,13 @@ begin_comment
 comment|/* Case insensitive search. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FNM_IGNORECASE
+value|FNM_CASEFOLD
+end_define
+
 begin_endif
 endif|#
 directive|endif
