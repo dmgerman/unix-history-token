@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.h,v 1.2 1995/02/26 12:17:31 amurai Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.h,v 1.3 1996/01/11 17:48:48 phk Exp $  *  *	TODO:  */
 end_comment
 
 begin_ifndef
@@ -117,6 +117,10 @@ begin_comment
 comment|/*  *  Output priority  */
 end_comment
 
+begin_comment
+comment|/* PRI_NORMAL and PRI_FAST have meaning only on the IP queue.  * All IP frames have the same priority once they are compressed.  * IP frames stay on the IP queue till they can be sent on the  * link. They are compressed at that time. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -136,14 +140,14 @@ value|1
 end_define
 
 begin_comment
-comment|/* Fast (interructive) */
+comment|/* Fast (interractive) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRI_URGENT
-value|2
+name|PRI_LINK
+value|1
 end_define
 
 begin_comment
