@@ -471,6 +471,17 @@ value|(((x) + NDENTRIES - 1) / NDENTRIES)
 end_define
 
 begin_comment
+comment|/*  * Storage required per open file descriptor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFILESIZE
+value|(sizeof(struct file *) + sizeof(char))
+end_define
+
+begin_comment
 comment|/*  * Basic allocation of descriptors:  * one of the above, plus arrays for NDFILE descriptors.  */
 end_comment
 
@@ -509,17 +520,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Storage required per open file descriptor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OFILESIZE
-value|(sizeof(struct file *) + sizeof(char))
-end_define
 
 begin_comment
 comment|/*  * Descriptor management.  */
