@@ -550,6 +550,10 @@ name|must
 decl_stmt|;
 comment|/* match must contain this string */
 name|int
+name|moffset
+decl_stmt|;
+comment|/* latest point at which must may be located */
+name|int
 modifier|*
 name|charjump
 decl_stmt|;

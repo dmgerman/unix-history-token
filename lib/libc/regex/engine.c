@@ -1065,6 +1065,10 @@ operator|(
 name|REG_NOMATCH
 operator|)
 return|;
+name|dp
+operator|=
+name|bmp
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1218,6 +1222,24 @@ name|m
 operator|->
 name|empty
 argument_list|)
+expr_stmt|;
+comment|/* Adjust start according to moffset, to speed things up */
+if|if
+condition|(
+name|g
+operator|->
+name|moffset
+operator|>
+operator|-
+literal|1
+condition|)
+name|start
+operator|=
+name|dp
+operator|-
+name|g
+operator|->
+name|moffset
 expr_stmt|;
 comment|/* this loop does only one repetition except for backrefs */
 for|for
