@@ -1718,10 +1718,10 @@ name|ent_size
 condition|)
 name|panic
 argument_list|(
-literal|"pccard_product_lookup: bogus ent_size %ld"
+literal|"pccard_product_lookup: bogus ent_size %jd"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ent_size
 argument_list|)
