@@ -3785,6 +3785,8 @@ argument_list|(
 name|bp
 operator|->
 name|b_vp
+argument_list|,
+name|NULL
 argument_list|)
 operator|&&
 operator|(
@@ -8292,6 +8294,8 @@ condition|(
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|bsize
@@ -10664,6 +10668,8 @@ operator|!
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 if|#

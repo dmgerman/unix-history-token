@@ -1520,6 +1520,9 @@ operator|!
 name|vn_isdisk
 argument_list|(
 name|devvp
+argument_list|,
+operator|&
+name|error
 argument_list|)
 condition|)
 block|{
@@ -1530,7 +1533,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENOTBLK
+name|error
 operator|)
 return|;
 block|}

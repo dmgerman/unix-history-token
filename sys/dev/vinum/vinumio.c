@@ -244,6 +244,11 @@ argument_list|(
 name|drive
 operator|->
 name|vp
+argument_list|,
+operator|&
+name|drive
+operator|->
+name|lasterror
 argument_list|)
 condition|)
 block|{
@@ -274,12 +279,6 @@ argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
-name|drive
-operator|->
-name|lasterror
-operator|=
-name|ENOTBLK
-expr_stmt|;
 if|if
 condition|(
 name|verbose
@@ -296,7 +295,9 @@ name|devicename
 argument_list|)
 expr_stmt|;
 return|return
-name|ENOTBLK
+name|drive
+operator|->
+name|lasterror
 return|;
 block|}
 name|drive

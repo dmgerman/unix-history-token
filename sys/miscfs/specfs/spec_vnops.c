@@ -874,6 +874,8 @@ condition|(
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 operator|&&
 name|ap
@@ -1070,6 +1072,8 @@ condition|(
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -1569,6 +1573,8 @@ operator|!
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return
@@ -1916,6 +1922,8 @@ condition|(
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 operator|&&
 operator|(
@@ -2741,6 +2749,8 @@ condition|(
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|blksiz

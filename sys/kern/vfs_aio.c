@@ -4213,12 +4213,14 @@ operator|!
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+operator|&
+name|error
 argument_list|)
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 if|if

@@ -17176,6 +17176,8 @@ operator|!
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|panic
@@ -17399,6 +17401,8 @@ operator|!
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -18305,6 +18309,8 @@ condition|(
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 operator|&&
 name|vp

@@ -1198,17 +1198,14 @@ operator|!
 name|vn_isdisk
 argument_list|(
 name|devvp
+argument_list|,
+operator|&
+name|err
 argument_list|)
 condition|)
-block|{
-name|err
-operator|=
-name|ENOTBLK
-expr_stmt|;
 goto|goto
 name|error_2
 goto|;
-block|}
 else|#
 directive|else
 comment|/* defined(__NetBSD__) */

@@ -2494,6 +2494,10 @@ expr|struct
 name|vnode
 operator|*
 name|vp
+operator|,
+name|int
+operator|*
+name|errp
 operator|)
 argument_list|)
 decl_stmt|;
