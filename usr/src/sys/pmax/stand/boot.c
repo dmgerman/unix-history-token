@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -54,12 +54,6 @@ name|int
 name|ask
 decl_stmt|,
 name|entry
-decl_stmt|;
-name|char
-modifier|*
-name|boot
-init|=
-literal|"boot"
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -361,13 +355,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Can't open '%s'\n"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
 goto|goto
 name|err
 goto|;
@@ -402,11 +389,6 @@ name|aout
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"No a.out header\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|cerr
 goto|;
@@ -421,27 +403,6 @@ operator|!=
 name|OMAGIC
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"A.out? magic 0%o size %d+%d+%d\n"
-argument_list|,
-name|aout
-operator|.
-name|a_magic
-argument_list|,
-name|aout
-operator|.
-name|a_text
-argument_list|,
-name|aout
-operator|.
-name|a_data
-argument_list|,
-name|aout
-operator|.
-name|a_bss
-argument_list|)
-expr_stmt|;
 goto|goto
 name|cerr
 goto|;
@@ -480,11 +441,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"\nSeek error\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|cerr
 goto|;
@@ -499,9 +455,6 @@ name|aout
 operator|.
 name|a_data
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|TEST
 name|n
 operator|=
 name|read
@@ -519,14 +472,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|n
-operator|=
-name|i
-expr_stmt|;
-endif|#
-directive|endif
+ifndef|#
+directive|ifndef
+name|SMALL
 operator|(
 name|void
 operator|)
@@ -535,6 +483,8 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|n
@@ -542,11 +492,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"\nRead error\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|err
 goto|;
@@ -559,13 +504,6 @@ operator|!=
 name|i
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"\nShort read (%d)\n"
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
 goto|goto
 name|err
 goto|;
@@ -596,6 +534,9 @@ operator|)
 return|;
 name|cerr
 label|:
+ifndef|#
+directive|ifndef
+name|SMALL
 operator|(
 name|void
 operator|)
@@ -604,8 +545,17 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|err
 label|:
+name|printf
+argument_list|(
+literal|"Can't boot '%s'\n"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
