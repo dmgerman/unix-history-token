@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -163,11 +163,17 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_update_args
-comment|/* { 		struct vnode *a_vp; 		struct timeval *a_ta; 		struct timeval *a_tm; 		int a_waitfor; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct timeval *a_access; 		struct timeval *a_modify; 		int a_waitfor; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
+specifier|register
+name|struct
+name|fs
+modifier|*
+name|fs
+decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -273,7 +279,7 @@ name|ts_sec
 operator|=
 name|ap
 operator|->
-name|a_ta
+name|a_access
 operator|->
 name|tv_sec
 expr_stmt|;
@@ -294,7 +300,7 @@ name|ts_sec
 operator|=
 name|ap
 operator|->
-name|a_tm
+name|a_modify
 operator|->
 name|tv_sec
 expr_stmt|;

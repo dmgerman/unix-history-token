@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -177,17 +177,6 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-name|int
-name|osize
-decl_stmt|,
-name|nsize
-decl_stmt|,
-name|num
-decl_stmt|,
-name|j
-decl_stmt|,
-name|error
-decl_stmt|;
 name|daddr_t
 name|newb
 decl_stmt|,
@@ -198,15 +187,21 @@ name|bap
 decl_stmt|,
 name|pref
 decl_stmt|;
+name|int
+name|osize
+decl_stmt|,
+name|nsize
+decl_stmt|,
+name|num
+decl_stmt|,
+name|i
+decl_stmt|,
+name|error
+decl_stmt|;
 operator|*
 name|bpp
 operator|=
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -966,7 +961,7 @@ block|}
 comment|/* 	 * Fetch through the indirect blocks, allocating as necessary. 	 */
 for|for
 control|(
-name|j
+name|i
 operator|=
 literal|1
 init|;
@@ -981,7 +976,7 @@ name|vp
 argument_list|,
 name|indirs
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|in_lbn
@@ -1029,7 +1024,7 @@ name|bap
 index|[
 name|indirs
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|in_off
@@ -1037,12 +1032,12 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|j
+name|i
 operator|==
 name|num
 condition|)
 break|break;
-name|j
+name|i
 operator|+=
 literal|1
 expr_stmt|;
@@ -1132,7 +1127,7 @@ name|vp
 argument_list|,
 name|indirs
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|in_lbn
@@ -1199,7 +1194,7 @@ name|bap
 index|[
 name|indirs
 index|[
-name|j
+name|i
 operator|-
 literal|1
 index|]
@@ -1250,7 +1245,7 @@ name|lbn
 argument_list|,
 name|indirs
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|in_off
@@ -1346,7 +1341,7 @@ name|bap
 index|[
 name|indirs
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|in_off
