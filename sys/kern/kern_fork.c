@@ -1025,6 +1025,17 @@ name|p_refcnt
 operator|++
 expr_stmt|;
 block|}
+comment|/* 	 * Preserve some flags in subprocess. 	 */
+name|p2
+operator|->
+name|p_flag
+operator||=
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|P_SUGID
+expr_stmt|;
 if|if
 condition|(
 name|p1
