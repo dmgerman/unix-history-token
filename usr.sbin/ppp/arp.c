@@ -412,7 +412,7 @@ name|routes
 operator|=
 name|ID0socket
 argument_list|(
-name|AF_ROUTE
+name|PF_ROUTE
 argument_list|,
 name|SOCK_RAW
 argument_list|,

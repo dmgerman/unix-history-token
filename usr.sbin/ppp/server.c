@@ -1352,7 +1352,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_LOCAL
+name|PF_LOCAL
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
@@ -1815,7 +1815,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_INET6
+name|PF_INET6
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
@@ -1870,7 +1870,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|PF_INET
 argument_list|,
 name|SOCK_STREAM
 argument_list|,

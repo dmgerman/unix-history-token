@@ -128,7 +128,7 @@ name|s
 operator|=
 name|ID0socket
 argument_list|(
-name|AF_INET6
+name|PF_INET6
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,

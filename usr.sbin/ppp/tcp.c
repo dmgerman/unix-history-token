@@ -339,7 +339,7 @@ name|sock
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|PF_INET
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
