@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	interface.h	4.2	84/04/09	*/
+comment|/*	interface.h	4.3	85/06/03	*/
 end_comment
 
 begin_comment
@@ -56,10 +56,24 @@ name|int
 name|int_flags
 decl_stmt|;
 comment|/* see below */
-name|int
+comment|/* START INTERNET SPECIFIC */
+name|u_long
 name|int_net
 decl_stmt|;
 comment|/* network # */
+name|u_long
+name|int_netmask
+decl_stmt|;
+comment|/* net mask for addr */
+name|u_long
+name|int_subnet
+decl_stmt|;
+comment|/* subnet # */
+name|u_long
+name|int_subnetmask
+decl_stmt|;
+comment|/* subnet mask for addr */
+comment|/* END INTERNET SPECIFIC */
 name|struct
 name|ifdebug
 name|int_input
@@ -89,7 +103,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * 0x1 to 0x100 are reused from the kernel's ifnet definitions,  * the others agree with the RTS_ flags defined elsewhere.  */
+comment|/*  * 0x1 to 0x10 are reused from the kernel's ifnet definitions,  * the others agree with the RTS_ flags defined elsewhere.  */
 end_comment
 
 begin_define
@@ -145,17 +159,6 @@ end_define
 
 begin_comment
 comment|/* interface is point-to-point link */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFF_LOCAL
-value|0x100
-end_define
-
-begin_comment
-comment|/* local network, host part encoded */
 end_comment
 
 begin_define

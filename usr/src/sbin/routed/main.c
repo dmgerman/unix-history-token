@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.12 (Berkeley) %G%"
+literal|"@(#)main.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,11 +86,16 @@ comment|/* process should supply updates */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|gateway
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* 1 if we are a gateway to parts beyond */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -337,37 +342,11 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-literal|"-l"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|gateway
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|argv
-operator|++
-operator|,
-name|argc
-operator|--
-expr_stmt|;
-continue|continue;
-block|}
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: routed [ -s ] [ -q ] [ -t ] [ -g ] [ -l ]\n"
+literal|"usage: routed [ -s ] [ -q ] [ -t ] [ -g ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -509,7 +488,7 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Collect an initial view of the world by 	 * snooping in the kernel and the gateway kludge 	 * file.  Then, send a request packet on all 	 * directly connected networks to find out what 	 * everyone else thinks. 	 */
+comment|/* 	 * Collect an initial view of the world by 	 * checking the interface configuration and the gateway kludge 	 * file.  Then, send a request packet on all 	 * directly connected networks to find out what 	 * everyone else thinks. 	 */
 name|rtinit
 argument_list|()
 expr_stmt|;
@@ -517,6 +496,15 @@ name|gwkludge
 argument_list|()
 expr_stmt|;
 name|ifinit
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|gateway
+operator|>
+literal|0
+condition|)
+name|rtdefault
 argument_list|()
 expr_stmt|;
 if|if
