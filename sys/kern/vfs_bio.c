@@ -10105,7 +10105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait for a BIO to finish.  * XXX: For now resort to a timeout, the optimal locking (if any) for this  * case is not at this point obvious.  */
+comment|/*  * Wait for a BIO to finish.  *  * XXX: resort to a timeout for now.  The optimal locking (if any) for this  * case is not yet clear.  */
 end_comment
 
 begin_function
@@ -10141,11 +10141,13 @@ name|bp
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PRIBIO
 argument_list|,
 name|wchan
 argument_list|,
 name|hz
+operator|/
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -10169,6 +10171,8 @@ condition|(
 name|bp
 operator|->
 name|bio_error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
