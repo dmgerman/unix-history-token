@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.23 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.24 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.23 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.24 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1808,6 +1808,15 @@ name|bool
 name|getcanonname
 parameter_list|()
 function_decl|;
+name|printf
+argument_list|(
+literal|"maphostname(%s, %d) => "
+argument_list|,
+name|hbuf
+argument_list|,
+name|hbsize
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getcanonname
@@ -1817,13 +1826,47 @@ argument_list|,
 name|hbsize
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|hbuf
+argument_list|)
+expr_stmt|;
 return|return
 name|hbuf
 return|;
+block|}
 else|else
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"FAIL\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 block|}
 if|if
 condition|(

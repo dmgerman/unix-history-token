@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.41 (Berkeley) %G%"
+literal|"@(#)conf.c	6.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,15 @@ block|,
 name|H_TRACE
 operator||
 name|H_FORCE
+block|,
+comment|/* miscellaneous fields */
+literal|"comments"
+block|,
+name|H_FORCE
+block|,
+literal|"return-path"
+block|,
+name|H_ACHECK
 block|,
 name|NULL
 block|,

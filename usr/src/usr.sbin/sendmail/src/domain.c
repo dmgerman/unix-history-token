@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.12 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.13 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.12 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.13 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1555,7 +1555,7 @@ name|tTd
 argument_list|(
 literal|8
 argument_list|,
-literal|8
+literal|7
 argument_list|)
 condition|)
 name|printf
@@ -1653,7 +1653,7 @@ name|tTd
 argument_list|(
 literal|8
 argument_list|,
-literal|8
+literal|7
 argument_list|)
 condition|)
 name|printf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.13 (Berkeley) %G%"
+literal|"@(#)util.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1996,7 +1996,7 @@ if|if
 condition|(
 name|tTd
 argument_list|(
-literal|9
+literal|53
 argument_list|,
 literal|99
 argument_list|)
@@ -2023,7 +2023,7 @@ literal|0
 operator|&&
 name|tTd
 argument_list|(
-literal|9
+literal|53
 argument_list|,
 literal|99
 argument_list|)

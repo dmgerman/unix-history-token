@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.20 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4219,6 +4219,8 @@ operator|=
 name|convtime
 argument_list|(
 name|val
+argument_list|,
+literal|'m'
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4605,6 +4607,8 @@ operator|=
 name|convtime
 argument_list|(
 name|p
+argument_list|,
+literal|'d'
 argument_list|)
 expr_stmt|;
 block|}
@@ -4615,6 +4619,8 @@ operator|=
 name|convtime
 argument_list|(
 name|val
+argument_list|,
+literal|'h'
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5389,6 +5395,8 @@ operator|=
 name|convtime
 argument_list|(
 name|val
+argument_list|,
+literal|'m'
 argument_list|)
 expr_stmt|;
 name|TimeOuts
@@ -5471,6 +5479,8 @@ operator|=
 name|convtime
 argument_list|(
 name|q
+argument_list|,
+literal|'m'
 argument_list|)
 expr_stmt|;
 if|if

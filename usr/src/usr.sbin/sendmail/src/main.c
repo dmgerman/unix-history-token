@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.44 (Berkeley) %G%"
+literal|"@(#)main.c	6.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2355,6 +2355,8 @@ operator|=
 name|convtime
 argument_list|(
 name|optarg
+argument_list|,
+literal|'m'
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5276,6 +5278,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Wrong version of frozen config file\n"
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_WARNING

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)convtime.c	6.2 (Berkeley) %G%"
+literal|"@(#)convtime.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|"useful.h"
 end_include
 
 begin_comment
-comment|/* **  CONVTIME -- convert time ** **	Takes a time as an ascii string with a trailing character **	giving units: **	  s -- seconds **	  m -- minutes **	  h -- hours **	  d -- days (default) **	  w -- weeks **	For example, "3d12h" is three and a half days. ** **	Parameters: **		p -- pointer to ascii time. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
+comment|/* **  CONVTIME -- convert time ** **	Takes a time as an ascii string with a trailing character **	giving units: **	  s -- seconds **	  m -- minutes **	  h -- hours **	  d -- days (default) **	  w -- weeks **	For example, "3d12h" is three and a half days. ** **	Parameters: **		p -- pointer to ascii time. **		units -- default units if none specified. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -49,10 +49,15 @@ name|time_t
 name|convtime
 parameter_list|(
 name|p
+parameter_list|,
+name|units
 parameter_list|)
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|char
+name|units
 decl_stmt|;
 block|{
 specifier|register
@@ -115,9 +120,15 @@ name|c
 operator|==
 literal|'\0'
 condition|)
+block|{
+name|c
+operator|=
+name|units
+expr_stmt|;
 name|p
 operator|--
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|c
