@@ -141,6 +141,9 @@ decl_stmt|;
 name|caddr_t
 name|dma_vaddr
 decl_stmt|;
+name|bus_dma_tag_t
+name|dma_tag
+decl_stmt|;
 name|bus_dmamap_t
 name|dma_map
 decl_stmt|;
