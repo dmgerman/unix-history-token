@@ -1,25 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Quick hack to page to dedicated partition(s).  * TODO:  *	Add multiprocessor locks  *	Deal with async writes in a better fashion  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"swappager.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NSWAPPAGER
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -4256,11 +4242,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
