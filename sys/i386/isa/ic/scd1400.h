@@ -1102,6 +1102,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ST_SCHARMASK
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
 name|ST_TIMEOUT
 value|0x80
 end_define
