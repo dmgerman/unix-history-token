@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwupdate.c	3.6 83/08/17"
+literal|"@(#)wwupdate.c	3.7 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,16 +90,6 @@ name|lastc
 decl_stmt|;
 name|wwnupdate
 operator|++
-expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_setinsert
-call|)
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 for|for
 control|(
