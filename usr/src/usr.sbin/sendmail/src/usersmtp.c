@@ -891,7 +891,7 @@ name|strstr
 argument_list|(
 name|line
 argument_list|,
-literal|"8BIT OK"
+literal|"8BIT-OK"
 argument_list|)
 operator|!=
 name|NULL
@@ -1311,6 +1311,15 @@ argument_list|,
 name|e
 operator|->
 name|e_flags
+argument_list|)
+operator|||
+name|bitset
+argument_list|(
+name|MCIF_8BITOK
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
 argument_list|)
 condition|)
 block|{
