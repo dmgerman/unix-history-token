@@ -315,6 +315,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Initialize PC-card, if we haven't already done so. */
+ifdef|#
+directive|ifdef
+name|PCCARD_ARCH
 if|if
 condition|(
 operator|!
@@ -333,6 +336,8 @@ literal|"pccardInitialize=1"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Initialize USB, if we haven't already done so. */
 if|if
 condition|(
