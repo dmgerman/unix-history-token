@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.2 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,7 +461,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. **		pvpbuf -- place to put the saved text -- note that **			the pointers are static. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. ** **	Side Effects: **		none. */
+comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. **		pvpbuf -- place to put the saved text -- note that **			the pointers are static. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. ** **	Side Effects: **		sets DelimChar to point to the character matching 'delim'. */
 end_comment
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	5.5 (Berkeley) %G%"
+literal|"@(#)err.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,17 +204,6 @@ operator|=
 name|EX_OSERR
 expr_stmt|;
 block|}
-comment|/* insure that we have a queue id for logging */
-operator|(
-name|void
-operator|)
-name|queuename
-argument_list|(
-name|CurEnv
-argument_list|,
-literal|'\0'
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -230,6 +219,14 @@ name|LOG_CRIT
 argument_list|,
 literal|"%s: SYSERR: %s"
 argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
 name|CurEnv
 operator|->
 name|e_id
