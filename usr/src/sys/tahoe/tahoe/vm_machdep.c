@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	1.10	88/01/07	*/
+comment|/*	vm_machdep.c	1.11	88/05/06	*/
 end_comment
 
 begin_include
@@ -933,29 +933,17 @@ argument_list|)
 expr_stmt|;
 name|fpte
 operator|=
-operator|&
-name|Sysmap
-index|[
-name|btop
+name|kvtopte
 argument_list|(
 name|from
-operator|-
-name|KERNBASE
 argument_list|)
-index|]
 expr_stmt|;
 name|tpte
 operator|=
-operator|&
-name|Sysmap
-index|[
-name|btop
+name|kvtopte
 argument_list|(
 name|to
-operator|-
-name|KERNBASE
 argument_list|)
-index|]
 expr_stmt|;
 while|while
 condition|(
