@@ -4,11 +4,15 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.18 2001/11/15 07:50:09 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.19 2001/11/16 06:58:47 imp Exp   */
 end_comment
 
 begin_comment
 comment|/* $NetBSD: pcmciadevs,v 1.144 2001/10/27 08:05:21 ichiro Exp $ */
+end_comment
+
+begin_comment
+comment|/* $OpenBSD: pcmciadevs,v 1.71 2001/10/28 19:21:37 mickey Exp $ */
 end_comment
 
 begin_comment
@@ -88,17 +92,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_MOTOROLA
-value|0x0109
-end_define
-
-begin_comment
-comment|/* Motorola Corporation */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCMCIA_VENDOR_3COM
 value|0x0101
 end_define
@@ -165,6 +158,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_MOTOROLA
+value|0x0109
+end_define
+
+begin_comment
+comment|/* Motorola Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_NI
 value|0x010b
 end_define
@@ -198,6 +202,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_PROXIM
+value|0x0126
+end_define
+
+begin_comment
+comment|/* Proxim */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_MEGAHERTZ2
 value|0x0128
 end_define
@@ -215,6 +230,17 @@ end_define
 
 begin_comment
 comment|/* Adaptec Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_QUATECH
+value|0x0137
+end_define
+
+begin_comment
+comment|/* Quatech */
 end_comment
 
 begin_define
@@ -253,12 +279,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_NETGEAR
+value|0x0149
+end_define
+
+begin_comment
+comment|/* Netgear */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_SIMPLETECH
 value|0x014d
 end_define
 
 begin_comment
 comment|/* Simple Technology */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_SYMBOL2
+value|0x014d
+end_define
+
+begin_comment
+comment|/* Symbol */
 end_comment
 
 begin_define
@@ -440,6 +488,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_BREEZECOM
+value|0x0a02
+end_define
+
+begin_comment
+comment|/* BreezeCOM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_NEWMEDIA2
+value|0x10cd
+end_define
+
+begin_comment
+comment|/* NewMedia */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_LASAT
 value|0x3401
 end_define
@@ -457,6 +527,28 @@ end_define
 
 begin_comment
 comment|/* Lexar Media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_ARCHOS
+value|0x5241
+end_define
+
+begin_comment
+comment|/* Archos */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_DUAL
+value|0x890f
+end_define
+
+begin_comment
+comment|/* Dual */
 end_comment
 
 begin_define
@@ -686,27 +778,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_3COM_3C1
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_3COM_3C1
-value|0x0cf1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_3COM_3C1
-value|"3Com Megahertz 3C1 10Mbps LAN CF+ Card"
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCMCIA_CIS_3COM_3CCFEM556BI
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -786,6 +857,27 @@ define|#
 directive|define
 name|PCMCIA_STR_3COM_3C574
 value|"3Com 3c574-TX 10/100Mbps Ethernet"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_3COM_3C1
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_3COM_3C1
+value|0x0cf1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_3COM_3C1
+value|"3Com Megahertz 3C1 10Mbps LAN CF+ Card"
 end_define
 
 begin_define
@@ -948,6 +1040,31 @@ value|"Allied Telesis LA-PCM"
 end_define
 
 begin_comment
+comment|/* Archos */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ARCHOS_ARC_ATAPI
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ARCHOS_ARC_ATAPI
+value|0x0043
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ARCHOS_ARC_ATAPI
+value|"MiniCD"
+end_define
+
+begin_comment
 comment|/* Bay Networks */
 end_comment
 
@@ -1012,6 +1129,31 @@ define|#
 directive|define
 name|PCMCIA_STR_BAY_STACK_660
 value|"BayStack 660 Wireless LAN"
+end_define
+
+begin_comment
+comment|/* BreezeCOM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BREEZECOM_BREEZENET
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BREEZECOM_BREEZENET
+value|0x0102
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BREEZECOM_BREEZENET
+value|"BreezeCOM BreezeNET"
 end_define
 
 begin_comment
@@ -1088,6 +1230,27 @@ end_define
 begin_comment
 comment|/* Compex Products */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_COMPEX_AMP_WIRELESS
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_COMPEX_AMP_WIRELESS
+value|0x0066
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_COMPEX_AMP_WIRELESS
+value|"AMP"
+end_define
 
 begin_define
 define|#
@@ -1250,6 +1413,31 @@ define|#
 directive|define
 name|PCMCIA_STR_DLINK_2_DMF560TX
 value|"D-Link DMF-650TX"
+end_define
+
+begin_comment
+comment|/* Dual */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_DUAL_NE2000
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_DUAL_NE2000
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_DUAL_NE2000
+value|"Dual NE2000"
 end_define
 
 begin_comment
@@ -2025,6 +2213,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_MEGAHERTZ2_XJEM1144
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_MEGAHERTZ2_XJEM1144
+value|0x0101
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_MEGAHERTZ2_XJEM1144
+value|"Megahertz X-JACK"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_MEGAHERTZ2_XJACK
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -2114,6 +2323,27 @@ name|PCMCIA_STR_MOTOROLA_PM100C
 value|"Motorola Personal Messenger 100C CDPD Modem"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_MOTOROLA_MONTANA_336
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_MOTOROLA_MONTANA_336
+value|0x0505
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_MOTOROLA_MONTANA_336
+value|"Motorola Montana 33.6"
+end_define
+
 begin_comment
 comment|/* New Media Products */
 end_comment
@@ -2142,6 +2372,69 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_NEWMEDIA_LANSURFER
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEWMEDIA_LANSURFER
+value|0x0021
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEWMEDIA_LANSURFER
+value|"NewMedia LANSurfer"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NEWMEDIA_LIVEWIRE
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEWMEDIA_LIVEWIRE
+value|0x1004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEWMEDIA_LIVEWIRE
+value|"NewMedia LiveWire Ethernet LAN Adapter"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NEWMEDIA_MULTIMEDIA
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEWMEDIA_MULTIMEDIA
+value|0x100b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEWMEDIA_MULTIMEDIA
+value|"NewMedia Multimedia"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_NEWMEDIA_BUSTOASTER
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -2158,6 +2451,73 @@ define|#
 directive|define
 name|PCMCIA_STR_NEWMEDIA_BUSTOASTER
 value|"New Media BusToaster SCSI Host Adapter"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NEWMEDIA_WAVJAMMER
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEWMEDIA_WAVJAMMER
+value|0xe005
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEWMEDIA_WAVJAMMER
+value|"NewMedia .WAVjammer"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NEWMEDIA2_BUSTOASTER
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEWMEDIA2_BUSTOASTER
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEWMEDIA2_BUSTOASTER
+value|"NewMedia BusToaster"
+end_define
+
+begin_comment
+comment|/* Netgear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NETGEAR_FA410TXC
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NETGEAR_FA410TXC
+value|0x4530
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NETGEAR_FA410TXC
+value|"Netgear FA410TXC"
 end_define
 
 begin_comment
@@ -2302,6 +2662,73 @@ name|PCMCIA_STR_PANASONIC_KXLC005
 value|"Panasonic 16X CD-ROM Interface Card"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_PANASONIC_KME
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_PANASONIC_KME
+value|0x2604
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_PANASONIC_KME
+value|"Panasonic CD-R/RW Interface"
+end_define
+
+begin_comment
+comment|/* Proxim */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_PROXIM_ROAMABOUT_2400FH
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_PROXIM_ROAMABOUT_2400FH
+value|0x1058
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_PROXIM_ROAMABOUT_2400FH
+value|"Digital RoamAbout 2400FH"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_PROXIM_RANGELAN2_7401
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_PROXIM_RANGELAN2_7401
+value|0x1158
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_PROXIM_RANGELAN2_7401
+value|"Proxim RangeLAN2 7401"
+end_define
+
 begin_comment
 comment|/* Psion */
 end_comment
@@ -2325,6 +2752,31 @@ define|#
 directive|define
 name|PCMCIA_STR_PSION_GOLDCARD
 value|"Psion Gold Card"
+end_define
+
+begin_comment
+comment|/* Quatech */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_QUATECH_DSP_225
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_QUATECH_DSP_225
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_QUATECH_DSP_225
+value|"Quatech Dual Serial Port"
 end_define
 
 begin_comment
@@ -2848,27 +3300,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_XIRCOM_CE2
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_XIRCOM_CE2
-value|0x010b
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_XIRCOM_CE2
-value|"Xircom CreditCard Ethernet II"
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCMCIA_CIS_XIRCOM_CE3
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -2885,6 +3316,27 @@ define|#
 directive|define
 name|PCMCIA_STR_XIRCOM_CE3
 value|"Xircom CreditCard 10/100 Ethernet"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_XIRCOM_CE2
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_CE2
+value|0x010b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_CE2
+value|"Xircom CreditCard Ethernet II"
 end_define
 
 begin_define
