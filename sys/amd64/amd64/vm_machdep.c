@@ -1533,6 +1533,11 @@ block|{
 name|sf_buf_alloc_want
 operator|++
 expr_stmt|;
+name|mbstat
+operator|.
+name|sf_allocwait
+operator|++
+expr_stmt|;
 name|error
 operator|=
 name|msleep

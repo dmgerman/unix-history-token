@@ -1109,6 +1109,19 @@ comment|/* Number of mbtypes (gives # elems in mbpstat's mb_mbtypes[] array: */
 name|short
 name|m_numtypes
 decl_stmt|;
+comment|/* XXX: Sendfile stats should eventually move to their own struct */
+name|u_long
+name|sf_iocnt
+decl_stmt|;
+comment|/* times sendfile had to do disk I/O */
+name|u_long
+name|sf_allocfail
+decl_stmt|;
+comment|/* times sfbuf allocation failed */
+name|u_long
+name|sf_allocwait
+decl_stmt|;
+comment|/* times sfbuf allocation had to wait */
 block|}
 struct|;
 end_struct

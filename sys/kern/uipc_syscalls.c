@@ -8652,6 +8652,11 @@ goto|goto
 name|done
 goto|;
 block|}
+name|mbstat
+operator|.
+name|sf_iocnt
+operator|++
+expr_stmt|;
 block|}
 else|else
 name|VM_OBJECT_UNLOCK
@@ -8677,6 +8682,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mbstat
+operator|.
+name|sf_allocfail
+operator|++
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
