@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -2226,6 +2226,10 @@ case|case
 name|MD_VERIFY
 case|:
 comment|/* verify only */
+case|case
+name|MD_TEST
+case|:
+comment|/* test addresses */
 break|break;
 default|default:
 name|syserr

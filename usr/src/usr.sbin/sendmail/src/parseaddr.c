@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.57
+literal|3.58
 operator|%
 name|G
 operator|%
@@ -1523,11 +1523,12 @@ name|bool
 name|sameword
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
+name|Mode
+operator|==
+name|MD_TEST
+operator|||
 name|tTd
 argument_list|(
 literal|21
@@ -1549,9 +1550,6 @@ name|pvp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* 	**  Run through the list of rewrite rules, applying 	**	any that match. 	*/
 for|for
 control|(
@@ -2417,11 +2415,12 @@ name|r_next
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
+name|Mode
+operator|==
+name|MD_TEST
+operator|||
 name|tTd
 argument_list|(
 literal|21
@@ -2443,9 +2442,6 @@ name|pvp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 block|}
 end_block
 
