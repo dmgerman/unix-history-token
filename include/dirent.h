@@ -118,6 +118,11 @@ name|int
 name|dd_flags
 decl_stmt|;
 comment|/* flags for readdir */
+name|void
+modifier|*
+name|dd_lock
+decl_stmt|;
+comment|/* hack to avoid including<pthread.h> */
 name|struct
 name|_telldir
 modifier|*
