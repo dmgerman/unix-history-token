@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -613,14 +607,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Invalid argument to option d: %s\n"
+literal|"invalid argument to option d: %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -910,6 +899,7 @@ name|fts_level
 operator|<=
 name|depth
 condition|)
+block|{
 if|if
 condition|(
 name|hflag
@@ -966,6 +956,7 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -1031,6 +1022,7 @@ name|fts_level
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|hflag
@@ -1092,6 +1084,7 @@ name|fts_path
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|p
 operator|->
 name|fts_parent
@@ -1129,6 +1122,7 @@ if|if
 condition|(
 name|cflag
 condition|)
+block|{
 if|if
 condition|(
 name|hflag
@@ -1173,6 +1167,7 @@ name|blocksize
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|exit
 argument_list|(
@@ -1332,7 +1327,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
