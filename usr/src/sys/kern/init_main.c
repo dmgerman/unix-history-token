@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	3.7	%G%	*/
+comment|/*	init_main.c	3.8	%G%	*/
 end_comment
 
 begin_include
@@ -121,6 +121,10 @@ parameter_list|(
 name|firstaddr
 parameter_list|)
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|cpusid
 operator|=
 name|mfpr
@@ -239,6 +243,43 @@ operator|.
 name|u_cmask
 operator|=
 name|CMASK
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|u
+operator|.
+name|u_limit
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|u
+operator|.
+name|u_limit
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|u
+operator|.
+name|u_limit
+index|[
+name|i
+index|]
+operator|=
+name|INFINITY
 expr_stmt|;
 name|clkstart
 argument_list|()
