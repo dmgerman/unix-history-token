@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1417,12 +1417,23 @@ begin_macro
 name|setregs
 argument_list|(
 argument|entry
+argument_list|,
+argument|retval
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|u_long
 name|entry
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|retval
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1490,11 +1501,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* not 68010 (bit 31), no FPA (30) */
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|retval
+index|[
+literal|0
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -1502,22 +1512,20 @@ comment|/* no float card */
 ifdef|#
 directive|ifdef
 name|FPCOPROC
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val2
+name|retval
+index|[
+literal|1
+index|]
 operator|=
 literal|1
 expr_stmt|;
 comment|/* yes 68881 */
 else|#
 directive|else
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val2
+name|retval
+index|[
+literal|1
+index|]
 operator|=
 literal|0
 expr_stmt|;
