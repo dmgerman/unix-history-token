@@ -1235,9 +1235,14 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lep
+decl_stmt|;
+name|char
+modifier|*
+name|dlep
 decl_stmt|,
 modifier|*
 name|flep
@@ -1297,7 +1302,7 @@ operator|.
 name|ni_vp
 argument_list|,
 operator|&
-name|lep
+name|dlep
 argument_list|,
 operator|&
 name|flep
@@ -1309,6 +1314,11 @@ condition|)
 name|lep
 operator|=
 name|linux_emul_path
+expr_stmt|;
+else|else
+name|lep
+operator|=
+name|dlep
 expr_stmt|;
 name|lep_len
 operator|=
