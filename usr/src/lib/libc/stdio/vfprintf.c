@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.48 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,41 +461,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LONGINT
-value|0x01
-end_define
-
-begin_comment
-comment|/* long integer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LONGDBL
-value|0x02
-end_define
-
-begin_comment
-comment|/* long double; unimplemented */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHORTINT
-value|0x04
-end_define
-
-begin_comment
-comment|/* short integer */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ALT
-value|0x08
+value|0x001
 end_define
 
 begin_comment
@@ -505,8 +472,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HEXPREFIX
+value|0x002
+end_define
+
+begin_comment
+comment|/* add 0x or 0X prefix */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LADJUST
-value|0x10
+value|0x004
 end_define
 
 begin_comment
@@ -516,23 +494,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZEROPAD
-value|0x20
+name|LONGDBL
+value|0x008
 end_define
 
 begin_comment
-comment|/* zero (as opposed to blank) pad */
+comment|/* long double; unimplemented */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HEXPREFIX
-value|0x40
+name|LONGINT
+value|0x010
 end_define
 
 begin_comment
-comment|/* add 0x or 0X prefix */
+comment|/* long integer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUADINT
+value|0x020
+end_define
+
+begin_comment
+comment|/* quad integer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHORTINT
+value|0x040
+end_define
+
+begin_comment
+comment|/* short integer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZEROPAD
+value|0x080
+end_define
+
+begin_comment
+comment|/* zero (as opposed to blank) pad */
 end_comment
 
 begin_function
@@ -554,13 +565,6 @@ name|char
 modifier|*
 name|fmt0
 decl_stmt|;
-if|#
-directive|if
-name|tahoe
-specifier|register
-comment|/* technically illegal, since we do not know what type va_list is */
-endif|#
-directive|endif
 name|va_list
 name|ap
 decl_stmt|;
@@ -632,8 +636,8 @@ decl_stmt|;
 comment|/* `extra' floating precision in [eEfgG] */
 endif|#
 directive|endif
-name|u_long
-name|_ulong
+name|u_quad_t
+name|_uquad
 decl_stmt|;
 comment|/* integer arguments %[diouxX] */
 enum|enum
@@ -699,7 +703,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* space for 0x hex-prefix */
-comment|/* 	 * Choose PADSIZE to trade efficiency vs size.  If larger 	 * printf fields occur frequently, increase PADSIZE (and make 	 * the initialisers below longer). 	 */
+comment|/* 	 * Choose PADSIZE to trade efficiency vs. size.  If larger printf 	 * fields occur frequently, increase PADSIZE and make the initialisers 	 * below longer. 	 */
 define|#
 directive|define
 name|PADSIZE
@@ -817,13 +821,13 @@ directive|define
 name|SARG
 parameter_list|()
 define|\
-value|(flags&LONGINT ? va_arg(ap, long) : \ 	    flags&SHORTINT ? (long)(short)va_arg(ap, int) : \ 	    (long)va_arg(ap, int))
+value|(flags&QUADINT ? va_arg(ap, quad_t) : \ 	    flags&LONGINT ? va_arg(ap, long) : \ 	    flags&SHORTINT ? (long)(short)va_arg(ap, int) : \ 	    (long)va_arg(ap, int))
 define|#
 directive|define
 name|UARG
 parameter_list|()
 define|\
-value|(flags&LONGINT ? va_arg(ap, u_long) : \ 	    flags&SHORTINT ? (u_long)(u_short)va_arg(ap, int) : \ 	    (u_long)va_arg(ap, u_int))
+value|(flags&QUADINT ? va_arg(ap, u_quad_t) : \ 	    flags&LONGINT ? va_arg(ap, u_long) : \ 	    flags&SHORTINT ? (u_long)(u_short)va_arg(ap, int) : \ 	    (u_long)va_arg(ap, u_int))
 comment|/* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
 if|if
 condition|(
@@ -1295,6 +1299,16 @@ goto|goto
 name|rflag
 goto|;
 case|case
+literal|'q'
+case|:
+name|flags
+operator||=
+name|QUADINT
+expr_stmt|;
+goto|goto
+name|rflag
+goto|;
+case|case
 literal|'c'
 case|:
 operator|*
@@ -1334,7 +1348,7 @@ case|:
 case|case
 literal|'i'
 case|:
-name|_ulong
+name|_uquad
 operator|=
 name|SARG
 argument_list|()
@@ -1342,17 +1356,17 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|long
+name|quad_t
 operator|)
-name|_ulong
+name|_uquad
 operator|<
 literal|0
 condition|)
 block|{
-name|_ulong
+name|_uquad
 operator|=
 operator|-
-name|_ulong
+name|_uquad
 expr_stmt|;
 name|sign
 operator|=
@@ -1551,6 +1565,24 @@ if|if
 condition|(
 name|flags
 operator|&
+name|QUADINT
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|quad_t
+operator|*
+argument_list|)
+operator|=
+name|ret
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
 name|LONGINT
 condition|)
 operator|*
@@ -1607,7 +1639,7 @@ comment|/*FALLTHROUGH*/
 case|case
 literal|'o'
 case|:
-name|_ulong
+name|_uquad
 operator|=
 name|UARG
 argument_list|()
@@ -1624,10 +1656,10 @@ literal|'p'
 case|:
 comment|/* 			 * ``The argument shall be a pointer to void.  The 			 * value of the pointer is converted to a sequence 			 * of printable characters, in an implementation- 			 * defined manner.'' 			 *	-- ANSI X3J11 			 */
 comment|/* NOSTRICT */
-name|_ulong
+name|_uquad
 operator|=
 operator|(
-name|u_long
+name|u_quad_t
 operator|)
 name|va_arg
 argument_list|(
@@ -1754,7 +1786,7 @@ comment|/*FALLTHROUGH*/
 case|case
 literal|'u'
 case|:
-name|_ulong
+name|_uquad
 operator|=
 name|UARG
 argument_list|()
@@ -1785,7 +1817,7 @@ literal|"0123456789abcdef"
 expr_stmt|;
 name|hex
 label|:
-name|_ulong
+name|_uquad
 operator|=
 name|UARG
 argument_list|()
@@ -1801,7 +1833,7 @@ name|flags
 operator|&
 name|ALT
 operator|&&
-name|_ulong
+name|_uquad
 operator|!=
 literal|0
 condition|)
@@ -1843,7 +1875,7 @@ name|BUF
 expr_stmt|;
 if|if
 condition|(
-name|_ulong
+name|_uquad
 operator|!=
 literal|0
 operator|||
@@ -1852,7 +1884,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * unsigned mod is hard, and unsigned mod 				 * by a constant is easier than that by 				 * a variable; hence this switch. 				 */
+comment|/* 				 * Unsigned mod is hard, and unsigned mod 				 * by a constant is easier than that by 				 * a variable; hence this switch. 				 */
 switch|switch
 condition|(
 name|base
@@ -1869,19 +1901,19 @@ name|cp
 operator|=
 name|to_char
 argument_list|(
-name|_ulong
+name|_uquad
 operator|&
 literal|7
 argument_list|)
 expr_stmt|;
-name|_ulong
+name|_uquad
 operator|>>=
 literal|3
 expr_stmt|;
 block|}
 do|while
 condition|(
-name|_ulong
+name|_uquad
 condition|)
 do|;
 comment|/* handle octal leading 0 */
@@ -1909,7 +1941,7 @@ case|:
 comment|/* many numbers are 1 digit */
 while|while
 condition|(
-name|_ulong
+name|_uquad
 operator|>=
 literal|10
 condition|)
@@ -1920,12 +1952,12 @@ name|cp
 operator|=
 name|to_char
 argument_list|(
-name|_ulong
+name|_uquad
 operator|%
 literal|10
 argument_list|)
 expr_stmt|;
-name|_ulong
+name|_uquad
 operator|/=
 literal|10
 expr_stmt|;
@@ -1936,7 +1968,7 @@ name|cp
 operator|=
 name|to_char
 argument_list|(
-name|_ulong
+name|_uquad
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1951,19 +1983,19 @@ name|cp
 operator|=
 name|xdigs
 index|[
-name|_ulong
+name|_uquad
 operator|&
 literal|15
 index|]
 expr_stmt|;
-name|_ulong
+name|_uquad
 operator|>>=
 literal|4
 expr_stmt|;
 block|}
 do|while
 condition|(
-name|_ulong
+name|_uquad
 condition|)
 do|;
 break|break;
