@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* ** show termcap entries ** ** where: **	-x	expand tc= capabilities **	-S	sort entries before display **	-d	look for duplicate names **	-n	-d and stop **	-g	sort on generic names **	-b	show bare entries **	-f	following arg is FULL PATHNAME of termcap file **	[ent]	display specific entry. tc= will be expanded. ** ** David L. Wasley, U.C.Berkeley ** Modified for 4.1c by Kevin Layer */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -15,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)showtc.c	1.1	(Berkeley) %G%"
+literal|"@(#)showtc.c	1.2	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +19,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ** show termcap entries ** ** where: **	-S	sort entries before display **	-b	show bare entries **	-d	look for duplicate names **	-f	following arg is FULL PATHNAME of termcap file **	-g	sort on generic names **	-n	-d and stop **	-s	don't print two char name at the front of every line **	-x	expand tc= capabilities **	[ent]	display specific entry. tc= will be expanded. ** ** David L. Wasley, U.C.Berkeley ** Modified for 4.1c by Kevin Layer */
+end_comment
 
 begin_include
 include|#
@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"usage: %s [-Sxdngb] [-f termcapfile] [entry] ..."
+value|"usage: %s [-Sxdngb] [-f termcapfile] [entry] ...\n"
 end_define
 
 begin_struct
@@ -139,9 +139,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|sflag
+name|Sflag
 init|=
 name|YES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sflag
+init|=
+name|NO
 decl_stmt|;
 end_decl_stmt
 
@@ -440,11 +448,20 @@ operator|=
 name|YES
 expr_stmt|;
 continue|continue;
+comment|/* strip the two name off */
+case|case
+literal|'s'
+case|:
+name|sflag
+operator|=
+name|YES
+expr_stmt|;
+continue|continue;
 comment|/* sort the name array */
 case|case
 literal|'S'
 case|:
-name|sflag
+name|Sflag
 operator|=
 name|NO
 expr_stmt|;
@@ -1014,7 +1031,7 @@ directive|endif
 comment|/* 	** Order the list 	*/
 if|if
 condition|(
-name|sflag
+name|Sflag
 condition|)
 name|qsort
 argument_list|(
@@ -1557,7 +1574,7 @@ expr_stmt|;
 comment|/* was (char *)0 */
 if|if
 condition|(
-name|sflag
+name|Sflag
 condition|)
 name|qsort
 argument_list|(
@@ -1599,6 +1616,19 @@ condition|;
 name|cp
 operator|++
 control|)
+if|if
+condition|(
+name|sflag
+condition|)
+name|printf
+argument_list|(
+literal|"	%s\n"
+argument_list|,
+operator|*
+name|cp
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%2.2s	%s\n"
