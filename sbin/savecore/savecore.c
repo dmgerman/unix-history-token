@@ -405,7 +405,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|dirname
+name|savedir
 decl_stmt|;
 end_decl_stmt
 
@@ -897,7 +897,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|dirname
+name|savedir
 operator|=
 name|argv
 index|[
@@ -1869,7 +1869,7 @@ argument_list|)
 argument_list|,
 literal|"%s/bounds"
 argument_list|,
-name|dirname
+name|savedir
 argument_list|)
 expr_stmt|;
 if|if
@@ -2031,7 +2031,7 @@ argument_list|)
 argument_list|,
 literal|"%s/vmcore.%d%s"
 argument_list|,
-name|dirname
+name|savedir
 argument_list|,
 name|bounds
 argument_list|,
@@ -2360,7 +2360,7 @@ argument_list|)
 argument_list|,
 literal|"%s/kernel.%d%s"
 argument_list|,
-name|dirname
+name|savedir
 argument_list|,
 name|bounds
 argument_list|,
@@ -3110,7 +3110,7 @@ if|if
 condition|(
 name|statfs
 argument_list|(
-name|dirname
+name|savedir
 argument_list|,
 operator|&
 name|fsbuf
@@ -3125,7 +3125,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m"
 argument_list|,
-name|dirname
+name|savedir
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3182,7 +3182,7 @@ argument_list|)
 argument_list|,
 literal|"%s/minfree"
 argument_list|,
-name|dirname
+name|savedir
 argument_list|)
 expr_stmt|;
 if|if
