@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from:hp300/hp300/autoconf.c	7.9 (Berkeley) 12/27/92  *  *	@(#)autoconf.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from:hp300/hp300/autoconf.c	7.9 (Berkeley) 12/27/92  *  *	@(#)autoconf.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1590,6 +1590,21 @@ literal|"sio"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|D_BMC
+case|:
+name|found
+operator|=
+name|dr_type
+argument_list|(
+name|hd
+operator|->
+name|hp_driver
+argument_list|,
+literal|"bmc"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -1639,6 +1654,32 @@ name|hw
 init|=
 name|sc_table
 decl_stmt|;
+name|setup_hw
+argument_list|(
+name|hw
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0x51000004
+argument_list|,
+literal|0x5
+argument_list|,
+name|D_BMC
+argument_list|,
+literal|0x5
+argument_list|)
+expr_stmt|;
+name|hw
+operator|->
+name|hw_secid
+operator|=
+literal|0
+expr_stmt|;
+name|hw
+operator|++
+expr_stmt|;
 name|setup_hw
 argument_list|(
 name|hw
