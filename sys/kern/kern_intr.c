@@ -2764,7 +2764,7 @@ operator|->
 name|it_vector
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Storm detection needs a delay here 				 * to see slightly delayed interrupts 				 * on some machines, but we don't 				 * want to always delay, so only delay 				 * while warming up. 				 */
+comment|/* 				 * Storm detection needs a delay here 				 * to see slightly delayed interrupts 				 * on some machines, but we don't 				 * want to always delay, so only delay 				 * while warming up. 				 * 				 * XXXRW: Calling DELAY() in the interrupt 				 * path surely needs to be revisited. 				 */
 if|if
 condition|(
 name|warming
