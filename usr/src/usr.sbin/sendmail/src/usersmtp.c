@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sysexits.h>
 end_include
 
@@ -45,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.7 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)usersmtp.c	5.8 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.7 (Berkeley) %G%"
+literal|"@(#)usersmtp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
