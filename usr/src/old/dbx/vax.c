@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vax.c 1.6 %G%"
+literal|"@(#)vax.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2546,10 +2546,11 @@ name|pc
 operator|=
 name|addr
 expr_stmt|;
-name|callnews
+name|curfunc
+operator|=
+name|whatblock
 argument_list|(
-comment|/* iscall = */
-name|true
+name|pc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2562,11 +2563,52 @@ block|{
 name|printstatus
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+name|bpact
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|nosource
+argument_list|(
+argument|curfunc
+argument_list|)
+name|and
+name|canskip
+argument_list|(
+argument|curfunc
+argument_list|)
+name|and
+name|nlhdr
+operator|.
+name|nlines
+operator|!=
+literal|0
+condition|)
+block|{
+name|addrstatus
+operator|=
+name|KNOWN
+expr_stmt|;
+name|addr
+operator|=
+name|return_addr
+argument_list|()
+expr_stmt|;
+name|stepto
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-name|bpact
-argument_list|()
+name|callnews
+argument_list|(
+comment|/* iscall = */
+name|true
+argument_list|)
 expr_stmt|;
 block|}
 block|}
