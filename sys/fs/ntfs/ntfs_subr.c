@@ -1908,6 +1908,16 @@ name|ntm_devvp
 expr_stmt|;
 name|ip
 operator|->
+name|i_dev
+operator|=
+name|ntmp
+operator|->
+name|ntm_devvp
+operator|->
+name|v_rdev
+expr_stmt|;
+name|ip
+operator|->
 name|i_number
 operator|=
 name|ino
