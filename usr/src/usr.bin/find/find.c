@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.29 (Berkeley) %G%"
+literal|"@(#)find.c	4.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,8 +218,6 @@ name|argv
 expr_stmt|;
 name|ftsoptions
 operator|=
-name|FTS_MULTIPLE
-operator||
 name|FTS_NOSTAT
 operator||
 name|FTS_PHYSICAL
