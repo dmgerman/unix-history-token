@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)docmd.c	5.3 (Berkeley) %G%"
+literal|"@(#)docmd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,24 +45,6 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RDIST
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RDIST
-value|"/usr/ucb/rdist"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|FILE
@@ -1106,7 +1088,7 @@ name|buf
 argument_list|,
 literal|"%s -Server%s"
 argument_list|,
-name|RDIST
+name|_PATH_RDIST
 argument_list|,
 name|qflag
 condition|?
@@ -2548,11 +2530,23 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Create a pipe to mailling program. 	 */
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s -oi -t"
+argument_list|,
+name|_PATH_SENDMAIL
+argument_list|)
+expr_stmt|;
 name|pf
 operator|=
 name|popen
 argument_list|(
-name|MAILCMD
+name|buf
 argument_list|,
 literal|"w"
 argument_list|)
@@ -2568,7 +2562,7 @@ name|error
 argument_list|(
 literal|"notify: \"%s\" failed\n"
 argument_list|,
-name|MAILCMD
+name|_PATH_SENDMAIL
 argument_list|)
 expr_stmt|;
 operator|(
