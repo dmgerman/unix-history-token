@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)paste.c	5.1 (Berkeley) %G%"
+literal|"@(#)paste.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,6 +769,7 @@ name|fp
 operator|=
 name|stdin
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
