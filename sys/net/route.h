@@ -1438,6 +1438,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|rtexpunge
+parameter_list|(
+name|struct
+name|rtentry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|rtfree
 parameter_list|(
