@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id$  */
+comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.1 1998/09/15 06:36:34 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -168,6 +168,66 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<opt_sa.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SA_SPACE_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SA_SPACE_TIMEOUT
+value|1 * 60
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SA_REWIND_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SA_REWIND_TIMEOUT
+value|2 * 60
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SA_ERASE_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SA_ERASE_TIMEOUT
+value|4 * 60
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -7515,7 +7575,6 @@ comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Put in a 2 hour timeout to deal with especially slow tape drives. 	 */
 name|scsi_rewind
 argument_list|(
 operator|&
@@ -7537,15 +7596,14 @@ argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
 operator|(
-literal|120
+name|SA_REWIND_TIMEOUT
+operator|)
 operator|*
 literal|60
 operator|*
 literal|1000
-operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 2 hours */
 name|error
 operator|=
 name|cam_periph_runccb
@@ -7686,7 +7744,9 @@ name|count
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|60
+operator|(
+name|SA_SPACE_TIMEOUT
+operator|)
 operator|*
 literal|60
 operator|*
@@ -8451,16 +8511,15 @@ comment|/*sense_len*/
 name|SSD_FULL_SIZE
 argument_list|,
 comment|/*timeout*/
-literal|4
-operator|*
-literal|60
+operator|(
+name|SA_ERASE_TIMEOUT
+operator|)
 operator|*
 literal|60
 operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* 4 hours */
 name|error
 operator|=
 name|cam_periph_runccb
