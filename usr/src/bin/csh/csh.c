@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	4.21 (Berkeley) %G%"
+literal|"@(#)csh.c	4.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1357,11 +1357,6 @@ condition|)
 name|dohash
 argument_list|()
 expr_stmt|;
-name|dosource
-argument_list|(
-name|loadhist
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|loginsh
@@ -1378,6 +1373,11 @@ literal|"/.login"
 argument_list|)
 expr_stmt|;
 block|}
+name|dosource
+argument_list|(
+name|loadhist
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Now are ready for the -v and -x flags 	 */
 if|if
