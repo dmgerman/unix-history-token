@@ -104,7 +104,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Null wide character, internal state, internal buffer. */
+comment|/* 	 * If the buffer argument is NULL, wc is implicitly L'\0', 	 * wcrtomb() resets its internal state. 	 */
 name|assert
 argument_list|(
 name|wcrtomb
@@ -120,31 +120,17 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Null wide character, internal buffer. */
-name|memset
-argument_list|(
-operator|&
-name|s
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|assert
 argument_list|(
 name|wcrtomb
 argument_list|(
 name|NULL
 argument_list|,
-literal|L'
-expr|\0'
+name|UCHAR_MAX
+operator|+
+literal|1
 argument_list|,
-operator|&
-name|s
+name|NULL
 argument_list|)
 operator|==
 literal|1
@@ -221,7 +207,7 @@ operator|==
 literal|0xcc
 argument_list|)
 expr_stmt|;
-comment|/* Latin letter A, internal state, internal buffer. */
+comment|/* Latin letter A, internal state. */
 name|assert
 argument_list|(
 name|wcrtomb
@@ -229,7 +215,7 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|L'
-expr|A'
+expr|\0'
 argument_list|,
 name|NULL
 argument_list|)
@@ -237,20 +223,6 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Latin letter A, internal buffer. */
-name|memset
-argument_list|(
-operator|&
-name|s
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|assert
 argument_list|(
 name|wcrtomb
@@ -260,8 +232,7 @@ argument_list|,
 literal|L'
 expr|A'
 argument_list|,
-operator|&
-name|s
+name|NULL
 argument_list|)
 operator|==
 literal|1
@@ -343,7 +314,7 @@ name|assert
 argument_list|(
 name|wcrtomb
 argument_list|(
-name|NULL
+name|buf
 argument_list|,
 name|UCHAR_MAX
 operator|+
@@ -391,20 +362,7 @@ operator|==
 literal|3
 argument_list|)
 expr_stmt|;
-comment|/* Null wide character, internal buffer. */
-name|memset
-argument_list|(
-operator|&
-name|s
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* 	 * If the buffer argument is NULL, wc is implicitly L'\0', 	 * wcrtomb() resets its internal state. 	 */
 name|assert
 argument_list|(
 name|wcrtomb
@@ -414,8 +372,7 @@ argument_list|,
 literal|L'
 expr|\0'
 argument_list|,
-operator|&
-name|s
+name|NULL
 argument_list|)
 operator|==
 literal|1
@@ -492,7 +449,7 @@ operator|==
 literal|0xcc
 argument_list|)
 expr_stmt|;
-comment|/* Latin letter A, internal state, internal buffer. */
+comment|/* Latin letter A, internal state. */
 name|assert
 argument_list|(
 name|wcrtomb
@@ -500,7 +457,7 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|L'
-expr|A'
+expr|\0'
 argument_list|,
 name|NULL
 argument_list|)
@@ -508,20 +465,6 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Latin letter A, internal buffer. */
-name|memset
-argument_list|(
-operator|&
-name|s
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|assert
 argument_list|(
 name|wcrtomb
@@ -531,8 +474,7 @@ argument_list|,
 literal|L'
 expr|A'
 argument_list|,
-operator|&
-name|s
+name|NULL
 argument_list|)
 operator|==
 literal|1
