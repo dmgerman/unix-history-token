@@ -361,7 +361,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCIC_ID_TI1510
+name|PCIC_ID_TI1515
 value|0xac58104cul
 end_define
 

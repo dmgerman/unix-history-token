@@ -4771,6 +4771,11 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* 	 * This ISR needs work XXX 	 */
+name|printf
+argument_list|(
+literal|"Cbb 1\n"
+argument_list|)
+expr_stmt|;
 name|sockevent
 operator|=
 name|cbb_get
@@ -4780,11 +4785,21 @@ argument_list|,
 name|CBB_SOCKET_EVENT
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Cbb 2\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sockevent
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Cbb 3\n"
+argument_list|)
+expr_stmt|;
 comment|/* ack the interrupt */
 name|cbb_setb
 argument_list|(
@@ -4795,6 +4810,11 @@ argument_list|,
 name|sockevent
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Cbb 4\n"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If anything has happened to the socket, we assume that 		 * the card is no longer OK, and we shouldn't call its 		 * ISR.  We set CARD_OK as soon as we've attached the 		 * card.  This helps in a noisy eject, which happens 		 * all too often when users are ejecting their PC Cards. 		 * 		 * We use this method in preference to checking to see if 		 * the card is still there because the check suffers from 		 * a race condition in the bouncing case.  Prior versions 		 * of the pccard software used a similar trick and achieved 		 * excellent results. 		 */
 if|if
 condition|(
@@ -4803,6 +4823,11 @@ operator|&
 name|CBB_SOCKET_EVENT_CD
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Cbb 5\n"
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4835,6 +4860,11 @@ name|mtx
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"Cbb 6\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sockevent
@@ -4890,6 +4920,11 @@ operator|&
 name|CBB_CARD_OK
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Cbb 7\n"
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|ih
@@ -4899,6 +4934,11 @@ argument_list|,
 argument|entries
 argument_list|)
 block|{
+name|printf
+argument_list|(
+literal|"Cbb 8\n"
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ih
