@@ -15,12 +15,6 @@ directive|include
 file|<dev/vinum/request.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|char
