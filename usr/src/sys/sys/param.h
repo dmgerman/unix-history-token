@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.24	82/10/31	*/
+comment|/*	param.h	4.25	82/10/31	*/
 end_comment
 
 begin_comment
 comment|/*  * Macine type dependent parameters.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|vax
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -24,11 +24,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|sun
-end_if
+end_ifdef
 
 begin_include
 include|#
