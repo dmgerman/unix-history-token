@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.5 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.6 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.5 (Berkeley) %G%"
+literal|"@(#)queue.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1090,6 +1090,39 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|extern
+name|bool
+name|shouldqueue
+parameter_list|()
+function_decl|;
+comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
+if|if
+condition|(
+name|shouldqueue
+argument_list|(
+operator|-
+literal|100000000L
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Skipping queue run -- load average too high\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|forkflag
+condition|)
+return|return;
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* 	**  See if we want to go off and do other useful work. 	*/
 if|if
 condition|(
@@ -1720,6 +1753,27 @@ argument_list|(
 name|cf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|doall
+operator|&&
+name|shouldqueue
+argument_list|(
+name|wlist
+index|[
+name|wn
+index|]
+operator|.
+name|w_pri
+argument_list|)
+condition|)
+block|{
+comment|/* don't even bother sorting this job in */
+name|wn
+operator|--
+expr_stmt|;
+block|}
 block|}
 end_while
 
