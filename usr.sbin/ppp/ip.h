@@ -52,6 +52,7 @@ name|struct
 name|bundle
 modifier|*
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -60,6 +61,14 @@ parameter_list|,
 name|struct
 name|filter
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+modifier|*
+name|secs
 parameter_list|)
 function_decl|;
 end_function_decl

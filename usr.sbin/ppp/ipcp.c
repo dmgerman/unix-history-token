@@ -201,12 +201,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"iplist.h"
 end_include
 
@@ -232,6 +226,12 @@ begin_include
 include|#
 directive|include
 file|"hdlc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lcp.h"
 end_include
 
 begin_include
@@ -6267,19 +6267,6 @@ name|bundle
 operator|->
 name|iface
 decl_stmt|;
-name|route_Clean
-argument_list|(
-name|ipcp
-operator|->
-name|fsm
-operator|.
-name|bundle
-argument_list|,
-name|ipcp
-operator|->
-name|route
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|iface

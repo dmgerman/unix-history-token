@@ -7,9 +7,17 @@ begin_struct
 struct|struct
 name|tun_data
 block|{
+union|union
+block|{
 name|u_int32_t
 name|family
 decl_stmt|;
+name|u_int32_t
+name|timeout
+decl_stmt|;
+block|}
+name|header
+union|;
 name|u_char
 name|data
 index|[

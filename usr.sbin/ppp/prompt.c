@@ -132,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"auth.h"
 end_include
 
@@ -175,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|"hdlc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lcp.h"
 end_include
 
 begin_include

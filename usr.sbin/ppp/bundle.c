@@ -158,11 +158,22 @@ name|NOKLDLOAD
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOSUID
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/linker.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -412,11 +423,11 @@ begin_define
 define|#
 directive|define
 name|SCATTER_SEGMENTS
-value|6
+value|7
 end_define
 
 begin_comment
-comment|/* version, datalink, name, physical,                                throughput, device                   */
+comment|/* version, datalink, name, physical,                                throughput, throughput, device       */
 end_comment
 
 begin_define
@@ -974,6 +985,8 @@ comment|/* We may need to start our idle timer */
 name|bundle_StartIdleTimer
 argument_list|(
 name|bundle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1173,6 +1186,8 @@ expr_stmt|;
 name|bundle_StartIdleTimer
 argument_list|(
 name|bundle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bundle_Notify
@@ -2524,6 +2539,9 @@ name|datalink
 modifier|*
 name|dl
 decl_stmt|;
+name|unsigned
+name|secs
+decl_stmt|;
 if|if
 condition|(
 name|descriptor_IsSet
@@ -2794,6 +2812,8 @@ name|ntohl
 argument_list|(
 name|tun
 operator|.
+name|header
+operator|.
 name|family
 argument_list|)
 operator|!=
@@ -2859,6 +2879,10 @@ operator|->
 name|filter
 operator|.
 name|in
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2921,9 +2945,6 @@ name|PHASE_DEAD
 condition|)
 block|{
 comment|/*        * Note, we must be in AUTO mode :-/ otherwise our interface should        * *not* be UP and we can't receive data        */
-if|if
-condition|(
-operator|(
 name|pri
 operator|=
 name|PacketCheck
@@ -2942,8 +2963,15 @@ operator|->
 name|filter
 operator|.
 name|dial
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pri
 operator|>=
 literal|0
 condition|)
@@ -2962,6 +2990,10 @@ else|else
 comment|/*          * Drop the packet.  If we were to queue it, we'd just end up with          * a pile of timed-out data in our output queue by the time we get          * around to actually dialing.  We'd also prematurely reach the           * threshold at which we stop select()ing to read() the tun          * device - breaking auto-dial.          */
 return|return;
 block|}
+name|secs
+operator|=
+literal|0
+expr_stmt|;
 name|pri
 operator|=
 name|PacketCheck
@@ -2980,6 +3012,11 @@ operator|->
 name|filter
 operator|.
 name|out
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|secs
 argument_list|)
 expr_stmt|;
 if|if
@@ -2988,6 +3025,16 @@ name|pri
 operator|>=
 literal|0
 condition|)
+block|{
+comment|/* Prepend the number of seconds timeout given in the filter */
+name|tun
+operator|.
+name|header
+operator|.
+name|timeout
+operator|=
+name|secs
+expr_stmt|;
 name|ip_Enqueue
 argument_list|(
 operator|&
@@ -2999,13 +3046,22 @@ name|ipcp
 argument_list|,
 name|pri
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|tun
-operator|.
-name|data
 argument_list|,
 name|n
+operator|+
+sizeof|sizeof
+name|tun
+operator|.
+name|header
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -5918,6 +5974,11 @@ name|pppThroughput
 modifier|*
 name|t
 decl_stmt|;
+name|unsigned
+name|long
+name|long
+name|octets
+decl_stmt|;
 name|int
 name|secs
 decl_stmt|;
@@ -5940,6 +6001,39 @@ operator|->
 name|next
 control|)
 block|{
+name|octets
+operator|=
+name|MAX
+argument_list|(
+name|dl
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|stats
+operator|.
+name|total
+operator|.
+name|in
+operator|.
+name|OctetsPerSecond
+argument_list|,
+name|dl
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|stats
+operator|.
+name|total
+operator|.
+name|out
+operator|.
+name|OctetsPerSecond
+argument_list|)
+expr_stmt|;
 name|prompt_Printf
 argument_list|(
 name|arg
@@ -5975,7 +6069,9 @@ name|physical
 operator|->
 name|link
 operator|.
-name|throughput
+name|stats
+operator|.
+name|total
 operator|.
 name|rolling
 operator|&&
@@ -6012,27 +6108,11 @@ operator|->
 name|physical
 argument_list|)
 argument_list|,
-name|dl
-operator|->
-name|physical
-operator|->
-name|link
-operator|.
-name|throughput
-operator|.
-name|OctetsPerSecond
+name|octets
 operator|*
 literal|8
 argument_list|,
-name|dl
-operator|->
-name|physical
-operator|->
-name|link
-operator|.
-name|throughput
-operator|.
-name|OctetsPerSecond
+name|octets
 argument_list|)
 expr_stmt|;
 name|prompt_Printf
@@ -6058,7 +6138,26 @@ name|mp
 operator|.
 name|link
 operator|.
-name|throughput
+name|stats
+operator|.
+name|total
+expr_stmt|;
+name|octets
+operator|=
+name|MAX
+argument_list|(
+name|t
+operator|->
+name|in
+operator|.
+name|OctetsPerSecond
+argument_list|,
+name|t
+operator|->
+name|out
+operator|.
+name|OctetsPerSecond
+argument_list|)
 expr_stmt|;
 name|secs
 operator|=
@@ -6100,15 +6199,11 @@ argument_list|,
 literal|"Currently averaging %llu bps (%llu bytes/sec)"
 literal|" over the last %d secs\n"
 argument_list|,
-name|t
-operator|->
-name|OctetsPerSecond
+name|octets
 operator|*
 literal|8
 argument_list|,
-name|t
-operator|->
-name|OctetsPerSecond
+name|octets
 argument_list|,
 name|secs
 argument_list|)
@@ -6689,7 +6784,25 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" ID check:      %s\n"
+literal|" Filter Decap:  %s\n"
+argument_list|,
+name|optval
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|,
+name|OPT_FILTERDECAP
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|" ID check:      %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6707,7 +6820,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Keep-Session:  %-20.20s"
+literal|" Keep-Session:  %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6725,7 +6838,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Loopback:      %s\n"
+literal|" Loopback:      %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6743,7 +6856,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" PasswdAuth:    %-20.20s"
+literal|" PasswdAuth:    %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6761,7 +6874,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Proxy:         %s\n"
+literal|" Proxy:         %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6779,7 +6892,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Proxyall:      %-20.20s"
+literal|" Proxyall:      %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6797,7 +6910,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Throughput:    %s\n"
+literal|" Throughput:    %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6815,7 +6928,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Utmp Logging:  %-20.20s"
+literal|" Utmp Logging:  %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6909,6 +7022,9 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+parameter_list|,
+name|unsigned
+name|secs
 parameter_list|)
 block|{
 name|timer_Stop
@@ -6952,9 +7068,20 @@ operator|.
 name|timeout
 condition|)
 block|{
-name|int
-name|secs
+name|time_t
+name|now
+init|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|secs
+operator|==
+literal|0
+condition|)
 name|secs
 operator|=
 name|bundle
@@ -6965,6 +7092,7 @@ name|idle
 operator|.
 name|timeout
 expr_stmt|;
+comment|/* We want at least `secs' */
 if|if
 condition|(
 name|bundle
@@ -6985,10 +7113,7 @@ block|{
 name|int
 name|up
 init|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|now
 operator|-
 name|bundle
 operator|->
@@ -7016,6 +7141,7 @@ name|long
 operator|)
 name|secs
 condition|)
+comment|/* Only increase from the current `remaining' value */
 name|secs
 operator|=
 name|bundle
@@ -7087,10 +7213,7 @@ name|idle
 operator|.
 name|done
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|now
 operator|+
 name|secs
 expr_stmt|;
@@ -7150,6 +7273,8 @@ condition|)
 name|bundle_StartIdleTimer
 argument_list|(
 name|bundle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -10350,17 +10475,22 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Tweak our process arguments.... */
-name|ID0setproctitle
+name|SetTitle
 argument_list|(
 literal|"session owner"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOSUID
 name|setuid
 argument_list|(
 name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/*          * Hang around for a HUP.  This should happen as soon as the          * ppp that we passed our ctty descriptor to closes it.          * NOTE: If this process dies, the passed descriptor becomes          *       invalid and will give a select() error by setting one          *       of the error fds, aborting the other ppp.  We don't          *       want that to happen !          */
 name|pause
 argument_list|()

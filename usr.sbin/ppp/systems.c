@@ -842,6 +842,13 @@ name|passwd
 modifier|*
 name|pwd
 decl_stmt|;
+if|if
+condition|(
+name|userok
+operator|==
+operator|-
+literal|1
+condition|)
 name|userok
 operator|=
 literal|0
@@ -2012,6 +2019,9 @@ name|how
 decl_stmt|,
 name|rs
 decl_stmt|;
+name|int
+name|defuserok
+decl_stmt|;
 name|def
 operator|=
 operator|!
@@ -2035,7 +2045,8 @@ name|SYSTEM_VALIDATE
 expr_stmt|;
 name|userok
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|modeok
 operator|=
@@ -2061,6 +2072,15 @@ name|NULL
 argument_list|,
 name|how
 argument_list|)
+expr_stmt|;
+name|defuserok
+operator|=
+name|userok
+expr_stmt|;
+name|userok
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2127,6 +2147,17 @@ name|CONFFILE
 literal|": File not found"
 return|;
 block|}
+if|if
+condition|(
+name|userok
+operator|==
+operator|-
+literal|1
+condition|)
+name|userok
+operator|=
+name|defuserok
+expr_stmt|;
 if|if
 condition|(
 name|how

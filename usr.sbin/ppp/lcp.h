@@ -314,6 +314,15 @@ range|:
 literal|2
 decl_stmt|;
 comment|/* Protocol field compression */
+name|char
+name|ident
+index|[
+name|DEF_MRU
+operator|-
+literal|7
+index|]
+decl_stmt|;
+comment|/* SendIdentification() data */
 block|}
 name|cfg
 struct|;
@@ -325,7 +334,7 @@ begin_define
 define|#
 directive|define
 name|LCP_MAXCODE
-value|CODE_DISCREQ
+value|CODE_IDENT
 end_define
 
 begin_define
@@ -630,6 +639,33 @@ name|u_char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|lcp_SendIdentification
+parameter_list|(
+name|struct
+name|lcp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|lcp_RecvIdentification
+parameter_list|(
+name|struct
+name|lcp
+modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
