@@ -3792,6 +3792,9 @@ case|:
 case|case
 literal|'.'
 case|:
+case|case
+literal|'/'
+case|:
 name|name
 operator|=
 name|aml_parse_namestring
@@ -7260,6 +7263,9 @@ literal|'_'
 case|:
 case|case
 literal|'.'
+case|:
+case|case
+literal|'/'
 case|:
 name|env
 operator|->

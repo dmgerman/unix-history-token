@@ -1606,6 +1606,9 @@ case|:
 case|case
 literal|'.'
 case|:
+case|case
+literal|'/'
+case|:
 name|name
 operator|=
 name|asl_dump_namestring
@@ -3354,6 +3357,9 @@ literal|'_'
 case|:
 case|case
 literal|'.'
+case|:
+case|case
+literal|'/'
 case|:
 name|dp
 operator|--
