@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.35 1998/06/25 22:33:12 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
+comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.36 1998/06/27 23:48:40 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
 end_comment
 
 begin_include
@@ -3627,7 +3627,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ccp_SetOpenMode
 parameter_list|(
 name|struct
@@ -3654,6 +3654,8 @@ operator|++
 control|)
 if|if
 condition|(
+name|IsEnabled
+argument_list|(
 name|ccp
 operator|->
 name|cfg
@@ -3662,7 +3664,9 @@ name|neg
 index|[
 name|f
 index|]
+argument_list|)
 condition|)
+block|{
 name|ccp
 operator|->
 name|fsm
@@ -3671,6 +3675,10 @@ name|open_mode
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|ccp
 operator|->
 name|fsm
@@ -3679,7 +3687,41 @@ name|open_mode
 operator|=
 name|OPEN_PASSIVE
 expr_stmt|;
-comment|/* Go straight to ST_STOPPED */
+comment|/* Go straight to ST_STOPPED ? */
+for|for
+control|(
+name|f
+operator|=
+literal|0
+init|;
+name|f
+operator|<
+name|CCP_NEG_TOTAL
+condition|;
+name|f
+operator|++
+control|)
+if|if
+condition|(
+name|IsAccepted
+argument_list|(
+name|ccp
+operator|->
+name|cfg
+operator|.
+name|neg
+index|[
+name|f
+index|]
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|0
+return|;
+comment|/* No CCP at all */
 block|}
 end_function
 
