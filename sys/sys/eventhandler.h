@@ -427,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|SHUTDOWN_PRI_LAST
-value|EVENTHANDLER_PRI_FIRST
+value|EVENTHANDLER_PRI_LAST
 end_define
 
 begin_expr_stmt
