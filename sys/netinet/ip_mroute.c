@@ -9431,6 +9431,7 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX as an additional consistency check, one could make sure 	 * that viftable[i].v_rsvpd == so, otherwise passing so as 	 * first parameter is pretty useless. 	 */
 name|viftable
 index|[
 name|i
