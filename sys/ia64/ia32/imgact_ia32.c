@@ -245,21 +245,6 @@ value|(IA32_USRSTACK - sizeof(struct ia32_ps_strings))
 end_define
 
 begin_function_decl
-specifier|extern
-name|int
-name|suhword
-parameter_list|(
-name|void
-modifier|*
-name|p
-parameter_list|,
-name|u_int32_t
-name|v
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|int
 name|elf32_check_header
@@ -3455,7 +3440,7 @@ name|id
 parameter_list|,
 name|val
 parameter_list|)
-value|{suhword(pos++, id); suhword(pos++, val);}
+value|{ \ 	suword32(pos++, id); \ 	suword32(pos++, val); \ }
 end_define
 
 begin_function
@@ -3663,7 +3648,7 @@ name|stack_base
 operator|)
 operator|--
 expr_stmt|;
-name|suhword
+name|suword32
 argument_list|(
 operator|*
 name|stack_base
@@ -5808,7 +5793,7 @@ name|stringspace
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill in "ps_strings" struct for ps, w, etc. 	 */
-name|suhword
+name|suword32
 argument_list|(
 operator|&
 name|arginfo
@@ -5824,7 +5809,7 @@ operator|)
 name|vectp
 argument_list|)
 expr_stmt|;
-name|suhword
+name|suword32
 argument_list|(
 operator|&
 name|arginfo
@@ -5846,7 +5831,7 @@ operator|--
 name|argc
 control|)
 block|{
-name|suhword
+name|suword32
 argument_list|(
 name|vectp
 operator|++
@@ -5876,7 +5861,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* a null vector table pointer separates the argp's from the envp's */
-name|suhword
+name|suword32
 argument_list|(
 name|vectp
 operator|++
@@ -5884,7 +5869,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|suhword
+name|suword32
 argument_list|(
 operator|&
 name|arginfo
@@ -5900,7 +5885,7 @@ operator|)
 name|vectp
 argument_list|)
 expr_stmt|;
-name|suhword
+name|suword32
 argument_list|(
 operator|&
 name|arginfo
@@ -5922,7 +5907,7 @@ operator|--
 name|envc
 control|)
 block|{
-name|suhword
+name|suword32
 argument_list|(
 name|vectp
 operator|++
@@ -5952,7 +5937,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* end of vector table is a null pointer */
-name|suhword
+name|suword32
 argument_list|(
 name|vectp
 argument_list|,

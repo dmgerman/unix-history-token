@@ -3514,19 +3514,6 @@ directive|include
 file|<i386/include/psl.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|long
-name|fuhword
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|base
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|void
@@ -3715,7 +3702,7 @@ block|{
 comment|/* 			 * Code is first argument, followed by actual args. 			 */
 name|code
 operator|=
-name|fuhword
+name|fuword32
 argument_list|(
 name|params
 argument_list|)
@@ -3736,10 +3723,10 @@ operator|==
 name|SYS___syscall
 condition|)
 block|{
-comment|/* 			 * Like syscall, but code is a quad, so as to maintain 			 * quad alignment for the rest of the arguments. 			 */
+comment|/* 			 * Like syscall, but code is a quad, so as to maintain 			 * quad alignment for the rest of the arguments. 			 * We use a 32-bit fetch in case params is not 			 * aligned. 			 */
 name|code
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 name|params
 argument_list|)
