@@ -15,6 +15,12 @@ directive|define
 name|_SYS_SOCKET_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -40,12 +46,6 @@ end_comment
 begin_comment
 comment|/*  * Data types.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/ansi.h>
-end_include
 
 begin_typedef
 typedef|typedef
