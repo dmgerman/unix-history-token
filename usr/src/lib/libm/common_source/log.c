@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	5.11 (Berkeley) %G%"
+literal|"@(#)log.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,6 +137,7 @@ comment|/* Table of log(Fj) = logF_head[j] + logF_tail[j], for Fj = 1+j/128.  * 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|A1
 init|=
@@ -145,6 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|double
 name|A2
 init|=
@@ -153,6 +155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|double
 name|A3
 init|=
@@ -161,6 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|double
 name|A4
 init|=
@@ -169,6 +173,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|double
 name|logF_head
 index|[
@@ -440,6 +445,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|double
 name|logF_tail
 index|[
