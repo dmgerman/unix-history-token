@@ -475,11 +475,21 @@ begin_comment
 comment|/* Nonstandard routines */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_ANSI_SOURCE
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
