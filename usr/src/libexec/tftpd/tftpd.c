@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	5.5 (Berkeley) %G%"
+literal|"@(#)tftpd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +235,11 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
 name|openlog
 argument_list|(
 literal|"tftpd"
@@ -244,11 +249,34 @@ argument_list|,
 name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
-name|alarm
+if|if
+condition|(
+name|ioctl
 argument_list|(
-literal|10
+literal|0
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|&
+name|on
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"ioctl(FIONBIO): %m\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|fromlen
 operator|=
 sizeof|sizeof
@@ -288,9 +316,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"tftpd: recvfrom"
+name|LOG_ERR
+argument_list|,
+literal|"recvfrom: %m\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -298,6 +328,135 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * Now that we have read the message out of the UDP 	 * socket, we fork and exit.  Thus, inetd will go back 	 * to listening to the tftp port, and the next request 	 * to come in will start up a new instance of tftpd. 	 * 	 * We do this so that inetd can run tftpd in "wait" mode. 	 * The problem with tftpd running in "nowait" mode is that 	 * inetd may get one or more successful "selects" on the 	 * tftp port before we do our receive, so more than one 	 * instance of tftpd may be started up.  Worse, if tftpd 	 * break before doing the above "recvfrom", inetd would 	 * spawn endless instances, clogging the system. 	 */
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+literal|20
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|pid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+block|{
+name|sleep
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+comment|/* 				 * flush out to most recently sent request. 				 * 				 * This may drop some request, but those 				 * will be resent by the clients when 				 * they timeout.  The positive effect of 				 * this flush is to (try to) prevent more 				 * than one tftpd being started up to service 				 * a single request from a single client. 				 */
+name|j
+operator|=
+sizeof|sizeof
+name|from
+expr_stmt|;
+name|i
+operator|=
+name|recvfrom
+argument_list|(
+literal|0
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|from
+argument_list|,
+operator|&
+name|j
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|n
+operator|=
+name|i
+expr_stmt|;
+name|fromlen
+operator|=
+name|j
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"fork: %m\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0
+condition|)
+block|{
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|from
 operator|.
@@ -342,7 +501,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"socket: %m"
+literal|"socket: %m\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -376,7 +535,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"bind: %m"
+literal|"bind: %m\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -410,7 +569,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"connect: %m"
+literal|"connect: %m\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1237,9 +1396,11 @@ operator|+
 literal|4
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"tftpd: write"
+name|LOG_ERR
+argument_list|,
+literal|"tftpd: write: %m\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1295,9 +1456,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"tftpd: read"
+name|LOG_ERR
+argument_list|,
+literal|"tftpd: read: %m\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1557,9 +1720,11 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"tftpd: write"
+name|LOG_ERR
+argument_list|,
+literal|"tftpd: write: %m\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1612,9 +1777,11 @@ literal|0
 condition|)
 block|{
 comment|/* really? */
-name|perror
+name|syslog
 argument_list|(
-literal|"tftpd: read"
+name|LOG_ERR
+argument_list|,
+literal|"tftpd: read: %m\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2155,9 +2322,11 @@ argument_list|)
 operator|!=
 name|length
 condition|)
-name|perror
+name|syslog
 argument_list|(
-literal|"nak"
+name|LOG_ERR
+argument_list|,
+literal|"nak: %m\n"
 argument_list|)
 expr_stmt|;
 block|}
