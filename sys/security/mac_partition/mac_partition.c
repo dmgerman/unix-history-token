@@ -641,25 +641,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* If we're already in a partition, can't repartition. */
-if|if
-condition|(
-name|SLOT
-argument_list|(
-operator|&
-name|cred
-operator|->
-name|cr_label
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-comment|/* 		 * If not in a partition, must have privilege to create 		 * one. 		 */
+comment|/* 		 * Require BSD privilege in order to change the partition. 		 * Originally we also required that the process not be 		 * in a partition in the first place, but this didn't 		 * interact well with sendmail. 		 */
 name|error
 operator|=
 name|suser_cred
