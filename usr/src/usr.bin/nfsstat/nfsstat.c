@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.10 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,7 +398,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nfsstate: kvm_openfiles: %s"
+literal|"nfsstate: kvm_openfiles: %s\n"
 argument_list|,
 name|kvm_geterr
 argument_list|()
@@ -424,7 +424,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nfsstate: kvm_nlist: can't get names"
+literal|"nfsstate: kvm_nlist: can't get names\n"
 argument_list|)
 expr_stmt|;
 name|exit
