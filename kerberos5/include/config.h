@@ -30,9 +30,10 @@ name|RCSID
 parameter_list|(
 name|msg
 parameter_list|)
+define|\
 value|static
 comment|/**/
-value|const char *const rcsid[] = { (const char *)rcsid, "\100(#)" msg }
+value|const char *const rcsid[] = { (const char *)rcsid, "@(#)" msg }
 end_define
 
 begin_endif
@@ -66,6 +67,13 @@ define|#
 directive|define
 name|SBINDIR
 value|"/usr/sbin"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCONFDIR
+value|"/etc"
 end_define
 
 begin_define
@@ -121,6 +129,34 @@ begin_define
 define|#
 directive|define
 name|HAVE_U_INT64_T
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT8_T
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT16_T
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT32_T
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT64_T
 value|1
 end_define
 
@@ -263,7 +299,23 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<arpa/ftp.h> header file. */
+comment|/* Define if you have the `altzone' variable. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ALTZONE */
+end_comment
+
+begin_comment
+comment|/* define if your system declares altzone */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ALTZONE_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<arpa/ftp.h> header file. */
 end_comment
 
 begin_define
@@ -274,7 +326,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<arpa/inet.h> header file. */
+comment|/* Define to 1 if you have the<arpa/inet.h> header file. */
 end_comment
 
 begin_define
@@ -285,7 +337,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<arpa/nameser.h> header file. */
+comment|/* Define to 1 if you have the<arpa/nameser.h> header file. */
 end_comment
 
 begin_define
@@ -296,7 +348,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<arpa/telnet.h> header file. */
+comment|/* Define to 1 if you have the<arpa/telnet.h> header file. */
 end_comment
 
 begin_define
@@ -307,7 +359,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `asnprintf' function. */
+comment|/* Define to 1 if you have the `asnprintf' function. */
 end_comment
 
 begin_comment
@@ -315,7 +367,7 @@ comment|/* #undef HAVE_ASNPRINTF */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `asprintf' function. */
+comment|/* Define to 1 if you have the `asprintf' function. */
 end_comment
 
 begin_define
@@ -326,7 +378,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<bind/bitypes.h> header file. */
+comment|/* Define to 1 if you have the `atexit' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ATEXIT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<bind/bitypes.h> header file. */
 end_comment
 
 begin_comment
@@ -334,7 +397,7 @@ comment|/* #undef HAVE_BIND_BITYPES_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<bsdsetjmp.h> header file. */
+comment|/* Define to 1 if you have the<bsdsetjmp.h> header file. */
 end_comment
 
 begin_comment
@@ -342,7 +405,7 @@ comment|/* #undef HAVE_BSDSETJMP_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `bswap16' function. */
+comment|/* Define to 1 if you have the `bswap16' function. */
 end_comment
 
 begin_comment
@@ -350,7 +413,7 @@ comment|/* #undef HAVE_BSWAP16 */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `bswap32' function. */
+comment|/* Define to 1 if you have the `bswap32' function. */
 end_comment
 
 begin_comment
@@ -358,7 +421,7 @@ comment|/* #undef HAVE_BSWAP32 */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<capability.h> header file. */
+comment|/* Define to 1 if you have the<capability.h> header file. */
 end_comment
 
 begin_comment
@@ -366,7 +429,7 @@ comment|/* #undef HAVE_CAPABILITY_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `cap_set_proc' function. */
+comment|/* Define to 1 if you have the `cap_set_proc' function. */
 end_comment
 
 begin_define
@@ -377,7 +440,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `cgetent' function. */
+comment|/* Define to 1 if you have the `cgetent' function. */
 end_comment
 
 begin_define
@@ -388,7 +451,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `chown' function. */
+comment|/* Define if you have the function `chown'. */
 end_comment
 
 begin_define
@@ -399,7 +462,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<config.h> header file. */
+comment|/* Define to 1 if you have the<config.h> header file. */
 end_comment
 
 begin_comment
@@ -407,7 +470,7 @@ comment|/* #undef HAVE_CONFIG_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `copyhostent' function. */
+comment|/* Define if you have the function `copyhostent'. */
 end_comment
 
 begin_comment
@@ -415,7 +478,7 @@ comment|/* #undef HAVE_COPYHOSTENT */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `crypt' function. */
+comment|/* Define to 1 if you have the `crypt' function. */
 end_comment
 
 begin_define
@@ -426,7 +489,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<crypt.h> header file. */
+comment|/* Define to 1 if you have the<crypt.h> header file. */
 end_comment
 
 begin_comment
@@ -434,7 +497,7 @@ comment|/* #undef HAVE_CRYPT_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<curses.h> header file. */
+comment|/* Define to 1 if you have the<curses.h> header file. */
 end_comment
 
 begin_define
@@ -445,7 +508,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `daemon' function. */
+comment|/* Define if you have the function `daemon'. */
 end_comment
 
 begin_define
@@ -467,7 +530,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if you have a berkeley db3 library */
+comment|/* define if you have a berkeley db3/4 library */
 end_comment
 
 begin_comment
@@ -475,7 +538,23 @@ comment|/* #undef HAVE_DB3 */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `dbm_firstkey' function. */
+comment|/* Define to 1 if you have the<db3/db.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DB3_DB_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<db4/db.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DB4_DB_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `dbm_firstkey' function. */
 end_comment
 
 begin_define
@@ -486,7 +565,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<dbm.h> header file. */
+comment|/* Define to 1 if you have the<dbm.h> header file. */
 end_comment
 
 begin_comment
@@ -494,7 +573,7 @@ comment|/* #undef HAVE_DBM_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `dbopen' function. */
+comment|/* Define to 1 if you have the `dbopen' function. */
 end_comment
 
 begin_define
@@ -505,7 +584,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<db_185.h> header file. */
+comment|/* Define to 1 if you have the<db_185.h> header file. */
 end_comment
 
 begin_comment
@@ -513,7 +592,7 @@ comment|/* #undef HAVE_DB_185_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `db_create' function. */
+comment|/* Define to 1 if you have the `db_create' function. */
 end_comment
 
 begin_comment
@@ -521,7 +600,7 @@ comment|/* #undef HAVE_DB_CREATE */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<db.h> header file. */
+comment|/* Define to 1 if you have the<db.h> header file. */
 end_comment
 
 begin_define
@@ -540,7 +619,7 @@ comment|/* #undef HAVE_DB_NDBM */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<dirent.h> header file. */
+comment|/* Define to 1 if you have the<dirent.h> header file. */
 end_comment
 
 begin_define
@@ -551,7 +630,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<dlfcn.h> header file. */
+comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
 begin_define
@@ -562,7 +641,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `dlopen' function. */
+comment|/* Define to 1 if you have the `dlopen' function. */
 end_comment
 
 begin_define
@@ -573,7 +652,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `dn_expand' function. */
+comment|/* Define to 1 if you have the `dn_expand' function. */
 end_comment
 
 begin_define
@@ -584,7 +663,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `ecalloc' function. */
+comment|/* Define if you have the function `ecalloc'. */
 end_comment
 
 begin_comment
@@ -592,7 +671,7 @@ comment|/* #undef HAVE_ECALLOC */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `el_init' function. */
+comment|/* Define to 1 if you have the `el_init' function. */
 end_comment
 
 begin_define
@@ -603,7 +682,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `emalloc' function. */
+comment|/* Define if you have the function `emalloc'. */
 end_comment
 
 begin_comment
@@ -619,7 +698,7 @@ comment|/* #undef HAVE_ENVIRON_DECLARATION */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `erealloc' function. */
+comment|/* Define if you have the function `erealloc'. */
 end_comment
 
 begin_comment
@@ -627,7 +706,7 @@ comment|/* #undef HAVE_EREALLOC */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `err' function. */
+comment|/* Define if you have the function `err'. */
 end_comment
 
 begin_define
@@ -638,7 +717,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<errno.h> header file. */
+comment|/* Define to 1 if you have the<errno.h> header file. */
 end_comment
 
 begin_define
@@ -649,7 +728,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `errx' function. */
+comment|/* Define if you have the function `errx'. */
 end_comment
 
 begin_define
@@ -660,7 +739,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<err.h> header file. */
+comment|/* Define to 1 if you have the<err.h> header file. */
 end_comment
 
 begin_define
@@ -671,7 +750,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `estrdup' function. */
+comment|/* Define if you have the function `estrdup'. */
 end_comment
 
 begin_comment
@@ -679,7 +758,7 @@ comment|/* #undef HAVE_ESTRDUP */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `fchown' function. */
+comment|/* Define if you have the function `fchown'. */
 end_comment
 
 begin_define
@@ -690,7 +769,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `fcntl' function. */
+comment|/* Define to 1 if you have the `fcntl' function. */
 end_comment
 
 begin_define
@@ -701,7 +780,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<fcntl.h> header file. */
+comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 
 begin_define
@@ -712,7 +791,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `flock' function. */
+comment|/* Define if you have the function `flock'. */
 end_comment
 
 begin_define
@@ -723,7 +802,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `fnmatch' function. */
+comment|/* Define if you have the function `fnmatch'. */
 end_comment
 
 begin_define
@@ -734,7 +813,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<fnmatch.h> header file. */
+comment|/* Define to 1 if you have the<fnmatch.h> header file. */
 end_comment
 
 begin_define
@@ -767,7 +846,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `freeaddrinfo' function. */
+comment|/* Define to 1 if you have the `freeaddrinfo' function. */
 end_comment
 
 begin_define
@@ -778,7 +857,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `freehostent' function. */
+comment|/* Define if you have the function `freehostent'. */
 end_comment
 
 begin_define
@@ -789,7 +868,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `gai_strerror' function. */
+comment|/* Define to 1 if you have the `gai_strerror' function. */
 end_comment
 
 begin_define
@@ -800,7 +879,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<gdbm/ndbm.h> header file. */
+comment|/* Define to 1 if you have the<gdbm/ndbm.h> header file. */
 end_comment
 
 begin_comment
@@ -808,7 +887,7 @@ comment|/* #undef HAVE_GDBM_NDBM_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `getaddrinfo' function. */
+comment|/* Define to 1 if you have the `getaddrinfo' function. */
 end_comment
 
 begin_define
@@ -819,7 +898,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getconfattr' function. */
+comment|/* Define to 1 if you have the `getconfattr' function. */
 end_comment
 
 begin_comment
@@ -827,7 +906,7 @@ comment|/* #undef HAVE_GETCONFATTR */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `getcwd' function. */
+comment|/* Define if you have the function `getcwd'. */
 end_comment
 
 begin_define
@@ -838,7 +917,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getdtablesize' function. */
+comment|/* Define if you have the function `getdtablesize'. */
 end_comment
 
 begin_define
@@ -849,7 +928,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getegid' function. */
+comment|/* Define if you have the function `getegid'. */
 end_comment
 
 begin_define
@@ -860,7 +939,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `geteuid' function. */
+comment|/* Define if you have the function `geteuid'. */
 end_comment
 
 begin_define
@@ -871,7 +950,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getgid' function. */
+comment|/* Define if you have the function `getgid'. */
 end_comment
 
 begin_define
@@ -882,7 +961,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `gethostbyname' function. */
+comment|/* Define to 1 if you have the `gethostbyname' function. */
 end_comment
 
 begin_define
@@ -893,7 +972,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `gethostbyname2' function. */
+comment|/* Define to 1 if you have the `gethostbyname2' function. */
 end_comment
 
 begin_define
@@ -904,7 +983,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `gethostname' function. */
+comment|/* Define if you have the function `gethostname'. */
 end_comment
 
 begin_define
@@ -915,7 +994,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getifaddrs' function. */
+comment|/* Define if you have the function `getifaddrs'. */
 end_comment
 
 begin_define
@@ -926,7 +1005,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getipnodebyaddr' function. */
+comment|/* Define if you have the function `getipnodebyaddr'. */
 end_comment
 
 begin_define
@@ -937,7 +1016,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getipnodebyname' function. */
+comment|/* Define if you have the function `getipnodebyname'. */
 end_comment
 
 begin_define
@@ -948,7 +1027,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getlogin' function. */
+comment|/* Define to 1 if you have the `getlogin' function. */
 end_comment
 
 begin_define
@@ -967,7 +1046,7 @@ comment|/* #undef HAVE_GETMSG */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `getnameinfo' function. */
+comment|/* Define to 1 if you have the `getnameinfo' function. */
 end_comment
 
 begin_define
@@ -978,7 +1057,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getopt' function. */
+comment|/* Define if you have the function `getopt'. */
 end_comment
 
 begin_define
@@ -989,7 +1068,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getprogname' function. */
+comment|/* Define to 1 if you have the `getprogname' function. */
 end_comment
 
 begin_if
@@ -1024,7 +1103,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define if you have the `getpwnam_r' function. */
+comment|/* Define to 1 if you have the `getpwnam_r' function. */
 end_comment
 
 begin_comment
@@ -1032,7 +1111,7 @@ comment|/* #undef HAVE_GETPWNAM_R */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `getrlimit' function. */
+comment|/* Define to 1 if you have the `getrlimit' function. */
 end_comment
 
 begin_define
@@ -1043,7 +1122,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getsockopt' function. */
+comment|/* Define to 1 if you have the `getsockopt' function. */
 end_comment
 
 begin_define
@@ -1054,7 +1133,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getspnam' function. */
+comment|/* Define to 1 if you have the `getspnam' function. */
 end_comment
 
 begin_comment
@@ -1062,7 +1141,7 @@ comment|/* #undef HAVE_GETSPNAM */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `gettimeofday' function. */
+comment|/* Define if you have the function `gettimeofday'. */
 end_comment
 
 begin_define
@@ -1073,7 +1152,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getudbnam' function. */
+comment|/* Define to 1 if you have the `getudbnam' function. */
 end_comment
 
 begin_comment
@@ -1081,7 +1160,7 @@ comment|/* #undef HAVE_GETUDBNAM */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `getuid' function. */
+comment|/* Define if you have the function `getuid'. */
 end_comment
 
 begin_define
@@ -1092,7 +1171,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `getusershell' function. */
+comment|/* Define if you have the function `getusershell'. */
 end_comment
 
 begin_define
@@ -1114,7 +1193,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `grantpt' function. */
+comment|/* Define to 1 if you have the `grantpt' function. */
 end_comment
 
 begin_comment
@@ -1122,7 +1201,7 @@ comment|/* #undef HAVE_GRANTPT */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<grp.h> header file. */
+comment|/* Define to 1 if you have the<grp.h> header file. */
 end_comment
 
 begin_define
@@ -1133,7 +1212,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `hstrerror' function. */
+comment|/* Define to 1 if you have the `hstrerror' function. */
 end_comment
 
 begin_define
@@ -1204,7 +1283,7 @@ comment|/* #undef HAVE_H_NERR_DECLARATION */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<ifaddrs.h> header file. */
+comment|/* Define to 1 if you have the<ifaddrs.h> header file. */
 end_comment
 
 begin_define
@@ -1226,7 +1305,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `inet_aton' function. */
+comment|/* define */
 end_comment
 
 begin_define
@@ -1237,7 +1316,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `inet_ntop' function. */
+comment|/* define */
 end_comment
 
 begin_define
@@ -1248,7 +1327,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `inet_pton' function. */
+comment|/* define */
 end_comment
 
 begin_define
@@ -1259,7 +1338,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `initgroups' function. */
+comment|/* Define if you have the function `initgroups'. */
 end_comment
 
 begin_define
@@ -1270,7 +1349,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `initstate' function. */
+comment|/* Define to 1 if you have the `initstate' function. */
 end_comment
 
 begin_define
@@ -1281,7 +1360,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `innetgr' function. */
+comment|/* Define if you have the function `innetgr'. */
 end_comment
 
 begin_define
@@ -1292,7 +1371,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<inttypes.h> header file. */
+comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
 begin_define
@@ -1303,7 +1382,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<io.h> header file. */
+comment|/* Define to 1 if you have the<io.h> header file. */
 end_comment
 
 begin_comment
@@ -1322,7 +1401,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `iruserok' function. */
+comment|/* Define if you have the function `iruserok'. */
 end_comment
 
 begin_define
@@ -1333,7 +1412,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `issetugid' function. */
+comment|/* Define to 1 if you have the `issetugid' function. */
 end_comment
 
 begin_define
@@ -1344,7 +1423,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `krb_disable_debug' function. */
+comment|/* Define to 1 if you have the `krb_disable_debug' function. */
 end_comment
 
 begin_define
@@ -1355,7 +1434,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `krb_enable_debug' function. */
+comment|/* Define to 1 if you have the `krb_enable_debug' function. */
 end_comment
 
 begin_define
@@ -1366,7 +1445,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `krb_get_our_ip_for_realm' function. */
+comment|/* Define to 1 if you have the `krb_get_kdc_time_diff' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_KRB_GET_KDC_TIME_DIFF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `krb_get_our_ip_for_realm' function. */
 end_comment
 
 begin_define
@@ -1377,7 +1467,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<libutil.h> header file. */
+comment|/* Define to 1 if you have the `krb_kdctimeofday' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_KRB_KDCTIMEOFDAY
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<libutil.h> header file. */
 end_comment
 
 begin_define
@@ -1388,7 +1489,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<limits.h> header file. */
+comment|/* Define to 1 if you have the<limits.h> header file. */
 end_comment
 
 begin_define
@@ -1399,7 +1500,26 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `logout' function. */
+comment|/* Define to 1 if you have the `loadquery' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LOADQUERY */
+end_comment
+
+begin_comment
+comment|/* Define if you have the function `localtime_r'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOCALTIME_R
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `logout' function. */
 end_comment
 
 begin_define
@@ -1410,7 +1530,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `logwtmp' function. */
+comment|/* Define to 1 if you have the `logwtmp' function. */
 end_comment
 
 begin_define
@@ -1421,7 +1541,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the system has the type `long long'. */
+comment|/* Define to 1 if the system has the type `long long'. */
 end_comment
 
 begin_define
@@ -1432,7 +1552,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `lstat' function. */
+comment|/* Define if you have the function `lstat'. */
 end_comment
 
 begin_define
@@ -1443,7 +1563,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<maillock.h> header file. */
+comment|/* Define to 1 if you have the<maillock.h> header file. */
 end_comment
 
 begin_comment
@@ -1451,7 +1571,7 @@ comment|/* #undef HAVE_MAILLOCK_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `memmove' function. */
+comment|/* Define if you have the function `memmove'. */
 end_comment
 
 begin_define
@@ -1462,7 +1582,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<memory.h> header file. */
+comment|/* Define to 1 if you have the<memory.h> header file. */
 end_comment
 
 begin_define
@@ -1473,7 +1593,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `mkstemp' function. */
+comment|/* Define if you have the function `mkstemp'. */
 end_comment
 
 begin_define
@@ -1484,7 +1604,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `mktime' function. */
+comment|/* Define to 1 if you have the `mktime' function. */
 end_comment
 
 begin_define
@@ -1506,7 +1626,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<ndbm.h> header file. */
+comment|/* Define to 1 if you have the<ndbm.h> header file. */
 end_comment
 
 begin_define
@@ -1517,7 +1637,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<netdb.h> header file. */
+comment|/* Define to 1 if you have the<netdb.h> header file. */
 end_comment
 
 begin_define
@@ -1528,7 +1648,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<netinet6/in6.h> header file. */
+comment|/* Define to 1 if you have the<netinet6/in6.h> header file. */
 end_comment
 
 begin_comment
@@ -1536,7 +1656,7 @@ comment|/* #undef HAVE_NETINET6_IN6_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<netinet6/in6_var.h> header file. */
+comment|/* Define to 1 if you have the<netinet6/in6_var.h> header file. */
 end_comment
 
 begin_define
@@ -1547,7 +1667,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<netinet/in6.h> header file. */
+comment|/* Define to 1 if you have the<netinet/in6.h> header file. */
 end_comment
 
 begin_comment
@@ -1555,7 +1675,7 @@ comment|/* #undef HAVE_NETINET_IN6_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<netinet/in6_machtypes.h> header file. */
+comment|/* Define to 1 if you have the<netinet/in6_machtypes.h> header file. */
 end_comment
 
 begin_comment
@@ -1563,15 +1683,7 @@ comment|/* #undef HAVE_NETINET_IN6_MACHTYPES_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<netinet/in6_var.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_NETINET_IN6_VAR_H */
-end_comment
-
-begin_comment
-comment|/* Define if you have the<netinet/in.h> header file. */
+comment|/* Define to 1 if you have the<netinet/in.h> header file. */
 end_comment
 
 begin_define
@@ -1582,7 +1694,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<netinet/in_systm.h> header file. */
+comment|/* Define to 1 if you have the<netinet/in_systm.h> header file. */
 end_comment
 
 begin_define
@@ -1593,7 +1705,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<netinet/ip.h> header file. */
+comment|/* Define to 1 if you have the<netinet/ip.h> header file. */
 end_comment
 
 begin_define
@@ -1604,7 +1716,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<netinet/tcp.h> header file. */
+comment|/* Define to 1 if you have the<netinet/tcp.h> header file. */
 end_comment
 
 begin_define
@@ -1623,7 +1735,7 @@ comment|/* #undef HAVE_NETINFO */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<netinfo/ni.h> header file. */
+comment|/* Define to 1 if you have the<netinfo/ni.h> header file. */
 end_comment
 
 begin_comment
@@ -1631,7 +1743,7 @@ comment|/* #undef HAVE_NETINFO_NI_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<net/if.h> header file. */
+comment|/* Define to 1 if you have the<net/if.h> header file. */
 end_comment
 
 begin_define
@@ -1642,7 +1754,26 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `openpty' function. */
+comment|/* Define if NDBM really is DB (creates files *.db) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NEW_DB
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `on_exit' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ON_EXIT */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `openpty' function. */
 end_comment
 
 begin_define
@@ -1716,7 +1847,7 @@ comment|/* #undef HAVE_OSFC2 */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<paths.h> header file. */
+comment|/* Define to 1 if you have the<paths.h> header file. */
 end_comment
 
 begin_define
@@ -1727,7 +1858,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `pidfile' function. */
+comment|/* Define to 1 if you have the `pidfile' function. */
 end_comment
 
 begin_comment
@@ -1735,7 +1866,7 @@ comment|/* #undef HAVE_PIDFILE */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<pthread.h> header file. */
+comment|/* Define to 1 if you have the<pthread.h> header file. */
 end_comment
 
 begin_define
@@ -1746,7 +1877,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `ptsname' function. */
+comment|/* Define to 1 if you have the `ptsname' function. */
 end_comment
 
 begin_comment
@@ -1754,7 +1885,7 @@ comment|/* #undef HAVE_PTSNAME */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<pty.h> header file. */
+comment|/* Define to 1 if you have the<pty.h> header file. */
 end_comment
 
 begin_comment
@@ -1762,7 +1893,7 @@ comment|/* #undef HAVE_PTY_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `putenv' function. */
+comment|/* Define if you have the function `putenv'. */
 end_comment
 
 begin_define
@@ -1773,7 +1904,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<pwd.h> header file. */
+comment|/* Define to 1 if you have the<pwd.h> header file. */
 end_comment
 
 begin_define
@@ -1784,7 +1915,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `rand' function. */
+comment|/* Define to 1 if you have the `rand' function. */
 end_comment
 
 begin_define
@@ -1795,7 +1926,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `random' function. */
+comment|/* Define to 1 if you have the `random' function. */
 end_comment
 
 begin_define
@@ -1806,7 +1937,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `rcmd' function. */
+comment|/* Define if you have the function `rcmd'. */
 end_comment
 
 begin_define
@@ -1828,7 +1959,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `readv' function. */
+comment|/* Define if you have the function `readv'. */
 end_comment
 
 begin_define
@@ -1839,7 +1970,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `recvmsg' function. */
+comment|/* Define if you have the function `recvmsg'. */
 end_comment
 
 begin_define
@@ -1850,7 +1981,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<resolv.h> header file. */
+comment|/* Define to 1 if you have the<resolv.h> header file. */
 end_comment
 
 begin_define
@@ -1861,7 +1992,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `res_search' function. */
+comment|/* Define to 1 if you have the `res_search' function. */
 end_comment
 
 begin_define
@@ -1872,7 +2003,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `revoke' function. */
+comment|/* Define to 1 if you have the `revoke' function. */
 end_comment
 
 begin_define
@@ -1883,7 +2014,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<rpcsvc/ypclnt.h> header file. */
+comment|/* Define to 1 if you have the<rpcsvc/ypclnt.h> header file. */
 end_comment
 
 begin_define
@@ -1894,7 +2025,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sac.h> header file. */
+comment|/* Define to 1 if you have the<sac.h> header file. */
 end_comment
 
 begin_comment
@@ -1902,7 +2033,7 @@ comment|/* #undef HAVE_SAC_H */
 end_comment
 
 begin_comment
-comment|/* Define if the system has the type `sa_family_t'. */
+comment|/* Define to 1 if the system has the type `sa_family_t'. */
 end_comment
 
 begin_define
@@ -1913,7 +2044,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<security/pam_modules.h> header file. */
+comment|/* Define to 1 if you have the<security/pam_modules.h> header file. */
 end_comment
 
 begin_define
@@ -1924,7 +2055,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `select' function. */
+comment|/* Define to 1 if you have the `select' function. */
 end_comment
 
 begin_define
@@ -1935,7 +2066,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `sendmsg' function. */
+comment|/* Define if you have the function `sendmsg'. */
 end_comment
 
 begin_define
@@ -1946,7 +2077,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setegid' function. */
+comment|/* Define if you have the function `setegid'. */
 end_comment
 
 begin_define
@@ -1957,7 +2088,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setenv' function. */
+comment|/* Define if you have the function `setenv'. */
 end_comment
 
 begin_define
@@ -1968,7 +2099,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `seteuid' function. */
+comment|/* Define if you have the function `seteuid'. */
 end_comment
 
 begin_define
@@ -1979,7 +2110,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setitimer' function. */
+comment|/* Define to 1 if you have the `setitimer' function. */
 end_comment
 
 begin_define
@@ -1990,7 +2121,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setlim' function. */
+comment|/* Define to 1 if you have the `setlim' function. */
 end_comment
 
 begin_comment
@@ -1998,7 +2129,7 @@ comment|/* #undef HAVE_SETLIM */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `setlogin' function. */
+comment|/* Define to 1 if you have the `setlogin' function. */
 end_comment
 
 begin_define
@@ -2009,7 +2140,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setpcred' function. */
+comment|/* Define to 1 if you have the `setpcred' function. */
 end_comment
 
 begin_comment
@@ -2017,7 +2148,7 @@ comment|/* #undef HAVE_SETPCRED */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `setpgid' function. */
+comment|/* Define to 1 if you have the `setpgid' function. */
 end_comment
 
 begin_define
@@ -2028,7 +2159,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setproctitle' function. */
+comment|/* Define to 1 if you have the `setproctitle' function. */
 end_comment
 
 begin_define
@@ -2039,7 +2170,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setprogname' function. */
+comment|/* Define to 1 if you have the `setprogname' function. */
 end_comment
 
 begin_if
@@ -2074,7 +2205,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define if you have the `setregid' function. */
+comment|/* Define to 1 if you have the `setregid' function. */
 end_comment
 
 begin_define
@@ -2085,7 +2216,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setresgid' function. */
+comment|/* Define to 1 if you have the `setresgid' function. */
 end_comment
 
 begin_define
@@ -2096,7 +2227,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setresuid' function. */
+comment|/* Define to 1 if you have the `setresuid' function. */
 end_comment
 
 begin_define
@@ -2107,7 +2238,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setreuid' function. */
+comment|/* Define to 1 if you have the `setreuid' function. */
 end_comment
 
 begin_define
@@ -2118,7 +2249,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setsid' function. */
+comment|/* Define to 1 if you have the `setsid' function. */
 end_comment
 
 begin_define
@@ -2129,7 +2260,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setsockopt' function. */
+comment|/* Define to 1 if you have the `setsockopt' function. */
 end_comment
 
 begin_define
@@ -2140,7 +2271,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setstate' function. */
+comment|/* Define to 1 if you have the `setstate' function. */
 end_comment
 
 begin_define
@@ -2151,7 +2282,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `setutent' function. */
+comment|/* Define to 1 if you have the `setutent' function. */
 end_comment
 
 begin_comment
@@ -2159,7 +2290,7 @@ comment|/* #undef HAVE_SETUTENT */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `sgi_getcapabilitybyname' function. */
+comment|/* Define to 1 if you have the `sgi_getcapabilitybyname' function. */
 end_comment
 
 begin_comment
@@ -2167,7 +2298,7 @@ comment|/* #undef HAVE_SGI_GETCAPABILITYBYNAME */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sgtty.h> header file. */
+comment|/* Define to 1 if you have the<sgtty.h> header file. */
 end_comment
 
 begin_define
@@ -2178,7 +2309,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<shadow.h> header file. */
+comment|/* Define to 1 if you have the<shadow.h> header file. */
 end_comment
 
 begin_comment
@@ -2186,7 +2317,7 @@ comment|/* #undef HAVE_SHADOW_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<siad.h> header file. */
+comment|/* Define to 1 if you have the<siad.h> header file. */
 end_comment
 
 begin_comment
@@ -2194,7 +2325,7 @@ comment|/* #undef HAVE_SIAD_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `sigaction' function. */
+comment|/* Define to 1 if you have the `sigaction' function. */
 end_comment
 
 begin_define
@@ -2205,7 +2336,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<signal.h> header file. */
+comment|/* Define to 1 if you have the<signal.h> header file. */
 end_comment
 
 begin_define
@@ -2227,7 +2358,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `socket' function. */
+comment|/* Define to 1 if you have the `socket' function. */
 end_comment
 
 begin_define
@@ -2238,7 +2369,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the system has the type `socklen_t'. */
+comment|/* Define to 1 if the system has the type `socklen_t'. */
 end_comment
 
 begin_define
@@ -2249,7 +2380,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<standards.h> header file. */
+comment|/* Define to 1 if the system has the type `ssize_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SSIZE_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<standards.h> header file. */
 end_comment
 
 begin_comment
@@ -2257,7 +2399,7 @@ comment|/* #undef HAVE_STANDARDS_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<stdint.h> header file. */
+comment|/* Define to 1 if you have the<stdint.h> header file. */
 end_comment
 
 begin_define
@@ -2268,7 +2410,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<stdlib.h> header file. */
+comment|/* Define to 1 if you have the<stdlib.h> header file. */
 end_comment
 
 begin_define
@@ -2279,7 +2421,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strcasecmp' function. */
+comment|/* Define if you have the function `strcasecmp'. */
 end_comment
 
 begin_define
@@ -2290,7 +2432,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strdup' function. */
+comment|/* Define if you have the function `strdup'. */
 end_comment
 
 begin_define
@@ -2301,7 +2443,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strerror' function. */
+comment|/* Define if you have the function `strerror'. */
 end_comment
 
 begin_define
@@ -2312,7 +2454,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strftime' function. */
+comment|/* Define if you have the function `strftime'. */
 end_comment
 
 begin_define
@@ -2323,7 +2465,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<strings.h> header file. */
+comment|/* Define to 1 if you have the<strings.h> header file. */
 end_comment
 
 begin_define
@@ -2334,7 +2476,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<string.h> header file. */
+comment|/* Define to 1 if you have the<string.h> header file. */
 end_comment
 
 begin_define
@@ -2345,7 +2487,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strlcat' function. */
+comment|/* Define if you have the function `strlcat'. */
 end_comment
 
 begin_define
@@ -2356,7 +2498,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strlcpy' function. */
+comment|/* Define if you have the function `strlcpy'. */
 end_comment
 
 begin_define
@@ -2367,7 +2509,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strlwr' function. */
+comment|/* Define if you have the function `strlwr'. */
 end_comment
 
 begin_comment
@@ -2375,7 +2517,7 @@ comment|/* #undef HAVE_STRLWR */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `strncasecmp' function. */
+comment|/* Define if you have the function `strncasecmp'. */
 end_comment
 
 begin_define
@@ -2386,7 +2528,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strndup' function. */
+comment|/* Define if you have the function `strndup'. */
 end_comment
 
 begin_comment
@@ -2394,7 +2536,7 @@ comment|/* #undef HAVE_STRNDUP */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `strnlen' function. */
+comment|/* Define if you have the function `strnlen'. */
 end_comment
 
 begin_comment
@@ -2402,7 +2544,7 @@ comment|/* #undef HAVE_STRNLEN */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<stropts.h> header file. */
+comment|/* Define to 1 if you have the<stropts.h> header file. */
 end_comment
 
 begin_comment
@@ -2410,7 +2552,7 @@ comment|/* #undef HAVE_STROPTS_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `strptime' function. */
+comment|/* Define if you have the function `strptime'. */
 end_comment
 
 begin_define
@@ -2421,7 +2563,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strsep' function. */
+comment|/* Define if you have the function `strsep'. */
 end_comment
 
 begin_define
@@ -2432,7 +2574,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strsep_copy' function. */
+comment|/* Define if you have the function `strsep_copy'. */
 end_comment
 
 begin_comment
@@ -2440,7 +2582,7 @@ comment|/* #undef HAVE_STRSEP_COPY */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `strstr' function. */
+comment|/* Define to 1 if you have the `strstr' function. */
 end_comment
 
 begin_define
@@ -2451,7 +2593,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strsvis' function. */
+comment|/* Define to 1 if you have the `strsvis' function. */
 end_comment
 
 begin_comment
@@ -2459,7 +2601,7 @@ comment|/* #undef HAVE_STRSVIS */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `strtok_r' function. */
+comment|/* Define if you have the function `strtok_r'. */
 end_comment
 
 begin_define
@@ -2470,7 +2612,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the system has the type `struct addrinfo'. */
+comment|/* Define to 1 if the system has the type `struct addrinfo'. */
 end_comment
 
 begin_define
@@ -2481,7 +2623,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the system has the type `struct ifaddrs'. */
+comment|/* Define to 1 if the system has the type `struct ifaddrs'. */
 end_comment
 
 begin_define
@@ -2492,7 +2634,29 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the system has the type `struct sockaddr'. */
+comment|/* Define to 1 if the system has the type `struct iovec'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_IOVEC
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `struct msghdr'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_MSGHDR
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `struct sockaddr'. */
 end_comment
 
 begin_define
@@ -2514,7 +2678,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the system has the type `struct sockaddr_storage'. */
+comment|/* Define to 1 if the system has the type `struct sockaddr_storage'. */
 end_comment
 
 begin_define
@@ -2630,7 +2794,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strunvis' function. */
+comment|/* Define to 1 if you have the `strunvis' function. */
 end_comment
 
 begin_define
@@ -2641,7 +2805,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strupr' function. */
+comment|/* Define if you have the function `strupr'. */
 end_comment
 
 begin_comment
@@ -2649,7 +2813,7 @@ comment|/* #undef HAVE_STRUPR */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `strvis' function. */
+comment|/* Define to 1 if you have the `strvis' function. */
 end_comment
 
 begin_define
@@ -2660,7 +2824,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `strvisx' function. */
+comment|/* Define to 1 if you have the `strvisx' function. */
 end_comment
 
 begin_define
@@ -2671,7 +2835,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `svis' function. */
+comment|/* Define to 1 if you have the `svis' function. */
 end_comment
 
 begin_comment
@@ -2679,7 +2843,7 @@ comment|/* #undef HAVE_SVIS */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `swab' function. */
+comment|/* Define if you have the function `swab'. */
 end_comment
 
 begin_define
@@ -2690,7 +2854,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `sysconf' function. */
+comment|/* Define to 1 if you have the `sysconf' function. */
 end_comment
 
 begin_define
@@ -2701,7 +2865,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `sysctl' function. */
+comment|/* Define to 1 if you have the `sysctl' function. */
 end_comment
 
 begin_define
@@ -2712,7 +2876,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `syslog' function. */
+comment|/* Define to 1 if you have the `syslog' function. */
 end_comment
 
 begin_define
@@ -2723,7 +2887,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<syslog.h> header file. */
+comment|/* Define to 1 if you have the<syslog.h> header file. */
 end_comment
 
 begin_define
@@ -2734,7 +2898,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/bitypes.h> header file. */
+comment|/* Define to 1 if you have the<sys/bitypes.h> header file. */
 end_comment
 
 begin_comment
@@ -2742,7 +2906,7 @@ comment|/* #undef HAVE_SYS_BITYPES_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/bswap.h> header file. */
+comment|/* Define to 1 if you have the<sys/bswap.h> header file. */
 end_comment
 
 begin_comment
@@ -2750,7 +2914,7 @@ comment|/* #undef HAVE_SYS_BSWAP_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/capability.h> header file. */
+comment|/* Define to 1 if you have the<sys/capability.h> header file. */
 end_comment
 
 begin_define
@@ -2761,7 +2925,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/category.h> header file. */
+comment|/* Define to 1 if you have the<sys/category.h> header file. */
 end_comment
 
 begin_comment
@@ -2769,7 +2933,7 @@ comment|/* #undef HAVE_SYS_CATEGORY_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/file.h> header file. */
+comment|/* Define to 1 if you have the<sys/file.h> header file. */
 end_comment
 
 begin_define
@@ -2780,7 +2944,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/filio.h> header file. */
+comment|/* Define to 1 if you have the<sys/filio.h> header file. */
 end_comment
 
 begin_define
@@ -2791,7 +2955,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/ioccom.h> header file. */
+comment|/* Define to 1 if you have the<sys/ioccom.h> header file. */
 end_comment
 
 begin_define
@@ -2802,7 +2966,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/ioctl.h> header file. */
+comment|/* Define to 1 if you have the<sys/ioctl.h> header file. */
 end_comment
 
 begin_define
@@ -2813,7 +2977,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/param.h> header file. */
+comment|/* Define to 1 if you have the<sys/param.h> header file. */
 end_comment
 
 begin_define
@@ -2824,7 +2988,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/proc.h> header file. */
+comment|/* Define to 1 if you have the<sys/proc.h> header file. */
 end_comment
 
 begin_define
@@ -2835,7 +2999,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/ptyio.h> header file. */
+comment|/* Define to 1 if you have the<sys/ptyio.h> header file. */
 end_comment
 
 begin_comment
@@ -2843,7 +3007,7 @@ comment|/* #undef HAVE_SYS_PTYIO_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/ptyvar.h> header file. */
+comment|/* Define to 1 if you have the<sys/ptyvar.h> header file. */
 end_comment
 
 begin_comment
@@ -2851,7 +3015,7 @@ comment|/* #undef HAVE_SYS_PTYVAR_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/pty.h> header file. */
+comment|/* Define to 1 if you have the<sys/pty.h> header file. */
 end_comment
 
 begin_comment
@@ -2859,7 +3023,7 @@ comment|/* #undef HAVE_SYS_PTY_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/resource.h> header file. */
+comment|/* Define to 1 if you have the<sys/resource.h> header file. */
 end_comment
 
 begin_define
@@ -2870,7 +3034,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/select.h> header file. */
+comment|/* Define to 1 if you have the<sys/select.h> header file. */
 end_comment
 
 begin_define
@@ -2881,7 +3045,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/socket.h> header file. */
+comment|/* Define to 1 if you have the<sys/socket.h> header file. */
 end_comment
 
 begin_define
@@ -2892,7 +3056,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/sockio.h> header file. */
+comment|/* Define to 1 if you have the<sys/sockio.h> header file. */
 end_comment
 
 begin_define
@@ -2903,7 +3067,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/stat.h> header file. */
+comment|/* Define to 1 if you have the<sys/stat.h> header file. */
 end_comment
 
 begin_define
@@ -2914,7 +3078,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/stream.h> header file. */
+comment|/* Define to 1 if you have the<sys/stream.h> header file. */
 end_comment
 
 begin_comment
@@ -2922,7 +3086,7 @@ comment|/* #undef HAVE_SYS_STREAM_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/stropts.h> header file. */
+comment|/* Define to 1 if you have the<sys/stropts.h> header file. */
 end_comment
 
 begin_comment
@@ -2930,7 +3094,7 @@ comment|/* #undef HAVE_SYS_STROPTS_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/strtty.h> header file. */
+comment|/* Define to 1 if you have the<sys/strtty.h> header file. */
 end_comment
 
 begin_comment
@@ -2938,7 +3102,7 @@ comment|/* #undef HAVE_SYS_STRTTY_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/str_tty.h> header file. */
+comment|/* Define to 1 if you have the<sys/str_tty.h> header file. */
 end_comment
 
 begin_comment
@@ -2946,7 +3110,7 @@ comment|/* #undef HAVE_SYS_STR_TTY_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/syscall.h> header file. */
+comment|/* Define to 1 if you have the<sys/syscall.h> header file. */
 end_comment
 
 begin_define
@@ -2957,7 +3121,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/sysctl.h> header file. */
+comment|/* Define to 1 if you have the<sys/sysctl.h> header file. */
 end_comment
 
 begin_define
@@ -2968,7 +3132,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/termio.h> header file. */
+comment|/* Define to 1 if you have the<sys/termio.h> header file. */
 end_comment
 
 begin_comment
@@ -2976,7 +3140,7 @@ comment|/* #undef HAVE_SYS_TERMIO_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<sys/timeb.h> header file. */
+comment|/* Define to 1 if you have the<sys/timeb.h> header file. */
 end_comment
 
 begin_define
@@ -2987,7 +3151,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/times.h> header file. */
+comment|/* Define to 1 if you have the<sys/times.h> header file. */
 end_comment
 
 begin_define
@@ -2998,7 +3162,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/time.h> header file. */
+comment|/* Define to 1 if you have the<sys/time.h> header file. */
 end_comment
 
 begin_define
@@ -3009,7 +3173,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/tty.h> header file. */
+comment|/* Define to 1 if you have the<sys/tty.h> header file. */
 end_comment
 
 begin_define
@@ -3020,7 +3184,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/types.h> header file. */
+comment|/* Define to 1 if you have the<sys/types.h> header file. */
 end_comment
 
 begin_define
@@ -3031,7 +3195,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/uio.h> header file. */
+comment|/* Define to 1 if you have the<sys/uio.h> header file. */
 end_comment
 
 begin_define
@@ -3042,7 +3206,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/un.h> header file. */
+comment|/* Define to 1 if you have the<sys/un.h> header file. */
 end_comment
 
 begin_define
@@ -3053,7 +3217,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/utsname.h> header file. */
+comment|/* Define to 1 if you have the<sys/utsname.h> header file. */
 end_comment
 
 begin_define
@@ -3064,7 +3228,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<sys/wait.h> header file. */
+comment|/* Define to 1 if you have the<sys/wait.h> header file. */
 end_comment
 
 begin_define
@@ -3075,7 +3239,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<termios.h> header file. */
+comment|/* Define to 1 if you have the<termcap.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TERMCAP_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<termios.h> header file. */
 end_comment
 
 begin_define
@@ -3086,7 +3261,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<termio.h> header file. */
+comment|/* Define to 1 if you have the<termio.h> header file. */
 end_comment
 
 begin_comment
@@ -3094,7 +3269,7 @@ comment|/* #undef HAVE_TERMIO_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<term.h> header file. */
+comment|/* Define to 1 if you have the<term.h> header file. */
 end_comment
 
 begin_define
@@ -3105,7 +3280,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `tgetent' function. */
+comment|/* Define to 1 if you have the `tgetent' function. */
 end_comment
 
 begin_define
@@ -3116,7 +3291,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `timegm' function. */
+comment|/* Define to 1 if you have the `timegm' function. */
 end_comment
 
 begin_define
@@ -3149,7 +3324,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<time.h> header file. */
+comment|/* Define to 1 if you have the<time.h> header file. */
 end_comment
 
 begin_define
@@ -3160,7 +3335,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<tmpdir.h> header file. */
+comment|/* Define to 1 if you have the<tmpdir.h> header file. */
 end_comment
 
 begin_comment
@@ -3168,7 +3343,7 @@ comment|/* #undef HAVE_TMPDIR_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `ttyname' function. */
+comment|/* Define to 1 if you have the `ttyname' function. */
 end_comment
 
 begin_define
@@ -3179,7 +3354,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `ttyslot' function. */
+comment|/* Define to 1 if you have the `ttyslot' function. */
 end_comment
 
 begin_define
@@ -3190,7 +3365,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<udb.h> header file. */
+comment|/* Define to 1 if you have the<udb.h> header file. */
 end_comment
 
 begin_comment
@@ -3198,7 +3373,7 @@ comment|/* #undef HAVE_UDB_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `umask' function. */
+comment|/* Define to 1 if you have the `umask' function. */
 end_comment
 
 begin_define
@@ -3209,7 +3384,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `uname' function. */
+comment|/* Define to 1 if you have the `uname' function. */
 end_comment
 
 begin_define
@@ -3220,7 +3395,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<unistd.h> header file. */
+comment|/* Define to 1 if you have the<unistd.h> header file. */
 end_comment
 
 begin_define
@@ -3231,7 +3406,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `unlockpt' function. */
+comment|/* Define to 1 if you have the `unlockpt' function. */
 end_comment
 
 begin_comment
@@ -3239,7 +3414,7 @@ comment|/* #undef HAVE_UNLOCKPT */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `unsetenv' function. */
+comment|/* Define if you have the function `unsetenv'. */
 end_comment
 
 begin_define
@@ -3250,7 +3425,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `unvis' function. */
+comment|/* Define to 1 if you have the `unvis' function. */
 end_comment
 
 begin_define
@@ -3261,7 +3436,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<userconf.h> header file. */
+comment|/* Define to 1 if you have the<userconf.h> header file. */
 end_comment
 
 begin_comment
@@ -3269,7 +3444,7 @@ comment|/* #undef HAVE_USERCONF_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<usersec.h> header file. */
+comment|/* Define to 1 if you have the<usersec.h> header file. */
 end_comment
 
 begin_comment
@@ -3277,7 +3452,7 @@ comment|/* #undef HAVE_USERSEC_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<util.h> header file. */
+comment|/* Define to 1 if you have the<util.h> header file. */
 end_comment
 
 begin_comment
@@ -3285,7 +3460,7 @@ comment|/* #undef HAVE_UTIL_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<utmpx.h> header file. */
+comment|/* Define to 1 if you have the<utmpx.h> header file. */
 end_comment
 
 begin_comment
@@ -3293,7 +3468,7 @@ comment|/* #undef HAVE_UTMPX_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<utmp.h> header file. */
+comment|/* Define to 1 if you have the<utmp.h> header file. */
 end_comment
 
 begin_define
@@ -3304,7 +3479,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `vasnprintf' function. */
+comment|/* Define to 1 if you have the `vasnprintf' function. */
 end_comment
 
 begin_comment
@@ -3312,7 +3487,7 @@ comment|/* #undef HAVE_VASNPRINTF */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `vasprintf' function. */
+comment|/* Define to 1 if you have the `vasprintf' function. */
 end_comment
 
 begin_define
@@ -3323,7 +3498,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `verr' function. */
+comment|/* Define if you have the function `verr'. */
 end_comment
 
 begin_define
@@ -3334,7 +3509,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `verrx' function. */
+comment|/* Define if you have the function `verrx'. */
 end_comment
 
 begin_define
@@ -3345,7 +3520,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `vhangup' function. */
+comment|/* Define to 1 if you have the `vhangup' function. */
 end_comment
 
 begin_comment
@@ -3353,7 +3528,7 @@ comment|/* #undef HAVE_VHANGUP */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `vis' function. */
+comment|/* Define to 1 if you have the `vis' function. */
 end_comment
 
 begin_define
@@ -3364,7 +3539,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<vis.h> header file. */
+comment|/* Define to 1 if you have the<vis.h> header file. */
 end_comment
 
 begin_define
@@ -3386,7 +3561,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `vsyslog' function. */
+comment|/* Define if you have the function `vsyslog'. */
 end_comment
 
 begin_define
@@ -3397,7 +3572,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `vwarn' function. */
+comment|/* Define if you have the function `vwarn'. */
 end_comment
 
 begin_define
@@ -3408,7 +3583,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `vwarnx' function. */
+comment|/* Define if you have the function `vwarnx'. */
 end_comment
 
 begin_define
@@ -3419,7 +3594,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `warn' function. */
+comment|/* Define if you have the function `warn'. */
 end_comment
 
 begin_define
@@ -3430,7 +3605,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `warnx' function. */
+comment|/* Define if you have the function `warnx'. */
 end_comment
 
 begin_define
@@ -3441,7 +3616,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `writev' function. */
+comment|/* Define if you have the function `writev'. */
 end_comment
 
 begin_define
@@ -3474,7 +3649,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `XauFileName' function. */
+comment|/* Define to 1 if you have the `XauFileName' function. */
 end_comment
 
 begin_define
@@ -3485,7 +3660,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `XauReadAuth' function. */
+comment|/* Define to 1 if you have the `XauReadAuth' function. */
 end_comment
 
 begin_define
@@ -3496,7 +3671,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `XauWriteAuth' function. */
+comment|/* Define to 1 if you have the `XauWriteAuth' function. */
 end_comment
 
 begin_define
@@ -3507,7 +3682,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `yp_get_default_domain' function. */
+comment|/* Define to 1 if you have the `yp_get_default_domain' function. */
 end_comment
 
 begin_define
@@ -3518,7 +3693,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `_getpty' function. */
+comment|/* Define to 1 if you have the `_getpty' function. */
 end_comment
 
 begin_comment
@@ -3526,7 +3701,29 @@ comment|/* #undef HAVE__GETPTY */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `_scrsize' function. */
+comment|/* Define if you have the `_res' variable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE__RES
+value|1
+end_define
+
+begin_comment
+comment|/* define if your system declares _res */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE__RES_DECLARATION
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `_scrsize' function. */
 end_comment
 
 begin_comment
@@ -3572,6 +3769,22 @@ comment|/* #undef HESIOD */
 end_comment
 
 begin_comment
+comment|/* Define if you are running IRIX 4. */
+end_comment
+
+begin_comment
+comment|/* #undef IRIX4 */
+end_comment
+
+begin_comment
+comment|/* Define if you have the krb4 package. */
+end_comment
+
+begin_comment
+comment|/* #undef KRB4 */
+end_comment
+
+begin_comment
 comment|/* Enable Kerberos 5 support in applications. */
 end_comment
 
@@ -3583,11 +3796,19 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if krb_mk_req takes cons char * */
+comment|/* Define if krb_mk_req takes const char * */
 end_comment
 
 begin_comment
 comment|/* #undef KRB_MK_REQ_CONST */
+end_comment
+
+begin_comment
+comment|/* This is the krb4 sendauth version. */
+end_comment
+
+begin_comment
+comment|/* #undef KRB_SENDAUTH_VERS */
 end_comment
 
 begin_comment
@@ -3618,9 +3839,12 @@ begin_comment
 comment|/* define if the system is missing a prototype for asnprintf() */
 end_comment
 
-begin_comment
-comment|/* #undef NEED_ASNPRINTF_PROTO */
-end_comment
+begin_define
+define|#
+directive|define
+name|NEED_ASNPRINTF_PROTO
+value|1
+end_define
 
 begin_comment
 comment|/* define if the system is missing a prototype for asprintf() */
@@ -3703,12 +3927,34 @@ comment|/* #undef NEED_SNPRINTF_PROTO */
 end_comment
 
 begin_comment
+comment|/* define if the system is missing a prototype for strndup() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_STRNDUP_PROTO
+value|1
+end_define
+
+begin_comment
 comment|/* define if the system is missing a prototype for strsep() */
 end_comment
 
 begin_comment
 comment|/* #undef NEED_STRSEP_PROTO */
 end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for strsvis() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_STRSVIS_PROTO
+value|1
+end_define
 
 begin_comment
 comment|/* define if the system is missing a prototype for strtok_r() */
@@ -3719,6 +3965,41 @@ comment|/* #undef NEED_STRTOK_R_PROTO */
 end_comment
 
 begin_comment
+comment|/* define if the system is missing a prototype for strunvis() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_STRUNVIS_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for strvisx() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_STRVISX_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for strvis() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_STRVIS_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for svis() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_SVIS_PROTO
+value|1
+end_define
+
+begin_comment
 comment|/* define if the system is missing a prototype for unsetenv() */
 end_comment
 
@@ -3727,12 +4008,23 @@ comment|/* #undef NEED_UNSETENV_PROTO */
 end_comment
 
 begin_comment
-comment|/* define if the system is missing a prototype for vasnprintf() */
+comment|/* define if the system is missing a prototype for unvis() */
 end_comment
 
 begin_comment
-comment|/* #undef NEED_VASNPRINTF_PROTO */
+comment|/* #undef NEED_UNVIS_PROTO */
 end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for vasnprintf() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_VASNPRINTF_PROTO
+value|1
+end_define
 
 begin_comment
 comment|/* define if the system is missing a prototype for vasprintf() */
@@ -3740,6 +4032,14 @@ end_comment
 
 begin_comment
 comment|/* #undef NEED_VASPRINTF_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for vis() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_VIS_PROTO */
 end_comment
 
 begin_comment
@@ -3784,12 +4084,9 @@ begin_comment
 comment|/* Define if you want OTP support in applications. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OTP
-value|1
-end_define
+begin_comment
+comment|/* #undef OTP */
+end_comment
 
 begin_comment
 comment|/* Name of package */
@@ -3800,6 +4097,61 @@ define|#
 directive|define
 name|PACKAGE
 value|"heimdal"
+end_define
+
+begin_comment
+comment|/* Define to the address where bug reports for this package should be sent. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_BUGREPORT
+value|"heimdal-bugs@pdc.kth.se"
+end_define
+
+begin_comment
+comment|/* Define to the full name of this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_NAME
+value|"Heimdal"
+end_define
+
+begin_comment
+comment|/* Define to the full name and version of this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_STRING
+value|"Heimdal 0.4f"
+end_define
+
+begin_comment
+comment|/* Define to the one symbol short name of this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_TARNAME
+value|"heimdal"
+end_define
+
+begin_comment
+comment|/* Define to the version of this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_VERSION
+value|"0.4f"
 end_define
 
 begin_comment
@@ -3838,7 +4190,7 @@ value|void
 end_define
 
 begin_comment
-comment|/* Define if you have the ANSI C header files. */
+comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
 begin_define
@@ -3865,7 +4217,7 @@ comment|/* #undef SunOS */
 end_comment
 
 begin_comment
-comment|/* Define if you can safely include both<sys/time.h> and<time.h>. */
+comment|/* Define to 1 if you can safely include both<sys/time.h> and<time.h>. */
 end_comment
 
 begin_define
@@ -3876,7 +4228,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if your<sys/time.h> declares `struct tm'. */
+comment|/* Define to 1 if your<sys/time.h> declares `struct tm'. */
 end_comment
 
 begin_comment
@@ -3891,7 +4243,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.4e"
+value|"0.4f"
 end_define
 
 begin_comment
@@ -3914,7 +4266,7 @@ comment|/* #undef WORDS_BIGENDIAN */
 end_comment
 
 begin_comment
-comment|/* Define if the X Window System is missing or not being used. */
+comment|/* Define to 1 if the X Window System is missing or not being used. */
 end_comment
 
 begin_comment
@@ -3922,13 +4274,24 @@ comment|/* #undef X_DISPLAY_MISSING */
 end_comment
 
 begin_comment
-comment|/* Define if `lex' declares `yytext' as a `char *' by default, not a `char[]'.    */
+comment|/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a    `char[]'. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|YYTEXT_POINTER
+value|1
+end_define
+
+begin_comment
+comment|/* Define to enable extensions on glibc-based systems such as Linux. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GNU_SOURCE
 value|1
 end_define
 
@@ -3997,550 +4360,11 @@ comment|/* #undef size_t */
 end_comment
 
 begin_comment
-comment|/* Define this to what the type ssize_t should be. */
-end_comment
-
-begin_comment
-comment|/* #undef ssize_t */
-end_comment
-
-begin_comment
 comment|/* Define to `int' if<sys/types.h> doesn't define. */
 end_comment
 
 begin_comment
 comment|/* #undef uid_t */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VOID_RETSIGTYPE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIGRETURN
-parameter_list|(
-name|x
-parameter_list|)
-value|return
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIGRETURN
-parameter_list|(
-name|x
-parameter_list|)
-value|return (RETSIGTYPE)(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BROKEN_REALLOC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|realloc
-parameter_list|(
-name|X
-parameter_list|,
-name|Y
-parameter_list|)
-value|isoc_realloc((X), (Y))
-end_define
-
-begin_define
-define|#
-directive|define
-name|isoc_realloc
-parameter_list|(
-name|X
-parameter_list|,
-name|Y
-parameter_list|)
-value|((X) ? realloc((X), (Y)) : malloc(Y))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_FOUR_VALUED_KRB_PUT_INT
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|KRB_PUT_INT
-parameter_list|(
-name|F
-parameter_list|,
-name|T
-parameter_list|,
-name|L
-parameter_list|,
-name|S
-parameter_list|)
-value|krb_put_int((F), (T), (L), (S))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KRB_PUT_INT
-parameter_list|(
-name|F
-parameter_list|,
-name|T
-parameter_list|,
-name|L
-parameter_list|,
-name|S
-parameter_list|)
-value|krb_put_int((F), (T), (S))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VOID_RETSIGTYPE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIGRETURN
-parameter_list|(
-name|x
-parameter_list|)
-value|return
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIGRETURN
-parameter_list|(
-name|x
-parameter_list|)
-value|return (RETSIGTYPE)(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BROKEN_REALLOC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|realloc
-parameter_list|(
-name|X
-parameter_list|,
-name|Y
-parameter_list|)
-value|isoc_realloc((X), (Y))
-end_define
-
-begin_define
-define|#
-directive|define
-name|isoc_realloc
-parameter_list|(
-name|X
-parameter_list|,
-name|Y
-parameter_list|)
-value|((X) ? realloc((X), (Y)) : malloc(Y))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|BINDIR
-value|"/usr/bin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIBDIR
-value|"/usr/lib"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIBEXECDIR
-value|"/usr/libexec"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBINDIR
-value|"/usr/sbin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|BINDIR
-value|"/usr/bin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIBDIR
-value|"/usr/lib"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIBEXECDIR
-value|"/usr/libexec"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBINDIR
-value|"/usr/sbin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT8_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT16_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT32_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT64_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT8_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT16_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT32_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT64_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT8_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT16_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT32_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT64_T
-value|1
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_FOUR_VALUED_KRB_PUT_INT
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|KRB_PUT_INT
-parameter_list|(
-name|F
-parameter_list|,
-name|T
-parameter_list|,
-name|L
-parameter_list|,
-name|S
-parameter_list|)
-value|krb_put_int((F), (T), (L), (S))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KRB_PUT_INT
-parameter_list|(
-name|F
-parameter_list|,
-name|T
-parameter_list|,
-name|L
-parameter_list|,
-name|S
-parameter_list|)
-value|krb_put_int((F), (T), (S))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BROKEN_REALLOC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|realloc
-parameter_list|(
-name|X
-parameter_list|,
-name|Y
-parameter_list|)
-value|isoc_realloc((X), (Y))
-end_define
-
-begin_define
-define|#
-directive|define
-name|isoc_realloc
-parameter_list|(
-name|X
-parameter_list|,
-name|Y
-parameter_list|)
-value|((X) ? realloc((X), (Y)) : malloc(Y))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VOID_RETSIGTYPE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIGRETURN
-parameter_list|(
-name|x
-parameter_list|)
-value|return
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIGRETURN
-parameter_list|(
-name|x
-parameter_list|)
-value|return (RETSIGTYPE)(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|RCSID
-parameter_list|(
-name|msg
-parameter_list|)
-define|\
-value|static
-comment|/**/
-value|const char *const rcsid[] = { (const char *)rcsid, "\100(#)" msg }
-end_define
-
-begin_comment
-comment|/* #undef PROTOTYPES */
-end_comment
-
-begin_comment
-comment|/* Maximum values on all known systems */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MaxHostNameLen
-value|(64+4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MaxPathLen
-value|(1024+4)
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SGTTY_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__NeXT__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SGTTY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* telnet stuff ----------------------------------------------- */
 end_comment
 
 begin_if
@@ -4608,23 +4432,190 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* random defines */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ROKEN_RENAME
+end_ifdef
 
-begin_comment
-comment|/*  * Defining this enables lots of useful (and used) extensions on  * glibc-based systems such as Linux  */
-end_comment
+begin_include
+include|#
+directive|include
+file|"roken_rename.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VOID_RETSIGTYPE
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|_GNU_SOURCE
+name|SIGRETURN
+parameter_list|(
+name|x
+parameter_list|)
+value|return
 end_define
 
-begin_comment
-comment|/*  * this assumes that KRB_C_BIGENDIAN is used.  * if we can find out endianess at compile-time, do so,  * otherwise WORDS_BIGENDIAN should already have been defined  */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SIGRETURN
+parameter_list|(
+name|x
+parameter_list|)
+value|return (RETSIGTYPE)(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BROKEN_REALLOC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|realloc
+parameter_list|(
+name|X
+parameter_list|,
+name|Y
+parameter_list|)
+value|isoc_realloc((X), (Y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isoc_realloc
+parameter_list|(
+name|X
+parameter_list|,
+name|Y
+parameter_list|)
+value|((X) ? realloc((X), (Y)) : malloc(Y))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FOUR_VALUED_KRB_PUT_INT
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KRB_PUT_INT
+parameter_list|(
+name|F
+parameter_list|,
+name|T
+parameter_list|,
+name|L
+parameter_list|,
+name|S
+parameter_list|)
+value|krb_put_int((F), (T), (L), (S))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KRB_PUT_INT
+parameter_list|(
+name|F
+parameter_list|,
+name|T
+parameter_list|,
+name|L
+parameter_list|,
+name|S
+parameter_list|)
+value|krb_put_int((F), (T), (S))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_KRB_KDCTIMEOFDAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|krb_kdctimeofday
+parameter_list|(
+name|X
+parameter_list|)
+value|gettimeofday((X), NULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_KRB_GET_KDC_TIME_DIFF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|krb_get_kdc_time_diff
+parameter_list|()
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -4669,17 +4660,75 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ROKEN_RENAME
-end_ifdef
+begin_if
+if|#
+directive|if
+name|_AIX
+end_if
 
-begin_include
-include|#
-directive|include
-file|"roken_rename.h"
-end_include
+begin_define
+define|#
+directive|define
+name|_ALL_SOURCE
+end_define
+
+begin_comment
+comment|/* XXX this is gross, but kills about a gazillion warnings */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ether_addr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr_dl
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr_in
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IRIX 4 braindamage */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|IRIX
+operator|==
+literal|4
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STDC__
+value|0
+end_define
 
 begin_endif
 endif|#
