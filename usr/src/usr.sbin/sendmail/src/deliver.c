@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.45 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4527,7 +4527,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|setuid
+name|setgid
 argument_list|(
 name|ctladdr
 operator|->
