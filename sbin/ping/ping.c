@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.30 1998/04/01 00:32:18 imp Exp $"
+literal|"$Id: ping.c,v 1.31 1998/04/02 01:12:55 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1285,6 +1285,10 @@ literal|"-l flag"
 argument_list|)
 expr_stmt|;
 block|}
+name|options
+operator||=
+name|F_FLOOD
+expr_stmt|;
 name|preload
 operator|=
 name|ultmp
