@@ -133,12 +133,6 @@ begin_comment
 comment|/* XXX: should this be 1? */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|EMUDEBUG
-end_undef
-
 begin_struct
 struct|struct
 name|emu_memblk
