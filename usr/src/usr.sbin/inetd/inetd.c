@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.16 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4062,6 +4062,13 @@ begin_comment
 comment|/*  * Internet services provided internally by inetd:  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|4096
+end_define
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -4098,7 +4105,7 @@ block|{
 name|char
 name|buffer
 index|[
-name|BUFSIZ
+name|BUFSIZE
 index|]
 decl_stmt|;
 name|int
@@ -4189,7 +4196,7 @@ block|{
 name|char
 name|buffer
 index|[
-name|BUFSIZ
+name|BUFSIZE
 index|]
 decl_stmt|;
 name|int
@@ -4298,7 +4305,7 @@ block|{
 name|char
 name|buffer
 index|[
-name|BUFSIZ
+name|BUFSIZE
 index|]
 decl_stmt|;
 name|setproctitle
@@ -4384,7 +4391,7 @@ block|{
 name|char
 name|buffer
 index|[
-name|BUFSIZ
+name|BUFSIZE
 index|]
 decl_stmt|;
 operator|(
