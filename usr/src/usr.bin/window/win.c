@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)win.c	3.4 84/03/29"
+literal|"@(#)win.c	3.5 84/04/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ file|"defs.h"
 end_include
 
 begin_comment
-comment|/*  * Higher level routines for dealing with windows.  *  * There are two types of windows: user window, and information window.  * User windows are the ones with a pty and shell.  Information windows  * are for displaying error messages, and other information.  *  * The windows are stacked in overlapping order and divided into  * three groups: foreground, normal, and background.  Information  * windows are always foreground.  User windows can be anywhere.  * Addwin() adds a window to one of the three groups.  * Deletewin() deletes a window.  Front() moves a window to the front  * of its group.  Wwadd() and wwdelete() should never be called  * directly.  */
+comment|/*  * Higher level routines for dealing with windows.  *  * There are two types of windows: user window, and information window.  * User windows are the ones with a pty and shell.  Information windows  * are for displaying error messages, and other information.  *  * The windows are doubly linked in overlapping order and divided into  * two groups: foreground and normal.  Information  * windows are always foreground.  User windows can be either.  * Addwin() adds a window to the list at the top of one of the two groups.  * Deletewin() deletes a window.  Front() moves a window to the front  * of its group.  Wwopen(), wwadd(), and wwdelete() should never be called  * directly.  */
 end_comment
 
 begin_comment
@@ -221,7 +221,7 @@ name|addwin
 argument_list|(
 name|w
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|selwin
@@ -520,7 +520,7 @@ name|addwin
 argument_list|(
 name|w
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|reframe
@@ -568,51 +568,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Set the current window.  */
-end_comment
-
-begin_macro
-name|setselwin
-argument_list|(
-argument|w
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|ww
-modifier|*
-name|w
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|selwin
-operator|==
-name|w
-condition|)
-return|return;
-name|lastselwin
-operator|=
-name|selwin
-expr_stmt|;
-name|front
-argument_list|(
-name|selwin
-operator|=
-name|w
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Move the window to the top of its group.  * Don't do it, if already fully visible.  * Wwvisible() doesn't work for tinted windows.  * But anything to make it faster.  * Always reframe() if doreframe is true.  */
+comment|/*  * Move the window to the top of its group.  * Don't do it if already fully visible.  * Wwvisible() doesn't work for tinted windows.  * But anything to make it faster.  * Always reframe() if doreframe is true.  */
 end_comment
 
 begin_expr_stmt
@@ -640,94 +596,20 @@ begin_block
 block|{
 if|if
 condition|(
+name|w
+operator|->
+name|ww_back
+operator|!=
+operator|(
 name|isfg
 argument_list|(
 name|w
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|w
-operator|->
-name|ww_back
-operator|!=
+condition|?
 name|framewin
-operator|&&
-operator|!
-name|wwvisible
-argument_list|(
-name|w
-argument_list|)
-condition|)
-block|{
-name|deletewin
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-name|addwin
-argument_list|(
-name|w
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|doreframe
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|isbg
-argument_list|(
-name|w
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|w
-operator|!=
-name|bgwin
-operator|&&
-operator|!
-name|wwvisible
-argument_list|(
-name|w
-argument_list|)
-condition|)
-block|{
-name|deletewin
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-name|addwin
-argument_list|(
-name|w
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
-name|doreframe
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|w
-operator|->
-name|ww_back
-operator|!=
+else|:
 name|fgwin
+operator|)
 operator|&&
 operator|!
 name|wwvisible
@@ -745,14 +627,16 @@ name|addwin
 argument_list|(
 name|w
 argument_list|,
-literal|1
+name|isfg
+argument_list|(
+name|w
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|doreframe
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -765,7 +649,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Add a window at one of four places.  */
+comment|/*  * Add a window at the top of normal windows or foreground windows.  */
 end_comment
 
 begin_expr_stmt
@@ -773,7 +657,7 @@ name|addwin
 argument_list|(
 name|w
 argument_list|,
-name|where
+name|fg
 argument_list|)
 specifier|register
 expr|struct
@@ -783,17 +667,19 @@ name|w
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|char
+name|fg
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-switch|switch
+if|if
 condition|(
-name|where
+name|fg
 condition|)
 block|{
-case|case
-literal|0
-case|:
-comment|/* top of foreground windows */
 name|wwadd
 argument_list|(
 name|w
@@ -811,11 +697,8 @@ name|fgwin
 operator|=
 name|w
 expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-comment|/* top of normal windows */
+block|}
+else|else
 name|wwadd
 argument_list|(
 name|w
@@ -823,40 +706,6 @@ argument_list|,
 name|fgwin
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-comment|/* bottom of normal windows */
-name|wwadd
-argument_list|(
-name|w
-argument_list|,
-name|bgwin
-operator|->
-name|ww_back
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
-comment|/* top of background windows */
-name|wwadd
-argument_list|(
-name|w
-argument_list|,
-name|bgwin
-operator|->
-name|ww_back
-argument_list|)
-expr_stmt|;
-name|bgwin
-operator|=
-name|w
-expr_stmt|;
-break|break;
-block|}
 block|}
 end_block
 
@@ -881,14 +730,6 @@ begin_block
 block|{
 if|if
 condition|(
-name|isfg
-argument_list|(
-name|w
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 name|fgwin
 operator|==
 name|w
@@ -899,29 +740,6 @@ name|w
 operator|->
 name|ww_back
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|isbg
-argument_list|(
-name|w
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|bgwin
-operator|==
-name|w
-condition|)
-name|bgwin
-operator|=
-name|w
-operator|->
-name|ww_forw
-expr_stmt|;
-block|}
 name|wwdelete
 argument_list|(
 name|w

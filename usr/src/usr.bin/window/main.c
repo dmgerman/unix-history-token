@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.18 84/04/05"
+literal|"@(#)main.c	3.19 84/04/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -572,11 +572,6 @@ block|}
 name|fgwin
 operator|=
 name|framewin
-expr_stmt|;
-name|bgwin
-operator|=
-operator|&
-name|wwhead
 expr_stmt|;
 name|wwupdate
 argument_list|()

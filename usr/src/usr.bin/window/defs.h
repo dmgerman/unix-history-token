@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.11 84/04/05	  */
+comment|/*  *	@(#)defs.h	3.12 84/04/05	  */
 end_comment
 
 begin_include
@@ -144,18 +144,6 @@ begin_comment
 comment|/* the last foreground window */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|ww
-modifier|*
-name|bgwin
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the first background window */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -164,16 +152,6 @@ parameter_list|(
 name|w
 parameter_list|)
 value|((w)->ww_order<= fgwin->ww_order)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isbg
-parameter_list|(
-name|w
-parameter_list|)
-value|((w)->ww_order>= bgwin->ww_order)
 end_define
 
 begin_decl_stmt
