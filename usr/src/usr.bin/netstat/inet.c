@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.7 (Berkeley) %G%"
+literal|"@(#)inet.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1602,7 +1602,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ICMP_IREQREPLY
+name|ICMP_MAXTYPE
 operator|+
 literal|1
 condition|;
@@ -1730,7 +1730,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ICMP_IREQREPLY
+name|ICMP_MAXTYPE
 operator|+
 literal|1
 condition|;
