@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.130 1998/09/18 22:41:12 gibbs Exp $ ** **  Device driver for the   NCR 53C8XX   PCI-SCSI-Controller Family. ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.131 1998/09/20 22:54:28 ken Exp $ ** **  Device driver for the   NCR 53C8XX   PCI-SCSI-Controller Family. ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -1776,33 +1776,41 @@ begin_comment
 comment|/*--------------------------------------- ** **	Timestamps for profiling ** **--------------------------------------- */
 end_comment
 
+begin_comment
+comment|/* Type of the kernel variable `ticks'.  XXX should be declared with the var. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|ticks_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|tstamp
 block|{
-name|int
+name|ticks_t
 name|start
 decl_stmt|;
-name|int
+name|ticks_t
 name|end
 decl_stmt|;
-name|int
+name|ticks_t
 name|select
 decl_stmt|;
-name|int
+name|ticks_t
 name|command
 decl_stmt|;
-name|int
+name|ticks_t
 name|data
 decl_stmt|;
-name|int
+name|ticks_t
 name|status
 decl_stmt|;
-name|int
+name|ticks_t
 name|disconnect
-decl_stmt|;
-name|int
-name|reselect
 decl_stmt|;
 block|}
 struct|;
@@ -2374,7 +2382,7 @@ name|u_long
 name|p_nccb
 decl_stmt|;
 comment|/* 	**	Completion time out for this job. 	**	It's set to time of start + allowed number of seconds. 	*/
-name|u_long
+name|time_t
 name|tlimit
 decl_stmt|;
 comment|/* 	**	All nccbs of one hostadapter are chained. 	*/
@@ -2573,7 +2581,7 @@ name|u_short
 name|squeueput
 decl_stmt|;
 comment|/* 	**	Timeout handler 	*/
-name|u_long
+name|time_t
 name|heartbeat
 decl_stmt|;
 name|u_short
@@ -2582,7 +2590,7 @@ decl_stmt|;
 name|u_short
 name|latetime
 decl_stmt|;
-name|u_long
+name|time_t
 name|lasttime
 decl_stmt|;
 name|struct
@@ -2594,8 +2602,7 @@ name|struct
 name|ncr_reg
 name|regdump
 decl_stmt|;
-name|struct
-name|timeval
+name|time_t
 name|regtime
 decl_stmt|;
 comment|/* 	**	Profiling data 	*/
@@ -3597,7 +3604,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.130 1998/09/18 22:41:12 gibbs Exp $\n"
+literal|"\n$Id: ncr.c,v 1.131 1998/09/20 22:54:28 ken Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -7984,12 +7991,14 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|(
-name|u_long
+name|char
+operator|*
 operator|)
 name|p
 operator|==
 operator|(
-name|u_long
+name|char
+operator|*
 operator|)
 operator|&
 name|scrh
@@ -8188,12 +8197,14 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|(
-name|u_long
+name|char
+operator|*
 operator|)
 name|p
 operator|==
 operator|(
-name|u_long
+name|char
+operator|*
 operator|)
 operator|&
 name|scr
@@ -8392,12 +8403,14 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|(
-name|u_long
+name|char
+operator|*
 operator|)
 name|p
 operator|==
 operator|(
-name|u_long
+name|char
+operator|*
 operator|)
 operator|&
 name|scr
@@ -16891,12 +16904,12 @@ name|np
 init|=
 name|arg
 decl_stmt|;
-name|u_long
+name|time_t
 name|thistime
 init|=
 name|time_second
 decl_stmt|;
-name|u_long
+name|ticks_t
 name|step
 init|=
 name|np
@@ -18001,8 +18014,6 @@ operator|-
 name|np
 operator|->
 name|regtime
-operator|.
-name|tv_sec
 operator|>
 literal|10
 condition|)
@@ -18010,13 +18021,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|microtime
-argument_list|(
-operator|&
 name|np
 operator|->
 name|regtime
-argument_list|)
+operator|=
+name|time_second
 expr_stmt|;
 for|for
 control|(
@@ -19132,7 +19141,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: SCSI phase error fixup: CCB already dequeued (0x%08lx)\n"
+literal|"%s: SCSI phase error fixup: CCB already dequeued (%p)\n"
 argument_list|,
 name|ncr_name
 argument_list|(
@@ -19140,7 +19149,8 @@ name|np
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
+name|void
+operator|*
 operator|)
 name|np
 operator|->
