@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx_reg.h,v 1.12.2.1 1996/09/06 06:32:32 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996, 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx_reg.h,v 1.2.2.9 1996/10/06 16:41:58 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ULTRAEN
+name|FAST20
 value|0x20
 end_define
 
@@ -1164,6 +1164,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALLONES
+value|0x069
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALLZEROS
 value|0x06a
 end_define
@@ -1578,6 +1585,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NO_MATCH_BUSY
+value|0x51
+end_define
+
+begin_comment
+comment|/* Couldn't find BUSY SCB */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REJECT_MSG
 value|0x61
 end_define
@@ -1611,34 +1629,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ABORT_TAG
-value|0x91
-end_define
-
-begin_comment
-comment|/* Sent an ABORT_TAG message */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|AWAITING_MSG
 value|0xa1
 end_define
 
 begin_comment
 comment|/* 						 * Kernel requested to specify                                                  * a message to this target                                                  * (command was null), so tell                                                  * it that it can fill the                                                  * message buffer.                                                  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IMMEDDONE
-value|0xb1
-end_define
-
-begin_comment
-comment|/* 						 * An immediate command has 						 * completed 						 */
 end_comment
 
 begin_define
@@ -1871,6 +1867,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MREQPEND
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDONE
 value|0x08
 end_define
@@ -1995,6 +1998,20 @@ define|#
 directive|define
 name|TAG_ENB
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPLIT_SG
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ABORT_SCB
+value|0x08
 end_define
 
 begin_define
@@ -2165,9 +2182,12 @@ name|SCB_DATACNT2
 value|0x0b2
 end_define
 
-begin_comment
-comment|/* UNUSED - QUAD PADDING	0x0b3 */
-end_comment
+begin_define
+define|#
+directive|define
+name|SCB_LINKED_NEXT
+value|0x0b3
+end_define
 
 begin_define
 define|#
@@ -2232,27 +2252,33 @@ name|SCB_PREV
 value|0x0bb
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux__
-end_ifdef
+begin_define
+define|#
+directive|define
+name|SCB_ACTIVE0
+value|0x0bc
+end_define
 
 begin_define
 define|#
 directive|define
-name|SG_SIZEOF
-value|0x0c
+name|SCB_ACTIVE1
+value|0x0bd
 end_define
 
-begin_comment
-comment|/* sizeof(struct scatterlist) */
-end_comment
+begin_define
+define|#
+directive|define
+name|SCB_ACTIVE2
+value|0x0be
+end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_define
+define|#
+directive|define
+name|SCB_ACTIVE3
+value|0x0bf
+end_define
 
 begin_define
 define|#
@@ -2264,11 +2290,6 @@ end_define
 begin_comment
 comment|/* sizeof(struct ahc_dma) */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* --------------------- AHA-2840-only definitions -------------------- */
@@ -2350,6 +2371,69 @@ define|#
 directive|define
 name|DSPCISTATUS
 value|0x086
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDCTL
+value|0x01d
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDDAT7
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDDAT6
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDDAT5
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDSTB
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDCS
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDRW
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDCTL1
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|BRDCTL0
+value|0x01
 end_define
 
 begin_comment
@@ -2439,7 +2523,7 @@ value|0x020
 end_define
 
 begin_comment
-comment|/*  * The sequencer will stick the frist byte of any rejected message here so  * we can see what is getting thrown away.  Extended messages put the  * extended message type in REJBYTE_EXT.  */
+comment|/*  * The sequencer will stick the frist byte of any rejected message here so  * we can see what is getting thrown away.  */
 end_comment
 
 begin_define
@@ -2449,10 +2533,14 @@ name|REJBYTE
 value|0x030
 end_define
 
+begin_comment
+comment|/*  * Since the sequencer cannot read QOUTCNT, we use this memory location  * to make sure that we don't overflow the QOUTFIFO when doing SCB Paging.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|REJBYTE_EXT
+name|QOUTQCNT
 value|0x031
 end_define
 
@@ -2493,7 +2581,7 @@ value|0x034
 end_define
 
 begin_comment
-comment|/* We reserve 8bytes to store outgoing messages */
+comment|/* We reserve 6bytes to store outgoing messages */
 end_comment
 
 begin_define
@@ -2552,40 +2640,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSG6
+name|LASTPHASE
 value|0x03b
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSG7
-value|0x03c
-end_define
-
-begin_comment
-comment|/*  * These are offsets into the card's scratch ram.  Some of the values are  * specified in the AHA2742 technical reference manual and are initialized  * by the BIOS at boot time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LASTPHASE
-value|0x03d
+name|P_BUSFREE
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARG_1
-value|0x03e
+value|0x03c
 end_define
 
 begin_define
 define|#
 directive|define
 name|RETURN_1
-value|0x03f
+value|0x03c
 end_define
 
 begin_define
@@ -2619,15 +2696,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIGSTATE
-value|0x040
-end_define
-
-begin_define
-define|#
-directive|define
 name|DMAPARAMS
-value|0x041
+value|0x03d
 end_define
 
 begin_comment
@@ -2637,54 +2707,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SG_COUNT
-value|0x042
-end_define
-
-begin_define
-define|#
-directive|define
-name|SG_NEXT
-value|0x043
-end_define
-
-begin_comment
-comment|/* working value of SG pointer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SG_NEXT0
-value|0x043
-end_define
-
-begin_define
-define|#
-directive|define
-name|SG_NEXT1
-value|0x044
-end_define
-
-begin_define
-define|#
-directive|define
-name|SG_NEXT2
-value|0x045
-end_define
-
-begin_define
-define|#
-directive|define
-name|SG_NEXT3
-value|0x046
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCBCOUNT
-value|0x047
+value|0x03e
 end_define
 
 begin_comment
@@ -2695,7 +2719,7 @@ begin_define
 define|#
 directive|define
 name|COMP_SCBCOUNT
-value|0x048
+value|0x03f
 end_define
 
 begin_comment
@@ -2706,7 +2730,7 @@ begin_define
 define|#
 directive|define
 name|QCNTMASK
-value|0x049
+value|0x040
 end_define
 
 begin_comment
@@ -2717,7 +2741,7 @@ begin_define
 define|#
 directive|define
 name|FLAGS
-value|0x04a
+value|0x041
 end_define
 
 begin_define
@@ -2758,7 +2782,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SELECTED
+name|TAGGED_SCB
 value|0x20
 end_define
 
@@ -2780,7 +2804,7 @@ begin_define
 define|#
 directive|define
 name|SAVED_TCL
-value|0x04b
+value|0x042
 end_define
 
 begin_comment
@@ -2790,22 +2814,54 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACTIVE_A
-value|0x04c
+name|SG_COUNT
+value|0x043
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACTIVE_B
-value|0x04d
+name|SG_NEXT
+value|0x044
+end_define
+
+begin_comment
+comment|/* working value of SG pointer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SG_NEXT0
+value|0x044
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_NEXT1
+value|0x045
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_NEXT2
+value|0x046
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_NEXT3
+value|0x047
 end_define
 
 begin_define
 define|#
 directive|define
 name|WAITING_SCBH
-value|0x04e
+value|0x048
 end_define
 
 begin_comment
@@ -2815,8 +2871,86 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DISCONNECTED_SCBH
+name|SAVED_LINKPTR
+value|0x049
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVED_SCBPTR
+value|0x04a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ULTRA_ENB
+value|0x04b
+end_define
+
+begin_define
+define|#
+directive|define
+name|ULTRA_ENB_B
+value|0x04c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSGIN_EXT_LEN
+value|0x04d
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSGIN_EXT_OPCODE
+value|0x04e
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSGIN_EXT_BYTE0
 value|0x04f
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSGIN_EXT_BYTE1
+value|0x050
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSGIN_EXT_BYTE2
+value|0x051
+end_define
+
+begin_comment
+comment|/* 					 * This location, stores the last 					 * byte of an extended message if 					 * it passes the two bytes of space 					 * we allow now.  This byte isn't 					 * used for anything, it just makes 					 * the code shorter for tossing 					 * extra bytes. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSGIN_EXT_LASTBYTE
+value|0x052
+end_define
+
+begin_comment
+comment|/* Used as the address for range 					 * checking, not used for storage. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DISCONNECTED_SCBH
+value|0x052
 end_define
 
 begin_comment
@@ -2826,75 +2960,65 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCB_LIST_NULL
-value|0xff
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAVED_LINKPTR
-value|0x050
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAVED_SCBPTR
-value|0x051
-end_define
-
-begin_define
-define|#
-directive|define
-name|ULTRA_ENB
-value|0x052
-end_define
-
-begin_define
-define|#
-directive|define
-name|ULTRA_ENB_B
+name|FREE_SCBH
 value|0x053
 end_define
 
+begin_comment
+comment|/* 					 * head of list of SCBs that are 					 * not in use.  Used for SCB paging. 					 */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MSGIN_EXT_LEN
+name|HSCB_ADDR0
 value|0x054
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSGIN_EXT_OPCODE
+name|HSCB_ADDR1
 value|0x055
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSGIN_EXT_BYTE0
+name|HSCB_ADDR2
 value|0x056
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSGIN_EXT_BYTE1
+name|HSCB_ADDR3
 value|0x057
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSGIN_EXT_LASTBYTE
+name|CUR_SCBID
 value|0x058
 end_define
 
+begin_define
+define|#
+directive|define
+name|QFULLCNT
+value|0x059
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_LIST_NULL
+value|0xff
+end_define
+
 begin_comment
-comment|/* 					 * We don't use this location, but 					 * continue to store bytes until 					 * we reach this address (avoids 					 * a more complicated compare). 					 * So, we can store at most 2 					 * bytes for now. 					 */
+comment|/*  * These are offsets into the card's scratch ram.  Some of the values are  * specified in the AHA2742 technical reference manual and are initialized  * by the BIOS at boot time.  */
 end_comment
 
 begin_define
