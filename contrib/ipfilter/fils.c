@@ -304,7 +304,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: fils.c,v 2.2.2.3 1999/10/05 12:57:37 darrenr Exp $"
+literal|"@(#)$Id: fils.c,v 2.2.2.4 1999/12/04 02:06:24 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2933,13 +2933,17 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"\tpkt_flags& %x = %x,\t"
+literal|"\tpkt_flags& %x(%x) = %x,\t"
 argument_list|,
 name|ips
 operator|.
 name|is_flags
 operator|&
 literal|0xf
+argument_list|,
+name|ips
+operator|.
+name|is_flags
 argument_list|,
 name|ips
 operator|.

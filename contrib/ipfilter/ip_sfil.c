@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sfil.c,v 2.1.2.2 1999/10/05 12:59:08 darrenr Exp $"
+literal|"@(#)$Id: ip_sfil.c,v 2.1.2.5 1999/12/11 05:31:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2957,16 +2957,12 @@ operator|!
 name|f
 condition|)
 block|{
-name|ftail
-operator|=
-name|fprev
-expr_stmt|;
 if|if
 condition|(
 name|req
 operator|!=
 name|SIOCINAFR
-operator|&&
+operator|||
 name|req
 operator|!=
 name|SIOCINIFR
@@ -2987,7 +2983,8 @@ name|f
 operator|->
 name|fr_next
 expr_stmt|;
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|fp
@@ -3019,6 +3016,7 @@ name|f
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3175,7 +3173,7 @@ name|data
 argument_list|,
 name|req
 argument_list|,
-name|f
+name|fp
 argument_list|,
 name|ftail
 argument_list|)

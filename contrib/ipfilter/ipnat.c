@@ -339,7 +339,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.1 1999/08/04 17:30:07 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.1.2.2 1999/12/04 02:09:30 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -558,6 +558,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|getsumd
+name|__P
+argument_list|(
+operator|(
+name|u_32_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -639,6 +652,57 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|getsumd
+parameter_list|(
+name|sum
+parameter_list|)
+name|u_32_t
+name|sum
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|sumdbuf
+index|[
+literal|17
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|sum
+operator|&
+name|NAT_HW_CKSUM
+condition|)
+name|sprintf
+argument_list|(
+name|sumdbuf
+argument_list|,
+literal|"hw(%#0x)"
+argument_list|,
+name|sum
+operator|&
+literal|0xffff
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|sumdbuf
+argument_list|,
+literal|"%#0x"
+argument_list|,
+name|sum
+argument_list|)
+expr_stmt|;
+return|return
+name|sumdbuf
+return|;
 block|}
 end_function
 
@@ -2025,7 +2089,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\tage %lu use %hu sumd %x pr %u"
+literal|"\n\tage %lu use %hu sumd %s/"
 argument_list|,
 name|nat
 operator|.
@@ -2035,18 +2099,34 @@ name|nat
 operator|.
 name|nat_use
 argument_list|,
+name|getsumd
+argument_list|(
 name|nat
 operator|.
 name|nat_sumd
-argument_list|,
-name|nat
-operator|.
-name|nat_p
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" bkt %d flags %x "
+literal|"%s pr %u bkt %d flags %x "
+argument_list|,
+name|getsumd
+argument_list|(
+name|nat
+operator|.
+name|nat_sumd
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|,
+name|nat
+operator|.
+name|nat_p
 argument_list|,
 name|i
 argument_list|,

@@ -1141,6 +1141,8 @@ operator|->
 name|ip_sum
 argument_list|,
 name|sum2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2210,6 +2212,8 @@ operator|->
 name|ip_sum
 argument_list|,
 name|sum2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
