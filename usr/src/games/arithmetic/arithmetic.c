@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arithmetic.c	5.4 (Berkeley) %G%"
+literal|"@(#)arithmetic.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,7 +194,7 @@ name|time_t
 name|time
 parameter_list|()
 function_decl|;
-name|sig_t
+name|void
 name|intr
 parameter_list|()
 function_decl|;
@@ -398,7 +398,7 @@ comment|/* Handle interrupt character.  Print score and exit. */
 end_comment
 
 begin_function
-name|sig_t
+name|void
 name|intr
 parameter_list|()
 block|{

@@ -31,7 +31,6 @@ end_include
 begin_else
 else|#
 directive|else
-else|BSD4.1
 end_else
 
 begin_define
@@ -44,7 +43,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|BSD4.1
 end_endif
 
 begin_include
