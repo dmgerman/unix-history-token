@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	6.1	83/07/29	*/
+comment|/*	tcp_input.c	6.2	83/11/04	*/
 end_comment
 
 begin_include
@@ -2207,6 +2207,16 @@ operator|.
 name|sb_cc
 condition|)
 block|{
+name|tp
+operator|->
+name|snd_wnd
+operator|-=
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_cc
+expr_stmt|;
 name|sbdrop
 argument_list|(
 operator|&
@@ -2220,16 +2230,6 @@ name|so_snd
 operator|.
 name|sb_cc
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|snd_wnd
-operator|-=
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_cc
 expr_stmt|;
 block|}
 else|else
