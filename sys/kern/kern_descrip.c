@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -97,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -5540,7 +5540,7 @@ name|fdp
 operator|->
 name|fd_knlist
 argument_list|,
-name|M_TEMP
+name|M_KQUEUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5555,7 +5555,7 @@ name|fdp
 operator|->
 name|fd_knhash
 argument_list|,
-name|M_TEMP
+name|M_KQUEUE
 argument_list|)
 expr_stmt|;
 name|FREE
