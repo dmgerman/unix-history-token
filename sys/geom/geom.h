@@ -1719,6 +1719,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|g_topology_try_lock
+parameter_list|()
+value|sx_try_xlock(&topology_lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|g_topology_unlock
 parameter_list|()
 define|\
