@@ -287,6 +287,12 @@ name|pass_pos
 decl_stmt|;
 comment|/* Position of scrambled password */
 name|unsigned
+name|chap_pass
+range|:
+literal|1
+decl_stmt|;
+comment|/* Have we got a CHAP_PASSWORD ? */
+name|unsigned
 name|char
 name|response
 index|[
