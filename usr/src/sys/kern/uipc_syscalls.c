@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_syscalls.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_syscalls.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1999,40 +1999,6 @@ name|msg_iov
 operator|=
 name|aiov
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|printf
-argument_list|(
-literal|"sendmsg name %x namelen %d iov %x iovlen %d accrights %x&len %d\n"
-argument_list|,
-name|msg
-operator|.
-name|msg_name
-argument_list|,
-name|msg
-operator|.
-name|msg_namelen
-argument_list|,
-name|msg
-operator|.
-name|msg_iov
-argument_list|,
-name|msg
-operator|.
-name|msg_iovlen
-argument_list|,
-name|msg
-operator|.
-name|msg_accrights
-argument_list|,
-name|msg
-operator|.
-name|msg_accrightslen
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sendit
 argument_list|(
 name|uap
@@ -2184,6 +2150,9 @@ name|msg_iovlen
 condition|;
 name|i
 operator|++
+operator|,
+name|iov
+operator|++
 control|)
 block|{
 if|if
@@ -2248,9 +2217,6 @@ operator|+=
 name|iov
 operator|->
 name|iov_len
-expr_stmt|;
-name|iov
-operator|++
 expr_stmt|;
 block|}
 if|if
@@ -3074,6 +3040,9 @@ name|msg_iovlen
 condition|;
 name|i
 operator|++
+operator|,
+name|iov
+operator|++
 control|)
 block|{
 if|if
@@ -3138,9 +3107,6 @@ operator|+=
 name|iov
 operator|->
 name|iov_len
-expr_stmt|;
-name|iov
-operator|++
 expr_stmt|;
 block|}
 name|len
