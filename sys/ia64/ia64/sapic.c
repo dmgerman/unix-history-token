@@ -302,7 +302,7 @@ name|c
 decl_stmt|;
 name|c
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|p
@@ -339,7 +339,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_enable
 argument_list|(
 name|c
 argument_list|)
@@ -386,7 +386,7 @@ name|c
 decl_stmt|;
 name|c
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|sapic_write
@@ -423,7 +423,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_enable
 argument_list|(
 name|c
 argument_list|)

@@ -2624,7 +2624,7 @@ block|}
 comment|/* 	 * XXX Should switch to DDB's own stack, here. 	 */
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -2843,7 +2843,7 @@ name|regs
 operator|=
 name|ddb_regs
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_enable
 argument_list|(
 name|s
 argument_list|)
