@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.54 (Berkeley) %G%"
+literal|"@(#)login.c	5.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,6 +547,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|openlog
+argument_list|(
+literal|"login"
+argument_list|,
+name|LOG_ODELAY
+argument_list|,
+name|LOG_AUTH
+argument_list|)
+expr_stmt|;
 comment|/* 	 * -p is used by getty to tell login not to destroy the environment 	 * -r is used by rlogind to cause the autologin protocol;  	 * -f is used to skip a second login authentication  	 * -h is used by other servers to pass the name of the remote 	 *    host to login so that it may be placed in utmp and wtmp 	 */
 name|domain
 operator|=
@@ -581,15 +590,6 @@ argument_list|(
 name|localhost
 argument_list|,
 literal|'.'
-argument_list|)
-expr_stmt|;
-name|openlog
-argument_list|(
-literal|"login"
-argument_list|,
-name|LOG_ODELAY
-argument_list|,
-name|LOG_AUTH
 argument_list|)
 expr_stmt|;
 name|fflag
