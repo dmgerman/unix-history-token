@@ -1739,7 +1739,7 @@ argument_list|(
 name|rbuf
 argument_list|)
 argument_list|,
-literal|"425 Cannot open data connetion\r\n"
+literal|"425 Cannot open data connection\r\n"
 argument_list|)
 expr_stmt|;
 block|}

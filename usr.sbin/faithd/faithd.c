@@ -908,7 +908,7 @@ name|MAXARGV
 condition|)
 name|exit_error
 argument_list|(
-literal|"too many augments"
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 name|serverpath
@@ -989,7 +989,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* fall throuth */
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -1430,7 +1430,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Staring faith daemon for %s port"
+literal|"starting faith daemon for %s port"
 argument_list|,
 name|service
 argument_list|)
@@ -1440,7 +1440,7 @@ argument_list|(
 name|s_wld
 argument_list|)
 expr_stmt|;
-comment|/*NOTRECHED*/
+comment|/*NOTREACHED*/
 name|exit
 argument_list|(
 literal|1
@@ -3275,7 +3275,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Terminating faith daemon"
+literal|"terminating faith daemon"
 argument_list|)
 expr_stmt|;
 name|exit

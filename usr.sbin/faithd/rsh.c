@@ -212,7 +212,7 @@ literal|0
 condition|)
 name|exit_failure
 argument_list|(
-literal|"connecion timeout"
+literal|"connection timeout"
 argument_list|)
 expr_stmt|;
 name|n
@@ -419,7 +419,7 @@ argument_list|)
 expr_stmt|;
 name|exit_success
 argument_list|(
-literal|"terminating rsh/contorol connections"
+literal|"terminating rsh/control connections"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -873,7 +873,7 @@ literal|0
 condition|)
 name|exit_failure
 argument_list|(
-literal|"connecion timeout"
+literal|"connection timeout"
 argument_list|)
 expr_stmt|;
 if|if
