@@ -508,6 +508,15 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+comment|/*If this driver is loaded from userland ,just ignore*/
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
+block|{
+return|return;
+block|}
 comment|/*      * Look for the _SB_ scope, which will contain all the devices      * we are likely to support.      */
 if|if
 condition|(

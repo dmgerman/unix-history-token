@@ -834,6 +834,19 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Don't load this driver from userland!!\n"
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
 comment|/*      * Make sure we're not being doubly invoked.      */
 if|if
 condition|(
