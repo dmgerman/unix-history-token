@@ -7832,12 +7832,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* XXX If you recursed this is broken. */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|DROP_GIANT
+argument_list|()
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
@@ -7862,11 +7858,8 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|PICKUP_GIANT
+argument_list|()
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
