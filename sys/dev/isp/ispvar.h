@@ -994,7 +994,7 @@ range|:
 literal|16
 decl_stmt|,
 range|:
-literal|3
+literal|2
 decl_stmt|,
 name|isp_iid_set
 range|:
@@ -1006,7 +1006,7 @@ literal|1
 decl_stmt|,
 name|isp_loopstate
 range|:
-literal|3
+literal|4
 decl_stmt|,
 comment|/* Current Loop State */
 name|isp_fwstate
@@ -1083,7 +1083,11 @@ range|:
 literal|8
 decl_stmt|,
 range|:
-literal|2
+literal|1
+decl_stmt|,
+name|force_logout
+range|:
+literal|1
 decl_stmt|,
 name|was_fabric_dev
 range|:
@@ -1239,21 +1243,21 @@ begin_define
 define|#
 directive|define
 name|LOOP_LSCAN_DONE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOOP_SYNCING_PDB
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_READY
+name|LOOP_SYNCING_PDB
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_READY
+value|8
 end_define
 
 begin_define
