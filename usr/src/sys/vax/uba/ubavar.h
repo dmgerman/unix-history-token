@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.22	81/11/20	*/
+comment|/*	ubavar.h	4.23	81/11/26	*/
 end_comment
 
 begin_comment
@@ -388,6 +388,50 @@ end_define
 begin_comment
 comment|/* use bdp specified in high bits */
 end_comment
+
+begin_comment
+comment|/*  * Macros to bust return word from map allocation routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBAI_BDP
+parameter_list|(
+name|i
+parameter_list|)
+value|((int)(((unsigned)(i))>>28))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UBAI_NMR
+parameter_list|(
+name|i
+parameter_list|)
+value|((int)((i)>>18)&0x3ff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UBAI_MR
+parameter_list|(
+name|i
+parameter_list|)
+value|((int)((i)>>9)&0x1ff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UBAI_BOFF
+parameter_list|(
+name|i
+parameter_list|)
+value|((int)((i)&0x1ff))
+end_define
 
 begin_ifndef
 ifndef|#

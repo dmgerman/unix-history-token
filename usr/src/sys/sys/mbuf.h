@@ -1,18 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.5 81/11/18 */
+comment|/* mbuf.h 4.6 81/11/26 */
 end_comment
 
 begin_comment
 comment|/*  * Constants related to memory allocator.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PGSIZE
-value|1024
-end_define
 
 begin_define
 define|#
@@ -77,27 +70,27 @@ comment|/*  * Macros for type conversion  *  * CONSTANTS HERE ARE A CROCK  */
 end_comment
 
 begin_comment
-comment|/* network page map number to virtual address, and back */
+comment|/* network cluster number to virtual address, and back */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|pftom
+name|cltom
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct mbuf *)((x<< 10) + (int)mbutl))
+value|((struct mbuf *)((int)mbutl + ((x)<< CLSHIFT)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mtopf
+name|mtocl
 parameter_list|(
 name|x
 parameter_list|)
-value|((((int)x& ~0x3ff) - (int)mbutl)>> 10)
+value|(((int)x - (int)mbutl)>> CLSHIFT)
 end_define
 
 begin_comment
@@ -111,18 +104,12 @@ name|dtom
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct mbuf *)((int)x& ~0x7f))
+value|((struct mbuf *)((int)x& ~(MSIZE-1)))
 end_define
 
-begin_define
-define|#
-directive|define
-name|mtoff
-parameter_list|(
-name|x
-parameter_list|)
-value|(((int)x& 0x3ff)>> 7)
-end_define
+begin_comment
+comment|/* mbuf head, to typed data */
+end_comment
 
 begin_define
 define|#
@@ -198,14 +185,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|MPGET
+name|MCLGET
 parameter_list|(
 name|m
 parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)=mpfree) \ 	      { ++mprefcnt[mtopf(m)]; nmpfree--; mpfree = (m)->m_next; } \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mclfree) \ 	      { ++mclrefcnt[mtocl(m)]; nmclfree--; mclfree = (m)->m_next; } \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -218,19 +205,8 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mprefcnt[mtopf(n)] == 0) \ 		    { (n)->m_next = mpfree; mpfree = (n); nmpfree++; } \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_bufs++; \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree; mclfree = (n); nmclfree++; } \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_bufs++; \ 	  splx(ms); }
 end_define
-
-begin_define
-define|#
-directive|define
-name|NMBPG
-value|(PGSIZE/MSIZE)
-end_define
-
-begin_comment
-comment|/* mbufs/page */
-end_comment
 
 begin_struct
 struct|struct
@@ -312,19 +288,19 @@ modifier|*
 name|mfree
 decl_stmt|,
 modifier|*
-name|mpfree
+name|mclfree
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nmpfree
+name|nmclfree
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|mprefcnt
+name|mclrefcnt
 index|[
 name|NMBPAGES
 index|]

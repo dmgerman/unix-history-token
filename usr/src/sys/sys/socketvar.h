@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	4.8	81/11/20	*/
+comment|/*	socketvar.h	4.9	81/11/26	*/
 end_comment
 
 begin_comment
@@ -282,7 +282,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	if ((m)->m_off> MMAXOFF) \ 		(sb)->sb_mbcnt += PGSIZE; \ }
+value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	if ((m)->m_off> MMAXOFF) \ 		(sb)->sb_mbcnt += CLBYTES; \ }
 end_define
 
 begin_comment
@@ -298,7 +298,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_off> MMAXOFF) \ 		(sb)->sb_mbcnt -= PGSIZE; \ }
+value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_off> MMAXOFF) \ 		(sb)->sb_mbcnt -= CLBYTES; \ }
 end_define
 
 begin_comment

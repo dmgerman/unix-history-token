@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.5	81/11/18	*/
+comment|/*	protosw.h	4.6	81/11/26	*/
 end_comment
 
 begin_comment
@@ -105,7 +105,7 @@ name|pr_slowtimo
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* slow timeout (1 sec) */
+comment|/* slow timeout (500ms) */
 name|int
 function_decl|(
 modifier|*
@@ -117,6 +117,17 @@ comment|/* flush any excess space possible */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PR_SLOWHZ
+value|2
+end_define
+
+begin_comment
+comment|/* 2 slow timeouts per second */
+end_comment
 
 begin_comment
 comment|/*  * Values for pr_flags  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.13	81/11/18	*/
+comment|/*	param.h	4.14	81/11/26	*/
 end_comment
 
 begin_comment
@@ -369,6 +369,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLBYTES
+value|(CLSIZE*NBPG)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLOFSET
 value|(CLSIZE*NBPG-1)
 end_define
@@ -376,6 +383,30 @@ end_define
 begin_comment
 comment|/* for clusters, like PGOFSET */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|claligned
+parameter_list|(
+name|x
+parameter_list|)
+value|((((int)(x))&CLOFSET)==0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOFF
+value|CLOFSET
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLSHIFT
+value|(PGSHIFT+1)
+end_define
 
 begin_comment
 comment|/* give the base virtual address (first of CLSIZE) */
