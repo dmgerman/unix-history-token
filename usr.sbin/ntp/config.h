@@ -11,16 +11,6 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ULONG_CONST
-parameter_list|(
-name|a
-parameter_list|)
-value|a ## UL
-end_define
-
 begin_comment
 comment|/* Is adjtime() accurate? */
 end_comment
@@ -36,16 +26,6 @@ end_comment
 begin_comment
 comment|/* #undef AUDIO_CHU */
 end_comment
-
-begin_comment
-comment|/* Autokey? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AUTOKEY
-end_define
 
 begin_comment
 comment|/* Declare char *sys_errlist array */
@@ -461,7 +441,7 @@ comment|/* #undef CLOCK_TT560 */
 end_comment
 
 begin_comment
-comment|/* Ultralink M320 WWVB receiver */
+comment|/* Ultralink M320 WWVB receiver? */
 end_comment
 
 begin_comment
@@ -806,14 +786,6 @@ value|100
 end_define
 
 begin_comment
-comment|/* Use DES? */
-end_comment
-
-begin_comment
-comment|/* #undef DES */
-end_comment
-
-begin_comment
 comment|/* synch TODR hourly? */
 end_comment
 
@@ -855,9 +827,12 @@ begin_comment
 comment|/* Do we have audio support? */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_AUDIO */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_AUDIO
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<bstring.h> header file. */
@@ -873,6 +848,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_CIOGETEV */
+end_comment
+
+begin_comment
+comment|/* [Use], [/dev/clockctl?] */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CLOCKCTL */
 end_comment
 
 begin_comment
@@ -918,6 +901,22 @@ directive|define
 name|HAVE_ERRNO_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_md2' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EVP_MD2 */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_mdc2' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EVP_MDC2 */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
@@ -1024,6 +1023,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* ISC: Use iflist_sysctl? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_IFLIST_SYSCTL
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
@@ -1038,9 +1048,12 @@ begin_comment
 comment|/* Define to 1 if you have the `isfinite' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_ISFINITE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_ISFINITE
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `kvm_open' function. */
@@ -1078,6 +1091,14 @@ comment|/* #undef HAVE_LIBCURSES */
 end_comment
 
 begin_comment
+comment|/* Do we have the edit library? */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBEDIT */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `elf' library (-lelf). */
 end_comment
 
@@ -1110,6 +1131,25 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBLD */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `md' library (-lmd). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBMD
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `md5' library (-lmd5). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBMD5 */
 end_comment
 
 begin_comment
@@ -1199,6 +1239,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `MD5Init' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MD5INIT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<md5.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MD5_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `memcpy' function. */
 end_comment
 
@@ -1276,9 +1338,12 @@ begin_comment
 comment|/* Define to 1 if you have the `mlockall' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MLOCKALL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MLOCKALL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `mrand48' function. */
@@ -1360,15 +1425,20 @@ comment|/* #undef HAVE_NETINFO_NI_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<net/if6.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NET_IF6_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<net/if.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_NET_IF_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_NET_IF_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `nice' function. */
@@ -1614,6 +1684,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `setrlimit' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETRLIMIT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `setsid' function. */
 end_comment
 
@@ -1725,6 +1806,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SRAND48
+value|1
+end_define
+
+begin_comment
+comment|/* Does struct sockaddr_storage have ss_family? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SS_FAMILY_IN_SS
 value|1
 end_define
 
@@ -1923,6 +2015,14 @@ comment|/* #undef HAVE_SYS_CLKDEFS_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/clockctl.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_CLOCKCTL_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/file.h> header file. */
 end_comment
 
@@ -1949,6 +2049,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_IOCTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/ipc.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_IPC_H
 value|1
 end_define
 
@@ -2059,6 +2170,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/shm.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SHM_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/signal.h> header file. */
 end_comment
 
@@ -2143,6 +2265,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_SYS_SYSSGI_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/systune.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_SYSTUNE_H */
 end_comment
 
 begin_comment
@@ -2333,6 +2463,28 @@ comment|/* #undef HAVE_TIO_SERIAL_STUFF */
 end_comment
 
 begin_comment
+comment|/* Does u_int64_t exist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TYPE_U_INT64_T
+value|1
+end_define
+
+begin_comment
+comment|/* Does u_int8_t exist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TYPE_U_INT8_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `umask' function. */
 end_comment
 
@@ -2444,6 +2596,84 @@ comment|/* #undef HAVE___NTP_GETTIME */
 end_comment
 
 begin_comment
+comment|/* Does struct sockaddr_storage have __ss_family? */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___SS_FAMILY_IN_SS */
+end_comment
+
+begin_comment
+comment|/* Should we use the IRIG sawtooth filter? */
+end_comment
+
+begin_comment
+comment|/* #undef IRIG_SUCKS */
+end_comment
+
+begin_comment
+comment|/* ISC: have struct if_laddrconf? */
+end_comment
+
+begin_comment
+comment|/* #undef ISC_PLATFORM_HAVEIF_LADDRCONF */
+end_comment
+
+begin_comment
+comment|/* ISC: have struct if_laddrreq? */
+end_comment
+
+begin_comment
+comment|/* #undef ISC_PLATFORM_HAVEIF_LADDRREQ */
+end_comment
+
+begin_comment
+comment|/* ISC: Have struct in6_pktinfo? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_HAVEIN6PKTINFO
+end_define
+
+begin_comment
+comment|/* ISC: Have IPv6? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_HAVEIPV6
+end_define
+
+begin_comment
+comment|/* ISC: struct sockaddr as sa_len? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_HAVESALEN
+end_define
+
+begin_comment
+comment|/* ISC: Need in6addr_any? */
+end_comment
+
+begin_comment
+comment|/* #undef ISC_PLATFORM_NEEDIN6ADDRANY */
+end_comment
+
+begin_comment
+comment|/* ISC: provide inet_ntop() */
+end_comment
+
+begin_comment
+comment|/* #undef ISC_PLATFORM_NEEDNTOP */
+end_comment
+
+begin_comment
 comment|/* Does the kernel have an FLL bug? */
 end_comment
 
@@ -2505,6 +2735,14 @@ directive|define
 name|K_TICK_NAME
 value|"_tick"
 end_define
+
+begin_comment
+comment|/* Should we align with the NIST lockclock scheme? */
+end_comment
+
+begin_comment
+comment|/* #undef LOCKCLOCK */
+end_comment
 
 begin_comment
 comment|/* Does the kernel support multicasting IP? */
@@ -2622,7 +2860,7 @@ begin_define
 define|#
 directive|define
 name|NTP_KEYSDIR
-value|"/usr/local/etc"
+value|"/etc/ntp"
 end_define
 
 begin_comment
@@ -2659,9 +2897,11 @@ begin_comment
 comment|/* Use OpenSSL? */
 end_comment
 
-begin_comment
-comment|/* #undef OPENSSL */
-end_comment
+begin_define
+define|#
+directive|define
+name|OPENSSL
+end_define
 
 begin_comment
 comment|/* Should we open the broadcast socket? */
@@ -2812,14 +3052,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Public key? */
-end_comment
-
-begin_comment
-comment|/* #undef PUBKEY */
-end_comment
-
-begin_comment
 comment|/* Does qsort expect to work on "void *" stuff? */
 end_comment
 
@@ -2869,14 +3101,6 @@ value|void
 end_define
 
 begin_comment
-comment|/* Use RSAREF? */
-end_comment
-
-begin_comment
-comment|/* #undef RSAREF */
-end_comment
-
-begin_comment
 comment|/* Do we want the SCO clock hacks? */
 end_comment
 
@@ -2885,7 +3109,7 @@ comment|/* #undef SCO5_CLOCK */
 end_comment
 
 begin_comment
-comment|/* The size of an `int', as computed by sizeof. */
+comment|/* The size of a `int', as computed by sizeof. */
 end_comment
 
 begin_define
@@ -2915,6 +3139,11 @@ operator|||
 name|defined
 argument_list|(
 name|__sparc64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
 argument_list|)
 end_if
 
@@ -2967,6 +3196,14 @@ end_comment
 
 begin_comment
 comment|/* #undef SLEWALWAYS */
+end_comment
+
+begin_comment
+comment|/* *s*printf() functions are char* */
+end_comment
+
+begin_comment
+comment|/* #undef SPRINTF_CHAR */
 end_comment
 
 begin_comment
@@ -3030,6 +3267,22 @@ define|#
 directive|define
 name|STR_SYSTEM
 value|"sparc64-undermydesk-freebsd"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"amd64-undermydesk-freebsd"
 end_define
 
 begin_elif
@@ -3152,6 +3405,20 @@ value|1
 end_define
 
 begin_comment
+comment|/* How do we create unsigned long constants? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ULONG_CONST
+parameter_list|(
+name|a
+parameter_list|)
+value|a ## UL
+end_define
+
+begin_comment
 comment|/* Must we have a CTTY for fsetown? */
 end_comment
 
@@ -3186,15 +3453,84 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.1.1b"
+value|"4.2.0"
+end_define
+
+begin_comment
+comment|/* ISC: Want IPv6? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WANT_IPV6
 end_define
 
 begin_comment
 comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
+comment|/* Handle ss_family */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SS_FAMILY_IN_SS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE___SS_FAMILY_IN_SS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ss_family
+value|__ss_family
+end_define
+
+begin_define
+define|#
+directive|define
+name|ss_len
+value|__ss_len
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(HAVE_SS_FAMILY_IN_SS)&& defined(HAVE_SA_FAMILY_IN_SS) */
 end_comment
 
 begin_comment
@@ -3322,6 +3658,17 @@ end_comment
 begin_comment
 comment|/* #undef volatile */
 end_comment
+
+begin_comment
+comment|/* XXX EAI_NODATA is deprecated but still used in 4.2.0, work around that */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EAI_NODATA
+value|EAI_NONAME
+end_define
 
 end_unit
 
