@@ -1003,6 +1003,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_RID_CNF_DBM_ADJUST
+value|0xFC46
+end_define
+
+begin_define
+define|#
+directive|define
 name|WI_RID_BASIC_RATE
 value|0xFCB3
 end_define
