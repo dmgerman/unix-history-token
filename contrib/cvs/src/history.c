@@ -2572,39 +2572,17 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> fopen(%s,a)\n"
+literal|"%s-> fopen(%s,a)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> fopen(%s,a)\n"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -3532,7 +3510,7 @@ name|NEXT_BAR
 parameter_list|(
 name|here
 parameter_list|)
-value|do { while (isspace(*line)) line++; hr->here = line; while ((c = *line++)&& c != '|') ; if (!c) return(rtn); *(line - 1) = '\0'; } while (0)
+value|do { while (isspace((unsigned char) *line)) line++; hr->here = line; while ((c = *line++)&& c != '|') ; if (!c) return(rtn); *(line - 1) = '\0'; } while (0)
 end_define
 
 begin_function
@@ -3599,6 +3577,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|line
 argument_list|)
@@ -4015,6 +3997,10 @@ operator|&&
 operator|!
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp2
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Three way file comparison program (diff3) for Project GNU.    Copyright (C) 1988, 1989, 1992, 1993, 1994, 1997, 1998 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Three way file comparison program (diff3) for Project GNU.    Copyright (C) 1988, 1989, 1992, 1993, 1994, 1997, 1998 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     */
 end_comment
 
 begin_escape
@@ -2372,10 +2372,11 @@ condition|(
 name|merge
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|freopen
+name|FILE
+modifier|*
+name|mfp
+init|=
+name|fopen
 argument_list|(
 name|file
 index|[
@@ -2386,9 +2387,12 @@ index|]
 index|]
 argument_list|,
 literal|"r"
-argument_list|,
-name|stdin
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|mfp
 condition|)
 name|diff3_perror_with_exit
 argument_list|(
@@ -2405,7 +2409,7 @@ name|conflicts_found
 operator|=
 name|output_diff3_merge
 argument_list|(
-name|stdin
+name|mfp
 argument_list|,
 name|diff3
 argument_list|,
@@ -2433,12 +2437,32 @@ if|if
 condition|(
 name|ferror
 argument_list|(
-name|stdin
+name|mfp
 argument_list|)
 condition|)
 name|diff3_fatal
 argument_list|(
 literal|"read error"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|mfp
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|perror_with_name
+argument_list|(
+name|file
+index|[
+name|rev_mapping
+index|[
+name|FILE0
+index|]
+index|]
 argument_list|)
 expr_stmt|;
 block|}

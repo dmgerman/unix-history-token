@@ -1738,15 +1738,11 @@ comment|/* Here is our librarified gzip implementation.  It is very minimal    b
 end_comment
 
 begin_comment
-comment|/* Note that currently only the client uses the gzip library.  If we    make the server use it too (which should be straightforward), then    filter_stream_through_program, filter_through_gzip, and    filter_through_gunzip can go away.  */
-end_comment
-
-begin_comment
-comment|/* BUF should contain SIZE bytes of gzipped data (RFC1952/RFC1951).    We are to uncompress the data and write the result to the file    descriptor FD.  If something goes wrong, give an error message    mentioning FULLNAME as the name of the file for FD (and make it a    fatal error if we can't recover from it).  */
+comment|/* BUF should contain SIZE bytes of gzipped data (RFC1952/RFC1951).    We are to uncompress the data and write the result to the file    descriptor FD.  If something goes wrong, give a nonfatal error message    mentioning FULLNAME as the name of the file for FD.  Return 1 if    it is an error we can't recover from.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|gunzip_and_write
 parameter_list|(
 name|fd
@@ -1809,15 +1805,20 @@ index|]
 operator|!=
 literal|139
 condition|)
+block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|0
 argument_list|,
 literal|"gzipped data does not start with gzip identification"
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|buf
@@ -1827,15 +1828,20 @@ index|]
 operator|!=
 literal|8
 condition|)
+block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|0
 argument_list|,
 literal|"only the deflate compression method is supported"
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 comment|/* Skip over the fixed header, and then skip any of the variable-length        fields.  */
 name|pos
 operator|=
@@ -2029,9 +2035,10 @@ name|zstatus
 operator|!=
 name|Z_OK
 condition|)
+block|{
 name|compress_error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|zstatus
 argument_list|,
@@ -2041,6 +2048,10 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|write
@@ -2061,9 +2072,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|errno
 argument_list|,
@@ -2072,6 +2084,10 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|crc
 operator|=
 name|crc32
@@ -2178,9 +2194,10 @@ literal|24
 operator|)
 operator|)
 condition|)
+block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -2189,6 +2206,10 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|zstr
@@ -2245,9 +2266,10 @@ literal|24
 operator|)
 operator|)
 condition|)
+block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -2256,15 +2278,22 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Read all of FD and put the gzipped data (RFC1952/RFC1951) into *BUF,    replacing previous contents of *BUF.  *BUF is malloc'd and *SIZE is    its allocated size.  Put the actual number of bytes of data in    *LEN.  If something goes wrong, give an error message mentioning    FULLNAME as the name of the file for FD (and make it a fatal error    if we can't recover from it).  LEVEL is the compression level (1-9).  */
+comment|/* Read all of FD and put the gzipped data (RFC1952/RFC1951) into *BUF,    replacing previous contents of *BUF.  *BUF is malloc'd and *SIZE is    its allocated size.  Put the actual number of bytes of data in    *LEN.  If something goes wrong, give a nonfatal error mentioning    FULLNAME as the name of the file for FD, and return 1 if we can't    recover from it).  LEVEL is the compression level (1-9).  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|read_and_gzip
 parameter_list|(
 name|fd
@@ -2332,20 +2361,19 @@ operator|<
 literal|1024
 condition|)
 block|{
+name|unsigned
+name|char
+modifier|*
+name|newbuf
+decl_stmt|;
 operator|*
 name|size
 operator|=
 literal|1024
 expr_stmt|;
-operator|*
-name|buf
+name|newbuf
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|xrealloc
+name|realloc
 argument_list|(
 operator|*
 name|buf
@@ -2353,6 +2381,31 @@ argument_list|,
 operator|*
 name|size
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|newbuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+operator|*
+name|buf
+operator|=
+name|newbuf
 expr_stmt|;
 block|}
 operator|(
@@ -2497,9 +2550,10 @@ name|zstatus
 operator|!=
 name|Z_OK
 condition|)
+block|{
 name|compress_error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|zstatus
 argument_list|,
@@ -2509,6 +2563,10 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|zstr
 operator|.
 name|avail_out
@@ -2553,9 +2611,10 @@ name|nread
 operator|<
 literal|0
 condition|)
+block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|errno
 argument_list|,
@@ -2564,6 +2623,10 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2614,6 +2677,11 @@ operator|<
 literal|4096
 condition|)
 block|{
+name|unsigned
+name|char
+modifier|*
+name|newbuf
+decl_stmt|;
 name|offset
 operator|=
 name|zstr
@@ -2628,10 +2696,9 @@ name|size
 operator|*=
 literal|2
 expr_stmt|;
-operator|*
-name|buf
+name|newbuf
 operator|=
-name|xrealloc
+name|realloc
 argument_list|(
 operator|*
 name|buf
@@ -2639,6 +2706,31 @@ argument_list|,
 operator|*
 name|size
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|newbuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+operator|*
+name|buf
+operator|=
+name|newbuf
 expr_stmt|;
 name|zstr
 operator|.
@@ -2909,6 +3001,9 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -369,7 +369,7 @@ name|tag_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-lRF] [-b] [-d] [-c] [-r tag|-D date] tag [files...]\n"
+literal|"Usage: %s %s [-lRF] [-b] [-d] [-c] [-r rev|-D date] tag [files...]\n"
 block|,
 literal|"\t-l\tLocal directory only, not recursive.\n"
 block|,
@@ -748,16 +748,6 @@ argument_list|(
 name|symtag
 argument_list|)
 expr_stmt|;
-name|send_file_names
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-name|SEND_EXPAND_WILD
-argument_list|)
-expr_stmt|;
-comment|/* SEND_NO_CONTENTS has a mildly bizarre interaction with 	   check_uptodate; if the timestamp is modified but the file 	   is unmodified, the check will fail, only to have "cvs diff" 	   show no differences (and one must do "update" or something to 	   reset the client's notion of the timestamp).  */
 name|send_files
 argument_list|(
 name|argc
@@ -768,7 +758,21 @@ name|local
 argument_list|,
 literal|0
 argument_list|,
+comment|/* I think the -c case is like "cvs status", in 		       which we really better be correct rather than 		       being fast; it is just too confusing otherwise.  */
+name|check_uptodate
+condition|?
+literal|0
+else|:
 name|SEND_NO_CONTENTS
+argument_list|)
+expr_stmt|;
+name|send_file_names
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|SEND_EXPAND_WILD
 argument_list|)
 expr_stmt|;
 name|send_to_server
@@ -1346,11 +1350,35 @@ condition|(
 name|delete_flag
 condition|)
 block|{
+comment|/* Deleting a tag which did not exist is a noop and 		   should not be logged.  */
 name|addit
 operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|delete_flag
+condition|)
+block|{
+name|free
+argument_list|(
+name|p
+operator|->
+name|data
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|data
+operator|=
+name|xstrdup
+argument_list|(
+name|oversion
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1655,6 +1683,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -3139,6 +3171,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|name
 index|[
 literal|0
@@ -3171,6 +3207,10 @@ operator|!
 operator|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -3759,6 +3799,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|join_tag
 index|[
 literal|0
@@ -3780,6 +3824,22 @@ operator|*
 name|s
 operator|=
 literal|'\0'
+expr_stmt|;
+comment|/* hmmm...  I think it makes sense to allow -j:<date>, but 	 * for now this fixes a bug where CVS just spins and spins (I 	 * think in the RCS code) looking for a zero length tag. 	 */
+if|if
+condition|(
+operator|!
+operator|*
+name|c
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"argument to join may not contain a date specifier without a tag"
+argument_list|)
 expr_stmt|;
 block|}
 name|tag_check_valid

@@ -170,6 +170,7 @@ operator|=
 name|get_homedir
 argument_list|()
 expr_stmt|;
+comment|/* If we can't find a home directory, ignore ~/.cvsrc.  This may        make tracking down problems a bit of a pain, but on the other        hand it might be obnoxious to complain when CVS will function        just fine without .cvsrc (and many users won't even know what        .cvsrc is).  */
 if|if
 condition|(
 operator|!
@@ -306,6 +307,10 @@ argument_list|)
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|line
