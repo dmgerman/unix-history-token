@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.7 %G%"
+literal|"@(#)eval.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,10 @@ name|double
 name|fr0
 decl_stmt|,
 name|fr1
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 if|if
 condition|(
@@ -1031,6 +1035,41 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|p
+operator|->
+name|sconval
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NIL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"can't read \"%s\""
+argument_list|,
+name|p
+operator|->
+name|sconval
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|skimsource
 argument_list|(
 name|p
@@ -1038,6 +1077,7 @@ operator|->
 name|sconval
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
