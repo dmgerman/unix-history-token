@@ -4890,9 +4890,6 @@ comment|/* fall thru... */
 case|case
 name|IEEE80211_S_AUTH
 case|:
-case|case
-name|IEEE80211_S_RUN
-case|:
 name|IEEE80211_DPRINTF
 argument_list|(
 name|ic
@@ -4904,6 +4901,10 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* fall thru... */
+case|case
+name|IEEE80211_S_RUN
+case|:
 break|break;
 case|case
 name|IEEE80211_S_SCAN
