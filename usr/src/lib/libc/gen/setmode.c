@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Dave Borman at Cray Research, Inc.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setmode.c	5.7 (Berkeley) %G%"
+literal|"@(#)setmode.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1015,6 +1015,10 @@ comment|/* 				 * When ever we hit 'u', 'g', or 'o', we have 				 * to flush out
 if|if
 condition|(
 name|perm
+operator|||
+name|op
+operator|==
+literal|'='
 condition|)
 block|{
 name|ADDCMD
@@ -1076,6 +1080,10 @@ comment|/* 				 * Add any permissions that we haven't already 				 * done. 				 
 if|if
 condition|(
 name|perm
+operator|||
+name|op
+operator|==
+literal|'='
 condition|)
 block|{
 name|ADDCMD
