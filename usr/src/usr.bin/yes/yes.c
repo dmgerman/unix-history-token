@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1987 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yes.c	5.1 (Berkeley) %G%"
+literal|"@(#)yes.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_function
 name|main
@@ -53,30 +59,42 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
 for|for
 control|(
 init|;
 condition|;
 control|)
-name|printf
+name|puts
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|argc
-operator|>
-literal|1
-condition|?
 name|argv
 index|[
 literal|1
 index|]
-else|:
+argument_list|)
+expr_stmt|;
+else|else
+for|for
+control|(
+init|;
+condition|;
+control|)
+name|puts
+argument_list|(
 literal|"y"
 argument_list|)
 expr_stmt|;
