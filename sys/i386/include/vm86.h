@@ -336,23 +336,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|i386_vm86_args
-block|{
-name|int
-name|sub_op
-decl_stmt|;
-comment|/* sub-operation to perform */
-name|char
-modifier|*
-name|sub_args
-decl_stmt|;
-comment|/* args */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
