@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.2 (Berkeley) %G%"
+literal|"@(#)compress.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -844,7 +844,7 @@ name|char
 name|rcs_ident
 index|[]
 init|=
-literal|"$Header: compress.c,v 3.1 85/05/12 18:56:13 jaw Exp $"
+literal|"$Header: compress.c,v 3.2 85/05/12 18:56:13 jaw Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6230,7 +6230,7 @@ operator|+
 name|hsize
 decl_stmt|;
 specifier|register
-name|count_int
+name|long
 name|i
 decl_stmt|;
 specifier|register
