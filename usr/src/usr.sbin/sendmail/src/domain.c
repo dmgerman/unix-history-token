@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.38 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.39 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.38 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.39 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1379,13 +1379,13 @@ name|buflen
 operator|--
 expr_stmt|;
 block|}
-block|}
-name|bp
-operator|++
-expr_stmt|;
 name|nmx
 operator|=
 literal|1
+expr_stmt|;
+block|}
+name|bp
+operator|++
 expr_stmt|;
 block|}
 comment|/* if we have a default lowest preference, include that */
