@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: load_aout.c,v 1.7 1998/09/30 19:26:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: load_aout.c,v 1.8 1998/10/02 16:22:26 msmith Exp $  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
 end_include
 
 begin_include
@@ -74,6 +80,11 @@ specifier|static
 name|int
 name|aout_loadimage
 parameter_list|(
+name|struct
+name|loaded_module
+modifier|*
+name|mp
+parameter_list|,
 name|int
 name|fd
 parameter_list|,
@@ -91,41 +102,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|vm_offset_t
-name|aout_findkldident
-parameter_list|(
-name|struct
-name|loaded_module
-modifier|*
-name|mp
-parameter_list|,
-name|struct
-name|exec
-modifier|*
-name|ehdr
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_function_decl
-specifier|static
-name|int
-name|aout_fixupkldmod
-parameter_list|(
-name|struct
-name|loaded_module
-modifier|*
-name|mp
-parameter_list|,
-name|struct
-name|exec
-modifier|*
-name|ehdr
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_endif
+unit|static vm_offset_t	aout_findkldident(struct loaded_module *mp, struct exec *ehdr); static int		aout_fixupkldmod(struct loaded_module *mp, struct exec *ehdr);
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -192,6 +179,10 @@ name|kernel
 decl_stmt|;
 name|u_int
 name|pad
+decl_stmt|;
+name|char
+modifier|*
+name|s
 decl_stmt|;
 name|mp
 operator|=
@@ -289,16 +280,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|N_GETFLAG
 argument_list|(
 name|ehdr
 argument_list|)
-operator|==
-operator|(
-name|EX_DYNAMIC
-operator||
-name|EX_PIC
 operator|)
+operator|&
+name|EX_DYNAMIC
 condition|)
 block|{
 comment|/* Looks like a kld module */
@@ -443,6 +432,40 @@ if|if
 condition|(
 name|kernel
 condition|)
+name|setenv
+argument_list|(
+literal|"kernelname"
+argument_list|,
+name|filename
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|strrchr
+argument_list|(
+name|filename
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+condition|)
+name|mp
+operator|->
+name|m_name
+operator|=
+name|strdup
+argument_list|(
+name|s
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 name|mp
 operator|->
 name|m_name
@@ -452,7 +475,6 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-comment|/* XXX should we prune the name? */
 name|mp
 operator|->
 name|m_type
@@ -524,6 +546,8 @@ name|m_size
 operator|=
 name|aout_loadimage
 argument_list|(
+name|mp
+argument_list|,
 name|fd
 argument_list|,
 name|addr
@@ -545,31 +569,13 @@ condition|)
 goto|goto
 name|ioerr
 goto|;
-comment|/* Handle KLD module data */
-if|if
-condition|(
-operator|!
-name|kernel
-operator|&&
-operator|(
-operator|(
-name|err
-operator|=
-name|aout_fixupkldmod
-argument_list|(
-name|mp
-argument_list|,
-operator|&
-name|ehdr
-argument_list|)
-operator|)
-operator|!=
+if|#
+directive|if
 literal|0
-operator|)
-condition|)
-goto|goto
-name|oerr
-goto|;
+comment|/* Handle KLD module data */
+block|if (!kernel&& ((err = aout_fixupkldmod(mp,&ehdr)) != 0)) 	goto oerr;
+endif|#
+directive|endif
 comment|/* save exec header as metadata */
 name|mod_addmetadata
 argument_list|(
@@ -647,6 +653,11 @@ specifier|static
 name|int
 name|aout_loadimage
 parameter_list|(
+name|struct
+name|loaded_module
+modifier|*
+name|mp
+parameter_list|,
 name|int
 name|fd
 parameter_list|,
@@ -670,6 +681,11 @@ name|addr
 decl_stmt|;
 name|int
 name|ss
+decl_stmt|;
+name|vm_offset_t
+name|ssym
+decl_stmt|,
+name|esym
 decl_stmt|;
 name|addr
 operator|=
@@ -822,6 +838,10 @@ operator|->
 name|a_bss
 expr_stmt|;
 comment|/* symbol table size */
+name|ssym
+operator|=
+name|addr
+expr_stmt|;
 name|archsw
 operator|.
 name|arch_copyin
@@ -981,6 +1001,40 @@ name|addr
 operator|+=
 name|ss
 expr_stmt|;
+name|esym
+operator|=
+name|addr
+expr_stmt|;
+name|mod_addmetadata
+argument_list|(
+name|mp
+argument_list|,
+name|MODINFOMD_SSYM
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ssym
+argument_list|)
+argument_list|,
+operator|&
+name|ssym
+argument_list|)
+expr_stmt|;
+name|mod_addmetadata
+argument_list|(
+name|mp
+argument_list|,
+name|MODINFOMD_ESYM
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|esym
+argument_list|)
+argument_list|,
+operator|&
+name|esym
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|addr
@@ -990,6 +1044,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -1007,591 +1067,13 @@ begin_comment
 comment|/*  * The goal here is to find the one symbol in the loaded object  * which fits the format "kld_identifier_<something>.  If there's  * more than one, we fail.  */
 end_comment
 
-begin_function
-specifier|static
-name|vm_offset_t
-name|aout_findkldident
-parameter_list|(
-name|struct
-name|loaded_module
-modifier|*
-name|mp
-parameter_list|,
-name|struct
-name|exec
-modifier|*
-name|ehdr
-parameter_list|)
-block|{
+begin_comment
+unit|static vm_offset_t aout_findkldident(struct loaded_module *mp, struct exec *ehdr) {
 comment|/* XXX much of this can go when we can address the load area directly */
-name|vm_offset_t
-name|sp
-decl_stmt|,
-name|ep
-decl_stmt|,
-name|cand
-decl_stmt|,
-name|stringbase
-decl_stmt|,
-name|result
-decl_stmt|;
-name|struct
-name|_dynamic
-name|dynamic
-decl_stmt|;
-name|struct
-name|section_dispatch_table
-name|sdt
-decl_stmt|;
-name|struct
-name|nzlist
-name|nzl
-decl_stmt|;
-name|char
-modifier|*
-name|np
-decl_stmt|;
-name|int
-name|match
-decl_stmt|;
-comment|/* Get the _DYNAMIC object, which we assume is first in the data segment */
-name|archsw
-operator|.
-name|arch_copyout
-argument_list|(
-name|AOUT_RELOC
-argument_list|(
-name|mp
-argument_list|,
-name|ehdr
-operator|->
-name|a_text
-argument_list|)
-argument_list|,
-operator|&
-name|dynamic
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dynamic
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|archsw
-operator|.
-name|arch_copyout
-argument_list|(
-name|AOUT_RELOC
-argument_list|(
-name|mp
-argument_list|,
-name|dynamic
-operator|.
-name|d_un
-operator|.
-name|d_sdt
-argument_list|)
-argument_list|,
-operator|&
-name|sdt
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_dispatch_table
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|dynamic
-operator|.
-name|d_un
-operator|.
-name|d_sdt
-operator|=
-operator|&
-name|sdt
-expr_stmt|;
-comment|/* fix up SDT pointer */
-if|if
-condition|(
-name|dynamic
-operator|.
-name|d_version
-operator|!=
-name|LD_VERSION_BSD
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|stringbase
-operator|=
-name|AOUT_RELOC
-argument_list|(
-name|mp
-argument_list|,
-name|LD_STRINGS
-argument_list|(
-operator|&
-name|dynamic
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* start pointer */
-name|sp
-operator|=
-name|AOUT_RELOC
-argument_list|(
-name|mp
-argument_list|,
-name|LD_SYMBOL
-argument_list|(
-operator|&
-name|dynamic
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* end pointer */
-name|ep
-operator|=
-name|sp
-operator|+
-name|LD_STABSZ
-argument_list|(
-operator|&
-name|dynamic
-argument_list|)
-expr_stmt|;
-comment|/*      * Walk the entire table comparing names.      */
-name|match
-operator|=
-literal|0
-expr_stmt|;
-name|result
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|cand
-operator|=
-name|sp
-init|;
-name|cand
-operator|<
-name|ep
-condition|;
-name|cand
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nzlist
-argument_list|)
-control|)
-block|{
-comment|/* get the entry, check for a name */
-name|archsw
-operator|.
-name|arch_copyout
-argument_list|(
-name|cand
-argument_list|,
-operator|&
-name|nzl
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nzlist
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* is this symbol worth looking at? */
-if|if
-condition|(
-operator|(
-name|nzl
-operator|.
-name|nz_strx
-operator|==
-literal|0
-operator|)
-operator|||
-comment|/* no name */
-operator|(
-name|nzl
-operator|.
-name|nz_value
-operator|==
-literal|0
-operator|)
-operator|||
-comment|/* not a definition */
-operator|(
-operator|(
-name|nzl
-operator|.
-name|nz_type
-operator|==
-name|N_UNDF
-operator|+
-name|N_EXT
-operator|)
-operator|&&
-operator|(
-name|nzl
-operator|.
-name|nz_value
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|nzl
-operator|.
-name|nz_other
-operator|==
-name|AUX_FUNC
-operator|)
-operator|)
-condition|)
-comment|/* weak function */
-continue|continue;
-name|np
-operator|=
-name|strdupout
-argument_list|(
-name|stringbase
-operator|+
-name|nzl
-operator|.
-name|nz_strx
-argument_list|)
-expr_stmt|;
-name|match
-operator|=
-operator|(
-name|np
-index|[
-literal|0
-index|]
-operator|==
-literal|'_'
-operator|)
-operator|&&
-operator|!
-name|strncmp
-argument_list|(
-name|KLD_IDENT_SYMNAME
-argument_list|,
-name|np
-operator|+
-literal|1
-argument_list|,
-name|strlen
-argument_list|(
-name|KLD_IDENT_SYMNAME
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|match
-condition|)
-block|{
-comment|/* duplicates? */
-if|if
-condition|(
-name|result
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|result
-operator|=
-name|AOUT_RELOC
-argument_list|(
-name|mp
-argument_list|,
-name|nzl
-operator|.
-name|nz_value
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-name|result
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Perform extra housekeeping associated with loading a KLD module.  *  * XXX if this returns an error, it seems the heap becomes corrupted.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|aout_fixupkldmod
-parameter_list|(
-name|struct
-name|loaded_module
-modifier|*
-name|mp
-parameter_list|,
-name|struct
-name|exec
-modifier|*
-name|ehdr
-parameter_list|)
-block|{
-name|struct
-name|kld_module_identifier
-name|kident
-decl_stmt|;
-name|struct
-name|kld_module_dependancy
-modifier|*
-name|kdeps
-decl_stmt|;
-name|vm_offset_t
-name|vp
-decl_stmt|;
-name|size_t
-name|dsize
-decl_stmt|;
-comment|/* Find the KLD identifier */
-if|if
-condition|(
-operator|(
-name|vp
-operator|=
-name|aout_findkldident
-argument_list|(
-name|mp
-argument_list|,
-name|ehdr
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bad a.out module format\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EFTYPE
-operator|)
-return|;
-block|}
-name|archsw
-operator|.
-name|arch_copyout
-argument_list|(
-name|vp
-argument_list|,
-operator|&
-name|kident
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|kld_module_identifier
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Name the module using the name from the KLD data */
-if|if
-condition|(
-name|mod_findmodule
-argument_list|(
-name|kident
-operator|.
-name|ki_name
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"module '%s' already loaded\n"
-argument_list|,
-name|kident
-operator|.
-name|ki_name
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-block|}
-name|mp
-operator|->
-name|m_name
-operator|=
-name|strdup
-argument_list|(
-name|kident
-operator|.
-name|ki_name
-argument_list|)
-expr_stmt|;
-comment|/* Save the module identifier */
-name|mod_addmetadata
-argument_list|(
-name|mp
-argument_list|,
-name|MODINFOMD_KLDIDENT
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|kld_module_identifier
-argument_list|)
-argument_list|,
-operator|&
-name|kident
-argument_list|)
-expr_stmt|;
-comment|/* Look for dependancy data, add to metadata list */
-if|if
-condition|(
-name|kident
-operator|.
-name|ki_ndeps
-operator|>
-literal|0
-condition|)
-block|{
-name|dsize
-operator|=
-name|kident
-operator|.
-name|ki_ndeps
-operator|*
-name|kident
-operator|.
-name|ki_depsize
-expr_stmt|;
-name|kdeps
-operator|=
-name|malloc
-argument_list|(
-name|dsize
-argument_list|)
-expr_stmt|;
-name|archsw
-operator|.
-name|arch_copyout
-argument_list|(
-name|AOUT_RELOC
-argument_list|(
-name|mp
-argument_list|,
-name|kident
-operator|.
-name|ki_deps
-argument_list|)
-argument_list|,
-name|kdeps
-argument_list|,
-name|dsize
-argument_list|)
-expr_stmt|;
-name|mod_addmetadata
-argument_list|(
-name|mp
-argument_list|,
-name|MODINFOMD_KLDDEP
-argument_list|,
-name|dsize
-argument_list|,
-name|kdeps
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|kdeps
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/************************************************************/
 end_comment
 
 begin_comment
-comment|/* XXX  Arbitrary symbol lookup - unused at this point  XXX */
-end_comment
-
-begin_comment
-comment|/*                                                          */
-end_comment
-
-begin_comment
-comment|/* Code heavily borrowed from kern/link_aout.c (c) DFR      */
-end_comment
-
-begin_comment
-comment|/************************************************************/
-end_comment
-
-begin_comment
-unit|static long symbol_hash_value(struct _dynamic *dynamic, const char* name) {     long hashval;     const char* p;      hashval = '_';
-comment|/* fake a starting '_' for C symbols */
-end_comment
-
-begin_comment
-unit|for (p = name; *p; p++) 	hashval = (hashval<< 1) + *p;      return (hashval& 0x7fffffff) % LD_BUCKETS(dynamic); }
-comment|/*  * Locate the symbol (name) in the a.out object associated with (mp),  * return a vm_offset_t containing the value of the symbol.  */
-end_comment
-
-begin_comment
-unit|static vm_offset_t aout_findsym(char *name, struct loaded_module *mp) {     struct module_metadata		*md;     struct exec				*ehdr;     struct _dynamic			dynamic;     struct section_dispatch_table	sdt;     vm_offset_t				hashbase, symbolbase, stringbase, hp, np, cp;     struct rrs_hash			hash;     struct nzlist			nzl;     char				*symbol, *asymbol;
-comment|/* XXX symbol name limit? */
-end_comment
-
-begin_comment
-unit|long				hashval;     vm_offset_t				result;           symbol = NULL;     asymbol = NULL;     result = 0;
-comment|/* Find the exec header */
-end_comment
-
-begin_comment
-unit|if ((md = mod_findmetadata(mp, MODINFOMD_AOUTEXEC)) == NULL) 	goto out;     ehdr = (struct exec *)md->md_data;
+unit|vm_offset_t				sp, ep, cand, stringbase, result;     struct _dynamic			dynamic;     struct section_dispatch_table	sdt;     struct nzlist			nzl;     char				*np;     int					match;
 comment|/* Get the _DYNAMIC object, which we assume is first in the data segment */
 end_comment
 
@@ -1601,42 +1083,77 @@ comment|/* fix up SDT pointer */
 end_comment
 
 begin_comment
-unit|if ((dynamic.d_version != LD_VERSION_BSD) || 	(LD_BUCKETS(&dynamic) == 0)) 	goto out;      hashbase = AOUT_RELOC(mp, LD_HASH(&dynamic));     symbolbase = AOUT_RELOC(mp, LD_SYMBOL(&dynamic));     stringbase = AOUT_RELOC(mp, LD_STRINGS(&dynamic));      restart:     hashval = symbol_hash_value(&dynamic, name);     hp = hashbase + (hashval * sizeof(struct rrs_hash));     archsw.arch_copyout(hp,&hash, sizeof(struct rrs_hash));     if (hash.rh_symbolnum == -1) 	goto out;          while (hp) { 	np = symbolbase + (hash.rh_symbolnum * sizeof(struct nzlist)); 	archsw.arch_copyout(np,&nzl, sizeof(struct nzlist)); 	cp = stringbase + nzl.nz_strx; 	if (symbol != NULL) 	    free(symbol); 	symbol = strdupout(cp);
-comment|/* 	 * Note: we fake the leading '_' for C symbols. 	 */
+unit|if (dynamic.d_version != LD_VERSION_BSD) 	return(0);     stringbase = AOUT_RELOC(mp, LD_STRINGS(&dynamic));
+comment|/* start pointer */
 end_comment
 
 begin_comment
-unit|if (symbol[0] == '_'&& !strcmp(symbol + 1, name)) 	    break;  	if (hash.rh_next == 0) { 	    hp = 0; 	} else { 	    hp = hashbase + (hash.rh_next * sizeof(struct rrs_hash)); 	    archsw.arch_copyout(hp,&hash, sizeof(struct rrs_hash)); 	}     }
-comment|/* Not found. */
+unit|sp = AOUT_RELOC(mp, LD_SYMBOL(&dynamic));
+comment|/* end pointer */
 end_comment
 
 begin_comment
-unit|if (hp == 0) 	goto out;
-comment|/*      * Check for an aliased symbol, whatever that is.      */
+unit|ep = sp + LD_STABSZ(&dynamic);
+comment|/*      * Walk the entire table comparing names.      */
 end_comment
 
 begin_comment
-unit|if (nzl.nz_type == N_INDR+N_EXT) { 	np += sizeof(struct nzlist); 	archsw.arch_copyout(np,&nzl, sizeof(struct nzlist)); 	asymbol = strdupout(stringbase + nzl.nz_strx + 1);
-comment|/* +1 for '_' */
+unit|match = 0;     result = 0;     for (cand = sp; cand< ep; cand += sizeof(struct nzlist)) {
+comment|/* get the entry, check for a name */
 end_comment
 
 begin_comment
-unit|goto restart;     }
-comment|/*      * Check this is an actual definition of the symbol.      */
+unit|archsw.arch_copyout(cand,&nzl, sizeof(struct nzlist));
+comment|/* is this symbol worth looking at? */
 end_comment
 
 begin_comment
-unit|if (nzl.nz_value == 0) 	goto out;      if (nzl.nz_type == N_UNDF+N_EXT&& nzl.nz_value != 0) 	if (nzl.nz_other == AUX_FUNC)
+unit|if ((nzl.nz_strx == 0)			||
+comment|/* no name */
+end_comment
+
+begin_comment
+unit|(nzl.nz_value == 0)			||
+comment|/* not a definition */
+end_comment
+
+begin_comment
+unit|((nzl.nz_type == N_UNDF+N_EXT)&&  	     (nzl.nz_value != 0)&&  	     (nzl.nz_other == AUX_FUNC)))
 comment|/* weak function */
 end_comment
 
 begin_comment
-unit|goto out;
-comment|/* Return a vm_offset_t pointing to the object itself */
+unit|continue;  	np = strdupout(stringbase + nzl.nz_strx); 	match = (np[0] == '_')&& !strncmp(KLD_IDENT_SYMNAME, np + 1, strlen(KLD_IDENT_SYMNAME)); 	free(np); 	if (match) {
+comment|/* duplicates? */
+end_comment
+
+begin_comment
+unit|if (result) 		return(0); 	    result = AOUT_RELOC(mp, nzl.nz_value); 	}     }     return(result); }
+comment|/*  * Perform extra housekeeping associated with loading a KLD module.  *  * XXX if this returns an error, it seems the heap becomes corrupted.  */
+end_comment
+
+begin_comment
+unit|static int aout_fixupkldmod(struct loaded_module *mp, struct exec *ehdr) {     struct kld_module_identifier	kident;     struct kld_module_dependancy	*kdeps;     vm_offset_t				vp;     size_t				dsize;
+comment|/* Find the KLD identifier */
+end_comment
+
+begin_comment
+unit|if ((vp = aout_findkldident(mp, ehdr)) == 0) { 	printf("bad a.out module format\n"); 	return(EFTYPE);     }     archsw.arch_copyout(vp,&kident, sizeof(struct kld_module_identifier));
+comment|/* Name the module using the name from the KLD data */
+end_comment
+
+begin_comment
+unit|if (mod_findmodule(kident.ki_name, NULL) != NULL) { 	printf("module '%s' already loaded\n", kident.ki_name); 	return(EPERM);     }     mp->m_name = strdup(kident.ki_name);
+comment|/* Save the module identifier */
+end_comment
+
+begin_comment
+unit|mod_addmetadata(mp, MODINFOMD_KLDIDENT, sizeof(struct kld_module_identifier),&kident);
+comment|/* Look for dependancy data, add to metadata list */
 end_comment
 
 begin_endif
-unit|result = AOUT_RELOC(mp, nzl.nz_value);   out:     if (symbol) 	free(symbol);     if (asymbol) 	free(asymbol);     return(result);      }
+unit|if (kident.ki_ndeps> 0) { 	dsize = kident.ki_ndeps * kident.ki_depsize; 	kdeps = malloc(dsize); 	archsw.arch_copyout(AOUT_RELOC(mp, kident.ki_deps), kdeps, dsize); 	mod_addmetadata(mp, MODINFOMD_KLDDEP, dsize, kdeps); 	free(kdeps);     }     return(0); }
 endif|#
 directive|endif
 end_endif
