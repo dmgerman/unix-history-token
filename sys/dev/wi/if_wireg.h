@@ -2014,7 +2014,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 value|0x6
 end_define
 

@@ -934,7 +934,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|!=
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 condition|)
 return|return;
 name|whi

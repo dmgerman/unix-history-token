@@ -3837,7 +3837,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 condition|)
 block|{
 if|if
@@ -4294,7 +4294,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 condition|)
 block|{
 comment|/*  			 * Give host AP code first crack at data 			 * packets.  If it decides to handle it (or 			 * drop it), it will return a non-zero. 			 * Otherwise, it is destined for this host. 			 */
@@ -6298,7 +6298,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 condition|)
 comment|/*  					 * Disable tx encryption... 					 * it's broken. 					 */
 name|p2ltv
@@ -8414,7 +8414,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|!=
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 operator|&&
 name|ifp
 operator|->
@@ -10509,7 +10509,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|!=
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 operator|&&
 name|ifp
 operator|->
@@ -10619,7 +10619,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|!=
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 operator|&&
 name|sc
 operator|->
@@ -11508,7 +11508,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 condition|)
 block|{
 if|if
@@ -11604,7 +11604,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 condition|)
 block|{
 name|tx_frame
@@ -11816,7 +11816,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 operator|&&
 name|sc
 operator|->
@@ -12068,7 +12068,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 operator|&&
 name|sc
 operator|->
@@ -13596,7 +13596,7 @@ name|wi_ptype
 condition|)
 block|{
 case|case
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 case|:
 operator|*
 name|len
@@ -13956,7 +13956,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|=
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 expr_stmt|;
 break|break;
 case|case
@@ -14174,7 +14174,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 condition|)
 name|imr
 operator|->
@@ -14344,7 +14344,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|==
-name|WI_PORTTYPE_AP
+name|WI_PORTTYPE_HOSTAP
 condition|)
 name|imr
 operator|->
