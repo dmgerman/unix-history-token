@@ -846,23 +846,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|__inline
 name|void
 name|pmap_changebit
-parameter_list|(
+argument_list|(
 name|vm_page_t
 name|m
-parameter_list|,
+argument_list|,
 name|int
 name|bit
-parameter_list|,
+argument_list|,
 name|boolean_t
 name|setem
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__always_inline
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
