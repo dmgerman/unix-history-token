@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.54 1997/09/01 10:42:03 kato Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.55 1997/09/03 12:41:15 kato Exp $  */
 end_comment
 
 begin_include
@@ -877,15 +877,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|badpages
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1092,37 +1083,22 @@ expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
 condition|(
-name|badpages
-operator|!=
-literal|0
+name|bootverbose
 condition|)
 block|{
 name|int
 name|indx
-init|=
-literal|1
 decl_stmt|;
-comment|/* 		 * XXX skip reporting ISA hole& unmanaged kernel memory 		 */
-if|if
-condition|(
-name|phys_avail
-index|[
-literal|0
-index|]
-operator|==
-name|PAGE_SIZE
-condition|)
-name|indx
-operator|+=
-literal|2
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"Physical memory hole(s):\n"
+literal|"Physical memory chunk(s):\n"
 argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|indx
+operator|=
+literal|0
 init|;
 name|phys_avail
 index|[
@@ -4782,6 +4758,9 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
+name|int
+name|speculative_mprobe
+decl_stmt|;
 name|proc0
 operator|.
 name|p_addr
@@ -5948,6 +5927,22 @@ literal|0x100000
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* 	 * Indicate that we wish to do a speculative search for memory beyond 	 * the end of the reported size if the indicated amount is 64MB (0x4000 	 * pages) - which is the largest amount that the BIOS/bootblocks can 	 * currently report. If a specific amount of memory is indicated via 	 * the MAXMEM option or the npx0 "msize", then don't do the speculative 	 * memory probe. 	 */
+if|if
+condition|(
+name|Maxmem
+operator|==
+literal|0x4000
+condition|)
+name|speculative_mprobe
+operator|=
+name|TRUE
+expr_stmt|;
+else|else
+name|speculative_mprobe
+operator|=
+name|FALSE
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAXMEM
@@ -5956,6 +5951,10 @@ operator|=
 name|MAXMEM
 operator|/
 literal|4
+expr_stmt|;
+name|speculative_mprobe
+operator|=
+name|FALSE
 expr_stmt|;
 endif|#
 directive|endif
@@ -5988,6 +5987,7 @@ name|id_msize
 operator|!=
 literal|0
 condition|)
+block|{
 name|Maxmem
 operator|=
 name|idp
@@ -5996,6 +5996,11 @@ name|id_msize
 operator|/
 literal|4
 expr_stmt|;
+name|speculative_mprobe
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifdef|#
@@ -6018,10 +6023,6 @@ expr_stmt|;
 comment|/* 	 * Size up each available chunk of physical memory. 	 */
 comment|/* 	 * We currently don't bother testing base memory. 	 * XXX  ...but we probably should. 	 */
 name|pa_indx
-operator|=
-literal|0
-expr_stmt|;
-name|badpages
 operator|=
 literal|0
 expr_stmt|;
@@ -6088,9 +6089,11 @@ name|int
 name|tmp
 decl_stmt|,
 name|page_bad
-init|=
-name|FALSE
 decl_stmt|;
+name|page_bad
+operator|=
+name|FALSE
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -6280,7 +6283,7 @@ operator|==
 name|FALSE
 condition|)
 block|{
-comment|/* 			 * If this good page is a continuation of the 			 * previous set of good pages, then just increase 			 * the end pointer. Otherwise start a new chunk. 			 * Note that "end" points one higher than end, 			 * making the range>= start and< end. 			 */
+comment|/* 			 * If this good page is a continuation of the 			 * previous set of good pages, then just increase 			 * the end pointer. Otherwise start a new chunk. 			 * Note that "end" points one higher than end, 			 * making the range>= start and< end. 			 * If we're also doing a speculative memory 			 * test and we at or past the end, bump up Maxmem 			 * so that we keep going. The first bad page 			 * will terminate the loop. 			 */
 if|if
 condition|(
 name|phys_avail
@@ -6297,6 +6300,28 @@ name|pa_indx
 index|]
 operator|+=
 name|PAGE_SIZE
+expr_stmt|;
+if|if
+condition|(
+name|speculative_mprobe
+operator|==
+name|TRUE
+operator|&&
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+operator|>=
+operator|(
+literal|64
+operator|*
+literal|1024
+operator|*
+literal|1024
+operator|)
+condition|)
+name|Maxmem
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -6343,16 +6368,6 @@ comment|/* end */
 block|}
 name|physmem
 operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|badpages
-operator|++
-expr_stmt|;
-name|page_bad
-operator|=
-name|FALSE
 expr_stmt|;
 block|}
 block|}
