@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA and Michael Smith  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: vesa.c,v 1.24 1999/06/01 18:20:18 jlemon Exp $  */
+comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA and Michael Smith  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: vesa.c,v 1.25 1999/06/22 14:13:13 yokota Exp $  */
 end_comment
 
 begin_include
@@ -266,15 +266,17 @@ begin_comment
 comment|/* VESA functions */
 end_comment
 
-begin_function_decl
-specifier|static
-name|int
-name|vesa_nop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static int			vesa_nop(void);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -828,6 +830,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -856,6 +864,11 @@ name|bits
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -969,21 +982,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|vesa_bios_get_start
-parameter_list|(
-name|int
-modifier|*
-name|x
-parameter_list|,
-name|int
-modifier|*
-name|y
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static int vesa_bios_get_start(int *x, int *y);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1113,21 +1122,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|vesa_get_origin
-parameter_list|(
-name|video_adapter_t
-modifier|*
-name|adp
-parameter_list|,
-name|off_t
-modifier|*
-name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static int vesa_get_origin(video_adapter_t *adp, off_t *offset);
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2279,6 +2284,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -2501,6 +2512,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2897,99 +2913,22 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|vesa_bios_get_start
-parameter_list|(
-name|int
-modifier|*
-name|x
-parameter_list|,
-name|int
-modifier|*
-name|y
-parameter_list|)
-block|{
-name|struct
-name|vm86frame
-name|vmf
-decl_stmt|;
-name|int
-name|err
-decl_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|vmf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|vmf
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|vmf
-operator|.
-name|vmf_eax
-operator|=
-literal|0x4f07
-expr_stmt|;
-name|vmf
-operator|.
-name|vmf_ebx
-operator|=
-literal|1
-expr_stmt|;
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static int vesa_bios_get_start(int *x, int *y) { 	struct vm86frame vmf; 	int err;  	bzero(&vmf, sizeof(vmf)); 	vmf.vmf_eax = 0x4f07;  	vmf.vmf_ebx = 1;
 comment|/* get display start */
-name|err
-operator|=
-name|vm86_intcall
-argument_list|(
-literal|0x10
-argument_list|,
-operator|&
-name|vmf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|err
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
-name|vmf
-operator|.
-name|vmf_eax
-operator|!=
-literal|0x4f
-operator|)
-condition|)
-return|return
-literal|1
-return|;
-operator|*
-name|x
-operator|=
-name|vmf
-operator|.
-name|vmf_cx
-expr_stmt|;
-operator|*
-name|y
-operator|=
-name|vmf
-operator|.
-name|vmf_dx
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|err = vm86_intcall(0x10,&vmf); 	if ((err != 0) || (vmf.vmf_eax != 0x4f)) 		return 1; 	*x = vmf.vmf_cx; 	*y = vmf.vmf_dx; 	return 0; }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -5028,19 +4967,17 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|vesa_nop
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
+begin_if
+if|#
+directive|if
 literal|0
-return|;
-block|}
-end_function
+end_if
+
+begin_endif
+unit|static int vesa_nop(void) { 	return 0; }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -6727,96 +6664,22 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|vesa_get_origin
-parameter_list|(
-name|video_adapter_t
-modifier|*
-name|adp
-parameter_list|,
-name|off_t
-modifier|*
-name|offset
-parameter_list|)
-block|{
-name|struct
-name|vm86frame
-name|vmf
-decl_stmt|;
-name|int
-name|err
-decl_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|vmf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|vmf
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|vmf
-operator|.
-name|vmf_eax
-operator|=
-literal|0x4f05
-expr_stmt|;
-name|vmf
-operator|.
-name|vmf_ebx
-operator|=
-literal|0x10
-expr_stmt|;
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static int vesa_get_origin(video_adapter_t *adp, off_t *offset) { 	struct vm86frame vmf; 	int err;  	bzero(&vmf, sizeof(vmf)); 	vmf.vmf_eax = 0x4f05;  	vmf.vmf_ebx = 0x10;
 comment|/* WINDOW_A, XXX */
-name|err
-operator|=
-name|vm86_intcall
-argument_list|(
-literal|0x10
-argument_list|,
-operator|&
-name|vmf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|err
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
-name|vmf
-operator|.
-name|vmf_eax
-operator|!=
-literal|0x4f
-operator|)
-condition|)
-return|return
-literal|1
-return|;
-operator|*
-name|offset
-operator|=
-name|vmf
-operator|.
-name|vmf_dx
-operator|*
-name|adp
-operator|->
-name|va_window_gran
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|err = vm86_intcall(0x10,&vmf);  	if ((err != 0) || (vmf.vmf_eax != 0x4f)) 		return 1; 	*offset = vmf.vmf_dx*adp->va_window_gran; 	return 0; }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -8884,12 +8747,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KLD_MODULE
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -9038,15 +8895,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KLD_MODULE */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -9078,20 +8926,10 @@ return|;
 case|case
 name|MOD_UNLOAD
 case|:
-ifdef|#
-directive|ifdef
-name|KLD_MODULE
 return|return
 name|vesa_unload
 argument_list|()
 return|;
-else|#
-directive|else
-return|return
-name|EBUSY
-return|;
-endif|#
-directive|endif
 default|default:
 break|break;
 block|}
