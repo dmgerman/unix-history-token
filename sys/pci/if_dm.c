@@ -8,7 +8,7 @@ comment|/*  * Davicom DM9102 fast ethernet PCI NIC driver.  *  * Written by Bill
 end_comment
 
 begin_comment
-comment|/*  * The Davicom DM9102 is yet another DEC 21x4x clone. This one is actually  * a pretty faithful copy. Same RX filter programming, same SROM layout,  * same everything. Datasheets available from www.davicom8.com. Only  * MII-based transceivers are supported.  *  * The DM9102's DMA engine seems pretty weak. Multi-fragment transmits  * don't seem to work well, and on slow machines you get lots of RX  * underruns.  */
+comment|/*  * The Davicom DM9102 is yet another DEC 21x4x clone. This one is actually  * a pretty faithful copy. Same RX filter programming, same SROM layout,  * same everything. Datasheets available from www.davicom8.com. Only  * MII-based transceivers are supported.  *  * The DM9102's DMA engine seems pretty weak. Multi-fragment transmits  * don't seem to work well, and on slow machines you get lots of RX  * overruns.  */
 end_comment
 
 begin_include
