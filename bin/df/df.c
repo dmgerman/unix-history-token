@@ -75,6 +75,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -105,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -118,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fstab.h>
 end_include
 
 begin_include
@@ -368,7 +386,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-name|int
+name|unit_t
 name|unitp
 index|[]
 init|=
@@ -2122,30 +2140,6 @@ end_function
 begin_comment
 comment|/*  * This code constitutes the pre-system call Berkeley df code for extracting  * information from filesystem superblocks.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fstab.h>
-end_include
 
 begin_union
 union|union
