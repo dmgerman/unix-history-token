@@ -444,11 +444,14 @@ name|ports
 operator|=
 name|calloc
 argument_list|(
-literal|1
-argument_list|,
 literal|65536
 operator|/
 name|INT_BIT
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 argument_list|)
 operator|)
 operator|==
