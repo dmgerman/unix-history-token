@@ -3,6 +3,10 @@ begin_comment
 comment|/*  *	Bill Shannon	21 Dec 1978  *	removed from lpd.c so as to be easier to modify.  *  *	sjl		4-22-81  *	changed to 2-dim  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -15,13 +19,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpdchar.c	4.3 (Berkeley) %G%"
+literal|"@(#)lpdchar.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
