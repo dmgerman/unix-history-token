@@ -25,22 +25,6 @@ directive|include
 file|"wcd.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"wfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wst.h"
-end_include
-
-begin_comment
-comment|/* #include "wmd.h" -- add your driver here */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -870,48 +854,6 @@ case|:
 comment|/* direct-access */
 if|#
 directive|if
-name|NWFD
-operator|>
-literal|0
-comment|/* ATAPI Floppy(LS-120) */
-if|if
-condition|(
-name|wfdattach
-argument_list|(
-name|ata
-argument_list|,
-name|unit
-argument_list|,
-name|ap
-argument_list|,
-name|ata
-operator|->
-name|debug
-argument_list|)
-operator|>=
-literal|0
-condition|)
-block|{
-comment|/* Device attached successfully. */
-name|ata
-operator|->
-name|attached
-index|[
-name|unit
-index|]
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-if|#
-directive|if
 name|NWCD
 operator|>
 literal|0
@@ -986,47 +928,6 @@ case|case
 name|AT_TYPE_TAPE
 case|:
 comment|/* streaming tape */
-if|#
-directive|if
-name|NWST
-operator|>
-literal|0
-comment|/* ATAPI Streaming Tape */
-if|if
-condition|(
-name|wstattach
-argument_list|(
-name|ata
-argument_list|,
-name|unit
-argument_list|,
-name|ap
-argument_list|,
-name|ata
-operator|->
-name|debug
-argument_list|)
-operator|<
-literal|0
-condition|)
-break|break;
-comment|/* Device attached successfully. */
-name|ata
-operator|->
-name|attached
-index|[
-name|unit
-index|]
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-else|#
-directive|else
 name|printf
 argument_list|(
 literal|"wdc%d: ATAPI streaming tapes not configured\n"
@@ -1034,8 +935,6 @@ argument_list|,
 name|ctlr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|AT_TYPE_OPTICAL
