@@ -1228,6 +1228,13 @@ name|sc_ah
 operator|=
 name|ah
 expr_stmt|;
+name|sc
+operator|->
+name|sc_invalid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ready to go, enable interrupt handling */
 comment|/* 	 * Collect the channel list using the default country 	 * code and including outdoor channels.  The 802.11 layer 	 * is resposible for filtering this list based on settings 	 * like the phy mode. 	 */
 name|error
 operator|=
@@ -2014,7 +2021,7 @@ operator|->
 name|sc_invalid
 condition|)
 block|{
-comment|/* 		 * The hardware is gone, don't touch anything. 		 * XXX can this happen? 		 */
+comment|/* 		 * The hardware is not ready/present, don't touch anything. 		 * Note this can happen early on if the IRQ is shared. 		 */
 name|DPRINTF
 argument_list|(
 operator|(

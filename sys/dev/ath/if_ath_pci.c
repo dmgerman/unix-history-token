@@ -540,6 +540,13 @@ operator|->
 name|sc_sr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Mark device invalid so any interrupts (shared or otherwise) 	 * that arrive before the HAL is setup are discarded. 	 */
+name|sc
+operator|->
+name|sc_invalid
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Arrange interrupt line. 	 */
 name|rid
 operator|=
