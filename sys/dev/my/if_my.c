@@ -3256,11 +3256,11 @@ operator||
 name|PHY_BMCR_LOOPBK
 operator|)
 expr_stmt|;
-comment|/* 	 * this version did not support 1000M, 	 */
 if|#
 directive|if
 literal|0
-block|if (IFM_SUBTYPE(media) == 	    IFM_1000_TX) { 		printf("1000Mbps/T4, half-duplex\n"); 		bmcr&= ~PHY_BMCR_SPEEDSEL; 		bmcr&= ~PHY_BMCR_DUPLEX; 		bmcr |= PHY_BMCR_1000; 	}
+comment|/* this version did not support 1000M, */
+block|if (IFM_SUBTYPE(media) == IFM_1000_TX) { 		printf("1000Mbps/T4, half-duplex\n"); 		bmcr&= ~PHY_BMCR_SPEEDSEL; 		bmcr&= ~PHY_BMCR_DUPLEX; 		bmcr |= PHY_BMCR_1000; 	}
 endif|#
 directive|endif
 if|if
@@ -3941,7 +3941,12 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
-comment|/* 	 * command = pci_read_config(dev, PCI_COMMAND_STATUS_REG, 4); command 	 * |= (PCIM_CMD_PORTEN|PCIM_CMD_MEMEN|PCIM_CMD_BUSMASTEREN); 	 * pci_write_config(dev, PCI_COMMAND_STATUS_REG, command& 	 * 0x000000ff, 4); command = pci_read_config(dev, 	 * PCI_COMMAND_STATUS_REG, 4); 	 */
+if|#
+directive|if
+literal|0
+block|command = pci_read_config(dev, PCI_COMMAND_STATUS_REG, 4); 	command |= (PCIM_CMD_PORTEN | PCIM_CMD_MEMEN | PCIM_CMD_BUSMASTEREN); 	pci_write_config(dev, PCI_COMMAND_STATUS_REG, command& 0x000000ff, 4); 	command = pci_read_config(dev, PCI_COMMAND_STATUS_REG, 4);
+endif|#
+directive|endif
 name|command
 operator|=
 name|pci_read_config
@@ -4058,7 +4063,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (!pci_map_port(config_id, MY_PCI_LOIO, 		    (u_int16_t *)&(sc->my_bhandle))) { 			printf ("my%d: couldn't map ports\n", 			    unit); error = ENXIO; goto fail; 		} 		   		sc->my_btag = I386_BUS_SPACE_IO;
+block|if (!pci_map_port(config_id, MY_PCI_LOIO, (u_int16_t *)& (sc->my_bhandle))) { 			printf("my%d: couldn't map ports\n", unit); 			error = ENXIO; 			goto fail; 		} 		   		sc->my_btag = I386_BUS_SPACE_IO;
 endif|#
 directive|endif
 block|}
@@ -4092,7 +4097,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (!pci_map_mem(config_id, MY_PCI_LOMEM,&vbase,&pbase)) { 			printf ("my%d: couldn't map memory\n", unit); 			error = ENXIO; 			goto fail; 		} 		   		sc->my_btag = I386_BUS_SPACE_MEM; sc->my_bhandle = vbase;
+block|if (!pci_map_mem(config_id, MY_PCI_LOMEM,&vbase,&pbase)) { 			printf ("my%d: couldn't map memory\n", unit); 			error = ENXIO; 			goto fail; 		} 		sc->my_btag = I386_BUS_SPACE_MEM; 		sc->my_bhandle = vbase;
 endif|#
 directive|endif
 block|}
@@ -5008,7 +5013,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * bus_generic_detach(dev); device_delete_child(dev, sc->rl_miibus); 	 */
+if|#
+directive|if
+literal|0
+block|bus_generic_detach(dev); 	device_delete_child(dev, sc->rl_miibus);
+endif|#
+directive|endif
 name|bus_teardown_intr
 argument_list|(
 name|dev
@@ -5048,7 +5058,12 @@ operator|->
 name|my_res
 argument_list|)
 expr_stmt|;
-comment|/* 	 * contigfree(sc->my_cdata.my_rx_buf, MY_RXBUFLEN + 32, M_DEVBUF); 	 */
+if|#
+directive|if
+literal|0
+block|contigfree(sc->my_cdata.my_rx_buf, MY_RXBUFLEN + 32, M_DEVBUF);
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|sc
@@ -6580,7 +6595,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * 90/1/18 delete if (status& MY_FBE) { my_reset(sc); 		 * my_init(sc); } 		 */
+if|#
+directive|if
+literal|0
+comment|/* 90/1/18 delete */
+block|if (status& MY_FBE) { 			my_reset(sc); 			my_init(sc); 		}
+endif|#
+directive|endif
 block|}
 comment|/* Re-enable interrupts. */
 name|CSR_WRITE_4
@@ -7339,7 +7360,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set cache alignment and burst length. 	 */
-comment|/* 	 * 89/9/1 modify, CSR_WRITE_4(sc, MY_BCR, MY_RPBLE512); 	 * CSR_WRITE_4(sc, MY_TCRRCR, MY_TFTSF); 	 */
+if|#
+directive|if
+literal|0
+comment|/* 89/9/1 modify,  */
+block|CSR_WRITE_4(sc, MY_BCR, MY_RPBLE512); 	CSR_WRITE_4(sc, MY_TCRRCR, MY_TFTSF);
+endif|#
+directive|endif
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -7828,7 +7855,13 @@ name|PHY_BMCR_AUTONEGENBL
 operator|)
 condition|)
 block|{
-comment|/* 		 * this version did not support 1000M, if (my_phy_readreg(sc, 		 * PHY_BMCR)& PHY_BMCR_1000) ifmr->ifm_active = 		 * IFM_ETHER|IFM_1000TX; 		 */
+if|#
+directive|if
+literal|0
+comment|/* this version did not support 1000M, */
+block|if (my_phy_readreg(sc, PHY_BMCR)& PHY_BMCR_1000) 			ifmr->ifm_active = IFM_ETHER | IFM_1000TX;
+endif|#
+directive|endif
 if|if
 condition|(
 name|my_phy_readreg
@@ -7906,10 +7939,10 @@ argument_list|,
 name|PHY_ANAR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * this version did not support 1000M, 	 */
 if|#
 directive|if
 literal|0
+comment|/* this version did not support 1000M, */
 block|if (sc->my_pinfo->my_vid = MarvellPHYID0) { 		ability2 = my_phy_readreg(sc, PHY_1000SR); 		if (ability2& PHY_1000SR_1000BTXFULL) { 			advert = 0; 			ability = 0; 	  		ifmr->ifm_active = IFM_ETHER|IFM_1000_TX|IFM_FDX; 	  	} else if (ability& PHY_1000SR_1000BTXHALF) { 			advert = 0; 			ability = 0; 			ifmr->ifm_active = IFM_ETHER|IFM_1000_TX|IFM_HDX; 		} 	}
 endif|#
 directive|endif
