@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: auth_none.c,v 1.3 1995/10/22 14:51:06 phk Exp $"
+literal|"$Id: auth_none.c,v 1.4 1996/06/08 22:54:49 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,22 +75,6 @@ directive|define
 name|MAX_MARSHEL_SIZE
 value|20
 end_define
-
-begin_function_decl
-name|bool_t
-name|xdr_opaque_auth
-parameter_list|(
-name|XDR
-modifier|*
-name|xdrs
-parameter_list|,
-name|struct
-name|opaque_auth
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Authenticator operations routines  */
