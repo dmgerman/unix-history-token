@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.8 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.9 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.8 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.9 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_ifdef
@@ -1564,20 +1570,8 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MYHOSTNAME -- return the name of this host. ** **	Parameters: **		hostbuf -- a place to return the name of this host. **		size -- the size of hostbuf. ** **	Returns: **		A list of aliases for this host. ** **	Side Effects: **		Sets the MyIpAddrs buffer to a list of my IP addresses. */
+comment|/* **  MYHOSTNAME -- return the name of this host. ** **	Parameters: **		hostbuf -- a place to return the name of this host. **		size -- the size of hostbuf. ** **	Returns: **		A list of aliases for this host. ** **	Side Effects: **		Adds numeric codes to $=w. */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|in_addr
-name|MyIpAddrs
-index|[
-name|MAXIPADDR
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|char
@@ -1697,36 +1691,38 @@ name|i
 operator|=
 literal|0
 init|;
-name|i
-operator|<
-name|MAXIPADDR
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
 name|hp
 operator|->
 name|h_addr_list
 index|[
 name|i
 index|]
-operator|==
+operator|!=
 name|NULL
-condition|)
-break|break;
-name|MyIpAddrs
-index|[
+condition|;
 name|i
+operator|++
+control|)
+block|{
+name|char
+name|ipbuf
+index|[
+literal|100
 index|]
-operator|.
-name|s_addr
-operator|=
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|ipbuf
+argument_list|,
+literal|"[%s]"
+argument_list|,
+name|inet_ntoa
+argument_list|(
 operator|*
 operator|(
-name|u_long
+operator|(
+expr|struct
+name|in_addr
 operator|*
 operator|)
 name|hp
@@ -1735,17 +1731,18 @@ name|h_addr_list
 index|[
 name|i
 index|]
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|setclass
+argument_list|(
+literal|'w'
+argument_list|,
+name|ipbuf
+argument_list|)
 expr_stmt|;
 block|}
-name|MyIpAddrs
-index|[
-name|i
-index|]
-operator|.
-name|s_addr
-operator|=
-literal|0
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -3055,55 +3052,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* check to see if this is one of our addresses */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|MyIpAddrs
-index|[
-name|i
-index|]
-operator|.
-name|s_addr
-operator|!=
-literal|0
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|MyIpAddrs
-index|[
-name|i
-index|]
-operator|.
-name|s_addr
-operator|==
-name|in_addr
-condition|)
-block|{
-return|return
-name|map_rewrite
-argument_list|(
-name|map
-argument_list|,
-name|MyHostName
-argument_list|,
-name|strlen
-argument_list|(
-name|MyHostName
-argument_list|)
-argument_list|,
-name|av
-argument_list|)
-return|;
-block|}
-block|}
 comment|/* nope -- ask the name server */
 name|hp
 operator|=
