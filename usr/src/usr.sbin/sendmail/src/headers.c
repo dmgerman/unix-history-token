@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.69 (Berkeley) %G%"
+literal|"@(#)headers.c	8.70 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2275,7 +2275,7 @@ block|{
 comment|/* this may be an RFC 1049 message */
 name|p
 operator|=
-name|strtok
+name|strpbrk
 argument_list|(
 name|p
 argument_list|,
