@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.18 83/12/06"
+literal|"@(#)cmd.c	3.19 83/12/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -1117,6 +1117,13 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|selwin
+operator|==
+name|w
+condition|)
+return|return;
 name|lastselwin
 operator|=
 name|selwin
