@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crtplot.c	4.4 (Berkeley) %G%"
+literal|"@(#)crtplot.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -518,6 +518,27 @@ expr_stmt|;
 block|}
 end_block
 
+begin_function
+name|void
+name|cputchar
+parameter_list|(
+name|ch
+parameter_list|)
+name|int
+name|ch
+decl_stmt|;
+block|{
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_macro
 name|plot_erase
 argument_list|()
@@ -526,14 +547,22 @@ end_macro
 begin_block
 block|{
 comment|/* Some of these functions probably belong in openpl().  However, if the input is being typed in, putting them in openpl would not work since "noecho", etc would prevent (sort of) input.  Notice that the driver calls openpl before doing anything.  This is actually wrong, but it is what whoever originally wrote the driver decided to do.  (openpl() in libplot does nothing -- that is the main problem!) */
-name|_puts
+name|tputs
 argument_list|(
 name|TI
+argument_list|,
+literal|0
+argument_list|,
+name|cputchar
 argument_list|)
 expr_stmt|;
-name|_puts
+name|tputs
 argument_list|(
 name|VS
+argument_list|,
+literal|0
+argument_list|,
+name|cputchar
 argument_list|)
 expr_stmt|;
 name|noecho
@@ -548,7 +577,7 @@ name|CL
 argument_list|,
 name|LINES
 argument_list|,
-name|__cputchar
+name|cputchar
 argument_list|)
 expr_stmt|;
 name|mvcur
