@@ -1283,6 +1283,10 @@ name|pin
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -1343,6 +1347,10 @@ literal|'\0'
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
