@@ -2889,7 +2889,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|eisa
 argument_list|,
-name|nexus
+name|legacy
 argument_list|,
 name|eisa_driver
 argument_list|,

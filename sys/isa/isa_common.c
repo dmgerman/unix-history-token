@@ -4573,7 +4573,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * ISA can be attached to a PCI-ISA bridge or directly to the nexus.  */
+comment|/*  * ISA can be attached to a PCI-ISA bridge or directly to the legacy device.  */
 end_comment
 
 begin_expr_stmt
@@ -4623,7 +4623,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|isa
 argument_list|,
-name|nexus
+name|legacy
 argument_list|,
 name|isa_driver
 argument_list|,
