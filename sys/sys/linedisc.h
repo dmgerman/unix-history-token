@@ -1672,6 +1672,7 @@ operator|*
 operator|*
 name|namep
 operator|,
+specifier|const
 name|char
 operator|*
 name|stem
