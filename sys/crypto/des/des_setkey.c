@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: des_setkey.c,v 1.5 2000/11/06 13:58:09 itojun Exp $	*/
+comment|/*	$KAME: des_setkey.c,v 1.6 2001/07/03 14:27:53 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -548,7 +548,6 @@ name|i
 operator|++
 control|)
 comment|/* Added == 0 to comparision, I obviously don't run 		 * this section very often :-(, thanks to 		 * engineering@MorningStar.Com for the fix 		 * eay 93/06/29 */
-comment|/* 		if (memcmp(weak_keys[i],key,sizeof(key)) == 0) return(1); */
 if|if
 condition|(
 name|bcmp
@@ -562,6 +561,7 @@ name|key
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|key
 argument_list|)
 argument_list|)
