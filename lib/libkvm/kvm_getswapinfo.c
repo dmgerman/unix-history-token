@@ -813,7 +813,7 @@ name|swinfo
 operator|.
 name|sw_dev
 argument_list|,
-name|S_IFBLK
+name|S_IFCHR
 argument_list|)
 argument_list|)
 expr_stmt|;

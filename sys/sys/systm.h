@@ -2425,16 +2425,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|udev_t
-name|dev2budev
-parameter_list|(
-name|dev_t
-name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|dev_t
 name|udev2dev
 parameter_list|(

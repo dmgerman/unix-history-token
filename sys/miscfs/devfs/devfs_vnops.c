@@ -1220,6 +1220,9 @@ name|S_IFCHR
 operator|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|nolonger
 case|case
 name|DEV_BDEV
 case|:
@@ -1243,6 +1246,8 @@ name|S_IFBLK
 operator|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|DEV_SLNK
 case|:
