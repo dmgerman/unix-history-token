@@ -971,16 +971,6 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devinfo
-init|=
-name|device_get_desc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1017,11 +1007,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|devinfo
-condition|)
-block|{
 name|device_set_desc
 argument_list|(
 name|self
@@ -1029,18 +1014,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|devinfo
-argument_list|,
-name|M_USB
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -4645,8 +4618,8 @@ condition|)
 return|return
 literal|0
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|UKBD_DEBUG
 for|for
 control|(
@@ -7370,6 +7343,7 @@ name|uaa
 operator|->
 name|iface
 condition|)
+comment|/* we attach to ifaces only */
 return|return
 name|EINVAL
 return|;
@@ -7408,6 +7382,7 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* found it */
 return|return
 name|EINVAL
 return|;
