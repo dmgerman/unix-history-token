@@ -260,6 +260,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|_ksd_get_tmbx
+parameter_list|(
+name|value
+parameter_list|)
+value|KSD_GET_PTR(mbx.km_curthread)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_ksd_readandclear_tmbx
 value|KSD_READANDCLEAR_PTR(mbx.km_curthread)
 end_define
