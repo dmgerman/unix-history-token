@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclose.c	3.7 83/12/01"
+literal|"@(#)wwclose.c	3.8 83/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,26 +55,6 @@ name|ww_index
 index|]
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|->
-name|ww_state
-operator|==
-name|WWS_HASPROC
-condition|)
-operator|(
-name|void
-operator|)
-name|kill
-argument_list|(
-name|w
-operator|->
-name|ww_pid
-argument_list|,
-name|SIGHUP
-argument_list|)
 expr_stmt|;
 operator|(
 name|void
