@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)du.c	4.7 (Berkeley) %G%"
+literal|"@(#)du.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,6 +757,15 @@ operator|*
 name|ebase0
 operator|=
 literal|0
+expr_stmt|;
+name|closedir
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
+name|dirp
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
