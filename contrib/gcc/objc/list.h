@@ -508,7 +508,6 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|__GNU_OBJC_LIST_H
 end_endif
 
 end_unit
