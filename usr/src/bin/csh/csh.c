@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.5 %G%"
+literal|"@(#)csh.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -569,6 +569,7 @@ if|if
 condition|(
 name|loginsh
 condition|)
+block|{
 name|signal
 argument_list|(
 name|SIGHUP
@@ -577,6 +578,23 @@ name|phup
 argument_list|)
 expr_stmt|;
 comment|/* exit processing on HUP */
+name|signal
+argument_list|(
+name|SIGXCPU
+argument_list|,
+name|phup
+argument_list|)
+expr_stmt|;
+comment|/* ...and on XCPU */
+name|signal
+argument_list|(
+name|SIGXFSZ
+argument_list|,
+name|phup
+argument_list|)
+expr_stmt|;
+comment|/* ...and on XFSZ */
+block|}
 comment|/* 	 * Process the arguments. 	 * 	 * Note that processing of -v/-x is actually delayed till after 	 * script processing. 	 * 	 * We set the first character of our name to be '-' if we are 	 * a shell running interruptible commands.  Many programs which 	 * examine ps'es use this to filter such shells out. 	 */
 name|c
 operator|--
