@@ -2058,6 +2058,18 @@ name|struct
 name|xl_mii_frame
 name|frame
 decl_stmt|;
+comment|/* 	 * Pretend that PHYs are only available at MII address 24. 	 * This is to guard against problems with certain 3Com ASIC 	 * revisions that incorrectly map the internal transceiver 	 * control registers at all MII addresses. This can cause 	 * the miibus code to attach the same PHY several times over. 	 */
+if|if
+condition|(
+name|phy
+operator|!=
+literal|24
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sc
 operator|=
 name|device_get_softc
@@ -2143,6 +2155,17 @@ name|struct
 name|xl_mii_frame
 name|frame
 decl_stmt|;
+if|if
+condition|(
+name|phy
+operator|!=
+literal|24
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sc
 operator|=
 name|device_get_softc
