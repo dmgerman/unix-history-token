@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -33,36 +39,11 @@ directive|include
 file|<machine/uc_device.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<isa/pnp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
 name|uc_device
 modifier|*
 name|id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pnp_cinfo
-modifier|*
-name|c
 decl_stmt|;
 end_decl_stmt
 
@@ -100,12 +81,6 @@ modifier|*
 name|mib1
 init|=
 literal|"machdep.uc_devlist"
-decl_stmt|;
-name|char
-modifier|*
-name|mib2
-init|=
-literal|"machdep.uc_pnplist"
 decl_stmt|;
 name|char
 name|name
@@ -186,7 +161,7 @@ block|}
 block|}
 block|}
 comment|/* We use sysctlbyname, because the oid is unknown (OID_AUTO) */
-comment|/* First, print the changes made to ISA devices */
+comment|/* Print the changes made to ISA devices */
 comment|/* get the buffer size */
 name|i
 operator|=
@@ -237,6 +212,25 @@ name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"malloc"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|i
 operator|=
 name|sysctlbyname
@@ -528,20 +522,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Now, print the changes to PnP override table */
-comment|/* get the buffer size */
-block|i=sysctlbyname(mib2,NULL,&len,NULL,NULL); 	if(i) {
-comment|/* Hmm.. No PnP table? */
-block|goto finish; 	} 	buf=(char *)malloc(len*sizeof(char)); 	i=sysctlbyname(mib2,buf,&len,NULL,NULL); 	if(i) { 		perror("retrieving data"); 		exit(-1); 	} 	i=0;
-comment|/* Print the PnP override table. Taken from userconfig.c */
-block|do { 		c = (struct pnp_cinfo *)(buf+i); 		if (c->csn>0&& c->csn != 255) { 	    		int pmax, mmax; 	    		char buf1[256];  			if(c->enable==0) { 				fprintf(fout,"pnp %d %d disable\n", 					c->csn, c->ldn); 				continue; 			} 			fprintf(fout,"pnp %d %d %s irq0 %d irq1 %d drq0 %d drq1 %d", 				c->csn, c->ldn, 				c->override ? "os":"bios", 				c->irq[0], c->irq[1], c->drq[0], c->drq[1]); 	    		if (c->flags) 				fprintf(fout," flags 0x%lx",c->flags); 			pmax=0; 			while(c->port[pmax]!=0&& pmax<8) { 				fprintf(fout," port%d %d",pmax,c->port[pmax]); 				pmax++; 			} 			mmax=0; 			while(c->mem[mmax].base!=0&& mmax<8) { 				fprintf(fout," mem%d %d",mmax,c->mem[mmax].base); 				mmax++; 			} 	    		fprintf(fout,"\n");     		}  	} while ((i+=sizeof(struct pnp_cinfo))<len); 	free(buf);
-endif|#
-directive|endif
-name|finish
-label|:
 name|fprintf
 argument_list|(
 name|fout
