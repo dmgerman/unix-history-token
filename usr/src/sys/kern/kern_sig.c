@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	6.6	84/08/29	*/
+comment|/*	kern_sig.c	6.7	84/09/04	*/
 end_comment
 
 begin_include
@@ -126,18 +126,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< ((s)-1))
-end_define
-
-begin_define
-define|#
-directive|define
 name|cantmask
-value|(mask(SIGKILL)|mask(SIGCONT)|mask(SIGSTOP))
+value|(sigmask(SIGKILL)|sigmask(SIGCONT)|sigmask(SIGSTOP))
 end_define
 
 begin_comment
@@ -418,7 +408,7 @@ name|u
 operator|.
 name|u_sigonstack
 operator|&
-name|mask
+name|sigmask
 argument_list|(
 name|sig
 argument_list|)
@@ -566,7 +556,7 @@ name|bit
 decl_stmt|;
 name|bit
 operator|=
-name|mask
+name|sigmask
 argument_list|(
 name|sig
 argument_list|)
@@ -581,7 +571,7 @@ comment|/* 	 * Change setting atomically. 	 */
 operator|(
 name|void
 operator|)
-name|spl6
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|u
@@ -712,7 +702,7 @@ struct|struct
 name|a
 block|{
 name|int
-name|sigmask
+name|mask
 decl_stmt|;
 block|}
 modifier|*
@@ -740,7 +730,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|spl6
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|u
@@ -759,7 +749,7 @@ name|p_sigmask
 operator||=
 name|uap
 operator|->
-name|sigmask
+name|mask
 operator|&
 operator|~
 name|cantmask
@@ -784,7 +774,7 @@ struct|struct
 name|a
 block|{
 name|int
-name|sigmask
+name|mask
 decl_stmt|;
 block|}
 modifier|*
@@ -812,7 +802,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|spl6
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|u
@@ -831,7 +821,7 @@ name|p_sigmask
 operator|=
 name|uap
 operator|->
-name|sigmask
+name|mask
 operator|&
 operator|~
 name|cantmask
@@ -856,7 +846,7 @@ struct|struct
 name|a
 block|{
 name|int
-name|sigmask
+name|mask
 decl_stmt|;
 block|}
 modifier|*
@@ -902,7 +892,7 @@ name|p_sigmask
 operator|=
 name|uap
 operator|->
-name|sigmask
+name|mask
 operator|&
 operator|~
 name|cantmask
@@ -931,12 +921,6 @@ begin_undef
 undef|#
 directive|undef
 name|cantmask
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|mask
 end_undef
 
 begin_macro
@@ -1606,7 +1590,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 name|int
-name|sigmask
+name|mask
 decl_stmt|;
 if|if
 condition|(
@@ -1618,15 +1602,12 @@ operator|>=
 name|NSIG
 condition|)
 return|return;
-name|sigmask
+name|mask
 operator|=
-literal|1
-operator|<<
-operator|(
+name|sigmask
+argument_list|(
 name|sig
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If proc is traced, always give parent a chance. 	 */
 if|if
@@ -1650,7 +1631,7 @@ name|p
 operator|->
 name|p_sigignore
 operator|&
-name|sigmask
+name|mask
 condition|)
 return|return;
 if|if
@@ -1659,7 +1640,7 @@ name|p
 operator|->
 name|p_sigmask
 operator|&
-name|sigmask
+name|mask
 condition|)
 name|action
 operator|=
@@ -1672,7 +1653,7 @@ name|p
 operator|->
 name|p_sigcatch
 operator|&
-name|sigmask
+name|mask
 condition|)
 name|action
 operator|=
@@ -1686,15 +1667,8 @@ expr_stmt|;
 block|}
 define|#
 directive|define
-name|mask
-parameter_list|(
-name|sig
-parameter_list|)
-value|(1<<(sig-1))
-define|#
-directive|define
 name|stops
-value|(mask(SIGSTOP)|mask(SIGTSTP)|mask(SIGTTIN)|mask(SIGTTOU))
+value|(sigmask(SIGSTOP)|sigmask(SIGTSTP)| \ 			sigmask(SIGTTIN)|sigmask(SIGTTOU))
 if|if
 condition|(
 name|sig
@@ -1704,7 +1678,7 @@ name|p
 operator|->
 name|p_sig
 operator||=
-name|sigmask
+name|mask
 expr_stmt|;
 switch|switch
 condition|(
@@ -1776,7 +1750,7 @@ operator|->
 name|p_sig
 operator|&=
 operator|~
-name|mask
+name|sigmask
 argument_list|(
 name|SIGCONT
 argument_list|)
@@ -1784,9 +1758,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-undef|#
-directive|undef
-name|mask
 undef|#
 directive|undef
 name|stops
@@ -1800,7 +1771,7 @@ condition|)
 return|return;
 name|s
 operator|=
-name|spl6
+name|splhigh
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -1894,7 +1865,7 @@ operator|->
 name|p_sig
 operator|&=
 operator|~
-name|sigmask
+name|mask
 expr_stmt|;
 name|splx
 argument_list|(
@@ -1920,7 +1891,7 @@ operator|->
 name|p_sig
 operator|&=
 operator|~
-name|sigmask
+name|mask
 expr_stmt|;
 name|p
 operator|->
@@ -1960,7 +1931,7 @@ operator|->
 name|p_sig
 operator|&=
 operator|~
-name|sigmask
+name|mask
 expr_stmt|;
 comment|/* take it away */
 goto|goto
@@ -2046,7 +2017,7 @@ operator|->
 name|p_sig
 operator|&=
 operator|~
-name|sigmask
+name|mask
 expr_stmt|;
 comment|/* take it away */
 goto|goto
@@ -2201,7 +2172,7 @@ decl_stmt|;
 name|int
 name|sigbits
 decl_stmt|,
-name|sigmask
+name|mask
 decl_stmt|;
 name|p
 operator|=
@@ -2299,22 +2270,19 @@ argument_list|(
 name|sigbits
 argument_list|)
 expr_stmt|;
-name|sigmask
+name|mask
 operator|=
-literal|1
-operator|<<
-operator|(
+name|sigmask
+argument_list|(
 name|sig
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
 name|p_sig
 operator|&=
 operator|~
-name|sigmask
+name|mask
 expr_stmt|;
 comment|/* take the signal! */
 name|p
@@ -2385,7 +2353,7 @@ name|p
 operator|->
 name|p_sig
 operator||=
-name|sigmask
+name|mask
 expr_stmt|;
 continue|continue;
 block|}
@@ -2404,15 +2372,12 @@ literal|0
 condition|)
 continue|continue;
 comment|/* 			 * If signal is being masked put it back 			 * into p_sig and look for other signals. 			 */
-name|sigmask
+name|mask
 operator|=
-literal|1
-operator|<<
-operator|(
+name|sigmask
+argument_list|(
 name|sig
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2420,14 +2385,14 @@ name|p
 operator|->
 name|p_sigmask
 operator|&
-name|sigmask
+name|mask
 condition|)
 block|{
 name|p
 operator|->
 name|p_sig
 operator||=
-name|sigmask
+name|mask
 expr_stmt|;
 continue|continue;
 block|}
@@ -2685,15 +2650,12 @@ operator|->
 name|p_cursig
 decl_stmt|;
 name|int
-name|sigmask
+name|mask
 init|=
-literal|1
-operator|<<
-operator|(
+name|sigmask
+argument_list|(
 name|sig
-operator|-
-literal|1
-operator|)
+argument_list|)
 decl_stmt|,
 name|returnmask
 decl_stmt|;
@@ -2743,7 +2705,7 @@ name|p
 operator|->
 name|p_sigmask
 operator|&
-name|sigmask
+name|mask
 operator|)
 condition|)
 name|panic
@@ -2761,7 +2723,7 @@ comment|/* 		 * Set the new mask value and also defer further 		 * occurences of
 operator|(
 name|void
 operator|)
-name|spl6
+name|splhigh
 argument_list|()
 expr_stmt|;
 if|if
@@ -2798,10 +2760,10 @@ operator|->
 name|p_sigcatch
 operator|&=
 operator|~
-name|sigmask
+name|mask
 expr_stmt|;
 block|}
-name|sigmask
+name|mask
 operator|=
 literal|0
 expr_stmt|;
@@ -2847,7 +2809,7 @@ index|[
 name|sig
 index|]
 operator||
-name|sigmask
+name|mask
 expr_stmt|;
 operator|(
 name|void
