@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.18.2.3 1997/09/16 06:57:10 charnier Exp $"
+literal|"$Id: mkmakefile.c,v 1.18.2.6 1998/06/08 10:55:26 thepish Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"configvers.h"
 end_include
 
 begin_define
@@ -620,6 +626,9 @@ name|warn_make_clean
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|versreq
+decl_stmt|;
 name|read_files
 argument_list|()
 expr_stmt|;
@@ -1149,6 +1158,95 @@ argument_list|(
 name|ofp
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"%VERSREQ="
+argument_list|,
+sizeof|sizeof
+argument_list|(
+literal|"%VERSREQ="
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|versreq
+operator|=
+name|atoi
+argument_list|(
+name|line
+operator|+
+sizeof|sizeof
+argument_list|(
+literal|"%VERSREQ="
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|versreq
+operator|!=
+name|CONFIGVERS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: version of config(8) does not match kernel!\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"config version = %d, "
+argument_list|,
+name|CONFIGVERS
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"version required = %d\n\n"
+argument_list|,
+name|versreq
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Make sure that /usr/src/usr.sbin/config is in sync\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"with your /usr/src/sys and install a new config binary\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"before trying this again.\n\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
 name|fprintf
 argument_list|(
