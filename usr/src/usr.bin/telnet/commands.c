@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.11 (Berkeley) %G%"
+literal|"@(#)commands.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ name|Ambiguous
 parameter_list|(
 name|s
 parameter_list|)
-value|((char *)s == ambiguous)
+value|((char **)s ==&ambiguous)
 end_define
 
 begin_decl_stmt
@@ -200,6 +200,163 @@ end_decl_stmt
 
 begin_comment
 comment|/*  * Various utility routines.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|||
+operator|(
+name|BSD
+operator|<=
+literal|43
+operator|)
+end_if
+
+begin_decl_stmt
+name|char
+modifier|*
+name|h_errlist
+index|[]
+init|=
+block|{
+literal|"Error 0"
+block|,
+literal|"Unknown host"
+block|,
+comment|/* 1 HOST_NOT_FOUND */
+literal|"Host name lookup failure"
+block|,
+comment|/* 2 TRY_AGAIN */
+literal|"Unknown server error"
+block|,
+comment|/* 3 NO_RECOVERY */
+literal|"No address associated with name"
+block|,
+comment|/* 4 NO_ADDRESS */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|h_nerr
+init|=
+block|{
+sizeof|sizeof
+argument_list|(
+name|h_errlist
+argument_list|)
+operator|/
+expr|sizeof
+operator|(
+name|h_errlist
+index|[
+literal|0
+index|]
+operator|)
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * herror --  *	print the error indicated by the h_errno value.  */
+end_comment
+
+begin_macro
+name|herror
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|s
+operator|&&
+operator|*
+name|s
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|h_errno
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|h_errno
+operator|>=
+name|h_nerr
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unknown error\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|h_errlist
+index|[
+name|h_errno
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !define(BSD) || (BSD<= 43) */
 end_comment
 
 begin_function
@@ -546,11 +703,7 @@ operator|>
 literal|1
 condition|)
 return|return
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
+operator|&
 name|ambiguous
 return|;
 return|return
@@ -2319,24 +2472,6 @@ name|actionexplanation
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"%s %s.\n"
-argument_list|,
-operator|*
-name|c
-operator|->
-name|variable
-condition|?
-literal|"Will"
-else|:
-literal|"Won't"
-argument_list|,
-name|c
-operator|->
-name|actionexplanation
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
