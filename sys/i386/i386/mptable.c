@@ -11306,6 +11306,13 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
+if|if
+condition|(
+name|mp_ncpus
+operator|==
+literal|1
+condition|)
+return|return;
 name|mtx_lock_spin
 argument_list|(
 operator|&
