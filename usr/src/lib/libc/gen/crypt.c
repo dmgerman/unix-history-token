@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crypt.c	5.10 (Berkeley) %G%"
+literal|"@(#)crypt.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2970,11 +2970,11 @@ operator|.
 name|b
 argument_list|)
 condition|)
-name|retrun
-argument_list|(
+return|return
+operator|(
 name|NULL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 operator|*
 name|encp
