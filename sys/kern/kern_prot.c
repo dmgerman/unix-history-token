@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -1659,6 +1665,12 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -1914,6 +1926,12 @@ argument_list|)
 expr_stmt|;
 name|done2
 label|:
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
