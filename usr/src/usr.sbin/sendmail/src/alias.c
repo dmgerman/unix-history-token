@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.46
+literal|3.47
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.46
+literal|3.47
 operator|%
 name|G
 operator|%
@@ -491,6 +491,10 @@ name|NoAlias
 operator|=
 name|TRUE
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
 ifdef|#
@@ -591,6 +595,10 @@ name|modtime
 operator|)
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|AutoRebuild

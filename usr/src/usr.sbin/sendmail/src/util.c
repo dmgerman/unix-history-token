@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -1191,6 +1191,10 @@ operator|(
 name|TRUE
 operator|)
 return|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
@@ -1447,6 +1451,10 @@ name|EINTR
 condition|)
 break|break;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|fp

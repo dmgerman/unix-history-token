@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.149
+literal|3.150
 operator|%
 name|G
 operator|%
@@ -3863,12 +3863,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|stb
 operator|.
 name|st_mode
 operator|=
 literal|0666
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bitset

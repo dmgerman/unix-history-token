@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.157
+literal|3.158
 operator|%
 name|G
 operator|%
@@ -3574,6 +3574,10 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 block|}
 endif|#
 directive|endif

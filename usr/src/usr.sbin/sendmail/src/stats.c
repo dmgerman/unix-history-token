@@ -15,7 +15,7 @@ operator|)
 name|stats
 operator|.
 name|c
-literal|3.6
+literal|3.7
 operator|%
 name|G
 operator|%
@@ -268,7 +268,13 @@ name|fd
 operator|<
 literal|0
 condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|read
