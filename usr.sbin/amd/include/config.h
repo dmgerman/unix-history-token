@@ -12,7 +12,7 @@ comment|/* aux/config.h.in.  Generated automatically from ./aux/configure.in by 
 end_comment
 
 begin_comment
-comment|/*  * Start of am-utils-6.x config.h file.  * Erez Zadok<ezk@cs.columbia.edu>  *  * DO NOT EDIT BY HAND.  * Note: accconfig.h generates config.h.in, which generates config.h.  */
+comment|/*  * Start of am-utils-6.x config.h file.  * Erez Zadok<ezk@cs.columbia.edu>  *  * DO NOT EDIT BY HAND.  * Note: acconfig.h generates config.h.in, which generates config.h.  */
 end_comment
 
 begin_ifndef
@@ -109,7 +109,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if have symlink with exitence check filesystem */
+comment|/* Define if have symlink with existence check filesystem */
 end_comment
 
 begin_define
@@ -162,14 +162,6 @@ directive|define
 name|HAVE_AM_FS_UNION
 value|1
 end_define
-
-begin_comment
-comment|/* Define if have Sun's autofs filesystem (NO LONGER NEEDED?) */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_AM_FS_AUTOFS */
-end_comment
 
 begin_comment
 comment|/*  * Check for types of maps available.  */
@@ -1256,9 +1248,12 @@ begin_comment
 comment|/* asynchronous filesystem access */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_GEN_OPT_ASYNC */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_GEN_OPT_ASYNC
+value|0x40
+end_define
 
 begin_comment
 comment|/* cache (what?) */
@@ -1282,6 +1277,14 @@ end_comment
 
 begin_comment
 comment|/* #undef MNT2_GEN_OPT_FSS */
+end_comment
+
+begin_comment
+comment|/* ignore mount entry in df output */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_GEN_OPT_IGNORE */
 end_comment
 
 begin_comment
@@ -1447,9 +1450,12 @@ begin_comment
 comment|/* synchronous filesystem access (same as SYNC) */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_GEN_OPT_SYNCHRONOUS */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_GEN_OPT_SYNCHRONOUS
+value|0x2
+end_define
 
 begin_comment
 comment|/* Mount with Sys 5-specific semantics */
@@ -1535,9 +1541,12 @@ begin_comment
 comment|/* set dead server retry thresh */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_NFS_OPT_DEADTHRESH */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_NFS_OPT_DEADTHRESH
+value|0x4000
+end_define
 
 begin_comment
 comment|/* Dismount in progress */
@@ -1653,9 +1662,12 @@ begin_comment
 comment|/* set lease term (nqnfs) */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_NFS_OPT_LEASETERM */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_NFS_OPT_LEASETERM
+value|0x1000
+end_define
 
 begin_comment
 comment|/* Local locking (no lock manager) */
@@ -1750,9 +1762,12 @@ begin_comment
 comment|/* Use Nqnfs protocol */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_NFS_OPT_NQNFS */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_NFS_OPT_NQNFS
+value|0x100
+end_define
 
 begin_comment
 comment|/* static pathconf kludge info */
@@ -1782,9 +1797,12 @@ begin_comment
 comment|/* set read ahead */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_NFS_OPT_READAHEAD */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_NFS_OPT_READAHEAD
+value|0x2000
+end_define
 
 begin_comment
 comment|/* Allocate a reserved port */
@@ -1798,7 +1816,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* set number of request retrys */
+comment|/* set number of request retries */
 end_comment
 
 begin_define
@@ -2205,7 +2223,7 @@ comment|/* #undef HAVE_FIELD_UFS_ARGS_T_UFS_PGTHRESH */
 end_comment
 
 begin_comment
-comment|/* does struct fhstatus have an fhs_fh field? */
+comment|/* does struct fhstatus have a fhs_fh field? */
 end_comment
 
 begin_comment
@@ -2246,6 +2264,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* does struct nfs_args have a bsize field? */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FIELD_NFS_ARGS_T_BSIZE */
+end_comment
+
+begin_comment
 comment|/* does struct nfs_args have an fh_len field? */
 end_comment
 
@@ -2265,11 +2291,19 @@ value|1
 end_define
 
 begin_comment
-comment|/* does struct nfs_args have an gfs_flags field? */
+comment|/* does struct nfs_args have a gfs_flags field? */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_FIELD_NFS_ARGS_T_GFS_FLAGS */
+end_comment
+
+begin_comment
+comment|/* does struct nfs_args have a namlen field? */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FIELD_NFS_ARGS_T_NAMLEN */
 end_comment
 
 begin_comment
@@ -2323,6 +2357,14 @@ directive|define
 name|HAVE_FIELD_STRUCT_IFREQ_IFR_ADDR
 value|1
 end_define
+
+begin_comment
+comment|/* does struct ifaddrs have field ifa_next? */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+end_comment
 
 begin_comment
 comment|/* does struct sockaddr have field sa_len? */
@@ -2391,11 +2433,27 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Define if using alloca.c.  */
+end_comment
+
+begin_comment
+comment|/* #undef C_ALLOCA */
+end_comment
+
+begin_comment
 comment|/* Define to empty if the keyword does not work.  */
 end_comment
 
 begin_comment
 comment|/* #undef const */
+end_comment
+
+begin_comment
+comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.    This function is required for alloca.c support on those systems.  */
+end_comment
+
+begin_comment
+comment|/* #undef CRAY_STACKSEG_END */
 end_comment
 
 begin_comment
@@ -2415,6 +2473,25 @@ end_comment
 
 begin_comment
 comment|/* #undef gid_t */
+end_comment
+
+begin_comment
+comment|/* Define if you have alloca, as a function or macro.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ALLOCA
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have<alloca.h> and it should be used (not on Ultrix).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ALLOCA_H */
 end_comment
 
 begin_comment
@@ -2489,27 +2566,11 @@ comment|/* #undef inline */
 end_comment
 
 begin_comment
-comment|/* Define to `int' if<sys/types.h> doesn't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef mode_t */
-end_comment
-
-begin_comment
 comment|/* Define if your C compiler doesn't accept -c and -o together.  */
 end_comment
 
 begin_comment
 comment|/* #undef NO_MINUS_C_MINUS_O */
-end_comment
-
-begin_comment
-comment|/* Define to `int' if<sys/types.h> doesn't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef pid_t */
 end_comment
 
 begin_comment
@@ -2532,11 +2593,11 @@ value|void
 end_define
 
 begin_comment
-comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
+comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.  STACK_DIRECTION> 0 => grows toward higher addresses  STACK_DIRECTION< 0 => grows toward lower addresses  STACK_DIRECTION = 0 => direction of growth unknown  */
 end_comment
 
 begin_comment
-comment|/* #undef size_t */
+comment|/* #undef STACK_DIRECTION */
 end_comment
 
 begin_comment
@@ -2680,7 +2741,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"6.0"
+value|"6.0.1"
 end_define
 
 begin_comment
@@ -2745,6 +2806,14 @@ comment|/* #define HOST_OS_VERSION "3.0" */
 end_comment
 
 begin_comment
+comment|/* Define the header version of (linux) hosts (eg. 2.2.10) */
+end_comment
+
+begin_comment
+comment|/* #define HOST_HEADER_VERSION "4.0" */
+end_comment
+
+begin_comment
 comment|/* Define name of host */
 end_comment
 
@@ -2774,14 +2843,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_TRANSPORT_TYPE_TLI */
-end_comment
-
-begin_comment
-comment|/* Define to `long' if<sys/types.h> doesn't define time_t */
-end_comment
-
-begin_comment
-comment|/* #undef time_t */
 end_comment
 
 begin_comment
@@ -3074,9 +3135,12 @@ begin_comment
 comment|/* Define a type for the mfs_args structure */
 end_comment
 
-begin_comment
-comment|/* #undef mfs_args_t */
-end_comment
+begin_define
+define|#
+directive|define
+name|mfs_args_t
+value|struct mfs_args
+end_define
 
 begin_comment
 comment|/* Define a type for the rfs_args structure */
@@ -3333,6 +3397,14 @@ directive|define
 name|HAVE_GETHOSTNAME
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the getifaddrs function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETIFADDRS */
+end_comment
 
 begin_comment
 comment|/* Define if you have the getmntinfo function.  */
@@ -4453,6 +4525,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<db1/ndbm.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DB1_NDBM_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<dirent.h> header file.  */
 end_comment
 
@@ -4510,6 +4590,22 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_HSFS_HSFS_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<ifaddrs.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_IFADDRS_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<irs.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_IRS_H */
 end_comment
 
 begin_comment
@@ -4577,6 +4673,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LINUX_NFS_MOUNT_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<linux/posix_types.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_POSIX_TYPES_H */
 end_comment
 
 begin_comment
@@ -4803,6 +4907,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_NFS_NFS_MOUNT_H */
 end_comment
+
+begin_comment
+comment|/* Define if you have the<nfs/nfsmount.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NFS_NFSMOUNT_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<nfs/nfsproto.h> header file.  */
@@ -5629,6 +5744,17 @@ comment|/* #undef HAVE_TMPFS_TMP_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<ufs/ufs/ufsmount.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UFS_UFS_UFSMOUNT_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<ufs/ufs_mount.h> header file.  */
 end_comment
 
@@ -5662,6 +5788,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<vfork.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_VFORK_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the gdbm library (-lgdbm).  */
 end_comment
 
@@ -5686,6 +5820,14 @@ comment|/* #undef HAVE_LIBMAPMALLOC */
 end_comment
 
 begin_comment
+comment|/* Define if you have the nsl library (-lnsl).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBNSL */
+end_comment
+
+begin_comment
 comment|/* Define if you have the rpc library (-lrpc).  */
 end_comment
 
@@ -5703,6 +5845,46 @@ directive|define
 name|HAVE_LIBRPCSVC
 value|1
 end_define
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef pid_t */
+end_comment
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef mode_t */
+end_comment
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef pid_t */
+end_comment
+
+begin_comment
+comment|/* Define to `unsigned' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef size_t */
+end_comment
+
+begin_comment
+comment|/* Define to `long' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef time_t */
+end_comment
 
 begin_comment
 comment|/**************************************************************************/
@@ -5739,6 +5921,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_EXTERN_OPTARG
+value|1
+end_define
+
+begin_comment
+comment|/* does clnt_spcreateerror() exist? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXTERN_CLNT_SPCREATEERROR
 value|1
 end_define
 
@@ -5862,6 +6055,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_EXTERN_SBRK
+value|1
+end_define
+
+begin_comment
+comment|/* does seteuid() exist? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXTERN_SETEUID
 value|1
 end_define
 
