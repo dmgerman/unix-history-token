@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.42 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3071,6 +3071,13 @@ case|case
 literal|'E'
 case|:
 comment|/* error message header/header file */
+if|if
+condition|(
+operator|*
+name|val
+operator|!=
+literal|'\0'
+condition|)
 name|ErrMsgFile
 operator|=
 name|newstr
