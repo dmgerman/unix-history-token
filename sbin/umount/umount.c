@@ -669,16 +669,11 @@ operator|&
 name|nfshost_ai
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"ndp: %s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|nfshost
 argument_list|,
@@ -688,7 +683,6 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 switch|switch
 condition|(
@@ -1829,6 +1823,8 @@ argument_list|(
 name|mntfromnamerev
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|umountfs
 argument_list|(
 name|mntfromname
@@ -1837,7 +1833,8 @@ name|mntonname
 argument_list|,
 name|type
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -1871,11 +1868,6 @@ name|timeval
 name|try
 decl_stmt|;
 name|struct
-name|mtablist
-modifier|*
-name|mtab
-decl_stmt|;
-name|struct
 name|addrinfo
 modifier|*
 name|ai
@@ -1903,11 +1895,15 @@ decl_stmt|,
 modifier|*
 name|delimp
 decl_stmt|;
-name|mtab
+name|ai
 operator|=
 name|NULL
 expr_stmt|;
-name|ai
+name|do_rpc
+operator|=
+literal|0
+expr_stmt|;
+name|hostp
 operator|=
 name|NULL
 expr_stmt|;
@@ -1932,13 +1928,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|type
 argument_list|,
 literal|"nfs"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -2023,19 +2020,9 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * Check if we have to start the rpc-call later. 	 * If there are still identical nfs-names mounted, 	 * we skip the rpc-call. Obviously this has to 	 * happen before unmount(2), but it should happen 	 * after the previous namecheck. 	 */
+comment|/* 		 * Check if we have to start the rpc-call later. 		 * If there are still identical nfs-names mounted, 		 * we skip the rpc-call. Obviously this has to 		 * happen before unmount(2), but it should happen 		 * after the previous namecheck. 		 * A non-NULL return means that this is the last 		 * mount from mntfromname that is still mounted. 		 */
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|type
-argument_list|,
-literal|"nfs"
-argument_list|)
-operator|==
-literal|0
-operator|&&
 name|getmntname
 argument_list|(
 name|mntfromname
@@ -2056,11 +2043,7 @@ name|do_rpc
 operator|=
 literal|1
 expr_stmt|;
-else|else
-name|do_rpc
-operator|=
-literal|0
-expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2152,9 +2135,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|clnt_pcreateerror
+name|warnx
 argument_list|(
-literal|"Cannot MNT PRC"
+literal|"%s: %s"
+argument_list|,
+name|hostp
+argument_list|,
+name|clnt_spcreateerror
+argument_list|(
+literal|"RPCPROG_MNT"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2211,11 +2201,18 @@ operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
-name|clnt_perror
+name|warnx
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|hostp
+argument_list|,
+name|clnt_sperror
 argument_list|(
 name|clp
 argument_list|,
-literal|"Bad MNT RPC"
+literal|"RPCMNT_UMOUNT"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2229,14 +2226,10 @@ if|if
 condition|(
 name|read_mtab
 argument_list|(
-name|mtab
+name|NULL
 argument_list|)
 condition|)
 block|{
-name|mtab
-operator|=
-name|mtabhead
-expr_stmt|;
 name|clean_mtab
 argument_list|(
 name|hostp
@@ -2252,7 +2245,7 @@ argument_list|()
 condition|)
 name|warnx
 argument_list|(
-literal|"cannot remove entry %s:%s"
+literal|"cannot remove mounttab entry %s:%s"
 argument_list|,
 name|hostp
 argument_list|,
