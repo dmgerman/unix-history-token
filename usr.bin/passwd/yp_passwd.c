@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_passwd.c,v 1.3 1993/08/01 18:10:17 mycroft Exp $"
+literal|"$Id: yp_passwd.c,v 1.1 1994/01/11 19:01:16 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -697,18 +697,16 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|uid
-operator|&&
-name|old_pass
-condition|)
-block|{
 operator|*
 name|old_pass
 operator|=
-name|NULL
+literal|"*"
 expr_stmt|;
+if|if
+condition|(
+name|uid
+condition|)
+block|{
 if|if
 condition|(
 name|pw
