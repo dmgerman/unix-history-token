@@ -219,7 +219,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * All devices need _some_ sort of bus settle delay, so we'll set it to  * a minimum value of 100ms.  */
+comment|/*  * All devices need _some_ sort of bus settle delay, so we'll set it to  * a minimum value of 100ms. Note that this is pertinent only for SPI-  * not transport like Fibre Channel or iSCSI where 'delay' is completely  * meaningless.  */
 end_comment
 
 begin_ifndef
@@ -251,6 +251,10 @@ operator|(
 name|SCSI_DELAY
 operator|<
 name|SCSI_MIN_DELAY
+operator|&&
+name|SCSI_DELAY
+operator|!=
+literal|0
 operator|)
 end_if
 
