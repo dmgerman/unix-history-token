@@ -72,11 +72,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|foo
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -104,7 +107,9 @@ name|foo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|i
@@ -134,7 +139,9 @@ name|foo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 return|return
@@ -185,8 +192,10 @@ name|SEEK_SET
 argument_list|)
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|i
 operator|=
@@ -209,8 +218,10 @@ operator|!=
 name|i
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 literal|0
