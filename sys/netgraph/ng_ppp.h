@@ -30,22 +30,59 @@ begin_define
 define|#
 directive|define
 name|NGM_PPP_COOKIE
-value|860635544
+value|940897792
 end_define
 
 begin_comment
-comment|/* Hook names */
+comment|/* Maximum number of supported links */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NG_PPP_HOOK_DOWNLINK
-value|"downlink"
+name|NG_PPP_MAX_LINKS
+value|16
 end_define
 
 begin_comment
-comment|/* downstream hook */
+comment|/* Pseudo-link number representing the multi-link bundle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_BUNDLE_LINKNUM
+value|0xffff
+end_define
+
+begin_comment
+comment|/* Max allowable link latency (miliseconds) and bandwidth (bytes/second/10) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_MAX_LATENCY
+value|1000
+end_define
+
+begin_comment
+comment|/* 1 second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_MAX_BANDWIDTH
+value|125000
+end_define
+
+begin_comment
+comment|/* 10 Mbits / second */
+end_comment
+
+begin_comment
+comment|/* Hook names */
 end_comment
 
 begin_define
@@ -56,7 +93,139 @@ value|"bypass"
 end_define
 
 begin_comment
-comment|/* any unhooked protocol */
+comment|/* unknown protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_COMPRESS
+value|"compress"
+end_define
+
+begin_comment
+comment|/* outgoing compression */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_DECOMPRESS
+value|"decompress"
+end_define
+
+begin_comment
+comment|/* incoming decompression */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_ENCRYPT
+value|"encrypt"
+end_define
+
+begin_comment
+comment|/* outgoing encryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_DECRYPT
+value|"decrypt"
+end_define
+
+begin_comment
+comment|/* incoming decryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_VJC_IP
+value|"vjc_ip"
+end_define
+
+begin_comment
+comment|/* VJC raw IP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_VJC_COMP
+value|"vjc_vjcomp"
+end_define
+
+begin_comment
+comment|/* VJC compressed TCP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_VJC_UNCOMP
+value|"vjc_vjuncomp"
+end_define
+
+begin_comment
+comment|/* VJC uncompressed TCP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_VJC_VJIP
+value|"vjc_vjip"
+end_define
+
+begin_comment
+comment|/* VJC uncompressed IP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_INET
+value|"inet"
+end_define
+
+begin_comment
+comment|/* IP packet data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_ATALK
+value|"atalk"
+end_define
+
+begin_comment
+comment|/* AppleTalk packet data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_IPX
+value|"ipx"
+end_define
+
+begin_comment
+comment|/* IPX packet data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_HOOK_LINK_PREFIX
+value|"link"
+end_define
+
+begin_comment
+comment|/* append decimal link number */
 end_comment
 
 begin_comment
@@ -66,214 +235,167 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|NGM_PPP_SET_PROTOCOMP
+name|NGM_PPP_SET_CONFIG
 init|=
 literal|1
 block|,
-comment|/* takes an integer 0 or 1 */
-name|NGM_PPP_GET_STATS
+comment|/* takes struct ng_ppp_bundle_config */
+name|NGM_PPP_GET_CONFIG
 block|,
-comment|/* returns struct ng_ppp_stat */
-name|NGM_PPP_CLR_STATS
+comment|/* returns ng_ppp_bundle_config */
+name|NGM_PPP_GET_LINK_STATS
 block|,
-comment|/* clear stats */
+comment|/* takes link #, returns stats struct */
+name|NGM_PPP_CLR_LINK_STATS
+block|,
+comment|/* takes link #, clears link stats */
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/* Statistics struct */
+comment|/* Per-link config structure */
 end_comment
 
 begin_struct
 struct|struct
-name|ng_ppp_stat
+name|ng_ppp_link_config
 block|{
-name|u_int32_t
-name|xmitFrames
+name|u_char
+name|enableLink
 decl_stmt|;
-comment|/* xmit frames on "downstream" */
-name|u_int32_t
-name|xmitOctets
+comment|/* enable this link */
+name|u_char
+name|enableProtoComp
 decl_stmt|;
-comment|/* xmit octets on "downstream" */
-name|u_int32_t
-name|recvFrames
+comment|/* enable protocol field compression */
+name|u_int16_t
+name|mru
 decl_stmt|;
-comment|/* recv frames on "downstream" */
+comment|/* peer MRU */
 name|u_int32_t
-name|recvOctets
+name|latency
 decl_stmt|;
-comment|/* recv octets on "downstream" */
+comment|/* link latency (in milliseconds) */
 name|u_int32_t
-name|badProto
+name|bandwidth
 decl_stmt|;
-comment|/* frames with invalid protocol */
-name|u_int32_t
-name|unknownProto
-decl_stmt|;
-comment|/* frames sent to "unhooked" */
+comment|/* link bandwidth (in bytes/second) */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * We recognize these hook names for some various PPP protocols. But we  * always recognize the hook name "0xNNNN" for any protocol, including these.  * So these are really just alias hook names.  */
+comment|/* Node config structure */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_LCP
-value|"lcp"
-end_define
+begin_struct
+struct|struct
+name|ng_ppp_node_config
+block|{
+name|u_int16_t
+name|mrru
+decl_stmt|;
+comment|/* multilink peer MRRU */
+name|u_char
+name|enableMultilink
+decl_stmt|;
+comment|/* enable multilink */
+name|u_char
+name|recvShortSeq
+decl_stmt|;
+comment|/* recv multilink short seq # */
+name|u_char
+name|xmitShortSeq
+decl_stmt|;
+comment|/* xmit multilink short seq # */
+name|u_char
+name|enableRoundRobin
+decl_stmt|;
+comment|/* xmit whole packets */
+name|u_char
+name|enableIP
+decl_stmt|;
+comment|/* enable IP data flow */
+name|u_char
+name|enableAtalk
+decl_stmt|;
+comment|/* enable AppleTalk data flow */
+name|u_char
+name|enableIPX
+decl_stmt|;
+comment|/* enable IPX data flow */
+name|u_char
+name|enableCompression
+decl_stmt|;
+comment|/* enable PPP compression */
+name|u_char
+name|enableDecompression
+decl_stmt|;
+comment|/* enable PPP decompression */
+name|u_char
+name|enableEncryption
+decl_stmt|;
+comment|/* enable PPP encryption */
+name|u_char
+name|enableDecryption
+decl_stmt|;
+comment|/* enable PPP decryption */
+name|u_char
+name|enableVJCompression
+decl_stmt|;
+comment|/* enable VJ compression */
+name|u_char
+name|enableVJDecompression
+decl_stmt|;
+comment|/* enable VJ decompression */
+name|struct
+name|ng_ppp_link_config
+comment|/* per link config params */
+name|links
+index|[
+name|NG_PPP_MAX_LINKS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|/* 0xc021 */
+comment|/* Statistics struct for a link (or the bundle if NG_PPP_BUNDLE_LINKNUM) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_IPCP
-value|"ipcp"
-end_define
-
-begin_comment
-comment|/* 0x8021 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_ATCP
-value|"atcp"
-end_define
-
-begin_comment
-comment|/* 0x8029 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_CCP
-value|"ccp"
-end_define
-
-begin_comment
-comment|/* 0x80fd */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_ECP
-value|"ecp"
-end_define
-
-begin_comment
-comment|/* 0x8053 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_IP
-value|"ip"
-end_define
-
-begin_comment
-comment|/* 0x0021 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_VJCOMP
-value|"vjcomp"
-end_define
-
-begin_comment
-comment|/* 0x002d */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_VJUNCOMP
-value|"vjuncomp"
-end_define
-
-begin_comment
-comment|/* 0x002f */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_MP
-value|"mp"
-end_define
-
-begin_comment
-comment|/* 0x003d */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_COMPD
-value|"compd"
-end_define
-
-begin_comment
-comment|/* 0x00fd */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_CRYPTD
-value|"cryptd"
-end_define
-
-begin_comment
-comment|/* 0x0053 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_PAP
-value|"pap"
-end_define
-
-begin_comment
-comment|/* 0xc023 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_CHAP
-value|"chap"
-end_define
-
-begin_comment
-comment|/* 0xc223 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPP_HOOK_LQR
-value|"lqr"
-end_define
-
-begin_comment
-comment|/* 0xc025 */
-end_comment
+begin_struct
+struct|struct
+name|ng_ppp_link_stat
+block|{
+name|u_int32_t
+name|xmitFrames
+decl_stmt|;
+comment|/* xmit frames on link */
+name|u_int32_t
+name|xmitOctets
+decl_stmt|;
+comment|/* xmit octets on link */
+name|u_int32_t
+name|recvFrames
+decl_stmt|;
+comment|/* recv frames on link */
+name|u_int32_t
+name|recvOctets
+decl_stmt|;
+comment|/* recv octets on link */
+name|u_int32_t
+name|badProtos
+decl_stmt|;
+comment|/* frames rec'd with bogus protocol */
+name|u_int32_t
+name|dupFragments
+decl_stmt|;
+comment|/* MP frames with duplicate seq # */
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
