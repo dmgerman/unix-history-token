@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	3.30 %G%"
+literal|"@(#)cmd2.c	3.31 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,35 +33,43 @@ name|help_shortcmd
 index|[]
 init|=
 block|{
-literal|"{1-9}   Select window {1-9} and return to conversation mode."
+literal|"#       Select window # and return to conversation mode."
 block|,
-literal|"%{1-9}  Select window {1-9} but stay in command mode."
+literal|"%#      Select window # but stay in command mode."
 block|,
 literal|"escape  Return to conversation mode without changing window."
 block|,
 literal|"^^      Return to conversation mode and change to previous window."
 block|,
-literal|"c{1-9}  Close window {1-9}."
+literal|"c#      Close window #."
 block|,
 literal|"w       Open a new window."
 block|,
-literal|"m{1-9}  Move window {1-9}."
+literal|"m#      Move window #."
 block|,
-literal|"M{1-9}  Move window {1-9} to previous position."
+literal|"M#      Move window # to its previous position."
 block|,
-literal|"{^Y^E}  Scroll {up, down} one line"
+literal|"s#      Change the size of window #."
 block|,
-literal|"{^U^D}  Scroll {up, down} half a window."
+literal|"S#      Change window # to its previous size."
 block|,
-literal|"{^B^F}  Scroll {up, down} a full window."
+literal|"^Y,^E   Scroll up, down one line."
 block|,
-literal|"{hjkl}  Move cursor {left, down, up, right}."
+literal|"^U,^D   Scroll up, down half a window."
+block|,
+literal|"^B,^F   Scroll up, down a full window."
+block|,
+literal|"h,j,k,l Move cursor left, down, up, right."
+block|,
+literal|"^S,^Q   Stop, start output in current window."
 block|,
 literal|"^L      Redraw screen."
 block|,
 literal|"^Z      Suspend."
 block|,
 literal|"q       Quit."
+block|,
+literal|":       Enter a long command."
 block|,
 literal|0
 block|}
@@ -75,29 +83,29 @@ name|help_longcmd
 index|[]
 init|=
 block|{
-literal|":%{1-9}               Select window {1-9}."
+literal|":%#                   Select window #."
 block|,
-literal|":close {1-9} . . .    Close windows."
+literal|":close # . . .        Close windows."
 block|,
 literal|":close all            Close all windows."
 block|,
 literal|":cursor modes         Set the cursor modes."
 block|,
+literal|":echo # string . . .  Print ``string . . .'' in window #."
+block|,
 literal|":escape C             Set escape character to C."
 block|,
-literal|":foreground {1-9} [off]"
+literal|":foreground # [off]   Make # a foreground window."
 block|,
-literal|"                      Make {1-9} a foreground window."
+literal|":label # string       Set label of window # to ``string''."
 block|,
-literal|":label {1-9} string   Label window {1-9}."
-block|,
-literal|":list                 List all windows."
+literal|":list                 Give a list of all windows."
 block|,
 literal|":nline lines          Set the default number of lines"
 block|,
 literal|"                      in window text buffers."
 block|,
-literal|":shell string         Set default shell program to ``string.''"
+literal|":shell string . . .   Set default shell program to ``string . . .''"
 block|,
 literal|":source filename      Execute commands in ``filename.''"
 block|,
@@ -115,9 +123,7 @@ literal|"                      of size ``nrow'', ``ncol'',"
 block|,
 literal|"                      with ``nline'', and ``label''."
 block|,
-literal|":write {1-9} string . . ."
-block|,
-literal|"                      Write strings to window {1-9}."
+literal|":write # string . . . Write ``string . . .'' to window #."
 block|,
 literal|0
 block|}
@@ -169,9 +175,16 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"The escape character is %c, which gets you into command mode.\n\n"
+literal|"The escape character is %c.\n"
 argument_list|,
 name|escapec
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"(Below, # is one of the digits from 1 to 9.)\n\n"
 argument_list|)
 expr_stmt|;
 if|if
