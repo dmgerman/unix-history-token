@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.15	84/08/29	*/
+comment|/*	defs.h	4.16	85/02/25	*/
 end_comment
 
 begin_comment
@@ -72,10 +72,6 @@ include|#
 directive|include
 file|"af.h"
 end_include
-
-begin_comment
-comment|/* #define	COMPAT	1		/* stay compatible with 4.1a daemons */
-end_comment
 
 begin_comment
 comment|/*  * When we find any interfaces marked down we rescan the  * kernel every CHECK_INTERVAL seconds to see if they've  * come up.  */

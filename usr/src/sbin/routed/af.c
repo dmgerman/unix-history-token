@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.15 (Berkeley) %G%"
+literal|"@(#)af.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,34 +268,6 @@ end_expr_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|COMPAT
-if|if
-condition|(
-name|ntohs
-argument_list|(
-name|sin
-operator|->
-name|sin_port
-argument_list|)
-operator|==
-name|ntohs
-argument_list|(
-name|sp
-operator|->
-name|s_port
-argument_list|)
-operator|+
-literal|1
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|sin
