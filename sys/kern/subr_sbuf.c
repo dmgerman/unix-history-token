@@ -136,8 +136,12 @@ end_ifdef
 begin_function
 specifier|static
 name|void
-name|assert_sbuf_integrity
+name|_assert_sbuf_integrity
 parameter_list|(
+name|char
+modifier|*
+name|fun
+parameter_list|,
 name|struct
 name|sbuf
 modifier|*
@@ -151,8 +155,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|" called with a NULL sbuf pointer"
+literal|"%s called with a NULL sbuf pointer"
+operator|,
+name|fun
 operator|)
 argument_list|)
 expr_stmt|;
@@ -165,8 +170,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|" called with unitialized or corrupt sbuf"
+literal|"%s called with unitialized or corrupt sbuf"
+operator|,
+name|fun
 operator|)
 argument_list|)
 expr_stmt|;
@@ -199,8 +205,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|assert_sbuf_state
+name|_assert_sbuf_state
 parameter_list|(
+name|char
+modifier|*
+name|fun
+parameter_list|,
 name|struct
 name|sbuf
 modifier|*
@@ -223,8 +233,9 @@ operator|==
 name|state
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|" called with %sfinished or corrupt sbuf"
+literal|"%s called with %sfinished or corrupt sbuf"
+operator|,
+name|fun
 operator|,
 operator|(
 name|state
@@ -238,6 +249,28 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|assert_sbuf_integrity
+parameter_list|(
+name|s
+parameter_list|)
+value|_assert_sbuf_integrity(__FUNCTION__, (s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|assert_sbuf_state
+parameter_list|(
+name|s
+parameter_list|,
+name|i
+parameter_list|)
+value|_assert_sbuf_state(__FUNCTION__, (s), (i))
+end_define
 
 begin_else
 else|#
@@ -704,63 +737,16 @@ modifier|*
 name|v
 parameter_list|)
 block|{
-name|struct
-name|sbuf
-modifier|*
-name|s
-init|=
+name|sbuf_putc
+argument_list|(
 operator|(
 expr|struct
 name|sbuf
 operator|*
 operator|)
 name|v
-decl_stmt|;
-name|assert_sbuf_integrity
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|assert_sbuf_state
-argument_list|(
-name|s
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|SBUF_HASOVERFLOWED
-argument_list|(
-name|s
-argument_list|)
-condition|)
-return|return;
-if|if
-condition|(
-name|SBUF_HASROOM
-argument_list|(
-name|s
-argument_list|)
-condition|)
-name|s
-operator|->
-name|s_buf
-index|[
-name|s
-operator|->
-name|s_len
-operator|++
-index|]
-operator|=
 name|c
-expr_stmt|;
-else|else
-name|SBUF_SETFLAG
-argument_list|(
-name|s
-argument_list|,
-name|SBUF_OVERFLOWED
 argument_list|)
 expr_stmt|;
 block|}
@@ -965,6 +951,12 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\0'
+condition|)
 name|s
 operator|->
 name|s_buf
@@ -1041,7 +1033,6 @@ index|[
 name|s
 operator|->
 name|s_len
-operator|++
 index|]
 operator|=
 literal|'\0'
