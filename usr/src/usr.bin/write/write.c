@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.9 %G%"
+literal|"@(#)write.c	4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,14 @@ argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
+name|int
+name|suser
+init|=
+name|getuid
+argument_list|()
+operator|==
+literal|0
+decl_stmt|;
 name|struct
 name|tm
 modifier|*
@@ -390,6 +398,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|suser
+operator|&&
 operator|(
 name|stbuf
 operator|.
@@ -837,6 +848,9 @@ name|perm
 goto|;
 if|if
 condition|(
+operator|!
+name|suser
+operator|&&
 operator|(
 name|stbuf
 operator|.
