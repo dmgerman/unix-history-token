@@ -293,7 +293,7 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/* Asymetric Pause */
+comment|/* Asymmetric Pause */
 end_comment
 
 begin_define
@@ -355,7 +355,7 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/* Asymetric Pause */
+comment|/* Asymmetric Pause */
 end_comment
 
 begin_define
@@ -1364,6 +1364,61 @@ end_define
 
 begin_comment
 comment|/* 1000baseT half duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRGPHY_RES_100FD
+value|0x0500
+end_define
+
+begin_comment
+comment|/* 100baseT full duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRGPHY_RES_100T4
+value|0x0400
+end_define
+
+begin_comment
+comment|/* 100baseT4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRGPHY_RES_100HD
+value|0x0300
+end_define
+
+begin_comment
+comment|/* 100baseT half duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRGPHY_RES_10HD
+value|0x0200
+end_define
+
+begin_comment
+comment|/* 10baseT full duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRGPHY_RES_10FD
+value|0x0100
+end_define
+
+begin_comment
+comment|/* 10baseT half duplex */
 end_comment
 
 begin_define
