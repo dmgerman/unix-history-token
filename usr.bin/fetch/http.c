@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: http.c,v 1.21 1998/10/26 02:39:21 fenner Exp $  */
+comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: http.c,v 1.22 1998/12/08 13:00:49 cracauer Exp $  */
 end_comment
 
 begin_include
@@ -6679,6 +6679,18 @@ block|}
 else|else
 block|{
 comment|/* Monday, 27-Jan-97 14:31:09 stuffwedon'tcareabout */
+comment|/* Quoth RFC 2068:   o  HTTP/1.1 clients and caches should assume that an RFC-850 date      which appears to be more than 50 years in the future is in fact      in the past (this helps solve the "year 2000" problem).                  */
+name|time_t
+name|now
+decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|tmnow
+decl_stmt|;
+name|int
+name|this2dyear
+decl_stmt|;
 name|char
 modifier|*
 name|comma
@@ -6828,6 +6840,45 @@ operator|.
 name|tm_mon
 operator|=
 name|i
+expr_stmt|;
+comment|/* 		 * RFC 2068 year interpretation. 		 */
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|tmnow
+operator|=
+name|gmtime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|this2dyear
+operator|=
+name|tmnow
+operator|->
+name|tm_year
+operator|%
+literal|100
+expr_stmt|;
+if|if
+condition|(
+name|tm
+operator|.
+name|tm_year
+operator|-
+name|this2dyear
+operator|>=
+literal|50
+condition|)
+name|tm
+operator|.
+name|tm_year
+operator|+=
+literal|100
 expr_stmt|;
 block|}
 undef|#
