@@ -200,7 +200,7 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,

@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ctags.h"
 end_include
 
@@ -371,7 +365,7 @@ comment|/* read character */
 name|int
 name|state
 decl_stmt|;
-comment|/* 	 * state == 0 : waiting 	 * state == 1 : received a newline 	 * state == 2 : received first % 	 * state == 3 : recieved second % 	 */
+comment|/* 	 * state == 0 : waiting 	 * state == 1 : received a newline 	 * state == 2 : received first % 	 * state == 3 : received second % 	 */
 name|lineftell
 operator|=
 name|ftell

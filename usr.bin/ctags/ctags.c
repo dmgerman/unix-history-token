@@ -83,13 +83,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -733,7 +733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * init --  *	this routine sets up the boolean psuedo-functions which work by  *	setting boolean flags dependent upon the corresponding character.  *	Every char which is NOT in that string is false with respect to  *	the pseudo-function.  Therefore, all of the array "_wht" is NO  *	by default and then the elements subscripted by the chars in  *	CWHITE are set to YES.  Thus, "_wht" of a char is YES if it is in  *	the string CWHITE, else NO.  */
+comment|/*  * init --  *	this routine sets up the boolean pseudo-functions which work by  *	setting boolean flags dependent upon the corresponding character.  *	Every char which is NOT in that string is false with respect to  *	the pseudo-function.  Therefore, all of the array "_wht" is NO  *	by default and then the elements subscripted by the chars in  *	CWHITE are set to YES.  Thus, "_wht" of a char is YES if it is in  *	the string CWHITE, else NO.  */
 end_comment
 
 begin_function
