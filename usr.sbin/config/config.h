@@ -574,13 +574,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|seen_scbus
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|device
 modifier|*
