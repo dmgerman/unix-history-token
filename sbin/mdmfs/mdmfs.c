@@ -2072,10 +2072,6 @@ modifier|*
 name|group
 decl_stmt|;
 comment|/* Result of extracton. */
-name|size_t
-name|strl
-decl_stmt|;
-comment|/* Length of 'str' incl. NULL. */
 name|struct
 name|passwd
 modifier|*
@@ -2097,9 +2093,6 @@ decl_stmt|;
 name|gid_t
 modifier|*
 name|gid
-decl_stmt|;
-name|size_t
-name|rv
 decl_stmt|;
 name|uid
 operator|=
@@ -2126,20 +2119,11 @@ operator|=
 name|false
 expr_stmt|;
 comment|/* Extract the user and group from 'str'.  Format above. */
-name|strl
-operator|=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
 name|ug
 operator|=
-name|malloc
+name|strdup
 argument_list|(
-name|strl
+name|str
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2147,40 +2131,6 @@ argument_list|(
 name|ug
 operator|!=
 name|NULL
-argument_list|)
-expr_stmt|;
-name|rv
-operator|=
-name|strlcpy
-argument_list|(
-name|ug
-argument_list|,
-name|str
-argument_list|,
-name|strl
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
-operator|>=
-name|strl
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-w word too long (%ld>= %ld)"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|rv
-argument_list|,
-operator|(
-name|long
-operator|)
-name|strl
 argument_list|)
 expr_stmt|;
 name|group
