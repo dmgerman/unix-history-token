@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.79 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.80 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -537,7 +537,11 @@ decl_stmt|;
 name|long
 name|off
 decl_stmt|,
+name|a_released
+decl_stmt|,
 name|blocksreleased
+decl_stmt|,
+name|i_released
 decl_stmt|;
 name|int
 name|e1
@@ -1059,7 +1063,6 @@ operator|--
 name|depth
 control|)
 block|{
-comment|/* 				 * XXX 				 * The indirect block may not yet exist, so 				 * bread will create one just so we can free 				 * it. 				 */
 if|if
 condition|(
 name|bread
@@ -1373,6 +1376,14 @@ operator||
 name|IUPD
 expr_stmt|;
 comment|/* 	 * Traverse dirty block list counting number of dirty buffers 	 * that are being deleted out of the cache, so that the lfs_avail 	 * field can be updated. 	 */
+name|a_released
+operator|=
+literal|0
+expr_stmt|;
+name|i_released
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|bp
@@ -1397,6 +1408,104 @@ name|b_flags
 operator|&
 name|B_LOCKED
 condition|)
+block|{
+operator|++
+name|a_released
+expr_stmt|;
+comment|/* 			 * XXX 			 * When buffers are created in the cache, their block 			 * number is set equal to their logical block number. 			 * If that is still true, we are assuming that the 			 * blocks are new (not yet on disk) and weren't 			 * counted above.  However, there is a slight chance 			 * that a block's disk address is equal to its logical 			 * block number in which case, we'll get an overcounting 			 * here. 			 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_blkno
+operator|==
+name|bp
+operator|->
+name|b_lblkno
+condition|)
+operator|++
+name|i_released
+expr_stmt|;
+block|}
+name|blocksreleased
+operator|=
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
+name|i_released
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|blocksreleased
+operator|>
+name|ip
+operator|->
+name|i_blocks
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"lfs_inode: Warning! %s\n"
+argument_list|,
+literal|"more blocks released from inode than are in inode"
+argument_list|)
+expr_stmt|;
+name|blocksreleased
+operator|=
+name|ip
+operator|->
+name|i_blocks
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|fs
+operator|->
+name|lfs_bfree
+operator|+=
+name|blocksreleased
+expr_stmt|;
+name|ip
+operator|->
+name|i_blocks
+operator|-=
+name|blocksreleased
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|length
+operator|==
+literal|0
+operator|&&
+name|ip
+operator|->
+name|i_blocks
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"lfs_inode: Warning! %s%d%s\n"
+argument_list|,
+literal|"Truncation to zero, but "
+argument_list|,
+name|ip
+operator|->
+name|i_blocks
+argument_list|,
+literal|" blocks left on inode"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fs
 operator|->
 name|lfs_avail
@@ -1405,7 +1514,7 @@ name|fsbtodb
 argument_list|(
 name|fs
 argument_list|,
-literal|1
+name|a_released
 argument_list|)
 expr_stmt|;
 name|e1
