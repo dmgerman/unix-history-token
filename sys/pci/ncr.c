@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.36 1995/03/31 00:05:08 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.37 1995/05/30 08:13:07 rgrimes Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -1015,6 +1015,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|QUIRK_NOSYNC
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUIRK_NOWIDE16
+value|(0x20)
+end_define
+
+begin_define
+define|#
+directive|define
 name|QUIRK_UPDATE
 value|(0x80)
 end_define
@@ -1840,11 +1854,11 @@ comment|/* 	**	Completion time out for this job. 	**	It's set to time of start +
 name|u_long
 name|tlimit
 decl_stmt|;
-comment|/* 	**	All ccbs of one hostadapter are linked. 	*/
+comment|/* 	**	All ccbs of one hostadapter are chained. 	*/
 name|ccb_p
 name|link_ccb
 decl_stmt|;
-comment|/* 	**	All ccbs of one target/lun are linked. 	*/
+comment|/* 	**	All ccbs of one target/lun are chained. 	*/
 name|ccb_p
 name|next_ccb
 decl_stmt|;
@@ -2327,12 +2341,25 @@ index|[
 literal|5
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NCR_GETCC_WITHMSG
 name|ncrcmd
 name|getcc2
 index|[
 literal|33
 index|]
 decl_stmt|;
+else|#
+directive|else
+name|ncrcmd
+name|getcc2
+index|[
+literal|14
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|ncrcmd
 name|getcc3
 index|[
@@ -2996,7 +3023,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.36 1995/03/31 00:05:08 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.37 1995/05/30 08:13:07 rgrimes Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -6479,6 +6506,9 @@ argument_list|(
 name|scratcha
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|NCR_GETCC_WITHMSG
 comment|/* 	**	If QUIRK_NOMSG is set, select without ATN. 	**	and don't send a message. 	*/
 name|SCR_FROM_REG
 argument_list|(
@@ -6577,7 +6607,10 @@ name|PADDR
 argument_list|(
 name|prepare2
 argument_list|)
-block|,  }
+block|,
+endif|#
+directive|endif
+block|}
 comment|/*-------------------------< GETCC3>----------------------*/
 block|,
 block|{
@@ -8166,6 +8199,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|bp
 operator|->
 name|b_bcount
@@ -9748,6 +9785,37 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCSI_NCR_MAX_SYNC
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CDROM_ASYNC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|GENERIC
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|tp
+operator|->
+name|inqdata
+index|[
+literal|0
+index|]
+operator|&
+literal|0x1f
+operator|)
+operator|!=
+literal|5
+operator|)
+endif|#
+directive|endif
+operator|&&
+operator|(
 name|tp
 operator|->
 name|inqdata
@@ -9756,6 +9824,7 @@ literal|7
 index|]
 operator|&
 name|INQ7_SYNC
+operator|)
 condition|)
 block|{
 name|nego
@@ -9953,41 +10022,9 @@ literal|0
 expr_stmt|;
 if|#
 directive|if
-literal|1
-comment|/* 		** @GENSCSI@	Bug in "/sys/scsi/cd.c" 		** 		**	/sys/scsi/cd.c initializes opennings with 2. 		**	Our info value of 1 is not respected. 		*/
-if|if
-condition|(
-name|xp
-operator|->
-name|sc_link
-operator|&&
-name|xp
-operator|->
-name|sc_link
-operator|->
-name|opennings
-condition|)
-block|{
-name|PRINT_ADDR
-argument_list|(
-name|xp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"opennings set to 0.\n"
-argument_list|)
-expr_stmt|;
-name|xp
-operator|->
-name|sc_link
-operator|->
-name|opennings
-operator|=
 literal|0
-expr_stmt|;
-block|}
-empty_stmt|;
+comment|/* 		** @GENSCSI@	Bug in "/sys/scsi/cd.c" 		** 		**	/sys/scsi/cd.c initializes opennings with 2. 		**	Our info value of 1 is not respected. 		*/
+block|if (xp->sc_link&& xp->sc_link->opennings) { 			PRINT_ADDR(xp); 			printf ("opennings set to 0.\n"); 			xp->sc_link->opennings = 0; 		};
 endif|#
 directive|endif
 block|}
@@ -10548,7 +10585,7 @@ name|header
 operator|.
 name|savep
 expr_stmt|;
-comment|/*---------------------------------------------------- 	** 	**	fill ccb 	** 	**---------------------------------------------------- 	** 	** 	**	physical -> virtual backlink 	**	Generic SCSI command 	*/
+comment|/*---------------------------------------------------- 	** 	**	fill in ccb 	** 	**---------------------------------------------------- 	** 	** 	**	physical -> virtual backlink 	**	Generic SCSI command 	*/
 name|cp
 operator|->
 name|phys
@@ -10751,6 +10788,21 @@ name|cp
 operator|->
 name|sensecmd
 index|[
+literal|1
+index|]
+operator|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|lun
+operator|<<
+literal|5
+expr_stmt|;
+name|cp
+operator|->
+name|sensecmd
+index|[
 literal|4
 index|]
 operator|=
@@ -10869,7 +10921,7 @@ name|tp
 operator|->
 name|wval
 expr_stmt|;
-comment|/*---------------------------------------------------- 	** 	**	Critical region: starting this job. 	** 	**---------------------------------------------------- 	*/
+comment|/*---------------------------------------------------- 	** 	**	Critical region: start this job. 	** 	**---------------------------------------------------- 	*/
 comment|/* 	**	reselect pattern and activate this job. 	*/
 name|cp
 operator|->
@@ -10913,7 +10965,7 @@ name|magic
 operator|=
 name|CCB_MAGIC
 expr_stmt|;
-comment|/* 	**	insert into startqueue. 	*/
+comment|/* 	**	insert into start queue. 	*/
 name|ptr
 operator|=
 name|np
@@ -11018,7 +11070,7 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	**	Script processor may be waiting for reconnect. 	**	Wake it up. 	*/
+comment|/* 	**	Script processor may be waiting for reselect. 	**	Wake it up. 	*/
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -15570,24 +15622,7 @@ operator|->
 name|tryloop
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|diff
-operator|<=
-name|MAX_START
-operator|*
-literal|20
-operator|)
-operator|&&
-operator|!
-operator|(
-name|diff
-operator|%
-literal|20
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/*	assert ((diff<= MAX_START * 20)&& !(diff % 20));*/
 if|if
 condition|(
 operator|(
@@ -15849,7 +15884,7 @@ name|CSF
 argument_list|)
 expr_stmt|;
 comment|/* clear scsi fifo */
-comment|/* 	**	verify cp 	*/
+comment|/* 	**	locate matching cp 	*/
 name|dsa
 operator|=
 name|INL
@@ -15886,10 +15921,21 @@ name|cp
 operator|->
 name|link_ccb
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
+operator|!
 name|cp
-operator|==
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: SCSI phase error fixup: CCB already dequeued (0x%08x)\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
 name|np
 operator|->
 name|header
@@ -15897,18 +15943,40 @@ operator|.
 name|cp
 argument_list|)
 expr_stmt|;
-name|assert
+return|return;
+block|}
+if|if
+condition|(
+name|cp
+operator|!=
+name|np
+operator|->
+name|header
+operator|.
+name|cp
+condition|)
+block|{
+name|printf
 argument_list|(
+literal|"%s: SCSI phase error fixup: CCB address mismatch (0x%08x != 0x%08x)\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|cp
+argument_list|,
+name|np
+operator|->
+name|header
+operator|.
 name|cp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cp
-condition|)
 return|return;
-comment|/* 	**	find the interrupted script command, 	**	and the address at where to continue. 	*/
+block|}
+comment|/* 	**	find the interrupted script command, 	**	and the address at which to continue. 	*/
 if|if
 condition|(
 name|dsp
@@ -17000,7 +17068,7 @@ operator|=
 name|SCR_INT
 expr_stmt|;
 break|break;
-comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look to byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simpletag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and set to the standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set the values, and send this **	answer back to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and set the values to **	the default. ** **	When we set the values, we set in all ccbs belonging to this **	target, in the controllers register, and in the "phys" **	field of the controllers struct ncb. ** **	Possible cases:	    hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin	 NEG FAIL  noop   defa   -      dispatch ** **	Target tries to negotiate: **	-> incoming message	--- SYNC  sdtr   set    SDTR   - **	-> incoming message	--- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
+comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look at byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simple tag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and fall back to standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set our parameters, and send back  **	this answer to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and fall back to default **	settings. ** **	When we set the values, we adjust them in all ccbs belonging  **	to this target, in the controller's register, and in the "phys" **	field of the controller's struct ncb. ** **	Possible cases:	    hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin	 NEG FAIL  noop   defa   -      dispatch ** **	Target tries to negotiate: **	-> incoming message	--- SYNC  sdtr   set    SDTR   - **	-> incoming message	--- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
 case|case
 name|SIR_NEGO_FAILED
 case|:
@@ -17515,15 +17583,6 @@ index|]
 operator|=
 name|ofs
 expr_stmt|;
-name|np
-operator|->
-name|msgin
-index|[
-literal|0
-index|]
-operator|=
-name|M_NOOP
-expr_stmt|;
 name|cp
 operator|->
 name|nego_status
@@ -17565,6 +17624,38 @@ literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|ofs
+condition|)
+block|{
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|msg_bad
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|np
+operator|->
+name|msgin
+index|[
+literal|0
+index|]
+operator|=
+name|M_NOOP
+expr_stmt|;
 break|break;
 case|case
 name|SIR_NEGO_WIDE
@@ -18829,7 +18920,7 @@ name|actlink
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		**   Link into Lun-Chain 		*/
+comment|/* 		**   Chain into LUN list 		*/
 name|tp
 operator|->
 name|jump_lcb
@@ -18942,7 +19033,7 @@ operator|->
 name|actccbs
 operator|++
 expr_stmt|;
-comment|/* 	**	Initialize it. 	*/
+comment|/* 	**	Initialize it 	*/
 name|bzero
 argument_list|(
 name|cp
@@ -18954,7 +19045,7 @@ name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	**	link in reselect chain. 	*/
+comment|/* 	**	Chain into reselect list 	*/
 name|cp
 operator|->
 name|jump_ccb
@@ -19013,7 +19104,7 @@ operator|->
 name|resel_tmp
 argument_list|)
 expr_stmt|;
-comment|/* 	**	link in wakeup chain 	*/
+comment|/* 	**	Chain into wakeup list 	*/
 name|cp
 operator|->
 name|link_ccb
@@ -19032,7 +19123,7 @@ name|link_ccb
 operator|=
 name|cp
 expr_stmt|;
-comment|/* 	**	Link into CCB-Chain 	*/
+comment|/* 	**	Chain into CCB list 	*/
 name|cp
 operator|->
 name|next_ccb
@@ -20388,6 +20479,19 @@ name|device_tab
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|NCR_GETCC_WITHMSG
+block|{
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+name|QUIRK_NOMSG
+block|}
+block|,
 block|{
 literal|"SONY"
 block|,
@@ -20428,6 +20532,8 @@ block|,
 name|QUIRK_NOMSG
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|""
 block|,
