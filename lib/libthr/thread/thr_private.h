@@ -2407,7 +2407,8 @@ begin_function_decl
 name|void
 name|_thread_start
 parameter_list|(
-name|void
+name|pthread_t
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
