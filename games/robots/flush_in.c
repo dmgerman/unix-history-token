@@ -75,13 +75,13 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|TIOCFLUSH
+comment|/* TIOCFLUSH */
 name|crmode
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|TIOCFLUSH
+comment|/* TIOCFLUSH */
 block|}
 end_block
 

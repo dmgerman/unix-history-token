@@ -180,7 +180,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|setjmp
 argument_list|(
 name|End_move

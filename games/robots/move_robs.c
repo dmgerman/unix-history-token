@@ -135,7 +135,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 for|for
 control|(
 name|rp
@@ -579,7 +579,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 if|if
 condition|(
 name|Real_time
