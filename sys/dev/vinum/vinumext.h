@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumext.h,v 1.4 1998/12/28 04:56:24 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumext.h,v 1.18 1999/01/15 02:41:16 grog Exp grog $  */
 end_comment
 
 begin_comment
@@ -107,7 +107,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|struct
+name|drive
+modifier|*
 name|check_drive
 parameter_list|(
 name|char
@@ -124,7 +126,8 @@ parameter_list|(
 name|struct
 name|drive
 modifier|*
-name|drive
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -139,6 +142,8 @@ parameter_list|,
 name|struct
 name|keywordset
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -389,7 +394,7 @@ begin_function_decl
 name|void
 name|config_subdisk
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -398,7 +403,7 @@ begin_function_decl
 name|void
 name|config_plex
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -407,7 +412,7 @@ begin_function_decl
 name|void
 name|config_volume
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -416,7 +421,7 @@ begin_function_decl
 name|void
 name|config_drive
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -490,8 +495,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|save_config
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|daemon_save_config
 parameter_list|(
 name|void
 parameter_list|)
@@ -625,6 +639,8 @@ parameter_list|,
 name|struct
 name|proc
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -649,7 +665,7 @@ name|struct
 name|drive
 modifier|*
 parameter_list|,
-name|void
+name|char
 modifier|*
 parameter_list|,
 name|size_t
@@ -684,6 +700,8 @@ parameter_list|(
 name|struct
 name|drive
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -705,6 +723,10 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX die die */
+end_comment
 
 begin_function_decl
 name|int
@@ -809,6 +831,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vinum_scandisk
+parameter_list|(
+name|char
+modifier|*
+name|drivename
+index|[]
+parameter_list|,
+name|int
+name|drives
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* I/O */
 end_comment
@@ -891,6 +928,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sdio
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* XXX Do we need this? */
 end_comment
@@ -964,54 +1013,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|add_defective_region
-parameter_list|(
-name|struct
-name|plex
-modifier|*
-name|plex
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|,
-name|size_t
-name|length
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|add_unmapped_region
-parameter_list|(
-name|struct
-name|plex
-modifier|*
-name|plex
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|,
-name|size_t
-name|length
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|rebuild_plex_unmappedlist
-parameter_list|(
-name|struct
-name|plex
-modifier|*
-name|plex
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct_decl
 struct_decl|struct
 name|request
@@ -1048,6 +1049,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Device number decoding */
+end_comment
+
+begin_function_decl
+name|int
+name|Volno
+parameter_list|(
+name|dev_t
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|Plexno
+parameter_list|(
+name|dev_t
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|Sdno
+parameter_list|(
+name|dev_t
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* State transitions */
 end_comment
 
@@ -1062,8 +1097,9 @@ name|enum
 name|drivestate
 name|state
 parameter_list|,
-name|int
-name|force
+name|enum
+name|setstateflags
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1142,6 +1178,50 @@ parameter_list|,
 name|enum
 name|setstateflags
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|update_sd_state
+parameter_list|(
+name|int
+name|sdno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|update_plex_state
+parameter_list|(
+name|int
+name|plexno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|update_volume_state
+parameter_list|(
+name|int
+name|volno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|invalidate_subdisks
+parameter_list|(
+name|struct
+name|plex
+modifier|*
+parameter_list|,
+name|enum
+name|sdstate
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1251,10 +1331,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|revive_read
+parameter_list|(
+name|struct
+name|sd
+modifier|*
+name|sd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|revive_block
 parameter_list|(
 name|int
-name|plexno
+name|sdno
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1272,10 +1364,6 @@ name|struct
 name|plex
 modifier|*
 name|plex
-parameter_list|,
-name|int
-modifier|*
-name|sddowncount
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1521,6 +1609,30 @@ end_comment
 
 begin_function_decl
 name|int
+name|lockdrive
+parameter_list|(
+name|struct
+name|drive
+modifier|*
+name|drive
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|unlockdrive
+parameter_list|(
+name|struct
+name|drive
+modifier|*
+name|drive
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|lockvol
 parameter_list|(
 name|struct
@@ -1620,6 +1732,63 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Dæmon */
+end_comment
+
+begin_function_decl
+name|void
+name|vinum_daemon
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vinum_finddaemon
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vinum_setdaemonopts
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|daemonq
+modifier|*
+name|daemonq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* daemon's work queue */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|daemonq
+modifier|*
+name|dqend
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* and the end of the queue */
+end_comment
 
 end_unit
 
