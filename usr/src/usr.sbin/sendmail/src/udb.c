@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.9 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.10 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.9 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.10 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,13 +614,36 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* there is at least one match -- start processing */
+while|while
+condition|(
+name|i
+operator|==
+literal|0
+operator|&&
+name|key
+operator|.
+name|size
+operator|==
+name|keylen
+operator|&&
+name|bcmp
+argument_list|(
+name|key
+operator|.
+name|data
+argument_list|,
+name|keybuf
+argument_list|,
+name|keylen
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|breakout
 operator|=
 name|TRUE
 expr_stmt|;
-do|do
-block|{
 if|if
 condition|(
 name|info
@@ -729,32 +752,6 @@ name|R_NEXT
 argument_list|)
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|i
-operator|==
-literal|0
-operator|&&
-name|key
-operator|.
-name|size
-operator|==
-name|keylen
-operator|&&
-name|bcmp
-argument_list|(
-name|key
-operator|.
-name|data
-argument_list|,
-name|keybuf
-argument_list|,
-name|keylen
-argument_list|)
-operator|==
-literal|0
-condition|)
-do|;
 break|break;
 case|case
 name|UDB_REMOTE
@@ -1388,7 +1385,11 @@ name|UDB_LOOKUP
 case|:
 name|printf
 argument_list|(
-literal|"LOOKUP\n"
+literal|"LOOKUP: file %s\n"
+argument_list|,
+name|up
+operator|->
+name|udb_dbname
 argument_list|)
 expr_stmt|;
 break|break;
