@@ -466,8 +466,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|sio_ih
-value|cy_ih
+name|sio_fast_ih
+value|cy_fast_ih
 end_define
 
 begin_define
@@ -489,6 +489,13 @@ define|#
 directive|define
 name|sio_lock
 value|cy_lock
+end_define
+
+begin_define
+define|#
+directive|define
+name|sio_slow_ih
+value|cy_slow_ih
 end_define
 
 begin_define
@@ -1780,7 +1787,15 @@ begin_decl_stmt
 specifier|static
 name|void
 modifier|*
-name|sio_ih
+name|sio_fast_ih
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|sio_slow_ih
 decl_stmt|;
 end_decl_stmt
 
@@ -2819,7 +2834,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sio_ih
+name|sio_fast_ih
 operator|==
 name|NULL
 condition|)
@@ -2840,7 +2855,26 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|sio_ih
+name|sio_fast_ih
+argument_list|)
+expr_stmt|;
+name|swi_add
+argument_list|(
+operator|&
+name|clk_ithd
+argument_list|,
+literal|"tty:cy"
+argument_list|,
+name|siopoll
+argument_list|,
+name|NULL
+argument_list|,
+name|SWI_TTY
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|sio_slow_ih
 argument_list|)
 expr_stmt|;
 block|}
@@ -5082,7 +5116,7 @@ literal|0
 condition|)
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -5249,7 +5283,7 @@ name|hotchar
 condition|)
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -5491,7 +5525,7 @@ name|hotchar
 condition|)
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -5568,7 +5602,7 @@ name|hotchar
 condition|)
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -5687,7 +5721,7 @@ name|hotchar
 condition|)
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -5972,7 +6006,7 @@ name|CS_CHECKMSR
 expr_stmt|;
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -6444,7 +6478,7 @@ name|CS_ODONE
 expr_stmt|;
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -6491,7 +6525,7 @@ name|CSE_ODONE
 expr_stmt|;
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -6757,7 +6791,7 @@ expr_stmt|;
 comment|/* handle at high level ASAP */
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_fast_ih
 argument_list|,
 literal|0
 argument_list|)
@@ -6820,9 +6854,9 @@ argument_list|)
 expr_stmt|;
 name|swi_sched
 argument_list|(
-name|sio_ih
+name|sio_slow_ih
 argument_list|,
-literal|0
+name|SWI_DELAY
 argument_list|)
 expr_stmt|;
 name|COM_UNLOCK
