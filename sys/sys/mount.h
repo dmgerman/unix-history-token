@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|MNAMELEN
-value|90
+value|80
 end_define
 
 begin_comment
@@ -233,6 +233,18 @@ name|MNAMELEN
 index|]
 decl_stmt|;
 comment|/* directory on which mounted */
+name|long
+name|f_syncreads
+decl_stmt|;
+comment|/* count of sync reads since mount */
+name|long
+name|f_asyncreads
+decl_stmt|;
+comment|/* count of async reads since mount */
+name|short
+name|f_spares1
+decl_stmt|;
+comment|/* unused spare */
 name|char
 name|f_mntfromname
 index|[
@@ -240,6 +252,17 @@ name|MNAMELEN
 index|]
 decl_stmt|;
 comment|/* mounted filesystem */
+name|short
+name|f_spares2
+decl_stmt|;
+comment|/* unused spare */
+name|long
+name|f_spare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* unused spare */
 block|}
 struct|;
 end_struct
