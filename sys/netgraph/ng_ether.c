@@ -285,8 +285,8 @@ specifier|static
 name|void
 name|ng_ether_input2
 parameter_list|(
-name|node_p
-name|node
+name|hook_p
+name|hook
 parameter_list|,
 name|struct
 name|mbuf
@@ -653,7 +653,9 @@ condition|)
 return|return;
 name|ng_ether_input2
 argument_list|(
-name|node
+name|priv
+operator|->
+name|lower
 argument_list|,
 name|mp
 argument_list|,
@@ -724,7 +726,9 @@ return|return;
 block|}
 name|ng_ether_input2
 argument_list|(
-name|node
+name|priv
+operator|->
+name|orphan
 argument_list|,
 operator|&
 name|m
@@ -755,8 +759,8 @@ specifier|static
 name|void
 name|ng_ether_input2
 parameter_list|(
-name|node_p
-name|node
+name|hook_p
+name|hook
 parameter_list|,
 name|struct
 name|mbuf
@@ -774,6 +778,8 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|hook
+operator|->
 name|node
 operator|->
 name|private
@@ -809,9 +815,7 @@ name|void
 operator|)
 name|ng_queue_data
 argument_list|(
-name|priv
-operator|->
-name|lower
+name|hook
 argument_list|,
 operator|*
 name|mp
