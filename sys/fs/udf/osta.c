@@ -14,7 +14,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/***********************************************************************  * OSTA compliant Unicode compression, uncompression routines.  * Copyright 1995 Micro Design International, Inc.  * Written by Jason M. Rinn.  * Micro Design International gives permission for the free use of the  * following source code.  */
+comment|/*-  **********************************************************************  * OSTA compliant Unicode compression, uncompression routines.  * Copyright 1995 Micro Design International, Inc.  * Written by Jason M. Rinn.  * Micro Design International gives permission for the free use of the  * following source code.  */
 end_comment
 
 begin_comment
@@ -1200,7 +1200,7 @@ name|NEEDS_ISPRINT
 end_ifdef
 
 begin_comment
-comment|/***********************************************************************  * OSTA UDF compliant file name translation routine for OS/2,  * Windows 95, Windows NT, Macintosh and UNIX.  * Copyright 1995 Micro Design International, Inc.  * Written by Jason M. Rinn.  * Micro Design International gives permission for the free use of the  * following source code.  */
+comment|/*-  **********************************************************************  * OSTA UDF compliant file name translation routine for OS/2,  * Windows 95, Windows NT, Macintosh and UNIX.  * Copyright 1995 Micro Design International, Inc.  * Written by Jason M. Rinn.  * Micro Design International gives permission for the free use of the  * following source code.  */
 end_comment
 
 begin_comment
