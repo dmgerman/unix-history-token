@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n3.c	4.2 %G%"
+literal|"@(#)n3.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2672,7 +2672,8 @@ operator|(
 name|char
 operator|*
 operator|)
-name|MAXPTR
+operator|-
+literal|1
 condition|)
 block|{
 name|prstrfl
