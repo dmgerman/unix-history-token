@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.7 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.8 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.7 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.8 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -749,6 +749,14 @@ argument_list|,
 sizeof|sizeof
 name|CurHostAddr
 argument_list|)
+expr_stmt|;
+name|SmtpPhase
+operator|=
+name|mci
+operator|->
+name|mci_phase
+operator|=
+literal|"initial connection"
 expr_stmt|;
 name|CurHostName
 operator|=

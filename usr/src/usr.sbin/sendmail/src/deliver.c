@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.15 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3290,6 +3290,10 @@ name|m_mailer
 expr_stmt|;
 comment|/* 	**  Deal with the special case of mail handled through an IPC 	**  connection. 	**	In this case we don't actually fork.  We must be 	**	running SMTP for this to work.  We will return a 	**	zero pid to indicate that we are running IPC. 	**  We also handle a debug version that just talks to stdin/out. 	*/
 name|curhost
+operator|=
+name|NULL
+expr_stmt|;
+name|SmtpPhase
 operator|=
 name|NULL
 expr_stmt|;
