@@ -1273,6 +1273,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|smp_started
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|volatile
 name|int
 name|smp_idle_loops
