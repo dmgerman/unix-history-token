@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	7.8 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	7.9 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
 end_comment
 
 begin_comment
@@ -50,24 +50,18 @@ name|u_int
 name|sc_escape
 decl_stmt|;
 comment|/* =1 if last char input was FRAME_ESCAPE */
-name|u_int
-name|sc_bytessent
-decl_stmt|;
-name|u_int
-name|sc_bytesrcvd
-decl_stmt|;
 name|long
 name|sc_lasttime
-decl_stmt|;
-comment|/* last time a char arrived */
-name|long
-name|sc_starttime
 decl_stmt|;
 comment|/* last time a char arrived */
 name|long
 name|sc_abortcount
 decl_stmt|;
 comment|/* number of abort esacpe chars */
+name|long
+name|sc_starttime
+decl_stmt|;
+comment|/* time of first abort in window */
 ifdef|#
 directive|ifdef
 name|INET
@@ -91,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|SC_COMPRESS
-value|IFF_LLC0
+value|IFF_LINK0
 end_define
 
 begin_comment
@@ -102,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|SC_NOICMP
-value|IFF_LLC1
+value|IFF_LINK1
 end_define
 
 begin_comment
@@ -113,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|SC_AUTOCOMP
-value|IFF_LLC2
+value|IFF_LINK2
 end_define
 
 begin_comment
@@ -121,44 +115,7 @@ comment|/* auto-enable TCP compression */
 end_comment
 
 begin_comment
-comment|/* internal flags (should be separate) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_ABORT
-value|0x10000
-end_define
-
-begin_comment
-comment|/* have been sent an abort request */
-end_comment
-
-begin_comment
 comment|/* this stuff doesn't belong here... */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLIOCGFLAGS
-value|_IOR('t', 90, int)
-end_define
-
-begin_comment
-comment|/* get configuration flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLIOCSFLAGS
-value|_IOW('t', 89, int)
-end_define
-
-begin_comment
-comment|/* set configuration flags */
 end_comment
 
 begin_define
