@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xargs.c	5.5 (Berkeley) %G%"
+literal|"@(#)xargs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,9 +826,6 @@ name|pstat
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|,
-name|waitpid
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -970,6 +967,10 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|pstat
 argument_list|,
