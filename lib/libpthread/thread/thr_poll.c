@@ -154,7 +154,7 @@ operator|%
 literal|1000
 operator|)
 operator|*
-literal|1000
+literal|1000000
 expr_stmt|;
 comment|/* Set the wake up time: */
 name|_thread_kern_set_timeout
