@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.5	(Berkeley) %G%"
+literal|"@(#)fio.c	5.6	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +156,7 @@ literal|1
 argument_list|)
 block|; }
 specifier|static
-name|int
+name|void
 argument_list|(
 operator|*
 name|fsig
