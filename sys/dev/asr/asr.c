@@ -3854,6 +3854,14 @@ modifier|*
 name|ccb
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3940,6 +3948,11 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3969,6 +3982,14 @@ modifier|*
 name|ccb
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|untimeout
 argument_list|(
 name|asr_timeout
@@ -3995,6 +4016,11 @@ argument_list|,
 name|sim_links
 operator|.
 name|le
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -4034,6 +4060,9 @@ argument_list|)
 expr_stmt|;
 name|PI2O_EXEC_LCT_NOTIFY_MESSAGE
 name|Message_Ptr
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 comment|/* Send a blind LCT command to wait for the enableSys to complete */
 name|Message_Ptr
@@ -4087,6 +4116,11 @@ name|PI2O_MESSAGE_FRAME
 operator|)
 name|Message_Ptr
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -4174,6 +4208,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
