@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: passwd.c,v 1.7 1995/12/16 09:45:15 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,12 +120,11 @@ directive|include
 file|<pw_yp.h>
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|prog_name
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<rpcsvc/yp.h>
+end_include
 
 begin_decl_stmt
 name|int
@@ -135,16 +134,27 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|int
+name|yp_errno
+init|=
+name|YP_TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|yp_passwd
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|char
-modifier|*
-name|user
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -249,13 +259,13 @@ decl_stmt|;
 define|#
 directive|define
 name|OPTIONS
-value|"lysfi:r:u:"
+value|"d:h:lysfoi:r:u:"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"lysf"
+value|"d:h:lysfo"
 endif|#
 directive|endif
 else|#
@@ -300,11 +310,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|prog_name
-operator|=
 literal|"yppasswd"
-operator|)
 argument_list|)
 condition|)
 name|__use_yp
@@ -385,6 +391,93 @@ comment|/* Change NIS password */
 name|__use_yp
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* Specify NIS domain. */
+ifdef|#
+directive|ifdef
+name|PARANOID
+if|if
+condition|(
+operator|!
+name|getuid
+argument_list|()
+condition|)
+block|{
+endif|#
+directive|endif
+name|yp_domain
+operator|=
+name|optarg
+expr_stmt|;
+if|if
+condition|(
+name|yp_server
+operator|==
+name|NULL
+condition|)
+name|yp_server
+operator|=
+literal|"localhost"
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PARANOID
+block|}
+else|else
+block|{
+name|warnx
+argument_list|(
+literal|"Only the super-user may use the -d flag."
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+break|break;
+case|case
+literal|'h'
+case|:
+comment|/* Specify NIS server. */
+ifdef|#
+directive|ifdef
+name|PARANOID
+if|if
+condition|(
+operator|!
+name|getuid
+argument_list|()
+condition|)
+block|{
+endif|#
+directive|endif
+name|yp_server
+operator|=
+name|optarg
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PARANOID
+block|}
+else|else
+block|{
+name|warnx
+argument_list|(
+literal|"Only the super-user may use the -h flag."
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+break|break;
+case|case
+literal|'o'
+case|:
+name|force_old
+operator|++
 expr_stmt|;
 break|break;
 endif|#
@@ -482,6 +575,10 @@ operator|=
 name|use_yp
 argument_list|(
 name|uname
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -489,6 +586,8 @@ condition|(
 name|res
 operator|==
 name|USER_YP_ONLY
+operator|||
+name|__use_yp
 condition|)
 block|{
 if|if
@@ -657,7 +756,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"        [-l] [-y] [user]\n"
+literal|"        [-l] [-y] [-o] [-d domain [-h host]] [user]\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -669,7 +768,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: passwd [-l] [-y] [user] \n"
+literal|"usage: passwd [-l] [-y] [-o] [-d domain \ [-h host]] [user] \n"
 argument_list|)
 expr_stmt|;
 endif|#
