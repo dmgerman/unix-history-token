@@ -282,7 +282,7 @@ comment|/* conversion function */
 end_comment
 
 begin_decl_stmt
-name|quad_t
+name|u_quad_t
 name|cpy_cnt
 decl_stmt|;
 end_decl_stmt

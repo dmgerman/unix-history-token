@@ -168,21 +168,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|bitswab
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|IO
 name|in
@@ -215,7 +200,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
-name|quad_t
+name|u_quad_t
 name|cpy_cnt
 decl_stmt|;
 end_decl_stmt
