@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -345,7 +345,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Mount flags.  */
+comment|/*  * Mount flags.  *  * Unmount uses MNT_FORCE flag.  */
 end_comment
 
 begin_define
@@ -539,6 +539,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNT_RELOAD
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* reload filesystem data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_FORCE
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* force unmount or readonly change */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNT_MLOCK
 value|0x00100000
 end_define
@@ -589,6 +611,17 @@ end_define
 
 begin_comment
 comment|/* unmount in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_WANTRDWR
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* want upgrade to read/write */
 end_comment
 
 begin_comment
@@ -1063,22 +1096,8 @@ comment|/* KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Flags for various system call interfaces.  *  * forcibly flags for vfs_umount().  * waitfor flags to vfs_sync() and getfsstat()  */
+comment|/*  * Flags for various system call interfaces.  *  * waitfor flags to vfs_sync() and getfsstat()  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_FORCE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MNT_NOFORCE
-value|2
-end_define
 
 begin_define
 define|#
