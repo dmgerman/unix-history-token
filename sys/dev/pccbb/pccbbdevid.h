@@ -220,6 +220,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_ID_OZ711M1
+value|0x71141217ul
+end_define
+
+begin_comment
+comment|/* O2Micro 711M1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_ID_RICOH_RL5C465
 value|0x04651180ul
 end_define
