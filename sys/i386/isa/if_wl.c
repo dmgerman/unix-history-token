@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.9 1997/09/21 21:41:13 gibbs Exp $ */
+comment|/* $Id: if_wl.c,v 1.10 1998/01/08 23:41:04 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -115,19 +115,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
 end_include
 
 begin_include

@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.1 1998/01/26 06:11:17 julian Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.2 1998/02/10 17:36:44 eivind Exp $"
 end_empty
 
 begin_define
@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -60,49 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/acct.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_message.h>
 end_include
 
 begin_include
@@ -132,19 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/reboot.h>
 end_include
 
 begin_include

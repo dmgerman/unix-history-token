@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.56 1997/10/20 14:32:46 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.78 1998/02/04 22:33:24 eivind Exp $ */
+comment|/*	$Id: if_de.c,v 1.79 1998/02/06 12:14:08 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -358,18 +358,6 @@ begin_include
 include|#
 directive|include
 file|<pci.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
 end_include
 
 begin_if

@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.1 1998/01/26 06:11:17 julian Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.2 1998/02/10 17:36:43 eivind Exp $"
 end_empty
 
 begin_include
@@ -20,23 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
-comment|/* #include<i386/isa/isa.h> */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<i386/include/cputypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/timerreg.h>
 end_include
 
 begin_include
@@ -49,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resourcevar.h>
 end_include
 
 begin_include
@@ -90,30 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/speaker.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -138,18 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_message.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<scsi/scsiconf.h>
 end_include
 
@@ -157,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<sys/dpt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_define

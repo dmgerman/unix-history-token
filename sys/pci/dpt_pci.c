@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  Pseudo device drivers for DPT on PCI on FreeBSD   *  *
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.2 1998/02/09 02:31:47 eivind Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.3 1998/02/10 17:36:41 eivind Exp $"
 end_empty
 
 begin_include
@@ -21,12 +21,6 @@ begin_include
 include|#
 directive|include
 file|"opt_dpt.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci.h>
 end_include
 
 begin_include
@@ -56,25 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_message.h>
 end_include
 
 begin_include
@@ -87,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<pci/pcireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
@@ -116,19 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.16 1998/02/09 06:09:52 eivind Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.17 1998/02/18 09:28:36 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -56,12 +56,6 @@ end_include
 begin_comment
 comment|/* to define vattr structure */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
 
 begin_comment
 comment|/*  * msdosfs include files.  */
