@@ -915,6 +915,24 @@ parameter_list|)
 value|hifn_write_reg_1(sc, reg, val)
 end_define
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|hifn
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"Hifn driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -933,11 +951,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug
+name|_hw_hifn
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|hifn
+name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -946,7 +964,7 @@ name|hifn_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"Hifn driver debugging printfs"
+literal|"control debugging msgs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -967,11 +985,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_STRUCT
 argument_list|(
-name|_kern
+name|_hw_hifn
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|hifn_stats
+name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -980,7 +998,7 @@ name|hifnstats
 argument_list|,
 name|hifn_stats
 argument_list|,
-literal|"Hifn driver statistics"
+literal|"driver statistics"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -990,22 +1008,18 @@ specifier|static
 name|int
 name|hifn_maxbatch
 init|=
-literal|2
+literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX tune based on part+sys speed */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern
+name|_hw_hifn
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|hifn_maxbatch
+name|maxbatch
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -1014,7 +1028,7 @@ name|hifn_maxbatch
 argument_list|,
 literal|0
 argument_list|,
-literal|"Hifn driver: max ops to batch w/o interrupt"
+literal|"max ops to batch w/o interrupt"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
