@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.44	82/12/17	*/
+comment|/*	init_main.c	4.45	83/01/16	*/
 end_comment
 
 begin_include
@@ -1100,6 +1100,11 @@ name|swdevt
 modifier|*
 name|swp
 decl_stmt|;
+name|int
+name|base
+decl_stmt|,
+name|residual
+decl_stmt|;
 for|for
 control|(
 name|dp
@@ -1143,6 +1148,18 @@ operator|=
 name|B_HEAD
 expr_stmt|;
 block|}
+name|base
+operator|=
+name|bufpages
+operator|/
+name|nbuf
+expr_stmt|;
+name|residual
+operator|=
+name|bufpages
+operator|%
+name|nbuf
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1192,11 +1209,30 @@ name|i
 operator|*
 name|MAXBSIZE
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+name|residual
+condition|)
 name|bp
 operator|->
 name|b_bufsize
 operator|=
-literal|2
+operator|(
+name|base
+operator|+
+literal|1
+operator|)
+operator|*
+name|CLBYTES
+expr_stmt|;
+else|else
+name|bp
+operator|->
+name|b_bufsize
+operator|=
+name|base
 operator|*
 name|CLBYTES
 expr_stmt|;
