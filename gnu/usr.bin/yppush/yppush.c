@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id: yppush.c,v 1.1 1995/01/31 09:47:10 wpaul Exp $ */
+comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id: yppush.c,v 1.2 1995/02/05 21:48:00 wpaul Exp $ */
 end_comment
 
 begin_include
@@ -156,6 +156,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -409,7 +416,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YPPUSH: Callback timed out\n"
+literal|"%sh: callback timed out\n, progname"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -441,7 +448,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: yppush [ -d domain ] [ -v ] mapname ...\n"
+literal|"Usage: %s [ -d domain ] [ -v ] mapname ...\n"
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -488,9 +497,18 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s:"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"YPPUSH: gethostname"
+literal|"gethostname"
 argument_list|)
 expr_stmt|;
 return|return
@@ -636,7 +654,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YPPUSH: %s: Cannot open\n"
+literal|"%s: %s: cannot open\n"
+argument_list|,
+name|progname
 argument_list|,
 name|mapPath
 argument_list|)
@@ -693,7 +713,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YPPUSH: %s: Cannot determine order number\n"
+literal|"%s: %s: cannot determine order number\n"
+argument_list|,
+name|progname
 argument_list|,
 name|MapName
 argument_list|)
@@ -743,7 +765,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YPPUSH: %s: Invalid order number '%s'\n"
+literal|"%s: %s: Invalid order number '%s'\n"
+argument_list|,
+name|progname
 argument_list|,
 name|MapName
 argument_list|,
@@ -910,7 +934,7 @@ name|PushClient
 argument_list|,
 name|YPPROC_XFR
 argument_list|,
-name|__xdr_ypreq_xfr
+name|xdr_ypreq_xfr
 argument_list|,
 operator|&
 name|req
@@ -935,7 +959,7 @@ name|clnt_perror
 argument_list|(
 name|PushClient
 argument_list|,
-literal|"YPPUSH: Cannot call YPPROC_XFR"
+literal|"yppush: cannot call YPPROC_XFR"
 argument_list|)
 expr_stmt|;
 name|kill
@@ -1000,7 +1024,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YPPUSH: Cannot create callback transport.\n"
+literal|"%s: Cannot create callback transport.\n"
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1083,7 +1109,7 @@ condition|)
 block|{
 name|clnt_pcreateerror
 argument_list|(
-literal|"YPPUSH: Cannot create client"
+literal|"yppush: cannot create client"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1142,9 +1168,18 @@ case|case
 operator|-
 literal|1
 case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s:"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"YPPUSH: Cannot fork"
+literal|"fork"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1373,6 +1408,13 @@ name|struct
 name|sigaction
 name|a
 decl_stmt|;
+name|progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|a
 operator|.
 name|sa_handler
@@ -1385,7 +1427,6 @@ name|sa_mask
 operator|=
 literal|0
 expr_stmt|;
-comment|/* a.sa_flags=SA_NOMASK; 	a.sa_restorer=NULL; */
 name|sigaction
 argument_list|(
 name|SIGINT
@@ -1480,7 +1521,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YPPUSH: Cannot get default domain\n"
+literal|"%s: cannot get default domain\n, 								progname"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1506,7 +1547,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YPPUSH: Cannot determine local hostname\n"
+literal|"%s: cannot determine local hostname\n, 								progname"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1570,7 +1611,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"YPPUSH: Could not read ypservers: %d %s\n"
+literal|"%s: could not read ypservers map: %d %s\n"
+argument_list|,
+name|progname
 argument_list|,
 name|y
 argument_list|,
