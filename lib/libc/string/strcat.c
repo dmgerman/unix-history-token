@@ -82,6 +82,7 @@ control|)
 empty_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|s
 operator|++
@@ -89,6 +90,7 @@ operator|=
 operator|*
 name|append
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 return|return

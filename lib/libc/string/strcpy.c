@@ -79,11 +79,13 @@ decl_stmt|;
 for|for
 control|(
 init|;
+operator|(
 operator|*
 name|to
 operator|=
 operator|*
 name|from
+operator|)
 condition|;
 operator|++
 name|from

@@ -2896,6 +2896,7 @@ name|name
 operator|!=
 literal|0xe5
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -3163,6 +3164,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 block|}
 block|}
 name|xdn
@@ -3645,6 +3647,7 @@ name|attr
 operator|&
 name|FA_DIR
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -3700,6 +3703,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 name|size

@@ -604,6 +604,7 @@ name|rsp
 operator|->
 name|hook
 condition|)
+block|{
 if|if
 condition|(
 name|rsp
@@ -652,6 +653,7 @@ argument_list|,
 name|COLS
 argument_list|)
 expr_stmt|;
+block|}
 operator|--
 name|LINES
 expr_stmt|;

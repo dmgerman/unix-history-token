@@ -153,10 +153,15 @@ specifier|register
 name|size_t
 name|t
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BZERO
 specifier|register
 name|u_int
 name|c
 decl_stmt|;
+endif|#
+directive|endif
 specifier|register
 name|u_char
 modifier|*

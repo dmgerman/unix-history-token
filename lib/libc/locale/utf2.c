@@ -115,13 +115,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|_utf_count
 index|[
 literal|16
 index|]
-operator|=
+init|=
 block|{
 literal|1
 block|,
@@ -155,8 +156,8 @@ literal|3
 block|,
 literal|0
 block|, }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int

@@ -466,8 +466,9 @@ name|ap
 decl_stmt|;
 block|{
 specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 specifier|static
 name|char
 name|etherbuf
