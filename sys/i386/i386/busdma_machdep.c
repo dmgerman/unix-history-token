@@ -1586,7 +1586,7 @@ begin_define
 define|#
 directive|define
 name|BUS_DMAMAP_NSEGS
-value|((BUS_SPACE_MAXSIZE / PAGE_SIZE) + 1)
+value|((64 * 1024) / PAGE_SIZE + 1)
 end_define
 
 begin_comment

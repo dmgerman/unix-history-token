@@ -132,12 +132,8 @@ begin_define
 define|#
 directive|define
 name|BUS_SPACE_MAXSIZE
-value|(64 * 1024)
+value|0xFFFFFFFFFFFFFFFF
 end_define
-
-begin_comment
-comment|/* Maximum supported size */
-end_comment
 
 begin_define
 define|#
