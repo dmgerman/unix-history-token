@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)token.h	3.2 %G%  */
+comment|/*  * @(#)token.h	3.3 %G%  */
 end_comment
 
 begin_define
@@ -150,8 +150,15 @@ name|T_XOR
 value|18
 end_define
 
+begin_define
+define|#
+directive|define
+name|T_DQ
+value|19
+end_define
+
 begin_comment
-comment|/* 19 */
+comment|/* $? */
 end_comment
 
 begin_define

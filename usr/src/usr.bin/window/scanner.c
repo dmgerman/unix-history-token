@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c	3.6 %G%"
+literal|"@(#)scanner.c	3.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -652,6 +652,14 @@ literal|25
 expr_stmt|;
 break|break;
 case|case
+literal|'$'
+case|:
+name|state
+operator|=
+literal|26
+expr_stmt|;
+break|break;
+case|case
 literal|'~'
 case|:
 name|cx
@@ -779,21 +787,6 @@ operator|.
 name|x_token
 operator|=
 name|T_RP
-expr_stmt|;
-name|state
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'$'
-case|:
-name|cx
-operator|.
-name|x_token
-operator|=
-name|T_DOLLAR
 expr_stmt|;
 name|state
 operator|=
@@ -2260,7 +2253,7 @@ break|break;
 case|case
 literal|24
 case|:
-comment|/* and& */
+comment|/* got& */
 switch|switch
 condition|(
 name|c
@@ -2306,7 +2299,7 @@ break|break;
 case|case
 literal|25
 case|:
-comment|/* and | */
+comment|/* got | */
 switch|switch
 condition|(
 name|c
@@ -2341,6 +2334,52 @@ operator|.
 name|x_token
 operator|=
 name|T_OR
+expr_stmt|;
+name|state
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|26
+case|:
+comment|/* got $ */
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'?'
+case|:
+name|cx
+operator|.
+name|x_token
+operator|=
+name|T_DQ
+expr_stmt|;
+name|state
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+operator|(
+name|void
+operator|)
+name|s_ungetc
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|cx
+operator|.
+name|x_token
+operator|=
+name|T_DOLLAR
 expr_stmt|;
 name|state
 operator|=
