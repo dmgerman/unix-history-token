@@ -155,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_DIRENT_H
-value|0
+value|1
 end_define
 
 begin_comment
