@@ -167,6 +167,11 @@ name|vmmeter
 name|pc_cnt
 decl_stmt|;
 comment|/* VM stats counters */
+name|struct
+name|device
+modifier|*
+name|pc_device
+decl_stmt|;
 block|}
 struct|;
 end_struct
