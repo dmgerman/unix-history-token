@@ -176,6 +176,19 @@ name|lo
 decl_stmt|,
 name|x
 decl_stmt|;
+comment|/* Can't be initialized with 0, so use another value. */
+if|if
+condition|(
+operator|*
+name|ctx
+operator|==
+literal|0
+condition|)
+operator|*
+name|ctx
+operator|=
+literal|123459876
+expr_stmt|;
 name|hi
 operator|=
 operator|*
@@ -203,7 +216,7 @@ expr_stmt|;
 if|if
 condition|(
 name|x
-operator|<=
+operator|<
 literal|0
 condition|)
 name|x
