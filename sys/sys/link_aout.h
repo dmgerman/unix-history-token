@@ -10,140 +10,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LINK_H_
+name|_SYS_LINK_AOUT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LINK_H_
+name|_SYS_LINK_AOUT_H_
 end_define
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|FREEBSD_ELF
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ELF__
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|FREEBSD_AOUT
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_struct
-struct|struct
-name|link_map
-block|{
-name|caddr_t
-name|l_addr
-decl_stmt|;
-comment|/* Base Address of library */
-ifdef|#
-directive|ifdef
-name|__mips__
-name|caddr_t
-name|l_offs
-decl_stmt|;
-comment|/* Load Offset of library */
-endif|#
-directive|endif
-specifier|const
-name|char
-modifier|*
-name|l_name
-decl_stmt|;
-comment|/* Absolute Path to Library */
-specifier|const
-name|void
-modifier|*
-name|l_ld
-decl_stmt|;
-comment|/* Pointer to .dynamic in memory */
-name|struct
-name|link_map
-modifier|*
-name|l_next
-decl_stmt|,
-modifier|*
-name|l_prev
-decl_stmt|;
-comment|/* linked list of of mapped libs */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|r_debug
-block|{
-name|int
-name|r_version
-decl_stmt|;
-comment|/* not used */
-name|struct
-name|link_map
-modifier|*
-name|r_map
-decl_stmt|;
-comment|/* list of loaded images */
-name|void
-function_decl|(
-modifier|*
-name|r_brk
-function_decl|)
-parameter_list|(
-name|struct
-name|r_debug
-modifier|*
-parameter_list|,
-name|struct
-name|link_map
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* pointer to break point */
-enum|enum
-block|{
-name|RT_CONSISTENT
-block|,
-comment|/* things are stable */
-name|RT_ADD
-block|,
-comment|/* adding a shared library */
-name|RT_DELETE
-comment|/* removing a shared library */
-block|}
-name|r_state
-enum|;
-block|}
-struct|;
-end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__ELF__ */
-end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -1095,16 +969,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__ELF__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _LINK_H_ */
+comment|/* _SYS_LINK_AOUT_H_ */
 end_comment
 
 end_unit
