@@ -13202,7 +13202,7 @@ name|nmarks
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|60000
+literal|180000
 argument_list|)
 expr_stmt|;
 name|softc
