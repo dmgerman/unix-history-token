@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.36 1998/05/17 11:53:06 phk Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.37 1998/05/17 18:00:45 bde Exp $ */
 end_comment
 
 begin_comment
@@ -954,14 +954,6 @@ name|pmp
 expr_stmt|;
 name|ldep
 operator|->
-name|de_devvp
-operator|=
-name|pmp
-operator|->
-name|pm_devvp
-expr_stmt|;
-name|ldep
-operator|->
 name|de_refcnt
 operator|=
 literal|1
@@ -1130,11 +1122,33 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+comment|/* 			 * The denode does not contain anything useful, so 			 * it would be wrong to leave it on its hash chain. 			 * Arrange for vput() to just forget about it. 			 */
+name|ldep
+operator|->
+name|de_Name
+index|[
+literal|0
+index|]
+operator|=
+name|SLOT_DELETED
+expr_stmt|;
+name|vput
+argument_list|(
+name|nvp
+argument_list|)
+expr_stmt|;
+operator|*
+name|depp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|DE_INTERNALIZE
 argument_list|(
 name|ldep
@@ -1262,6 +1276,14 @@ name|tv_usec
 operator|*
 literal|4294
 argument_list|)
+expr_stmt|;
+name|ldep
+operator|->
+name|de_devvp
+operator|=
+name|pmp
+operator|->
+name|pm_devvp
 expr_stmt|;
 name|VREF
 argument_list|(
