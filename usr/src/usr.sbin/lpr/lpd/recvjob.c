@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.8 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<ufs/fs.h>
 end_include
 
 begin_include
