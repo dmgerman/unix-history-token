@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_backspace[] = "@(#)backspace.c	1.3";  *  * Backspace records  */
+comment|/* char id_backspace[] = "@(#)backspace.c	1.4";  *  * Backspace records  */
 end_comment
 
 begin_include
@@ -153,6 +153,13 @@ operator|->
 name|uend
 operator|=
 name|NO
+expr_stmt|;
+name|clearerr
+argument_list|(
+name|b
+operator|->
+name|ufd
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
