@@ -68,25 +68,27 @@ name|imaxdiv_t
 typedef|;
 end_typedef
 
-begin_function_decl
+begin_decl_stmt
 name|intmax_t
 name|imaxabs
-parameter_list|(
+argument_list|(
 name|intmax_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|imaxdiv_t
 name|imaxdiv
-parameter_list|(
+argument_list|(
 name|intmax_t
-parameter_list|,
+argument_list|,
 name|intmax_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* XXX: The following functions are missing the restrict type qualifier. */
