@@ -1341,13 +1341,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"sn%d: snstart() while memory allocation pending\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"snstart() while memory allocation pending\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1426,13 +1424,11 @@ operator|-
 name|ETHER_CRC_LEN
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sn%d: large packet discarded (A)\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"large packet discarded (A)\n"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1644,13 +1640,11 @@ operator|++
 operator|>
 literal|10
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"sn%d: Memory allocation failed\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"Memory allocation failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2066,13 +2060,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sn%d: snresume() with nothing to send\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"snresume() with nothing to send\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2122,13 +2114,11 @@ operator|-
 name|ETHER_CRC_LEN
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sn%d: large packet discarded (B)\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"large packet discarded (B)\n"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -2223,13 +2213,11 @@ operator|&
 name|ARR_FAILED
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sn%d: Memory allocation failed.  Weird.\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"Memory allocation failed.  Weird.\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2264,13 +2252,11 @@ operator|!=
 name|numPages
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sn%d: memory allocation wrong size.  Weird.\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"memory allocation wrong size.  Weird.\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the allocation was the wrong size we simply release the 		 * memory once it is granted. Wait for the MMU to be un-busy. 		 */
