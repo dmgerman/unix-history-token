@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.8 (Berkeley) 6/4/91"
+literal|"@(#)option.c	5.11 (Berkeley) 8/21/91"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,7 +122,12 @@ name|OPTION
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* NB: the following table must be sorted lexically. */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|OPTION
 name|options
 index|[]
@@ -311,6 +316,14 @@ block|,
 name|c_or
 block|,
 name|O_ZERO
+block|,
+literal|"-path"
+block|,
+name|N_PATH
+block|,
+name|c_path
+block|,
+name|O_ARGV
 block|,
 literal|"-perm"
 block|,

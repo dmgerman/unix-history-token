@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.34 (Berkeley) 6/26/91"
+literal|"@(#)syslog.c	5.36 (Berkeley) 10/4/92"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -70,19 +64,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_if
@@ -112,30 +136,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_decl_stmt
 specifier|static
@@ -331,9 +331,6 @@ name|p
 decl_stmt|;
 name|time_t
 name|now
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
 name|int
 name|fd
@@ -341,6 +338,9 @@ decl_stmt|,
 name|saved_errno
 decl_stmt|;
 name|char
+modifier|*
+name|stdp
+decl_stmt|,
 name|tbuf
 index|[
 literal|2048
@@ -350,24 +350,14 @@ name|fmt_cpy
 index|[
 literal|1024
 index|]
-decl_stmt|,
-modifier|*
-name|stdp
-decl_stmt|,
-modifier|*
-name|ctime
-argument_list|()
 decl_stmt|;
-comment|/* check for invalid bits or no priority set */
+define|#
+directive|define
+name|INTERNALLOG
+value|LOG_ERR|LOG_CONS|LOG_PERROR|LOG_PID
+comment|/* Check for invalid bits. */
 if|if
 condition|(
-operator|!
-name|LOG_PRI
-argument_list|(
-name|pri
-argument_list|)
-operator|||
-operator|(
 name|pri
 operator|&
 operator|~
@@ -376,17 +366,37 @@ name|LOG_PRIMASK
 operator||
 name|LOG_FACMASK
 operator|)
-operator|)
-operator|||
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|INTERNALLOG
+argument_list|,
+literal|"syslog: unknown facility/priority: %x"
+argument_list|,
+name|pri
+argument_list|)
+expr_stmt|;
+name|pri
+operator|&=
+name|LOG_PRIMASK
+operator||
+name|LOG_FACMASK
+expr_stmt|;
+block|}
+comment|/* Check priority against setlogmask values. */
+if|if
+condition|(
 operator|!
-operator|(
 name|LOG_MASK
+argument_list|(
+name|LOG_PRI
 argument_list|(
 name|pri
 argument_list|)
+argument_list|)
 operator|&
 name|LogMask
-operator|)
 condition|)
 return|return;
 name|saved_errno
@@ -1043,20 +1053,15 @@ begin_comment
 comment|/* setlogmask -- set the log mask level */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|setlogmask
-argument_list|(
-argument|pmask
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pmask
+parameter_list|)
 name|int
 name|pmask
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|omask
@@ -1081,7 +1086,7 @@ name|omask
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
