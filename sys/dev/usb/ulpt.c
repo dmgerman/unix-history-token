@@ -526,7 +526,26 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|, }
+block|,
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+operator|(
+name|__FreeBSD__
+operator|<
+literal|5
+operator|)
+comment|/* bmaj */
+operator|-
+literal|1
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
