@@ -1922,8 +1922,6 @@ operator|->
 name|parent
 decl_stmt|;
 name|unsigned
-name|ss
-decl_stmt|,
 name|cnt
 decl_stmt|;
 if|if
