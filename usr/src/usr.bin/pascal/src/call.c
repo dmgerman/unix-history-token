@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.14 %G%"
+literal|"@(#)call.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1344,7 +1344,7 @@ name|putRV
 argument_list|(
 literal|0
 argument_list|,
-name|cbn
+name|psbn
 argument_list|,
 name|p
 operator|->
