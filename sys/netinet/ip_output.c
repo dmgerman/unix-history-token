@@ -567,10 +567,15 @@ name|struct
 name|route
 name|iproute
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PFIL_HOOKS
 name|struct
 name|in_addr
 name|odst
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
@@ -770,8 +775,13 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PFIL_HOOKS
 name|again
 label|:
+endif|#
+directive|endif
 comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing the 	 * cache with IPv6. 	 */
 if|if
 condition|(
