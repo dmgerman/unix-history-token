@@ -92,6 +92,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NMBCLUSTERS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NMBCLUSTERS
+value|(512 + MAXUSERS * 16)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -195,12 +213,18 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nmbclusters
+init|=
+name|NMBCLUSTERS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|nmbufs
+init|=
+name|NMBCLUSTERS
+operator|*
+literal|4
 decl_stmt|;
 end_decl_stmt
 
@@ -421,45 +445,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NMBCLUSTERS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NMBCLUSTERS
-value|(512 + MAXUSERS * 16)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 argument_list|(
 literal|"kern.ipc.nmbclusters"
 argument_list|,
-name|NMBCLUSTERS
-argument_list|,
+operator|&
 name|nmbclusters
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 argument_list|(
 literal|"kern.ipc.nmbufs"
 argument_list|,
-name|NMBCLUSTERS
-operator|*
-literal|4
-argument_list|,
+operator|&
 name|nmbufs
 argument_list|)
 expr_stmt|;

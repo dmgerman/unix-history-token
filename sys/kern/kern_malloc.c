@@ -1990,9 +1990,6 @@ decl_stmt|;
 name|u_long
 name|mem_size
 decl_stmt|;
-name|u_long
-name|xvm_kmem_size
-decl_stmt|;
 if|#
 directive|if
 operator|(
@@ -2040,7 +2037,7 @@ literal|"kmeminit: MAXALLOCSAVE too small"
 endif|#
 directive|endif
 comment|/* 	 * Try to auto-tune the kernel memory size, so that it is 	 * more applicable for a wider range of machine sizes. 	 * On an X86, a VM_KMEM_SIZE_SCALE value of 4 is good, while 	 * a VM_KMEM_SIZE of 12MB is a fair compromise.  The 	 * VM_KMEM_SIZE_MAX is dependent on the maximum KVA space 	 * available, and on an X86 with a total KVA space of 256MB, 	 * try to keep VM_KMEM_SIZE_MAX at 80MB or below. 	 * 	 * Note that the kmem_map is also used by the zone allocator, 	 * so make sure that there is enough space. 	 */
-name|xvm_kmem_size
+name|vm_kmem_size
 operator|=
 name|VM_KMEM_SIZE
 expr_stmt|;
@@ -2066,9 +2063,9 @@ operator|/
 name|VM_KMEM_SIZE_SCALE
 operator|)
 operator|>
-name|xvm_kmem_size
+name|vm_kmem_size
 condition|)
-name|xvm_kmem_size
+name|vm_kmem_size
 operator|=
 name|mem_size
 operator|/
@@ -2084,11 +2081,11 @@ name|VM_KMEM_SIZE_MAX
 argument_list|)
 if|if
 condition|(
-name|xvm_kmem_size
+name|vm_kmem_size
 operator|>=
 name|VM_KMEM_SIZE_MAX
 condition|)
-name|xvm_kmem_size
+name|vm_kmem_size
 operator|=
 name|VM_KMEM_SIZE_MAX
 expr_stmt|;
@@ -2099,8 +2096,7 @@ name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.vm.kmem.size"
 argument_list|,
-name|xvm_kmem_size
-argument_list|,
+operator|&
 name|vm_kmem_size
 argument_list|)
 expr_stmt|;

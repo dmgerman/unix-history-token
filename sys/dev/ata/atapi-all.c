@@ -192,16 +192,17 @@ begin_decl_stmt
 specifier|static
 name|int
 name|atapi_dma
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 argument_list|(
 literal|"hw.ata.atapi_dma"
 argument_list|,
-literal|0
-argument_list|,
+operator|&
 name|atapi_dma
 argument_list|)
 expr_stmt|;

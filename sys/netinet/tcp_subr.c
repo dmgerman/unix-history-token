@@ -776,6 +776,8 @@ parameter_list|()
 block|{
 name|int
 name|hashsize
+init|=
+name|TCBHASHSIZE
 decl_stmt|;
 name|tcp_iss
 operator|=
@@ -831,8 +833,7 @@ name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"net.inet.tcp.tcbhashsize"
 argument_list|,
-name|TCBHASHSIZE
-argument_list|,
+operator|&
 name|hashsize
 argument_list|)
 expr_stmt|;

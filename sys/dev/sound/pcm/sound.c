@@ -244,16 +244,17 @@ end_ifdef
 begin_decl_stmt
 name|int
 name|snd_unit
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT_DECL
+name|TUNABLE_INT
 argument_list|(
 literal|"hw.snd.unit"
 argument_list|,
-literal|0
-argument_list|,
+operator|&
 name|snd_unit
 argument_list|)
 expr_stmt|;
