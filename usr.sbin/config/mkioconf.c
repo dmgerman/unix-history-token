@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.43 1998/10/16 15:00:18 bde Exp $"
+literal|"$Id: mkioconf.c,v 1.44 1998/10/23 17:05:06 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6582,7 +6582,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"struct resource %s_resources[] = {\n"
+literal|"struct config_resource %s_resources[] = {\n"
 argument_list|,
 name|devstr
 argument_list|(
