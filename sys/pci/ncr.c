@@ -3046,7 +3046,7 @@ specifier|static
 name|void
 name|ncr_script_copy_and_bind
 parameter_list|(
-name|cb_p
+name|ncb_p
 name|np
 parameter_list|,
 name|ncrcmd
