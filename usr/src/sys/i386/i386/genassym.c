@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	5.7 (Berkeley) %G%"
+literal|"@(#)genassym.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,6 @@ begin_function
 name|main
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -147,7 +146,6 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|vmmeter
 modifier|*
@@ -160,7 +158,6 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|user
 modifier|*
@@ -173,7 +170,6 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|rusage
 modifier|*
@@ -182,6 +178,18 @@ init|=
 operator|(
 expr|struct
 name|rusage
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+name|struct
+name|uprof
+modifier|*
+name|uprof
+init|=
+operator|(
+expr|struct
+name|uprof
 operator|*
 operator|)
 literal|0
@@ -934,6 +942,46 @@ operator|&
 name|up
 operator|->
 name|u_prof
+operator|.
+name|pr_scale
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPR_BASE %d\n"
+argument_list|,
+operator|&
+name|uprof
+operator|.
+name|pr_base
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPR_SIZE %d\n"
+argument_list|,
+operator|&
+name|uprof
+operator|.
+name|pr_size
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPR_OFF %d\n"
+argument_list|,
+operator|&
+name|uprof
+operator|.
+name|pr_off
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPR_SCALE %d\n"
+argument_list|,
+operator|&
+name|uprof
 operator|.
 name|pr_scale
 argument_list|)
