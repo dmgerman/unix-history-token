@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.33 1998/06/16 19:40:37 brian Exp $  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.34 1998/06/27 23:48:44 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -2595,6 +2595,11 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|type
+decl_stmt|;
 name|log_Printf
 argument_list|(
 name|LogDEBUG
@@ -2879,19 +2884,39 @@ break|break;
 block|}
 comment|/* Fall through */
 default|default:
+switch|switch
+condition|(
+name|proto
+condition|)
+block|{
+case|case
+name|PROTO_MP
+case|:
+case|case
+name|PROTO_COMPD
+case|:
+case|case
+name|PROTO_ICOMPD
+case|:
+name|type
+operator|=
+literal|"Unexpected"
+expr_stmt|;
+break|break;
+default|default:
+name|type
+operator|=
+literal|"Unknown"
+expr_stmt|;
+break|break;
+block|}
 name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
 literal|"%s protocol 0x%04x (%s)\n"
 argument_list|,
-name|proto
-operator|==
-name|PROTO_MP
-condition|?
-literal|"Unexpected"
-else|:
-literal|"Unknown"
+name|type
 argument_list|,
 name|proto
 argument_list|,
