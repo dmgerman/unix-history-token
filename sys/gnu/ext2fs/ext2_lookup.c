@@ -4066,10 +4066,19 @@ condition|)
 break|break;
 name|namlen
 operator|=
+operator|(
+operator|(
+expr|struct
+name|odirtemplate
+operator|*
+operator|)
+operator|&
 name|dirbuf
-operator|.
+operator|)
+operator|->
 name|dotdot_namlen
 expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|namlen
