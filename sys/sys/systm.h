@@ -1824,17 +1824,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRISON_ROOT
-value|SUSER_ALLOWJAIL
-end_define
-
-begin_comment
-comment|/* XXX Old name, will be removed */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SUSER_RUID
 value|2
 end_define
