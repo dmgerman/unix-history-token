@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.23 1997/10/22 00:38:48 peter Exp $"
+literal|"$Id: mkmakefile.c,v 1.24 1997/10/28 07:21:04 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1282,9 +1282,6 @@ literal|"Makefile"
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|warn_make_clean
@@ -1314,8 +1311,6 @@ argument_list|(
 literal|"Don't forget to do a ``make depend''\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
