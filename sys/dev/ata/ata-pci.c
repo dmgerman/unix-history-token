@@ -1022,6 +1022,18 @@ return|return
 literal|"ServerWorks CSB5 ATA66 controller"
 return|;
 case|case
+literal|0x02131166
+case|:
+return|return
+literal|"ServerWorks CSB6 ATA100 controller (channel 0+1)"
+return|;
+case|case
+literal|0x02171166
+case|:
+return|return
+literal|"ServerWorks CSB6 ATA66 controller (channel 2)"
+return|;
+case|case
 literal|0x4d33105a
 case|:
 return|return
