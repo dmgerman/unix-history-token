@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.8 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,6 +391,12 @@ index|[
 literal|1
 index|]
 argument_list|,
+name|op
+operator|==
+name|VERIFY
+condition|?
+name|O_RDONLY
+else|:
 name|O_RDWR
 argument_list|,
 literal|0666
