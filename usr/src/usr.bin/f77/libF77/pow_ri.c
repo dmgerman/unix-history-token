@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)pow_ri.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)pow_ri.c	5.3	%G%  */
 end_comment
-
-begin_decl_stmt
-name|float
-name|flt_retval
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|float
@@ -71,13 +65,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|flt_retval
-operator|=
-name|pow
-expr_stmt|;
 return|return
 operator|(
-name|flt_retval
+name|pow
 operator|)
 return|;
 block|}
@@ -93,6 +83,17 @@ operator|/
 name|x
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|x
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 for|for
 control|(
 init|;
@@ -123,13 +124,9 @@ else|else
 break|break;
 block|}
 block|}
-name|flt_retval
-operator|=
-name|pow
-expr_stmt|;
 return|return
 operator|(
-name|flt_retval
+name|pow
 operator|)
 return|;
 block|}
