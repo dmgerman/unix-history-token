@@ -3242,8 +3242,8 @@ operator|.
 name|msrepstr
 expr_stmt|;
 else|else
-else|#
-directive|else
+endif|#
+directive|endif
 name|msg
 operator|=
 name|auth2chap
@@ -3253,8 +3253,6 @@ argument_list|)
 operator|->
 name|authresponse
 expr_stmt|;
-endif|#
-directive|endif
 name|MPPE_MasterKeyValid
 operator|=
 literal|1
