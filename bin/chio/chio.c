@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: chio.c,v 1.1.1.1.2.1 1997/06/06 16:02:01 charnier Exp $	*/
+comment|/*	$Id: chio.c,v 1.1.1.1.2.2 1997/08/24 10:29:16 jkh Exp $	*/
 end_comment
 
 begin_comment
@@ -1545,7 +1545,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: no arguements expected"
+literal|"%s: no arguments expected"
 argument_list|,
 name|cname
 argument_list|)
