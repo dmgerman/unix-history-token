@@ -410,6 +410,8 @@ argument_list|,
 name|epp
 argument_list|,
 name|stack
+argument_list|,
+literal|0UL
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: reg.h,v 1.1.1.1 1998/03/09 05:43:16 jb Exp $ */
+comment|/* $Id: reg.h,v 1.2 1998/06/10 10:55:26 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -333,6 +333,8 @@ operator|(
 expr|struct
 name|proc
 operator|*
+operator|,
+name|u_long
 operator|,
 name|u_long
 operator|,
