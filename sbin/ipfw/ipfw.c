@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.58 1998/07/06 03:20:10 julian Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.59 1998/08/04 14:41:37 thepish Exp $  *  */
 end_comment
 
 begin_include
@@ -467,6 +467,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_port
 parameter_list|(
@@ -2277,6 +2278,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|list
 parameter_list|(
@@ -2836,6 +2838,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fill_ip
 parameter_list|(
@@ -3488,6 +3491,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fill_port
 parameter_list|(
@@ -3704,6 +3708,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|void
 name|fill_tcpflag
 parameter_list|(
@@ -4112,6 +4117,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fill_icmptypes
 parameter_list|(
@@ -4130,7 +4136,7 @@ modifier|*
 modifier|*
 name|vp
 decl_stmt|;
-name|u_short
+name|u_int
 modifier|*
 name|fw_flg
 decl_stmt|;
@@ -4248,6 +4254,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|delete
 parameter_list|(
@@ -7153,6 +7160,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ipfw_main
 parameter_list|(
