@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.35 (Berkeley) %G%"
+literal|"@(#)local2.c	1.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2636,10 +2636,46 @@ name|lval
 operator|==
 literal|0
 operator|&&
+operator|(
+name|r
+operator|->
+name|in
+operator|.
+name|type
+operator|==
+name|DOUBLE
+operator|||
+name|r
+operator|->
+name|in
+operator|.
+name|type
+operator|==
+name|FLOAT
+operator|||
 operator|!
 name|forarg
+operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|r
+operator|->
+name|in
+operator|.
+name|type
+operator|==
+name|FLOAT
+condition|)
+name|r
+operator|->
+name|in
+operator|.
+name|type
+operator|=
+name|DOUBLE
+expr_stmt|;
 name|putstr
 argument_list|(
 literal|"clr"
