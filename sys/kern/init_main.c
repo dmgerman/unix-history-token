@@ -1908,7 +1908,7 @@ argument_list|,
 argument|p_list
 argument_list|)
 block|{
-name|microtime
+name|microuptime
 argument_list|(
 operator|&
 name|p

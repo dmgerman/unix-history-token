@@ -219,7 +219,6 @@ operator|!
 name|proc0
 operator|.
 name|p_stats
-comment|/* || proc0.p_stats->p_start.tv_sec == 0 */
 condition|)
 name|panic
 argument_list|(

@@ -2757,16 +2757,14 @@ name|flags
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If RFSTOPPED not requested, make child runnable and add to 	 * run queue. 	 */
-name|microtime
+name|microuptime
 argument_list|(
 operator|&
-operator|(
 name|p2
 operator|->
 name|p_stats
 operator|->
 name|p_start
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
