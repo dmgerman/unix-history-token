@@ -266,8 +266,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uintmax_t
+operator|)
 name|mediasize
 operator|<
+operator|(
+name|uintmax_t
+operator|)
 name|physmem
 condition|)
 block|{
