@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -76,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"uio.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"kernel.h"
 end_include
 
@@ -89,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/reg.h"
 end_include
 
 begin_decl_stmt
@@ -229,60 +211,6 @@ literal|38400
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|ttspeedtab
-argument_list|(
-name|speed
-argument_list|,
-name|table
-argument_list|)
-specifier|register
-expr|struct
-name|speedtab
-operator|*
-name|table
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-for|for
-control|(
-init|;
-name|table
-operator|->
-name|sp_speed
-operator|!=
-operator|-
-literal|1
-condition|;
-name|table
-operator|++
-control|)
-if|if
-condition|(
-name|table
-operator|->
-name|sp_speed
-operator|==
-name|speed
-condition|)
-return|return
-operator|(
-name|table
-operator|->
-name|sp_code
-operator|)
-return|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_block
 
 begin_comment
 comment|/*ARGSUSED*/
