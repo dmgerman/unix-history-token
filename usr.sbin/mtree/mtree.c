@@ -225,6 +225,9 @@ name|keys
 operator|=
 name|KEYDEFAULT
 expr_stmt|;
+name|init_excludes
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -236,7 +239,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdef:iK:k:np:rs:Uux"
+literal|"cdef:iK:k:np:rs:UuxX:"
 argument_list|)
 operator|)
 operator|!=
@@ -473,6 +476,15 @@ name|FTS_XDEV
 expr_stmt|;
 break|break;
 case|case
+literal|'X'
+case|:
+name|read_excludes_file
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -591,6 +603,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: mtree [-cdeinrUux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
+literal|"\t[-X excludes]\n"
 argument_list|)
 expr_stmt|;
 name|exit
