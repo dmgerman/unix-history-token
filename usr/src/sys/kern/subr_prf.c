@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"machine/mtpr.h"
 end_include
 
 begin_ifdef
@@ -102,7 +102,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../machine/kdbparam.h"
+file|"machine/kdbparam.h"
 end_include
 
 begin_endif
