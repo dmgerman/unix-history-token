@@ -611,6 +611,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|HTONL
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = htonl((__uint32_t)(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HTONS
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = htons((__uint16_t)(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTOHL
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = ntohl((__uint32_t)(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTOHS
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = ntohs((__uint16_t)(x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_NAME
 value|"pf"
 end_define

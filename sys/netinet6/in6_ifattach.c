@@ -2898,9 +2898,15 @@ comment|/* OpenBSD 2.8, NetBSD 1.6 */
 case|case
 name|IFT_BRIDGE
 case|:
-return|return;
 endif|#
 directive|endif
+case|case
+name|IFT_PFLOG
+case|:
+case|case
+name|IFT_PFSYNC
+case|:
+return|return;
 block|}
 comment|/* 	 * quirks based on interface type 	 */
 switch|switch

@@ -222,6 +222,28 @@ begin_comment
 comment|/* min for a long */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UID_MAX
+value|UINT_MAX
+end_define
+
+begin_comment
+comment|/* max value for a uid_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GID_MAX
+value|UINT_MAX
+end_define
+
+begin_comment
+comment|/* max value for a gid_t */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

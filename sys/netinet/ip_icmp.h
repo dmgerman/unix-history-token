@@ -567,6 +567,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICMP_ALTHOSTADDR
+value|6
+end_define
+
+begin_comment
+comment|/* alternate host address */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICMP_ECHO
 value|8
 end_define
@@ -584,6 +595,28 @@ end_define
 
 begin_comment
 comment|/* router advertisement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_ROUTERADVERT_NORMAL
+value|0
+end_define
+
+begin_comment
+comment|/* normal advertisement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_ROUTERADVERT_NOROUTE_COMMON
+value|16
+end_define
+
+begin_comment
+comment|/* selective routing */
 end_comment
 
 begin_define
@@ -743,8 +776,140 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICMP_TRACEROUTE
+value|30
+end_define
+
+begin_comment
+comment|/* traceroute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_DATACONVERR
+value|31
+end_define
+
+begin_comment
+comment|/* data conversion error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_MOBILE_REDIRECT
+value|32
+end_define
+
+begin_comment
+comment|/* mobile host redirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_IPV6_WHEREAREYOU
+value|33
+end_define
+
+begin_comment
+comment|/* IPv6 where-are-you */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_IPV6_IAMHERE
+value|34
+end_define
+
+begin_comment
+comment|/* IPv6 i-am-here */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_MOBILE_REGREQUEST
+value|35
+end_define
+
+begin_comment
+comment|/* mobile registration req */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_MOBILE_REGREPLY
+value|36
+end_define
+
+begin_comment
+comment|/* mobile registration reply */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_SKIP
+value|39
+end_define
+
+begin_comment
+comment|/* SKIP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_PHOTURIS
+value|40
+end_define
+
+begin_comment
+comment|/* Photuris */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_PHOTURIS_UNKNOWN_INDEX
+value|1
+end_define
+
+begin_comment
+comment|/* unknown sec index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_PHOTURIS_AUTH_FAILED
+value|2
+end_define
+
+begin_comment
+comment|/* auth failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_PHOTURIS_DECRYPT_FAILED
+value|3
+end_define
+
+begin_comment
+comment|/* decrypt failed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICMP_MAXTYPE
-value|18
+value|40
 end_define
 
 begin_define

@@ -673,6 +673,13 @@ name|DLT_PFLOG
 value|117
 end_define
 
+begin_define
+define|#
+directive|define
+name|DLT_PFSYNC
+value|121
+end_define
+
 begin_comment
 comment|/*  * Registered for Cisco-internal use.  */
 end_comment

@@ -2131,6 +2131,20 @@ name|IFT_FAITH
 value|0xf2
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFT_PFLOG
+value|0xf6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_PFSYNC
+value|0xf7
+end_define
+
 begin_endif
 endif|#
 directive|endif

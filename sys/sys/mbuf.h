@@ -2398,6 +2398,61 @@ begin_comment
 comment|/* MAC label */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_PF_GENERATED
+value|(20 | MTAG_PERSISTENT)
+end_define
+
+begin_comment
+comment|/* PF, pass always */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_PF_ROUTED
+value|21
+end_define
+
+begin_comment
+comment|/* PF routed, avoid loops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_PF_FRAGCACHE
+value|22
+end_define
+
+begin_comment
+comment|/* PF fragment cached */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_PF_QID
+value|23
+end_define
+
+begin_comment
+comment|/* PF ALTQ queue id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_PF_TAG
+value|24
+end_define
+
+begin_comment
+comment|/* PF tagged */
+end_comment
+
 begin_comment
 comment|/* Packet tag routines. */
 end_comment
