@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.13 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1124,6 +1124,20 @@ name|char
 name|c
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+comment|/* SunOS 4.0 bug */
+name|c
+operator|&=
+literal|0x7f
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(sun) */
 if|if
 condition|(
 name|TTYBYTES
