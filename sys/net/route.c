@@ -92,13 +92,6 @@ value|((struct sockaddr *)(p))
 end_define
 
 begin_decl_stmt
-name|struct
-name|route_cb
-name|route_cb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|rtstat

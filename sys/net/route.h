@@ -1176,26 +1176,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|route_cb
-block|{
-name|int
-name|ip_count
-decl_stmt|;
-name|int
-name|ip6_count
-decl_stmt|;
-name|int
-name|ipx_count
-decl_stmt|;
-name|int
-name|any_count
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1253,14 +1233,6 @@ parameter_list|)
 define|\
 value|do { \ 		if ((rt)->rt_refcnt<= 1) \ 			rtfree(rt); \ 		else \ 			(rt)->rt_refcnt--; \ 	} while (0)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|route_cb
-name|route_cb
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
