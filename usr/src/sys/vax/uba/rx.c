@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.4	83/02/21	*/
+comment|/*	rx.c	4.5	83/03/20	*/
 end_comment
 
 begin_include
@@ -300,10 +300,14 @@ comment|/* error code dump from controller */
 block|}
 name|rxerr
 index|[
-name|NFX
+name|NRX
 index|]
 struct|;
 end_struct
+
+begin_comment
+comment|/* End of per-drive data */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -343,11 +347,7 @@ argument_list|()
 decl_stmt|,
 name|rxintr
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|rxwatch
 argument_list|()
 decl_stmt|,
@@ -411,7 +411,7 @@ name|RXUNIT
 parameter_list|(
 name|dev
 parameter_list|)
-value|(minor(dev)>>4)
+value|(minor(dev)>>3)
 end_define
 
 begin_comment
@@ -719,15 +719,6 @@ operator|>=
 name|NRX
 operator|||
 operator|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-literal|0x8
-operator|)
-operator|||
-operator|(
 name|ui
 operator|=
 name|rxdinfo
@@ -905,12 +896,6 @@ name|struct
 name|uba_device
 modifier|*
 name|ui
-decl_stmt|;
-specifier|register
-name|struct
-name|rx_softc
-modifier|*
-name|sc
 decl_stmt|;
 specifier|register
 name|struct
@@ -1422,6 +1407,15 @@ name|sc
 operator|->
 name|sc_csbits
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"rxstart: (read) track=%d, sector=%d\n"
+argument_list|,
+name|track
+argument_list|,
+name|sector
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1805,6 +1799,17 @@ operator|.
 name|b_actf
 operator|->
 name|b_actf
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rxintr: unit=%d, state=0x%x\n"
+argument_list|,
+name|unit
+argument_list|,
+name|rxc
+operator|->
+name|rxc_state
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2668,7 +2673,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|" fx%d"
+literal|" fx%d: "
 argument_list|,
 name|ctlr
 argument_list|)
@@ -2863,6 +2868,8 @@ argument_list|,
 name|B_READ
 argument_list|,
 name|minrxphys
+argument_list|,
+name|uio
 argument_list|)
 operator|)
 return|;
@@ -2982,6 +2989,8 @@ argument_list|,
 name|B_WRITE
 argument_list|,
 name|minrxphys
+argument_list|,
+name|uio
 argument_list|)
 operator|)
 return|;
@@ -2989,7 +2998,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Control routine:  * processes three kinds of requests:  *  *	(1) Set density according to that specified by the open device.  *	(2) Arrange for the next sector to be written with a deleted-  *		  data mark.  *	(3) Report whether the last sector read had a deleted-data mark  *		  (by returning with an EIO error code if it did).  *  * Requests relating to deleted-data marks can be handled right here.  * A "set density" request, however, must additionally be processed  * through "rxstart", just like a read or write request.  */
+comment|/*  * Control routine:  * processes three kinds of requests:  *  *	(1) Set density (i.e., format the diskette) according to   *		  that specified by the open device.  *	(2) Arrange for the next sector to be written with a deleted-  *		  data mark.  *	(3) Report whether the last sector read had a deleted-data mark  *		  (by returning with an EIO error code if it did).  *  * Requests relating to deleted-data marks can be handled right here.  * A "set density" request, however, must additionally be processed  * through "rxstart", just like a read or write request.  */
 end_comment
 
 begin_comment
