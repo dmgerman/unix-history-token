@@ -568,9 +568,7 @@ block|{
 name|char
 name|name
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 name|ng_h4_info_p
@@ -2954,9 +2952,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 comment|/* Let old node go */

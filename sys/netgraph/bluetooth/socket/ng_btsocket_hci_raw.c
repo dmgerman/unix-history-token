@@ -4311,9 +4311,9 @@ decl_stmt|;
 name|char
 name|path
 index|[
-name|NG_NODELEN
+name|NG_NODESIZ
 operator|+
-literal|2
+literal|1
 index|]
 decl_stmt|;
 name|struct
