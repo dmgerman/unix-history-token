@@ -983,7 +983,7 @@ name|original_filename
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * If pathname is longer than PATH_MAX, record starting directory 	 * and move to a suitable intermediate dir. 	 */
+comment|/* 	 * If pathname is longer than PATH_MAX, record starting directory 	 * and chdir to a suitable intermediate dir. 	 */
 if|if
 condition|(
 name|strlen
@@ -997,6 +997,13 @@ operator|>
 name|PATH_MAX
 condition|)
 block|{
+name|char
+modifier|*
+name|intdir
+decl_stmt|,
+modifier|*
+name|tail
+decl_stmt|;
 comment|/* 		 * Yes, the copy here is necessary because we edit 		 * the pathname in-place to create intermediate dirnames. 		 */
 name|original_filename
 operator|=
@@ -1008,13 +1015,6 @@ name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|char
-modifier|*
-name|intdir
-decl_stmt|,
-modifier|*
-name|tail
-decl_stmt|;
 name|restore_pwd
 operator|=
 name|open
@@ -1045,6 +1045,7 @@ name|intdir
 operator|=
 name|tail
 expr_stmt|;
+comment|/* Locate a dir prefix shorter than PATH_MAX. */
 name|tail
 operator|=
 name|intdir
@@ -1074,11 +1075,6 @@ operator|<=
 name|intdir
 condition|)
 block|{
-name|close
-argument_list|(
-name|restore_pwd
-argument_list|)
-expr_stmt|;
 name|archive_set_error
 argument_list|(
 name|a
@@ -1088,20 +1084,23 @@ argument_list|,
 literal|"Path element too long"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ARCHIVE_WARN
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
 block|}
+comment|/* Create intdir and chdir to it. */
 operator|*
 name|tail
 operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* Terminate dir portion */
-if|if
-condition|(
+name|ret
+operator|=
 name|create_dir
 argument_list|(
 name|a
@@ -1110,28 +1109,13 @@ name|intdir
 argument_list|,
 name|flags
 argument_list|)
-operator|!=
-name|ARCHIVE_OK
-condition|)
-block|{
-name|fchdir
-argument_list|(
-name|restore_pwd
-argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|restore_pwd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ARCHIVE_WARN
-operator|)
-return|;
-block|}
 if|if
 condition|(
+name|ret
+operator|==
+name|ARCHIVE_OK
+operator|&&
 name|chdir
 argument_list|(
 name|intdir
@@ -1149,21 +1133,10 @@ argument_list|,
 literal|"Couldn't chdir"
 argument_list|)
 expr_stmt|;
-name|fchdir
-argument_list|(
-name|restore_pwd
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|restore_pwd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ARCHIVE_WARN
-operator|)
-return|;
+expr_stmt|;
 block|}
 operator|*
 name|tail
@@ -1171,6 +1144,15 @@ operator|=
 literal|'/'
 expr_stmt|;
 comment|/* Restore the / we removed. */
+if|if
+condition|(
+name|ret
+operator|!=
+name|ARCHIVE_OK
+condition|)
+goto|goto
+name|cleanup
+goto|;
 name|tail
 operator|++
 expr_stmt|;
@@ -1384,6 +1366,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|cleanup
+label|:
 comment|/* If we changed directory above, restore it here. */
 if|if
 condition|(
@@ -1397,6 +1381,11 @@ name|NULL
 condition|)
 block|{
 name|fchdir
+argument_list|(
+name|restore_pwd
+argument_list|)
+expr_stmt|;
+name|close
 argument_list|(
 name|restore_pwd
 argument_list|)
