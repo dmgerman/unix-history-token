@@ -1705,7 +1705,7 @@ modifier|*
 name|wmesg
 parameter_list|,
 name|int
-name|timeout
+name|timo
 parameter_list|)
 function_decl|;
 end_function_decl
