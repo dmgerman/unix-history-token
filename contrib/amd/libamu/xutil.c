@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.2 1998/12/27 06:25:24 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.6 1999/09/08 23:36:53 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -36,18 +36,18 @@ directive|include
 file|<amu.h>
 end_include
 
+begin_comment
+comment|/*  * Logfp is the default logging device, and is initialized to stderr by  * default in dplog/plog below, and in  * amd/amfs_program.c:amfs_program_exec().  */
+end_comment
+
 begin_decl_stmt
 name|FILE
 modifier|*
 name|logfp
 init|=
-name|stderr
+name|NULL
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Log errors to stderr initially */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1045,7 +1045,7 @@ comment|/* DEBUG_MEM */
 end_comment
 
 begin_comment
-comment|/*  * Take a log format string and expand occurrences of %m  * with the current error code taken from errno.  */
+comment|/*  * Take a log format string and expand occurrences of %m  * with the current error code taken from errno.  Make sure  * 'e' never gets longer than maxlen characters.  */
 end_comment
 
 begin_function
@@ -1060,6 +1060,9 @@ parameter_list|,
 name|char
 modifier|*
 name|e
+parameter_list|,
+name|int
+name|maxlen
 parameter_list|)
 block|{
 specifier|extern
@@ -1069,27 +1072,46 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
 name|int
 name|error
 init|=
 name|errno
 decl_stmt|;
+name|int
+name|len
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 name|p
 operator|=
 name|f
+operator|,
+name|q
+operator|=
+name|e
 init|;
 operator|(
 operator|*
-name|e
+name|q
 operator|=
 operator|*
 name|p
 operator|)
+operator|&&
+name|len
+operator|<
+name|maxlen
 condition|;
-name|e
+name|len
+operator|++
+operator|,
+name|q
 operator|++
 operator|,
 name|p
@@ -1133,6 +1155,19 @@ operator|=
 name|NULL
 expr_stmt|;
 else|else
+ifdef|#
+directive|ifdef
+name|HAVE_STRERROR
+name|errstr
+operator|=
+name|strerror
+argument_list|(
+name|error
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_STRERROR */
 name|errstr
 operator|=
 name|sys_errlist
@@ -1140,13 +1175,16 @@ index|[
 name|error
 index|]
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_STRERROR */
 if|if
 condition|(
 name|errstr
 condition|)
 name|strcpy
 argument_list|(
-name|e
+name|q
 argument_list|,
 name|errstr
 argument_list|)
@@ -1154,18 +1192,27 @@ expr_stmt|;
 else|else
 name|sprintf
 argument_list|(
-name|e
+name|q
 argument_list|,
 literal|"Error %d"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|e
+name|len
 operator|+=
 name|strlen
 argument_list|(
-name|e
+name|q
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|q
+operator|+=
+name|strlen
+argument_list|(
+name|q
 argument_list|)
 operator|-
 literal|1
@@ -1175,6 +1222,16 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|e
+index|[
+name|maxlen
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null terminate, to be sure */
 block|}
 end_function
 
@@ -1384,6 +1441,16 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|logfp
+condition|)
+name|logfp
+operator|=
+name|stderr
+expr_stmt|;
+comment|/* initialize before possible first use */
 name|va_start
 argument_list|(
 name|ap
@@ -1434,6 +1501,16 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|logfp
+condition|)
+name|logfp
+operator|=
+name|stderr
+expr_stmt|;
+comment|/* initialize before possible first use */
 name|va_start
 argument_list|(
 name|ap
@@ -1533,8 +1610,11 @@ argument_list|(
 name|fmt
 argument_list|,
 name|efmt
+argument_list|,
+literal|1024
 argument_list|)
 expr_stmt|;
+comment|/*    * XXX: ptr is 1024 bytes long.  It is possible to write into it    * more than 1024 bytes, if efmt is already large, and vargs expand    * as well.    */
 name|vsprintf
 argument_list|(
 name|ptr
@@ -1544,6 +1624,14 @@ argument_list|,
 name|vargs
 argument_list|)
 expr_stmt|;
+name|msg
+index|[
+literal|1023
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null terminate, to be sure */
 name|ptr
 operator|+=
 name|strlen
@@ -2328,6 +2416,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOG_DAEMON
+end_ifdef
+
 begin_comment
 comment|/*  * get syslog facility to use.  * logfile can be "syslog", "syslog:daemon", "syslog:local7", etc.  */
 end_comment
@@ -2448,9 +2542,6 @@ return|;
 endif|#
 directive|endif
 comment|/* not LOG_MAIL */
-ifdef|#
-directive|ifdef
-name|LOG_DAEMON
 if|if
 condition|(
 name|STREQ
@@ -2463,9 +2554,6 @@ condition|)
 return|return
 name|LOG_DAEMON
 return|;
-endif|#
-directive|endif
-comment|/* not LOG_DAEMON */
 ifdef|#
 directive|ifdef
 name|LOG_AUTH
@@ -2733,6 +2821,15 @@ name|LOG_DAEMON
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not LOG_DAEMON */
+end_comment
 
 begin_comment
 comment|/*  * Change current logfile  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_hesiod.c,v 1.1.1.1 1998/11/05 02:04:49 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_hesiod.c,v 1.5 1999/02/04 07:24:15 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -88,6 +88,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|hesiod_init
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|context
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|voidp
@@ -103,6 +116,72 @@ end_endif
 begin_comment
 comment|/* HAVE_HESIOD_INIT */
 end_comment
+
+begin_comment
+comment|/* forward declarations */
+end_comment
+
+begin_function_decl
+name|int
+name|amu_hesiod_init
+parameter_list|(
+name|mnt_map
+modifier|*
+name|m
+parameter_list|,
+name|char
+modifier|*
+name|map
+parameter_list|,
+name|time_t
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|hesiod_search
+parameter_list|(
+name|mnt_map
+modifier|*
+name|m
+parameter_list|,
+name|char
+modifier|*
+name|map
+parameter_list|,
+name|char
+modifier|*
+name|key
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|pval
+parameter_list|,
+name|time_t
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|hesiod_isup
+parameter_list|(
+name|mnt_map
+modifier|*
+name|m
+parameter_list|,
+name|char
+modifier|*
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * No easy way to probe the server - check the map name begins with "hesiod."  * Note: this name includes 'amu_' so as to not conflict with libhesiod's  * hesiod_init() function.  */
@@ -237,16 +316,28 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"hesiod_search(m=%x, map=%s, key=%s, pval=%x tp=%x)"
+literal|"hesiod_search(m=%lx, map=%s, key=%s, pval=%lx tp=%lx)"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|m
 argument_list|,
 name|map
 argument_list|,
 name|key
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pval
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|tp
 argument_list|)
 expr_stmt|;
@@ -451,6 +542,133 @@ return|;
 endif|#
 directive|endif
 comment|/* not HAVE_HESIOD_INIT */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Check if Hesiod is up, so we can determine if to clear the map or not.  * Test it by querying for /defaults.  * Returns: 0 if Hesiod is down, 1 if it is up.  */
+end_comment
+
+begin_function
+name|int
+name|hesiod_isup
+parameter_list|(
+name|mnt_map
+modifier|*
+name|m
+parameter_list|,
+name|char
+modifier|*
+name|map
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|char
+modifier|*
+name|val
+decl_stmt|;
+name|time_t
+name|mtime
+decl_stmt|;
+specifier|static
+name|int
+name|last_status
+init|=
+literal|1
+decl_stmt|;
+comment|/* assume up by default */
+name|error
+operator|=
+name|hesiod_search
+argument_list|(
+name|m
+argument_list|,
+name|map
+argument_list|,
+literal|"/defaults"
+argument_list|,
+operator|&
+name|val
+argument_list|,
+operator|&
+name|mtime
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|dlog
+argument_list|(
+literal|"hesiod_isup(%s): %s"
+argument_list|,
+name|map
+argument_list|,
+name|strerror
+argument_list|(
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|error
+operator|!=
+name|ENOENT
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"hesiod_isup: error getting `/defaults' entry in map %s: %m"
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
+name|last_status
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* Hesiod is down */
+block|}
+if|if
+condition|(
+name|last_status
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* if was down before */
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"hesiod_isup: Hesiod came back up for map %s"
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
+name|last_status
+operator|=
+literal|1
+expr_stmt|;
+block|}
+return|return
+literal|1
+return|;
+comment|/* Hesiod is up */
 block|}
 end_function
 
