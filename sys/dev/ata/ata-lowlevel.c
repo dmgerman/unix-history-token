@@ -2503,20 +2503,6 @@ literal|0x02
 expr_stmt|;
 block|}
 block|}
-comment|/* if nothing showed up there is no need to get any further */
-comment|/* SOS is that too strong?, we just might loose devices here XXX */
-name|ch
-operator|->
-name|devices
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mask
-condition|)
-return|return;
 if|if
 condition|(
 name|bootverbose
@@ -2537,6 +2523,20 @@ argument_list|,
 name|ostat1
 argument_list|)
 expr_stmt|;
+comment|/* if nothing showed up there is no need to get any further */
+comment|/* SOS is that too strong?, we just might loose devices here XXX */
+name|ch
+operator|->
+name|devices
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mask
+condition|)
+return|return;
 comment|/* reset (both) devices on this channel */
 name|ATA_IDX_OUTB
 argument_list|(
