@@ -61,6 +61,13 @@ name|FS_MIN_SIZE
 value|2048
 end_define
 
+begin_define
+define|#
+directive|define
+name|MSG_NOT_APPLICABLE
+value|"That option is not applicable here"
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -380,9 +387,6 @@ name|type
 operator|==
 name|PART_FILESYSTEM
 operator|&&
-operator|!
-name|strcmp
-argument_list|(
 name|fbsd_chunk_info
 index|[
 name|i
@@ -390,7 +394,27 @@ index|]
 operator|.
 name|c
 operator|->
-name|name
+name|private
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+operator|(
+operator|(
+name|PartInfo
+operator|*
+operator|)
+name|fbsd_chunk_info
+index|[
+name|i
+index|]
+operator|.
+name|c
+operator|->
+name|private
+operator|)
+operator|->
+name|mountpoint
 argument_list|,
 name|name
 argument_list|)
@@ -1178,21 +1202,21 @@ begin_define
 define|#
 directive|define
 name|PART_SIZE_COL
-value|(PART_MOUNT_COL + MAX_MOUNT_NAME + 4)
+value|(PART_MOUNT_COL + MAX_MOUNT_NAME + 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PART_NEWFS_COL
-value|(PART_SIZE_COL + 8)
+value|(PART_SIZE_COL + 7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PART_OFF
-value|42
+value|38
 end_define
 
 begin_comment
@@ -1380,6 +1404,10 @@ name|prow
 operator|=
 name|CHUNK_PART_START_ROW
 expr_stmt|;
+name|pcol
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1531,11 +1559,6 @@ operator|=
 name|CHUNK_PART_START_ROW
 expr_stmt|;
 block|}
-else|else
-name|pcol
-operator|=
-literal|0
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|onestr
@@ -2088,7 +2111,7 @@ condition|)
 block|{
 name|msg
 operator|=
-literal|"Can't create a sub-partition here (that only works in master partitions)"
+literal|"You can only do this in a master partition (see top of screen)"
 expr_stmt|;
 break|break;
 block|}
@@ -2296,7 +2319,7 @@ operator|)
 condition|?
 name|FS_SWAP
 else|:
-name|freebsd
+name|FS_BSDFFS
 argument_list|,
 name|flags
 argument_list|)
@@ -2379,7 +2402,7 @@ condition|)
 block|{
 name|msg
 operator|=
-literal|"Use the Master Partition Editor to delete one of these"
+name|MSG_NOT_APPLICABLE
 expr_stmt|;
 break|break;
 block|}
@@ -2425,7 +2448,7 @@ name|PART_SLICE
 case|:
 name|msg
 operator|=
-literal|"You can't mount one of these directly!"
+name|MSG_NOT_APPLICABLE
 expr_stmt|;
 break|break;
 case|case
@@ -2525,7 +2548,7 @@ expr_stmt|;
 else|else
 name|msg
 operator|=
-literal|"newfs options not applicable for this partition"
+name|MSG_NOT_APPLICABLE
 expr_stmt|;
 break|break;
 case|case
@@ -2581,7 +2604,7 @@ expr_stmt|;
 else|else
 name|msg
 operator|=
-literal|"Set a mount point first."
+name|MSG_NOT_APPLICABLE
 expr_stmt|;
 break|break;
 case|case
@@ -2640,15 +2663,6 @@ decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"Last Chance!  Are you sure you want to write out\nall your changes to disk?"
-argument_list|)
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -2731,6 +2745,15 @@ argument_list|,
 name|mbr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Last Chance!  Are you sure you want to write out\nall these changes to disk?"
+argument_list|)
+condition|)
+block|{
 name|Write_Disk
 argument_list|(
 name|disks
