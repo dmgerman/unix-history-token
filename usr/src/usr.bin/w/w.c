@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.11 (Berkeley) %G%"
+literal|"@(#)w.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,12 +225,12 @@ index|[]
 init|=
 block|{
 block|{
-literal|"_avenrun"
+literal|"_nproc"
 block|}
 block|,
 define|#
 directive|define
-name|X_AVENRUN
+name|X_NPROC
 value|0
 block|{
 literal|"_boottime"
@@ -281,21 +281,13 @@ directive|define
 name|X_NSWAP
 value|6
 block|{
-literal|"_nproc"
-block|}
-block|,
-define|#
-directive|define
-name|X_NPROC
-value|7
-block|{
 literal|"_dmmin"
 block|}
 block|,
 define|#
 directive|define
 name|X_DMMIN
-value|8
+value|7
 block|{
 literal|"_dmmax"
 block|}
@@ -303,7 +295,7 @@ block|,
 define|#
 directive|define
 name|X_DMMAX
-value|9
+value|8
 block|{
 literal|""
 block|}
@@ -1368,38 +1360,30 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Print 1, 5, and 15 minute load averages. 		 * (Found by looking in kernel for avenrun). 		 */
+comment|/* 		 * Print 1, 5, and 15 minute load averages. 		 */
 name|printf
 argument_list|(
 literal|",  load average:"
 argument_list|)
 expr_stmt|;
-name|lseek
-argument_list|(
-name|kmem
-argument_list|,
 operator|(
-name|long
+name|void
 operator|)
-name|nl
-index|[
-name|X_AVENRUN
-index|]
-operator|.
-name|n_value
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|read
+name|getloadavg
 argument_list|(
-name|kmem
-argument_list|,
 name|avenrun
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|avenrun
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|avenrun
+index|[
+literal|0
+index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
