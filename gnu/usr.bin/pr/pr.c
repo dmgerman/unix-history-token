@@ -17,6 +17,52 @@ end_comment
 begin_escape
 end_escape
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_BROKETS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* We use<config.h> instead of "config.h" so that a compilation    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h    (which it would do because it found this file in $srcdir).  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1096,18 +1142,18 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|flag_help
+name|show_help
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If non-zero, print the version on standard error.  */
+comment|/* If non-zero, print the version on standard output then exit.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|flag_version
+name|show_version
 decl_stmt|;
 end_decl_stmt
 
@@ -1126,7 +1172,7 @@ block|,
 name|no_argument
 block|,
 operator|&
-name|flag_help
+name|show_help
 block|,
 literal|1
 block|}
@@ -1137,7 +1183,7 @@ block|,
 name|no_argument
 block|,
 operator|&
-name|flag_version
+name|show_version
 block|,
 literal|1
 block|}
@@ -1279,6 +1325,11 @@ expr_stmt|;
 name|file_names
 operator|=
 operator|(
+name|argc
+operator|>
+literal|1
+condition|?
+operator|(
 name|char
 operator|*
 operator|*
@@ -1297,6 +1348,9 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
+else|:
+name|NULL
+operator|)
 expr_stmt|;
 while|while
 condition|(
@@ -1369,7 +1423,9 @@ literal|"`+' requires a numeric argument"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|()
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* FIXME: use strtol */
@@ -1685,7 +1741,9 @@ name|s
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|()
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1719,20 +1777,20 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|()
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
 if|if
 condition|(
-name|flag_version
+name|show_version
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s\n"
 argument_list|,
 name|version_string
@@ -1746,10 +1804,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|flag_help
+name|show_help
 condition|)
 name|usage
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2025,7 +2085,9 @@ name|arg
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|()
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -5873,20 +5935,46 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|status
+parameter_list|)
+name|int
+name|status
+decl_stmt|;
 block|{
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [+PAGE] [-COLUMN] [-abcdfFmrtv] [-e[in-tab-char[in-tab-width]]]\n\        [-h header] [-i[out-tab-char[out-tab-width]]] [-l page-length]\n\        [-n[number-separator[digits]]] [-o left-margin]\n\        [-s[column-separator]] [-w page-width] [--help] [--version] [file...]\n"
+literal|"Try `%s --help' for more information.\n"
 argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\ Usage: %s [OPTION]... [FILE]...\n\ "
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\ \n\   +PAGE             begin printing with page PAGE\n\   -COLUMN           produce COLUMN-column output and print columns down\n\   -F, -f            simulate formfeed with newlines on output\n\   -a                print columns across rather than down\n\   -b                balance columns on the last page\n\   -c                use hat notation (^G) and octal backslash notation\n\   -d                double space the output\n\   -e[CHAR[WIDTH]]   expand input CHARs (TABs) to tab WIDTH (8)\n\   -h HEADER         use HEADER instead of filename in page headers\n\   -i[CHAR[WIDTH]]   replace spaces with CHARs (TABs) to tab WIDTH (8)\n\   -l PAGE_LENGTH    set the page length to PAGE_LENGTH (66) lines\n\   -m                print all files in parallel, one in each column\n\   -n[SEP[DIGITS]]   number lines, use DIGITS (5) digits, then SEP (TAB)\n\   -o MARGIN         offset each line with MARGIN spaces (do not affect -w)\n\   -r                inhibit warning when a file cannot be opened\n\   -s[SEP]           separate columns by character SEP (TAB)\n\   -t                inhibit 5-line page headers and trailers\n\   -v                use octal backslash notation\n\   -w PAGE_WIDTH     set page width to PAGE_WIDTH (72) columns\n\       --help        display this help and exit\n\       --version     output version information and exit\n\ \n\ -t implied by -l N when N< 10.  Without -s, columns are separated by\n\ spaces.  With no FILE, or when FILE is -, read standard input.\n\ "
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
-literal|2
+name|status
 argument_list|)
 expr_stmt|;
 block|}
