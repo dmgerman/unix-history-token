@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.24 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
 
 begin_comment
 comment|/*  * The vnode is the focus of all file activity in UNIX.  * There is a unique vnode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  */
@@ -1215,14 +1221,10 @@ name|long
 name|va_fileid
 decl_stmt|;
 comment|/* file id */
-name|u_long
-name|va_size
+name|quad
+name|va_qsize
 decl_stmt|;
-comment|/* file size in bytes (quad?) */
-name|u_long
-name|va_size1
-decl_stmt|;
-comment|/* reserved if not quad */
+comment|/* file size in bytes */
 name|long
 name|va_blocksize
 decl_stmt|;
@@ -1254,17 +1256,87 @@ name|dev_t
 name|va_rdev
 decl_stmt|;
 comment|/* device the special file represents */
-name|u_long
-name|va_bytes
+name|quad
+name|va_qbytes
 decl_stmt|;
 comment|/* bytes of disk space held by file */
-name|u_long
-name|va_bytes1
-decl_stmt|;
-comment|/* reserved if va_bytes not a quad */
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|va_size
+value|va_qsize.val[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_size_rsv
+value|va_qsize.val[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_bytes
+value|va_qbytes.val[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_bytes_rsv
+value|va_qbytes.val[1]
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|va_size
+value|va_qsize.val[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_size_rsv
+value|va_qsize.val[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_bytes
+value|va_qbytes.val[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_bytes_rsv
+value|va_qbytes.val[0]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  Modes. Some values same as Ixxx entries from inode.h for now  */
