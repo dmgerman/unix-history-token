@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.11 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,6 +426,8 @@ argument_list|,
 name|BTF_RDONLY
 argument_list|)
 expr_stmt|;
+name|slow
+label|:
 if|if
 condition|(
 operator|(
@@ -562,7 +564,7 @@ operator|-
 literal|1
 condition|)
 goto|goto
-name|err
+name|slow
 goto|;
 name|t
 operator|->
