@@ -840,7 +840,7 @@ if|if
 condition|(
 name|alpha_implver
 argument_list|()
-operator|==
+operator|>=
 name|ALPHA_IMPLVER_EV5
 operator|&&
 name|alpha_amask
@@ -882,7 +882,7 @@ if|if
 condition|(
 name|alpha_implver
 argument_list|()
-operator|==
+operator|>=
 name|ALPHA_IMPLVER_EV5
 operator|&&
 name|alpha_amask
