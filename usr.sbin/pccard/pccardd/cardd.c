@@ -1122,6 +1122,21 @@ block|}
 else|else
 block|{
 comment|/* otherwise, matching by strncmp() */
+if|if
+condition|(
+name|n
+operator|!=
+name|strlen
+argument_list|(
+name|cis
+argument_list|)
+condition|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
 return|return
 name|strncmp
 argument_list|(
