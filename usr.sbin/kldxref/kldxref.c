@@ -253,6 +253,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|xref_file
@@ -279,6 +280,20 @@ decl_stmt|,
 name|reccnt
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|maketempfile
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
