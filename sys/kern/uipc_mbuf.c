@@ -195,6 +195,22 @@ name|nmbufs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|m_mballoc_wid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|m_clalloc_wid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(

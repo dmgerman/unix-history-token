@@ -638,6 +638,97 @@ comment|/* expedited data  */
 end_comment
 
 begin_comment
+comment|/*  * Mbuf statistics.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mbstat
+block|{
+name|u_long
+name|m_mbufs
+decl_stmt|;
+comment|/* mbufs obtained from page pool */
+name|u_long
+name|m_clusters
+decl_stmt|;
+comment|/* clusters obtained from page pool */
+name|u_long
+name|m_spare
+decl_stmt|;
+comment|/* spare field */
+name|u_long
+name|m_clfree
+decl_stmt|;
+comment|/* free clusters */
+name|u_long
+name|m_drops
+decl_stmt|;
+comment|/* times failed to find space */
+name|u_long
+name|m_wait
+decl_stmt|;
+comment|/* times waited for space */
+name|u_long
+name|m_drain
+decl_stmt|;
+comment|/* times drained protocols for space */
+name|u_short
+name|m_mtypes
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* type specific mbuf allocations */
+name|u_long
+name|m_mcfail
+decl_stmt|;
+comment|/* times m_copym failed */
+name|u_long
+name|m_mpfail
+decl_stmt|;
+comment|/* times m_pullup failed */
+name|u_long
+name|m_msize
+decl_stmt|;
+comment|/* length of an mbuf */
+name|u_long
+name|m_mclbytes
+decl_stmt|;
+comment|/* length of an mbuf cluster */
+name|u_long
+name|m_minclsize
+decl_stmt|;
+comment|/* min length of data to allocate a cluster */
+name|u_long
+name|m_mlen
+decl_stmt|;
+comment|/* length of data in an mbuf */
+name|u_long
+name|m_mhlen
+decl_stmt|;
+comment|/* length of data in a header mbuf */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/* We'll need wakeup_one(). */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_comment
 comment|/* flags to m_get/MGET */
 end_comment
 
@@ -653,90 +744,6 @@ define|#
 directive|define
 name|M_WAIT
 value|0
-end_define
-
-begin_comment
-comment|/* mbuf and mbuf cluster wait count variables... */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|m_mballoc_wid
-init|=
-literal|0
-decl_stmt|,
-name|m_clalloc_wid
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|__inline
-name|void
-name|m_mballoc_wakeup
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|__inline
-name|void
-name|m_clalloc_wakeup
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* We'll need wakeup_one(). */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Identifying number passed to the m_mballoc_wait function, allowing  * us to determine that the call came from an MGETHDR and not an MGET --  * this way we are sure to run the MGETHDR macro when the call came from there.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MGETHDR_C
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MGET_C
-value|2
 end_define
 
 begin_comment
@@ -763,8 +770,40 @@ union|;
 end_union
 
 begin_comment
-comment|/*  * mbuf and mbuf cluster wakeup inline routines.  */
+comment|/* mbuf and mbuf cluster wait count variables */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|m_mballoc_wid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|m_clalloc_wid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Identifying number passed to the m_mballoc_wait function, allowing  * us to determine that the call came from an MGETHDR and not an MGET --  * this way we are sure to run the MGETHDR macro when the call came from there.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MGETHDR_C
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGET_C
+value|2
+end_define
 
 begin_comment
 comment|/*  * Wakeup the next instance -- if any -- of m_mballoc_wait() which  * is waiting for an mbuf to be freed. Make sure to decrement sleep count.  * XXX: If there is another free mbuf, this routine will be called [again]  * from the m_mballoc_wait routine in order to wake another sleep instance.  * Should be called at splimp()  */
@@ -1112,87 +1151,6 @@ name|l
 parameter_list|)
 value|m_copym((m), (o), (l), M_DONTWAIT)
 end_define
-
-begin_comment
-comment|/*  * Mbuf statistics.  */
-end_comment
-
-begin_struct
-struct|struct
-name|mbstat
-block|{
-name|u_long
-name|m_mbufs
-decl_stmt|;
-comment|/* mbufs obtained from page pool */
-name|u_long
-name|m_clusters
-decl_stmt|;
-comment|/* clusters obtained from page pool */
-name|u_long
-name|m_spare
-decl_stmt|;
-comment|/* spare field */
-name|u_long
-name|m_clfree
-decl_stmt|;
-comment|/* free clusters */
-name|u_long
-name|m_drops
-decl_stmt|;
-comment|/* times failed to find space */
-name|u_long
-name|m_wait
-decl_stmt|;
-comment|/* times waited for space */
-name|u_long
-name|m_drain
-decl_stmt|;
-comment|/* times drained protocols for space */
-name|u_short
-name|m_mtypes
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* type specific mbuf allocations */
-name|u_long
-name|m_mcfail
-decl_stmt|;
-comment|/* times m_copym failed */
-name|u_long
-name|m_mpfail
-decl_stmt|;
-comment|/* times m_pullup failed */
-name|u_long
-name|m_msize
-decl_stmt|;
-comment|/* length of an mbuf */
-name|u_long
-name|m_mclbytes
-decl_stmt|;
-comment|/* length of an mbuf cluster */
-name|u_long
-name|m_minclsize
-decl_stmt|;
-comment|/* min length of data to allocate a cluster */
-name|u_long
-name|m_mlen
-decl_stmt|;
-comment|/* length of data in an mbuf */
-name|u_long
-name|m_mhlen
-decl_stmt|;
-comment|/* length of data in a header mbuf */
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
