@@ -5532,6 +5532,10 @@ name|next
 expr_stmt|;
 block|}
 comment|/* 		 * Now decrement the wiring count for each region. If a region 		 * becomes completely unwired, unwire its physical pages and 		 * mappings. 		 */
+name|entry
+operator|=
+name|start_entry
+expr_stmt|;
 while|while
 condition|(
 operator|(
