@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1341,29 +1341,18 @@ name|defdev
 goto|;
 name|bootdev
 operator|=
-operator|(
+name|MAKEBOOTDEV
+argument_list|(
 name|majdev
-operator|<<
-name|B_TYPESHIFT
-operator|)
-operator||
-operator|(
+argument_list|,
+literal|0
+argument_list|,
 name|ctrl
-operator|<<
-name|B_CONTROLLERSHIFT
-operator|)
-operator||
-operator|(
+argument_list|,
 name|unit
-operator|<<
-name|B_UNITSHIFT
-operator|)
-operator||
-operator|(
+argument_list|,
 name|part
-operator|<<
-name|B_PARTITIONSHIFT
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
