@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memalloc.c,v 1.9 1998/05/18 06:43:57 charnier Exp $"
+literal|"$Id: memalloc.c,v 1.10 1998/09/06 21:13:09 tegge Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"mystring.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"expand.h"
 end_include
 
 begin_include

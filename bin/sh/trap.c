@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trap.c,v 1.14 1998/08/25 09:33:34 cracauer Exp $"
+literal|"$Id: trap.c,v 1.15 1998/09/08 13:16:52 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1377,9 +1377,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
 ifndef|#
 directive|ifndef
 name|BSD
@@ -1452,29 +1449,11 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/*  	 * If a trap is set, we need to make sure it is executed even 	 * when a childs blocks all signals. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NSIG
-condition|;
-name|i
-operator|++
-control|)
-block|{
 if|if
 condition|(
-name|signo
-operator|==
-name|i
-operator|&&
 name|trap
 index|[
-name|i
+name|signo
 index|]
 operator|!=
 name|NULL
@@ -1483,7 +1462,7 @@ operator|!
 operator|(
 name|trap
 index|[
-name|i
+name|signo
 index|]
 index|[
 literal|0
@@ -1493,7 +1472,7 @@ literal|':'
 operator|&&
 name|trap
 index|[
-name|i
+name|signo
 index|]
 index|[
 literal|1
@@ -1502,14 +1481,10 @@ operator|==
 literal|'\0'
 operator|)
 condition|)
-block|{
 name|breakwaitcmd
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-block|}
-block|}
 block|}
 end_block
 
