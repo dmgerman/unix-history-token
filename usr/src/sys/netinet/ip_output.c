@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ip_output.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ip_output.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1142,15 +1142,35 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
+call|(
+name|u_short
+call|)
+argument_list|(
 name|hlen
 operator|+
 name|firstlen
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
 name|ip_off
-operator||=
+operator|=
+name|htons
+argument_list|(
+call|(
+name|u_short
+call|)
+argument_list|(
+name|ip
+operator|->
+name|ip_off
+operator||
 name|IP_MF
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
