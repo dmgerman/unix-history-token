@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.21 (Berkeley) %G%"
+literal|"@(#)main.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,25 +91,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/inode.h>
+file|<ufs/fs.h>
 end_include
 
 begin_else
@@ -132,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_endif
@@ -143,7 +125,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
@@ -413,6 +395,10 @@ decl_stmt|,
 name|bflag
 init|=
 literal|0
+decl_stmt|,
+name|Tflag
+init|=
+literal|0
 decl_stmt|;
 name|float
 name|fetapes
@@ -426,8 +412,15 @@ name|c_date
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 operator|&
 operator|(
 name|spcl
@@ -517,6 +510,9 @@ literal|'w'
 argument_list|)
 expr_stmt|;
 comment|/* tell us only what has to be done */
+operator|(
+name|void
+operator|)
 name|exit
 argument_list|(
 literal|0
@@ -532,6 +528,9 @@ literal|'W'
 argument_list|)
 expr_stmt|;
 comment|/* tell us state of what is done */
+operator|(
+name|void
+operator|)
 name|exit
 argument_list|(
 literal|0
@@ -587,6 +586,9 @@ operator|<
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -649,6 +651,9 @@ operator|<
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -676,6 +681,69 @@ operator|*=
 literal|12
 operator|*
 literal|10
+expr_stmt|;
+continue|continue;
+case|case
+literal|'T'
+case|:
+comment|/* time of last dump */
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+break|break;
+name|spcl
+operator|.
+name|c_ddate
+operator|=
+name|unctime
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|spcl
+operator|.
+name|c_ddate
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"bad time \"%s\"\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|Exit
+argument_list|(
+name|X_ABORT
+argument_list|)
+expr_stmt|;
+block|}
+name|Tflag
+operator|++
+expr_stmt|;
+name|lastlevel
+operator|=
+literal|'?'
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
 expr_stmt|;
 continue|continue;
 case|case
@@ -707,6 +775,9 @@ operator|<
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -758,6 +829,9 @@ operator|<
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -845,6 +919,9 @@ operator|++
 expr_stmt|;
 continue|continue;
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -861,6 +938,9 @@ name|X_ABORT
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -884,6 +964,9 @@ operator|<
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -916,6 +999,9 @@ operator|>=
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -928,6 +1014,9 @@ condition|(
 name|argc
 operator|--
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -939,11 +1028,37 @@ name|argv
 operator|++
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|Exit
+argument_list|(
+name|X_ABORT
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Tflag
+operator|&&
+name|uflag
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"You cannot use the T and u flags together.\n"
 argument_list|)
 expr_stmt|;
 name|Exit
@@ -1062,6 +1177,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|exit
 argument_list|(
 name|X_ABORT
@@ -1069,6 +1187,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1076,6 +1197,9 @@ argument_list|,
 literal|"remote dump not enabled\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|exit
 argument_list|(
 name|X_ABORT
@@ -1084,6 +1208,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+operator|(
+name|void
+operator|)
 name|setuid
 argument_list|(
 name|getuid
@@ -1249,6 +1376,9 @@ operator|->
 name|fs_spec
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|spcl
@@ -1262,6 +1392,9 @@ argument_list|,
 name|NAMELEN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|spcl
@@ -1278,6 +1411,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|spcl
@@ -1289,6 +1425,9 @@ argument_list|,
 name|NAMELEN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|spcl
@@ -1301,6 +1440,9 @@ name|NAMELEN
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|spcl
@@ -1310,6 +1452,9 @@ argument_list|,
 literal|"none"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gethostname
 argument_list|(
 name|spcl
@@ -1333,6 +1478,11 @@ name|c_type
 operator|=
 name|TS_TAPE
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Tflag
+condition|)
 name|getdumptime
 argument_list|()
 expr_stmt|;
@@ -1465,12 +1615,16 @@ expr|struct
 name|fs
 operator|*
 operator|)
-name|buf
+name|sblock_buf
 expr_stmt|;
 name|bread
 argument_list|(
 name|SBOFF
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|sblock
 argument_list|,
 name|SBSIZE
@@ -1594,6 +1748,9 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|mapsize
 argument_list|,
 sizeof|sizeof
@@ -1610,6 +1767,9 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|mapsize
 argument_list|,
 sizeof|sizeof
@@ -1626,6 +1786,9 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|mapsize
 argument_list|,
 sizeof|sizeof
@@ -1875,17 +2038,32 @@ argument_list|,
 name|fetapes
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allocate tape buffer 	 */
+if|if
+condition|(
+operator|!
 name|alloctape
 argument_list|()
+condition|)
+name|quit
+argument_list|(
+literal|"can't allocate tape buffers - try a smaller blocking factor.\n"
+argument_list|)
 expr_stmt|;
-comment|/* Allocate tape buffer */
 name|startnewtape
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 operator|&
 operator|(
 name|tstart_writing
@@ -1978,6 +2156,9 @@ operator|!=
 name|IFDIR
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|dumpino
 argument_list|(
 name|dp
@@ -2063,6 +2244,9 @@ operator|==
 name|IFDIR
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|dumpino
 argument_list|(
 name|dp
@@ -2166,11 +2350,17 @@ argument_list|(
 literal|"Rewriting attempted as response to unknown signal.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -2179,6 +2369,9 @@ expr_stmt|;
 name|close_rewind
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|exit
 argument_list|(
 name|X_REWRITE
@@ -2350,6 +2543,9 @@ name|dp
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|rawbuf
@@ -2362,6 +2558,9 @@ name|dp
 operator|=
 literal|'/'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|rawbuf
@@ -2369,6 +2568,9 @@ argument_list|,
 literal|"/r"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|rawbuf
