@@ -5197,7 +5197,7 @@ argument_list|,
 name|PCN_EXTCTL2_FASTSPNDE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable burst read and write. Also set the no underflow 	 * bit. This will avoid transmit underruns in certain 	 * conditions while still providing decent performances. 	 */
+comment|/* 	 * Enable burst read and write. Also set the no underflow 	 * bit. This will avoid transmit underruns in certain 	 * conditions while still providing decent performance. 	 */
 name|PCN_BCR_SETBIT
 argument_list|(
 name|sc
