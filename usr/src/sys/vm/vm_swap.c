@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -340,8 +340,6 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 name|int
 name|sz
 decl_stmt|,
@@ -854,8 +852,6 @@ name|int
 name|index
 decl_stmt|;
 block|{
-name|USES_VOP_OPEN
-expr_stmt|;
 specifier|register
 name|struct
 name|swdevt
