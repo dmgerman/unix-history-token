@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.28	82/01/25	*/
+comment|/*	uipc_mbuf.c	1.29	82/02/08	*/
 end_comment
 
 begin_include
@@ -1555,6 +1555,10 @@ decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
+name|n
+operator|=
+name|m0
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -1591,10 +1595,6 @@ operator|->
 name|m_len
 operator|=
 literal|0
-expr_stmt|;
-name|n
-operator|=
-name|m0
 expr_stmt|;
 do|do
 block|{
@@ -1722,7 +1722,7 @@ name|bad
 label|:
 name|m_freem
 argument_list|(
-name|m0
+name|n
 argument_list|)
 expr_stmt|;
 return|return
