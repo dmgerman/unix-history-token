@@ -154,6 +154,19 @@ end_define
 begin_decl_stmt
 specifier|static
 name|void
+name|fake
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|usage
 name|__P
 argument_list|(
@@ -165,10 +178,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|fake
-parameter_list|()
-block|{}
+parameter_list|(
+name|unused
+parameter_list|)
+name|int
+name|unused
+name|__unused
+decl_stmt|;
+block|{
+comment|/* Do nothing. */
+block|}
 end_function
 
 begin_function
