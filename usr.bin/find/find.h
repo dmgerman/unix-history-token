@@ -33,14 +33,15 @@ begin_typedef
 typedef|typedef
 name|int
 name|exec_f
-name|__P
-typedef|((struct
+parameter_list|(
+name|struct
 name|_plandata
 modifier|*
-typedef|,
+parameter_list|,
 name|FTSENT
 modifier|*
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_comment

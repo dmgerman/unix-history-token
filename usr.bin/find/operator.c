@@ -76,37 +76,31 @@ directive|include
 file|"find.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|PLAN
 modifier|*
 name|yanknode
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|PLAN
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|PLAN
 modifier|*
 name|yankexpr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|PLAN
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * yanknode --  *	destructively removes the top from the plan  */

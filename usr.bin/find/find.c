@@ -106,28 +106,25 @@ directive|include
 file|"find.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|find_compare
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|FTSENT
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|s1
-operator|,
+parameter_list|,
 specifier|const
 name|FTSENT
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|s2
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * find_compare --  *	tell fts_open() how to order the traversal of the hierarchy.   *	This variant gives lexicographical order, i.e., alphabetical  *	order within each directory.  */
