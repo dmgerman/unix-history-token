@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: dec_kn20aa.c,v 1.38 1998/04/17 02:45:19 mjacob Exp $ */
+comment|/* $NetBSD: dec_2100_a50.c,v 1.39 1998/04/17 02:45:19 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -9,6 +9,10 @@ end_comment
 
 begin_comment
 comment|/*  * Additional Copyright (c) 1997 by Matthew Jacob for NASA/Ames Research Center  */
+end_comment
+
+begin_comment
+comment|/*  * Additional Copyright (c) 1998 by Andrew Gallatin for Duke University   */
 end_comment
 
 begin_include
@@ -80,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<alpha/pci/ciareg.h>
+file|<alpha/pci/apecsreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<alpha/pci/ciavar.h>
+file|<alpha/pci/apecsvar.h>
 end_include
 
 begin_include
@@ -130,7 +134,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|dec_kn20aa_init
+name|dec_2100_a50_init
 name|__P
 argument_list|(
 operator|(
@@ -143,7 +147,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|dec_kn20aa_cons_init
+name|dec_2100_a50_cons_init
 name|__P
 argument_list|(
 operator|(
@@ -156,11 +160,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|dec_kn20aa_intr_init
+name|dec_2100_a50_device_register
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|device
+operator|*
+operator|,
 name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -169,7 +178,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|dec_kn20aa_intr_map
+name|dec_2100_a50_intr_map
 name|__P
 argument_list|(
 operator|(
@@ -181,9 +190,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
-name|dec_kn20aa_intr_disable
+name|sio_intr_establish
 name|__P
 argument_list|(
 operator|(
@@ -194,13 +202,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
-name|dec_kn20aa_intr_enable
+name|sio_intr_disestablish
 name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sio_intr_setup
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -249,30 +268,48 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void dec_kn20aa_device_register __P((struct device *, void *));
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|const
 name|struct
 name|alpha_variation_table
-name|dec_kn20aa_variations
+name|dec_2100_a50_variations
 index|[]
 init|=
 block|{
 block|{
-literal|0
+name|SV_ST_AVANTI
 block|,
-literal|"AlphaStation 500 or 600 (KN20AA)"
+literal|"AlphaStation 400 4/233 (\"Avanti\")"
+block|}
+block|,
+block|{
+name|SV_ST_MUSTANG2_4_166
+block|,
+literal|"AlphaStation 200 4/166 (\"Mustang II\")"
+block|}
+block|,
+block|{
+name|SV_ST_MUSTANG2_4_233
+block|,
+literal|"AlphaStation 200 4/233 (\"Mustang II\")"
+block|}
+block|,
+block|{
+name|SV_ST_AVANTI_4_266
+block|,
+literal|"AlphaStation 250 4/266"
+block|}
+block|,
+block|{
+name|SV_ST_MUSTANG2_4_100
+block|,
+literal|"AlphaStation 200 4/100 (\"Mustang II\")"
+block|}
+block|,
+block|{
+name|SV_ST_AVANTI_4_233
+block|,
+literal|"AlphaStation 255/233"
 block|}
 block|,
 block|{
@@ -284,20 +321,9 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|comconsole
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX for forcing comconsole when srm serial console is used */
-end_comment
-
 begin_function
 name|void
-name|dec_kn20aa_init
+name|dec_2100_a50_init
 parameter_list|()
 block|{
 name|u_int64_t
@@ -307,7 +333,7 @@ name|platform
 operator|.
 name|family
 operator|=
-literal|"AlphaStation 500 or 600 (KN20AA)"
+literal|"AlphaStation 200/400 (\"Avanti\")"
 expr_stmt|;
 if|if
 condition|(
@@ -333,6 +359,19 @@ name|SV_ST_MASK
 expr_stmt|;
 if|if
 condition|(
+name|variation
+operator|==
+name|SV_ST_AVANTI_XXX
+condition|)
+block|{
+comment|/* XXX apparently the same? */
+name|variation
+operator|=
+name|SV_ST_AVANTI
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|platform
 operator|.
@@ -342,7 +381,7 @@ name|alpha_variation_name
 argument_list|(
 name|variation
 argument_list|,
-name|dec_kn20aa_variations
+name|dec_2100_a50_variations
 argument_list|)
 operator|)
 operator|==
@@ -360,45 +399,38 @@ name|platform
 operator|.
 name|iobus
 operator|=
-literal|"cia"
+literal|"apecs"
 expr_stmt|;
 name|platform
 operator|.
 name|cons_init
 operator|=
-name|dec_kn20aa_cons_init
-expr_stmt|;
-name|platform
-operator|.
-name|pci_intr_init
-operator|=
-name|dec_kn20aa_intr_init
+name|dec_2100_a50_cons_init
 expr_stmt|;
 name|platform
 operator|.
 name|pci_intr_map
 operator|=
-name|dec_kn20aa_intr_map
-expr_stmt|;
-name|platform
-operator|.
-name|pci_intr_disable
-operator|=
-name|dec_kn20aa_intr_disable
-expr_stmt|;
-name|platform
-operator|.
-name|pci_intr_enable
-operator|=
-name|dec_kn20aa_intr_enable
+name|dec_2100_a50_intr_map
 expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|comconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX for forcing comconsole when srm serial console is used */
+end_comment
+
 begin_function
 specifier|static
 name|void
-name|dec_kn20aa_cons_init
+name|dec_2100_a50_cons_init
 parameter_list|()
 block|{
 name|struct
@@ -406,7 +438,7 @@ name|ctb
 modifier|*
 name|ctb
 decl_stmt|;
-name|cia_init
+name|apecs_init
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -462,6 +494,7 @@ operator|/
 name|comcnrate
 argument_list|)
 expr_stmt|;
+comment|/* 			 * force a comconsole on com1 if the SRM has a serial console 			 */
 name|comconsole
 operator|=
 literal|0
@@ -489,7 +522,7 @@ comment|/* display console ... */
 comment|/* XXX */
 if|#
 directive|if
-name|NPCKBD
+name|NSC
 operator|>
 literal|0
 name|sccnattach
@@ -502,6 +535,8 @@ argument_list|(
 literal|"not configured to use display&& keyboard console"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|printf
@@ -532,138 +567,41 @@ name|ctb_term_type
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-unit|static void dec_kn20aa_device_register(dev, aux) 	struct device *dev; 	void *aux; { 	static int found, initted, scsiboot, netboot; 	static struct device *pcidev, *scsidev; 	struct bootdev_data *b = bootdev_data; 	struct device *parent = dev->dv_parent; 	struct cfdata *cf = dev->dv_cfdata; 	struct cfdriver *cd = cf->cf_driver;  	if (found) 		return;  	if (!initted) { 		scsiboot = (strcmp(b->protocol, "SCSI") == 0); 		netboot = (strcmp(b->protocol, "BOOTP") == 0);
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|printf("scsiboot = %d, netboot = %d\n", scsiboot, netboot);
-endif|#
-directive|endif
-end_endif
-
-begin_if
-unit|initted =1; 	}  	if (pcidev == NULL) { 		if (strcmp(cd->cd_name, "pci")) 			return; 		else { 			struct pcibus_attach_args *pba = aux;  			if ((b->slot / 1000) != pba->pba_bus) 				return; 	 			pcidev = dev;
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|printf("\npcidev = %s\n", pcidev->dv_xname);
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-unit|return; 		} 	}  	if (scsiboot&& (scsidev == NULL)) { 		if (parent != pcidev) 			return; 		else { 			struct pci_attach_args *pa = aux;  			if ((b->slot % 1000) != pa->pa_device) 				return;
-comment|/* XXX function? */
-end_comment
-
-begin_if
-unit|scsidev = dev;
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|printf("\nscsidev = %s\n", scsidev->dv_xname);
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-unit|return; 		} 	}  	if (scsiboot&& 	    (!strcmp(cd->cd_name, "sd") || 	     !strcmp(cd->cd_name, "st") || 	     !strcmp(cd->cd_name, "cd"))) { 		struct scsipibus_attach_args *sa = aux;  		if (parent->dv_parent != scsidev) 			return;  		if (b->unit / 100 != sa->sa_sc_link->scsipi_scsi.target) 			return;
-comment|/* XXX LUN! */
-end_comment
-
-begin_comment
-unit|switch (b->boot_dev_type) { 		case 0: 			if (strcmp(cd->cd_name, "sd")&& 			    strcmp(cd->cd_name, "cd")) 				return; 			break; 		case 1: 			if (strcmp(cd->cd_name, "st")) 				return; 			break; 		default: 			return; 		}
-comment|/* we've found it! */
-end_comment
-
-begin_if
-unit|booted_device = dev;
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|printf("\nbooted_device = %s\n", booted_device->dv_xname);
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-unit|found = 1; 	}  	if (netboot) { 		if (parent != pcidev) 			return; 		else { 			struct pci_attach_args *pa = aux;  			if ((b->slot % 1000) != pa->pa_device) 				return;
-comment|/* XXX function? */
-end_comment
-
-begin_if
-unit|booted_device = dev;
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|printf("\nbooted_device = %s\n", booted_device->dv_xname);
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|found = 1; 			return; 		} 	} }
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
-name|KN20AA_MAX_IRQ
-value|32
+name|SIO_PCIREG_PIRQ_RTCTRL
+value|0x60
 end_define
 
-begin_function
-name|void
-name|dec_kn20aa_intr_init
-parameter_list|()
-block|{
-comment|/*      * Enable ISA-PCI cascade interrupt.      */
-name|dec_kn20aa_intr_enable
-argument_list|(
-literal|31
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/* PIRQ0 Route Control */
+end_comment
 
 begin_function
 name|void
-name|dec_kn20aa_intr_map
+name|dec_2100_a50_intr_map
 parameter_list|(
 name|void
 modifier|*
 name|arg
 parameter_list|)
 block|{
+name|u_int8_t
+name|pirqline
+decl_stmt|;
+name|u_int32_t
+name|pirqreg
+decl_stmt|;
+name|int
+name|pirq
+init|=
+literal|0
+decl_stmt|;
+comment|/* gcc -Wuninitialized XXX */
 name|pcicfgregs
 modifier|*
 name|cfg
@@ -674,7 +612,39 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-comment|/*          * Slot->interrupt translation.  Appears to work, though it          * may not hold up forever.          *          * The DEC engineers who did this hardware obviously engaged          * in random drug testing.          */
+specifier|static
+name|int
+name|intr_setup_done
+init|=
+literal|0
+decl_stmt|;
+comment|/*          * Slot->interrupt translation.  Taken from NetBSD           */
+if|if
+condition|(
+name|cfg
+operator|->
+name|intpin
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|cfg
+operator|->
+name|intpin
+operator|>
+literal|4
+condition|)
+name|panic
+argument_list|(
+literal|"dec_2100_a50_intr_map: bad intpin %d"
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cfg
@@ -683,202 +653,228 @@ name|slot
 condition|)
 block|{
 case|case
-literal|11
-case|:
-case|case
-literal|12
-case|:
-name|cfg
-operator|->
-name|intline
-operator|=
-operator|(
-operator|(
-name|cfg
-operator|->
-name|slot
-operator|-
-literal|11
-operator|)
-operator|+
-literal|0
-operator|)
-operator|*
-literal|4
-expr_stmt|;
-break|break;
-case|case
-literal|7
-case|:
-name|cfg
-operator|->
-name|intline
-operator|=
-literal|8
-expr_stmt|;
-break|break;
-case|case
-literal|9
-case|:
-name|cfg
-operator|->
-name|intline
-operator|=
-literal|12
-expr_stmt|;
-break|break;
-case|case
 literal|6
 case|:
-comment|/* 21040 on AlphaStation 500 */
-name|cfg
-operator|->
-name|intline
+comment|/*  NCR SCSI */
+name|pirq
 operator|=
-literal|13
+literal|3
 expr_stmt|;
 break|break;
 case|case
-literal|8
+literal|11
 case|:
-name|cfg
-operator|->
-name|intline
-operator|=
-literal|16
-expr_stmt|;
-break|break;
+comment|/* slot 1 */
 case|case
-literal|10
+literal|14
 case|:
-comment|/* 8275EB on AlphaStation 500 */
-return|return;
-default|default:
-if|if
+comment|/* slot 3 */
+switch|switch
 condition|(
-operator|!
 name|cfg
 operator|->
-name|bus
+name|intpin
 condition|)
 block|{
+case|case
+literal|1
+case|:
+case|case
+literal|4
+case|:
+name|pirq
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|pirq
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|pirq
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"dec_2100_a50_intr_map bogus PCI pin %d\n"
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|12
+case|:
+comment|/* slot 2 */
+switch|switch
+condition|(
+name|cfg
+operator|->
+name|intpin
+condition|)
+block|{
+case|case
+literal|1
+case|:
+case|case
+literal|4
+case|:
+name|pirq
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|pirq
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|pirq
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"dec_2100_a50_intr_map bogus PCI pin %d\n"
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+break|break;
+case|case
+literal|13
+case|:
+comment|/* slot 3 */
+switch|switch
+condition|(
+name|cfg
+operator|->
+name|intpin
+condition|)
+block|{
+case|case
+literal|1
+case|:
+case|case
+literal|4
+case|:
+name|pirq
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|pirq
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|pirq
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+break|break;
+default|default:
 name|printf
 argument_list|(
-literal|"dec_kn20aa_intr_map: weird slot %d\n"
+literal|"dec_2100_a50_intr_map: weird slot %d\n"
 argument_list|,
 name|cfg
 operator|->
 name|slot
 argument_list|)
 expr_stmt|;
-return|return;
+comment|/*                return;*/
 block|}
-else|else
-block|{
-name|cfg
-operator|->
-name|intline
+comment|/*  	 *  read the SIO IRQ routing register to determine where the 	 *  interrupt will actually be routed.  Thank you, NetBSD 	 */
+name|pirqreg
 operator|=
-name|cfg
-operator|->
-name|slot
+name|chipset
+operator|.
+name|cfgreadl
+argument_list|(
+literal|0
+argument_list|,
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+name|SIO_PCIREG_PIRQ_RTCTRL
+argument_list|)
 expr_stmt|;
-block|}
-block|}
-name|cfg
-operator|->
-name|intline
-operator|+=
-name|cfg
-operator|->
-name|bus
+name|pirqline
+operator|=
+operator|(
+name|pirqreg
+operator|>>
+operator|(
+name|pirq
 operator|*
-literal|16
+literal|8
+operator|)
+operator|)
+operator|&
+literal|0xff
 expr_stmt|;
 if|if
 condition|(
-name|cfg
-operator|->
-name|intline
-operator|>
-name|KN20AA_MAX_IRQ
+operator|(
+name|pirqline
+operator|&
+literal|0x80
+operator|)
+operator|!=
+literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"dec_kn20aa_intr_map: cfg->intline too large (%d)\n"
+literal|"bad pirqline %d"
 argument_list|,
+name|pirqline
+argument_list|)
+expr_stmt|;
+name|pirqline
+operator|&=
+literal|0xf
+expr_stmt|;
 name|cfg
 operator|->
 name|intline
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|dec_kn20aa_intr_enable
-parameter_list|(
-name|irq
-parameter_list|)
-name|int
-name|irq
-decl_stmt|;
-block|{
-comment|/*          * From disassembling small bits of the OSF/1 kernel:          * the following appears to enable a given interrupt request.          * "blech."  I'd give valuable body parts for better docs or          * for a good decompiler.          */
-name|alpha_mb
-argument_list|()
-expr_stmt|;
-name|REGVAL
-argument_list|(
-literal|0x8780000000L
-operator|+
-literal|0x40L
-argument_list|)
-operator||=
-operator|(
-literal|1
-operator|<<
-name|irq
-operator|)
-expr_stmt|;
-comment|/* XXX */
-name|alpha_mb
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|dec_kn20aa_intr_disable
-parameter_list|(
-name|irq
-parameter_list|)
-name|int
-name|irq
-decl_stmt|;
-block|{
-name|alpha_mb
-argument_list|()
-expr_stmt|;
-name|REGVAL
-argument_list|(
-literal|0x8780000000L
-operator|+
-literal|0x40L
-argument_list|)
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-name|irq
-operator|)
-expr_stmt|;
-comment|/* XXX */
-name|alpha_mb
-argument_list|()
+operator|=
+name|pirqline
 expr_stmt|;
 block|}
 end_function

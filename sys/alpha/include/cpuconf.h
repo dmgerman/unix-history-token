@@ -146,6 +146,17 @@ argument_list|)
 expr_stmt|;
 name|void
 argument_list|(
+argument|*pci_intr_init
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
 argument|*pci_intr_map
 argument_list|)
 name|__P

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: interrupt.c,v 1.3 1998/07/05 12:22:56 dfr Exp $ */
+comment|/* $Id: interrupt.c,v 1.4 1998/07/12 16:09:27 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -208,7 +208,7 @@ name|p_addr
 operator|+
 literal|1024
 condition|)
-name|printf
+name|panic
 argument_list|(
 literal|"possible stack overflow\n"
 argument_list|)
@@ -1110,7 +1110,12 @@ begin_function
 name|void
 name|alpha_dispatch_intr
 parameter_list|(
-name|int
+name|void
+modifier|*
+name|frame
+parameter_list|,
+name|unsigned
+name|long
 name|vector
 parameter_list|)
 block|{

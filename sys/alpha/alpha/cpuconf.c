@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: cpuconf.c,v 1.1 1998/06/10 10:52:18 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -371,6 +371,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEC_ST550
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|st550_init
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|st550_init
+value|platform_not_configured
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|cpuinit
@@ -576,12 +612,14 @@ literal|"???"
 argument_list|)
 block|,
 comment|/* 29: ??? */
-name|cpu_notsupp
+name|cpu_init
 argument_list|(
-literal|"???"
+name|st550_init
+argument_list|,
+literal|"DEC_ST550"
 argument_list|)
 block|,
-comment|/* 30: ??? */
+comment|/* 30: ST_DEC_550 */
 name|cpu_notsupp
 argument_list|(
 literal|"???"
@@ -710,7 +748,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"NetBSD does not yet support system type %d (%s).\n"
+literal|"FreeBSD does not yet support system type %d (%s).\n"
 argument_list|,
 name|cputype
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: dec_eb164.c,v 1.2 1998/07/12 16:07:43 dfr Exp $ */
+comment|/* $Id: dec_eb164.c,v 1.3 1998/07/22 08:18:34 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<alpha/pci/ciavar.h>
 end_include
 
 begin_include
@@ -128,6 +134,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
+name|void
+name|eb164_intr_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|eb164_intr_enable
@@ -148,6 +164,49 @@ name|irq
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|siocnattach
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|siogdbattach
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sccnattach
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -194,6 +253,12 @@ operator|.
 name|cons_init
 operator|=
 name|dec_eb164_cons_init
+expr_stmt|;
+name|platform
+operator|.
+name|pci_intr_init
+operator|=
+name|eb164_intr_init
 expr_stmt|;
 name|platform
 operator|.
@@ -351,6 +416,21 @@ name|ctb_term_type
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|eb164_intr_init
+parameter_list|()
+block|{
+comment|/*      * Enable ISA-PCI cascade interrupt.      */
+name|eb164_intr_enable
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

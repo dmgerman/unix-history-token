@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cia.c,v 1.4 1998/07/31 09:17:51 dfr Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cia.c,v 1.5 1998/08/07 08:18:44 dfr Exp $  */
 end_comment
 
 begin_include
@@ -104,67 +104,14 @@ name|cia_hae_mem
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|eb164_intr_enable
-parameter_list|(
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|eb164_intr_disable
-parameter_list|(
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|cia_intr
-parameter_list|(
-name|void
-modifier|*
-name|frame
-parameter_list|,
-name|u_long
-name|vector
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|cia_softc
 block|{
-name|vm_offset_t
-name|dmem_base
+name|int
+name|junk
 decl_stmt|;
-comment|/* dense memory */
-name|vm_offset_t
-name|smem_base
-decl_stmt|;
-comment|/* sparse memory */
-name|vm_offset_t
-name|io_base
-decl_stmt|;
-comment|/* dense i/o */
-name|vm_offset_t
-name|cfg0_base
-decl_stmt|;
-comment|/* dense pci0 config */
-name|vm_offset_t
-name|cfg1_base
-decl_stmt|;
-comment|/* dense pci1 config */
+comment|/* no softc */
 block|}
 struct|;
 end_struct
@@ -1739,7 +1686,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|type val = ~0;							\ 	int ipl = 0;							\ 	u_int32_t old_cfg = 0;						\ 	struct cia_softc* sc = CIA_SOFTC(cia0);				\ 	vm_offset_t off = CIA_SWIZ_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(sc->cfg0_base, off);	\ 	alpha_mb();							\ 	CIA_TYPE1_SETUP(b,ipl,old_cfg);					\ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			\ 		val = SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv));	\ 	}								\         CIA_TYPE1_TEARDOWN(b,ipl,old_cfg);				\ 	return val;
+value|type val = ~0;							\ 	int ipl = 0;							\ 	u_int32_t old_cfg = 0;						\ 	vm_offset_t off = CIA_SWIZ_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(CIA_PCI_CONF, off);	\ 	alpha_mb();							\ 	CIA_TYPE1_SETUP(b,ipl,old_cfg);					\ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			\ 		val = SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv));	\ 	}								\         CIA_TYPE1_TEARDOWN(b,ipl,old_cfg);				\ 	return val;
 end_define
 
 begin_define
@@ -1762,7 +1709,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|int ipl = 0;							\ 	u_int32_t old_cfg = 0;						\ 	struct cia_softc* sc = CIA_SOFTC(cia0);				\ 	vm_offset_t off = CIA_SWIZ_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(sc->cfg0_base, off);	\ 	alpha_mb();							\ 	CIA_TYPE1_SETUP(b,ipl,old_cfg);					\ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			\                 SPARSE_WRITE(kv, SPARSE_##width##_INSERT(off, data));	\ 		alpha_wmb();						\ 	}								\         CIA_TYPE1_TEARDOWN(b,ipl,old_cfg);				\ 	return;
+value|int ipl = 0;							\ 	u_int32_t old_cfg = 0;						\ 	vm_offset_t off = CIA_SWIZ_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(CIA_PCI_CONF, off);	\ 	alpha_mb();							\ 	CIA_TYPE1_SETUP(b,ipl,old_cfg);					\ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			\                 SPARSE_WRITE(kv, SPARSE_##width##_INSERT(off, data));	\ 		alpha_wmb();						\ 	}								\         CIA_TYPE1_TEARDOWN(b,ipl,old_cfg);				\ 	return;
 end_define
 
 begin_function
@@ -2174,6 +2121,24 @@ argument_list|(
 name|CIA_CSR_HAE_MEM
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|chipset = cia_swiz_chipset;
+comment|/* XXX */
+endif|#
+directive|endif
+if|if
+condition|(
+name|platform
+operator|.
+name|pci_intr_init
+condition|)
+name|platform
+operator|.
+name|pci_intr_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2246,90 +2211,21 @@ argument_list|()
 expr_stmt|;
 name|chipset
 operator|.
-name|bridge
+name|intrdev
 operator|=
 name|dev
 expr_stmt|;
 if|if
 condition|(
-name|alpha_amask
-argument_list|(
-name|ALPHA_AMASK_BWX
-argument_list|)
-operator|==
-literal|0
+operator|!
+name|platform
+operator|.
+name|iointr
 condition|)
-block|{
-name|sc
-operator|->
-name|dmem_base
-operator|=
-name|CIA_EV56_BWMEM
-expr_stmt|;
-name|sc
-operator|->
-name|smem_base
-operator|=
-name|CIA_PCI_SMEM1
-expr_stmt|;
-name|sc
-operator|->
-name|io_base
-operator|=
-name|CIA_EV56_BWIO
-expr_stmt|;
-name|sc
-operator|->
-name|cfg0_base
-operator|=
-name|CIA_EV56_BWCONF0
-expr_stmt|;
-name|sc
-operator|->
-name|cfg1_base
-operator|=
-name|CIA_EV56_BWCONF1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sc
-operator|->
-name|dmem_base
-operator|=
-name|CIA_PCI_DENSE
-expr_stmt|;
-name|sc
-operator|->
-name|smem_base
-operator|=
-name|CIA_PCI_SMEM1
-expr_stmt|;
-name|sc
-operator|->
-name|io_base
-operator|=
-name|CIA_PCI_SIO1
-expr_stmt|;
-name|sc
-operator|->
-name|cfg0_base
-operator|=
-name|KV
-argument_list|(
-name|CIA_PCI_CONF
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|cfg1_base
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+comment|/* XXX */
 name|set_iointr
 argument_list|(
-name|cia_intr
+name|alpha_dispatch_intr
 argument_list|)
 expr_stmt|;
 name|bus_generic_attach
@@ -2370,7 +2266,13 @@ block|{
 return|return
 name|alpha_create_intr
 argument_list|(
+literal|0x900
+operator|+
+operator|(
 name|irq
+operator|<<
+literal|4
+operator|)
 argument_list|,
 name|intr
 argument_list|,
@@ -2420,15 +2322,7 @@ operator|!
 name|error
 condition|)
 block|{
-if|if
-condition|(
-name|i
-operator|->
-name|vector
-operator|>
-literal|0x900
-condition|)
-comment|/* PCI interrupt */
+comment|/* Enable PCI interrupt */
 name|platform
 operator|.
 name|pci_intr_enable
@@ -2444,24 +2338,6 @@ operator|>>
 literal|4
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|i
-operator|->
-name|vector
-operator|>
-literal|0x800
-condition|)
-comment|/* ISA interrupt chained to PCI interrupt 4 */
-name|platform
-operator|.
-name|pci_intr_enable
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 block|}
 name|splx
 argument_list|(
@@ -2471,27 +2347,6 @@ expr_stmt|;
 return|return
 name|error
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|cia_intr
-parameter_list|(
-name|void
-modifier|*
-name|frame
-parameter_list|,
-name|u_long
-name|vector
-parameter_list|)
-block|{
-name|alpha_dispatch_intr
-argument_list|(
-name|vector
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

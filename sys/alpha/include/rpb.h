@@ -370,6 +370,129 @@ directive|define
 name|SV_ST_AVANTI_4_233
 value|0x0000a800
 comment|/* AlphaStation 255/233 */
+define|#
+directive|define
+name|SV_ST_KN20AA
+value|0x00000400
+comment|/* AlphaStation 500/600 */
+comment|/*  * System types for the AXPvme Family  */
+define|#
+directive|define
+name|SV_ST_AXPVME_64
+value|0x00000000
+comment|/* 21068, 64MHz */
+define|#
+directive|define
+name|SV_ST_AXPVME_160
+value|0x00000400
+comment|/* 21066, 160MHz */
+define|#
+directive|define
+name|SV_ST_AXPVME_100
+value|0x00000c00
+comment|/* 21066A, 99MHz */
+define|#
+directive|define
+name|SV_ST_AXPVME_230
+value|0x00001000
+comment|/* 21066A, 231MHz */
+define|#
+directive|define
+name|SV_ST_AXPVME_66
+value|0x00001400
+comment|/* 21066A, 66MHz */
+define|#
+directive|define
+name|SV_ST_AXPVME_166
+value|0x00001800
+comment|/* 21066A, 165MHz */
+define|#
+directive|define
+name|SV_ST_AXPVME_264
+value|0x00001c00
+comment|/* 21066A, 264MHz */
+comment|/*  * System types for the EB164 Family  */
+define|#
+directive|define
+name|SV_ST_EB164_266
+value|0x00000400
+comment|/* EB164, 266MHz */
+define|#
+directive|define
+name|SV_ST_EB164_300
+value|0x00000800
+comment|/* EB164, 300MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164_366
+value|0x00000c00
+comment|/* AlphaPC164, 366MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164_400
+value|0x00001000
+comment|/* AlphaPC164, 400MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164_433
+value|0x00001400
+comment|/* AlphaPC164, 433MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164_466
+value|0x00001800
+comment|/* AlphaPC164, 466MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164_500
+value|0x00001c00
+comment|/* AlphaPC164, 500MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164LX_400
+value|0x00002000
+comment|/* AlphaPC164LX, 400MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164LX_466
+value|0x00002400
+comment|/* AlphaPC164LX, 466MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164LX_533
+value|0x00002800
+comment|/* AlphaPC164LX, 533MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164LX_600
+value|0x00002c00
+comment|/* AlphaPC164LX, 600MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164SX_400
+value|0x00003000
+comment|/* AlphaPC164SX, 400MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164SX_466
+value|0x00003400
+comment|/* AlphaPC164SX, 433MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164SX_533
+value|0x00003800
+comment|/* AlphaPC164SX, 533MHz */
+define|#
+directive|define
+name|SV_ST_ALPHAPC164SX_600
+value|0x00003c00
+comment|/* AlphaPC164SX, 600MHz */
+comment|/*  * System types for the Digital Personal Workstation (Miata) Family  * XXX These are not very complete!  */
+define|#
+directive|define
+name|SV_ST_MIATA_1_5
+value|0x00004c00
+comment|/* Miata 1.5 */
 name|u_int64_t
 name|rpb_variation
 decl_stmt|;
