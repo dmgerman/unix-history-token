@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *
 end_comment
 
 begin_comment
-comment|/*  * 386 Trap and System call handling  */
+comment|/*  * AMD64 Trap and System call handling  */
 end_comment
 
 begin_include
@@ -698,15 +698,14 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We shouldn't enable interrupts while holding a 			 * spin lock. 			 */
+comment|/* 			 * We shouldn't enable interrupts while in a critical 			 * section. 			 */
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|spinlocks
-argument_list|)
+name|td
+operator|->
+name|td_critnest
 operator|==
-name|NULL
+literal|0
 condition|)
 name|enable_intr
 argument_list|()
@@ -726,15 +725,14 @@ operator|==
 name|T_PAGEFLT
 condition|)
 block|{
-comment|/* 		 * If we get a page fault while holding a spin lock, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
+comment|/* 		 * If we get a page fault while in a critical section, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|spinlocks
-argument_list|)
-operator|!=
-name|NULL
+name|td
+operator|->
+name|td_critnest
+operator|==
+literal|0
 condition|)
 name|trap_fatal
 argument_list|(
