@@ -52,6 +52,14 @@ name|p_inf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|StartDir
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Local prototypes  */
 end_comment
@@ -692,6 +700,10 @@ name|fname
 operator|=
 name|dialog_fselect
 argument_list|(
+name|StartDir
+condition|?
+name|StartDir
+else|:
 literal|"."
 argument_list|,
 literal|"*.tgz"
@@ -817,6 +829,10 @@ name|fname
 operator|=
 name|dialog_fselect
 argument_list|(
+name|StartDir
+condition|?
+name|StartDir
+else|:
 literal|"."
 argument_list|,
 literal|"*.tgz"
@@ -885,6 +901,10 @@ if|if
 condition|(
 name|dialog_dselect
 argument_list|(
+name|StartDir
+condition|?
+name|StartDir
+else|:
 literal|"."
 argument_list|,
 literal|"*.tgz"
@@ -1210,6 +1230,10 @@ comment|/* now build a list of the packages in the chosen directory */
 comment|/* and display them in a list */
 name|get_dir
 argument_list|(
+name|StartDir
+condition|?
+name|StartDir
+else|:
 literal|"."
 argument_list|,
 literal|"*.tgz"

@@ -22,6 +22,13 @@ name|p_inf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|StartDir
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Main  */
 end_comment
@@ -30,7 +37,13 @@ begin_function
 name|void
 name|main
 parameter_list|(
-name|void
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
 parameter_list|)
 block|{
 name|init_dialog
@@ -43,6 +56,24 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Initialize p_inf */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+name|StartDir
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
+else|else
+name|StartDir
+operator|=
+name|NULL
+expr_stmt|;
 name|get_pkginfo
 argument_list|()
 expr_stmt|;
