@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/types.h>
+file|<sys/types.h>
 end_include
 
 begin_comment
