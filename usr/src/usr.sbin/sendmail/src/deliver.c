@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.76 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.77 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6842,6 +6842,26 @@ argument_list|,
 name|ctladdr
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"giveresponse: stat=%d, e->e_message=%s\n"
+argument_list|,
+name|stat
+argument_list|,
+name|e
+operator|->
+name|e_message
 argument_list|)
 expr_stmt|;
 if|if

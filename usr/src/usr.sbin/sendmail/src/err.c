@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.24 (Berkeley) %G%"
+literal|"@(#)err.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,22 @@ else|else
 name|ExitStat
 operator|=
 name|EX_OSERR
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|54
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"syserr: ExitStat = %d\n"
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#

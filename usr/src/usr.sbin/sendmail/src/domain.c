@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.17 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.18 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.17 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.18 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2474,14 +2474,55 @@ operator|>
 name|MAXCNAMEDEPTH
 condition|)
 block|{
-name|syserr
+comment|/*XXX should notify postmaster XXX*/
+name|message
 argument_list|(
 literal|"DNS failure: CNAME loop for %s"
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-continue|continue;
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|)
+block|{
+name|char
+name|ebuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|ebuf
+argument_list|,
+literal|"Deferred: DNS failure: CNAME loop for %s"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|ebuf
+argument_list|)
+expr_stmt|;
+block|}
+name|h_errno
+operator|=
+name|NO_RECOVERY
+expr_stmt|;
+return|return
+name|FALSE
+return|;
 block|}
 comment|/* value points at name */
 if|if
