@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c	1.10 (Berkeley) %G%"
+literal|"@(#)scanner.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -367,7 +367,7 @@ literal|0
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Alias loop (maximum %d deep).\n"
+literal|"alias loop (maximum %d deep)"
 argument_list|,
 name|MAXDEPTH
 argument_list|)
