@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)display.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines to implement the higher level display  * driver routines  */
+comment|/* @(#)display.c	1.3	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines to implement the higher level display  * driver routines  */
 end_comment
 
 begin_include
@@ -226,6 +226,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|POLYGON
+case|:
+case|case
 name|VECTOR
 case|:
 name|p1
@@ -445,6 +448,9 @@ name|eraseany
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|POLYGON
+case|:
 case|case
 name|VECTOR
 case|:

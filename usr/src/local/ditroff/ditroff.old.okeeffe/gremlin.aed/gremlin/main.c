@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)main.c	1.5	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
+comment|/* @(#)main.c	1.6	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_comment
@@ -436,7 +436,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	1.5	(Berkeley)	%G%"
+literal|"@(#)main.c	1.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,6 +1202,9 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|map
 operator|=
 name|fopen
@@ -1210,7 +1213,18 @@ name|GMapFile
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"can't open color map"
+argument_list|)
 expr_stmt|;
+block|}
+else|else
 for|for
 control|(
 name|i
@@ -1249,7 +1263,6 @@ operator|&
 literal|0377
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* Open the display, and call all of the initialization routines.      * Initialize all of the globals defined in this file.      */
 name|type
 operator|=

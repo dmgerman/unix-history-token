@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)gremlin.h	1.2	%G%  *  *  * This file contains standard definitions used by the gremlin program.  *  * (modified from software written by John Ousterhout for the caesar  * program)  */
+comment|/* @(#)gremlin.h	1.3	%G%  *  *  * This file contains standard definitions used by the gremlin program.  *  * (modified from software written by John Ousterhout for the caesar  * program)  */
 end_comment
 
 begin_include
@@ -195,6 +195,13 @@ define|#
 directive|define
 name|CURVE
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLYGON
+value|6
 end_define
 
 begin_define
