@@ -393,7 +393,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.12.2.37 2002/12/06 11:40:26 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.12.2.40 2004/05/12 23:21:55 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5833,6 +5833,20 @@ expr|\
 operator|(
 name|defined
 argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|501113
+operator|)
+operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
 name|OpenBSD
 argument_list|)
 operator|&&
@@ -6314,6 +6328,8 @@ name|ip6_dst
 expr_stmt|;
 name|plen
 operator|=
+name|hl
+operator|+
 name|ntohs
 argument_list|(
 name|ip6
@@ -7308,23 +7324,14 @@ name|sprintf
 argument_list|(
 name|t
 argument_list|,
-literal|" frag %s%s%hu@%hu"
+literal|" (frag %d:%hu@%hu%s%s)"
 argument_list|,
-name|ipoff
-operator|&
-name|IP_MF
-condition|?
-literal|"+"
-else|:
-literal|""
-argument_list|,
-name|ipoff
-operator|&
-name|IP_DF
-condition|?
-literal|"-"
-else|:
-literal|""
+name|ntohs
+argument_list|(
+name|ipc
+operator|->
+name|ip_id
+argument_list|)
 argument_list|,
 name|i
 operator|-
@@ -7343,6 +7350,22 @@ name|IP_OFFMASK
 operator|)
 operator|<<
 literal|3
+argument_list|,
+name|ipoff
+operator|&
+name|IP_MF
+condition|?
+literal|"+"
+else|:
+literal|""
+argument_list|,
+name|ipoff
+operator|&
+name|IP_DF
+condition|?
+literal|"-"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -7422,7 +7445,26 @@ name|sprintf
 argument_list|(
 name|t
 argument_list|,
-literal|" frag %s%s%hu@%hu"
+literal|" (frag %d:%hu@%hu%s%s)"
+argument_list|,
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_id
+argument_list|)
+argument_list|,
+name|plen
+operator|-
+name|hl
+argument_list|,
+operator|(
+name|off
+operator|&
+name|IP_OFFMASK
+operator|)
+operator|<<
+literal|3
 argument_list|,
 name|ipoff
 operator|&
@@ -7439,18 +7481,6 @@ condition|?
 literal|"-"
 else|:
 literal|""
-argument_list|,
-name|plen
-operator|-
-name|hl
-argument_list|,
-operator|(
-name|off
-operator|&
-name|IP_OFFMASK
-operator|)
-operator|<<
-literal|3
 argument_list|)
 expr_stmt|;
 block|}

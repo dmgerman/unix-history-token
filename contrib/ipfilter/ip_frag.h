@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.7 2002/07/06 14:17:51 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.8 2003/06/11 22:28:16 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -241,6 +241,20 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|ipfr_forget
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipfr_forgetnat
 name|__P
 argument_list|(
 operator|(

@@ -207,8 +207,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Per-interface router version information is kept in this list.  * This information should be part of the ifnet structure but we don't wish  * to change that - as it might break a number of things  */

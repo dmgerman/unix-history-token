@@ -243,7 +243,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_ef.c,v 2.2.2.4 2002/12/06 11:40:25 darrenr Exp $"
+literal|"@(#)$Id: ipft_ef.c,v 2.2.2.5 2003/05/19 12:02:35 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,7 +598,7 @@ name|sscanf
 argument_list|(
 name|lbuf
 argument_list|,
-literal|"%s %s %s %s %s %s"
+literal|"%7s %7s %15s %15s %15s %15s"
 argument_list|,
 name|len
 argument_list|,
@@ -621,7 +621,7 @@ name|sscanf
 argument_list|(
 name|lbuf
 argument_list|,
-literal|"%s %s %s %s %s %s %s"
+literal|"%7s %7s %7s %15s %15s %15s %15s"
 argument_list|,
 name|time
 argument_list|,

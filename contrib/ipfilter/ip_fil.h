@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.34 2002/10/01 15:23:37 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.35 2003/06/07 11:56:02 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -821,7 +821,8 @@ comment|/* IP packet id field */
 name|u_int
 name|fin_misc
 decl_stmt|;
-name|void
+name|mb_t
+modifier|*
 modifier|*
 name|fin_mp
 decl_stmt|;
@@ -4357,7 +4358,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|fr_makefrip
 name|__P
 argument_list|(

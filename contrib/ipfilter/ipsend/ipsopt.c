@@ -152,7 +152,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsopt.c,v 2.1.4.4 2002/12/06 11:40:35 darrenr Exp $"
+literal|"@(#)$Id: ipsopt.c,v 2.1.4.5 2004/04/10 11:50:52 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,6 +582,23 @@ name|io
 operator|->
 name|on_siz
 expr_stmt|;
+if|if
+condition|(
+name|io
+operator|->
+name|on_value
+operator|==
+name|IPOPT_TS
+condition|)
+operator|*
+name|op
+operator|++
+operator|=
+name|IPOPT_MINOFF
+operator|+
+literal|1
+expr_stmt|;
+else|else
 operator|*
 name|op
 operator|++
