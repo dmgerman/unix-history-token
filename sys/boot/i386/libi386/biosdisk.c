@@ -346,6 +346,9 @@ parameter_list|,
 name|char
 modifier|*
 name|prefix
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -360,12 +363,15 @@ name|open_disk
 modifier|*
 name|od
 parameter_list|,
-name|int
+name|daddr_t
 name|offset
 parameter_list|,
 name|char
 modifier|*
 name|prefix
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -398,7 +404,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -427,7 +433,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -498,6 +504,8 @@ block|,
 name|noioctl
 block|,
 name|bd_print
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -913,6 +921,9 @@ literal|0xff
 operator|)
 operator|>
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|bd
 operator|->
 name|bd_unit
@@ -1006,11 +1017,13 @@ name|BD_MODEEDD1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|v86
 operator|.
 name|eax
 operator|&
 literal|0xff00
+operator|)
 operator|>
 literal|0x300
 condition|)
@@ -1202,7 +1215,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* Check for a "truly dedicated" disk */
+comment|/* Check for a "dedicated" disk */
 if|if
 condition|(
 operator|(
@@ -1255,6 +1268,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|line
+argument_list|,
+name|verbose
 argument_list|)
 expr_stmt|;
 block|}
@@ -1300,6 +1315,8 @@ name|j
 index|]
 argument_list|,
 name|line
+argument_list|,
+name|verbose
 argument_list|)
 expr_stmt|;
 block|}
@@ -1316,7 +1333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print information about slices on a disk  */
+comment|/*  * Print information about slices on a disk.  For the size calculations we  * assume a 512 byte sector.  */
 end_comment
 
 begin_function
@@ -1337,6 +1354,9 @@ parameter_list|,
 name|char
 modifier|*
 name|prefix
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 block|{
 name|char
@@ -1359,17 +1379,26 @@ name|bd_printbsdslice
 argument_list|(
 name|od
 argument_list|,
+operator|(
+name|daddr_t
+operator|)
 name|dp
 operator|->
 name|dp_start
 argument_list|,
 name|prefix
+argument_list|,
+name|verbose
 argument_list|)
 expr_stmt|;
 return|return;
 case|case
 name|DOSPTYP_LINSWP
 case|:
+if|if
+condition|(
+name|verbose
+condition|)
 name|sprintf
 argument_list|(
 name|line
@@ -1384,7 +1413,6 @@ name|dp_size
 operator|/
 literal|2048
 argument_list|,
-comment|/* 512-byte sector assumption */
 name|dp
 operator|->
 name|dp_start
@@ -1398,11 +1426,25 @@ operator|->
 name|dp_size
 argument_list|)
 expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"%s: Linux swap\n"
+argument_list|,
+name|prefix
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|DOSPTYP_LINUX
 case|:
 comment|/* 		 * XXX 		 * read the superblock to confirm this is an ext2fs partition? 		 */
+if|if
+condition|(
+name|verbose
+condition|)
 name|sprintf
 argument_list|(
 name|line
@@ -1417,7 +1459,6 @@ name|dp_size
 operator|/
 literal|2048
 argument_list|,
-comment|/* 512-byte sector assumption */
 name|dp
 operator|->
 name|dp_start
@@ -1429,6 +1470,16 @@ operator|+
 name|dp
 operator|->
 name|dp_size
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"%s: ext2fs\n"
+argument_list|,
+name|prefix
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1443,6 +1494,10 @@ return|return;
 case|case
 literal|0x01
 case|:
+if|if
+condition|(
+name|verbose
+condition|)
 name|sprintf
 argument_list|(
 name|line
@@ -1457,7 +1512,6 @@ name|dp_size
 operator|/
 literal|2048
 argument_list|,
-comment|/* 512-byte sector assumption */
 name|dp
 operator|->
 name|dp_start
@@ -1471,6 +1525,16 @@ operator|->
 name|dp_size
 argument_list|)
 expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"%s: FAT-12\n"
+argument_list|,
+name|prefix
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|0x04
@@ -1481,6 +1545,10 @@ case|:
 case|case
 literal|0x0e
 case|:
+if|if
+condition|(
+name|verbose
+condition|)
 name|sprintf
 argument_list|(
 name|line
@@ -1495,7 +1563,6 @@ name|dp_size
 operator|/
 literal|2048
 argument_list|,
-comment|/* 512-byte sector assumption */
 name|dp
 operator|->
 name|dp_start
@@ -1509,6 +1576,16 @@ operator|->
 name|dp_size
 argument_list|)
 expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"%s: FAT-16\n"
+argument_list|,
+name|prefix
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|0x0b
@@ -1516,6 +1593,10 @@ case|:
 case|case
 literal|0x0c
 case|:
+if|if
+condition|(
+name|verbose
+condition|)
 name|sprintf
 argument_list|(
 name|line
@@ -1530,7 +1611,6 @@ name|dp_size
 operator|/
 literal|2048
 argument_list|,
-comment|/* 512-byte sector assumption */
 name|dp
 operator|->
 name|dp_start
@@ -1544,8 +1624,22 @@ operator|->
 name|dp_size
 argument_list|)
 expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"%s: FAT-32\n"
+argument_list|,
+name|prefix
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|verbose
+condition|)
 name|sprintf
 argument_list|(
 name|line
@@ -1564,7 +1658,6 @@ name|dp_size
 operator|/
 literal|2048
 argument_list|,
-comment|/* 512-byte sector assumption */
 name|dp
 operator|->
 name|dp_start
@@ -1578,6 +1671,20 @@ operator|->
 name|dp_size
 argument_list|)
 expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"%s: Unknown fs: 0x%x\n"
+argument_list|,
+name|prefix
+argument_list|,
+name|dp
+operator|->
+name|dp_typ
+argument_list|)
+expr_stmt|;
 block|}
 name|pager_output
 argument_list|(
@@ -1586,6 +1693,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Print out each valid partition in the disklabel of a FreeBSD slice.  * For size calculations, we assume a 512 byte sector size.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1597,12 +1708,15 @@ name|open_disk
 modifier|*
 name|od
 parameter_list|,
-name|int
+name|daddr_t
 name|offset
 parameter_list|,
 name|char
 modifier|*
 name|prefix
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 block|{
 name|char
@@ -1611,7 +1725,7 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|u_char
+name|char
 name|buf
 index|[
 name|BIOSDISK_SECSIZE
@@ -1699,6 +1813,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* 	 * For each partition, make sure we know what type of fs it is.  If 	 * not, then skip it.  However, since floppies often have bogus 	 * fstypes, print the 'a' partition on a floppy even if it is marked 	 * unused. 	 */
 if|if
 condition|(
 operator|(
@@ -1770,7 +1885,11 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* Floppies often have bogus fstype, print 'a' */
+comment|/* Only print out statistics in verbose mode */
+if|if
+condition|(
+name|verbose
+condition|)
 name|sprintf
 argument_list|(
 name|line
@@ -1826,7 +1945,6 @@ name|p_size
 operator|/
 literal|2048
 argument_list|,
-comment|/* 512-byte sector assumption */
 name|lp
 operator|->
 name|d_partitions
@@ -1853,6 +1971,52 @@ name|i
 index|]
 operator|.
 name|p_size
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"  %s%c: %s\n"
+argument_list|,
+name|prefix
+argument_list|,
+literal|'a'
+operator|+
+name|i
+argument_list|,
+operator|(
+name|lp
+operator|->
+name|d_partitions
+index|[
+name|i
+index|]
+operator|.
+name|p_fstype
+operator|==
+name|FS_SWAP
+operator|)
+condition|?
+literal|"swap"
+else|:
+operator|(
+name|lp
+operator|->
+name|d_partitions
+index|[
+name|i
+index|]
+operator|.
+name|p_fstype
+operator|==
+name|FS_VINUM
+operator|)
+condition|?
+literal|"vinum"
+else|:
+literal|"FFS"
 argument_list|)
 expr_stmt|;
 name|pager_output
@@ -2023,7 +2187,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|u_char
+name|char
 name|buf
 index|[
 name|BUFSIZE
@@ -2232,6 +2396,9 @@ comment|/*       * Check the slice table magic.      */
 if|if
 condition|(
 operator|(
+operator|(
+name|u_char
+operator|)
 name|buf
 index|[
 literal|0x1fe
@@ -2241,6 +2408,9 @@ literal|0x55
 operator|)
 operator|||
 operator|(
+operator|(
+name|u_char
+operator|)
 name|buf
 index|[
 literal|0x1ff
@@ -2780,7 +2950,10 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Complain if the partition type is wrong */
+ifdef|#
+directive|ifdef
+name|DISK_DEBUG
+comment|/* Complain if the partition is unused unless this is a floppy. */
 if|if
 condition|(
 operator|(
@@ -2811,12 +2984,13 @@ operator|&
 name|BD_FLOPPY
 operator|)
 condition|)
-comment|/* Floppies often have bogus fstype */
 name|DEBUG
 argument_list|(
 literal|"warning, partition marked as unused"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|od
 operator|->
 name|od_boff
@@ -2881,7 +3055,7 @@ name|int
 name|slicenum
 parameter_list|)
 block|{
-name|u_char
+name|char
 name|buf
 index|[
 name|BIOSDISK_SECSIZE
@@ -2946,6 +3120,9 @@ name|bd_read
 argument_list|(
 name|od
 argument_list|,
+operator|(
+name|daddr_t
+operator|)
 name|dp
 operator|->
 name|dp_start
@@ -2961,6 +3138,9 @@ goto|;
 if|if
 condition|(
 operator|(
+operator|(
+name|u_char
+operator|)
 name|buf
 index|[
 literal|0x1fe
@@ -2970,6 +3150,9 @@ literal|0x55
 operator|)
 operator|||
 operator|(
+operator|(
+name|u_char
+operator|)
 name|buf
 index|[
 literal|0x1ff
@@ -3450,7 +3633,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -3550,7 +3733,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -3811,7 +3994,7 @@ name|caddr_t
 name|dest
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|x
 decl_stmt|,
 name|bpc
@@ -3826,8 +4009,6 @@ name|result
 decl_stmt|,
 name|resid
 decl_stmt|,
-name|cnt
-decl_stmt|,
 name|retry
 decl_stmt|,
 name|maxfer
@@ -3841,6 +4022,19 @@ name|bbuf
 decl_stmt|,
 name|breg
 decl_stmt|;
+comment|/* Just in case some idiot actually tries to read -1 blocks... */
+if|if
+condition|(
+name|blks
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|bpc
 operator|=
 operator|(
@@ -3905,6 +4099,9 @@ name|min
 argument_list|(
 name|FLOPPY_BOUNCEBUF
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|blks
 argument_list|)
 expr_stmt|;
@@ -3974,6 +4171,8 @@ comment|/* limit transfers to bounce region size */
 block|}
 else|else
 block|{
+name|breg
+operator|=
 name|bbuf
 operator|=
 name|NULL
@@ -4607,13 +4806,16 @@ operator|&
 literal|0xff
 operator|)
 operator|<=
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|od
 operator|->
 name|od_unit
 operator|&
 literal|0x7f
-operator|)
+argument_list|)
 operator|)
 condition|)
 comment|/* unit # bad */
@@ -5040,6 +5242,17 @@ name|WDMAJOR
 expr_stmt|;
 block|}
 block|}
+comment|/* default root disk unit number */
+name|unit
+operator|=
+operator|(
+name|biosdev
+operator|&
+literal|0x7f
+operator|)
+operator|-
+name|unitofs
+expr_stmt|;
 comment|/* XXX a better kludge to set the root disk unit number */
 if|if
 condition|(
@@ -5087,20 +5300,6 @@ name|unit
 operator|=
 name|i
 expr_stmt|;
-block|}
-else|else
-block|{
-name|unit
-operator|=
-operator|(
-name|biosdev
-operator|&
-literal|0x7f
-operator|)
-operator|-
-name|unitofs
-expr_stmt|;
-comment|/* allow for #wd compenstation in da case */
 block|}
 name|rootdev
 operator|=
@@ -5160,51 +5359,6 @@ operator|(
 name|rootdev
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Fix (dev) so that it refers to the 'real' disk/slice/partition that it implies.  */
-end_comment
-
-begin_function
-name|int
-name|bd_fixupdev
-parameter_list|(
-name|struct
-name|i386_devdesc
-modifier|*
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|open_disk
-modifier|*
-name|od
-decl_stmt|;
-comment|/*      * Open the disk.  This will fix up the slice and partition fields.      */
-if|if
-condition|(
-name|bd_opendisk
-argument_list|(
-operator|&
-name|od
-argument_list|,
-name|dev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
-name|bd_closedisk
-argument_list|(
-name|od
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
