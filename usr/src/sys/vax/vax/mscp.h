@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mscp.h	6.1	83/07/29	*/
+comment|/*	mscp.h	6.2	84/06/27	*/
 end_comment
 
 begin_comment
@@ -1114,9 +1114,25 @@ struct|;
 block|}
 name|mscp_un
 union|;
+name|short
+name|mscp_fil1
+decl_stmt|;
+name|short
+name|mscp_fil2
+decl_stmt|;
+name|short
+name|mscp_fil3
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|mscp_msglen
+value|(sizeof (struct mscp) - sizeof(struct mscp_header))
+end_define
 
 begin_comment
 comment|/*  * generic packet  */
