@@ -41,7 +41,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_endif
-unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfscanf.c,v 1.32 2003/06/28 09:03:05 das Exp ");
+unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfscanf.c,v 1.35 2004/01/31 23:16:09 das Exp ");
 endif|#
 directive|endif
 end_endif
@@ -348,6 +348,17 @@ end_define
 
 begin_comment
 comment|/* no zero digits detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVESIGN
+value|0x10000
+end_define
+
+begin_comment
+comment|/* sign detected */
 end_comment
 
 begin_comment
@@ -2756,12 +2767,16 @@ operator|&=
 operator|~
 name|SIGNOK
 expr_stmt|;
+name|flags
+operator||=
+name|HAVESIGN
+expr_stmt|;
 goto|goto
 name|ok
 goto|;
 block|}
 break|break;
-comment|/* x ok iff flag still set& 2nd char */
+comment|/* 				 * x ok iff flag still set& 2nd char (or 				 * 3rd char if we have a sign). 				 */
 case|case
 literal|'x'
 case|:
@@ -2779,6 +2794,14 @@ operator|==
 name|buf
 operator|+
 literal|1
+operator|+
+operator|!
+operator|!
+operator|(
+name|flags
+operator|&
+name|HAVESIGN
+operator|)
 condition|)
 block|{
 name|base
