@@ -2135,7 +2135,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't disable v4-in-v6 on UDP socket"
+literal|"can't disable v4-in-v6 on TCP socket"
 argument_list|)
 expr_stmt|;
 name|exit
