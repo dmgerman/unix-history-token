@@ -1056,6 +1056,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_persistdrop
+argument_list|,
+literal|"\t\t%d connection%s dropped by persist timeout\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_keeptimeo
 argument_list|,
 literal|"\t%d keepalive timeout%s\n"
