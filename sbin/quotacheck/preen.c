@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: preen.c,v 1.9 1998/06/15 07:07:20 charnier Exp $"
+literal|"$Id: preen.c,v 1.11 1998/12/03 02:41:11 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1915,6 +1915,19 @@ operator|==
 name|S_IFCHR
 condition|)
 block|{
+if|if
+condition|(
+name|stslash
+operator|.
+name|st_dev
+operator|==
+name|stchar
+operator|.
+name|st_rdev
+condition|)
+name|hotroot
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|raw
