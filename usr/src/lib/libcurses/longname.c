@@ -7,7 +7,7 @@ value|register
 end_define
 
 begin_comment
-comment|/*  *	This routine fills in "def" with the long name of the terminal.  *  * %G% (Berkeley) @(#)longname.c	1.1  */
+comment|/*  *	This routine fills in "def" with the long name of the terminal.  *  * @(#)longname.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_function
@@ -67,24 +67,29 @@ operator|++
 expr_stmt|;
 name|cp
 operator|=
-name|bp
+name|def
 expr_stmt|;
 while|while
 condition|(
 operator|*
-name|cp
+name|bp
 operator|&&
 operator|*
-name|cp
+name|bp
 operator|!=
 literal|':'
 operator|&&
 operator|*
-name|cp
+name|bp
 operator|!=
 literal|'|'
 condition|)
+operator|*
 name|cp
+operator|++
+operator|=
+operator|*
+name|bp
 operator|++
 expr_stmt|;
 operator|*
@@ -92,9 +97,6 @@ name|cp
 operator|=
 literal|0
 expr_stmt|;
-return|return
-name|bp
-return|;
 block|}
 return|return
 name|def

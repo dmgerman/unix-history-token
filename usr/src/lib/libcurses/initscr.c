@@ -27,7 +27,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	This routine initializes the current and standard screen.  *  * %G% (Berkeley) @(#)initscr.c	1.4  */
+comment|/*  *	This routine initializes the current and standard screen.  *  * @(#)initscr.c	1.4 (Berkeley) %G%  */
 end_comment
 
 begin_function
@@ -230,11 +230,19 @@ condition|)
 return|return
 name|ERR
 return|;
+name|clearok
+argument_list|(
+name|curscr
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 name|curscr
 operator|->
-name|_clear
-operator|=
-name|TRUE
+name|_flags
+operator|&=
+operator|~
+name|_FULLLINE
 expr_stmt|;
 if|if
 condition|(
