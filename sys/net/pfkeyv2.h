@@ -1021,6 +1021,17 @@ name|SADB_X_AALG_SHA2_512
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_RIPEMD160HMAC
+value|9
+end_define
+
+begin_comment
+comment|/*8*/
+end_comment
+
 begin_comment
 comment|/* private allocations should use 249-255 (RFC2407) */
 end_comment
@@ -1132,6 +1143,13 @@ end_define
 begin_comment
 comment|/* private allocations should use 249-255 (RFC2407) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_SKIPJACK
+value|249
+end_define
 
 begin_if
 if|#
