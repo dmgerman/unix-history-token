@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)tr.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)tr.c	8.2 (Berkeley) 5/4/95";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tr.c,v 1.3.2.1 1997/08/20 07:16:10 charnier Exp $"
+literal|"$Id: tr.c,v 1.7 1997/10/12 09:52:49 helbig Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -792,7 +798,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cds"
+literal|"cdsu"
 argument_list|)
 operator|)
 operator|!=
@@ -829,6 +835,21 @@ case|:
 name|sflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1493,13 +1514,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: tr [-cs] string1 string2"
+literal|"usage: tr [-csu] string1 string2"
 argument_list|,
-literal|"       tr [-c] -d string1"
+literal|"       tr [-cu] -d string1"
 argument_list|,
-literal|"       tr [-c] -s string1"
+literal|"       tr [-cu] -s string1"
 argument_list|,
-literal|"       tr [-c] -ds string1 string2"
+literal|"       tr [-cu] -ds string1 string2"
 argument_list|)
 expr_stmt|;
 name|exit
