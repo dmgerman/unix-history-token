@@ -364,6 +364,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UHCI_LEGSUP
+value|0xC0
+end_define
+
+begin_define
+define|#
+directive|define
 name|UHCI_FRAMELIST_COUNT
 value|1024
 end_define
