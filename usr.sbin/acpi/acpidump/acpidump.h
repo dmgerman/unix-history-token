@@ -996,7 +996,10 @@ decl_stmt|;
 comment|/* Reserved */
 block|}
 name|s
-index|[]
+index|[
+literal|1
+index|]
+name|__packed
 struct|;
 block|}
 name|__packed
