@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	1.4 (Lucasfilm) %G%"
+literal|"@(#)pigs.c	1.5 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,11 +51,11 @@ name|newwin
 argument_list|(
 literal|20
 argument_list|,
-literal|70
+literal|0
 argument_list|,
 literal|3
 argument_list|,
-literal|5
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -598,7 +598,7 @@ name|sprintf
 argument_list|(
 name|pidname
 argument_list|,
-literal|"%8.8s"
+literal|"%10.10s"
 argument_list|,
 name|pnamp
 argument_list|)
@@ -609,7 +609,7 @@ name|wnd
 argument_list|,
 name|y
 argument_list|,
-literal|6
+literal|9
 argument_list|,
 name|pidname
 argument_list|)
@@ -621,7 +621,7 @@ argument_list|,
 name|y
 operator|++
 argument_list|,
-literal|15
+literal|20
 argument_list|)
 expr_stmt|;
 for|for
