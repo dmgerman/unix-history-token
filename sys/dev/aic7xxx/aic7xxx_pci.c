@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996, 1997, 1998, 1999, 2000 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  *  * $FreeBSD$  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996, 1997, 1998, 1999, 2000 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx_pci.c#4 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -5939,9 +5939,32 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
-name|uint8_t
+name|u_int
+name|error
+decl_stmt|;
+name|u_int
 name|status1
 decl_stmt|;
+name|error
+operator|=
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|ERROR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|&
+name|PCIERRSTAT
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|status1
 operator|=
 name|ahc_pci_read_config
@@ -5958,28 +5981,9 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|status1
-operator|&
-operator|(
-name|DPE
-operator||
-name|SSE
-operator||
-name|RMA
-operator||
-name|RTA
-operator||
-name|STA
-operator||
-name|DPR
-operator|)
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|"%s: PCI Interrupt at seqaddr = 0x%x\n"
+literal|"%s: PCI error Interrupt at seqaddr = 0x%x\n"
 argument_list|,
 name|ahc_name
 argument_list|(
@@ -6005,7 +6009,6 @@ literal|8
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|status1
@@ -6034,7 +6037,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Signal System Error Detected\n"
+literal|"%s: Signaled System Error Detected\n"
 argument_list|,
 name|ahc_name
 argument_list|(
@@ -6052,7 +6055,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Received a Master Abort\n"
+literal|"%s: Signaled a Master Abort\n"
 argument_list|,
 name|ahc_name
 argument_list|(
@@ -6189,6 +6192,11 @@ name|CLRPARERR
 argument_list|)
 expr_stmt|;
 block|}
+name|unpause_sequencer
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -451,6 +451,9 @@ name|regs_id
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHC_ALLOW_MEMIO
 if|if
 condition|(
 operator|(
@@ -582,6 +585,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|regs

@@ -100,11 +100,22 @@ name|AHC_SUPPORT_PCI
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AHC_ALLOW_MEMIO
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/bus_memio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2179,9 +2190,14 @@ name|struct
 name|ahc_softc
 modifier|*
 parameter_list|,
-name|struct
-name|ahc_devinfo
-modifier|*
+name|char
+comment|/*channel*/
+parameter_list|,
+name|u_int
+comment|/*target*/
+parameter_list|,
+name|u_int
+comment|/*lun*/
 parameter_list|,
 name|ac_code
 parameter_list|)
