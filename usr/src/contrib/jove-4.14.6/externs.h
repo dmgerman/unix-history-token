@@ -3977,7 +3977,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|int
+name|pid_t
 name|UNMACRO
 parameter_list|(
 name|vfork

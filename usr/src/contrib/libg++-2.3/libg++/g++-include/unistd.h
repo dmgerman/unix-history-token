@@ -977,7 +977,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|int
+name|_G_pid_t
 name|vfork
 name|_G_ARGS
 argument_list|(
