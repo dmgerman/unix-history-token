@@ -6488,18 +6488,17 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 		 * Require that the entry is wired. 		 */
+comment|/* 		 * If system unwiring, require that the entry is system wired. 		 */
 if|if
 condition|(
+operator|!
+name|user_unwire
+operator|&&
 name|entry
 operator|->
 name|wired_count
-operator|==
-literal|0
-operator|||
+operator|<
 operator|(
-name|user_unwire
-operator|&&
 operator|(
 name|entry
 operator|->
@@ -6507,8 +6506,10 @@ name|eflags
 operator|&
 name|MAP_ENTRY_USER_WIRED
 operator|)
-operator|==
-literal|0
+condition|?
+literal|2
+else|:
+literal|1
 operator|)
 condition|)
 block|{
@@ -6615,6 +6616,19 @@ condition|(
 name|rv
 operator|==
 name|KERN_SUCCESS
+operator|&&
+operator|(
+operator|!
+name|user_unwire
+operator|||
+operator|(
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_USER_WIRED
+operator|)
+operator|)
 condition|)
 block|{
 if|if
