@@ -402,7 +402,9 @@ name|td2
 operator|->
 name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|td2
+operator|->
+name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|)
@@ -847,7 +849,9 @@ name|td
 operator|->
 name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|td
+operator|->
+name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|)
