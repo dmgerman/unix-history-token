@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.7 1997/04/23 22:25:20 ache Exp $"
+literal|"$Id: vacation.c,v 1.8 1997/04/23 22:36:51 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2042,6 +2042,14 @@ name|pvect
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fileno
+argument_list|(
+name|mfp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|execl
