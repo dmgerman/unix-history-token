@@ -1093,6 +1093,16 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+name|name
+operator|==
+literal|'r'
+condition|)
+name|name
+operator|++
+expr_stmt|;
 name|cp
 operator|=
 name|name
