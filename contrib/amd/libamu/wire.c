@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: wire.c,v 1.8.2.5 2001/01/10 03:23:41 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: wire.c,v 1.8.2.9 2002/12/27 22:45:13 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -1216,6 +1216,19 @@ name|addrlist
 modifier|*
 name|al
 decl_stmt|;
+comment|/*    * If the network name string does not contain a '/', use old behavior.    * If it does contain a '/' then interpret the string as a network/netmask    * pair.  If "netmask" doesn't exist, use the interface's own netmask.    * Also support fully explicit netmasks such as 255.255.255.0 as well as    * bit-length netmask such as /24 (hex formats such 0xffffff00 work too).    */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|net
+argument_list|,
+literal|'/'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|al
@@ -1253,6 +1266,218 @@ condition|)
 return|return
 name|TRUE
 return|;
+block|}
+else|else
+block|{
+name|char
+modifier|*
+name|netstr
+init|=
+name|strdup
+argument_list|(
+name|net
+argument_list|)
+decl_stmt|,
+modifier|*
+name|maskstr
+decl_stmt|;
+name|u_long
+name|netnum
+decl_stmt|,
+name|masknum
+init|=
+literal|0
+decl_stmt|;
+name|maskstr
+operator|=
+name|strchr
+argument_list|(
+name|netstr
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+name|maskstr
+operator|++
+expr_stmt|;
+name|maskstr
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null terminate netstr */
+if|if
+condition|(
+operator|*
+name|maskstr
+operator|==
+literal|'\0'
+condition|)
+comment|/* if empty string, make it NULL */
+name|maskstr
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* check if netmask uses a dotted-quad or bit-length, or not defined at all */
+if|if
+condition|(
+name|maskstr
+condition|)
+block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|maskstr
+argument_list|,
+literal|'.'
+argument_list|)
+condition|)
+block|{
+name|masknum
+operator|=
+name|inet_addr
+argument_list|(
+name|maskstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|masknum
+operator|<
+literal|0
+condition|)
+comment|/* can be invalid (-1) or all-1s */
+name|masknum
+operator|=
+literal|0xffffffff
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|NSTRCEQ
+argument_list|(
+name|maskstr
+argument_list|,
+literal|"0x"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|masknum
+operator|=
+name|strtoul
+argument_list|(
+name|maskstr
+argument_list|,
+name|NULL
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|int
+name|bits
+init|=
+name|atoi
+argument_list|(
+name|maskstr
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|bits
+operator|<
+literal|0
+condition|)
+name|bits
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|bits
+operator|>
+literal|32
+condition|)
+name|bits
+operator|=
+literal|32
+expr_stmt|;
+name|masknum
+operator|=
+literal|0xffffffff
+operator|<<
+operator|(
+literal|32
+operator|-
+name|bits
+operator|)
+expr_stmt|;
+block|}
+block|}
+name|netnum
+operator|=
+name|inet_addr
+argument_list|(
+name|netstr
+argument_list|)
+expr_stmt|;
+comment|/* not checking return value, b/c -1 (0xffffffff) is valid */
+name|XFREE
+argument_list|(
+name|netstr
+argument_list|)
+expr_stmt|;
+comment|/* netstr not needed any longer */
+comment|/* now check against each local interface */
+for|for
+control|(
+name|al
+operator|=
+name|localnets
+init|;
+name|al
+condition|;
+name|al
+operator|=
+name|al
+operator|->
+name|ip_next
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|al
+operator|->
+name|ip_addr
+operator|&
+operator|(
+name|maskstr
+condition|?
+name|masknum
+else|:
+name|al
+operator|->
+name|ip_mask
+operator|)
+operator|)
+operator|==
+name|netnum
+condition|)
+return|return
+name|TRUE
+return|;
+block|}
+block|}
 return|return
 name|FALSE
 return|;
@@ -1301,7 +1526,7 @@ name|ifap
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT
+name|HAVE_STRUCT_IFADDRS_IFA_NEXT
 name|int
 name|count
 init|=
@@ -1311,14 +1536,14 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* not HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+comment|/* not HAVE_STRUCT_IFADDRS_IFA_NEXT */
 name|ifaddrs
 operator|=
 name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT
+name|HAVE_STRUCT_IFADDRS_IFA_NEXT
 if|if
 condition|(
 name|getifaddrs
@@ -1351,7 +1576,7 @@ control|)
 block|{
 else|#
 directive|else
-comment|/* not HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+comment|/* not HAVE_STRUCT_IFADDRS_IFA_NEXT */
 if|if
 condition|(
 name|getifaddrs
@@ -1391,7 +1616,7 @@ control|)
 block|{
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+comment|/* HAVE_STRUCT_IFADDRS_IFA_NEXT */
 if|if
 condition|(
 operator|!
@@ -1574,12 +1799,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_FIELD_STRUCT_IFREQ_IFR_ADDR
+name|HAVE_STRUCT_IFREQ_IFR_ADDR
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN
+name|HAVE_STRUCT_SOCKADDR_SA_LEN
 argument_list|)
 define|#
 directive|define
@@ -1590,7 +1815,7 @@ parameter_list|)
 value|(MAX((ifr)->ifr_addr.sa_len, sizeof((ifr)->ifr_addr)) + sizeof(ifr->ifr_name))
 else|#
 directive|else
-comment|/* not defined(HAVE_FIELD_STRUCT_IFREQ_IFR_ADDR)&& defined(HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN) */
+comment|/* not defined(HAVE_STRUCT_IFREQ_IFR_ADDR)&& defined(HAVE_STRUCT_SOCKADDR_SA_LEN) */
 define|#
 directive|define
 name|SIZE
@@ -1600,7 +1825,7 @@ parameter_list|)
 value|sizeof(struct ifreq)
 endif|#
 directive|endif
-comment|/* not defined(HAVE_FIELD_STRUCT_IFREQ_IFR_ADDR)&& defined(HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN) */
+comment|/* not defined(HAVE_STRUCT_IFREQ_IFR_ADDR)&& defined(HAVE_STRUCT_SOCKADDR_SA_LEN) */
 define|#
 directive|define
 name|clist

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: transp_sockets.c,v 1.6.2.5 2001/06/08 18:50:40 ezk Exp $  *  * Socket specific utilities.  *      -Erez Zadok<ezk@cs.columbia.edu>  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: transp_sockets.c,v 1.6.2.10 2003/04/23 14:27:34 ezk Exp $  *  * Socket specific utilities.  *      -Erez Zadok<ezk@cs.columbia.edu>  */
 end_comment
 
 begin_ifdef
@@ -35,24 +35,6 @@ include|#
 directive|include
 file|<amu.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RPC_MAXDATASIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RPC_MAXDATASIZE
-value|9000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * find the IP address that can be used to connect to the local host  */
@@ -785,11 +767,6 @@ modifier|*
 name|tcp_amqpp
 parameter_list|)
 block|{
-name|int
-name|maxrec
-init|=
-name|RPC_MAXDATASIZE
-decl_stmt|;
 comment|/* first create TCP service */
 if|if
 condition|(
@@ -864,10 +841,26 @@ return|return
 literal|2
 return|;
 block|}
-block|}
 ifdef|#
 directive|ifdef
 name|SVCSET_CONNMAXREC
+comment|/*      * This is *BSD at its best.      * They just had to do things differently than everyone else      * so they fixed a library DoS issue by forcing client-side changes...      */
+ifndef|#
+directive|ifndef
+name|RPC_MAXDATASIZE
+define|#
+directive|define
+name|RPC_MAXDATASIZE
+value|9000
+endif|#
+directive|endif
+comment|/* not RPC_MAXDATASIZE */
+block|{
+name|int
+name|maxrec
+init|=
+name|RPC_MAXDATASIZE
+decl_stmt|;
 name|SVC_CONTROL
 argument_list|(
 operator|*
@@ -879,8 +872,11 @@ operator|&
 name|maxrec
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
+comment|/* not SVCSET_CONNMAXREC */
+block|}
 comment|/* next create UDP service */
 if|if
 condition|(
@@ -1462,71 +1458,6 @@ name|nfs_version
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * AUTOFS FUNCTIONS FOR SOCKETS:  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_FS_AUTOFS
-end_ifdef
-
-begin_comment
-comment|/*  * Create the nfs service for amd  */
-end_comment
-
-begin_function
-name|int
-name|create_autofs_service
-parameter_list|(
-name|int
-modifier|*
-name|soAUTOFSp
-parameter_list|,
-name|u_short
-modifier|*
-name|autofs_portp
-parameter_list|,
-name|SVCXPRT
-modifier|*
-modifier|*
-name|autofs_xprtp
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|dispatch_fxn
-function_decl|)
-parameter_list|(
-name|struct
-name|svc_req
-modifier|*
-name|rqstp
-parameter_list|,
-name|SVCXPRT
-modifier|*
-name|transp
-parameter_list|)
-parameter_list|)
-block|{
-comment|/* NOT IMPLEMENTED! */
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_FS_AUTOFS */
-end_comment
 
 end_unit
 

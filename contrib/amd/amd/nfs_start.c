@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: nfs_start.c,v 1.5.2.1 2001/01/10 03:23:08 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: nfs_start.c,v 1.5.2.6 2002/12/27 22:44:39 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -70,46 +70,6 @@ name|u_short
 name|nfs_port
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_FS_AUTOFS
-end_ifdef
-
-begin_decl_stmt
-name|SVCXPRT
-modifier|*
-name|autofsxprt
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_short
-name|autofs_port
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|amd_use_autofs
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_FS_AUTOFS */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -249,6 +209,9 @@ operator|-
 literal|1
 operator|)
 operator|/
+operator|(
+name|long
+operator|)
 name|getpagesize
 argument_list|()
 argument_list|)
@@ -991,9 +954,11 @@ directive|endif
 comment|/* DEBUG */
 continue|continue;
 block|}
-name|perror
+name|plog
 argument_list|(
-literal|"select"
+name|XLOG_ERROR
+argument_list|,
+literal|"select: %m"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1205,15 +1170,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_TRANSPORT_TYPE_TLI */
-ifdef|#
-directive|ifdef
-name|HAVE_FS_AUTOFS
-name|int
-name|soAUTOFS
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_FS_AUTOFS */
 comment|/*    * Create the nfs service for amd    */
 ifdef|#
 directive|ifdef
@@ -1323,58 +1279,6 @@ condition|)
 return|return
 name|ret
 return|;
-ifdef|#
-directive|ifdef
-name|HAVE_FS_AUTOFS
-if|if
-condition|(
-name|amd_use_autofs
-condition|)
-block|{
-comment|/*      * Create the autofs service for amd, but only if autofs maps      * were defined (so amd doesn't clash with automountd.)      */
-name|plog
-argument_list|(
-name|XLOG_INFO
-argument_list|,
-literal|"creating autofs service listener"
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|create_autofs_service
-argument_list|(
-operator|&
-name|soAUTOFS
-argument_list|,
-operator|&
-name|autofs_port
-argument_list|,
-operator|&
-name|autofsxprt
-argument_list|,
-name|autofs_program_1
-argument_list|)
-expr_stmt|;
-comment|/* if autofs service fails it is OK if using a test amd */
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-operator|&&
-name|gopt
-operator|.
-name|portmap_program
-operator|==
-name|AMQ_PROGRAM
-condition|)
-return|return
-name|ret
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* HAVE_FS_AUTOFS */
 comment|/*    * Start RPC forwarding    */
 if|if
 condition|(

@@ -987,32 +987,6 @@ name|MNTTAB_OPT_NODEV
 value|"nodev"
 end_define
 
-begin_comment
-comment|/* this is missing under some versions of Linux */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MNTTAB_OPT_DEV
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MNTTAB_OPT_DEV
-value|"dev"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not MNTTAB_OPT_DEV */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -1441,7 +1415,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_FIELD_CDFS_ARGS_T_NORRIP
+name|HAVE_CDFS_ARGS_T_NORRIP
 end_define
 
 begin_endif
@@ -1558,31 +1532,30 @@ begin_comment
 comment|/* defined(HAVE_FS_EFS)&& !defined(efs_args_t) */
 end_comment
 
+begin_comment
+comment|/*  * if does not define struct xfs_args, assume integer bit-field (linux)  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_FS_AUTOFS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MOUNT_TYPE_AUTOFS
+name|HAVE_FS_XFS
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|MNTTYPE_AUTOFS
+name|xfs_args_t
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|MNTTYPE_AUTOFS
-value|"autofs"
+name|xfs_args_t
+value|u_int
 end_define
 
 begin_endif
@@ -1591,7 +1564,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(HAVE_FS_AUTOFS)&& defined(MOUNT_TYPE_AUTOFS)&& !defined(MNTTYPE_AUTOFS) */
+comment|/* defined(HAVE_FS_XFS)&& !defined(xfs_args_t) */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: map.c,v 1.6.2.3 2001/01/10 03:23:07 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: map.c,v 1.6.2.7 2002/12/27 22:44:38 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -2672,7 +2672,7 @@ name|vp
 argument_list|)
 return|;
 comment|/*    * Below is the comment left from the old code    * that was dependent on the macro FLUSH_KERNEL_NAME_CACHE    */
-comment|/*    * This code should just say:    * return unmount_node((am_node *) vp);    *    * However...    * The kernel keeps a cached copy of filehandles,    * and doesn't ever uncache them (apparently).  So    * when Amd times out a node the kernel will have a    * stale filehandle.  When the kernel next uses the    * filehandle it gets ESTALE.    *    * The workaround:    * Arrange that when a node is removed an unlink or    * rmdir is done on that path so that the kernel    * cache is done.  Yes - yuck.    *    * This can all be removed (and the background    * unmount flag in amfs_link_ops) if/when the kernel does    * something smarter.    *    * If the unlink or rmdir failed then just log a warning,    * don't fail the unmount.  This can occur if the kernel    * client code decides that the object is still referenced    * and should be renamed rather than discarded.    *    * There is still a race condition here...    * if another process is trying to access the same    * filesystem at the time we get here, then    * it will block, since the MF_UNMOUNTING flag will    * be set.  That may, or may not, cause the entire    * system to deadlock.  Hmmm...    */
+comment|/*    * This code should just say:    * return unmount_node((am_node *) vp);    *    * However...    * The kernel keeps a cached copy of filehandles,    * and doesn't ever uncache them (apparently).  So    * when Amd times out a node the kernel will have a    * stale filehandle.  When the kernel next uses the    * filehandle it gets ESTALE.    *    * The workaround:    * Arrange that when a node is removed an unlink or    * rmdir is done on that path so that the kernel    * cache is done.  Yes - yuck.    *    * This can all be removed (and the background    * unmount flag in amfs_link_ops) if/when the kernel does    * something smarter.    *    * If the unlink or rmdir failed then just log a warning,    * don't fail the unmount.  This can occur if the kernel    * client code decides that the object is still referenced    * and should be renamed rather than discarded.    *    * There is still a race condition here...    * if another process is trying to access the same    * filesystem at the time we get here, then    * it will block, since the MFF_UNMOUNTING flag will    * be set.  That may, or may not, cause the entire    * system to deadlock.  Hmmm...    */
 block|}
 end_function
 
@@ -2859,7 +2859,7 @@ name|mp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Wakeup anything waiting for this mount    */
+comment|/*    * Wakeup anything waiting for this unmount    */
 name|wakeup
 argument_list|(
 operator|(
@@ -2897,44 +2897,20 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|MNT2_NFS_OPT_SYMTTL
-comment|/*      * This code is needed to defeat Solaris 2.4's (and newer) symlink      * values cache.  It forces the last-modified time of the symlink to be      * current.  It is not needed if the O/S has an nfs flag to turn off the      * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.      */
+comment|/*      * This code is needed to defeat Solaris 2.4's (and newer) symlink      * values cache.  It forces the last-modified time of the symlink to be      * current.  It is not needed if the O/S has an nfs flag to turn off the      * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.      *      * Additionally, Linux currently ignores the nt_useconds field,      * so we must update the nt_seconds field every time.      */
 if|if
 condition|(
 name|mp
 operator|->
 name|am_parent
 condition|)
-block|{
 comment|/* defensive programming... can't we assert the above condition? */
-name|nfsattrstat
-modifier|*
-name|attrp
-init|=
-operator|&
 name|mp
 operator|->
 name|am_parent
 operator|->
 name|am_attr
-decl_stmt|;
-if|if
-condition|(
-operator|++
-name|attrp
-operator|->
-name|ns_u
 operator|.
-name|ns_attr_u
-operator|.
-name|na_mtime
-operator|.
-name|nt_useconds
-operator|==
-literal|0
-condition|)
-operator|++
-name|attrp
-operator|->
 name|ns_u
 operator|.
 name|ns_attr_u
@@ -2942,8 +2918,8 @@ operator|.
 name|na_mtime
 operator|.
 name|nt_seconds
+operator|++
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* not MNT2_NFS_OPT_SYMTTL */

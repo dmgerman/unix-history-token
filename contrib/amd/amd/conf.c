@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: conf.c,v 1.7.2.3 2001/04/14 21:08:21 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: conf.c,v 1.7.2.6 2002/12/27 22:44:34 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -2510,37 +2510,23 @@ literal|"autofs"
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAVE_FS_AUTOFS
-name|gopt
-operator|.
-name|flags
-operator||=
-name|CFM_MOUNT_TYPE_AUTOFS
-expr_stmt|;
-name|amd_use_autofs
-operator|++
-expr_stmt|;
-return|return
-literal|0
-return|;
-else|#
-directive|else
-comment|/* not HAVE_FS_AUTOFS */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"conf: no autofs support available\n"
+literal|"conf: no autofs support available, turning it off\n"
 argument_list|)
 expr_stmt|;
+name|gopt
+operator|.
+name|flags
+operator|&=
+operator|~
+name|CFM_MOUNT_TYPE_AUTOFS
+expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
-endif|#
-directive|endif
-comment|/* not HAVE_FS_AUTOFS */
 block|}
 elseif|else
 if|if
@@ -4021,37 +4007,23 @@ literal|"autofs"
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAVE_FS_AUTOFS
-name|cfm
-operator|->
-name|cfm_flags
-operator||=
-name|CFM_MOUNT_TYPE_AUTOFS
-expr_stmt|;
-name|amd_use_autofs
-operator|++
-expr_stmt|;
-return|return
-literal|0
-return|;
-else|#
-directive|else
-comment|/* not HAVE_FS_AUTOFS */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"conf: no autofs support available\n"
+literal|"conf: no autofs support available, turning it off\n"
 argument_list|)
 expr_stmt|;
+name|cfm
+operator|->
+name|cfm_flags
+operator|&=
+operator|~
+name|CFM_MOUNT_TYPE_AUTOFS
+expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
-endif|#
-directive|endif
-comment|/* not HAVE_FS_AUTOFS */
 block|}
 elseif|else
 if|if

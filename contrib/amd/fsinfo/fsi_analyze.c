@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: fsi_analyze.c,v 1.3.2.1 2001/01/10 03:23:32 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: fsi_analyze.c,v 1.3.2.4 2003/07/18 04:50:19 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -321,7 +321,7 @@ condition|(
 name|d
 condition|)
 do|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"hostpath of '%s' is '%s'"
 argument_list|,
@@ -373,7 +373,7 @@ name|q
 decl_stmt|;
 do|do
 block|{
-name|log
+name|fsi_log
 argument_list|(
 literal|"Searching for volname %s"
 argument_list|,
@@ -456,7 +456,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"mask left for %s:%s is %#x"
 argument_list|,
@@ -714,7 +714,7 @@ argument_list|,
 argument|q
 argument_list|)
 block|{
-name|log
+name|fsi_log
 argument_list|(
 literal|"Mount %s:"
 argument_list|,
@@ -800,7 +800,7 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"Changing name %s to %s"
 argument_list|,
@@ -1057,7 +1057,7 @@ argument_list|(
 name|nbuf
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"%s:%s has default mount on %s"
 argument_list|,
@@ -1711,7 +1711,7 @@ operator|->
 name|h_hostname
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"set: %s comes from %s"
 argument_list|,
@@ -1751,7 +1751,7 @@ literal|"nfs"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"set: fstype is %s"
 argument_list|,
@@ -1786,7 +1786,7 @@ literal|"rw,nosuid,grpid,defaults"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"set: opts are %s"
 argument_list|,
@@ -1830,7 +1830,7 @@ name|f_volname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"set: localname is %s"
 argument_list|,
@@ -1898,7 +1898,7 @@ block|{
 name|int
 name|req
 decl_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"Disk %s:"
 argument_list|,
@@ -2076,7 +2076,7 @@ argument_list|(
 name|nn
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"Mount: %s (trying %s)"
 argument_list|,
@@ -2428,7 +2428,7 @@ argument_list|,
 argument|q
 argument_list|)
 block|{
-name|log
+name|fsi_log
 argument_list|(
 literal|"disks on host %s"
 argument_list|,
@@ -2482,7 +2482,7 @@ argument_list|,
 argument|q
 argument_list|)
 block|{
-name|log
+name|fsi_log
 argument_list|(
 literal|"mounts on host %s"
 argument_list|,
@@ -2713,7 +2713,7 @@ else|:
 name|nname
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"automount point %s:"
 argument_list|,
@@ -2758,7 +2758,7 @@ operator|->
 name|a_hardwiredfs
 condition|)
 block|{
-name|log
+name|fsi_log
 argument_list|(
 literal|"\thardwired from %s to %s"
 argument_list|,
@@ -2780,7 +2780,7 @@ operator|->
 name|a_volname
 condition|)
 block|{
-name|log
+name|fsi_log
 argument_list|(
 literal|"\tautomount from %s"
 argument_list|,
@@ -2803,7 +2803,7 @@ operator|->
 name|a_symlink
 condition|)
 block|{
-name|log
+name|fsi_log
 argument_list|(
 literal|"\tsymlink to %s"
 argument_list|,
@@ -2826,7 +2826,7 @@ operator|->
 name|a_name
 argument_list|)
 expr_stmt|;
-name|log
+name|fsi_log
 argument_list|(
 literal|"\timplicit automount from %s"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_ldap.c,v 1.9.2.2 2001/01/12 23:28:56 ro Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_ldap.c,v 1.9.2.8 2003/08/22 04:47:21 ib42 Exp $  *  */
 end_comment
 
 begin_comment
@@ -166,7 +166,7 @@ begin_typedef
 typedef|typedef
 name|struct
 name|he_ent
-name|HE
+name|HE_ENT
 typedef|;
 end_typedef
 
@@ -182,7 +182,7 @@ name|LDAP
 modifier|*
 name|ldap
 decl_stmt|;
-name|HE
+name|HE_ENT
 modifier|*
 name|hostent
 decl_stmt|;
@@ -281,7 +281,7 @@ specifier|static
 name|void
 name|he_free
 parameter_list|(
-name|HE
+name|HE_ENT
 modifier|*
 name|h
 parameter_list|)
@@ -318,7 +318,7 @@ end_function
 
 begin_function
 specifier|static
-name|HE
+name|HE_ENT
 modifier|*
 name|string2he
 parameter_list|(
@@ -338,7 +338,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|HE
+name|HE_ENT
 modifier|*
 name|new
 decl_stmt|,
@@ -396,7 +396,7 @@ name|new
 operator|=
 name|ALLOC
 argument_list|(
-name|HE
+name|HE_ENT
 argument_list|)
 expr_stmt|;
 name|old
@@ -416,7 +416,7 @@ name|old
 operator|=
 name|ALLOC
 argument_list|(
-name|HE
+name|HE_ENT
 argument_list|)
 expr_stmt|;
 name|old
@@ -651,6 +651,12 @@ argument_list|)
 expr_stmt|;
 name|aldh
 operator|->
+name|ldap
+operator|=
+name|NULL
+expr_stmt|;
+name|aldh
+operator|->
 name|hostent
 operator|=
 name|string2he
@@ -678,6 +684,12 @@ argument_list|,
 name|gopt
 operator|.
 name|ldap_hostports
+condition|?
+name|gopt
+operator|.
+name|ldap_hostports
+else|:
+literal|"(null)"
 argument_list|,
 name|map
 argument_list|)
@@ -849,7 +861,7 @@ name|LDAP
 modifier|*
 name|ld
 decl_stmt|;
-name|HE
+name|HE_ENT
 modifier|*
 name|h
 decl_stmt|;
@@ -917,12 +929,6 @@ operator|=
 name|now
 expr_stmt|;
 block|}
-else|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 for|for
 control|(
@@ -1047,6 +1053,9 @@ operator|>
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_LDAP_ENABLE_CACHE
 name|ldap_enable_cache
 argument_list|(
 name|ld
@@ -1060,6 +1069,23 @@ operator|.
 name|ldap_cache_maxmem
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_LDAP_ENABLE_CACHE */
+name|plog
+argument_list|(
+name|XLOG_WARNING
+argument_list|,
+literal|"ldap_enable_cache(%ld) does not exist on this system!\n"
+argument_list|,
+name|gopt
+operator|.
+name|ldap_cache_seconds
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_LDAP_ENABLE_CACHE */
 name|a
 operator|->
 name|ldap
@@ -1389,11 +1415,6 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|ldap_msgfree
-argument_list|(
-name|entry
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -1528,11 +1549,6 @@ expr_stmt|;
 name|ldap_msgfree
 argument_list|(
 name|res
-argument_list|)
-expr_stmt|;
-name|ldap_msgfree
-argument_list|(
-name|entry
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1913,11 +1929,6 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|ldap_msgfree
-argument_list|(
-name|entry
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -1989,11 +2000,6 @@ block|}
 name|ldap_msgfree
 argument_list|(
 name|res
-argument_list|)
-expr_stmt|;
-name|ldap_msgfree
-argument_list|(
-name|entry
 argument_list|)
 expr_stmt|;
 name|ldap_value_free
