@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.266.4.5 2003/03/12 22:42:52 gshapiro Exp $"
+literal|"@(#)$Id: headers.c,v 8.266.4.7 2003/09/03 21:32:20 ca Exp $"
 argument_list|)
 end_macro
 
@@ -457,6 +457,7 @@ argument_list|,
 name|mid
 argument_list|)
 condition|)
+block|{
 name|p
 operator|+=
 name|strlen
@@ -469,6 +470,14 @@ argument_list|)
 operator|+
 literal|2
 expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|p
+operator|<=
+name|q
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|p
 operator|++
@@ -1224,6 +1233,7 @@ operator|=
 literal|'"'
 expr_stmt|;
 comment|/* - 3 to avoid problems with " at the end */
+comment|/* should be sizeof(qval), not MAXNAME */
 for|for
 control|(
 name|k
@@ -4836,6 +4846,10 @@ operator|>
 literal|0
 operator|&&
 name|SM_HAVE_ROOM
+operator|&&
+name|bp
+operator|>
+name|bufhead
 condition|)
 name|bp
 operator|--
@@ -5413,6 +5427,10 @@ condition|(
 name|copylev
 operator|>
 literal|0
+operator|&&
+name|bp
+operator|>
+name|bufhead
 condition|)
 name|bp
 operator|--
@@ -6833,6 +6851,7 @@ name|nlp
 operator|-
 name|v
 expr_stmt|;
+comment|/* 		**  XXX This is broken for SPACELEFT()==0 		**  However, SPACELEFT() is always> 0 unless MAXLINE==1. 		*/
 if|if
 condition|(
 name|SPACELEFT
@@ -6924,6 +6943,7 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+comment|/* XXX This is broken for SPACELEFT()==0 */
 operator|(
 name|void
 operator|)
@@ -7038,6 +7058,11 @@ init|=
 name|PXLF_HEADER
 decl_stmt|;
 name|char
+modifier|*
+modifier|*
+name|res
+decl_stmt|;
+name|char
 name|obuf
 index|[
 name|MAXLINE
@@ -7108,6 +7133,7 @@ operator|->
 name|h_field
 argument_list|)
 expr_stmt|;
+comment|/* opos = strlen(obp); */
 name|opos
 operator|=
 name|strlen
@@ -7215,6 +7241,10 @@ name|name
 operator|=
 name|p
 expr_stmt|;
+name|res
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -7232,9 +7262,8 @@ index|[
 name|PSBUFSIZE
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
+name|res
+operator|=
 name|prescan
 argument_list|(
 name|p
@@ -7260,6 +7289,26 @@ name|p
 operator|=
 name|oldp
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_IGNORE_BOGUS_ADDR
+comment|/* ignore addresses that can't be parsed */
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+block|{
+name|name
+operator|=
+name|p
+expr_stmt|;
+continue|continue;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_IGNORE_BOGUS_ADDR */
 comment|/* look to see if we have an at sign */
 while|while
 condition|(
@@ -7368,6 +7417,47 @@ operator|==
 name|name
 condition|)
 continue|continue;
+comment|/* 		**  if prescan() failed go a bit backwards; this is a hack, 		**  there should be some better error recovery. 		*/
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+operator|&&
+name|p
+operator|>
+name|name
+operator|&&
+operator|!
+operator|(
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|)
+operator|||
+operator|*
+name|p
+operator|==
+literal|','
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\0'
+operator|)
+condition|)
+operator|--
+name|p
+expr_stmt|;
 name|savechar
 operator|=
 operator|*
@@ -7582,7 +7672,7 @@ argument_list|,
 literal|"        "
 argument_list|,
 sizeof|sizeof
-name|obp
+name|obuf
 argument_list|)
 expr_stmt|;
 name|opos
@@ -7669,8 +7759,30 @@ operator|=
 name|savechar
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|obp
+operator|<
+operator|&
+name|obuf
+index|[
+sizeof|sizeof
+name|obuf
+index|]
+condition|)
 operator|*
 name|obp
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+name|obuf
+index|[
+sizeof|sizeof
+name|obuf
+operator|-
+literal|1
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -7852,6 +7964,7 @@ return|return
 literal|0
 return|;
 comment|/* Split on each ';' */
+comment|/* find_character() never returns NULL */
 while|while
 condition|(
 operator|(

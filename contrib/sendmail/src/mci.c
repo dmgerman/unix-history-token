@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.205.2.3 2003/01/07 03:56:19 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.205.2.4 2003/03/31 17:35:27 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1961,6 +1961,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* 	**  The following check is just for paranoia.  It protects the 	**  assignment in the if() clause. If there's not some minimum 	**  amount of space we can stop right now. The check will not 	**  trigger as long as sizeof(buf)=4000. 	*/
+if|if
+condition|(
+name|p
+operator|>=
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|4
+condition|)
+goto|goto
+name|printit
+goto|;
 if|if
 condition|(
 name|mci
@@ -1981,6 +1998,7 @@ operator|++
 operator|=
 literal|'<'
 expr_stmt|;
+comment|/* protected above */
 for|for
 control|(
 name|f
@@ -4277,6 +4295,10 @@ name|end
 expr_stmt|;
 while|while
 condition|(
+name|start
+operator|>
+name|pathname
+operator|&&
 operator|*
 operator|(
 name|start
@@ -4330,6 +4352,10 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+name|end
+operator|>
+name|pathname
+operator|&&
 operator|*
 name|end
 operator|==
@@ -5086,7 +5112,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MCI_GENERATE_PERSISTENT_PATH -- generate path from hostname ** **	Given `host', convert from a.b.c to $QueueDir/.hoststat/c./b./a, **	putting the result into `path'.  if `createflag' is set, intervening **	directories will be created as needed. ** **	Parameters: **		host -- host name to convert from. **		path -- place to store result. **		pathlen -- length of path buffer. **		createflag -- if set, create intervening directories as **			needed. ** **	Returns: **		0 -- success **		-1 -- failure */
+comment|/* **  MCI_GENERATE_PERSISTENT_PATH -- generate path from hostname ** **	Given `host', convert from a.b.c to $HostStatDir/c./b./a, **	putting the result into `path'.  if `createflag' is set, intervening **	directories will be created as needed. ** **	Parameters: **		host -- host name to convert from. **		path -- place to store result. **		pathlen -- length of path buffer. **		createflag -- if set, create intervening directories as **			needed. ** **	Returns: **		0 -- success **		-1 -- failure */
 end_comment
 
 begin_function
