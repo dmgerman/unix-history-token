@@ -13,6 +13,13 @@ name|VAX750
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAX730
+value|1
+end_define
+
 begin_include
 include|#
 directive|include
@@ -172,6 +179,19 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
+specifier|register
+name|struct
+name|rusage
+modifier|*
+name|rup
+init|=
+operator|(
+expr|struct
+name|rusage
+operator|*
+operator|)
+literal|0
+decl_stmt|;
 name|struct
 name|rpb
 modifier|*
@@ -247,6 +267,56 @@ operator|&
 name|p
 operator|->
 name|p_wchan
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP_TSIZE %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_tsize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP_SSIZE %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_ssize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP_P0BR %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_p0br
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP_SZPT %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_szpt
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP_TEXTP %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_textp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -365,6 +435,26 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tV_FAULTS %d\n"
+argument_list|,
+operator|&
+name|vm
+operator|->
+name|v_faults
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tV_PGREC %d\n"
+argument_list|,
+operator|&
+name|vm
+operator|->
+name|v_pgrec
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tUPAGES %d\n"
 argument_list|,
 name|UPAGES
@@ -410,6 +500,36 @@ argument_list|(
 literal|"#define\tNMBCLUSTERS %d\n"
 argument_list|,
 name|NMBCLUSTERS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tU_PROCP %d\n"
+argument_list|,
+operator|&
+name|up
+operator|->
+name|u_procp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tU_RU %d\n"
+argument_list|,
+operator|&
+name|up
+operator|->
+name|u_ru
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tRU_MINFLT %d\n"
+argument_list|,
+operator|&
+name|rup
+operator|->
+name|ru_minflt
 argument_list|)
 expr_stmt|;
 name|printf
