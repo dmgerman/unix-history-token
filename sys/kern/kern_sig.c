@@ -9226,7 +9226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The force of a signal has been directed against a single  * thread. We need to see what we can do about knocking it  * out of any sleep it may be in etc.  */
+comment|/*  * The force of a signal has been directed against a single  * thread.  We need to see what we can do about knocking it  * out of any sleep it may be in etc.  */
 end_comment
 
 begin_function
@@ -9284,11 +9284,9 @@ expr_stmt|;
 comment|/* 	 * Bring the priority of a thread up if we want it to get 	 * killed in this lifetime. 	 */
 if|if
 condition|(
-operator|(
 name|action
 operator|==
 name|SIG_DFL
-operator|)
 operator|&&
 operator|(
 name|prop
@@ -9305,14 +9303,12 @@ name|td_priority
 operator|>
 name|PUSER
 condition|)
-block|{
 name|td
 operator|->
 name|td_priority
 operator|=
 name|PUSER
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -9391,7 +9387,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 			 * Raise priority to at least PUSER. 			 */
+comment|/* 			 * Give low priority threads a better chance to run. 			 */
 if|if
 condition|(
 name|td
@@ -9413,12 +9409,12 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* 		 * Other states do nothing with the signal immediately, 		 * other than kicking ourselves if we are running. 		 * It will either never be noticed, or noticed very soon. 		 */
 ifdef|#
 directive|ifdef
 name|SMP
-else|else
-block|{
-comment|/* 		 * Other states do nothing with the signal immediatly, 		 * other than kicking ourselves if we are running. 		 * It will either never be noticed, or noticed very soon. 		 */
 if|if
 condition|(
 name|TD_IS_RUNNING
@@ -9435,9 +9431,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 end_function
 
