@@ -10,6 +10,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netatm/kern_include.h>
 end_include
 
@@ -18,6 +36,28 @@ include|#
 directive|include
 file|<netatm/uni/unisig_var.h>
 end_include
+
+begin_comment
+comment|/*  * net.harp.uni  */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_harp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|uni
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"UNI"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#

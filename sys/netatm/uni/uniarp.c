@@ -10,6 +10,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netatm/kern_include.h>
 end_include
 
@@ -123,6 +141,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * net.harp.uni.uniarp_print  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|uniarp_print
@@ -130,6 +152,27 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_harp_uni
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|uniarp_print
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|uniarp_print
+argument_list|,
+literal|0
+argument_list|,
+literal|"dump UNI/ARP messages"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|Atm_endpoint
