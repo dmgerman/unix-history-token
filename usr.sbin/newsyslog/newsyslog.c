@@ -860,7 +860,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|log
+name|logname
 parameter_list|,
 specifier|const
 name|struct
@@ -878,7 +878,7 @@ name|compress_log
 parameter_list|(
 name|char
 modifier|*
-name|log
+name|logname
 parameter_list|,
 name|int
 name|dowait
@@ -893,7 +893,7 @@ name|bzcompress_log
 parameter_list|(
 name|char
 modifier|*
-name|log
+name|logname
 parameter_list|,
 name|int
 name|dowait
@@ -7137,7 +7137,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|log
+name|logname
 parameter_list|,
 specifier|const
 name|struct
@@ -7162,7 +7162,7 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-name|log
+name|logname
 argument_list|,
 literal|"a"
 argument_list|)
@@ -7302,7 +7302,7 @@ name|compress_log
 parameter_list|(
 name|char
 modifier|*
-name|log
+name|logname
 parameter_list|,
 name|int
 name|dowait
@@ -7349,7 +7349,7 @@ argument_list|)
 argument_list|,
 literal|"%s.0"
 argument_list|,
-name|log
+name|logname
 argument_list|)
 expr_stmt|;
 name|pid
@@ -7419,7 +7419,7 @@ name|bzcompress_log
 parameter_list|(
 name|char
 modifier|*
-name|log
+name|logname
 parameter_list|,
 name|int
 name|dowait
@@ -7463,7 +7463,7 @@ argument_list|)
 argument_list|,
 literal|"%s.0"
 argument_list|,
-name|log
+name|logname
 argument_list|)
 expr_stmt|;
 name|pid
