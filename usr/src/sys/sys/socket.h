@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socket.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socket.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -380,12 +380,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_NBS
+name|AF_ISO
 value|7
 end_define
 
 begin_comment
-comment|/* nbs protocols */
+comment|/* ISO protocols */
 end_comment
 
 begin_define
@@ -490,19 +490,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|AF_ROUTE
 value|17
+end_define
+
+begin_comment
+comment|/* Internal Routing Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|18
 end_define
 
 begin_comment
 comment|/*  * Structure used by kernel to store most  * addresses.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
 
 begin_struct
 struct|struct
@@ -517,9 +522,9 @@ name|sa_family
 decl_stmt|;
 comment|/* address family */
 name|char
-name|sa_addr
+name|sa_data
 index|[
-literal|1
+literal|14
 index|]
 decl_stmt|;
 comment|/* actually longer; address value */
@@ -527,14 +532,13 @@ block|}
 struct|;
 end_struct
 
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/*  * 4.3 compat sockaddr, move to compat file later  */
+end_comment
 
 begin_struct
 struct|struct
-name|sockaddr
+name|osockaddr
 block|{
 name|u_short
 name|sa_family
@@ -550,11 +554,6 @@ comment|/* up to 14 bytes of direct address */
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Structure used by kernel to pass protocol  * information in raw sockets.  */
@@ -632,8 +631,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PF_NBS
-value|AF_NBS
+name|PF_ISO
+value|AF_ISO
 end_define
 
 begin_define
@@ -697,6 +696,13 @@ define|#
 directive|define
 name|PF_APPLETALK
 value|AF_APPLETALK
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_ROUTE
+value|AF_ROUTE
 end_define
 
 begin_define
