@@ -1409,6 +1409,13 @@ name|flags
 operator||=
 name|MAP_ANON
 expr_stmt|;
+else|else
+name|bsd_args
+operator|.
+name|flags
+operator||=
+name|MAP_NOSYNC
+expr_stmt|;
 if|if
 condition|(
 name|linux_args
