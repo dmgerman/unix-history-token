@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Robert N. M. Watson  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spx_usrreq.h  */
+comment|/*-  * Copyright (c) 2004-2005 Robert N. M. Watson  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spx_usrreq.h  */
 end_comment
 
 begin_include
@@ -270,9 +270,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_close
 parameter_list|(
 name|struct
@@ -285,9 +283,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_disconnect
 parameter_list|(
 name|struct
@@ -300,9 +296,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_drop
 parameter_list|(
 name|struct
@@ -398,9 +392,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_usrclosed
 parameter_list|(
 name|struct
@@ -1790,6 +1782,10 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|cb
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|si
 operator|->
@@ -1834,6 +1830,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cb
+operator|==
+name|NULL
+operator|||
 name|cb
 operator|->
 name|s_ipxpcb
@@ -7797,9 +7797,6 @@ name|so
 decl_stmt|;
 block|{
 name|int
-name|error
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|struct
@@ -7812,10 +7809,6 @@ name|spxpcb
 modifier|*
 name|cb
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|ipxp
 operator|=
 name|sotoipxpcb
@@ -7840,26 +7833,9 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|cb
-operator|=
 name|spx_usrclosed
 argument_list|(
 name|cb
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cb
-operator|!=
-name|NULL
-condition|)
-name|error
-operator|=
-name|spx_output
-argument_list|(
-name|cb
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|splx
@@ -7869,7 +7845,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -8128,14 +8104,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close a SPIP control block:  *	discard spx control block itself  *	discard ipx protocol control block  *	wake up any sleepers  */
+comment|/*  * Close a SPIP control block:  *	discard spx control block itself  *	discard ipx protocol control block  *	wake up any sleepers  * cb will always be invalid after this call.  */
 end_comment
 
 begin_function
-specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_close
 parameter_list|(
 name|cb
@@ -8263,23 +8236,16 @@ operator|.
 name|spxs_closed
 operator|++
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *	Someday we may do level 3 handshaking  *	to close a connection or send a xerox style error.  *	For now, just close.  */
+comment|/*  *	Someday we may do level 3 handshaking  *	to close a connection or send a xerox style error.  *	For now, just close.  * cb will always be invalid after this call.  */
 end_comment
 
 begin_function
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_usrclosed
 parameter_list|(
 name|cb
@@ -8291,22 +8257,21 @@ modifier|*
 name|cb
 decl_stmt|;
 block|{
-return|return
-operator|(
 name|spx_close
 argument_list|(
 name|cb
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * cb will always be invalid after this call.  */
+end_comment
+
 begin_function
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_disconnect
 parameter_list|(
 name|cb
@@ -8318,26 +8283,21 @@ modifier|*
 name|cb
 decl_stmt|;
 block|{
-return|return
-operator|(
 name|spx_close
 argument_list|(
 name|cb
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Drop connection, reporting  * the specified error.  */
+comment|/*  * Drop connection, reporting  * the specified error.  * cb will always be invalid after this call.  */
 end_comment
 
 begin_function
 specifier|static
-name|struct
-name|spxpcb
-modifier|*
+name|void
 name|spx_drop
 parameter_list|(
 name|cb
@@ -8401,14 +8361,11 @@ name|so_error
 operator|=
 name|errno
 expr_stmt|;
-return|return
-operator|(
 name|spx_close
 argument_list|(
 name|cb
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -8750,14 +8707,16 @@ operator|.
 name|spxs_timeoutdrop
 operator|++
 expr_stmt|;
-name|cb
-operator|=
 name|spx_drop
 argument_list|(
 name|cb
 argument_list|,
 name|ETIMEDOUT
 argument_list|)
+expr_stmt|;
+name|cb
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -9018,14 +8977,16 @@ operator|.
 name|spxs_keepdrops
 operator|++
 expr_stmt|;
-name|cb
-operator|=
 name|spx_drop
 argument_list|(
 name|cb
 argument_list|,
 name|ETIMEDOUT
 argument_list|)
+expr_stmt|;
+name|cb
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 block|}
