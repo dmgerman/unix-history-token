@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dispatch.c,v 1.5.2.6 1997/03/10 21:10:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dispatch.c,v 1.5.2.7 1997/05/22 04:10:06 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -77,15 +77,51 @@ name|configSamba
 block|}
 block|,
 block|{
-literal|"configRegister"
+literal|"configNTP"
 block|,
-name|configRegister
+name|configNTP
+block|}
+block|,
+block|{
+literal|"configPCNFSD"
+block|,
+name|configPCNFSD
+block|}
+block|,
+block|{
+literal|"configNFSServer"
+block|,
+name|configNFSServer
 block|}
 block|,
 block|{
 literal|"configPackages"
 block|,
 name|configPackages
+block|}
+block|,
+block|{
+literal|"configRegister"
+block|,
+name|configRegister
+block|}
+block|,
+block|{
+literal|"configRouter"
+block|,
+name|configRouter
+block|}
+block|,
+block|{
+literal|"configUsers"
+block|,
+name|configUsers
+block|}
+block|,
+block|{
+literal|"configXFree86"
+block|,
+name|configXFree86
 block|}
 block|,
 block|{
@@ -116,6 +152,12 @@ block|{
 literal|"distReset"
 block|,
 name|distReset
+block|}
+block|,
+block|{
+literal|"distSetCustom"
+block|,
+name|distSetDeveloper
 block|}
 block|,
 block|{
@@ -209,6 +251,12 @@ name|installExpress
 block|}
 block|,
 block|{
+literal|"installNovice"
+block|,
+name|installNovice
+block|}
+block|,
+block|{
 literal|"installUpgrade"
 block|,
 name|installUpgrade
@@ -221,9 +269,33 @@ name|installFixup
 block|}
 block|,
 block|{
+literal|"installFixitHoloShell"
+block|,
+name|installFixitHoloShell
+block|}
+block|,
+block|{
+literal|"installFixitCDROM"
+block|,
+name|installFixitCDROM
+block|}
+block|,
+block|{
+literal|"installFixitFloppy"
+block|,
+name|installFixitFloppy
+block|}
+block|,
+block|{
 literal|"installFilesystems"
 block|,
 name|installFilesystems
+block|}
+block|,
+block|{
+literal|"installVarDefaults"
+block|,
+name|installVarDefaults
 block|}
 block|,
 block|{
@@ -509,7 +581,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* A command might be a pathname if it's encoded in argv[0], as we also support */
+comment|/* If it's got a `=' sign in there, assume it's a variable setting */
 if|if
 condition|(
 name|index
@@ -532,12 +604,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* A command might be a pathname if it's encoded in argv[0], which we also support */
 if|if
 condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|rindex
 argument_list|(
 name|str
 argument_list|,
@@ -567,9 +640,9 @@ name|i
 argument_list|)
 condition|)
 block|{
-name|msgConfirm
+name|msgNotify
 argument_list|(
-literal|"No such command: %s"
+literal|"Warning: No such command ``%s''"
 argument_list|,
 name|str
 argument_list|)
