@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regex.c	5.2 (Berkeley) %G%"
+literal|"@(#)regex.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1380,6 +1380,7 @@ block|}
 end_block
 
 begin_expr_stmt
+specifier|static
 name|backref
 argument_list|(
 name|i
@@ -1447,6 +1448,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|int
 name|cclass
 parameter_list|(
