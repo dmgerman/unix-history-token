@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: disklabel.c,v 1.2 1998/04/22 10:25:09 julian Exp $  */
+comment|/*-  * Copyright (C) 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: disklabel.c,v 1.3 1998/04/22 19:27:51 julian Exp $  */
 end_comment
 
 begin_define
@@ -271,6 +271,17 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|sl_h_dump_t
+name|dkl_dump
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* core dump req downward */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|slice_handler
 name|slicetype
@@ -314,7 +325,10 @@ block|,
 comment|/* verify */
 operator|&
 name|dkl_upconfig
+block|,
 comment|/* subslice manipulation */
+operator|&
+name|dkl_dump
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3586,6 +3600,9 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|BAD144
 case|case
 name|SLCIOCTRANSBAD
 case|:
@@ -3635,6 +3652,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 comment|/* These don't really make sense. keep the headers for a reminder */
 default|default:
 return|return
@@ -3911,6 +3930,84 @@ end_endif
 begin_comment
 comment|/* 0 */
 end_comment
+
+begin_function
+specifier|static
+name|int
+name|dkl_dump
+parameter_list|(
+name|void
+modifier|*
+name|private
+parameter_list|,
+name|int32_t
+name|blkoff
+parameter_list|,
+name|int32_t
+name|blkcnt
+parameter_list|)
+block|{
+name|struct
+name|private_data
+modifier|*
+name|pd
+decl_stmt|;
+name|struct
+name|subdev
+modifier|*
+name|sdp
+decl_stmt|;
+specifier|register
+name|struct
+name|slice
+modifier|*
+name|slice
+decl_stmt|;
+name|RR
+expr_stmt|;
+name|sdp
+operator|=
+name|private
+expr_stmt|;
+name|pd
+operator|=
+name|sdp
+operator|->
+name|pd
+expr_stmt|;
+name|slice
+operator|=
+name|pd
+operator|->
+name|slice_down
+expr_stmt|;
+name|blkoff
+operator|+=
+name|sdp
+operator|->
+name|offset
+expr_stmt|;
+return|return
+call|(
+modifier|*
+name|slice
+operator|->
+name|handler_down
+operator|->
+name|dump
+call|)
+argument_list|(
+name|slice
+operator|->
+name|private_down
+argument_list|,
+name|blkoff
+argument_list|,
+name|blkcnt
+argument_list|)
+return|;
+block|}
+end_function
 
 end_unit
 
