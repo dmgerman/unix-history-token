@@ -866,7 +866,7 @@ name|mmbfree
 operator|!=
 name|NULL
 condition|)
-name|m_mballoc_wakeup
+name|MMBWAKEUP
 argument_list|()
 expr_stmt|;
 block|}
@@ -1329,7 +1329,7 @@ name|mclfree
 operator|!=
 name|NULL
 condition|)
-name|m_clalloc_wakeup
+name|MCLWAKEUP
 argument_list|()
 expr_stmt|;
 block|}
