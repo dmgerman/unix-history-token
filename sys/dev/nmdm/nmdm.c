@@ -271,7 +271,11 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TTY
-block|, }
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -683,7 +687,7 @@ decl_stmt|;
 comment|/* 	 * XXX: Gross hack for DEVFS: 	 * If we openned this device, ensure we have the 	 * next one too, so people can open it. 	 */
 name|minr
 operator|=
-name|dev2unit
+name|lminor
 argument_list|(
 name|dev
 argument_list|)
@@ -901,9 +905,7 @@ name|pt_prison
 operator|!=
 name|p
 operator|->
-name|p_ucred
-operator|->
-name|cr_prison
+name|p_prison
 condition|)
 block|{
 return|return
