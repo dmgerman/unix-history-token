@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	OMRON: $Id: pmap.h,v 1.2 92/06/14 06:29:43 moti Exp $  *  *	@(#)pmap.h	7.2 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: hp300/include/pmap.h	7.11 (Berkeley) 12/27/92  *  *	@(#)pmap.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -132,6 +132,17 @@ name|kernel_pmap
 value|(&kernel_pmap_store)
 end_define
 
+begin_define
+define|#
+directive|define
+name|active_pmap
+parameter_list|(
+name|pm
+parameter_list|)
+define|\
+value|((pm) == kernel_pmap || (pm) == curproc->p_vmspace->vm_map.pmap)
+end_define
+
 begin_comment
 comment|/*  * On the 040 we keep track of which level 2 blocks are already in use  * with the pm_stfree mask.  Bits are arranged from LSB (block 0) to MSB  * (block 31).  For convenience, the level 1 table is considered to be  * block 0.  *  * MAX[KU]L2SIZE control how many pages of level 2 descriptors are allowed.  * for the kernel and users.  8 implies only the initial "segment table"  * page is used.  WARNING: don't change MAXUL2SIZE unless you can allocate  * physically contiguous pages for the ST in pmap.c!  */
 end_comment
@@ -255,7 +266,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* all entries must be cache inhibited */
+comment|/* header: all entries are cache inhibited */
 end_comment
 
 begin_define
@@ -266,7 +277,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* entry maps a page table page */
+comment|/* header: entry maps a page table page */
 end_comment
 
 begin_ifdef
