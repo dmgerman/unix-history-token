@@ -63,6 +63,18 @@ name|u_int32_t
 name|pc_class
 decl_stmt|;
 comment|/* device class */
+name|struct
+name|pci_device
+modifier|*
+name|pc_dvp
+decl_stmt|;
+comment|/* device driver pointer or NULL */
+name|struct
+name|pcicb
+modifier|*
+name|pc_cb
+decl_stmt|;
+comment|/* pointer to bus parameters */
 block|}
 struct|;
 end_struct
@@ -129,6 +141,13 @@ define|#
 directive|define
 name|PCIOCWRITE
 value|_IOWR('p', 3, struct pci_io)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIOCATTACHED
+value|_IOWR('p', 4, struct pci_io)
 end_define
 
 begin_endif
