@@ -280,9 +280,11 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|my_machine_name
+operator|=
 name|his_machine_name
 operator|=
-name|my_machine_name
+literal|"localhost"
 expr_stmt|;
 block|}
 else|else
