@@ -1248,6 +1248,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|printf
+argument_list|(
+literal|"USE COUNT %d\n"
+argument_list|,
+name|ln
+operator|->
+name|useCount
+argument_list|)
+expr_stmt|;
 name|ln
 operator|->
 name|flags
