@@ -25,12 +25,15 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|off_t
+name|int
 name|_ftello
 name|__P
 argument_list|(
 operator|(
 name|FILE
+operator|*
+operator|,
+name|fpos_t
 operator|*
 operator|)
 argument_list|)
