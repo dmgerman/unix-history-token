@@ -822,19 +822,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"ep%d: Pass 1 of 2 detection failed (nonfatal)\n"
-argument_list|,
-name|is
-operator|->
-name|id_unit
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|!
 name|ep_pccard_identify
 argument_list|(
@@ -846,6 +833,19 @@ name|id_unit
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ep%d: Pass 1 of 2 detection failed (nonfatal)\n"
+argument_list|,
+name|is
+operator|->
+name|id_unit
+argument_list|)
+expr_stmt|;
 name|epb
 operator|->
 name|cmd_off
