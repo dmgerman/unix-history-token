@@ -60,7 +60,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gzip.c,v 1.7 1997/03/15 22:43:58 guido Exp $"
+literal|"$Id: gzip.c,v 1.4 1998/11/22 20:03:21 deraadt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3025,12 +3025,57 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-name|strcpy
+if|if
+condition|(
+name|z_len
+operator|>
+sizeof|sizeof
+argument_list|(
+name|z_suffix
+argument_list|)
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: -S suffix too long\n"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+name|do_exit
+argument_list|(
+name|ERROR
+argument_list|)
+expr_stmt|;
+block|}
+name|strncpy
 argument_list|(
 name|z_suffix
 argument_list|,
 name|optarg
+argument_list|,
+sizeof|sizeof
+name|z_suffix
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|z_suffix
+index|[
+sizeof|sizeof
+name|z_suffix
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 break|break;
 case|case
