@@ -6157,12 +6157,19 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-comment|/* pamh is NULL, cannot use pam_strerror() */
+comment|/* 		 * In OpenPAM, it's OK to pass NULL to pam_strerror() 		 * if context creation has failed in the first place. 		 */
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pam_start failed"
+literal|"pam_start: %s"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|NULL
+argument_list|,
+name|e
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
