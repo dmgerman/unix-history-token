@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.3 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.4 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.3 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.4 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3368,6 +3368,17 @@ operator|->
 name|e_id
 operator|=
 name|id
+expr_stmt|;
+if|if
+condition|(
+name|forkflag
+condition|)
+name|disconnect
+argument_list|(
+literal|0
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
