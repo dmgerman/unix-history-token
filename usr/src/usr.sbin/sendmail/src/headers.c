@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -2584,7 +2584,7 @@ name|fputc
 argument_list|(
 literal|','
 argument_list|,
-name|obp
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2595,14 +2595,14 @@ name|fputc
 argument_list|(
 literal|'\r'
 argument_list|,
-name|obp
+name|fp
 argument_list|)
 expr_stmt|;
 name|fputc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|obp
+name|fp
 argument_list|)
 expr_stmt|;
 name|putline
