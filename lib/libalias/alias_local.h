@@ -3,6 +3,18 @@ begin_comment
 comment|/* -*- mode: c; tab-width: 3; c-basic-offset: 3; -*-     Alias_local.h contains the function prototypes for alias.c,     alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well     as any future add-ons).  It is intended to be used only within     the aliasing software.  Outside world interfaces are defined     in alias.h      This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)<updated several times by original author and Eivind Eiklund> */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ALIAS_LOCAL_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ALIAS_LOCAL_H
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -503,6 +515,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|PunchFWHole
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Housekeeping function */
 end_comment
@@ -561,30 +584,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Log file control */
-end_comment
-
-begin_function_decl
-name|void
-name|InitPacketAliasLog
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|UninitPacketAliasLog
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_enum
+enum|enum
+name|alias_tcp_state
+block|{
+name|ALIAS_TCP_STATE_NOT_CONNECTED
+block|,
+name|ALIAS_TCP_STATE_CONNECTED
+block|,
+name|ALIAS_TCP_STATE_DISCONNECTED
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*lint -restore */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(ALIAS_LOCAL_H) */
 end_comment
 
 end_unit

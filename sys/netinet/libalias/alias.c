@@ -4,7 +4,7 @@ comment|/* -*- mode: c; tab-width: 8; c-basic-indent: 4; -*- */
 end_comment
 
 begin_comment
-comment|/*     Alias.c provides supervisory control for the functions of the     packet aliasing software.  It consists of routines to monitor     TCP connection state, protocol-specific aliasing routines,     fragment handling and the following outside world functional     interfaces: SaveFragmentPtr, GetFragmentPtr, FragmentAliasIn,     PacketAliasIn and PacketAliasOut.      The other C program files are briefly described. The data     structure framework which holds information needed to translate     packets is encapsulated in alias_db.c.  Data is accessed by     function calls, so other segments of the program need not know     about the underlying data structures.  Alias_ftp.c contains     special code for modifying the ftp PORT command used to establish     data connections, while alias_irc.c do the same for IRC     DCC. Alias_util.c contains a few utility routines.      This software is placed into the public domain with no restrictions     on its distribution.      Version 1.0 August, 1996  (cjm)      Version 1.1 August 20, 1996  (cjm)         PPP host accepts incoming connections for ports 0 to 1023.         (Gary Roberts pointed out the need to handle incoming          connections.)      Version 1.2 September 7, 1996 (cjm)         Fragment handling error in alias_db.c corrected.         (Tom Torrance helped fix this problem.)      Version 1.4 September 16, 1996 (cjm)         - A more generalized method for handling incoming           connections, without the 0-1023 restriction, is           implemented in alias_db.c         - Improved ICMP support in alias.c.  Traceroute           packet streams can now be correctly aliased.         - TCP connection closing logic simplified in           alias.c and now allows for additional 1 minute           "grace period" after FIN or RST is observed.      Version 1.5 September 17, 1996 (cjm)         Corrected error in handling incoming UDP packets with 0 checksum.         (Tom Torrance helped fix this problem.)      Version 1.6 September 18, 1996 (cjm)         Simplified ICMP aliasing scheme.  Should now support         traceroute from Win95 as well as FreeBSD.      Version 1.7 January 9, 1997 (cjm)         - Out-of-order fragment handling.         - IP checksum error fixed for ftp transfers           from aliasing host.         - Integer return codes added to all           aliasing/de-aliasing functions.         - Some obsolete comments cleaned up.         - Differential checksum computations for           IP header (TCP, UDP and ICMP were already           differential).      Version 2.1 May 1997 (cjm)         - Added support for outgoing ICMP error           messages.         - Added two functions PacketAliasIn2()           and PacketAliasOut2() for dynamic address           control (e.g. round-robin allocation of           incoming packets).      Version 2.2 July 1997 (cjm)         - Rationalized API function names to begin           with "PacketAlias..."         - Eliminated PacketAliasIn2() and           PacketAliasOut2() as poorly conceived.  */
+comment|/*     Alias.c provides supervisory control for the functions of the     packet aliasing software.  It consists of routines to monitor     TCP connection state, protocol-specific aliasing routines,     fragment handling and the following outside world functional     interfaces: SaveFragmentPtr, GetFragmentPtr, FragmentAliasIn,     PacketAliasIn and PacketAliasOut.      The other C program files are briefly described. The data     structure framework which holds information needed to translate     packets is encapsulated in alias_db.c.  Data is accessed by     function calls, so other segments of the program need not know     about the underlying data structures.  Alias_ftp.c contains     special code for modifying the ftp PORT command used to establish     data connections, while alias_irc.c do the same for IRC     DCC. Alias_util.c contains a few utility routines.      This software is placed into the public domain with no restrictions     on its distribution.      Version 1.0 August, 1996  (cjm)      Version 1.1 August 20, 1996  (cjm)         PPP host accepts incoming connections for ports 0 to 1023.         (Gary Roberts pointed out the need to handle incoming          connections.)      Version 1.2 September 7, 1996 (cjm)         Fragment handling error in alias_db.c corrected.         (Tom Torrance helped fix this problem.)      Version 1.4 September 16, 1996 (cjm)         - A more generalized method for handling incoming           connections, without the 0-1023 restriction, is           implemented in alias_db.c         - Improved ICMP support in alias.c.  Traceroute           packet streams can now be correctly aliased.         - TCP connection closing logic simplified in           alias.c and now allows for additional 1 minute           "grace period" after FIN or RST is observed.      Version 1.5 September 17, 1996 (cjm)         Corrected error in handling incoming UDP packets with 0 checksum.         (Tom Torrance helped fix this problem.)      Version 1.6 September 18, 1996 (cjm)         Simplified ICMP aliasing scheme.  Should now support         traceroute from Win95 as well as FreeBSD.      Version 1.7 January 9, 1997 (cjm)         - Out-of-order fragment handling.         - IP checksum error fixed for ftp transfers           from aliasing host.         - Integer return codes added to all           aliasing/de-aliasing functions.         - Some obsolete comments cleaned up.         - Differential checksum computations for           IP header (TCP, UDP and ICMP were already           differential).      Version 2.1 May 1997 (cjm)         - Added support for outgoing ICMP error           messages.         - Added two functions PacketAliasIn2()           and PacketAliasOut2() for dynamic address           control (e.g. round-robin allocation of           incoming packets).      Version 2.2 July 1997 (cjm)         - Rationalized API function names to begin           with "PacketAlias..."         - Eliminated PacketAliasIn2() and           PacketAliasOut2() as poorly conceived.      See HISTORY file for additional revisions.  */
 end_comment
 
 begin_include
@@ -209,7 +209,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|0
+name|ALIAS_TCP_STATE_NOT_CONNECTED
 case|:
 if|if
 condition|(
@@ -223,12 +223,12 @@ name|SetStateIn
 argument_list|(
 name|link
 argument_list|,
-literal|1
+name|ALIAS_TCP_STATE_CONNECTED
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|1
+name|ALIAS_TCP_STATE_CONNECTED
 case|:
 if|if
 condition|(
@@ -248,9 +248,10 @@ name|SetStateIn
 argument_list|(
 name|link
 argument_list|,
-literal|2
+name|ALIAS_TCP_STATE_DISCONNECTED
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -308,7 +309,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|0
+name|ALIAS_TCP_STATE_NOT_CONNECTED
 case|:
 if|if
 condition|(
@@ -322,12 +323,12 @@ name|SetStateOut
 argument_list|(
 name|link
 argument_list|,
-literal|1
+name|ALIAS_TCP_STATE_CONNECTED
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|1
+name|ALIAS_TCP_STATE_CONNECTED
 case|:
 if|if
 condition|(
@@ -347,9 +348,10 @@ name|SetStateOut
 argument_list|(
 name|link
 argument_list|,
-literal|2
+name|ALIAS_TCP_STATE_DISCONNECTED
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -3559,6 +3561,31 @@ name|pip
 operator|->
 name|ip_dst
 expr_stmt|;
+comment|/* Defense against mangled packets */
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|pip
+operator|->
+name|ip_len
+argument_list|)
+operator|>
+name|maxpacketsize
+operator|||
+operator|(
+name|pip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+operator|)
+operator|>
+name|maxpacketsize
+condition|)
+return|return
+name|PKT_ALIAS_IGNORED
+return|;
 name|iresult
 operator|=
 name|PKT_ALIAS_IGNORED
@@ -3799,6 +3826,31 @@ operator|*
 operator|)
 name|ptr
 expr_stmt|;
+comment|/* Defense against mangled packets */
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|pip
+operator|->
+name|ip_len
+argument_list|)
+operator|>
+name|maxpacketsize
+operator|||
+operator|(
+name|pip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+operator|)
+operator|>
+name|maxpacketsize
+condition|)
+return|return
+name|PKT_ALIAS_IGNORED
+return|;
 name|addr_save
 operator|=
 name|GetDefaultAliasAddress

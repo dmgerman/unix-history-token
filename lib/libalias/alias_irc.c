@@ -1033,6 +1033,12 @@ name|u_short
 name|alias_port
 decl_stmt|;
 comment|/* Port given by aliasing */
+comment|/* Generate firewall hole as appropriate */
+name|PunchFWHole
+argument_list|(
+name|dcc_link
+argument_list|)
+expr_stmt|;
 name|alias_address
 operator|=
 name|GetAliasAddress

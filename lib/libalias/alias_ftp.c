@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*     Alias_ftp.c performs special processing for FTP sessions under     TCP.  Specifically, when a PORT command from the client side     is sent, it is intercepted and modified.  The address is changed     to the gateway machine and an aliasing port is used.      For this routine to work, the PORT command must fit entirely     into a single TCP packet.  This is typically the case, but exceptions     can easily be envisioned under the actual specifications.      Probably the most troubling aspect of the approach taken here is     that the new PORT command will typically be a different length, and     this causes a certain amount of bookkeeping to keep track of the     changes of sequence and acknowledgment numbers, since the client     machine is totally unaware of the modification to the TCP stream.       This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)      Version 1.6          Brian Somers and Martin Renters identified an IP checksum          error for modified IP packets.      Version 1.7:  January 9, 1996 (cjm)          Differental checksum computation for change          in IP packet length.         Version 2.1:  May, 1997 (cjm)          Very minor changes to conform with          local/global/function naming conventions          withing the packet alising module. */
+comment|/*     Alias_ftp.c performs special processing for FTP sessions under     TCP.  Specifically, when a PORT command from the client side     is sent, it is intercepted and modified.  The address is changed     to the gateway machine and an aliasing port is used.      For this routine to work, the PORT command must fit entirely     into a single TCP packet.  This is typically the case, but exceptions     can easily be envisioned under the actual specifications.      Probably the most troubling aspect of the approach taken here is     that the new PORT command will typically be a different length, and     this causes a certain amount of bookkeeping to keep track of the     changes of sequence and acknowledgment numbers, since the client     machine is totally unaware of the modification to the TCP stream.       This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)      Version 1.6          Brian Somers and Martin Renters identified an IP checksum          error for modified IP packets.      Version 1.7:  January 9, 1996 (cjm)          Differental checksum computation for change          in IP packet length.         Version 2.1:  May, 1997 (cjm)          Very minor changes to conform with          local/global/function naming conventions          withing the packet alising module.      See HISTORY file for record of revisions. */
 end_comment
 
 begin_comment
@@ -789,6 +789,12 @@ name|tcphdr
 modifier|*
 name|tc
 decl_stmt|;
+comment|/* Punch hole in firewall */
+name|PunchFWHole
+argument_list|(
+name|ftp_link
+argument_list|)
+expr_stmt|;
 comment|/* Calculate data length of TCP packet */
 name|tc
 operator|=
@@ -889,11 +895,13 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
 name|alias_address
+operator|.
+name|s_addr
 expr_stmt|;
 name|a1
 operator|=

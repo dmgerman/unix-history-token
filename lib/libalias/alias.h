@@ -68,6 +68,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|PacketAliasUninit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|PacketAliasSetAddress
 parameter_list|(
 name|struct
@@ -81,6 +91,20 @@ specifier|extern
 name|unsigned
 name|int
 name|PacketAliasSetMode
+parameter_list|(
+name|unsigned
+name|int
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|PacketAliasSetFWBase
 parameter_list|(
 name|unsigned
 name|int
@@ -472,6 +496,17 @@ value|0x20
 end_define
 
 begin_comment
+comment|/* If PKT_ALIAS_PUNCH_FW is set, active FTP and IRC DCC connections    will create a 'hole' in the firewall to allow the transfers to    work.  Where (IPFW "line-numbers") the hole is created is    controlled by PacketAliasSetFWBase(base, size). The hole will be    attached to that particular alias_link, so when the link goes away    so do the hole.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKT_ALIAS_PUNCH_FW
+value|0x40
+end_define
+
+begin_comment
 comment|/* Return Codes */
 end_comment
 
@@ -508,19 +543,6 @@ define|#
 directive|define
 name|PKT_ALIAS_FOUND_HEADER_FRAGMENT
 value|4
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|__libalias_version
-end_undef
-
-begin_define
-define|#
-directive|define
-name|__libalias_version
-value|"2.4"
 end_define
 
 begin_endif
