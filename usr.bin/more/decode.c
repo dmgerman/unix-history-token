@@ -41,7 +41,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: decode.c,v 1.2 1999/05/30 18:06:53 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -494,6 +494,18 @@ block|,
 literal|0
 block|,
 name|A_TAGFILE
+block|,
+literal|'T'
+block|,
+literal|0
+block|,
+name|A_PREVTAG
+block|,
+literal|'t'
+block|,
+literal|0
+block|,
+name|A_NEXTTAG
 block|,
 literal|':'
 block|,

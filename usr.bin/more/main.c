@@ -65,7 +65,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.11 1999/05/30 18:06:56 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,7 +227,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Edit a new file.  * Filename "-" means standard input.  * No filename means the "current" file, from the command line.  */
+comment|/*  * Edit a new file.  * Filename "-" means standard input.  * No filename means the "current" file, from the command line.  If called  * with the same filename in succession, filename will be closed and reopened.  */
 end_comment
 
 begin_expr_stmt
