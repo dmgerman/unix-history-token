@@ -2132,7 +2132,7 @@ comment|/* 2 */
 literal|"Simulation"
 block|,
 comment|/* 3 */
-literal|"LCA Family"
+literal|"LCA (21066/21068)"
 block|,
 comment|/* 4 */
 literal|"EV5 (21164)"
@@ -2148,7 +2148,25 @@ literal|"EV6 (21264)"
 block|,
 comment|/* 8 */
 literal|"PCA56 (21164PC)"
+block|,
 comment|/* 9 */
+literal|"PCA57 (21164PC)"
+block|,
+comment|/* 10 */
+literal|"EV67 (21264A)"
+block|,
+comment|/* 11 */
+literal|"EV68CB (21264C)"
+block|,
+comment|/* 12 */
+literal|"EV68AL (21264B)"
+block|,
+comment|/* 13 */
+literal|"EV68CX (21264D)"
+block|,
+comment|/* 14 */
+literal|"EV7 (21364)"
+comment|/* 15 */
 block|}
 decl_stmt|;
 comment|/* 	 * print out CPU identification information. 	 */
