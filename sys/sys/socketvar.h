@@ -623,7 +623,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_state& SS_CANTRCVMORE) || \ 	(so)->so_comp.tqh_first || (so)->so_error)
+value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_state& SS_CANTRCVMORE) || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
 end_define
 
 begin_comment
