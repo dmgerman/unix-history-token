@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.7 (Berkeley) %G%"
+literal|"@(#)output.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,6 +365,20 @@ operator|->
 name|rip_vers
 operator|=
 name|RIPVERSION
+expr_stmt|;
+name|bzero
+argument_list|(
+name|msg
+operator|->
+name|rip_res1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+operator|->
+name|rip_res1
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|again
 label|:
