@@ -872,6 +872,13 @@ name|NUMCDEVSW
 value|256
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXMINOR
+value|0xffff00ff
+end_define
+
 begin_comment
 comment|/*  * XXX: do not use MAJOR_AUTO unless you have no choice.  In general drivers  * should just not initialize .d_maj and that will DTRT.  */
 end_comment
@@ -1269,6 +1276,16 @@ name|unit2minor
 parameter_list|(
 name|int
 name|_unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|minor2unit
+parameter_list|(
+name|int
+name|_minor
 parameter_list|)
 function_decl|;
 end_function_decl
