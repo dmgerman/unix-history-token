@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.6 %G%"
+literal|"@(#)mloop.c	3.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,14 @@ block|}
 else|else
 block|{
 specifier|register
+name|struct
+name|ww
+modifier|*
+name|w
+init|=
+name|wwcurwin
+decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|p
@@ -138,12 +146,28 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|w
+operator|->
+name|ww_ispty
+operator|&&
+name|w
+operator|->
+name|ww_stopped
+condition|)
+name|startwin
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|write
 argument_list|(
-name|wwcurwin
+name|w
 operator|->
 name|ww_pty
 argument_list|,
