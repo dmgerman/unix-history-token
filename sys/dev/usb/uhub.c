@@ -2453,13 +2453,18 @@ comment|/* usbd_reset_port(dev, port,&up->status); */
 comment|/* 			 * The unit refused to accept a new address, or had 			 * some other serious problem.  Since we cannot leave 			 * at 0 we have to disable the port instead. 			 */
 name|printf
 argument_list|(
-literal|"%s: device problem, disabling port %d\n"
+literal|"%s: device problem (%s), disabling port %d\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
+argument_list|)
+argument_list|,
+name|usbd_errstr
+argument_list|(
+name|err
 argument_list|)
 argument_list|,
 name|port
