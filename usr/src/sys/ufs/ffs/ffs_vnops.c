@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.95 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.96 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1346,6 +1346,8 @@ name|off_t
 name|diff
 decl_stmt|;
 name|int
+name|type
+decl_stmt|,
 name|rasize
 decl_stmt|,
 name|error
@@ -1359,12 +1361,17 @@ name|n
 decl_stmt|,
 name|on
 decl_stmt|;
+name|type
+operator|=
+name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|int
-name|type
-decl_stmt|;
 if|if
 condition|(
 name|uio
@@ -1377,14 +1384,6 @@ name|panic
 argument_list|(
 literal|"ffs_read mode"
 argument_list|)
-expr_stmt|;
-name|type
-operator|=
-name|ip
-operator|->
-name|i_mode
-operator|&
-name|IFMT
 expr_stmt|;
 if|if
 condition|(
@@ -1698,6 +1697,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|==
+name|IFREG
+operator|&&
+operator|(
 name|n
 operator|+
 name|on
@@ -1713,6 +1717,7 @@ operator|==
 name|ip
 operator|->
 name|i_size
+operator|)
 condition|)
 name|bp
 operator|->
