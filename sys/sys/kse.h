@@ -181,6 +181,24 @@ name|KSE_VERSION
 value|KSE_VER_0
 end_define
 
+begin_comment
+comment|/* These flags are kept in km_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KMF_NOUPCALL
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMF_NOCOMPLETED
+value|0x02
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
