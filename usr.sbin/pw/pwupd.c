@@ -706,6 +706,10 @@ name|HAVE_PWDB_U
 name|int
 name|isrename
 init|=
+name|pwd
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|user
