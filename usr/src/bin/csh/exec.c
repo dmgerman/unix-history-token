@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c	5.6 (Berkeley) %G%"
+literal|"@(#)exec.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -779,12 +785,6 @@ modifier|*
 modifier|*
 name|vp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 name|char
 modifier|*
 name|lastsh
@@ -978,10 +978,10 @@ condition|)
 block|{
 name|exerr
 operator|=
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 expr_stmt|;
 name|expath
 operator|=
