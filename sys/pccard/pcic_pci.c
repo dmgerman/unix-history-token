@@ -1156,6 +1156,7 @@ case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1031
 case|:
+comment|/* 1031 is like 6832 */
 name|pd6832_legacy_init
 argument_list|(
 name|dev
