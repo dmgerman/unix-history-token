@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#) (Berkeley) 82/05/10"
+literal|"@(#) (Berkeley) 82/06/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -4050,12 +4050,10 @@ name|xfile
 operator|,
 name|loc
 operator|=
-name|nl
-index|[
-name|SFIL
-index|]
-operator|.
-name|n_value
+operator|(
+name|int
+operator|)
+name|afile
 init|;
 name|fp
 operator|<
