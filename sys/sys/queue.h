@@ -15,49 +15,19 @@ directive|define
 name|_SYS_QUEUE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
+begin_comment
+comment|/* for __offsetof */
+end_comment
+
 begin_comment
 comment|/*  * This file defines five types of data structures: singly-linked lists,  * singly-linked tail queues, lists, tail queues, and circular queues.  *  * A singly-linked list is headed by a single forward pointer. The elements  * are singly linked for minimum space and pointer manipulation overhead at  * the expense of O(n) removal for arbitrary elements. New elements can be  * added to the list after an existing element or at the head of the list.  * Elements being removed from the head of the list should use the explicit  * macro for this purpose for optimum efficiency. A singly-linked list may  * only be traversed in the forward direction.  Singly-linked lists are ideal  * for applications with large datasets and few or no removals or for  * implementing a LIFO queue.  *  * A singly-linked tail queue is headed by a pair of pointers, one to the  * head of the list and the other to the tail of the list. The elements are  * singly linked for minimum space and pointer manipulation overhead at the  * expense of O(n) removal for arbitrary elements. New elements can be added  * to the list after an existing element, at the head of the list, or at the  * end of the list. Elements being removed from the head of the tail queue  * should use the explicit macro for this purpose for optimum efficiency.  * A singly-linked tail queue may only be traversed in the forward direction.  * Singly-linked tail queues are ideal for applications with large datasets  * and few or no removals or for implementing a FIFO queue.  *  * A list is headed by a single forward pointer (or an array of forward  * pointers for a hash table header). The elements are doubly linked  * so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before  * or after an existing element or at the head of the list. A list  * may only be traversed in the forward direction.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  *  * A circle queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or after  * an existing element, at the head of the list, or at the end of the list.  * A circle queue may be traversed in either direction, but has a more  * complex end of list detection.  *  * For details on the use of these macros, see the queue(3) manual page.  *  *  *			SLIST	LIST	STAILQ	TAILQ	CIRCLEQ  * _HEAD		+	+	+	+	+  * _HEAD_INITIALIZER	+	+	+	+	+  * _ENTRY		+	+	+	+	+  * _INIT		+	+	+	+	+  * _EMPTY		+	+	+	+	+  * _FIRST		+	+	+	+	+  * _NEXT		+	+	+	+	+  * _PREV		-	-	-	+	+  * _LAST		-	-	+	+	+  * _FOREACH		+	+	+	+	+  * _FOREACH_REVERSE	-	-	-	+	+  * _INSERT_HEAD		+	+	+	+	+  * _INSERT_BEFORE	-	+	-	+	+  * _INSERT_AFTER	+	+	+	+	+  * _INSERT_TAIL		-	-	+	+	+  * _REMOVE_HEAD		+	-	+	-	-  * _REMOVE		+	+	+	+	+  *  */
 end_comment
-
-begin_comment
-comment|/*  * XXX: temporary, we need to find the real home of these.  */
-end_comment
-
-begin_comment
-comment|/* Offset of the field in the structure. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__qfldoff
-parameter_list|(
-name|name
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|((int)&(((struct name *)0)->field))
-end_define
-
-begin_comment
-comment|/* Address of the structure from a field. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__qstrbase
-parameter_list|(
-name|name
-parameter_list|,
-name|addr
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|((struct name *)((char *)(addr) - __qfldoff(name, field)))
-end_define
 
 begin_comment
 comment|/*  * Singly-linked List declarations.  */
@@ -369,7 +339,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|(STAILQ_EMPTY(head) ?						\ 		NULL :							\ 		__qstrbase(type, (head)->stqh_last, field))
+value|(STAILQ_EMPTY(head) ?						\ 		NULL :							\ 	        ((struct type *)					\ 		((char *)((head)->stqh_last) - __offsetof(struct type, field))))
 end_define
 
 begin_define

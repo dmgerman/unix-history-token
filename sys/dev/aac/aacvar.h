@@ -1230,27 +1230,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Borrowed from<struct.h>  */
-end_comment
-
-begin_comment
-comment|/* Offset of the field in the structure. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|fldoff
-parameter_list|(
-name|name
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|((int)&(((struct name *)0)->field))
-end_define
-
-begin_comment
 comment|/********************************************************************************  * Queue primitives  *  * These are broken out individually to make statistics gathering easier.  */
 end_comment
 

@@ -223,28 +223,6 @@ directive|include
 file|<isa/pnpvar.h>
 end_include
 
-begin_comment
-comment|/* somehow offsetof() was lost in FreeBSD 5.0, so declare it */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|offsetof
-end_undef
-
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|type
-parameter_list|,
-name|field
-parameter_list|)
-value|( (int)(&((type *)0)->field ) )
-end_define
-
 begin_define
 define|#
 directive|define

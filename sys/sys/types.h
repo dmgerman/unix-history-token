@@ -421,17 +421,6 @@ name|vm_page_t
 typedef|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|specinfo
@@ -457,6 +446,18 @@ modifier|*
 name|dev_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+value|__offsetof(type, field)
+end_define
 
 begin_else
 else|#

@@ -75,16 +75,6 @@ directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 
-begin_comment
-comment|/* XXX: This is not where we should get fldoff() from. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<struct.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -2056,8 +2046,9 @@ name|sc
 operator|->
 name|mly_mmbox_busaddr
 operator|+
-name|fldoff
+name|offsetof
 argument_list|(
+expr|struct
 name|mly_mmbox
 argument_list|,
 name|mmm_command
@@ -2075,8 +2066,9 @@ name|sc
 operator|->
 name|mly_mmbox_busaddr
 operator|+
-name|fldoff
+name|offsetof
 argument_list|(
+expr|struct
 name|mly_mmbox
 argument_list|,
 name|mmm_status
@@ -2094,8 +2086,9 @@ name|sc
 operator|->
 name|mly_mmbox_busaddr
 operator|+
-name|fldoff
+name|offsetof
 argument_list|(
+expr|struct
 name|mly_mmbox
 argument_list|,
 name|mmm_health

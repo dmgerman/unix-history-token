@@ -5156,8 +5156,9 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-name|fldoff
+name|offsetof
 argument_list|(
+expr|struct
 name|aac_common
 argument_list|,
 name|ac_fibs
@@ -5207,8 +5208,9 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-name|fldoff
+name|offsetof
 argument_list|(
+expr|struct
 name|aac_common
 argument_list|,
 name|ac_printf
@@ -5702,8 +5704,9 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-name|fldoff
+name|offsetof
 argument_list|(
+expr|struct
 name|aac_common
 argument_list|,
 name|ac_init
@@ -6048,8 +6051,9 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-name|fldoff
+name|offsetof
 argument_list|(
+expr|struct
 name|aac_common
 argument_list|,
 name|ac_sync_fib

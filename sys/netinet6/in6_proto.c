@@ -330,18 +330,6 @@ directive|include
 file|<net/net_osdep.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|type
-parameter_list|,
-name|member
-parameter_list|)
-value|((size_t)(&((type *)0)->member))
-end_define
-
 begin_comment
 comment|/*  * TCP/IP protocol family: IP6, ICMP6, UDP, TCP.  */
 end_comment
