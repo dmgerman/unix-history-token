@@ -3325,6 +3325,15 @@ modifier|*
 name|child
 parameter_list|)
 block|{
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|child
+operator|->
+name|kg_proc
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* XXX Need something better here */
 if|if
 condition|(
@@ -3432,6 +3441,14 @@ name|kse
 modifier|*
 name|ke
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kg
