@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.25 1998/05/21 21:46:33 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
+comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.26 1998/06/15 19:05:20 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
 end_comment
 
 begin_include
@@ -426,7 +426,7 @@ block|}
 else|else
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"lqr_RecvEcho: Got sig 0x%08x, expecting 0x%08x !\n"
 argument_list|,
@@ -450,7 +450,7 @@ block|}
 else|else
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"lqr_RecvEcho: Got packet size %d, expecting %d !\n"
 argument_list|,
@@ -958,7 +958,7 @@ argument_list|)
 condition|)
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"lqr_Input: Got packet size %d, expecting %d !\n"
 argument_list|,
@@ -1093,9 +1093,9 @@ name|his_magic
 condition|)
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
-literal|"lqr_Input: magic %x != expecting %x\n"
+literal|"lqr_Input: magic 0x%x is wrong, expecting 0x%x\n"
 argument_list|,
 operator|(
 name|unsigned

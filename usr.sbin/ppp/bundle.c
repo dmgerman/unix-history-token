@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.17 1998/06/15 19:06:01 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.18 1998/06/16 19:40:24 brian Exp $  */
 end_comment
 
 begin_include
@@ -792,7 +792,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"bundle_CleanInterface: Can't get dst for %s on %s !\n"
+literal|"Can't get dst for %s on %s !\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -864,7 +864,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"bundle_CleanInterface: Can't delete %s address on %s !\n"
+literal|"Can't delete %s address on %s !\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -2215,7 +2215,7 @@ expr_stmt|;
 else|else
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogALERT
 argument_list|,
 literal|"Oops, lost an unrecognised datalink (%s) !\n"
 argument_list|,
@@ -3427,7 +3427,7 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"read from %s: %s\n"
 argument_list|,
@@ -3462,7 +3462,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"read from %s: Only %d bytes read\n"
+literal|"read from %s: Only %d bytes read ?\n"
 argument_list|,
 name|TUN_NAME
 argument_list|,
@@ -4083,7 +4083,7 @@ block|{
 comment|/* Already allocated ! */
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogALERT
 argument_list|,
 literal|"bundle_Create:  There's only one BUNDLE !\n"
 argument_list|)
@@ -4399,7 +4399,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"OpenTunnel: ioctl(SIOCGIFFLAGS): %s\n"
+literal|"bundle_Create: ioctl(SIOCGIFFLAGS): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -4458,7 +4458,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"OpenTunnel: ioctl(SIOCSIFFLAGS): %s\n"
+literal|"bundle_Create: ioctl(SIOCSIFFLAGS): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -4523,7 +4523,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"OpenTunnel: Can't find interface index.\n"
+literal|"Can't find interface index.\n"
 argument_list|)
 expr_stmt|;
 name|close
@@ -4779,7 +4779,7 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogALERT
 argument_list|,
 literal|"Cannot create data link: %s\n"
 argument_list|,
@@ -9542,7 +9542,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"fork: %s\n"
+literal|"fork(2): %s\n"
 argument_list|,
 name|strerror
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.89 1998/06/15 19:05:25 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.90 1998/06/15 19:06:21 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -3311,7 +3311,7 @@ expr_stmt|;
 comment|/* Don't destroy name.full */
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"%s: Invalid host:port: \"%s\"\n"
 argument_list|,
@@ -3334,7 +3334,7 @@ else|else
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"%s: Device (%s) must begin with a '/',"
 literal|" a '!' or be a host:port pair\n"
@@ -3676,7 +3676,7 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"%s: Open: Cannot get modem status: %s\n"
 argument_list|,
@@ -3751,7 +3751,7 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
 literal|"%s: Open: Cannot get modem flags: %s\n"
 argument_list|,
@@ -6514,7 +6514,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ToBinary: No room for physical !\n"
+literal|"modem2iov: No room for physical !\n"
 argument_list|)
 expr_stmt|;
 if|if
