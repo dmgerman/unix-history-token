@@ -2649,6 +2649,11 @@ else|:
 literal|0
 operator|)
 decl_stmt|;
+name|int
+name|nothing
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|newcrt
@@ -2742,6 +2747,10 @@ name|any
 operator|=
 literal|0
 expr_stmt|;
+name|nothing
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|lpit
 argument_list|(
@@ -2794,6 +2803,10 @@ name|any
 operator|=
 literal|0
 expr_stmt|;
+name|nothing
+operator|=
+literal|0
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -2831,6 +2844,8 @@ expr_stmt|;
 if|if
 condition|(
 name|any
+operator|||
+name|nothing
 condition|)
 name|fprintf
 argument_list|(
@@ -3172,9 +3187,8 @@ break|break;
 block|}
 if|if
 condition|(
+operator|!
 name|first
-operator|==
-literal|0
 condition|)
 name|fprintf
 argument_list|(
