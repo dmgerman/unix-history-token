@@ -777,6 +777,28 @@ begin_comment
 comment|/* universal play command */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATAPI_MECH_STATUS
+value|0xbd
+end_define
+
+begin_comment
+comment|/* get changer mechanism status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_LOAD_UNLOAD
+value|0xa6
+end_define
+
+begin_comment
+comment|/* changer control command */
+end_comment
+
 begin_comment
 comment|/*  * Optional packet commands  */
 end_comment
