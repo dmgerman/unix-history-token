@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -253,6 +253,13 @@ name|boottime
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|timeval
+name|runtime
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * System startup; initialize the world, create process 0,  * mount root filesystem, and fork to create init and pagedaemon.  * Most of the hard work is done in the lower-level initialization  * routines including startup(), which does memory initialization  * and autoconfiguration.  */
 end_comment
@@ -284,6 +291,28 @@ name|rval
 index|[
 literal|2
 index|]
+decl_stmt|;
+specifier|extern
+name|void
+name|roundrobin
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|schedcpu
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 comment|/* 	 * Initialize curproc before any possible traps/probes 	 * to simplify trap processing. 	 */
 name|p
@@ -325,12 +354,24 @@ name|p
 expr_stmt|;
 name|allproc
 operator|=
+operator|(
+specifier|volatile
+expr|struct
+name|proc
+operator|*
+operator|)
 name|p
 expr_stmt|;
 name|p
 operator|->
 name|p_prev
 operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|*
+operator|)
 operator|&
 name|allproc
 expr_stmt|;
@@ -702,30 +743,10 @@ argument_list|(
 literal|"can't setup bdevvp's"
 argument_list|)
 expr_stmt|;
-name|startrtclock
+comment|/* 	 * Start real time and statistics clocks. 	 */
+name|initclocks
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-include|#
-directive|include
-file|"kg.h"
-if|#
-directive|if
-name|NKG
-operator|>
-literal|0
-name|startkgclock
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|/* 	 * Initialize tables, protocols, and set up well-known inodes. 	 */
 name|mbinit
 argument_list|()
@@ -796,15 +817,15 @@ endif|#
 directive|endif
 comment|/* kick off timeout driven events by calling first time */
 name|roundrobin
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 name|schedcpu
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
-name|enablertclock
-argument_list|()
-expr_stmt|;
-comment|/* enable realtime clock interrupts */
 comment|/* 	 * Set up the root file system and vnode. 	 */
 if|if
 condition|(
@@ -869,17 +890,25 @@ name|swapinit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Now can look at time, having had a chance 	 * to verify the time from the file system. 	 */
+name|runtime
+operator|=
 name|mono_time
 operator|=
 name|boottime
 operator|=
+name|time
+expr_stmt|;
 name|p
 operator|->
 name|p_stats
 operator|->
 name|p_start
 operator|=
-name|time
+name|p
+operator|->
+name|p_rtime
+operator|=
+name|runtime
 expr_stmt|;
 comment|/* 	 * make init process 	 */
 name|siginit
