@@ -309,7 +309,7 @@ if|if
 condition|(
 name|vector
 operator|==
-literal|240
+literal|255
 condition|)
 block|{
 comment|/* clock interrupt */
