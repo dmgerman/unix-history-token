@@ -124,13 +124,13 @@ name|snd_dbuf
 modifier|*
 name|buffer
 decl_stmt|;
-name|int
-name|dir
-decl_stmt|;
-name|int
+name|u_int32_t
 name|fmt
 decl_stmt|,
 name|spd
+decl_stmt|;
+name|int
+name|dir
 decl_stmt|;
 name|int
 name|dma_active
