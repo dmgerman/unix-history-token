@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.26 1998/12/10 02:35:55 archie Exp $"
+literal|"$Id: main.c,v 1.27 1999/04/07 09:27:56 grog Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,7 +757,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: config [-gpr] sysname\n"
+literal|"usage: config [-gprs] sysname\n"
 argument_list|)
 expr_stmt|;
 name|exit
