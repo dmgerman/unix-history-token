@@ -357,11 +357,13 @@ decl_stmt|;
 define|#
 directive|define
 name|PROG_NAME_SIZE
-value|16
+value|39
 name|char
 name|pname
 index|[
 name|PROG_NAME_SIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|apps_startup
@@ -2552,6 +2554,33 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"invalid hex iv value\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|hiv
+operator|==
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|str
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+comment|/* No IV was explicitly set and no IV was generated 			 * during EVP_BytesToKey. Hence the IV is undefined, 			 * making correct decryption impossible. */
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"iv undefined\n"
 argument_list|)
 expr_stmt|;
 goto|goto

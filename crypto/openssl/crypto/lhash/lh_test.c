@@ -93,13 +93,6 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
-name|buf
-index|[
-literal|256
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|i
 operator|=
 name|strlen

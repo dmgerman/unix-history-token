@@ -171,7 +171,7 @@ decl_stmt|;
 name|int
 name|ret
 init|=
-literal|0
+literal|1
 decl_stmt|;
 name|apps_startup
 argument_list|()

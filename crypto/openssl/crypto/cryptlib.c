@@ -134,6 +134,8 @@ literal|"ssl"
 block|,
 literal|"rand"
 block|,
+literal|"rand2"
+block|,
 literal|"debug_malloc"
 block|,
 literal|"BIO"
@@ -158,7 +160,7 @@ if|#
 directive|if
 name|CRYPTO_NUM_LOCKS
 operator|!=
-literal|28
+literal|29
 error|#
 directive|error
 literal|"Inconsistency between crypto.h and cryptlib.c"
@@ -798,7 +800,14 @@ argument_list|(
 name|dyn_locks
 argument_list|)
 condition|)
+block|{
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_DYNLOCK
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|pointer
 operator|=
 name|sk_CRYPTO_dynlock_value
@@ -848,12 +857,9 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|--
-operator|(
 name|pointer
 operator|->
 name|references
-operator|)
 operator|<=
 literal|0
 condition|)
@@ -1581,6 +1587,8 @@ decl_stmt|;
 if|if
 condition|(
 name|pointer
+operator|&&
+name|dynlock_lock_callback
 condition|)
 block|{
 name|dynlock_lock_callback
@@ -1713,11 +1721,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|*
-name|pointer
-operator|=
-name|ret
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1943,6 +1946,43 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|void
+name|OpenSSLDie
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|assertion
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s(%d): OpenSSL internal error, assertion failed: %s\n"
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|assertion
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

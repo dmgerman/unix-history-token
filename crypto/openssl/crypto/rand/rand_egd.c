@@ -116,11 +116,33 @@ directive|ifndef
 name|NO_SYS_UN_H
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VXWORKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<streams/un.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/un.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

@@ -351,6 +351,10 @@ operator|=
 name|p
 expr_stmt|;
 comment|/* Catch the beg of Setblobs*/
+if|if
+condition|(
+operator|!
+operator|(
 name|rgSetBlob
 operator|=
 operator|(
@@ -369,7 +373,11 @@ argument_list|(
 name|MYBLOB
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+literal|0
+return|;
 comment|/* In this array we will store the SET blobs */
 for|for
 control|(
@@ -459,13 +467,21 @@ argument_list|,
 name|SetBlobCmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|pTempMem
 operator|=
 name|OPENSSL_malloc
 argument_list|(
 name|totSize
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Copy to temp mem */
 name|p
 operator|=

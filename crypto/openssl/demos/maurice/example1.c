@@ -305,6 +305,9 @@ if|if
 condition|(
 operator|!
 name|pubKey
+index|[
+literal|0
+index|]
 condition|)
 block|{
 name|fprintf
