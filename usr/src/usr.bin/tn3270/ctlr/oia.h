@@ -6,6 +6,12 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INCLUDED_OIA
+end_define
+
+begin_define
+define|#
+directive|define
 name|OIA_READY_3274
 value|0xF4
 end_define

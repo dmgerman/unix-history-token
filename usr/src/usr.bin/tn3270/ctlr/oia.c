@@ -9,11 +9,11 @@ directive|include
 file|"oia.h"
 end_include
 
-begin_decl_stmt
-name|OIA
-name|OperatorInformationArea
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"../general/globals.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -174,10 +174,7 @@ literal|0
 expr_stmt|;
 block|}
 name|ScreenOIA
-argument_list|(
-operator|&
-name|OperatorInformationArea
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -223,10 +220,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|ScreenOIA
-argument_list|(
-operator|&
-name|OperatorInformationArea
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -284,10 +278,7 @@ expr_stmt|;
 block|}
 block|}
 name|ScreenOIA
-argument_list|(
-operator|&
-name|OperatorInformationArea
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -365,10 +356,7 @@ literal|0
 expr_stmt|;
 block|}
 name|ScreenOIA
-argument_list|(
-operator|&
-name|OperatorInformationArea
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -414,10 +402,7 @@ literal|0
 expr_stmt|;
 block|}
 name|ScreenOIA
-argument_list|(
-operator|&
-name|OperatorInformationArea
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -463,10 +448,7 @@ literal|0
 expr_stmt|;
 block|}
 name|ScreenOIA
-argument_list|(
-operator|&
-name|OperatorInformationArea
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_block

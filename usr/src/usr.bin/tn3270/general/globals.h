@@ -384,5 +384,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INCLUDED_OIA
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|OIA
+name|OperatorInformationArea
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(INCLUDED_OIA) */
+end_comment
+
 end_unit
 
