@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.93 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.94 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9230,7 +9230,7 @@ operator|=
 literal|'\r'
 expr_stmt|;
 goto|goto
-name|putchar
+name|putch
 goto|;
 case|case
 name|OS_INLINE
@@ -9248,7 +9248,7 @@ name|OS_CR
 expr_stmt|;
 continue|continue;
 block|}
-name|putchar
+name|putch
 label|:
 if|if
 condition|(
