@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.19 (Berkeley) %G%"
+literal|"@(#)tables.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -882,8 +882,6 @@ expr_stmt|;
 comment|/* 	 * If the ioctl fails because the gateway is unreachable 	 * from this host, discard the entry.  This should only 	 * occur because of an incorrect entry in /etc/gateways. 	 */
 if|if
 condition|(
-name|install
-operator|&&
 operator|(
 name|rt
 operator|->
@@ -1047,7 +1045,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|rtentry
+name|rtuentry
 name|oldroute
 decl_stmt|;
 name|FIXLEN
@@ -1234,8 +1232,14 @@ argument_list|,
 name|rt
 operator|->
 name|rt_ifp
+condition|?
+name|rt
+operator|->
+name|rt_ifp
 operator|->
 name|int_name
+else|:
+literal|"?"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1307,13 +1311,6 @@ argument_list|,
 name|rt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|install
-operator|==
-literal|0
-condition|)
-return|return;
 ifndef|#
 directive|ifndef
 name|RTM_ADD
@@ -1531,8 +1528,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|install
-operator|&&
 operator|(
 name|rt
 operator|->
@@ -1881,7 +1876,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ortentry
+name|rtuentry
 modifier|*
 name|ort
 decl_stmt|;
@@ -1892,6 +1887,27 @@ block|{
 ifndef|#
 directive|ifndef
 name|RTM_ADD
+if|if
+condition|(
+name|install
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|errno
+operator|=
+literal|0
+operator|)
+return|;
+name|ort
+operator|->
+name|rtu_rtflags
+operator|=
+name|ort
+operator|->
+name|rtu_flags
+expr_stmt|;
 switch|switch
 condition|(
 name|action
@@ -2025,9 +2041,6 @@ operator|)
 expr_stmt|;
 undef|#
 directive|undef
-name|rt_flags
-undef|#
-directive|undef
 name|rt_dst
 name|rtm
 operator|.
@@ -2035,7 +2048,7 @@ name|rtm_flags
 operator|=
 name|ort
 operator|->
-name|rt_flags
+name|rtu_flags
 expr_stmt|;
 name|rtm
 operator|.
@@ -2061,7 +2074,7 @@ operator|)
 operator|&
 name|ort
 operator|->
-name|rt_dst
+name|rtu_dst
 argument_list|,
 operator|(
 name|char
@@ -2089,7 +2102,7 @@ operator|)
 operator|&
 name|ort
 operator|->
-name|rt_gateway
+name|rtu_router
 argument_list|,
 operator|(
 name|char
@@ -2324,6 +2337,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
+name|install
+condition|?
 name|write
 argument_list|(
 name|r
@@ -2339,6 +2355,13 @@ name|rtm
 operator|.
 name|rtm_msglen
 argument_list|)
+else|:
+operator|(
+name|errno
+operator|=
+literal|0
+operator|)
+operator|)
 return|;
 endif|#
 directive|endif
