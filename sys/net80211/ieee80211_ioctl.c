@@ -4339,6 +4339,8 @@ name|suser
 argument_list|(
 name|curthread
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|bcopy
