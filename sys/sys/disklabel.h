@@ -1187,7 +1187,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|bsd_disklabel_le_dec
 parameter_list|(
 name|u_char
@@ -1198,6 +1198,9 @@ name|struct
 name|disklabel
 modifier|*
 name|d
+parameter_list|,
+name|int
+name|maxpart
 parameter_list|)
 function_decl|;
 end_function_decl
