@@ -4122,10 +4122,9 @@ decl_stmt|,
 modifier|*
 name|dest
 decl_stmt|;
-name|size_t
-name|buflen
-decl_stmt|;
 name|int
+name|buflen
+decl_stmt|,
 name|error
 decl_stmt|;
 name|source
