@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1146,15 +1146,15 @@ decl_stmt|;
 name|off_t
 name|uio_off
 decl_stmt|;
-name|u_int
+name|int
+name|eofflag
+decl_stmt|;
+name|u_long
 modifier|*
-name|cookiep
+name|cookies
 decl_stmt|;
 name|int
 name|ncookies
-decl_stmt|;
-name|int
-name|eof
 decl_stmt|;
 block|}
 struct|;
@@ -1223,20 +1223,22 @@ condition|)
 block|{
 name|idp
 operator|->
-name|eof
+name|eofflag
 operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
 condition|(
 name|idp
 operator|->
-name|cookiep
+name|cookies
 condition|)
 block|{
 if|if
@@ -1250,19 +1252,21 @@ condition|)
 block|{
 name|idp
 operator|->
-name|eof
+name|eofflag
 operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 operator|*
 name|idp
 operator|->
-name|cookiep
+name|cookies
 operator|++
 operator|=
 name|off
@@ -1291,7 +1295,9 @@ name|uio
 argument_list|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|idp
 operator|->
@@ -1300,7 +1306,9 @@ operator|=
 name|off
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1624,7 +1632,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1739,20 +1747,28 @@ name|uio
 operator|=
 name|uio
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|idp->cookiep = cookies; 	idp->ncookies = ncookies; 	idp->eof = 1;
-else|#
-directive|else
 name|idp
 operator|->
-name|cookiep
+name|eofflag
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-endif|#
-directive|endif
+name|idp
+operator|->
+name|cookies
+operator|=
+name|ap
+operator|->
+name|a_cookies
+expr_stmt|;
+name|idp
+operator|->
+name|ncookies
+operator|=
+name|ap
+operator|->
+name|a_ncookies
+expr_stmt|;
 name|idp
 operator|->
 name|curroff
@@ -2337,12 +2353,15 @@ name|idp
 operator|->
 name|uio_off
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|*eofflagp = idp->eof;
-endif|#
-directive|endif
+operator|*
+name|ap
+operator|->
+name|a_eofflag
+operator|=
+name|idp
+operator|->
+name|eofflag
+expr_stmt|;
 name|FREE
 argument_list|(
 name|idp
