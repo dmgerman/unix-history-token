@@ -1086,6 +1086,8 @@ operator|&
 name|gdt
 index|[
 name|cpuid
+operator|*
+name|NGDT
 index|]
 expr_stmt|;
 else|#
