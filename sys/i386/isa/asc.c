@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.11 1995/12/10 13:38:20 phk Exp $  */
+comment|/*  * $Id: asc.c,v 1.12 1995/12/15 00:29:27 bde Exp $  */
 end_comment
 
 begin_include
@@ -263,12 +263,8 @@ begin_define
 define|#
 directive|define
 name|PROBE_SUCCESS
-value|5
+value|IO_ASCSIZE
 end_define
-
-begin_comment
-comment|/* number of io ports... */
-end_comment
 
 begin_define
 define|#
