@@ -2362,9 +2362,6 @@ decl_stmt|;
 name|u_short
 name|ether_type
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|#
 directive|if
 name|defined
