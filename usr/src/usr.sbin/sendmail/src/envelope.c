@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.8 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -951,6 +951,12 @@ operator|==
 name|MD_DAEMON
 operator|&&
 name|QueueRun
+operator|&&
+name|e
+operator|->
+name|e_xfp
+operator|!=
+name|NULL
 condition|)
 name|OutChannel
 operator|=

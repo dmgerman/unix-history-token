@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.9 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.10 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.9 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.10 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,6 +634,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|InChild
+condition|)
+name|ExitStat
+operator|=
+name|EX_QUIT
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
@@ -962,10 +970,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
+name|finis
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* fork a subprocess to process this command */
