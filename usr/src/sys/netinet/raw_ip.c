@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	4.5	82/03/05	*/
+comment|/*	raw_ip.c	4.6	82/03/12	*/
 end_comment
 
 begin_include
@@ -144,14 +144,6 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-decl_stmt|;
-name|struct
-name|sockaddr_in
-name|sin
-decl_stmt|;
-name|struct
-name|sockproto
-name|sp
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -333,7 +325,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Fill in IP header as needed. 	 */
 name|m
