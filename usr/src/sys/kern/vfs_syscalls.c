@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.78 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.78.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -74,6 +74,61 @@ include|#
 directive|include
 file|"malloc.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REF_DIAGNOSTIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CURCOUNT
+value|(curproc ? curproc->p_spare[0] : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECKPOINTREF
+value|int oldrefcount = CURCOUNT;
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECKREFS
+parameter_list|(
+name|F
+parameter_list|)
+value|if (oldrefcount != CURCOUNT) \ 	printf("REFCOUNT: %s, old=%d, new=%d\n", (F), oldrefcount, CURCOUNT);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHECKPOINTREF
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECKREFS
+parameter_list|(
+name|D
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Virtual File System System Calls  */
@@ -3312,6 +3367,8 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|CHECKPOINTREF
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -3562,6 +3619,11 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
+name|CHECKREFS
+argument_list|(
+literal|"mknod"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3883,6 +3945,8 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|CHECKPOINTREF
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -4141,6 +4205,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|CHECKREFS
+argument_list|(
+literal|"link"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4219,6 +4288,8 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|CHECKPOINTREF
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|target
@@ -4414,6 +4485,11 @@ argument_list|,
 name|M_NAMEI
 argument_list|)
 expr_stmt|;
+name|CHECKREFS
+argument_list|(
+literal|"symlink"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4485,6 +4561,8 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|CHECKPOINTREF
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -4677,6 +4755,11 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
+name|CHECKREFS
+argument_list|(
+literal|"unlink"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5590,6 +5673,8 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|CHECKPOINTREF
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -5740,6 +5825,11 @@ operator|-
 name|auio
 operator|.
 name|uio_resid
+expr_stmt|;
+name|CHECKREFS
+argument_list|(
+literal|"readlink"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7778,6 +7868,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|CHECKPOINTREF
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -8261,6 +8353,11 @@ argument_list|,
 name|M_NAMEI
 argument_list|)
 expr_stmt|;
+name|CHECKREFS
+argument_list|(
+literal|"rename"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -8352,6 +8449,8 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|CHECKPOINTREF
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -8436,6 +8535,11 @@ expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|CHECKREFS
+argument_list|(
+literal|"mkdir1"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8524,6 +8628,11 @@ operator|.
 name|ni_vp
 argument_list|)
 expr_stmt|;
+name|CHECKREFS
+argument_list|(
+literal|"mkdir2"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -8595,6 +8704,8 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|CHECKPOINTREF
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -8782,6 +8893,11 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
+name|CHECKREFS
+argument_list|(
+literal|"rmdir"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
