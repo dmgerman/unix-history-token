@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -221,7 +221,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPINIT -- initialize SMTP. ** **	Opens the connection and sends the initial protocol. ** **	Parameters: **		m -- mailer to create connection to. **		pvp -- pointer to parameter vector to pass to **			the mailer. ** **	Returns: **		appropriate exit status -- EX_OK on success. ** **	Side Effects: **		creates connection and sends initial protocol. */
+comment|/* **  SMTPINIT -- initialize SMTP. ** **	Opens the connection and sends the initial protocol. ** **	Parameters: **		m -- mailer to create connection to. **		pvp -- pointer to parameter vector to pass to **			the mailer. ** **	Returns: **		appropriate exit status -- EX_OK on success. **		If not EX_OK, it should close the connection. ** **	Side Effects: **		creates connection and sends initial protocol. */
 end_comment
 
 begin_decl_stmt
@@ -404,7 +404,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously.  Give it two minutes to 	**	happen. 	*/
+comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously.  Give it five minutes to 	**	happen. 	*/
 end_comment
 
 begin_if
@@ -417,11 +417,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
+goto|goto
+name|tempfail
+goto|;
 end_if
 
 begin_expr_stmt
@@ -429,7 +427,7 @@ name|gte
 operator|=
 name|setevent
 argument_list|(
-literal|120
+literal|300
 argument_list|,
 name|greettimeout
 argument_list|,
@@ -470,11 +468,9 @@ argument_list|)
 operator|!=
 literal|2
 condition|)
-return|return
-operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
+goto|goto
+name|tempfail
+goto|;
 end_if
 
 begin_comment
@@ -510,11 +506,9 @@ name|r
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
+goto|goto
+name|tempfail
+goto|;
 elseif|else
 if|if
 condition|(
@@ -525,11 +519,9 @@ argument_list|)
 operator|==
 literal|5
 condition|)
-return|return
-operator|(
-name|EX_UNAVAILABLE
-operator|)
-return|;
+goto|goto
+name|unavailable
+goto|;
 elseif|else
 if|if
 condition|(
@@ -540,11 +532,9 @@ argument_list|)
 operator|!=
 literal|2
 condition|)
-return|return
-operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
+goto|goto
+name|tempfail
+goto|;
 end_if
 
 begin_comment
@@ -585,11 +575,9 @@ name|r
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
+goto|goto
+name|tempfail
+goto|;
 comment|/* tell it we will be sending one transaction only */
 name|smtpmessage
 argument_list|(
@@ -611,11 +599,9 @@ name|r
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
+goto|goto
+name|tempfail
+goto|;
 block|}
 end_if
 
@@ -731,11 +717,9 @@ argument_list|)
 operator|==
 literal|4
 condition|)
-return|return
-operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
+goto|goto
+name|tempfail
+goto|;
 elseif|else
 if|if
 condition|(
@@ -755,17 +739,77 @@ name|r
 operator|==
 literal|552
 condition|)
-return|return
-operator|(
-name|EX_UNAVAILABLE
-operator|)
-return|;
+goto|goto
+name|unavailable
+goto|;
 end_if
+
+begin_comment
+comment|/* protocol error -- close up */
+end_comment
+
+begin_expr_stmt
+name|smtpquit
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
 operator|(
 name|EX_PROTOCOL
+operator|)
+return|;
+end_return
+
+begin_comment
+comment|/* signal a temporary failure */
+end_comment
+
+begin_label
+name|tempfail
+label|:
+end_label
+
+begin_expr_stmt
+name|smtpquit
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
+end_return
+
+begin_comment
+comment|/* signal service unavailable */
+end_comment
+
+begin_label
+name|unavailable
+label|:
+end_label
+
+begin_expr_stmt
+name|smtpquit
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|EX_UNAVAILABLE
 operator|)
 return|;
 end_return
