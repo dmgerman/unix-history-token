@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|NWFS_VERMIN
-value|3200
+value|3300
 end_define
 
 begin_define
