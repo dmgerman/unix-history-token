@@ -1333,7 +1333,7 @@ literal|'+'
 argument_list|,
 name|val
 argument_list|,
-literal|0
+name|mk
 argument_list|)
 return|;
 case|case
@@ -1392,7 +1392,7 @@ literal|'-'
 argument_list|,
 name|val
 argument_list|,
-literal|0
+name|mk
 argument_list|)
 return|;
 default|default:
@@ -1417,7 +1417,7 @@ name|tm_wday
 operator|-
 name|val
 argument_list|,
-literal|0
+name|mk
 argument_list|)
 return|;
 elseif|else
@@ -1452,7 +1452,7 @@ name|t
 operator|->
 name|tm_wday
 argument_list|,
-literal|0
+name|mk
 argument_list|)
 return|;
 block|}
