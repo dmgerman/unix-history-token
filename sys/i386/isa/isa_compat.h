@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mse.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ar.h"
 end_include
 
@@ -326,14 +320,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|advdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|msedriver
 decl_stmt|;
 end_decl_stmt
 
@@ -748,20 +734,6 @@ name|INTR_TYPE_TTY
 block|,
 operator|&
 name|vtdriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|NMSE
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_TTY
-block|,
-operator|&
-name|msedriver
 block|}
 block|,
 endif|#
