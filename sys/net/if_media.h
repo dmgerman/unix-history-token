@@ -978,6 +978,113 @@ comment|/* 2Ghz, CCK mode */
 end_comment
 
 begin_comment
+comment|/*  * ATM  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM
+value|0x000000a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_UNKNOWN
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_UTP_25
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_TAXI_100
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_TAXI_140
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_MM_155
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_SM_155
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_UTP_155
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_MM_622
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_SM_622
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_SDH
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* SDH instead of SONET */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_NOSCRAMB
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* no scrambling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ATM_UNASSIGNED
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* unassigned cells */
+end_comment
+
+begin_comment
 comment|/*  * Shared media sub-types  */
 end_comment
 
@@ -1331,7 +1438,7 @@ begin_define
 define|#
 directive|define
 name|IFM_TYPE_DESCRIPTIONS
-value|{						\ 	{ IFM_ETHER,		"Ethernet" },				\ 	{ IFM_TOKEN,		"Token ring" },				\ 	{ IFM_FDDI,		"FDDI" },				\ 	{ IFM_IEEE80211,	"IEEE 802.11 Wireless Ethernet" },	\ 	{ 0, NULL },							\ }
+value|{						\ 	{ IFM_ETHER,		"Ethernet" },				\ 	{ IFM_TOKEN,		"Token ring" },				\ 	{ IFM_FDDI,		"FDDI" },				\ 	{ IFM_IEEE80211,	"IEEE 802.11 Wireless Ethernet" },	\ 	{ IFM_ATM,		"ATM" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1423,6 +1530,27 @@ define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_MODE_DESCRIPTIONS
 value|{			\ 	{ IFM_IEEE80211_11A, "11a" },					\ 	{ IFM_IEEE80211_11B, "11b" },					\ 	{ IFM_IEEE80211_11G, "11g" },					\ 	{ 0, NULL },							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_SUBTYPE_ATM_DESCRIPTIONS
+value|{					\ 	{ IFM_ATM_UNKNOWN,	"Unknown" },				\ 	{ IFM_ATM_UTP_25,	"UTP/25.6MBit" },			\ 	{ IFM_ATM_TAXI_100,	"Taxi/100MBit" },			\ 	{ IFM_ATM_TAXI_140,	"Taxi/140MBit" },			\ 	{ IFM_ATM_MM_155,	"Multi-mode/155MBit" },			\ 	{ IFM_ATM_SM_155,	"Single-mode/155MBit" },		\ 	{ IFM_ATM_UTP_155,	"UTP/155MBit" },			\ 	{ IFM_ATM_MM_622,	"Mult-imode/622MBit" },			\ 	{ IFM_ATM_SM_622,	"Single-mode/622MBit" },		\ 	{ 0, NULL },							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_SUBTYPE_ATM_ALIASES
+value|{					\ 	{ IFM_ATM_UNKNOWN,	"UNKNOWN" },				\ 	{ IFM_ATM_UTP_25,	"UTP-25" },				\ 	{ IFM_ATM_TAXI_100,	"TAXI-100" },				\ 	{ IFM_ATM_TAXI_140,	"TAXI-140" },				\ 	{ IFM_ATM_MM_155,	"MM-155" },				\ 	{ IFM_ATM_SM_155,	"SM-155" },				\ 	{ IFM_ATM_UTP_155,	"UTP-155" },				\ 	{ IFM_ATM_MM_622,	"MM-622" },				\ 	{ IFM_ATM_SM_622,	"SM-622" },				\ 	{ 0, NULL },							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_SUBTYPE_ATM_OPTION_DESCRIPTIONS
+value|{				\ 	{ IFM_ATM_SDH, "SDH" },						\ 	{ IFM_ATM_NOSCRAMB, "Noscramb" },				\ 	{ IFM_ATM_UNASSIGNED, "Unassigned" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
