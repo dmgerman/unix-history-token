@@ -1737,6 +1737,12 @@ name|NULL
 expr_stmt|;
 name|cnp
 operator|->
+name|cn_flags
+operator||=
+name|NOMACCHECK
+expr_stmt|;
+name|cnp
+operator|->
 name|cn_pnbuf
 operator|=
 name|uma_zalloc
