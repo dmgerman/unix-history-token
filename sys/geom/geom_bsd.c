@@ -134,6 +134,13 @@ name|BSD_CLASS_NAME
 value|"BSD"
 end_define
 
+begin_define
+define|#
+directive|define
+name|ALPHA_LABEL_OFFSET
+value|64
+end_define
+
 begin_comment
 comment|/*  * Our private data about one instance.  All the rest is handled by the  * slice code and stored in its softc, so this is just the stuff  * specific to BSD disklabels.  */
 end_comment
@@ -2438,6 +2445,11 @@ name|secsize
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|i
+decl_stmt|;
+name|uint64_t
+name|sum
 decl_stmt|;
 comment|/* We don't need topology for now. */
 name|g_topology_unlock
@@ -2639,6 +2651,53 @@ argument_list|,
 name|dl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ms
+operator|->
+name|labeloffset
+operator|==
+name|ALPHA_LABEL_OFFSET
+condition|)
+block|{
+name|sum
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|63
+condition|;
+name|i
+operator|++
+control|)
+name|sum
+operator|+=
+name|g_dec_le8
+argument_list|(
+name|buf
+operator|+
+name|i
+operator|*
+literal|8
+argument_list|)
+expr_stmt|;
+name|g_enc_le8
+argument_list|(
+name|buf
+operator|+
+literal|504
+argument_list|,
+name|sum
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|g_write_data
@@ -3284,7 +3343,7 @@ argument_list|,
 name|secsize
 argument_list|)
 expr_stmt|;
-comment|/* Next, look for it 64 bytes into the first sector. */
+comment|/* Next, look for alpha labels */
 if|if
 condition|(
 name|error
@@ -3301,7 +3360,7 @@ name|secsize
 argument_list|,
 name|ms
 argument_list|,
-literal|64
+name|ALPHA_LABEL_OFFSET
 argument_list|)
 expr_stmt|;
 comment|/* If we didn't find a label, punt. */
