@@ -14,7 +14,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_ifndef
@@ -56,7 +56,7 @@ operator|)
 name|arpadate
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
