@@ -1461,6 +1461,12 @@ begin_comment
 comment|/* set badscan mode */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * XXX encoding of disk minor numbers, should be elsewhere.  *  * See<sys/reboot.h> for a possibly better encoding.  *  * "cpio -H newc" can be used to back up device files with large minor  * numbers (but not ones>= 2^31).  Old cpio formats and all tar formats  * don't have enough bits, and cpio and tar don't notice the lossage.  * There are also some sign extension bugs.  */
 end_comment
@@ -1637,12 +1643,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_struct_decl
 struct_decl|struct
