@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.14.2.1 1995/07/21 11:22:38 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.17 1996/04/29 05:03:02 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -354,6 +354,9 @@ operator|==
 name|RAW_PART
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"Weird parititon letter %c"
@@ -366,6 +369,8 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 name|dl
@@ -783,6 +788,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"open(%s) failed"
@@ -790,6 +798,8 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|1
 return|;
@@ -1516,6 +1526,9 @@ operator|&
 name|i
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|i
@@ -1527,6 +1540,8 @@ argument_list|(
 literal|"ioctl(DIOCSYNCSLICEINFO)"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|fd
