@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	5.2 (Berkeley) %G%"
+literal|"@(#)map.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2573,7 +2573,7 @@ name|ED_UNASSIGNED
 block|,
 comment|/* . */
 comment|/*  47 */
-name|VI_SEARCH_NEXT
+name|VI_SEARCH_PREV
 block|,
 comment|/* / */
 comment|/*  48 */
@@ -2637,7 +2637,7 @@ name|ED_UNASSIGNED
 block|,
 comment|/*> */
 comment|/*  63 */
-name|VI_SEARCH_PREV
+name|VI_SEARCH_NEXT
 block|,
 comment|/* ? */
 comment|/*  64 */

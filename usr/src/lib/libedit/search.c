@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)search.c	5.3 (Berkeley) %G%"
+literal|"@(#)search.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2132,9 +2132,9 @@ name|dir
 operator|==
 name|ED_SEARCH_PREV_HISTORY
 condition|?
-literal|'?'
-else|:
 literal|'/'
+else|:
+literal|'?'
 expr_stmt|;
 name|re_refresh
 argument_list|(
