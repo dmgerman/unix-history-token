@@ -145,6 +145,8 @@ name|fd
 decl_stmt|;
 name|int
 name|noplayers
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
