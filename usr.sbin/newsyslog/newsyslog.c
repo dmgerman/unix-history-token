@@ -1750,6 +1750,13 @@ condition|(
 name|destdir
 operator|==
 name|NULL
+operator|||
+name|fname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
 condition|)
 name|tempwork
 operator|->
