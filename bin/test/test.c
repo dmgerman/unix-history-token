@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: test.c,v 1.25 1999/08/20 16:19:26 green Exp $"
+literal|"$Id: test.c,v 1.26 1999/08/22 22:32:41 green Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -824,7 +824,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * We need to set our real user and group so that when we call 	 * access(2), it actually reflects our effective credentials, 	 * not the real credentials it wants to use. 	 */
+comment|/* XXX work around the absence of an eaccess(2) syscall */
 operator|(
 name|void
 operator|)
@@ -1620,7 +1620,7 @@ return|;
 case|case
 name|FILEX
 case|:
-comment|/* 		 * We cannot simply use access(2) for this specific case 		 * since it can always return false positives for root. 		 */
+comment|/* XXX work around access(2) false positives for superuser */
 if|if
 condition|(
 name|access
