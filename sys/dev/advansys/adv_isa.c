@@ -342,10 +342,14 @@ index|]
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"adv%d: Invalid baseport of 0x%lx specified. "
-literal|"Neerest valid baseport is 0x%x.  Failing "
+literal|"Nearest valid baseport is 0x%x.  Failing "
 literal|"probe.\n"
 argument_list|,
 name|device_get_unit
