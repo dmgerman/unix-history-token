@@ -6377,19 +6377,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|td
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"schedclock: null thread pointer"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Adjust ticks for pctcpu */
 name|ke
 operator|->
@@ -7386,7 +7373,7 @@ name|KES_ONRUNQ
 operator|)
 argument_list|,
 operator|(
-literal|"KSE not on run queue"
+literal|"sched_rem: KSE not on run queue"
 operator|)
 argument_list|)
 expr_stmt|;
