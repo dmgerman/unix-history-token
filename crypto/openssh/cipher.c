@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: cipher.c,v 1.68 2004/01/23 19:26:33 hshoexer Exp $"
+literal|"$OpenBSD: cipher.c,v 1.71 2004/07/28 09:40:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -570,7 +570,7 @@ directive|endif
 block|{
 name|NULL
 block|,
-name|SSH_CIPHER_ILLEGAL
+name|SSH_CIPHER_INVALID
 block|,
 literal|0
 block|,
@@ -810,7 +810,7 @@ name|c
 decl_stmt|;
 name|char
 modifier|*
-name|ciphers
+name|cipher_list
 decl_stmt|,
 modifier|*
 name|cp
@@ -837,7 +837,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|ciphers
+name|cipher_list
 operator|=
 name|cp
 operator|=
@@ -911,7 +911,7 @@ argument_list|)
 expr_stmt|;
 name|xfree
 argument_list|(
-name|ciphers
+name|cipher_list
 argument_list|)
 expr_stmt|;
 return|return
@@ -940,7 +940,7 @@ argument_list|)
 expr_stmt|;
 name|xfree
 argument_list|(
-name|ciphers
+name|cipher_list
 argument_list|)
 expr_stmt|;
 return|return
@@ -1064,7 +1064,7 @@ name|u_int
 name|ivlen
 parameter_list|,
 name|int
-name|encrypt
+name|do_encrypt
 parameter_list|)
 block|{
 specifier|static
@@ -1264,7 +1264,7 @@ operator|)
 name|iv
 argument_list|,
 operator|(
-name|encrypt
+name|do_encrypt
 operator|==
 name|CIPHER_ENCRYPT
 operator|)
@@ -1292,7 +1292,7 @@ operator|)
 name|iv
 argument_list|,
 operator|(
-name|encrypt
+name|do_encrypt
 operator|==
 name|CIPHER_ENCRYPT
 operator|)
@@ -1561,7 +1561,7 @@ modifier|*
 name|passphrase
 parameter_list|,
 name|int
-name|encrypt
+name|do_encrypt
 parameter_list|)
 block|{
 name|MD5_CTX
@@ -1619,7 +1619,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|encrypt
+name|do_encrypt
 argument_list|)
 expr_stmt|;
 name|memset

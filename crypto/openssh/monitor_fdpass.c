@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor_fdpass.c,v 1.4 2002/06/26 14:50:04 deraadt Exp $"
+literal|"$OpenBSD: monitor_fdpass.c,v 1.6 2004/08/13 02:51:48 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -40,7 +40,7 @@ name|void
 name|mm_send_fd
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|int
 name|fd
@@ -239,7 +239,7 @@ name|n
 operator|=
 name|sendmsg
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|&
 name|msg
@@ -302,7 +302,7 @@ name|int
 name|mm_receive_fd
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|)
 block|{
 if|#
@@ -449,7 +449,7 @@ name|n
 operator|=
 name|recvmsg
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|&
 name|msg
@@ -520,6 +520,19 @@ name|CMSG_FIRSTHDR
 argument_list|(
 operator|&
 name|msg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmsg
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: no message header"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 ifndef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh1.h,v 1.3 2001/05/30 12:55:13 markus Exp $	*/
+comment|/*	$OpenBSD: ssh1.h,v 1.4 2004/07/11 17:48:47 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -310,7 +310,7 @@ comment|/* channel (int) */
 end_comment
 
 begin_comment
-comment|/*      SSH_CMSG_X11_REQUEST_FORWARDING         26         OBSOLETE */
+comment|/*      SSH_CMSG_X11_REQUEST_FORWARDING		26	   OBSOLETE */
 end_comment
 
 begin_define

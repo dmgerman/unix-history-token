@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.156 2004/01/25 03:49:09 djm Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.158 2004/06/21 17:36:31 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -105,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"readpass.h"
 end_include
 
 begin_include
@@ -3398,7 +3392,7 @@ condition|)
 block|{
 name|char
 modifier|*
-name|msg
+name|key_msg
 decl_stmt|;
 if|if
 condition|(
@@ -3406,7 +3400,7 @@ name|ip_status
 operator|==
 name|HOST_NEW
 condition|)
-name|msg
+name|key_msg
 operator|=
 literal|"is unknown"
 expr_stmt|;
@@ -3417,12 +3411,12 @@ name|ip_status
 operator|==
 name|HOST_OK
 condition|)
-name|msg
+name|key_msg
 operator|=
 literal|"is unchanged"
 expr_stmt|;
 else|else
-name|msg
+name|key_msg
 operator|=
 literal|"has a different value"
 expr_stmt|;
@@ -3461,7 +3455,7 @@ name|error
 argument_list|(
 literal|"%s. This could either mean that"
 argument_list|,
-name|msg
+name|key_msg
 argument_list|)
 expr_stmt|;
 name|error

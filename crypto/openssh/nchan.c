@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: nchan.c,v 1.49 2003/08/29 10:04:36 markus Exp $"
+literal|"$OpenBSD: nchan.c,v 1.51 2004/07/11 17:48:47 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -60,7 +60,7 @@ file|"log.h"
 end_include
 
 begin_comment
-comment|/*  * SSH Protocol 1.5 aka New Channel Protocol  * Thanks to Martina, Axel and everyone who left Erlangen, leaving me bored.  * Written by Markus Friedl in October 1999  *  * Protocol versions 1.3 and 1.5 differ in the handshake protocol used for the  * tear down of channels:  *  * 1.3:	strict request-ack-protocol:  * 	CLOSE	->  *<-  CLOSE_CONFIRM  *  * 1.5:	uses variations of:  * 	IEOF	->  *<-  OCLOSE  *<-  IEOF  * 	OCLOSE	->  * 	i.e. both sides have to close the channel  *  * 2.0: the EOF messages are optional  *  * See the debugging output from 'ssh -v' and 'sshd -d' of  * ssh-1.2.27 as an example.  *  */
+comment|/*  * SSH Protocol 1.5 aka New Channel Protocol  * Thanks to Martina, Axel and everyone who left Erlangen, leaving me bored.  * Written by Markus Friedl in October 1999  *  * Protocol versions 1.3 and 1.5 differ in the handshake protocol used for the  * tear down of channels:  *  * 1.3:	strict request-ack-protocol:  *	CLOSE	->  *<-  CLOSE_CONFIRM  *  * 1.5:	uses variations of:  *	IEOF	->  *<-  OCLOSE  *<-  IEOF  *	OCLOSE	->  *	i.e. both sides have to close the channel  *  * 2.0: the EOF messages are optional  *  * See the debugging output from 'ssh -v' and 'sshd -d' of  * ssh-1.2.27 as an example.  *  */
 end_comment
 
 begin_comment
@@ -1527,7 +1527,7 @@ modifier|*
 name|c
 parameter_list|,
 name|int
-name|send
+name|do_send
 parameter_list|)
 block|{
 if|if
@@ -1659,7 +1659,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|send
+name|do_send
 condition|)
 block|{
 name|chan_send_close2

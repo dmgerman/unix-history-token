@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: myproposal.h,v 1.15 2003/05/17 04:27:52 markus Exp $	*/
+comment|/*	$OpenBSD: myproposal.h,v 1.16 2004/06/13 12:53:24 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|KEX_DEFAULT_KEX
-value|"diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1"
+value|"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1," \ 	"diffie-hellman-group1-sha1"
 end_define
 
 begin_define

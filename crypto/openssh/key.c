@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: key.c,v 1.55 2003/11/10 16:23:41 jakob Exp $"
+literal|"$OpenBSD: key.c,v 1.56 2004/07/28 09:40:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4114,7 +4114,7 @@ break|break;
 default|default:
 name|error
 argument_list|(
-literal|"key_sign: illegal key type %d"
+literal|"key_sign: invalid key type %d"
 argument_list|,
 name|key
 operator|->
@@ -4216,7 +4216,7 @@ break|break;
 default|default:
 name|error
 argument_list|(
-literal|"key_verify: illegal key type %d"
+literal|"key_verify: invalid key type %d"
 argument_list|,
 name|key
 operator|->

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-arc4random.c,v 1.8 2004/02/17 05:49:55 djm Exp $"
+literal|"$Id: bsd-arc4random.c,v 1.9 2004/07/18 23:30:40 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -183,6 +183,9 @@ index|[
 name|SEED_SIZE
 index|]
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -231,6 +234,24 @@ argument_list|,
 name|rand_buf
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Discard early keystream, as per recommendations in: 	 * http://www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Rc4_ksa.ps 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+literal|256
+condition|;
+name|i
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|rand_buf
+argument_list|)
+control|)
 name|RC4
 argument_list|(
 operator|&

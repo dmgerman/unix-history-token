@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor_wrap.c,v 1.35 2003/11/17 11:06:07 markus Exp $"
+literal|"$OpenBSD: monitor_wrap.c,v 1.39 2004/07/17 05:31:41 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -265,6 +265,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|Buffer
+name|loginmsg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|ServerOptions
 name|options
 decl_stmt|;
@@ -297,7 +304,7 @@ name|void
 name|mm_request_send
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|enum
 name|monitor_reqtype
@@ -357,7 +364,7 @@ name|atomicio
 argument_list|(
 name|vwrite
 argument_list|,
-name|socket
+name|sock
 argument_list|,
 name|buf
 argument_list|,
@@ -385,7 +392,7 @@ name|atomicio
 argument_list|(
 name|vwrite
 argument_list|,
-name|socket
+name|sock
 argument_list|,
 name|buffer_ptr
 argument_list|(
@@ -412,7 +419,7 @@ name|void
 name|mm_request_receive
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -444,7 +451,7 @@ name|atomicio
 argument_list|(
 name|read
 argument_list|,
-name|socket
+name|sock
 argument_list|,
 name|buf
 argument_list|,
@@ -530,7 +537,7 @@ name|atomicio
 argument_list|(
 name|read
 argument_list|,
-name|socket
+name|sock
 argument_list|,
 name|buffer_ptr
 argument_list|(
@@ -566,7 +573,7 @@ name|void
 name|mm_request_receive_expect
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|enum
 name|monitor_reqtype
@@ -591,7 +598,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_receive
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|m
 argument_list|)
@@ -957,7 +964,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|login
+name|username
 parameter_list|)
 block|{
 name|Buffer
@@ -989,7 +996,7 @@ argument_list|(
 operator|&
 name|m
 argument_list|,
-name|login
+name|username
 argument_list|)
 expr_stmt|;
 name|mm_request_send
@@ -2877,7 +2884,7 @@ parameter_list|(
 name|struct
 name|monitor
 modifier|*
-name|pmonitor
+name|monitor
 parameter_list|)
 block|{
 name|Buffer
@@ -3068,7 +3075,7 @@ operator|&
 name|m
 argument_list|,
 operator|*
-name|pmonitor
+name|monitor
 operator|->
 name|m_pkex
 argument_list|)
@@ -3405,7 +3412,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|pmonitor
+name|monitor
 operator|->
 name|m_recvfd
 argument_list|,
@@ -3457,6 +3464,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|msg
 decl_stmt|;
 name|int
 name|success
@@ -3544,6 +3554,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|msg
+operator|=
+name|buffer_get_string
+argument_list|(
+operator|&
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|buffer_free
 argument_list|(
 operator|&
@@ -3563,6 +3583,24 @@ comment|/* Possible truncation */
 name|xfree
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|buffer_append
+argument_list|(
+operator|&
+name|loginmsg
+argument_list|,
+name|msg
+argument_list|,
+name|strlen
+argument_list|(
+name|msg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|msg
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4904,6 +4942,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SKEY
+end_ifdef
+
 begin_function
 name|int
 name|mm_skey_query
@@ -5240,6 +5284,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SKEY */
+end_comment
 
 begin_function
 name|void
@@ -5827,7 +5880,7 @@ modifier|*
 name|ctx
 parameter_list|,
 name|gss_OID
-name|oid
+name|goid
 parameter_list|)
 block|{
 name|Buffer
@@ -5853,11 +5906,11 @@ argument_list|(
 operator|&
 name|m
 argument_list|,
-name|oid
+name|goid
 operator|->
 name|elements
 argument_list|,
-name|oid
+name|goid
 operator|->
 name|length
 argument_list|)

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: readpass.c,v 1.28 2003/01/23 13:50:27 markus Exp $"
+literal|"$OpenBSD: readpass.c,v 1.30 2004/06/17 15:10:14 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readpass.h"
+file|"misc.h"
 end_include
 
 begin_include
@@ -487,6 +487,17 @@ if|if
 condition|(
 name|flags
 operator|&
+name|RP_USE_ASKPASS
+condition|)
+name|use_askpass
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
 name|RP_ALLOW_STDIN
 condition|)
 block|{
@@ -535,6 +546,35 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|RP_USE_ASKPASS
+operator|)
+operator|&&
+name|getenv
+argument_list|(
+literal|"DISPLAY"
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|flags
+operator|&
+name|RP_ALLOW_EOF
+operator|)
+condition|?
+name|NULL
+else|:
+name|xstrdup
+argument_list|(
+literal|""
+argument_list|)
+return|;
 if|if
 condition|(
 name|use_askpass

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-aix.h,v 1.19 2004/02/10 04:27:35 dtucker Exp $ */
+comment|/* $Id: port-aix.h,v 1.21 2004/08/14 14:09:12 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -190,6 +190,50 @@ directive|define
 name|CUSTOM_SYS_AUTH_PASSWD
 value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|CUSTOM_SYS_AUTH_ALLOWED_USER
+value|1
+end_define
+
+begin_function_decl
+name|int
+name|sys_auth_allowed_user
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|CUSTOM_SYS_AUTH_RECORD_LOGIN
+value|1
+end_define
+
+begin_function_decl
+name|int
+name|sys_auth_record_login
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

@@ -85,7 +85,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-rand-helper.c,v 1.16 2003/11/21 12:56:47 djm Exp $"
+literal|"$Id: ssh-rand-helper.c,v 1.18 2004/07/17 04:07:42 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -178,12 +178,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___PROGNAME
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -191,46 +185,6 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|offsetof
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|type
-parameter_list|,
-name|member
-parameter_list|)
-value|((size_t)&((type *)0)->member)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

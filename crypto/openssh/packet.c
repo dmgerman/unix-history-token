@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: packet.c,v 1.112 2003/09/23 20:17:11 markus Exp $"
+literal|"$OpenBSD: packet.c,v 1.115 2004/06/21 17:36:31 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -512,6 +512,11 @@ name|send_context
 argument_list|,
 name|none
 argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
 literal|""
 argument_list|,
 literal|0
@@ -530,6 +535,11 @@ name|receive_context
 argument_list|,
 name|none
 argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
 literal|""
 argument_list|,
 literal|0
@@ -1244,27 +1254,9 @@ name|void
 parameter_list|)
 block|{
 comment|/* Set the socket into non-blocking mode. */
-if|if
-condition|(
-name|fcntl
+name|set_nonblock
 argument_list|(
 name|connection_in
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|O_NONBLOCK
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"fcntl O_NONBLOCK: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1273,31 +1265,11 @@ name|connection_out
 operator|!=
 name|connection_in
 condition|)
-block|{
-if|if
-condition|(
-name|fcntl
+name|set_nonblock
 argument_list|(
 name|connection_out
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|O_NONBLOCK
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"fcntl O_NONBLOCK: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1979,7 +1951,7 @@ name|u_int
 name|checksum
 decl_stmt|;
 name|u_int32_t
-name|rand
+name|rnd
 init|=
 literal|0
 decl_stmt|;
@@ -2109,7 +2081,7 @@ literal|4
 operator|==
 literal|0
 condition|)
-name|rand
+name|rnd
 operator|=
 name|arc4random
 argument_list|()
@@ -2121,11 +2093,11 @@ operator|-
 name|i
 index|]
 operator|=
-name|rand
+name|rnd
 operator|&
 literal|0xff
 expr_stmt|;
-name|rand
+name|rnd
 operator|>>=
 literal|8
 expr_stmt|;
@@ -2303,7 +2275,7 @@ modifier|*
 name|max_blocks
 decl_stmt|;
 name|int
-name|encrypt
+name|crypt_type
 decl_stmt|;
 name|debug2
 argument_list|(
@@ -2324,7 +2296,7 @@ operator|=
 operator|&
 name|send_context
 expr_stmt|;
-name|encrypt
+name|crypt_type
 operator|=
 name|CIPHER_ENCRYPT
 expr_stmt|;
@@ -2351,7 +2323,7 @@ operator|=
 operator|&
 name|receive_context
 expr_stmt|;
-name|encrypt
+name|crypt_type
 operator|=
 name|CIPHER_DECRYPT
 expr_stmt|;
@@ -2589,7 +2561,7 @@ name|enc
 operator|->
 name|block_size
 argument_list|,
-name|encrypt
+name|crypt_type
 argument_list|)
 expr_stmt|;
 comment|/* Deleting the keys does not gain extra security */
@@ -2737,7 +2709,7 @@ decl_stmt|,
 name|len
 decl_stmt|;
 name|u_int32_t
-name|rand
+name|rnd
 init|=
 literal|0
 decl_stmt|;
@@ -3062,7 +3034,7 @@ literal|4
 operator|==
 literal|0
 condition|)
-name|rand
+name|rnd
 operator|=
 name|arc4random
 argument_list|()
@@ -3072,11 +3044,11 @@ index|[
 name|i
 index|]
 operator|=
-name|rand
+name|rnd
 operator|&
 literal|0xff
 expr_stmt|;
-name|rand
+name|rnd
 operator|>>=
 literal|8
 expr_stmt|;
@@ -6083,7 +6055,7 @@ block|}
 end_function
 
 begin_function
-name|u_int
+name|int
 name|packet_set_maxsize
 parameter_list|(
 name|u_int
@@ -6195,7 +6167,7 @@ name|nbytes
 parameter_list|)
 block|{
 name|u_int32_t
-name|rand
+name|rnd
 init|=
 literal|0
 decl_stmt|;
@@ -6238,19 +6210,19 @@ literal|4
 operator|==
 literal|0
 condition|)
-name|rand
+name|rnd
 operator|=
 name|arc4random
 argument_list|()
 expr_stmt|;
 name|packet_put_char
 argument_list|(
-name|rand
+name|rnd
 operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|rand
+name|rnd
 operator|>>=
 literal|8
 expr_stmt|;
@@ -6262,7 +6234,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PACKETS
-value|(1<<31)
+value|(1U<<31)
 end_define
 
 begin_function

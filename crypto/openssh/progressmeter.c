@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: progressmeter.c,v 1.19 2004/02/05 15:33:33 markus Exp $"
+literal|"$OpenBSD: progressmeter.c,v 1.22 2004/07/11 17:48:47 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -820,6 +820,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|bytes_per_second
 argument_list|)
 expr_stmt|;
@@ -1080,7 +1083,7 @@ name|filesize
 parameter_list|,
 name|off_t
 modifier|*
-name|stat
+name|ctr
 parameter_list|)
 block|{
 name|struct
@@ -1110,7 +1113,7 @@ literal|0
 expr_stmt|;
 name|counter
 operator|=
-name|stat
+name|ctr
 expr_stmt|;
 name|stalled
 operator|=

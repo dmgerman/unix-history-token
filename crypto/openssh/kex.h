@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: kex.h,v 1.33 2003/02/16 17:09:57 markus Exp $	*/
+comment|/*	$OpenBSD: kex.h,v 1.35 2004/06/13 12:53:24 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -48,6 +48,13 @@ define|#
 directive|define
 name|KEX_DH1
 value|"diffie-hellman-group1-sha1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_DH14
+value|"diffie-hellman-group14-sha1"
 end_define
 
 begin_define
@@ -104,6 +111,8 @@ enum|enum
 name|kex_exchange
 block|{
 name|KEX_DH_GRP1_SHA1
+block|,
+name|KEX_DH_GRP14_SHA1
 block|,
 name|KEX_DH_GEX_SHA1
 block|,
@@ -556,6 +565,29 @@ modifier|*
 parameter_list|,
 name|BIGNUM
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|derive_ssh1_session_id
+parameter_list|(
+name|BIGNUM
+modifier|*
+parameter_list|,
+name|BIGNUM
+modifier|*
+parameter_list|,
+name|u_int8_t
+index|[
+literal|8
+index|]
+parameter_list|,
+name|u_int8_t
+index|[
+literal|16
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl

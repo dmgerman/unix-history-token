@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: clientloop.h,v 1.8 2003/12/16 15:49:51 markus Exp $	*/
+comment|/*	$OpenBSD: clientloop.h,v 1.11 2004/07/11 17:48:47 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,39 @@ parameter_list|,
 name|u_int32_t
 parameter_list|,
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|client_session2_setup
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|Buffer
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|dispatch_fn
 modifier|*
 parameter_list|)
 function_decl|;

@@ -18,10 +18,28 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-misc.c,v 1.21 2004/02/17 05:49:55 djm Exp $"
+literal|"$Id: bsd-misc.c,v 1.25 2004/08/15 08:41:00 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE___PROGNAME
+end_ifndef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * NB. duplicate __progname in case it is an alias for argv[0]  * Otherwise it may get clobbered by setproctitle()  */

@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readpass.h"
+file|"misc.h"
 end_include
 
 begin_include

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-none.c,v 1.6 2003/08/26 09:58:43 markus Exp $"
+literal|"$OpenBSD: auth2-none.c,v 1.7 2004/05/11 19:01:43 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -113,7 +113,7 @@ name|banner
 init|=
 name|NULL
 decl_stmt|;
-name|off_t
+name|size_t
 name|len
 decl_stmt|,
 name|n
@@ -169,12 +169,40 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|>
+literal|1
+operator|*
+literal|1024
+operator|*
+literal|1024
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|len
 operator|=
+operator|(
+name|size_t
+operator|)
 name|st
 operator|.
 name|st_size
 expr_stmt|;
+comment|/* truncate */
 name|banner
 operator|=
 name|xmalloc

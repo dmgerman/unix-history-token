@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-pubkey.c,v 1.6 2004/01/19 21:25:15 markus Exp $"
+literal|"$OpenBSD: auth2-pubkey.c,v 1.7 2004/06/21 17:36:31 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -889,7 +889,7 @@ modifier|*
 name|cp
 decl_stmt|,
 modifier|*
-name|options
+name|key_options
 init|=
 name|NULL
 decl_stmt|;
@@ -960,7 +960,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|options
+name|key_options
 operator|=
 name|cp
 expr_stmt|;
@@ -1077,7 +1077,7 @@ name|auth_parse_options
 argument_list|(
 name|pw
 argument_list|,
-name|options
+name|key_options
 argument_list|,
 name|file
 argument_list|,

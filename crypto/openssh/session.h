@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: session.h,v 1.21 2003/09/23 20:17:11 markus Exp $	*/
+comment|/*	$OpenBSD: session.h,v 1.23 2004/07/17 05:31:41 dtucker Exp $	*/
 end_comment
 
 begin_comment
@@ -83,16 +83,6 @@ index|[
 name|TTYSZ
 index|]
 decl_stmt|;
-comment|/* last login */
-name|char
-name|hostname
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-name|time_t
-name|last_login_time
-decl_stmt|;
 comment|/* X11 */
 name|u_int
 name|display_number
@@ -126,6 +116,23 @@ decl_stmt|;
 name|int
 name|is_subsystem
 decl_stmt|;
+name|int
+name|num_env
+decl_stmt|;
+struct|struct
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|char
+modifier|*
+name|val
+decl_stmt|;
+block|}
+modifier|*
+name|env
+struct|;
 block|}
 struct|;
 end_struct

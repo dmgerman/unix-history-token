@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.115 2004/04/14 07:24:30 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.117 2004/06/22 03:27:16 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -2212,6 +2212,24 @@ begin_comment
 comment|/* !defined(__GNUC__) || (__GNUC__< 2) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__dead
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__dead
+value|__attribute__((noreturn))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* *-*-nto-qnx doesn't define this macro in the system headers */
 end_comment
@@ -2386,6 +2404,29 @@ end_endif
 begin_comment
 comment|/* CMSG_FIRSTHDR */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|offsetof
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+value|((size_t)&((type *)0)->member)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Function replacement / compatibility hacks */

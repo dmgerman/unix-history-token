@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keygen.c,v 1.113 2003/12/22 09:16:58 djm Exp $"
+literal|"$OpenBSD: ssh-keygen.c,v 1.117 2004/07/11 17:48:47 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -86,13 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readpass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"moduli.h"
+file|"misc.h"
 end_include
 
 begin_ifdef
@@ -291,12 +285,6 @@ begin_comment
 comment|/* argv0 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___PROGNAME
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -304,23 +292,6 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -330,6 +301,44 @@ name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* moduli.c */
+end_comment
+
+begin_function_decl
+name|int
+name|gen_candidates
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|BIGNUM
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|prime_test
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -877,7 +886,7 @@ name|value
 parameter_list|)
 block|{
 name|u_int
-name|bits
+name|bignum_bits
 init|=
 name|buffer_get_int
 argument_list|(
@@ -888,7 +897,7 @@ name|u_int
 name|bytes
 init|=
 operator|(
-name|bits
+name|bignum_bits
 operator|+
 literal|7
 operator|)
@@ -3373,7 +3382,7 @@ name|pw
 parameter_list|,
 name|char
 modifier|*
-name|hostname
+name|hname
 parameter_list|)
 block|{
 name|Key
@@ -3445,7 +3454,7 @@ condition|)
 block|{
 name|export_dns_rr
 argument_list|(
-name|hostname
+name|hname
 argument_list|,
 name|public
 argument_list|,
@@ -4705,21 +4714,6 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|trials
-operator|<
-name|TRIAL_MINIMUM
-condition|)
-block|{
-name|fatal
-argument_list|(
-literal|"Minimum primality trials is %d"
-argument_list|,
-name|TRIAL_MINIMUM
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'M'
@@ -4731,33 +4725,6 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|memory
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|memory
-operator|<
-name|LARGE_MINIMUM
-operator|||
-name|memory
-operator|>
-name|LARGE_MAXIMUM
-operator|)
-condition|)
-block|{
-name|fatal
-argument_list|(
-literal|"Invalid memory amount (min %ld, max %ld)"
-argument_list|,
-name|LARGE_MINIMUM
-argument_list|,
-name|LARGE_MAXIMUM
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'G'

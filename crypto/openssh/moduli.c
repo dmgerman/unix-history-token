@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.5 2003/12/22 09:16:57 djm Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.9 2004/07/11 17:48:47 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -15,12 +15,6 @@ begin_include
 include|#
 directive|include
 file|"includes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"moduli.h"
 end_include
 
 begin_include
@@ -91,7 +85,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|QTYPE_SOPHIE_GERMAINE
+name|QTYPE_SOPHIE_GERMAIN
 value|(4)
 end_define
 
@@ -203,6 +197,36 @@ value|(SHIFT_MEGABYTE-SHIFT_BYTE)
 end_define
 
 begin_comment
+comment|/*  * Using virtual memory can cause thrashing.  This should be the largest  * number that is supported without a large amount of disk activity --  * that would increase the run time from hours to days or weeks!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LARGE_MINIMUM
+value|(8UL)
+end_define
+
+begin_comment
+comment|/* megabytes */
+end_comment
+
+begin_comment
+comment|/*  * Do not increase this number beyond the unsigned integer bit size.  * Due to a multiple of 4, it must be LESS than 128 (yielding 2**30 bits).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LARGE_MAXIMUM
+value|(127UL)
+end_define
+
+begin_comment
+comment|/* megabytes */
+end_comment
+
+begin_comment
 comment|/*  * Constant: when used with 32-bit integers, the largest sieve prime  * has to be less than 2**32.  */
 end_comment
 
@@ -302,6 +326,17 @@ comment|/*  * Prime testing defines  */
 end_comment
 
 begin_comment
+comment|/* Minimum number of primality tests to perform */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRIAL_MINIMUM
+value|(4)
+end_define
+
+begin_comment
 comment|/*  * Sieving data (XXX - move to struct)  */
 end_comment
 
@@ -373,6 +408,40 @@ modifier|*
 name|largebase
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|gen_candidates
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|BIGNUM
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|prime_test
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * print moduli out in consistent form,  */
@@ -728,7 +797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * list candidates for Sophie-Germaine primes (where q = (p-1)/2)  * to standard output.  * The list is checked against small known primes (less than 2**30).  */
+comment|/*  * list candidates for Sophie-Germain primes (where q = (p-1)/2)  * to standard output.  * The list is checked against small known primes (less than 2**30).  */
 end_comment
 
 begin_function
@@ -793,6 +862,39 @@ name|largememory
 operator|=
 name|memory
 expr_stmt|;
+if|if
+condition|(
+name|memory
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|memory
+operator|<
+name|LARGE_MINIMUM
+operator|||
+name|memory
+operator|>
+name|LARGE_MAXIMUM
+operator|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Invalid memory amount (min %ld, max %ld)"
+argument_list|,
+name|LARGE_MINIMUM
+argument_list|,
+name|LARGE_MAXIMUM
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * Set power to the length in bits of the prime to be generated. 	 * This is changed to 1 less than the desired safe prime moduli p. 	 */
 if|if
 condition|(
@@ -1481,7 +1583,7 @@ name|qfileout
 argument_list|(
 name|out
 argument_list|,
-name|QTYPE_SOPHIE_GERMAINE
+name|QTYPE_SOPHIE_GERMAIN
 argument_list|,
 name|QTEST_SIEVE
 argument_list|,
@@ -1635,6 +1737,27 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
+if|if
+condition|(
+name|trials
+operator|<
+name|TRIAL_MINIMUM
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Minimum primality trials is %d"
+argument_list|,
+name|TRIAL_MINIMUM
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|time
 argument_list|(
 operator|&
@@ -1844,11 +1967,11 @@ name|in_type
 condition|)
 block|{
 case|case
-name|QTYPE_SOPHIE_GERMAINE
+name|QTYPE_SOPHIE_GERMAIN
 case|:
 name|debug2
 argument_list|(
-literal|"%10u: (%u) Sophie-Germaine"
+literal|"%10u: (%u) Sophie-Germain"
 argument_list|,
 name|count_in
 argument_list|,

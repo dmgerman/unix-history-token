@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: packet.h,v 1.40 2003/06/24 08:23:46 markus Exp $	*/
+comment|/*	$OpenBSD: packet.h,v 1.41 2004/05/11 19:01:43 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -652,7 +652,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|u_int
+name|int
 name|packet_set_maxsize
 parameter_list|(
 name|u_int

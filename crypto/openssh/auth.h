@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth.h,v 1.49 2004/01/30 09:48:57 markus Exp $	*/
+comment|/*	$OpenBSD: auth.h,v 1.50 2004/05/23 23:59:53 dtucker Exp $	*/
 end_comment
 
 begin_comment
@@ -1104,20 +1104,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|AUTH_FAIL_MAX
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUTH_FAIL_LOG
-value|(AUTH_FAIL_MAX/2)
-end_define
 
 begin_define
 define|#

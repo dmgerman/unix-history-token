@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-add.c,v 1.69 2003/11/21 11:57:03 djm Exp $"
+literal|"$OpenBSD: ssh-add.c,v 1.70 2004/05/08 00:21:31 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -74,45 +74,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readpass.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"misc.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___PROGNAME
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* argv0 */

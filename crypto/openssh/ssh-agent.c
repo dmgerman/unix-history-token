@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-agent.c,v 1.117 2003/12/02 17:01:15 markus Exp $"
+literal|"$OpenBSD: ssh-agent.c,v 1.120 2004/08/11 21:43:05 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -93,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"readpass.h"
 end_include
 
 begin_include
@@ -330,12 +324,6 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___PROGNAME
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -343,23 +331,6 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Default lifetime (0 == forever) */
@@ -4103,27 +4074,9 @@ name|old_alloc
 decl_stmt|,
 name|new_alloc
 decl_stmt|;
-if|if
-condition|(
-name|fcntl
+name|set_nonblock
 argument_list|(
 name|fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|O_NONBLOCK
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"fcntl O_NONBLOCK: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4360,7 +4313,7 @@ name|int
 modifier|*
 name|fdl
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 name|nallocp
 parameter_list|)
@@ -5346,7 +5299,8 @@ decl_stmt|,
 name|fd
 decl_stmt|,
 name|ch
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|nalloc
 decl_stmt|;
 name|char

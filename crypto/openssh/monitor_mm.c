@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor_mm.c,v 1.8 2002/08/02 14:43:15 millert Exp $"
+literal|"$OpenBSD: monitor_mm.c,v 1.9 2004/05/11 19:01:43 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

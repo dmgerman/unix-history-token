@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: misc.c,v 1.23 2003/10/28 09:08:06 markus Exp $"
+literal|"$OpenBSD: misc.c,v 1.25 2004/08/11 21:43:05 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -98,7 +98,7 @@ comment|/* set/unset filedescriptor to non-blocking */
 end_comment
 
 begin_function
-name|void
+name|int
 name|set_nonblock
 parameter_list|(
 name|int
@@ -138,7 +138,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -147,14 +152,18 @@ operator|&
 name|O_NONBLOCK
 condition|)
 block|{
-name|debug2
+name|debug3
 argument_list|(
 literal|"fd %d is O_NONBLOCK"
 argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|debug2
 argument_list|(
@@ -181,6 +190,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|debug
 argument_list|(
 literal|"fcntl(%d, F_SETFL, O_NONBLOCK): %s"
@@ -193,11 +203,23 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|unset_nonblock
 parameter_list|(
 name|int
@@ -237,7 +259,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -249,14 +276,18 @@ name|O_NONBLOCK
 operator|)
 condition|)
 block|{
-name|debug2
+name|debug3
 argument_list|(
 literal|"fd %d is not O_NONBLOCK"
 argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|debug
 argument_list|(
@@ -284,9 +315,10 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|debug
 argument_list|(
-literal|"fcntl(%d, F_SETFL, O_NONBLOCK): %s"
+literal|"fcntl(%d, F_SETFL, ~O_NONBLOCK): %s"
 argument_list|,
 name|fd
 argument_list|,
@@ -296,6 +328,18 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1250,7 +1294,7 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|nalloc
 decl_stmt|;
 name|va_start

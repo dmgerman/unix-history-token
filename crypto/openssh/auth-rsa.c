@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rsa.c,v 1.58 2003/11/04 08:54:09 djm Exp $"
+literal|"$OpenBSD: auth-rsa.c,v 1.60 2004/06/21 17:36:31 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"ssh1.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mpaux.h"
 end_include
 
 begin_include
@@ -790,7 +784,7 @@ name|cp
 decl_stmt|;
 name|char
 modifier|*
-name|options
+name|key_options
 decl_stmt|;
 name|linenum
 operator|++
@@ -852,7 +846,7 @@ name|quoted
 init|=
 literal|0
 decl_stmt|;
-name|options
+name|key_options
 operator|=
 name|cp
 expr_stmt|;
@@ -916,7 +910,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|options
+name|key_options
 operator|=
 name|NULL
 expr_stmt|;
@@ -1010,7 +1004,7 @@ name|auth_parse_options
 argument_list|(
 name|pw
 argument_list|,
-name|options
+name|key_options
 argument_list|,
 name|file
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: includes.h,v 1.17 2002/01/26 16:44:22 stevesk Exp $	*/
+comment|/*	$OpenBSD: includes.h,v 1.18 2004/06/13 15:03:02 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -112,6 +112,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
 end_include
 
 begin_ifdef
@@ -1001,6 +1007,38 @@ include|#
 directive|include
 file|<kafs.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * On HP-UX 11.11, shadow.h and prot.h provide conflicting declarations  * of getspnam when _INCLUDE__STDC__ is defined, so we unset it here.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__hpux
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_INCLUDE__STDC__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_INCLUDE__STDC__
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

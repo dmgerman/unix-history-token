@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect2.c,v 1.135 2004/03/05 10:53:58 markus Exp $"
+literal|"$OpenBSD: sshconnect2.c,v 1.138 2004/06/13 12:53:24 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readpass.h"
+file|"misc.h"
 end_include
 
 begin_include
@@ -483,6 +483,15 @@ operator|->
 name|kex
 index|[
 name|KEX_DH_GRP1_SHA1
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP14_SHA1
 index|]
 operator|=
 name|kexdh_client
@@ -2204,9 +2213,9 @@ argument|id
 argument_list|,
 argument|&authctxt->keys
 argument_list|,
-argument|next
-argument_list|,
 argument|idlist
+argument_list|,
+argument|next
 argument_list|)
 block|{
 if|if

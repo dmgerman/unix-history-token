@@ -87,16 +87,10 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: logintest.c,v 1.10 2003/08/21 23:34:41 djm Exp $"
+literal|"$Id: logintest.c,v 1.11 2004/07/17 04:07:42 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___PROGNAME
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -105,23 +99,6 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

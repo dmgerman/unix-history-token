@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.60 2004/03/05 10:53:58 markus Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.64 2004/07/11 17:48:47 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -54,6 +54,13 @@ end_typedef
 begin_comment
 comment|/* Data structure for representing option data. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SEND_ENV
+value|256
+end_define
 
 begin_typedef
 typedef|typedef
@@ -314,6 +321,23 @@ decl_stmt|;
 name|int
 name|server_alive_count_max
 decl_stmt|;
+name|int
+name|num_send_env
+decl_stmt|;
+name|char
+modifier|*
+name|send_env
+index|[
+name|MAX_SEND_ENV
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|control_path
+decl_stmt|;
+name|int
+name|control_master
+decl_stmt|;
 block|}
 name|Options
 typedef|;
@@ -353,6 +377,8 @@ modifier|*
 parameter_list|,
 name|Options
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

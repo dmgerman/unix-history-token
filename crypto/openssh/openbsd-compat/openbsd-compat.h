@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.25 2004/01/21 06:07:23 djm Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.26 2004/08/15 08:41:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -106,6 +106,26 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_CLOSEFROM
+end_ifndef
+
+begin_function_decl
+name|void
+name|closefrom
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

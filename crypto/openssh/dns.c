@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: dns.c,v 1.9 2003/11/21 11:57:03 djm Exp $	*/
+comment|/*	$OpenBSD: dns.c,v 1.10 2004/06/21 17:36:31 avsm Exp $	*/
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ end_decl_stmt
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dns.c,v 1.9 2003/11/21 11:57:03 djm Exp $"
+literal|"$OpenBSD: dns.c,v 1.10 2004/06/21 17:36:31 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -153,12 +153,12 @@ name|dns_result_totext
 parameter_list|(
 name|unsigned
 name|int
-name|error
+name|res
 parameter_list|)
 block|{
 switch|switch
 condition|(
-name|error
+name|res
 condition|)
 block|{
 case|case

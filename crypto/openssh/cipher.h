@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: cipher.h,v 1.34 2003/11/10 16:23:41 jakob Exp $	*/
+comment|/*	$OpenBSD: cipher.h,v 1.35 2004/07/28 09:40:29 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSH_CIPHER_ILLEGAL
+name|SSH_CIPHER_INVALID
 value|-2
 end_define
 

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect1.c,v 1.56 2003/08/28 12:54:34 markus Exp $"
+literal|"$OpenBSD: sshconnect1.c,v 1.60 2004/07/28 09:40:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mpaux.h"
+file|"kex.h"
 end_include
 
 begin_include
@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readpass.h"
+file|"misc.h"
 end_include
 
 begin_include
@@ -1893,7 +1893,7 @@ decl_stmt|,
 name|client_flags
 decl_stmt|;
 name|u_int32_t
-name|rand
+name|rnd
 init|=
 literal|0
 decl_stmt|;
@@ -2132,12 +2132,8 @@ name|SSH_PROTOFLAG_SCREEN_NUMBER
 operator||
 name|SSH_PROTOFLAG_HOST_IN_FWD_OPEN
 expr_stmt|;
-name|compute_session_id
+name|derive_ssh1_session_id
 argument_list|(
-name|session_id
-argument_list|,
-name|cookie
-argument_list|,
 name|host_key
 operator|->
 name|rsa
@@ -2149,6 +2145,10 @@ operator|->
 name|rsa
 operator|->
 name|n
+argument_list|,
+name|cookie
+argument_list|,
+name|session_id
 argument_list|)
 expr_stmt|;
 comment|/* Generate a session key. */
@@ -2178,7 +2178,7 @@ literal|4
 operator|==
 literal|0
 condition|)
-name|rand
+name|rnd
 operator|=
 name|arc4random
 argument_list|()
@@ -2188,11 +2188,11 @@ index|[
 name|i
 index|]
 operator|=
-name|rand
+name|rnd
 operator|&
 literal|0xff
 expr_stmt|;
-name|rand
+name|rnd
 operator|>>=
 literal|8
 expr_stmt|;
@@ -2497,7 +2497,7 @@ name|options
 operator|.
 name|cipher
 operator|==
-name|SSH_CIPHER_ILLEGAL
+name|SSH_CIPHER_INVALID
 operator|||
 operator|!
 operator|(
