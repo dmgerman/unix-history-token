@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	4.5	81/02/19	*/
+comment|/*	pte.h	4.6	81/02/23	*/
 end_comment
 
 begin_comment
 comment|/*  * VAX page table entry  *  * There are two major kinds of pte's: those which have ever existed (and are  * thus either now in core or on the swap device), and those which have  * never existed, but which will be filled on demand at first reference.  * There is a structure describing each.  There is also an ancillary  * structure used in page clustering.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_struct
 struct|struct
@@ -112,6 +118,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -224,6 +235,12 @@ name|pte
 parameter_list|)
 value|((pte)->pg_fod == 0&& (pte)->pg_pfnum&& \ 			    ((pte)->pg_m || (pte)->pg_swapm))
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -383,6 +400,11 @@ literal|16
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
