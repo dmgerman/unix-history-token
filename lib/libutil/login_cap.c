@@ -655,8 +655,16 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
-comment|/* Switch to user mode before checking/reading its ~/.login_conf */
-comment|/* - some NFSes have root read access disabled.                  */
+ifndef|#
+directive|ifndef
+name|_FILE_LOGIN_CONF_WORKS
+name|dir
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Switch to user mode before checking/reading its ~/.login_conf 	 * - some NFSes have root read access disabled. 	 * 	 * XXX: This fails to configure additional groups. 	 */
 if|if
 condition|(
 name|dir
