@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	draw.c	1.7	84/04/13  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
+comment|/*	draw.c	1.8	84/05/09  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
 end_comment
 
 begin_include
@@ -276,6 +276,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* type of line (SOLID, DOTTED, DASHED...) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|polyborder
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag for whether or not to draw a border */
 end_comment
 
 begin_comment
@@ -1422,16 +1434,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|polyborder
+condition|)
+block|{
 name|byte
 argument_list|(
 name|ADRAW
 argument_list|)
 expr_stmt|;
+comment|/* draw the border, if requested */
 name|byte
 argument_list|(
 literal|15
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|laststipmem
