@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.4	%G%"
+literal|"@(#)srvrsmtp.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,11 +1066,16 @@ decl_stmt|;
 name|bool
 name|noinfo
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|HelpFile
+decl_stmt|;
 name|hf
 operator|=
 name|fopen
 argument_list|(
-literal|"/usr/lib/sendmail.hf"
+name|HelpFile
 argument_list|,
 literal|"r"
 argument_list|)

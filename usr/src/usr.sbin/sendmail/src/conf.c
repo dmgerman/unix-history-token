@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.34	%G%"
+literal|"@(#)conf.c	3.35	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,12 +369,25 @@ name|char
 modifier|*
 name|StatFile
 init|=
-literal|"/usr/eric/mailstats"
+literal|"/usr/lib/mailstats"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* statistics summary */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|HelpFile
+init|=
+literal|"/usr/lib/sendmail.hf"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* help file */
 end_comment
 
 begin_comment
