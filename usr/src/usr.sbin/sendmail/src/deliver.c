@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.96 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.97 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5099,7 +5099,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			**  Set up the mailer environment 			**	TZ is timezone information. 			**	SYSTYPE is Apollo software sys type (required). 			**	ISP is Apollo hardware system type (required). 			*/
+comment|/* 			**  Set up the mailer environment 			**	_FORCE_MAIL_LOCAL_ is DG-UX equiv of -d flag. 			**	TZ is timezone information. 			**	SYSTYPE is Apollo software sys type (required). 			**	ISP is Apollo hardware system type (required). 			*/
 name|i
 operator|=
 literal|0
@@ -5111,6 +5111,14 @@ operator|++
 index|]
 operator|=
 literal|"AGENT=sendmail"
+expr_stmt|;
+name|env
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"_FORCE_MAIL_LOCAL_=yes"
 expr_stmt|;
 for|for
 control|(
@@ -5178,7 +5186,6 @@ block|}
 name|env
 index|[
 name|i
-operator|++
 index|]
 operator|=
 name|NULL
