@@ -93,6 +93,10 @@ modifier|*
 name|tc_name
 decl_stmt|;
 comment|/* Name of the timecounter. */
+name|int
+name|tc_quality
+decl_stmt|;
+comment|/* 		 * Used to determine if this timecounter is better than 		 * another timecounter higher means better.  Negative 		 * means "only use at explicit request". 		 */
 name|void
 modifier|*
 name|tc_priv

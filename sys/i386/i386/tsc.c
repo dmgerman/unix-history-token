@@ -191,7 +191,11 @@ literal|0
 block|,
 comment|/* frequency */
 literal|"TSC"
+block|,
 comment|/* name */
+literal|800
+block|,
+comment|/* quality (adjusted in code) */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -286,23 +290,6 @@ operator|)
 name|tsc_freq
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs 	 * are somehow synchronized.  Some hardware configurations do 	 * this, but we have no way of determining whether this is the 	 * case, so we do not use the TSC in multi-processor systems 	 * unless the user indicated (by setting kern.timecounter.smp_tsc 	 * to 1) that he believes that his TSCs are synchronized. 	 */
-if|if
-condition|(
-name|mp_ncpus
-operator|>
-literal|1
-operator|&&
-operator|!
-name|smp_tsc
-condition|)
-return|return;
-endif|#
-directive|endif
-return|return;
 block|}
 end_function
 
@@ -322,6 +309,13 @@ operator|==
 name|POWER_PM_TYPE_APM
 condition|)
 block|{
+name|tsc_timecounter
+operator|.
+name|tc_quality
+operator|=
+operator|-
+literal|1000
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -331,8 +325,29 @@ argument_list|(
 literal|"TSC timecounter disabled: APM enabled.\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs 	 * are somehow synchronized.  Some hardware configurations do 	 * this, but we have no way of determining whether this is the 	 * case, so we do not use the TSC in multi-processor systems 	 * unless the user indicated (by setting kern.timecounter.smp_tsc 	 * to 1) that he believes that his TSCs are synchronized. 	 */
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|&&
+operator|!
+name|smp_tsc
+condition|)
+name|tsc_timecounter
+operator|.
+name|tc_quality
+operator|=
+operator|-
+literal|100
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tsc_present
@@ -358,7 +373,6 @@ name|tsc_timecounter
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

@@ -642,7 +642,10 @@ literal|0
 block|,
 comment|/* frequency */
 literal|"i8254"
+block|,
 comment|/* name */
+literal|0
+comment|/* quality */
 block|}
 decl_stmt|;
 end_decl_stmt

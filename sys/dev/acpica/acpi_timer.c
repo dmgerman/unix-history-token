@@ -351,6 +351,8 @@ block|,
 literal|0
 block|,
 literal|"ACPI"
+block|,
+literal|1000
 block|}
 decl_stmt|;
 end_decl_stmt
