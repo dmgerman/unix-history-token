@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)cpr.c	1.1		%G%"
+literal|"@(#)cpr.c	1.1.1.1		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,17 @@ index|[
 literal|200
 index|]
 block|;
+specifier|register
+name|char
+operator|*
+name|p
+block|;
+specifier|extern
+name|char
+operator|*
+name|index
+argument_list|()
+block|;
 while|while
 condition|(
 name|fgets
@@ -176,17 +187,65 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-name|fputs
+block|{
+name|p
+operator|=
+name|index
 argument_list|(
 name|buf
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+continue|continue;
+operator|*
+name|p
+operator|=
+literal|'\r'
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\033 5%s\033|"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getack
+argument_list|()
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Lost printer\n"
+argument_list|)
+expr_stmt|;
+name|cleanterm
+argument_list|()
+expr_stmt|;
+block|}
+name|fputs
+argument_list|(
+literal|"\n"
 argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-block|}
 end_expr_stmt
 
 begin_macro
+unit|} }
 name|setupterm
 argument_list|()
 end_macro
@@ -253,36 +312,6 @@ name|sg_flags
 operator|=
 name|oldflags
 expr_stmt|;
-name|fputs
-argument_list|(
-literal|"\033}"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|getack
-argument_list|()
-operator|>=
-literal|0
-condition|)
-return|return;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot attach printer\n"
-argument_list|)
-expr_stmt|;
-name|resetmodes
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -293,16 +322,6 @@ end_macro
 
 begin_block
 block|{
-name|printf
-argument_list|(
-literal|"\033~"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 name|resetmodes
 argument_list|()
 expr_stmt|;
