@@ -3858,6 +3858,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|init_TSC_tc
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
