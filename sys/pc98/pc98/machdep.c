@@ -5271,23 +5271,17 @@ operator||
 name|CR0_TS
 expr_stmt|;
 comment|/* Done at every execve() too. */
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|I386_CPU
-if|if
-condition|(
-name|cpu_class
-operator|!=
-name|CPUCLASS_386
-condition|)
-endif|#
-directive|endif
 name|cr0
 operator||=
 name|CR0_WP
 operator||
 name|CR0_AM
 expr_stmt|;
+endif|#
+directive|endif
 name|load_cr0
 argument_list|(
 name|cr0

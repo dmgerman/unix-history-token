@@ -2528,16 +2528,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * Now that we have told the user what they have, 	 * let them know if that machine type isn't configured. 	 */
-switch|switch
-condition|(
-name|cpu_class
-condition|)
-block|{
-case|case
-name|CPUCLASS_286
-case|:
-comment|/* a 286 should not make it this far, anyway */
 if|#
 directive|if
 operator|!
@@ -2568,6 +2558,44 @@ directive|error
 error|This kernel is not configured for one of the supported CPUs
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I386_CPU
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+operator|)
+error|#
+directive|error
+error|I386_CPU is mutually exclusive with the other cpu types.
+endif|#
+directive|endif
+comment|/* 	 * Now that we have told the user what they have, 	 * let them know if that machine type isn't configured. 	 */
+switch|switch
+condition|(
+name|cpu_class
+condition|)
+block|{
+case|case
+name|CPUCLASS_286
+case|:
+comment|/* a 286 should not make it this far, anyway */
 if|#
 directive|if
 operator|!
