@@ -27,12 +27,27 @@ directive|include
 file|<netsmb/smb_dev.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMB_CFG_FILE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SMB_CFG_FILE
 value|"/usr/local/etc/nsmb.conf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMB_CFG_FILE */
+end_comment
 
 begin_define
 define|#
