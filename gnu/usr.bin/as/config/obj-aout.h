@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.     $Id$  */
+comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.     $Id: obj-aout.h,v 1.7 1997/02/22 15:44:22 peter Exp $  */
 end_comment
 
 begin_comment
@@ -711,7 +711,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|( (h)->header.a_info =					\ 	   htonl( (((f)&0x3f)<<26) | (((mid)&0x03ff)<<16) | (((mag)&0xffff)) ) )
+value|( (h)->header.a_info =					\ 	   (((f)&0x3f)<<26) | (((mid)&0x03ff)<<16) | (((mag)&0xffff)) )
 end_define
 
 begin_endif

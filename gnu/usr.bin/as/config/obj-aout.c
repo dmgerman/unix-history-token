@@ -623,11 +623,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FREEBSD_AOUT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|NETBSD_AOUT
 argument_list|)
 comment|/* `a_info' (magic, mid, flags) is in network byte-order */
