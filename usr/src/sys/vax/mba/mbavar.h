@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	4.11	81/02/26	*/
+comment|/*	mbavar.h	4.12	81/03/03	*/
 end_comment
 
 begin_comment
@@ -421,6 +421,13 @@ directive|define
 name|MBASR_BITS
 define|\
 value|"\20\40DTBUSY\37NRCONF\36CRD\30CBHUNG\24PGE\23NED\22MCPE\21ATTN\ \17SPE\16DTCMP\15DTABT\14DLT\13WCKUP\12WCKLWR\11MXF\10MBEXC\7MDPE\ \6MAPPE\5INVMAP\4ERRCONF\3RDS\2ISTIMO\1RDTIMO"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBASR_HARD
+value|(MBS_PGE|MBS_ERRCONF|MBS_ISTIMO|MBS_RDTIMO)
 end_define
 
 begin_define
