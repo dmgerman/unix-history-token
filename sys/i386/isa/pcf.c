@@ -627,6 +627,9 @@ argument_list|(
 name|pcfdev
 argument_list|)
 decl_stmt|;
+name|uintptr_t
+name|base
+decl_stmt|;
 name|device_set_desc
 argument_list|(
 name|pcfdev
@@ -727,10 +730,14 @@ argument_list|,
 name|ISA_IVAR_PORT
 argument_list|,
 operator|&
+name|base
+argument_list|)
+expr_stmt|;
 name|pcf
 operator|->
 name|pcf_base
-argument_list|)
+operator|=
+name|base
 expr_stmt|;
 name|pcf
 operator|->
