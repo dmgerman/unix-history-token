@@ -63,26 +63,23 @@ directive|include
 file|<libutil.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|isescaped
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* isescaped():  *	Return true if the character in *p that belongs to a string  *	that starts in *sp, is escaped by the escape character esc.  */
@@ -792,21 +789,18 @@ directive|ifdef
 name|TEST
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|int
-decl|main
-name|__P
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int

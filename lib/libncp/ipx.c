@@ -795,24 +795,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|rt_xaddrs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|caddr_t
-operator|,
+parameter_list|,
 name|caddr_t
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|rt_addrinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static

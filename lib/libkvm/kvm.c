@@ -189,21 +189,18 @@ begin_comment
 comment|/* from src/lib/libc/gen/nlist.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|__fdnlist
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|nlist
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|char

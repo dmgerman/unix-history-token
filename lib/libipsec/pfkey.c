@@ -117,50 +117,41 @@ parameter_list|)
 value|(cast)calloc(1, (size))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|findsupportedmap
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|setsupportedmap
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sadb_supported
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|sadb_alg
 modifier|*
 name|findsupportedalg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int
-operator|,
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -246,22 +237,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|pfkey_send_x3
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -303,22 +291,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|pfkey_send_x5
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -395,26 +380,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|caddr_t
 name|pfkey_setsadbkey
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|caddr_t
-operator|,
+parameter_list|,
 name|caddr_t
-operator|,
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|caddr_t
-operator|,
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -441,24 +423,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|caddr_t
 name|pfkey_setsadbxsa2
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|caddr_t
-operator|,
+parameter_list|,
 name|caddr_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * make and search supported algorithm structure.  */

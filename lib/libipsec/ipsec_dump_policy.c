@@ -180,26 +180,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|set_address
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|sockaddr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * policy is sadb_x_policy buffer.  * Must call free() later.  * When delimiter == NULL, alternatively ' '(space) is applied.  */
