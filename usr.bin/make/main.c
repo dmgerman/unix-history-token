@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.25 1998/07/26 17:06:05 imp Exp $"
+literal|"$Id: main.c,v 1.26 1998/09/09 14:58:30 kato Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1629,8 +1629,6 @@ decl_stmt|;
 comment|/* FALSE if all targets up to date */
 name|struct
 name|stat
-name|sb
-decl_stmt|,
 name|sa
 decl_stmt|;
 name|char
@@ -1645,10 +1643,20 @@ name|path
 decl_stmt|,
 modifier|*
 name|pathp
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WANT_ENV_PWD
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+name|char
 modifier|*
 name|pwd
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|mdpath
 index|[
@@ -1802,6 +1810,9 @@ argument_list|,
 name|curdir
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WANT_ENV_PWD
 if|if
 condition|(
 operator|(
@@ -1855,6 +1866,8 @@ name|pwd
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -2137,6 +2150,9 @@ operator|=
 name|curdir
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|WANT_ENV_PWD
 name|setenv
 argument_list|(
 literal|"PWD"
@@ -2146,6 +2162,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|create
 operator|=
 name|Lst_Init
