@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.106		%G%"
+literal|"@(#)sendmail.h	3.107		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,6 +541,17 @@ end_define
 
 begin_comment
 comment|/* SMTP to another sendmail site */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CRLF
+value|002000000L
+end_define
+
+begin_comment
+comment|/* use CRLF instead of NL as EOLine */
 end_comment
 
 begin_define
