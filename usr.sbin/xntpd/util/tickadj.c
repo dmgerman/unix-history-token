@@ -406,7 +406,7 @@ end_ifndef
 begin_decl_stmt
 specifier|extern
 name|int
-name|getopt
+name|getopt_l
 name|P
 argument_list|(
 operator|(
@@ -534,7 +534,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt
+name|getopt_l
 argument_list|(
 name|argc
 argument_list|,
