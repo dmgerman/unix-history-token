@@ -2127,6 +2127,8 @@ begin_block
 block|{
 name|bc_num
 name|sum
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|cmp_res
@@ -2282,6 +2284,8 @@ begin_block
 block|{
 name|bc_num
 name|diff
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|cmp_res

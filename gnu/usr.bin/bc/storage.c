@@ -778,6 +778,8 @@ name|temp
 decl_stmt|;
 name|int
 name|retval
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1644,6 +1646,8 @@ name|var_ptr
 decl_stmt|;
 name|long
 name|temp
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|toobig

@@ -2097,6 +2097,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* NOT_REACHED */
 block|}
 end_function
 
