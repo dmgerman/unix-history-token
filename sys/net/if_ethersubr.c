@@ -4655,7 +4655,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Give our ok for a hook to be added...  *   * Allow one hook at a time (rawdata).   * It can eiteh rdivert everything or only unclaimed packets.  */
+comment|/*  * Give our ok for a hook to be added...  *  * Allow one hook at a time (rawdata).  * It can eiteh rdivert everything or only unclaimed packets.  */
 end_comment
 
 begin_function
@@ -5435,7 +5435,7 @@ operator|==
 name|eh2
 condition|)
 block|{
-comment|/* 			 * This is the case so just move the markers back to  			 * re-include it. We lucked out. 			 * This allows us to avoid a yucky m_pullup 			 * in later nodes if it works. 			 */
+comment|/* 			 * This is the case so just move the markers back to 			 * re-include it. We lucked out. 			 * This allows us to avoid a yucky m_pullup 			 * in later nodes if it works. 			 */
 name|m
 operator|->
 name|m_len
@@ -5580,7 +5580,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Doing anything more is likely to get more  				 * expensive than it's worth.. 				 * it's probable that everything else is in one 				 * big lump. The next node will do an m_pullup() 				 * for exactly the amount of data it needs and 				 * hopefully everything after that will not 				 * need one. So let's just use M_PREPEND. 				 */
+comment|/* 				 * Doing anything more is likely to get more 				 * expensive than it's worth.. 				 * it's probable that everything else is in one 				 * big lump. The next node will do an m_pullup() 				 * for exactly the amount of data it needs and 				 * hopefully everything after that will not 				 * need one. So let's just use M_PREPEND. 				 */
 name|M_PREPEND
 argument_list|(
 name|m
@@ -5712,7 +5712,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * notify on hook disconnection (destruction)  *  * For this type, removal of the last lins no effect. The interface can run   * independently.  * Since we have no per-hook information, this is rather simple.  */
+comment|/*  * notify on hook disconnection (destruction)  *  * For this type, removal of the last lins no effect. The interface can run  * independently.  * Since we have no per-hook information, this is rather simple.  */
 end_comment
 
 begin_function
