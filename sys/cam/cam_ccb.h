@@ -1639,7 +1639,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x14
+value|0x15
 end_define
 
 begin_comment
@@ -2707,10 +2707,10 @@ decl_stmt|;
 name|u_int32_t
 name|block_size
 decl_stmt|;
-name|u_int32_t
+name|u_int64_t
 name|volume_size
 decl_stmt|;
-name|u_int16_t
+name|u_int32_t
 name|cylinders
 decl_stmt|;
 name|u_int8_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 2003 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1896,9 +1896,41 @@ comment|/* 84 */
 comment|/* 85 */
 comment|/* 86 */
 comment|/* 87 */
-comment|/* 88 */
+comment|/* 88  MM  OO O    O   READ(16) */
+block|{
+literal|0x88
+block|,
+name|D
+operator||
+name|T
+operator||
+name|W
+operator||
+name|R
+operator||
+name|O
+block|,
+literal|"READ(16)"
+block|}
+block|,
 comment|/* 89 */
-comment|/* 8A */
+comment|/* 8A  OM  O  O    O   WRITE(16) */
+block|{
+literal|0x8A
+block|,
+name|D
+operator||
+name|T
+operator||
+name|W
+operator||
+name|R
+operator||
+name|O
+block|,
+literal|"WRITE(16)"
+block|}
+block|,
 comment|/* 8B */
 comment|/* 8C */
 comment|/* 8D */
@@ -1918,8 +1950,25 @@ comment|/* 9A */
 comment|/* 9B */
 comment|/* 9C */
 comment|/* 9D */
-comment|/* 9E */
-comment|/* 9F */
+comment|/* XXX KDM ALL for these?  op-num.txt defines them for none.. */
+comment|/* 9E                  SERVICE ACTION IN(16) */
+block|{
+literal|0x9E
+block|,
+name|ALL
+block|,
+literal|"SERVICE ACTION IN(16)"
+block|}
+block|,
+comment|/* 9F                  SERVICE ACTION OUT(16) */
+block|{
+literal|0x9F
+block|,
+name|ALL
+block|,
+literal|"SERVICE ACTION OUT(16)"
+block|}
+block|,
 comment|/* A0  OOOOOOOOOOO   REPORT LUNS */
 block|{
 literal|0xA0
@@ -2027,10 +2076,12 @@ block|,
 literal|"MOVE MEDIUM ATTACHED"
 block|}
 block|,
-comment|/* A8      OM O      READ(12) */
+comment|/* A8  O   OM O      READ(12) */
 block|{
 literal|0xA8
 block|,
+name|D
+operator||
 name|W
 operator||
 name|R
@@ -2058,10 +2109,12 @@ block|,
 literal|"PLAY TRACK RELATIVE(12)"
 block|}
 block|,
-comment|/* AA      O  O      WRITE(12) */
+comment|/* AA  O   O  O      WRITE(12) */
 block|{
 literal|0xAA
 block|,
+name|D
+operator||
 name|W
 operator||
 name|O
@@ -12806,6 +12859,178 @@ end_function
 
 begin_function
 name|void
+name|scsi_read_capacity_16
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|,
+name|uint32_t
+name|retries
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|cbfcnp
+function_decl|)
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+parameter_list|,
+name|union
+name|ccb
+modifier|*
+parameter_list|)
+parameter_list|,
+name|uint8_t
+name|tag_action
+parameter_list|,
+name|uint64_t
+name|lba
+parameter_list|,
+name|int
+name|reladr
+parameter_list|,
+name|int
+name|pmi
+parameter_list|,
+name|struct
+name|scsi_read_capacity_data_long
+modifier|*
+name|rcap_buf
+parameter_list|,
+name|uint8_t
+name|sense_len
+parameter_list|,
+name|uint32_t
+name|timeout
+parameter_list|)
+block|{
+name|struct
+name|scsi_read_capacity_16
+modifier|*
+name|scsi_cmd
+decl_stmt|;
+name|cam_fill_csio
+argument_list|(
+name|csio
+argument_list|,
+name|retries
+argument_list|,
+name|cbfcnp
+argument_list|,
+comment|/*flags*/
+name|CAM_DIR_IN
+argument_list|,
+name|tag_action
+argument_list|,
+comment|/*data_ptr*/
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|rcap_buf
+argument_list|,
+comment|/*dxfer_len*/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|rcap_buf
+argument_list|)
+argument_list|,
+name|sense_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scsi_cmd
+argument_list|)
+argument_list|,
+name|timeout
+argument_list|)
+expr_stmt|;
+name|scsi_cmd
+operator|=
+operator|(
+expr|struct
+name|scsi_read_capacity_16
+operator|*
+operator|)
+operator|&
+name|csio
+operator|->
+name|cdb_io
+operator|.
+name|cdb_bytes
+expr_stmt|;
+name|bzero
+argument_list|(
+name|scsi_cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scsi_cmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|opcode
+operator|=
+name|SERVICE_ACTION_IN
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|service_action
+operator|=
+name|SRC16_SERVICE_ACTION
+expr_stmt|;
+name|scsi_u64to8b
+argument_list|(
+name|lba
+argument_list|,
+name|scsi_cmd
+operator|->
+name|addr
+argument_list|)
+expr_stmt|;
+name|scsi_ulto4b
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|rcap_buf
+argument_list|)
+argument_list|,
+name|scsi_cmd
+operator|->
+name|alloc_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pmi
+condition|)
+name|reladr
+operator||=
+name|SRC16_PMI
+expr_stmt|;
+if|if
+condition|(
+name|reladr
+condition|)
+name|reladr
+operator||=
+name|SRC16_RELADR
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|scsi_report_luns
 parameter_list|(
 name|struct
@@ -13104,7 +13329,7 @@ parameter_list|,
 name|int
 name|minimum_cmd_size
 parameter_list|,
-name|u_int32_t
+name|u_int64_t
 name|lba
 parameter_list|,
 name|u_int32_t
@@ -13285,6 +13510,16 @@ operator|)
 operator|==
 name|block_count
 operator|)
+operator|&&
+operator|(
+operator|(
+name|lba
+operator|&
+literal|0xffffffff
+operator|)
+operator|==
+name|lba
+operator|)
 condition|)
 block|{
 comment|/* 		 * Need a 10 byte cdb. 		 */
@@ -13421,9 +13656,37 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|minimum_cmd_size
+operator|<
+literal|16
+operator|)
+operator|&&
+operator|(
+operator|(
+name|block_count
+operator|&
+literal|0xffffffff
+operator|)
+operator|==
+name|block_count
+operator|)
+operator|&&
+operator|(
+operator|(
+name|lba
+operator|&
+literal|0xffffffff
+operator|)
+operator|==
+name|lba
+operator|)
+condition|)
 block|{
-comment|/*  		 * The block count is too big for a 10 byte CDB, use a 12 		 * byte CDB.  READ/WRITE(12) are currently only defined for 		 * optical devices. 		 */
+comment|/*  		 * The block count is too big for a 10 byte CDB, use a 12 		 * byte CDB. 		 */
 name|struct
 name|scsi_rw_12
 modifier|*
@@ -13568,6 +13831,83 @@ index|]
 operator|,
 name|dxfer_len
 operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * 16 byte CDB.  We'll only get here if the LBA is larger 		 * than 2^32, or if the user asks for a 16 byte command. 		 */
+name|struct
+name|scsi_rw_16
+modifier|*
+name|scsi_cmd
+decl_stmt|;
+name|scsi_cmd
+operator|=
+operator|(
+expr|struct
+name|scsi_rw_16
+operator|*
+operator|)
+operator|&
+name|csio
+operator|->
+name|cdb_io
+operator|.
+name|cdb_bytes
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|opcode
+operator|=
+name|readop
+condition|?
+name|READ_16
+else|:
+name|WRITE_16
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|byte2
+operator|=
+name|byte2
+expr_stmt|;
+name|scsi_u64to8b
+argument_list|(
+name|lba
+argument_list|,
+name|scsi_cmd
+operator|->
+name|addr
+argument_list|)
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|reserved
+operator|=
+literal|0
+expr_stmt|;
+name|scsi_ulto4b
+argument_list|(
+name|block_count
+argument_list|,
+name|scsi_cmd
+operator|->
+name|length
+argument_list|)
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|control
+operator|=
+literal|0
+expr_stmt|;
+name|cdb_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scsi_cmd
 argument_list|)
 expr_stmt|;
 block|}
