@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* %G% (Berkeley) @(#)curses.h	1.8 */
+comment|/* %G% (Berkeley) @(#)curses.h	1.9 */
 end_comment
 
 begin_ifndef
@@ -663,8 +663,10 @@ parameter_list|,
 name|y
 parameter_list|,
 name|x
+parameter_list|,
+name|str
 parameter_list|)
-value|VOID(wmove(win,y,x)==ERR?ERR:wgetstr(win))
+value|VOID(wmove(win,y,x)==ERR?ERR:wgetstr(win,str))
 end_define
 
 begin_define
@@ -759,8 +761,10 @@ parameter_list|(
 name|y
 parameter_list|,
 name|x
+parameter_list|,
+name|str
 parameter_list|)
-value|mvwgetstr(stdscr,y,x)
+value|mvwgetstr(stdscr,y,x,str)
 end_define
 
 begin_define
