@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)abort.c	5.7 (Berkeley) %G%"
+literal|"@(#)abort.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,18 @@ directive|include
 file|<sys/signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_macro
 name|abort
 argument_list|()
@@ -50,28 +62,41 @@ end_macro
 
 begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|sigblock
+name|sigset_t
+name|mask
+decl_stmt|;
+name|sigfillset
 argument_list|(
-operator|~
-literal|0L
+operator|&
+name|mask
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigsetmask
+comment|/* 	 * don't block SIGABRT to give any handler a chance; we ignore 	 * any errors -- X311J doesn't allow abort to return anyway. 	 */
+name|sigdelset
 argument_list|(
-operator|~
-name|sigmask
-argument_list|(
+operator|&
+name|mask
+argument_list|,
 name|SIGABRT
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|mask
+argument_list|,
+operator|(
+name|sigset_t
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* leave catch function active to give program a crack at it */
 operator|(
 name|void
 operator|)
@@ -83,7 +108,7 @@ argument_list|,
 name|SIGABRT
 argument_list|)
 expr_stmt|;
-comment|/* if we got here, it was no good; reset to default and stop */
+comment|/* 	 * if SIGABRT ignored, or caught and the handler returns, do 	 * it again, only harder. 	 */
 operator|(
 name|void
 operator|)
@@ -97,13 +122,18 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigsetmask
+name|sigprocmask
 argument_list|(
-operator|~
-name|sigmask
-argument_list|(
-name|SIGABRT
-argument_list|)
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|mask
+argument_list|,
+operator|(
+name|sigset_t
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -115,6 +145,11 @@ name|getpid
 argument_list|()
 argument_list|,
 name|SIGABRT
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
