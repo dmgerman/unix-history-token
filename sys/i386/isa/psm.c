@@ -1333,7 +1333,8 @@ block|}
 end_function
 
 begin_function
-name|staticint
+specifier|static
+name|int
 name|psmread
 parameter_list|(
 name|dev_t
@@ -1680,7 +1681,8 @@ block|}
 end_function
 
 begin_function
-name|staticint
+specifier|static
+name|int
 name|psmioctl
 parameter_list|(
 name|dev_t
@@ -1911,23 +1913,10 @@ begin_function
 name|void
 name|psmintr
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
-name|struct
-name|psm_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|psm_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|int
 name|ioport
 init|=
@@ -2106,16 +2095,19 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
 name|void
-argument_list|(
-argument|void *unused
-argument_list|)
+name|psm_drvinit
+parameter_list|(
+name|void
+modifier|*
+name|unused
+parameter_list|)
 block|{
 name|dev_t
 name|dev
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2147,29 +2139,32 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  SYSINIT
-operator|(
-name|psmdev
-operator|,
-name|SI_SUB_DRIVERS
-operator|,
-name|SI_ORDER_MIDDLE
-operator|+
-name|CDEV_MAJOR
-operator|,
-name|psm_drvinit
-operator|,
-name|NULL
-operator|)
-end_expr_stmt
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|psmdev
+argument_list|,
+argument|SI_SUB_DRIVERS
+argument_list|,
+argument|SI_ORDER_MIDDLE+CDEV_MAJOR
+argument_list|,
+argument|psm_drvinit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NPSM> 0 */
+end_comment
 
 end_unit
 
