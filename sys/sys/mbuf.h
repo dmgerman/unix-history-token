@@ -1125,14 +1125,19 @@ name|to
 parameter_list|,
 name|from
 parameter_list|)
-value|m_copy_pkthdr(to, from)
+value|m_copy_pkthdr((to), (from))
 end_define
 
 begin_define
 define|#
 directive|define
 name|m_getclr
-value|m_get_clrd
+parameter_list|(
+name|how
+parameter_list|,
+name|type
+parameter_list|)
+value|m_get_clrd((how), (type))
 end_define
 
 begin_define
@@ -1146,7 +1151,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|(m) = m_get((how), (type))
+value|((m) = m_get((how), (type)))
 end_define
 
 begin_define
@@ -1160,7 +1165,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|(m) = m_gethdr((how), (type))
+value|((m) = m_gethdr((how), (type)))
 end_define
 
 begin_define
@@ -1334,7 +1339,7 @@ value|1000000000
 end_define
 
 begin_comment
-comment|/* Compatibility with 4.3 */
+comment|/* Compatibility with 4.3. */
 end_comment
 
 begin_define
@@ -1374,7 +1379,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Some packet tags to identify different mbuf annotations.  *  * Eventually, these annotations will end up in an appropriate chain  * (struct m_tag or similar, e.g. as in NetBSD) properly managed by  * the mbuf handling routines.  *  * As a temporary and low impact solution to replace the even uglier  * approach used so far in some parts of the network stack (which relies  * on global variables), these annotations are stored in MT_TAG  * mbufs (or lookalikes) prepended to the actual mbuf chain.  *  *	m_type	= MT_TAG  *	m_flags = m_tag_id  *	m_next	= next buffer in chain.  *  * BE VERY CAREFUL not to pass these blocks to the mbuf handling routines.  *  */
+comment|/*-  * Some packet tags to identify different mbuf annotations.  *  * Eventually, these annotations will end up in an appropriate chain  * (struct m_tag or similar, e.g. as in NetBSD) properly managed by  * the mbuf handling routines.  *  * As a temporary and low impact solution to replace the even uglier  * approach used so far in some parts of the network stack (which relies  * on global variables), these annotations are stored in MT_TAG  * mbufs (or lookalikes) prepended to the actual mbuf chain.  *  *	m_type	= MT_TAG  *	m_flags = m_tag_id  *	m_next	= next buffer in chain.  *  * BE VERY CAREFUL not to pass these blocks to the mbuf handling routines.  */
 end_comment
 
 begin_define
@@ -1627,7 +1632,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* largest link + protocol header */
+comment|/* Largest link + protocol header */
 end_comment
 
 begin_decl_stmt
@@ -1638,7 +1643,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* largest link-level header */
+comment|/* Largest link-level header */
 end_comment
 
 begin_decl_stmt
@@ -1649,7 +1654,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* largest protocol header */
+comment|/* Largest protocol header */
 end_comment
 
 begin_decl_stmt
@@ -1662,7 +1667,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Per-CPU allocation stats. */
+comment|/* Per-CPU allocation stats */
 end_comment
 
 begin_decl_stmt
@@ -1674,7 +1679,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* General mbuf stats/infos. */
+comment|/* General mbuf stats/infos */
 end_comment
 
 begin_decl_stmt
@@ -1986,12 +1991,10 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|to
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|from
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2052,7 +2055,6 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2174,13 +2176,11 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 modifier|*
-name|l
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2210,7 +2210,6 @@ specifier|const
 name|struct
 name|mbuf
 modifier|*
-name|m
 parameter_list|)
 function_decl|;
 end_function_decl
