@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.13 1999/02/18 00:52:12 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.14 1999/02/18 19:45:06 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_struct_decl
@@ -85,14 +85,29 @@ name|struct
 name|authinfo
 name|auth
 decl_stmt|;
+struct|struct
+block|{
 name|u_char
-name|challenge
+name|local
 index|[
 name|CHAPCHALLENGELEN
 operator|+
 name|AUTHLEN
 index|]
 decl_stmt|;
+comment|/* I invented this one */
+name|u_char
+name|peer
+index|[
+name|CHAPCHALLENGELEN
+operator|+
+name|AUTHLEN
+index|]
+decl_stmt|;
+comment|/* Peer gave us this one */
+block|}
+name|challenge
+struct|;
 ifdef|#
 directive|ifdef
 name|HAVE_DES
