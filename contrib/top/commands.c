@@ -166,9 +166,23 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ORDER
+if|if
+condition|(
+name|displaymode
+operator|==
+name|DISP_CPU
+condition|)
 name|fputs
 argument_list|(
 literal|"\ o       - specify sort order (pri, size, res, cpu, time)\n"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+else|else
+name|fputs
+argument_list|(
+literal|"\ o       - specify sort order (read, write, fault, total)\n"
 argument_list|,
 name|stdout
 argument_list|)
