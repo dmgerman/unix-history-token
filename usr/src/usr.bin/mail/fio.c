@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.5 %G%"
+literal|"@(#)fio.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2397,11 +2397,34 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'/'
+condition|)
 name|sprintf
 argument_list|(
 name|xname
 argument_list|,
 literal|"%s/%s"
+argument_list|,
+name|cp
+argument_list|,
+name|name
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|xname
+argument_list|,
+literal|"%s/%s/%s"
+argument_list|,
+name|homedir
 argument_list|,
 name|cp
 argument_list|,
