@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.3 (Berkeley) %G%"
+literal|"@(#)option.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -844,6 +844,10 @@ name|message
 index|[
 literal|100
 index|]
+decl_stmt|,
+modifier|*
+name|strcat
+argument_list|()
 decl_stmt|;
 name|c
 operator|=
@@ -1185,6 +1189,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
@@ -1267,6 +1274,9 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
@@ -1280,6 +1290,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
@@ -1289,6 +1302,9 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|message
@@ -1432,6 +1448,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
@@ -1945,6 +1964,9 @@ name|next
 goto|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
@@ -2154,6 +2176,9 @@ operator|-
 literal|1
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
