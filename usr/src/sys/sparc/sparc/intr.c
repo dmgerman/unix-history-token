@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)intr.c	7.3 (Berkeley) %G%  *  * from: $Header: intr.c,v 1.18 92/07/09 00:47:43 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)intr.c	7.4 (Berkeley) %G%  *  * from: $Header: intr.c,v 1.20 92/11/26 03:04:53 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ctlreg.h>
 end_include
 
 begin_ifdef
@@ -54,12 +60,6 @@ begin_include
 include|#
 directive|include
 file|<sparc/sparc/clockreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sparc/sparc/ctlreg.h>
 end_include
 
 begin_comment
