@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -52,14 +52,22 @@ name|short
 name|di_nlink
 decl_stmt|;
 comment|/*   2: number of links to file */
+union|union
+block|{
 name|u_short
-name|di_ouid
+name|oldids
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/*   4: old owner's user id */
-name|u_short
-name|di_ogid
+comment|/*   4: ffs: old user and group ids */
+name|ino_t
+name|inumber
 decl_stmt|;
-comment|/*   6: old owner's group id */
+comment|/*   4: lfs: inode number */
+block|}
+name|di_u
+union|;
 name|u_quad_t
 name|di_size
 decl_stmt|;
@@ -127,6 +135,27 @@ end_struct
 begin_comment
 comment|/*  * The di_db fields may be overlaid with other information for  * file types that do not have associated disk storage. Block  * and character devices overlay the first data block with their  * dev_t value. Short symbolic links place their path in the  * di_db area.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|di_ouid
+value|di_u.oldids[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_ogid
+value|di_u.oldids[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_inumber
+value|di_u.inumber
+end_define
 
 begin_define
 define|#
