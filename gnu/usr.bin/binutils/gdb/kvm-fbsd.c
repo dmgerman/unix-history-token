@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -161,17 +167,41 @@ directive|include
 file|<machine/pcb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/tss.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<machine/frame.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500032
+operator|&&
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -247,6 +277,11 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+expr|struct
+name|mem_attrib
+operator|*
+name|attrib
 operator|,
 expr|struct
 name|target_ops
@@ -1239,9 +1274,9 @@ name|int
 name|quitting
 decl_stmt|;
 block|{
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 comment|/* Avoid confusion from thread stuff */
 if|if
@@ -1953,6 +1988,8 @@ name|len
 parameter_list|,
 name|write
 parameter_list|,
+name|attrib
+parameter_list|,
 name|target
 parameter_list|)
 name|CORE_ADDR
@@ -1967,6 +2004,11 @@ name|len
 decl_stmt|;
 name|int
 name|write
+decl_stmt|;
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
 decl_stmt|;
 name|struct
 name|target_ops
@@ -4683,11 +4725,39 @@ name|kcore_ops
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|kernel_debugging
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|_initialize_kcorelow
 parameter_list|()
 block|{
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500032
+operator|&&
+name|defined
+argument_list|(
+name|i386
+argument_list|)
 name|kcore_ops
 operator|.
 name|to_shortname
@@ -4812,6 +4882,8 @@ argument_list|,
 literal|"Set current cpu"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

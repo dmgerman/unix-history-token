@@ -456,23 +456,17 @@ begin_comment
 comment|/* BFD's default architecture. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_BFD_ARCH
-value|bfd_i386_arch
-end_define
+begin_comment
+comment|/* #define DEFAULT_BFD_ARCH bfd_alpha_arch */
+end_comment
 
 begin_comment
 comment|/* BFD's default target vector. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_BFD_VEC
-value|bfd_elf32_i386_vec
-end_define
+begin_comment
+comment|/* #define DEFAULT_BFD_VEC bfd_elf64_alpha_vec */
+end_comment
 
 begin_comment
 comment|/* Multi-arch enabled. */
@@ -486,12 +480,9 @@ begin_comment
 comment|/* hostfile */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GDB_XM_FILE
-value|config/i386/xm-i386.h
-end_define
+begin_comment
+comment|/* #define GDB_XM_FILE 1 */
+end_comment
 
 begin_comment
 comment|/* targetfile */
@@ -501,7 +492,7 @@ begin_define
 define|#
 directive|define
 name|GDB_TM_FILE
-value|config/i386/tm-fbsd.h
+value|1
 end_define
 
 begin_comment
@@ -512,7 +503,7 @@ begin_define
 define|#
 directive|define
 name|GDB_NM_FILE
-value|config/i386/nm-fbsd.h
+value|1
 end_define
 
 begin_comment
