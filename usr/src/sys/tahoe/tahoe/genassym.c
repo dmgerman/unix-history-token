@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	7.3 (Berkeley) %G%"
+literal|"@(#)genassym.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,12 +74,6 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
