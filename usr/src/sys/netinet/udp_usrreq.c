@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.8	81/11/23	*/
+comment|/*	udp_usrreq.c	4.9	81/11/23	*/
 end_comment
 
 begin_include
@@ -176,11 +176,6 @@ decl_stmt|,
 name|ulen
 decl_stmt|;
 comment|/* 	 * Get ip and udp header together in first mbuf. 	 */
-name|printf
-argument_list|(
-literal|"udp_input: "
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|m0
@@ -215,15 +210,6 @@ name|udpstat
 operator|.
 name|udps_hdrops
 operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"hdrop m_len %d\n"
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|)
 expr_stmt|;
 goto|goto
 name|bad
@@ -291,15 +277,6 @@ argument_list|)
 operator|+
 name|ulen
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ulen %d, len %d\n"
-argument_list|,
-name|ulen
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -332,11 +309,6 @@ operator|->
 name|ip_len
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"udp badlen\n"
-argument_list|)
-expr_stmt|;
 name|udpstat
 operator|.
 name|udps_badlen
@@ -449,31 +421,6 @@ return|return;
 block|}
 block|}
 comment|/* 	 * Convert addresses and ports to host format. 	 * Locate pcb for datagram. 	 */
-name|printf
-argument_list|(
-literal|"src %x dst %x sport %x dport %x\n"
-argument_list|,
-name|ui
-operator|->
-name|ui_src
-operator|.
-name|s_addr
-argument_list|,
-name|ui
-operator|->
-name|ui_dst
-operator|.
-name|s_addr
-argument_list|,
-name|ui
-operator|->
-name|ui_sport
-argument_list|,
-name|ui
-operator|->
-name|ui_dport
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|in_pcblookup
@@ -504,16 +451,9 @@ name|inp
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pcb not found\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
 name|udp_in
 operator|.
@@ -696,13 +636,6 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"udp_output len %d: "
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|m_get
@@ -716,16 +649,9 @@ name|m
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"no mbufs\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 comment|/* 	 * Fill in mbuf with extended udp header 	 * and addresses and length put into network format. 	 */
 name|m
 operator|->
@@ -844,31 +770,6 @@ operator|)
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"src %x dst %x sport %x dport %x"
-argument_list|,
-name|ui
-operator|->
-name|ui_src
-operator|.
-name|s_addr
-argument_list|,
-name|ui
-operator|->
-name|ui_dst
-operator|.
-name|s_addr
-argument_list|,
-name|ui
-operator|->
-name|ui_sport
-argument_list|,
-name|ui
-operator|->
-name|ui_dport
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Stuff checksum and output datagram. 	 */
 name|ui
 operator|->
@@ -891,15 +792,6 @@ name|udpiphdr
 argument_list|)
 operator|+
 name|len
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" cksum %x\n"
-argument_list|,
-name|ui
-operator|->
-name|ui_sum
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1010,18 +902,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"udp_usrreq %x %s\n"
-argument_list|,
-name|inp
-argument_list|,
-name|prurequests
-index|[
-name|req
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -1032,18 +912,11 @@ name|req
 operator|!=
 name|PRU_ATTACH
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"inp == 0 not on ATTACH\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|req
@@ -1088,20 +961,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"in_pcballoc failed %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 break|break;
 case|case
 name|PRU_DETACH
@@ -1157,20 +1021,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"in_pcbsetpeer failed %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|soisconnected
 argument_list|(
 name|so
@@ -1265,20 +1120,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"send setpeer failed %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -1298,37 +1144,6 @@ name|ENOTCONN
 operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"udp send m %x m_len %d * %c (%o)\n"
-argument_list|,
-name|m
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|,
-operator|*
-operator|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
-argument_list|)
-operator|)
-argument_list|,
-operator|*
-operator|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 name|udp_output
 argument_list|(
 name|inp
