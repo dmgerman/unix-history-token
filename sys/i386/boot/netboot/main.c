@@ -120,6 +120,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|offset
+decl_stmt|,
+name|howto
 decl_stmt|;
 end_decl_stmt
 
@@ -1928,6 +1930,8 @@ modifier|*
 name|kernelentry
 call|)
 argument_list|(
+name|howto
+operator||
 name|RB_BOOTINFO
 argument_list|,
 name|NODEV
