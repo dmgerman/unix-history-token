@@ -1427,12 +1427,6 @@ name|vm_pindex_t
 name|count
 parameter_list|)
 block|{
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|vm_page_queue_free_mtx
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|count
@@ -1448,12 +1442,6 @@ name|m
 operator|++
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|vm_page_queue_free_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
