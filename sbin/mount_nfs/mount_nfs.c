@@ -806,11 +806,6 @@ decl_stmt|,
 modifier|*
 name|spec
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|vfsconf
 modifier|*
