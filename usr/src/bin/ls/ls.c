@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.27 (Berkeley) %G%"
+literal|"@(#)ls.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -895,18 +895,46 @@ block|}
 for|for
 control|(
 init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s:\n"
+argument_list|,
 operator|*
 name|argv
-condition|;
-operator|++
-name|argv
-control|)
+argument_list|)
+expr_stmt|;
 name|dodir
 argument_list|(
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+operator|++
+name|argv
+condition|)
+break|break;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -987,7 +1015,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ls: .: %s\n"
+literal|"ls: %s: %s\n"
+argument_list|,
+name|name
 argument_list|,
 name|strerror
 argument_list|(
