@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	restore.h	3.9	85/01/14	*/
+comment|/*	restore.h	3.10	85/01/18	*/
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dir.h>
 end_include
 
 begin_comment
@@ -469,6 +475,25 @@ begin_function_decl
 specifier|extern
 name|ino_t
 name|upperbnd
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|DIR
+modifier|*
+name|rst_opendir
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|direct
+modifier|*
+name|rst_readdir
 parameter_list|()
 function_decl|;
 end_function_decl
