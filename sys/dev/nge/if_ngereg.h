@@ -3364,7 +3364,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|VGE_FIXUP_RX
+name|NGE_FIXUP_RX
 end_define
 
 begin_endif

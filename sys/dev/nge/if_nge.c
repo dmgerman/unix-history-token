@@ -391,7 +391,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VGE_FIXUP_RX
+name|NGE_FIXUP_RX
 end_ifdef
 
 begin_function_decl
