@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.6 88/05/24$  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.6 88/05/24$  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -205,7 +205,7 @@ name|intrap
 operator|=
 literal|1
 expr_stmt|;
-name|romprintf
+name|printf
 argument_list|(
 literal|"Got unexpected trap, vector = %x, ps = %x, pc = %x\n"
 argument_list|,
@@ -224,7 +224,7 @@ operator|->
 name|pc
 argument_list|)
 expr_stmt|;
-name|romprintf
+name|printf
 argument_list|(
 literal|"dregs: %x %x %x %x %x %x %x %x\n"
 argument_list|,
@@ -285,7 +285,7 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
-name|romprintf
+name|printf
 argument_list|(
 literal|"aregs: %x %x %x %x %x %x %x %x\n"
 argument_list|,
