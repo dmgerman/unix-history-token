@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.26 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -355,6 +355,12 @@ index|]
 decl_stmt|;
 comment|/* These fields are set at mount time and are meaningless on disk. */
 name|struct
+name|segment
+modifier|*
+name|lfs_sp
+decl_stmt|;
+comment|/* current segment being written */
+name|struct
 name|vnode
 modifier|*
 name|lfs_ivnode
@@ -364,6 +370,10 @@ name|u_long
 name|lfs_seglock
 decl_stmt|;
 comment|/* single-thread the segment writer */
+name|pid_t
+name|lfs_lockpid
+decl_stmt|;
+comment|/* pid of lock holder */
 name|u_long
 name|lfs_iocount
 decl_stmt|;
@@ -474,17 +484,6 @@ end_define
 begin_comment
 comment|/* first free inode number */
 end_comment
-
-begin_comment
-comment|/*  * Used to access the first spare of the dinode which we use to store  * the ifile number so we can identify them  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|di_inum
-value|di_spare[0]
-end_define
 
 begin_comment
 comment|/* Address calculations for metadata located in the inode */
@@ -1039,6 +1038,11 @@ directive|define
 name|SEGM_CLEAN
 value|0x02
 comment|/* cleaner call; don't sort */
+define|#
+directive|define
+name|SEGM_SYNC
+value|0x04
+comment|/* wait for segment */
 name|u_long
 name|seg_flags
 decl_stmt|;
@@ -1087,6 +1091,79 @@ parameter_list|)
 define|\
 value|((F)->lfs_bfree>= (BB))
 end_define
+
+begin_define
+define|#
+directive|define
+name|DOSTATS
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DOSTATS
+end_ifdef
+
+begin_comment
+comment|/* Statistics Counters */
+end_comment
+
+begin_struct
+struct|struct
+name|lfs_stats
+block|{
+name|int
+name|segsused
+decl_stmt|;
+name|int
+name|psegwrites
+decl_stmt|;
+name|int
+name|psyncwrites
+decl_stmt|;
+name|int
+name|pcleanwrites
+decl_stmt|;
+name|int
+name|blocktot
+decl_stmt|;
+name|int
+name|cleanblocks
+decl_stmt|;
+name|int
+name|ncheckpoints
+decl_stmt|;
+name|int
+name|nwrites
+decl_stmt|;
+name|int
+name|nsync_writes
+decl_stmt|;
+name|int
+name|wait_exceeded
+decl_stmt|;
+name|int
+name|write_exceeded
+decl_stmt|;
+name|int
+name|flush_invoked
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|lfs_stats
+name|lfs_stats
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
