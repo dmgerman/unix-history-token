@@ -360,6 +360,11 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+name|clearerr
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 literal|1
