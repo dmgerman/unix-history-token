@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.11 (Berkeley) %G%"
+literal|"@(#)util.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,54 +152,6 @@ end_block
 
 begin_function
 name|void
-modifier|*
-name|emalloc
-parameter_list|(
-name|size
-parameter_list|)
-name|u_int
-name|size
-decl_stmt|;
-block|{
-name|void
-modifier|*
-name|retval
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|retval
-operator|=
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|retval
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
 name|usage
 parameter_list|()
 block|{
@@ -210,7 +162,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ls [-1ACFLRTacdfgiklqrstu] [file ...]\n"
+literal|"usage: ls [-1ACFLRTacdfiklqrstu] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
