@@ -150,11 +150,11 @@ comment|/* upper hook connection */
 name|hook_p
 name|lower
 decl_stmt|;
-comment|/* lower OR orphan hook connection */
-name|u_char
-name|lowerOrphan
+comment|/* lower hook connection */
+name|hook_p
+name|orphan
 decl_stmt|;
-comment|/* whether lower is lower or orphan */
+comment|/* orphan hook connection */
 name|u_char
 name|autoSrcAddr
 decl_stmt|;
@@ -649,10 +649,6 @@ operator|->
 name|lower
 operator|==
 name|NULL
-operator|||
-name|priv
-operator|->
-name|lowerOrphan
 condition|)
 return|return;
 name|ng_ether_input2
@@ -714,14 +710,9 @@ if|if
 condition|(
 name|priv
 operator|->
-name|lower
+name|orphan
 operator|==
 name|NULL
-operator|||
-operator|!
-name|priv
-operator|->
-name|lowerOrphan
 condition|)
 block|{
 name|m_freem
@@ -1443,13 +1434,6 @@ name|node
 operator|->
 name|private
 decl_stmt|;
-name|u_char
-name|orphan
-init|=
-name|priv
-operator|->
-name|lowerOrphan
-decl_stmt|;
 name|hook_p
 modifier|*
 name|hookptr
@@ -1501,7 +1485,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|hookptr
 operator|=
 operator|&
@@ -1509,11 +1492,6 @@ name|priv
 operator|->
 name|lower
 expr_stmt|;
-name|orphan
-operator|=
-literal|0
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1526,19 +1504,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|hookptr
 operator|=
 operator|&
 name|priv
 operator|->
-name|lower
-expr_stmt|;
 name|orphan
-operator|=
-literal|1
 expr_stmt|;
-block|}
 else|else
 return|return
 operator|(
@@ -1581,12 +1553,6 @@ operator|*
 name|hookptr
 operator|=
 name|hook
-expr_stmt|;
-name|priv
-operator|->
-name|lowerOrphan
-operator|=
-name|orphan
 expr_stmt|;
 return|return
 operator|(
@@ -2167,6 +2133,12 @@ operator|==
 name|priv
 operator|->
 name|lower
+operator|||
+name|hook
+operator|==
+name|priv
+operator|->
+name|orphan
 condition|)
 return|return
 name|ng_ether_rcv_lower
@@ -2207,7 +2179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle an mbuf received on the "lower" hook.  */
+comment|/*  * Handle an mbuf received on the "lower" or "orphan" hook.  */
 end_comment
 
 begin_function
@@ -2732,20 +2704,27 @@ name|priv
 operator|->
 name|lower
 condition|)
-block|{
 name|priv
 operator|->
 name|lower
 operator|=
 name|NULL
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|hook
+operator|==
 name|priv
 operator|->
-name|lowerOrphan
+name|orphan
+condition|)
+name|priv
+operator|->
+name|orphan
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
-block|}
 else|else
 name|panic
 argument_list|(
