@@ -317,7 +317,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -752,7 +752,7 @@ name|void
 modifier|*
 name|bp
 decl_stmt|;
-name|int
+name|size_t
 name|size
 decl_stmt|;
 block|{
@@ -765,9 +765,6 @@ name|realloc
 argument_list|(
 name|bp
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|size
 argument_list|)
 operator|)
@@ -1431,9 +1428,6 @@ name|cycle_buf
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|NODE
@@ -1447,9 +1441,6 @@ name|longest_cycle
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|NODE

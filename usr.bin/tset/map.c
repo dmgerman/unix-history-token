@@ -229,9 +229,6 @@ name|mapp
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|MAP

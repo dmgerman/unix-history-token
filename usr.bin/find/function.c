@@ -2371,9 +2371,6 @@ name|e_argv
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|cnt
 operator|*
 sizeof|sizeof
@@ -2390,10 +2387,6 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2406,9 +2399,6 @@ name|e_orig
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|cnt
 operator|*
 sizeof|sizeof
@@ -2425,10 +2415,6 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2441,9 +2427,6 @@ name|e_len
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|cnt
 operator|*
 sizeof|sizeof
@@ -2459,10 +2442,6 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2540,9 +2519,6 @@ index|]
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|MAXPATHLEN
 argument_list|)
 operator|)
@@ -2553,10 +2529,6 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -4832,7 +4804,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|size_t
+name|int
 name|len
 decl_stmt|;
 name|regex_t

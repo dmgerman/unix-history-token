@@ -1245,9 +1245,6 @@ name|p
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|PERSON
@@ -1296,9 +1293,6 @@ name|w
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|WHERE
