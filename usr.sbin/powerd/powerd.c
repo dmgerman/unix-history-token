@@ -81,14 +81,14 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_ACTIVE_PERCENT
-value|50
+value|80
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_IDLE_PERCENT
-value|75
+value|90
 end_define
 
 begin_define
