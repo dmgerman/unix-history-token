@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.2 (Berkeley) %G%"
+literal|"@(#)if.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -639,19 +639,52 @@ name|in
 operator|.
 name|ia_addr
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"ns:%-8d "
-argument_list|,
-name|ntohl
-argument_list|(
-name|ns_netof
-argument_list|(
+name|long
+name|net
+decl_stmt|;
+name|char
+name|host
+index|[
+literal|8
+index|]
+decl_stmt|;
+operator|*
+operator|(
+expr|union
+name|ns_net
+operator|*
+operator|)
+operator|&
+name|net
+operator|=
 name|sns
 operator|->
 name|sns_addr
+operator|.
+name|x_net
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|host
+argument_list|,
+literal|"%lxH"
+argument_list|,
+name|ntohl
+argument_list|(
+name|net
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|upHex
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ns:%-8s "
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 name|printf
