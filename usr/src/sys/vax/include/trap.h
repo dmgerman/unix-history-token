@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.h	4.6	81/03/03	*/
+comment|/*	trap.h	4.7	82/10/31	*/
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RESADFLT
+name|T_RESADFLT
 value|0
 end_define
 
@@ -25,7 +25,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIVINFLT
+name|T_PRIVINFLT
 value|1
 end_define
 
@@ -36,7 +36,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RESOPFLT
+name|T_RESOPFLT
 value|2
 end_define
 
@@ -51,7 +51,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BPTFLT
+name|T_BPTFLT
 value|3
 end_define
 
@@ -62,7 +62,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XFCFLT
+name|T_XFCFLT
 value|4
 end_define
 
@@ -73,7 +73,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYSCALL
+name|T_SYSCALL
 value|5
 end_define
 
@@ -84,7 +84,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARITHTRAP
+name|T_ARITHTRAP
 value|6
 end_define
 
@@ -95,7 +95,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASTFLT
+name|T_ASTFLT
 value|7
 end_define
 
@@ -106,7 +106,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SEGFLT
+name|T_SEGFLT
 value|8
 end_define
 
@@ -117,7 +117,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PROTFLT
+name|T_PROTFLT
 value|9
 end_define
 
@@ -128,7 +128,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRCTRAP
+name|T_TRCTRAP
 value|10
 end_define
 
@@ -139,7 +139,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COMPATFLT
+name|T_COMPATFLT
 value|11
 end_define
 
@@ -150,7 +150,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PAGEFLT
+name|T_PAGEFLT
 value|12
 end_define
 
@@ -161,7 +161,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TABLEFLT
+name|T_TABLEFLT
 value|13
 end_define
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.22	82/10/21	*/
+comment|/*	trap.c	4.23	82/10/31	*/
 end_comment
 
 begin_include
@@ -297,7 +297,7 @@ literal|"trap"
 argument_list|)
 expr_stmt|;
 case|case
-name|PROTFLT
+name|T_PROTFLT
 operator|+
 name|USER
 case|:
@@ -308,19 +308,19 @@ name|SIGBUS
 expr_stmt|;
 break|break;
 case|case
-name|PRIVINFLT
+name|T_PRIVINFLT
 operator|+
 name|USER
 case|:
 comment|/* privileged instruction fault */
 case|case
-name|RESADFLT
+name|T_RESADFLT
 operator|+
 name|USER
 case|:
 comment|/* reserved addressing fault */
 case|case
-name|RESOPFLT
+name|T_RESOPFLT
 operator|+
 name|USER
 case|:
@@ -340,7 +340,7 @@ name|SIGILL
 expr_stmt|;
 break|break;
 case|case
-name|ASTFLT
+name|T_ASTFLT
 operator|+
 name|USER
 case|:
@@ -351,7 +351,7 @@ goto|goto
 name|out
 goto|;
 case|case
-name|ARITHTRAP
+name|T_ARITHTRAP
 operator|+
 name|USER
 case|:
@@ -368,7 +368,7 @@ expr_stmt|;
 break|break;
 comment|/* 	 * If the user SP is above the stack segment, 	 * grow the stack automatically. 	 */
 case|case
-name|SEGFLT
+name|T_SEGFLT
 operator|+
 name|USER
 case|:
@@ -399,11 +399,11 @@ name|SIGSEGV
 expr_stmt|;
 break|break;
 case|case
-name|TABLEFLT
+name|T_TABLEFLT
 case|:
 comment|/* allow page table faults in kernel mode */
 case|case
-name|TABLEFLT
+name|T_TABLEFLT
 operator|+
 name|USER
 case|:
@@ -414,11 +414,11 @@ literal|"ptable fault"
 argument_list|)
 expr_stmt|;
 case|case
-name|PAGEFLT
+name|T_PAGEFLT
 case|:
 comment|/* allow page faults in kernel mode */
 case|case
-name|PAGEFLT
+name|T_PAGEFLT
 operator|+
 name|USER
 case|:
@@ -444,20 +444,20 @@ if|if
 condition|(
 name|type
 operator|==
-name|PAGEFLT
+name|T_PAGEFLT
 condition|)
 return|return;
 goto|goto
 name|out
 goto|;
 case|case
-name|BPTFLT
+name|T_BPTFLT
 operator|+
 name|USER
 case|:
 comment|/* bpt instruction fault */
 case|case
-name|TRCTRAP
+name|T_TRCTRAP
 operator|+
 name|USER
 case|:
@@ -476,7 +476,7 @@ name|SIGTRAP
 expr_stmt|;
 break|break;
 case|case
-name|XFCFLT
+name|T_XFCFLT
 operator|+
 name|USER
 case|:
@@ -487,7 +487,7 @@ name|SIGEMT
 expr_stmt|;
 break|break;
 case|case
-name|COMPATFLT
+name|T_COMPATFLT
 operator|+
 name|USER
 case|:
