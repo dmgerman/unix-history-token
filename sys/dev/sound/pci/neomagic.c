@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pcm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/sound/pcm/sound.h>
 end_include
 
