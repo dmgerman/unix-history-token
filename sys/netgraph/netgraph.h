@@ -1172,10 +1172,12 @@ name|unsigned
 name|long
 name|strtoul
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|nptr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
