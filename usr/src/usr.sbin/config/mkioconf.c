@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.21 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4450,7 +4450,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"/*\tdriver,\t\tunit,\taddr,\t\tflags */\n"
+literal|"/*\tdriver,\t\tunit,\taddr,\t\tpri,\tflags */\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4569,7 +4569,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t{&%sdriver,\t%d,\tC 0x%x,\t0x%x },\n"
+literal|"\t{&%sdriver,\t%d,\tC 0x%x,\t%d,\t0x%x },\n"
 argument_list|,
 name|dp
 operator|->
@@ -4582,6 +4582,10 @@ argument_list|,
 name|dp
 operator|->
 name|d_addr
+argument_list|,
+name|dp
+operator|->
+name|d_pri
 argument_list|,
 name|dp
 operator|->
@@ -4668,13 +4672,23 @@ name|mp
 operator|->
 name|d_name
 argument_list|,
+literal|"asc"
+argument_list|)
+operator|&&
+operator|!
+name|eq
+argument_list|(
+name|mp
+operator|->
+name|d_name
+argument_list|,
 literal|"sii"
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%s: devices must be attached to a SCSI (sii) controller\n"
+literal|"%s%s: devices must be attached to a SCSI (asc or sii) controller\n"
 argument_list|,
 name|dp
 operator|->
