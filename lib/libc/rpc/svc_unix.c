@@ -1732,6 +1732,11 @@ case|case
 operator|-
 literal|1
 case|:
+name|FD_ZERO
+argument_list|(
+name|fds
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|errno
