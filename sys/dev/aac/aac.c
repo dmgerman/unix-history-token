@@ -2438,25 +2438,7 @@ name|NULL
 condition|)
 break|break;
 comment|/* Set a timeout for this command to be completed by the controller */
-name|cm
-operator|->
-name|timeout_handle
-operator|=
-name|timeout
-argument_list|(
-operator|(
-name|timeout_t
-operator|*
-operator|)
-name|aac_timeout
-argument_list|,
-name|cm
-argument_list|,
-name|AAC_CMD_TIMEOUT
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
+comment|/* Disable this for now until the timeout queue is fixed or the driver 	 * can watch timeouts itself 	 * cm->timeout_handle = timeout((timeout_t*)aac_timeout, cm, AAC_CMD_TIMEOUT * hz); 	 */
 comment|/* try to give the command to the controller */
 if|if
 condition|(
@@ -3569,21 +3551,7 @@ name|AAC_FSAStatus
 name|status
 decl_stmt|;
 comment|/* kill the timeout timer */
-name|untimeout
-argument_list|(
-operator|(
-name|timeout_t
-operator|*
-operator|)
-name|aac_timeout
-argument_list|,
-name|cm
-argument_list|,
-name|cm
-operator|->
-name|timeout_handle
-argument_list|)
-expr_stmt|;
+comment|/* Disable this for now until the timeout queue is fixed or the driver      * can watch timeouts itself      * untimeout((timeout_t *)aac_timeout, cm, cm->timeout_handle);      */
 comment|/* fetch relevant status and then release the command */
 name|bp
 operator|=
