@@ -512,22 +512,7 @@ literal|16
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|c
-operator|->
-name|flags
-operator|&
-operator|(
-name|CHN_F_CLOSING
-operator||
-name|CHN_F_ABORTING
-operator|)
-operator|)
-condition|)
-comment|/* device_printf(c->parent->dev, "hwptr went backwards %d -> %d\n", b->hp, hwptr); */
+comment|/* 		if (!(c->flags& (CHN_F_CLOSING | CHN_F_ABORTING))) 			device_printf(c->parent->dev, "hwptr went backwards %d -> %d\n", b->hp, hwptr); 		*/
 block|}
 if|if
 condition|(
