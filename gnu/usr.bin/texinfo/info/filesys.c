@@ -311,6 +311,12 @@ literal|"unyabba"
 block|}
 block|,
 block|{
+literal|".gz"
+block|,
+literal|"gunzip"
+block|}
+block|,
+block|{
 literal|".z"
 block|,
 literal|"gunzip"
