@@ -4208,14 +4208,6 @@ name|sec
 decl_stmt|,
 name|days
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
-name|int
-name|yd
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|year
 decl_stmt|,
@@ -4637,10 +4629,6 @@ name|RTC_DAY
 argument_list|)
 operator|-
 literal|1
-expr_stmt|;
-name|yd
-operator|=
-name|days
 expr_stmt|;
 for|for
 control|(
