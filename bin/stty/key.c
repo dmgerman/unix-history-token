@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: key.c,v 1.9 1997/08/24 00:26:12 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1449,8 +1449,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ld\n"
+literal|"%lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|cfgetospeed
 argument_list|(
 operator|&
