@@ -144,7 +144,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-asm|__asm __volatile ("lock; decl %0" : "=m"(*p) : "0"(*p) : "cc");
+asm|__asm __volatile ("lock; decl %0" : "+m"(*p) : : "cc");
 block|}
 end_function
 
@@ -160,7 +160,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-asm|__asm __volatile ("lock; incl %0" : "=m"(*p) : "0"(*p) : "cc");
+asm|__asm __volatile ("lock; incl %0" : "+m"(*p) : : "cc");
 block|}
 end_function
 
@@ -181,7 +181,7 @@ parameter_list|)
 block|{
 asm|__asm __volatile ("lock; addl %1, %0"
 block|:
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
@@ -190,12 +190,6 @@ operator|:
 literal|"ri"
 operator|(
 name|val
-operator|)
-operator|,
-literal|"0"
-operator|(
-operator|*
-name|p
 operator|)
 operator|:
 literal|"cc"

@@ -141,7 +141,7 @@ name|result
 decl_stmt|;
 asm|__asm __volatile ("lock; cmpxchgl %2, %0"
 block|:
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|m
@@ -155,12 +155,6 @@ operator|:
 literal|"r"
 operator|(
 name|new
-operator|)
-operator|,
-literal|"0"
-operator|(
-operator|*
-name|m
 operator|)
 operator|,
 literal|"1"
@@ -204,7 +198,7 @@ operator|(
 name|result
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|m
@@ -213,12 +207,6 @@ operator|:
 literal|"0"
 operator|(
 name|v
-operator|)
-operator|,
-literal|"1"
-operator|(
-operator|*
-name|m
 operator|)
 block|)
 function|;
