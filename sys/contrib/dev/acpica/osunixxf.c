@@ -567,7 +567,7 @@ name|void
 modifier|*
 name|where
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 name|length
 parameter_list|)
 block|{
@@ -584,7 +584,7 @@ name|void
 modifier|*
 name|AcpiOsAllocate
 parameter_list|(
-name|UINT32
+name|ACPI_SIZE
 name|size
 parameter_list|)
 block|{
