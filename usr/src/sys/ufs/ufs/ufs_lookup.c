@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_lookup.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_lookup.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -104,8 +104,6 @@ name|struct
 name|inode
 modifier|*
 name|dp
-init|=
-literal|0
 decl_stmt|;
 comment|/* the directory we are searching */
 specifier|register
@@ -323,18 +321,9 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Get the next vnode in the path. 		 * See comment below starting `Step through' for 		 * an explaination of the locking protocol. 		 */
-name|pdp
-operator|=
-name|dp
-expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-name|ndp
-operator|->
-name|ni_vp
+name|vp
 operator|==
 name|ndp
 operator|->
@@ -343,8 +332,17 @@ operator|&&
 name|ndp
 operator|->
 name|ni_isdotdot
-operator|)
 condition|)
+name|panic
+argument_list|(
+literal|"lookup: .. through root"
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Get the next vnode in the path. 		 * See comment below starting `Step through' for 		 * an explaination of the locking protocol. 		 */
+name|pdp
+operator|=
+name|dp
+expr_stmt|;
 name|dp
 operator|=
 name|VTOI
