@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.37 1998/07/06 06:29:06 imp Exp $  */
+comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.38 1998/08/03 11:30:28 yokota Exp $  */
 end_comment
 
 begin_ifndef
@@ -157,6 +157,13 @@ name|KDSETRAD
 value|_IO('K', 67
 comment|/*, int */
 value|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KDRASTER
+value|_IOW('K', 100, scr_size_t)
 end_define
 
 begin_define
@@ -374,6 +381,43 @@ define|#
 directive|define
 name|CONS_GETVERS
 value|_IOR('c', 74, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_CURRENTADP
+value|_IOR('c', 100, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_ADPINFO
+value|_IOWR('c', 101, video_adapter_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_MODEINFO
+value|_IOWR('c', 102, video_info_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_FINDMODE
+value|_IOWR('c', 103, video_info_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_SETWINORG
+value|_IO('c', 104
+comment|/* u_int */
+value|)
 end_define
 
 begin_comment
@@ -827,6 +871,17 @@ end_define
 
 begin_comment
 comment|/* set graphics mode 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KD_PIXEL
+value|3
+end_define
+
+begin_comment
+comment|/* set pixel mode		*/
 end_comment
 
 begin_define
@@ -1287,6 +1342,172 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* adapter infromation block */
+end_comment
+
+begin_struct
+struct|struct
+name|video_adapter
+block|{
+name|int
+name|va_index
+decl_stmt|;
+name|int
+name|va_type
+decl_stmt|;
+name|int
+name|va_flags
+decl_stmt|;
+define|#
+directive|define
+name|V_ADP_COLOR
+value|(1<<0)
+define|#
+directive|define
+name|V_ADP_MODECHANGE
+value|(1<<1)
+define|#
+directive|define
+name|V_ADP_STATESAVE
+value|(1<<2)
+define|#
+directive|define
+name|V_ADP_STATELOAD
+value|(1<<3)
+define|#
+directive|define
+name|V_ADP_FONT
+value|(1<<4)
+define|#
+directive|define
+name|V_ADP_PALETTE
+value|(1<<5)
+define|#
+directive|define
+name|V_ADP_BORDER
+value|(1<<6)
+define|#
+directive|define
+name|V_ADP_VESA
+value|(1<<7)
+name|int
+name|va_crtc_addr
+decl_stmt|;
+name|u_int
+name|va_window
+decl_stmt|;
+comment|/* virtual address */
+name|size_t
+name|va_window_size
+decl_stmt|;
+name|size_t
+name|va_window_gran
+decl_stmt|;
+name|u_int
+name|va_buffer
+decl_stmt|;
+comment|/* virtual address */
+name|size_t
+name|va_buffer_size
+decl_stmt|;
+name|int
+name|va_initial_mode
+decl_stmt|;
+name|int
+name|va_initial_bios_mode
+decl_stmt|;
+name|int
+name|va_mode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|V_ADP_PRIMARY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ADP_SECONDARY
+value|1
+end_define
+
+begin_comment
+comment|/* video mode information block */
+end_comment
+
+begin_struct
+struct|struct
+name|video_info
+block|{
+name|int
+name|vi_mode
+decl_stmt|;
+name|int
+name|vi_flags
+decl_stmt|;
+define|#
+directive|define
+name|V_INFO_COLOR
+value|(1<<0)
+define|#
+directive|define
+name|V_INFO_GRAPHICS
+value|(1<<1)
+define|#
+directive|define
+name|V_INFO_LENEAR
+value|(1<<2)
+define|#
+directive|define
+name|V_INFO_VESA
+value|(1<<3)
+name|int
+name|vi_width
+decl_stmt|;
+name|int
+name|vi_height
+decl_stmt|;
+name|int
+name|vi_cwidth
+decl_stmt|;
+name|int
+name|vi_cheight
+decl_stmt|;
+name|int
+name|vi_depth
+decl_stmt|;
+name|int
+name|vi_planes
+decl_stmt|;
+name|u_int
+name|vi_window
+decl_stmt|;
+comment|/* physical address */
+name|size_t
+name|vi_window_size
+decl_stmt|;
+name|size_t
+name|vi_window_gran
+decl_stmt|;
+name|u_int
+name|vi_buffer
+decl_stmt|;
+comment|/* physical address */
+name|size_t
+name|vi_buffer_size
+decl_stmt|;
+comment|/* XXX pixel format, memory model,... */
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -1398,6 +1619,37 @@ typedef|typedef
 name|struct
 name|ssaver
 name|ssaver_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|video_adapter
+name|video_adapter_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|video_info
+name|video_info_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|scr_size
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|scr_size_t
 typedef|;
 end_typedef
 
@@ -2402,17 +2654,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_VESA_BASE
-value|0x100
-end_define
-
-begin_comment
-comment|/* VESA mode number base */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SW_PC98_80x25
 value|_IO('S', M_PC98_80x25)
 end_define
@@ -2688,6 +2929,542 @@ define|#
 directive|define
 name|SW_VGA_MODEX
 value|_IO('S', M_VGA_MODEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_VESA_BASE
+value|0x100
+end_define
+
+begin_comment
+comment|/* VESA mode number base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_CG640x400
+value|0x100
+end_define
+
+begin_comment
+comment|/* 640x400, 256 color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_CG640x480
+value|0x101
+end_define
+
+begin_comment
+comment|/* 640x480, 256 color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_800x600
+value|0x102
+end_define
+
+begin_comment
+comment|/* 800x600, 16 color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_CG800x600
+value|0x103
+end_define
+
+begin_comment
+comment|/* 800x600, 256 color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_1024x768
+value|0x104
+end_define
+
+begin_comment
+comment|/* 1024x768, 16 color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_CG1024x768
+value|0x105
+end_define
+
+begin_comment
+comment|/* 1024x768, 256 color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_1280x1024
+value|0x106
+end_define
+
+begin_comment
+comment|/* 1280x1024, 16 color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_CG1280x1024
+value|0x107
+end_define
+
+begin_comment
+comment|/* 1280x1024, 256 color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_C80x60
+value|0x108
+end_define
+
+begin_comment
+comment|/* 8x8 font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_C132x25
+value|0x109
+end_define
+
+begin_comment
+comment|/* 8x16 font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_C132x43
+value|0x10a
+end_define
+
+begin_comment
+comment|/* 8x14 font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_C132x50
+value|0x10b
+end_define
+
+begin_comment
+comment|/* 8x8 font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_C132x60
+value|0x10c
+end_define
+
+begin_comment
+comment|/* 8x8 font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_32K_320
+value|0x10d
+end_define
+
+begin_comment
+comment|/* 320x200, 5:5:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_64K_320
+value|0x10e
+end_define
+
+begin_comment
+comment|/* 320x200, 5:6:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_FULL_320
+value|0x10f
+end_define
+
+begin_comment
+comment|/* 320x200, 8:8:8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_32K_640
+value|0x110
+end_define
+
+begin_comment
+comment|/* 640x480, 5:5:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_64K_640
+value|0x111
+end_define
+
+begin_comment
+comment|/* 640x480, 5:6:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_FULL_640
+value|0x112
+end_define
+
+begin_comment
+comment|/* 640x480, 8:8:8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_32K_800
+value|0x113
+end_define
+
+begin_comment
+comment|/* 800x600, 5:5:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_64K_800
+value|0x114
+end_define
+
+begin_comment
+comment|/* 800x600, 5:6:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_FULL_800
+value|0x115
+end_define
+
+begin_comment
+comment|/* 800x600, 8:8:8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_32K_1024
+value|0x116
+end_define
+
+begin_comment
+comment|/* 1024x768, 5:5:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_64K_1024
+value|0x117
+end_define
+
+begin_comment
+comment|/* 1024x768, 5:6:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_FULL_1024
+value|0x118
+end_define
+
+begin_comment
+comment|/* 1024x768, 8:8:8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_32K_1280
+value|0x119
+end_define
+
+begin_comment
+comment|/* 1280x1024, 5:5:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_64K_1280
+value|0x11a
+end_define
+
+begin_comment
+comment|/* 1280x1024, 5:6:5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_FULL_1280
+value|0x11b
+end_define
+
+begin_comment
+comment|/* 1280x1024, 8:8:8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_MODE_MAX
+value|0x1ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_VESA_USER
+value|0x1ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_CG640x400
+value|_IO('V', M_VESA_CG640x400 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_CG640x480
+value|_IO('V', M_VESA_CG640x480 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_800x600
+value|_IO('V', M_VESA_800x600 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_CG800x600
+value|_IO('V', M_VESA_CG800x600 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_1024x768
+value|_IO('V', M_VESA_1024x768 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_CG1024x768
+value|_IO('V', M_VESA_CG1024x768 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_1280x1024
+value|_IO('V', M_VESA_1280x1024 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_CG1280x1024
+value|_IO('V', M_VESA_CG1280x1024 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_C80x60
+value|_IO('V', M_VESA_C80x60 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_C132x25
+value|_IO('V', M_VESA_C132x25 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_C132x43
+value|_IO('V', M_VESA_C132x43 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_C132x50
+value|_IO('V', M_VESA_C132x50 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_C132x60
+value|_IO('V', M_VESA_C132x60 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_32K_320
+value|_IO('V', M_VESA_32K_320 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_64K_320
+value|_IO('V', M_VESA_64K_320 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_FULL_320
+value|_IO('V', M_VESA_FULL_320 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_32K_640
+value|_IO('V', M_VESA_32K_640 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_64K_640
+value|_IO('V', M_VESA_64K_640 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_FULL_640
+value|_IO('V', M_VESA_FULL_640 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_32K_800
+value|_IO('V', M_VESA_32K_800 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_64K_800
+value|_IO('V', M_VESA_64K_800 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_FULL_800
+value|_IO('V', M_VESA_FULL_800 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_32K_1024
+value|_IO('V', M_VESA_32K_1024 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_64K_1024
+value|_IO('V', M_VESA_64K_1024 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_FULL_1024
+value|_IO('V', M_VESA_FULL_1024 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_32K_1280
+value|_IO('V', M_VESA_32K_1280 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_64K_1280
+value|_IO('V', M_VESA_64K_1280 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_FULL_1280
+value|_IO('V', M_VESA_FULL_1280 - M_VESA_BASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VESA_USER
+value|_IO('V', M_VESA_USER - M_VESA_BASE)
 end_define
 
 begin_endif
