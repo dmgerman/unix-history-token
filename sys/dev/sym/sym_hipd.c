@@ -34282,10 +34282,9 @@ operator|&
 name|SYM_SETUP_LP_PROBE_MAP
 operator|)
 condition|?
-operator|-
-literal|2000
+name|BUS_PROBE_LOW_PRIORITY
 else|:
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 return|return
