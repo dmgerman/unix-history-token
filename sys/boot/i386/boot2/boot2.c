@@ -641,7 +641,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|printf
 parameter_list|(
 specifier|const
@@ -655,7 +655,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|putchar
 parameter_list|(
 name|int
@@ -1709,7 +1709,7 @@ argument|,
 literal|"partition"
 argument|); 		return -
 literal|1
-argument|; 	    } 	    dsk.start += d->d_partitions[dsk.part].p_offset; 	    dsk.start -= d->d_partitions[RAW_PART].p_offset; 	}     }     return drvread(buf, dsk.start + lba, nblk); }  static int printf(const char *fmt,...) {     static const char digits[
+argument|; 	    } 	    dsk.start += d->d_partitions[dsk.part].p_offset; 	    dsk.start -= d->d_partitions[RAW_PART].p_offset; 	}     }     return drvread(buf, dsk.start + lba, nblk); }  static void printf(const char *fmt,...) {     static const char digits[
 literal|16
 argument|] =
 literal|"0123456789abcdef"
@@ -1733,13 +1733,11 @@ argument|?
 literal|10U
 argument|:
 literal|16U
-argument|; 		u = va_arg(ap, unsigned); 		s = buf; 		do 		    *s++ = digits[u % r]; 		while (u /= r); 		while (--s>= buf) 		    putchar(*s); 		continue; 	    } 	} 	putchar(c);     }     va_end(ap);     return
-literal|0
-argument|; }  static int putchar(int c) {     if (c ==
+argument|; 		u = va_arg(ap, unsigned); 		s = buf; 		do 		    *s++ = digits[u % r]; 		while (u /= r); 		while (--s>= buf) 		    putchar(*s); 		continue; 	    } 	} 	putchar(c);     }     va_end(ap);     return; }  static void putchar(int c) {     if (c ==
 literal|'\n'
 argument|) 	xputc(
 literal|'\r'
-argument|);     return xputc(c); }  static uint32_t memsize(int type) {     v86.addr = type;     v86.eax =
+argument|);     xputc(c); }  static uint32_t memsize(int type) {     v86.addr = type;     v86.eax =
 literal|0x8800
 argument|;     v86int();     return v86.eax; }  static int drvread(void *buf, unsigned lba, unsigned nblk) {     static unsigned c =
 literal|0x2d5c7c2f
