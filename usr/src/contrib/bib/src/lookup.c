@@ -341,12 +341,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|fileflag
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -422,14 +416,6 @@ name|INDEX
 argument_list|,
 name|operand
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'f'
-case|:
-name|fileflag
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 default|default:

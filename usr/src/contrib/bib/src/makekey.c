@@ -21,6 +21,10 @@ directive|endif
 endif|not lint
 end_endif
 
+begin_empty
+empty|#
+end_empty
+
 begin_include
 include|#
 directive|include
