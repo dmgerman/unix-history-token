@@ -2424,6 +2424,8 @@ operator|=
 name|alloca
 argument_list|(
 name|j
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|len
@@ -2482,6 +2484,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|val
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|fmt
 operator|=
 name|buf
@@ -2527,7 +2536,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%.*s"
+argument_list|,
+name|len
 argument_list|,
 name|p
 argument_list|)
