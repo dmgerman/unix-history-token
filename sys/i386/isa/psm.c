@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.25.2.11 1998/01/20 03:51:28 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.25.2.12 1998/01/24 12:13:13 yokota Exp $  */
 end_comment
 
 begin_comment
-comment|/*  *  Ported to 386bsd Oct 17, 1992  *  Sandi Donno, Computer Science, University of Cape Town, South Africa  *  Please send bug reports to sandi@cs.uct.ac.za  *  *  Thanks are also due to Rick Macklem, rick@snowhite.cis.uoguelph.ca -  *  although I was only partially successful in getting the alpha release  *  of his "driver for the Logitech and ATI Inport Bus mice for use with  *  386bsd and the X386 port" to work with my Microsoft mouse, I nevertheless  *  found his code to be an invaluable reference when porting this driver  *  to 386bsd.  *  *  Further modifications for latest 386BSD+patchkit and port to NetBSD,  *  Andrew Herbert<andrew@werple.apana.org.au> - 8 June 1993  *  *  Cloned from the Microsoft Bus Mouse driver, also by Erik Forsberg, by  *  Andrew Herbert - 12 June 1993  *  *  Modified for PS/2 mouse by Charles Hannum<mycroft@ai.mit.edu>  *  - 13 June 1993  *  *  Modified for PS/2 AUX mouse by Shoji Yuen<yuen@nuie.nagoya-u.ac.jp>  *  - 24 October 1993  *  *  Hardware access routines and probe logic rewritten by  *  Kazutaka Yokota<yokota@zodiac.mech.utsunomiya-u.ac.jp>  *  - 3, 14, 22 October 1996.  *  - 12 November 1996. IOCTLs and rearranging `psmread', `psmioctl'...  *  - 14, 30 November 1996. Uses `kbdio.c'.  *  - 13 December 1996. Uses queuing version of `kbdio.c'.  *  - January/February 1997. Tweaked probe logic for   *    HiNote UltraII/Latitude/Armada laptops.  *  - 30 July 1997. Added APM support.  *  - 5 March 1997. Defined driver configuration flags (PSM_CONFIG_XXX).   *    Improved sync check logic.  *    Vender specific support routines.  */
+comment|/*  *  Ported to 386bsd Oct 17, 1992  *  Sandi Donno, Computer Science, University of Cape Town, South Africa  *  Please send bug reports to sandi@cs.uct.ac.za  *  *  Thanks are also due to Rick Macklem, rick@snowhite.cis.uoguelph.ca -  *  although I was only partially successful in getting the alpha release  *  of his "driver for the Logitech and ATI Inport Bus mice for use with  *  386bsd and the X386 port" to work with my Microsoft mouse, I nevertheless  *  found his code to be an invaluable reference when porting this driver  *  to 386bsd.  *  *  Further modifications for latest 386BSD+patchkit and port to NetBSD,  *  Andrew Herbert<andrew@werple.apana.org.au> - 8 June 1993  *  *  Cloned from the Microsoft Bus Mouse driver, also by Erik Forsberg, by  *  Andrew Herbert - 12 June 1993  *  *  Modified for PS/2 mouse by Charles Hannum<mycroft@ai.mit.edu>  *  - 13 June 1993  *  *  Modified for PS/2 AUX mouse by Shoji Yuen<yuen@nuie.nagoya-u.ac.jp>  *  - 24 October 1993  *  *  Hardware access routines and probe logic rewritten by  *  Kazutaka Yokota<yokota@zodiac.mech.utsunomiya-u.ac.jp>  *  - 3, 14, 22 October 1996.  *  - 12 November 1996. IOCTLs and rearranging `psmread', `psmioctl'...  *  - 14, 30 November 1996. Uses `kbdio.c'.  *  - 13 December 1996. Uses queuing version of `kbdio.c'.  *  - January/February 1997. Tweaked probe logic for   *    HiNote UltraII/Latitude/Armada laptops.  *  - 30 July 1997. Added APM support.  *  - 5 March 1997. Defined driver configuration flags (PSM_CONFIG_XXX).   *    Improved sync check logic.  *    Vendor specific support routines.  */
 end_comment
 
 begin_include
@@ -587,7 +587,7 @@ comment|/* other flags (flags) */
 end_comment
 
 begin_comment
-comment|/*  * Pass mouse data packet to the user land program `as is', even if   * the mouse has vender-specific enhanced features and uses non-standard   * packet format.  Otherwise manipulate the mouse data packet so that   * it can be recognized by the programs which can only understand   * the standard packet format. */
+comment|/*  * Pass mouse data packet to the user land program `as is', even if   * the mouse has vendor-specific enhanced features and uses non-standard   * packet format.  Otherwise manipulate the mouse data packet so that   * it can be recognized by the programs which can only understand   * the standard packet format. */
 end_comment
 
 begin_define
@@ -1015,7 +1015,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* vender specific features */
+comment|/* vendor specific features */
 end_comment
 
 begin_typedef
@@ -1132,7 +1132,7 @@ modifier|*
 name|probefunc
 decl_stmt|;
 block|}
-name|vendertype
+name|vendortype
 index|[]
 init|=
 block|{
@@ -2376,6 +2376,9 @@ case|case
 literal|1
 case|:
 comment|/* ignore this error */
+case|case
+name|PSM_ACK
+case|:
 if|if
 condition|(
 name|verbose
@@ -2497,7 +2500,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -2514,7 +2517,7 @@ if|if
 condition|(
 operator|(
 operator|*
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -2542,7 +2545,7 @@ name|unit
 argument_list|,
 name|model_name
 argument_list|(
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -2560,7 +2563,7 @@ name|hw
 operator|.
 name|model
 operator|=
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -2573,7 +2576,7 @@ name|mode
 operator|.
 name|packetsize
 operator|=
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -3244,7 +3247,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      *      * XXX: some controllers erroneously return the error code 1 when      * it has the perfectly functional aux port. We have to ignore this      * error code. Even if the controller HAS error with the aux port,      * it will be detected later...      */
+comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      *      * XXX: some controllers erroneously return the error code 1 when      * it has the perfectly functional aux port. We have to ignore this      * error code. Even if the controller HAS error with the aux port,      * it will be detected later...      * XXX: another incompatible controller returns PSM_ACK (0xfa)...      */
 switch|switch
 condition|(
 operator|(
@@ -3263,6 +3266,9 @@ case|case
 literal|1
 case|:
 comment|/* ignore this error */
+case|case
+name|PSM_ACK
+case|:
 if|if
 condition|(
 name|verbose
@@ -3639,7 +3645,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -3656,7 +3662,7 @@ if|if
 condition|(
 operator|(
 operator|*
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -3682,7 +3688,7 @@ name|unit
 argument_list|,
 name|model_name
 argument_list|(
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -3700,7 +3706,7 @@ name|hw
 operator|.
 name|model
 operator|=
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -3768,7 +3774,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -3801,7 +3807,7 @@ name|mode
 operator|.
 name|packetsize
 operator|=
-name|vendertype
+name|vendortype
 index|[
 name|i
 index|]
@@ -8970,7 +8976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vender/model specific routines */
+comment|/* vendor/model specific routines */
 end_comment
 
 begin_function
