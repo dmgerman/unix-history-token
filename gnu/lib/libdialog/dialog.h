@@ -188,6 +188,9 @@ name|mark
 decl_stmt|,
 name|rbra
 decl_stmt|;
+name|int
+name|aux
+decl_stmt|;
 block|}
 name|dialogMenuItem
 typedef|;
