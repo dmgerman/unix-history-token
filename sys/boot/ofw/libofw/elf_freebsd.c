@@ -202,6 +202,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|intptr_t
+name|entry
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -234,6 +237,12 @@ operator|&
 name|fmp
 operator|->
 name|md_data
+expr_stmt|;
+name|entry
+operator|=
+name|e
+operator|->
+name|e_entry
 expr_stmt|;
 if|if
 condition|(
@@ -293,9 +302,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|e
-operator|->
-name|e_entry
+name|entry
 argument_list|,
 operator|(
 name|void
