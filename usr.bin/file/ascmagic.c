@@ -57,7 +57,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id$"
+literal|"@(#)$Id: ascmagic.c,v 1.7 1997/03/18 19:37:17 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,6 +312,7 @@ return|return
 literal|1
 return|;
 block|}
+comment|/* Make sure we are dealing with ascii text before looking for tokens */
 for|for
 control|(
 name|i

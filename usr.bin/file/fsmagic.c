@@ -45,6 +45,42 @@ directive|ifndef
 name|major
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__SVR4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_SVR4_SOURCE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/mkdev.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|major
+end_ifndef
+
 begin_comment
 comment|/* if `major' not defined in types.h, */
 end_comment
@@ -131,7 +167,7 @@ name|char
 operator|*
 name|moduleid
 operator|=
-literal|"@(#)$Id: fsmagic.c,v 1.2 1995/05/30 06:30:03 rgrimes Exp $"
+literal|"@(#)$Id: fsmagic.c,v 1.6 1997/03/18 19:37:19 mpp Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -299,8 +335,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"character special (%d/%d)"
+literal|"character special (%ld/%ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|major
 argument_list|(
 name|sb
@@ -308,6 +347,9 @@ operator|->
 name|st_rdev
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|minor
 argument_list|(
 name|sb
@@ -327,8 +369,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"block special (%d/%d)"
+literal|"block special (%ld/%ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|major
 argument_list|(
 name|sb
@@ -336,6 +381,9 @@ operator|->
 name|st_rdev
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|minor
 argument_list|(
 name|sb

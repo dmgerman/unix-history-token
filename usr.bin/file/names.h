@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in /etc/magic must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * See LEGAL.NOTICE  *  * $Id: names.h,v 1.1.1.2 1996/01/22 22:31:42 mpp Exp $  */
+comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in /etc/magic must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * See LEGAL.NOTICE  *  * $Id: names.h,v 1.5 1997/03/18 19:37:21 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -21,8 +21,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|L_FORT
+name|L_CC
 value|1
+end_define
+
+begin_comment
+comment|/* Bjarne's postincrement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L_FORT
+value|2
 end_define
 
 begin_comment
@@ -33,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|L_MAKE
-value|2
+value|3
 end_define
 
 begin_comment
@@ -44,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|L_PLI
-value|3
+value|4
 end_define
 
 begin_comment
@@ -55,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|L_MACH
-value|4
+value|5
 end_define
 
 begin_comment
@@ -66,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|L_ENG
-value|5
+value|6
 end_define
 
 begin_comment
@@ -77,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|L_PAS
-value|6
+value|7
 end_define
 
 begin_comment
@@ -88,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|L_MAIL
-value|7
+value|8
 end_define
 
 begin_comment
@@ -99,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|L_NEWS
-value|8
+value|9
 end_define
 
 begin_comment
@@ -115,6 +126,8 @@ index|[]
 init|=
 block|{
 literal|"C program text"
+block|,
+literal|"C++ program text"
 block|,
 literal|"FORTRAN program text"
 block|,
@@ -158,6 +171,42 @@ init|=
 block|{
 comment|/* These must be sorted by eye for optimal hit rate */
 comment|/* Add to this list only after substantial meditation */
+block|{
+literal|"//"
+block|,
+name|L_CC
+block|}
+block|,
+block|{
+literal|"template"
+block|,
+name|L_CC
+block|}
+block|,
+block|{
+literal|"virtual"
+block|,
+name|L_CC
+block|}
+block|,
+block|{
+literal|"class"
+block|,
+name|L_CC
+block|}
+block|,
+block|{
+literal|"public:"
+block|,
+name|L_CC
+block|}
+block|,
+block|{
+literal|"private:"
+block|,
+name|L_CC
+block|}
+block|,
 block|{
 literal|"/*"
 block|,

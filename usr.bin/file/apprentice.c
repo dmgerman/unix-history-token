@@ -51,7 +51,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: apprentice.c,v 1.2 1995/05/30 06:29:58 rgrimes Exp $"
+literal|"@(#)$Id: apprentice.c,v 1.6 1997/03/18 19:37:16 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -602,8 +602,7 @@ comment|/*  * extend the sign bit if the comparison is to be signed  */
 end_comment
 
 begin_function
-name|unsigned
-name|long
+name|uint32
 name|signextend
 parameter_list|(
 name|m
@@ -615,8 +614,7 @@ name|magic
 modifier|*
 name|m
 decl_stmt|;
-name|unsigned
-name|long
+name|uint32
 name|v
 decl_stmt|;
 block|{
@@ -688,7 +686,7 @@ case|:
 name|v
 operator|=
 operator|(
-name|long
+name|int32
 operator|)
 name|v
 expr_stmt|;
@@ -920,6 +918,31 @@ operator|->
 name|flag
 operator||=
 name|INDIR
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|m
+operator|->
+name|cont_level
+operator|!=
+literal|0
+operator|&&
+operator|*
+name|l
+operator|==
+literal|'&'
+condition|)
+block|{
+operator|++
+name|l
+expr_stmt|;
+comment|/* step over */
+name|m
+operator|->
+name|flag
+operator||=
+name|ADD
 expr_stmt|;
 block|}
 comment|/* get offset, then skip over it */
@@ -2264,7 +2287,7 @@ operator|)
 name|val
 expr_stmt|;
 break|break;
-comment|/* \x and up to 3 hex digits */
+comment|/* \x and up to 2 hex digits */
 case|case
 literal|'x'
 case|:
@@ -2309,7 +2332,6 @@ name|c
 operator|>=
 literal|0
 condition|)
-block|{
 name|val
 operator|=
 operator|(
@@ -2320,38 +2342,6 @@ operator|)
 operator|+
 name|c
 expr_stmt|;
-name|c
-operator|=
-name|hextoint
-argument_list|(
-operator|*
-name|s
-operator|++
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|>=
-literal|0
-condition|)
-block|{
-name|val
-operator|=
-operator|(
-name|val
-operator|<<
-literal|4
-operator|)
-operator|+
-name|c
-expr_stmt|;
-block|}
-else|else
-operator|--
-name|s
-expr_stmt|;
-block|}
 else|else
 operator|--
 name|s

@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -45,7 +51,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: softmagic.c,v 1.3 1995/05/30 06:30:09 rgrimes Exp $"
+literal|"@(#)$Id: softmagic.c,v 1.7 1997/03/18 19:37:22 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +127,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|int32
 name|mprint
 name|__P
 argument_list|(
@@ -145,7 +151,7 @@ name|mdebug
 name|__P
 argument_list|(
 operator|(
-name|long
+name|int32
 operator|,
 name|char
 operator|*
@@ -263,6 +269,54 @@ name|union
 name|VALUETYPE
 name|p
 decl_stmt|;
+specifier|static
+name|int32
+modifier|*
+name|tmpoff
+init|=
+name|NULL
+decl_stmt|;
+specifier|static
+name|size_t
+name|tmplen
+init|=
+literal|0
+decl_stmt|;
+name|int32
+name|oldoff
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|tmpoff
+operator|==
+name|NULL
+condition|)
+if|if
+condition|(
+operator|(
+name|tmpoff
+operator|=
+operator|(
+name|int32
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|tmplen
+operator|=
+literal|20
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|"out of memory\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|magindex
@@ -334,6 +388,11 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+name|tmpoff
+index|[
+name|cont_level
+index|]
+operator|=
 name|mprint
 argument_list|(
 operator|&
@@ -364,8 +423,38 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* and any continuations that match */
-name|cont_level
+if|if
+condition|(
 operator|++
+name|cont_level
+operator|>=
+name|tmplen
+condition|)
+if|if
+condition|(
+operator|(
+name|tmpoff
+operator|=
+operator|(
+name|int32
+operator|*
+operator|)
+name|realloc
+argument_list|(
+name|tmpoff
+argument_list|,
+name|tmplen
+operator|+=
+literal|20
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|"out of memory\n"
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -419,6 +508,42 @@ name|magindex
 index|]
 operator|.
 name|cont_level
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|magic
+index|[
+name|magindex
+index|]
+operator|.
+name|flag
+operator|&
+name|ADD
+condition|)
+block|{
+name|oldoff
+operator|=
+name|magic
+index|[
+name|magindex
+index|]
+operator|.
+name|offset
+expr_stmt|;
+name|magic
+index|[
+name|magindex
+index|]
+operator|.
+name|offset
+operator|+=
+name|tmpoff
+index|[
+name|cont_level
+operator|-
+literal|1
+index|]
 expr_stmt|;
 block|}
 if|if
@@ -497,6 +622,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|tmpoff
+index|[
+name|cont_level
+index|]
+operator|=
 name|mprint
 argument_list|(
 operator|&
@@ -526,8 +656,60 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 					 * If we see any continuations 					 * at a higher level, 					 * process them. 					 */
-name|cont_level
+if|if
+condition|(
 operator|++
+name|cont_level
+operator|>=
+name|tmplen
+condition|)
+if|if
+condition|(
+operator|(
+name|tmpoff
+operator|=
+operator|(
+name|int32
+operator|*
+operator|)
+name|realloc
+argument_list|(
+name|tmpoff
+argument_list|,
+name|tmplen
+operator|+=
+literal|20
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|"out of memory\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|magic
+index|[
+name|magindex
+index|]
+operator|.
+name|flag
+operator|&
+name|ADD
+condition|)
+block|{
+name|magic
+index|[
+name|magindex
+index|]
+operator|.
+name|offset
+operator|=
+name|oldoff
 expr_stmt|;
 block|}
 block|}
@@ -546,7 +728,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int32
 name|mprint
 parameter_list|(
 name|p
@@ -571,9 +753,13 @@ decl_stmt|,
 modifier|*
 name|rt
 decl_stmt|;
-name|unsigned
-name|long
+name|uint32
 name|v
+decl_stmt|;
+name|int32
+name|t
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
@@ -618,6 +804,17 @@ name|unsigned
 name|char
 operator|)
 name|v
+argument_list|)
+expr_stmt|;
+name|t
+operator|=
+name|m
+operator|->
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|char
 argument_list|)
 expr_stmt|;
 break|break;
@@ -665,6 +862,17 @@ operator|)
 name|v
 argument_list|)
 expr_stmt|;
+name|t
+operator|=
+name|m
+operator|->
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|LONG
@@ -704,10 +912,20 @@ operator|->
 name|desc
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|uint32
 operator|)
 name|v
+argument_list|)
+expr_stmt|;
+name|t
+operator|=
+name|m
+operator|->
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|int32
 argument_list|)
 expr_stmt|;
 break|break;
@@ -739,9 +957,59 @@ operator|.
 name|s
 argument_list|)
 expr_stmt|;
+name|t
+operator|=
+name|m
+operator|->
+name|offset
+operator|+
+name|strlen
+argument_list|(
+name|m
+operator|->
+name|value
+operator|.
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|*
+name|m
+operator|->
+name|value
+operator|.
+name|s
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|char
+modifier|*
+name|cp
+init|=
+name|strchr
+argument_list|(
+name|p
+operator|->
+name|s
+argument_list|,
+literal|'\n'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -756,8 +1024,21 @@ operator|->
 name|s
 argument_list|)
 expr_stmt|;
+name|t
+operator|=
+name|m
+operator|->
+name|offset
+operator|+
+name|strlen
+argument_list|(
+name|p
+operator|->
+name|s
+argument_list|)
+expr_stmt|;
 block|}
-return|return;
+break|break;
 case|case
 name|DATE
 case|:
@@ -813,7 +1094,18 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
-return|return;
+name|t
+operator|=
+name|m
+operator|->
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|time_t
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|error
 argument_list|(
@@ -826,6 +1118,11 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+return|return
+operator|(
+name|t
+operator|)
+return|;
 block|}
 end_function
 
@@ -853,10 +1150,6 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|rt
-decl_stmt|;
 switch|switch
 condition|(
 name|m
@@ -882,6 +1175,11 @@ return|;
 case|case
 name|STRING
 case|:
+block|{
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
 comment|/* Null terminate and eat the return */
 name|p
 operator|->
@@ -902,7 +1200,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|rt
+name|ptr
 operator|=
 name|strchr
 argument_list|(
@@ -917,13 +1215,14 @@ operator|!=
 name|NULL
 condition|)
 operator|*
-name|rt
+name|ptr
 operator|=
 literal|'\0'
 expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 case|case
 name|BESHORT
 case|:
@@ -970,7 +1269,7 @@ operator|->
 name|l
 operator|=
 call|(
-name|long
+name|int32
 call|)
 argument_list|(
 operator|(
@@ -1065,7 +1364,7 @@ operator|->
 name|l
 operator|=
 call|(
-name|long
+name|int32
 call|)
 argument_list|(
 operator|(
@@ -1142,7 +1441,7 @@ name|str
 parameter_list|,
 name|len
 parameter_list|)
-name|long
+name|int32
 name|offset
 decl_stmt|;
 name|char
@@ -1160,7 +1459,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mget @%ld: "
+literal|"mget @%d: "
 argument_list|,
 name|offset
 argument_list|)
@@ -1233,7 +1532,7 @@ name|int
 name|nbytes
 decl_stmt|;
 block|{
-name|long
+name|int32
 name|offset
 init|=
 name|m
@@ -1270,7 +1569,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 		 * the usefulness of padding with zeroes eludes me, it 		 * might even cause problems 		 */
-name|long
+name|int32
 name|have
 init|=
 name|nbytes
@@ -1515,8 +1814,7 @@ name|m
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|long
+name|uint32
 name|l
 init|=
 name|m
@@ -1526,8 +1824,7 @@ operator|.
 name|l
 decl_stmt|;
 specifier|register
-name|unsigned
-name|long
+name|uint32
 name|v
 decl_stmt|;
 name|int
@@ -1705,7 +2002,7 @@ name|a
 operator|++
 operator|)
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 break|break;
 block|}
@@ -1759,7 +2056,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%lu == *any* = 1\n"
+literal|"%u == *any* = 1\n"
 argument_list|,
 name|v
 argument_list|)
@@ -1789,7 +2086,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%lu != %lu = %d\n"
+literal|"%u != %u = %d\n"
 argument_list|,
 name|v
 argument_list|,
@@ -1819,7 +2116,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%lu == %lu = %d\n"
+literal|"%u == %u = %d\n"
 argument_list|,
 name|v
 argument_list|,
@@ -1858,7 +2155,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%lu> %lu = %d\n"
+literal|"%u> %u = %d\n"
 argument_list|,
 name|v
 argument_list|,
@@ -1873,12 +2170,12 @@ block|{
 name|matched
 operator|=
 operator|(
-name|long
+name|int32
 operator|)
 name|v
 operator|>
 operator|(
-name|long
+name|int32
 operator|)
 name|l
 expr_stmt|;
@@ -1893,7 +2190,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%ld> %ld = %d\n"
+literal|"%d> %d = %d\n"
 argument_list|,
 name|v
 argument_list|,
@@ -1933,7 +2230,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%lu< %lu = %d\n"
+literal|"%u< %u = %d\n"
 argument_list|,
 name|v
 argument_list|,
@@ -1948,12 +2245,12 @@ block|{
 name|matched
 operator|=
 operator|(
-name|long
+name|int32
 operator|)
 name|v
 operator|<
 operator|(
-name|long
+name|int32
 operator|)
 name|l
 expr_stmt|;
@@ -1968,7 +2265,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%ld< %ld = %d\n"
+literal|"%d< %d = %d\n"
 argument_list|,
 name|v
 argument_list|,
@@ -2003,7 +2300,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"((%lx& %lx) == %lx) = %d\n"
+literal|"((%x& %x) == %x) = %d\n"
 argument_list|,
 name|v
 argument_list|,
@@ -2039,7 +2336,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"((%lx& %lx) != %lx) = %d\n"
+literal|"((%x& %x) != %x) = %d\n"
 argument_list|,
 name|v
 argument_list|,

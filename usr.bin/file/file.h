@@ -1,7 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.3 1996/01/23 12:40:13 mpp Exp $  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.7 1997/03/18 19:37:18 mpp Exp $  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__file_h__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__file_h__
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|int32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|uint32
+typedef|;
+end_typedef
 
 begin_ifndef
 ifndef|#
@@ -75,6 +102,11 @@ directive|define
 name|UNSIGNED
 value|2
 comment|/* comparison is unsigned */
+define|#
+directive|define
+name|ADD
+value|4
+comment|/* if '>&' appears,  */
 name|short
 name|cont_level
 decl_stmt|;
@@ -85,14 +117,14 @@ name|char
 name|type
 decl_stmt|;
 comment|/* byte short long */
-name|long
+name|int32
 name|offset
 decl_stmt|;
 comment|/* offset from indirection */
 block|}
 name|in
 struct|;
-name|long
+name|int32
 name|offset
 decl_stmt|;
 comment|/* offset to magic number */
@@ -164,8 +196,7 @@ name|unsigned
 name|short
 name|h
 decl_stmt|;
-name|unsigned
-name|long
+name|uint32
 name|l
 decl_stmt|;
 name|char
@@ -194,8 +225,7 @@ block|}
 name|value
 union|;
 comment|/* either number or string */
-name|unsigned
-name|long
+name|uint32
 name|mask
 decl_stmt|;
 comment|/* mask before comparison with value */
@@ -569,8 +599,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|long
+name|uint32
 name|signextend
 name|__P
 argument_list|(
@@ -580,7 +609,42 @@ name|magic
 operator|*
 operator|,
 name|unsigned
-name|long
+name|int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|internatmagic
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|tryelf
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -711,12 +775,6 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|sun
@@ -725,6 +783,72 @@ operator|||
 name|defined
 argument_list|(
 name|__sun__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__svr4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SVR4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__svr4__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SOLARIS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SUNOS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SUNOS
 argument_list|)
 operator|||
 name|defined
@@ -796,6 +920,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __file_h__ */
+end_comment
 
 end_unit
 

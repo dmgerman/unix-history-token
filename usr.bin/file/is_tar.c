@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * $Id: is_tar.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
+comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * $Id: is_tar.c,v 1.5 1997/03/18 19:37:19 mpp Exp $  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
 end_comment
 
 begin_include
@@ -53,7 +53,7 @@ end_if
 
 begin_function_decl
 specifier|static
-name|long
+name|int
 name|from_oct
 parameter_list|(
 name|int
@@ -75,7 +75,7 @@ end_else
 
 begin_function_decl
 specifier|static
-name|long
+name|int
 name|from_oct
 parameter_list|()
 function_decl|;
@@ -125,7 +125,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
-name|long
+name|int
 name|sum
 decl_stmt|,
 name|recsum
@@ -284,7 +284,7 @@ end_comment
 
 begin_function
 specifier|static
-name|long
+name|int
 name|from_oct
 parameter_list|(
 name|digs
@@ -302,7 +302,7 @@ name|where
 decl_stmt|;
 block|{
 specifier|register
-name|long
+name|int
 name|value
 decl_stmt|;
 while|while

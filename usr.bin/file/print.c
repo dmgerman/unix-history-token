@@ -85,7 +85,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: print.c,v 1.2 1995/05/30 06:30:08 rgrimes Exp $"
+literal|"@(#)$Id: print.c,v 1.6 1997/03/18 19:37:22 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,7 +203,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(%s,%ld),"
+literal|"(%s,%d),"
 argument_list|,
 operator|(
 name|m
@@ -316,7 +316,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"& %.8lx"
+literal|"& %.8x"
 argument_list|,
 name|m
 operator|->
@@ -381,7 +381,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%ld"
+literal|"%d"
 argument_list|,
 name|m
 operator|->

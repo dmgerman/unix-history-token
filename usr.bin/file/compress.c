@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * compress routines:  *	zmagic() - returns 0 if not recognized, uncompresses and prints  *		   information if recognized  *	uncompress(method, old, n, newch) - uncompress old into new,  *					    using method, return sizeof new  * $Id: compress.c,v 1.2 1995/05/30 06:30:00 rgrimes Exp $  */
+comment|/*  * compress routines:  *	zmagic() - returns 0 if not recognized, uncompresses and prints  *		   information if recognized  *	uncompress(method, old, n, newch) - uncompress old into new,  *					    using method, return sizeof new  * $Id: compress.c,v 1.5 1997/02/22 19:29:10 peter Exp $  */
 end_comment
 
 begin_include
