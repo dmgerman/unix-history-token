@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.15 1995/12/10 19:44:52 bde Exp $ */
+comment|/* $Id: scd.c,v 1.16 1995/12/10 20:10:23 bde Exp $ */
 end_comment
 
 begin_comment
@@ -565,28 +565,6 @@ end_struct
 begin_comment
 comment|/* prototypes */
 end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|bcd2bin
-parameter_list|(
-name|bcd_t
-name|b
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|bcd_t
-name|bin2bcd
-parameter_list|(
-name|int
-name|b
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -5698,62 +5676,6 @@ expr_stmt|;
 goto|goto
 name|harderr
 goto|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|bcd2bin
-parameter_list|(
-name|bcd_t
-name|b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|b
-operator|>>
-literal|4
-operator|)
-operator|*
-literal|10
-operator|+
-operator|(
-name|b
-operator|&
-literal|15
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bcd_t
-name|bin2bcd
-parameter_list|(
-name|int
-name|b
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|b
-operator|/
-literal|10
-operator|)
-operator|<<
-literal|4
-operator|)
-operator||
-operator|(
-name|b
-operator|%
-literal|10
-operator|)
-return|;
 block|}
 end_function
 
