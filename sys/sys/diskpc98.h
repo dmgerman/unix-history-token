@@ -49,17 +49,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NEXTDOSPART
-value|32
-end_define
-
-begin_comment
-comment|/* XXX: For biosdisk.c in sys/boot.  Probably wrong */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DOSPTYP_386BSD
 value|0x94
 end_define
