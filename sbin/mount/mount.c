@@ -1257,7 +1257,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* 		 * If -t flag has not been specified, and spec contains either 		 * a ':' or a '@' then assume that an NFS filesystem is being 		 * specified ala Sun. 		 */
+comment|/* 		 * If -t flag has not been specified, and spec contains either 		 * a ':' or a '@', and the spec is not a file with those 		 * characters, then assume that an NFS filesystem is being 		 * specified ala Sun. 		 */
 if|if
 condition|(
 name|vfslist
@@ -1275,6 +1275,19 @@ literal|":@"
 argument_list|)
 operator|!=
 name|NULL
+operator|&&
+name|access
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 name|vfstype
 operator|=
