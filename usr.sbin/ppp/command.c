@@ -17799,6 +17799,27 @@ name|OPT_SROUTES
 block|}
 block|,
 block|{
+literal|"tcpmssfixup"
+block|,
+literal|"mssfixup"
+block|,
+name|OptSet
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Modify MSS options"
+block|,
+literal|"disable|enable"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|OPT_TCPMSSFIXUP
+block|}
+block|,
+block|{
 literal|"throughput"
 block|,
 name|NULL
@@ -17843,7 +17864,7 @@ block|,
 define|#
 directive|define
 name|OPT_MAX
-value|10
+value|11
 comment|/* accept/deny allowed below and not above */
 block|{
 literal|"acfcomp"

@@ -469,6 +469,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"tcpmss.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -7087,6 +7093,17 @@ name|link
 argument_list|,
 operator|&
 name|vjlayer
+argument_list|)
+expr_stmt|;
+name|link_Stack
+argument_list|(
+operator|&
+name|p
+operator|->
+name|link
+argument_list|,
+operator|&
+name|tcpmsslayer
 argument_list|)
 expr_stmt|;
 ifndef|#
