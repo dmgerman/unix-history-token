@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2670,7 +2670,7 @@ operator|.
 name|sb_mb
 expr_stmt|;
 comment|/* 	 * If we have less data than requested, block awaiting more 	 * (subject to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_WAITALL is set, and it is possible to do the entire 	 *	receive operation at once if we block (resid<= hiwat). 	 * If MSG_WAITALL is set but resid is larger than the receive buffer, 	 * we have to do the receive in sections, and thus risk returning 	 * a short count if a timeout or signal occurs after we start. 	 */
-while|while
+if|if
 condition|(
 name|m
 operator|==
@@ -2782,7 +2782,9 @@ if|if
 condition|(
 name|m
 condition|)
-break|break;
+goto|goto
+name|dontblock
+goto|;
 name|error
 operator|=
 name|so
@@ -2822,7 +2824,9 @@ if|if
 condition|(
 name|m
 condition|)
-break|break;
+goto|goto
+name|dontblock
+goto|;
 else|else
 goto|goto
 name|release
@@ -4689,6 +4693,10 @@ name|ENOPROTOOPT
 expr_stmt|;
 break|break;
 block|}
+name|m
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|error
