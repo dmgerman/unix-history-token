@@ -15,6 +15,12 @@ directive|define
 name|_SYS_TIME_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_comment
 comment|/*  * Structure returned by gettimeofday(2) system call,  * and used in other calls.  */
 end_comment
@@ -23,11 +29,11 @@ begin_struct
 struct|struct
 name|timeval
 block|{
-name|long
+name|int32_t
 name|tv_sec
 decl_stmt|;
 comment|/* seconds */
-name|long
+name|int32_t
 name|tv_usec
 decl_stmt|;
 comment|/* and microseconds */
@@ -43,11 +49,11 @@ begin_struct
 struct|struct
 name|timespec
 block|{
-name|long
+name|int32_t
 name|ts_sec
 decl_stmt|;
 comment|/* seconds */
-name|long
+name|int32_t
 name|ts_nsec
 decl_stmt|;
 comment|/* and nanoseconds */
