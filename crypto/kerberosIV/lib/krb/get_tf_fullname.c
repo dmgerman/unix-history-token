@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_tf_fullname.c,v 1.7 1998/06/09 19:25:19 joda Exp $"
+literal|"$Id: get_tf_fullname.c,v 1.8 1999/09/16 20:41:51 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -113,7 +113,7 @@ if|if
 condition|(
 name|name
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
@@ -128,7 +128,7 @@ if|if
 condition|(
 name|instance
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|instance
 argument_list|,
@@ -158,7 +158,7 @@ if|if
 condition|(
 name|realm
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|realm
 argument_list|,

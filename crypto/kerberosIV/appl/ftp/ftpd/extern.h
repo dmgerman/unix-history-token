@@ -200,6 +200,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|eprt
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|epsv
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|fatal
 parameter_list|(
 name|char
@@ -377,7 +397,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|passive
+name|pasv
 parameter_list|(
 name|void
 parameter_list|)
@@ -390,6 +410,7 @@ name|perror_reply
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -479,6 +500,7 @@ begin_function_decl
 name|void
 name|retrieve
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -598,6 +620,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|list_file
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|kauth
 parameter_list|(
 name|char
@@ -680,6 +712,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|builtin_ls
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|do_login
 parameter_list|(
@@ -725,9 +771,11 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sockaddr_in
+name|sockaddr
+modifier|*
 name|ctrl_addr
 decl_stmt|,
+modifier|*
 name|his_addr
 decl_stmt|;
 end_decl_stmt
@@ -743,7 +791,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sockaddr_in
+name|sockaddr
+modifier|*
 name|data_dest
 decl_stmt|;
 end_decl_stmt

@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_ser_wrap.c,v 1.24 1998/06/13 00:45:52 assar Exp $"
+literal|"$Id: kadm_ser_wrap.c,v 1.25 1999/09/16 20:41:41 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -88,7 +88,7 @@ condition|)
 return|return
 name|KADM_NO_HOSTNAME
 return|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|server_parm
 operator|.
@@ -104,7 +104,7 @@ name|sname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|server_parm
 operator|.
@@ -120,7 +120,7 @@ name|sinst
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|server_parm
 operator|.

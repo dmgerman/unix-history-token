@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: login_fbtab.c,v 1.13 1999/01/14 00:37:59 assar Exp $"
+literal|"$Id: login_fbtab.c,v 1.14 1999/09/16 20:37:24 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -488,7 +488,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -638,7 +638,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|buf
 operator|+

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: prot.h,v 1.8 1997/12/05 00:18:02 joda Exp $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * Include file with authentication protocol information.  */
+comment|/*  * $Id: prot.h,v 1.9 1999/11/30 18:57:46 bg Exp $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * Include file with authentication protocol information.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|PROT_DEFS
 end_define
+
+begin_include
+include|#
+directive|include
+file|<krb.h>
+end_include
 
 begin_define
 define|#

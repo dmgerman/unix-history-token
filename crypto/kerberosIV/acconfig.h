@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.103.2.1 1999/07/22 03:12:42 assar Exp $ */
+comment|/* $Id: acconfig.h,v 1.105 1999/12/02 13:09:41 joda Exp $ */
 end_comment
 
 begin_expr_stmt
@@ -52,6 +52,10 @@ value|1
 define|#
 directive|define
 name|HAVE_KRB_DISABLE_DEBUG
+value|1
+define|#
+directive|define
+name|HAVE_KRB_GET_OUR_IP_FOR_REALM
 value|1
 define|#
 directive|define

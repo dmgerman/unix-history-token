@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rshd.c,v 1.58 1999/06/17 18:49:43 assar Exp $"
+literal|"$Id: rshd.c,v 1.60 1999/11/13 06:13:53 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -268,7 +268,8 @@ name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -2966,7 +2967,7 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|homedir
 argument_list|,
@@ -2997,7 +2998,7 @@ argument_list|,
 name|_PATH_DEFPATH
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|shell
 argument_list|,
@@ -3011,7 +3012,7 @@ name|shell
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|username
 argument_list|,

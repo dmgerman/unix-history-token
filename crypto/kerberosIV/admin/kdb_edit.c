@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kdb_edit.c,v 1.27 1998/11/22 09:26:31 assar Exp $"
+literal|"$Id: kdb_edit.c,v 1.28 1999/09/16 20:37:21 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -423,7 +423,7 @@ name|creating
 operator|=
 literal|1
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal_data
 index|[
@@ -437,7 +437,7 @@ argument_list|,
 name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal_data
 index|[

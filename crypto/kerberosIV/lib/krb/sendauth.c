@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sendauth.c,v 1.17 1998/06/09 19:25:26 joda Exp $"
+literal|"$Id: sendauth.c,v 1.18 1999/09/16 20:41:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -314,7 +314,7 @@ argument_list|(
 name|instance
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|inst
 argument_list|,

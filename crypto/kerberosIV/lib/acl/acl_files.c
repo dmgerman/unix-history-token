@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: acl_files.c,v 1.13 1999/03/13 21:21:32 assar Exp $"
+literal|"$Id: acl_files.c,v 1.14 1999/09/16 20:41:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1811,7 +1811,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Set up the acl */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|acl_cache
 index|[

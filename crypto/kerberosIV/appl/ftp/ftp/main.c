@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.25 1999/05/08 02:22:09 assar Exp $"
+literal|"$Id: main.c,v 1.27 1999/11/13 06:18:02 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -119,7 +119,8 @@ literal|"dginptv"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -261,7 +262,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|homedir
 argument_list|,
@@ -808,7 +809,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|line
 argument_list|,

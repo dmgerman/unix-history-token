@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sample_server.c,v 1.12 1999/03/10 18:33:53 joda Exp $"
+literal|"$Id: sample_server.c,v 1.14 1999/11/13 06:28:49 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -152,7 +152,7 @@ argument_list|,
 name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|service
 argument_list|,
@@ -184,7 +184,8 @@ literal|"s:t:i"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -194,7 +195,7 @@ block|{
 case|case
 literal|'s'
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|service
 argument_list|,
@@ -210,7 +211,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|srvtab
 argument_list|,
@@ -455,7 +456,7 @@ argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|lname
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_in_tkt.c,v 1.23 1999/07/01 09:36:22 assar Exp $"
+literal|"$Id: get_in_tkt.c,v 1.24 1999/11/25 05:22:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -550,6 +550,32 @@ argument_list|,
 name|instance
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|code
+operator|==
+name|KSUCCESS
+condition|)
+block|{
+if|if
+condition|(
+name|krb_get_config_bool
+argument_list|(
+literal|"nat_in_use"
+argument_list|)
+condition|)
+name|krb_add_our_ip_for_realm
+argument_list|(
+name|user
+argument_list|,
+name|instance
+argument_list|,
+name|realm
+argument_list|,
+name|password
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

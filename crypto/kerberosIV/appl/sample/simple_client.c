@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: simple_client.c,v 1.13 1998/06/09 19:24:39 joda Exp $"
+literal|"$Id: simple_client.c,v 1.15 1999/11/13 06:29:01 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -865,7 +865,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|service
 argument_list|,
@@ -892,7 +892,8 @@ literal|"s:p:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -902,7 +903,7 @@ block|{
 case|case
 literal|'s'
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|service
 argument_list|,

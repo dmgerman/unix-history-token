@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadmin.c,v 1.59.2.1 1999/09/02 08:51:59 joda Exp $"
+literal|"$Id: kadmin.c,v 1.62 1999/11/02 17:02:14 bg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2103,7 +2103,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|pr
 operator|.
@@ -2172,7 +2172,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|default_realm
 argument_list|,
@@ -2193,7 +2193,7 @@ condition|(
 name|username
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|pr
 operator|.
@@ -2209,7 +2209,7 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|pr
 operator|.
@@ -2230,7 +2230,7 @@ if|if
 condition|(
 name|realm
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|default_realm
 argument_list|,
@@ -2242,7 +2242,7 @@ name|default_realm
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|krbrlm
 argument_list|,
@@ -2265,7 +2265,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|pr
 operator|.
@@ -2357,8 +2357,9 @@ argument_list|(
 name|tktstring
 argument_list|)
 argument_list|,
+literal|"%s_adm_%d"
+argument_list|,
 name|TKT_ROOT
-literal|"_adm_%d"
 argument_list|,
 operator|(
 name|int
@@ -2601,7 +2602,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|realm
 argument_list|,
@@ -2623,7 +2624,7 @@ name|krbrlm
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|krbrlm
 argument_list|,

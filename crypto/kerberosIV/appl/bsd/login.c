@@ -50,7 +50,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: login.c,v 1.120.2.2 1999/09/02 08:55:26 joda Exp $"
+literal|"$Id: login.c,v 1.125 1999/11/30 19:24:01 bg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -997,7 +997,8 @@ literal|"a:d:fh:pr:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -1105,7 +1106,7 @@ name|hflag
 operator|=
 literal|1
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|full_hostname
 argument_list|,
@@ -1218,7 +1219,7 @@ name|rflag
 operator|=
 literal|1
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|full_hostname
 argument_list|,
@@ -1693,7 +1694,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|tbuf
 argument_list|,
@@ -2907,7 +2908,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|term
 argument_list|,
@@ -4267,11 +4268,6 @@ operator|||
 name|defined
 argument_list|(
 name|HAVE_LOGIN_H
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SYSV_SHADOW
 argument_list|)
 name|struct
 name|lastlog

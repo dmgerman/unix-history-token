@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: iruserok.c,v 1.21 1999/03/11 14:04:15 joda Exp $"
+literal|"$Id: iruserok.c,v 1.22 1999/09/16 20:06:06 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -440,7 +440,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|hname
 argument_list|,

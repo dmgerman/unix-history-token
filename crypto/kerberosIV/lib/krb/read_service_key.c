@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: read_service_key.c,v 1.11 1999/03/10 18:34:34 joda Exp $"
+literal|"$Id: read_service_key.c,v 1.12 1999/09/16 20:41:54 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -247,7 +247,7 @@ condition|(
 name|wcard
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|instance
 argument_list|,
