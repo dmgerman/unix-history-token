@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	6.4	84/12/21	*/
+comment|/*	subr_prf.c	6.5	84/12/27	*/
 end_comment
 
 begin_include
@@ -131,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Scaled down version of C Library printf.  * Used to print diagnostic information directly on console tty.  * Since it is not interrupt driven, all system activities are  * suspended.  Printf should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Usage is:  *	printf("reg=%b\n", regval, "<base><arg>*");  * Where<base> is the output base expressed as a control character,  * e.g. \10 gives octal; \20 gives hex.  Each arg is a sequence of  * characters, the first of which gives the bit number to be inspected  * (origin 1), and the next characters (up to a control character, i.e.  * a character<= 32), give the name of the register.  Thus  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  * would produce output:  *	reg=2<BITTWO,BITONE>  */
+comment|/*  * Scaled down version of C Library printf.  * Used to print diagnostic information directly on console tty.  * Since it is not interrupt driven, all system activities are  * suspended.  Printf should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Usage is:  *	printf("reg=%b\n", regval, "<base><arg>*");  * Where<base> is the output base expressed as a control character,  * e.g. \10 gives octal; \20 gives hex.  Each arg is a sequence of  * characters, the first of which gives the bit number to be inspected  * (origin 1), and the next characters (up to a control character, i.e.  * a character<= 32), give the name of the register.  Thus  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  * would produce output:  *	reg=3<BITTWO,BITONE>  */
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Uprintf prints to the current user's terminal,  * guarantees not to sleep (so can be called by interrupt routines)  * and does no watermark checking - (so no verbose messages).  */
+comment|/*  * Uprintf prints to the current user's terminal  * and does no watermark checking - (so no verbose messages).  */
 end_comment
 
 begin_comment
@@ -290,7 +290,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Log writes to the log buffer,  * guarantees not to sleep (so can be called by interrupt routines)  * and does no watermark checking - (so no verbose messages).  */
+comment|/*  * Log writes to the log buffer,  * and guarantees not to sleep (so can be called by interrupt routines).  */
 end_comment
 
 begin_comment
@@ -649,15 +649,6 @@ condition|(
 name|b
 condition|)
 block|{
-name|putchar
-argument_list|(
-literal|'<'
-argument_list|,
-name|flags
-argument_list|,
-name|ttyp
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|i
@@ -682,13 +673,13 @@ operator|)
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|any
-condition|)
 name|putchar
 argument_list|(
+name|any
+condition|?
 literal|','
+else|:
+literal|'<'
 argument_list|,
 name|flags
 argument_list|,
@@ -1100,7 +1091,7 @@ name|c
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 specifier|register
 name|int
@@ -1112,12 +1103,17 @@ begin_decl_stmt
 name|struct
 name|tty
 modifier|*
-name|ttyp
+name|tp
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|struct
+name|tty
+name|cons
+decl_stmt|;
 if|if
 condition|(
 name|flags
@@ -1125,14 +1121,30 @@ operator|&
 name|TOTTY
 condition|)
 block|{
-specifier|register
-name|struct
-name|tty
-modifier|*
+if|if
+condition|(
 name|tp
-init|=
-name|ttyp
-decl_stmt|;
+operator|==
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+name|NULL
+operator|&&
+operator|(
+name|flags
+operator|&
+name|TOCONS
+operator|)
+operator|==
+literal|0
+condition|)
+name|tp
+operator|=
+operator|&
+name|cons
+expr_stmt|;
 if|if
 condition|(
 name|tp
