@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	font.c	4.1	83/02/11	*/
+comment|/*	font.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -85,6 +85,9 @@ argument_list|,
 name|ft
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 if|if
 condition|(
 name|dbg
@@ -98,6 +101,23 @@ argument_list|,
 name|ft
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+if|if
+condition|(
+name|dbg
+condition|)
+name|printf
+argument_list|(
+literal|".\tsetfont %c\n"
+argument_list|,
+name|ft
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 block|}
 end_block
 

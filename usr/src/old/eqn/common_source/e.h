@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	e.h	4.1	83/02/11	*/
+comment|/*	e.h	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -23,6 +23,12 @@ name|ROM
 value|'1'
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEQN
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -37,6 +43,38 @@ name|BLD
 value|'3'
 end_define
 
+begin_else
+else|#
+directive|else
+else|NEQN
+end_else
+
+begin_define
+define|#
+directive|define
+name|ITAL
+value|'1'
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLD
+value|'1'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|NEQN
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEQN
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -46,6 +84,28 @@ name|n
 parameter_list|)
 value|((((n)+1)/3)*3)
 end_define
+
+begin_else
+else|#
+directive|else
+else|NEQN
+end_else
+
+begin_define
+define|#
+directive|define
+name|VERT
+parameter_list|(
+name|n
+parameter_list|)
+value|(20 * (n))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|NEQN
+end_endif
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	text.c	4.1	83/02/11	*/
+comment|/*	text.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -111,6 +111,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 name|eht
 index|[
 name|yyval
@@ -134,6 +137,23 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* ht in machine units */
+else|#
+directive|else
+else|NEQN
+name|eht
+index|[
+name|yyval
+index|]
+operator|=
+name|VERT
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* 2 half-spaces */
+endif|#
+directive|endif
+endif|NEQN
 name|lfont
 index|[
 name|yyval

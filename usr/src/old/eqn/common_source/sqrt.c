@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sqrt.c	4.1	83/02/11	*/
+comment|/*	sqrt.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -24,6 +24,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEQN
 name|int
 name|nps
 decl_stmt|;
@@ -49,10 +52,16 @@ operator|/
 literal|6
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 name|yyval
 operator|=
 name|p2
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 name|eht
 index|[
 name|yyval
@@ -110,6 +119,9 @@ argument_list|,
 name|yyval
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 name|nrwid
 argument_list|(
 name|p2
@@ -119,6 +131,9 @@ argument_list|,
 name|p2
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\v'%du'\\s%d\\v'-.2m'\\(sr\\l'\\n(%du\\(rn'\\v'.2m'\\s%d"
@@ -159,6 +174,84 @@ index|]
 operator|=
 name|ROM
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|printf
+argument_list|(
+literal|".ds %d \\v'%du'\\e\\L'%du'\\l'\\n(%du'"
+argument_list|,
+name|p2
+argument_list|,
+name|ebase
+index|[
+name|p2
+index|]
+argument_list|,
+operator|-
+name|eht
+index|[
+name|p2
+index|]
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\\v'%du'\\h'-\\n(%du'\\*(%d\n"
+argument_list|,
+name|eht
+index|[
+name|p2
+index|]
+operator|-
+name|ebase
+index|[
+name|p2
+index|]
+argument_list|,
+name|p2
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|eht
+index|[
+name|p2
+index|]
+operator|+=
+name|VERT
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dbg
+condition|)
+name|printf
+argument_list|(
+literal|".\tsqrt: S%d<- S%d;b=%d, h=%d\n"
+argument_list|,
+name|p2
+argument_list|,
+name|p2
+argument_list|,
+name|ebase
+index|[
+name|p2
+index|]
+argument_list|,
+name|eht
+index|[
+name|p2
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 block|}
 end_block
 

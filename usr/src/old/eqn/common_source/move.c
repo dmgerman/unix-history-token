@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	move.c	4.1	83/02/11	*/
+comment|/*	move.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -45,6 +45,9 @@ name|yyval
 operator|=
 name|p
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 name|a
 operator|=
 name|VERT
@@ -63,6 +66,26 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|a
+operator|=
+name|VERT
+argument_list|(
+operator|(
+name|amt
+operator|+
+literal|49
+operator|)
+operator|/
+literal|50
+argument_list|)
+expr_stmt|;
+comment|/* nearest number of half-lines */
+endif|#
+directive|endif
+endif|NEQN
 name|printf
 argument_list|(
 literal|".ds %d "

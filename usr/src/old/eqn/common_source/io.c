@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	io.c	4.1	83/02/11	*/
+comment|/*	io.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -645,6 +645,9 @@ name|p1
 argument_list|)
 expr_stmt|;
 comment|/* suppposed to leave room for a subscript or superscript */
+ifndef|#
+directive|ifndef
+name|NEQN
 name|before
 operator|=
 name|eht
@@ -670,6 +673,30 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|before
+operator|=
+name|eht
+index|[
+name|p1
+index|]
+operator|-
+name|ebase
+index|[
+name|p1
+index|]
+operator|-
+name|VERT
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+comment|/* 3 = 1.5 lines */
+endif|#
+directive|endif
+endif|NEQN
 if|if
 condition|(
 name|before
@@ -705,6 +732,9 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 name|after
 operator|=
 name|ebase
@@ -725,6 +755,24 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|after
+operator|=
+name|ebase
+index|[
+name|p1
+index|]
+operator|-
+name|VERT
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 if|if
 condition|(
 name|after

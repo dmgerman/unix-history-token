@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	integral.c	4.1	83/02/11	*/
+comment|/*	integral.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -28,6 +28,9 @@ end_macro
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEQN
 if|if
 condition|(
 name|p1
@@ -58,6 +61,8 @@ argument_list|,
 name|p2
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|p1
@@ -160,6 +165,9 @@ name|f
 operator|=
 literal|"\\(is"
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\s%d\\v'.1m'\\s+4%s\\s-4\\v'-.1m'\\s%d\n"
@@ -215,6 +223,38 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|printf
+argument_list|(
+literal|".ds %d %s\n"
+argument_list|,
+name|yyval
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+name|eht
+index|[
+name|yyval
+index|]
+operator|=
+name|VERT
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|ebase
+index|[
+name|yyval
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 name|lfont
 index|[
 name|yyval

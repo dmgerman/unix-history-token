@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	funny.c	4.1	83/02/11	*/
+comment|/*	funny.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -88,6 +88,9 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\s%d\\v'.3m'\\s+5%s\\s-5\\v'-.3m'\\s%d\n"
@@ -145,6 +148,38 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|printf
+argument_list|(
+literal|".ds %d %s\n"
+argument_list|,
+name|yyval
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+name|eht
+index|[
+name|yyval
+index|]
+operator|=
+name|VERT
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|ebase
+index|[
+name|yyval
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 if|if
 condition|(
 name|dbg

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pile.c	4.1	83/02/11	*/
+comment|/*	pile.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -56,6 +56,9 @@ operator|=
 name|oalloc
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 name|gap
 operator|=
 name|VERT
@@ -72,6 +75,19 @@ literal|10
 argument_list|)
 expr_stmt|;
 comment|/* 4/10 m between blocks */
+else|#
+directive|else
+else|NEQN
+name|gap
+operator|=
+name|VERT
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 if|if
 condition|(
 name|type
@@ -199,6 +215,9 @@ index|[
 name|mid
 index|]
 index|]
+ifndef|#
+directive|ifndef
+name|NEQN
 else|:
 name|b
 operator|-
@@ -217,6 +236,22 @@ argument_list|)
 operator|-
 name|gap
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+block|:
+name|b
+operator|-
+name|VERT
+argument_list|(
+literal|1
+argument_list|)
+operator|-
+name|gap
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 if|if
 condition|(
 name|dbg

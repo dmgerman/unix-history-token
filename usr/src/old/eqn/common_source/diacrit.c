@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	diacrit.c	4.1	83/02/11	*/
+comment|/*	diacrit.c	4.2	83/02/12	*/
 end_comment
 
 begin_include
@@ -38,9 +38,16 @@ name|int
 name|c
 decl_stmt|,
 name|t
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
+name|int
 name|effps
 decl_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 name|c
 operator|=
 name|oalloc
@@ -51,6 +58,46 @@ operator|=
 name|oalloc
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEQN
+name|nrwid
+argument_list|(
+name|p1
+argument_list|,
+name|ps
+argument_list|,
+name|p1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|".nr 10 %du\n"
+argument_list|,
+name|max
+argument_list|(
+name|eht
+index|[
+name|p1
+index|]
+operator|-
+name|ebase
+index|[
+name|p1
+index|]
+operator|-
+name|VERT
+argument_list|(
+literal|2
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|NEQN
 name|effps
 operator|=
 name|EFFPS
@@ -121,6 +168,9 @@ argument_list|,
 name|effps
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 switch|switch
 condition|(
 name|type
@@ -129,6 +179,10 @@ block|{
 case|case
 name|VEC
 case|:
+comment|/* vec */
+ifndef|#
+directive|ifndef
+name|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\v'-.4m'\\s%d\\(->\\s0\\v'.4m'\n"
@@ -146,9 +200,26 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+endif|NEQN
 case|case
 name|DYAD
 case|:
+comment|/* dyad */
+ifdef|#
+directive|ifdef
+name|NEQN
+name|printf
+argument_list|(
+literal|".ds %d \\v'-1'_\\v'1'\n"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\v'-.4m'\\s%d\\z\\(<-\\(->\\s0\\v'.4m'\n"
@@ -165,6 +236,9 @@ literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 break|break;
 case|case
 name|HAT
@@ -191,6 +265,9 @@ break|break;
 case|case
 name|DOT
 case|:
+ifndef|#
+directive|ifndef
+name|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\s%d\\v'-.67m'.\\v'.67m'\\s0\n"
@@ -200,10 +277,26 @@ argument_list|,
 name|effps
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|printf
+argument_list|(
+literal|".ds %d \\v'-1'.\\v'1'\n"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 break|break;
 case|case
 name|DOTDOT
 case|:
+ifndef|#
+directive|ifndef
+name|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\s%d\\v'-.67m'..\\v'.67m\\s0'\n"
@@ -213,10 +306,26 @@ argument_list|,
 name|effps
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|printf
+argument_list|(
+literal|".ds %d \\v'-1'..\\v'1'\n"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 break|break;
 case|case
 name|BAR
 case|:
+ifndef|#
+directive|ifndef
+name|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\s%d\\v'.18m'\\h'.05m'\\l'\\n(%du-.1m\\(rn'\\h'.05m'\\v'-.18m'\\s0\n"
@@ -228,10 +337,28 @@ argument_list|,
 name|p1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|printf
+argument_list|(
+literal|".ds %d \\v'-1'\\l'\\n(%du'\\v'1'\n"
+argument_list|,
+name|c
+argument_list|,
+name|p1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 break|break;
 case|case
 name|UNDER
 case|:
+ifndef|#
+directive|ifndef
+name|NEQN
 name|printf
 argument_list|(
 literal|".ds %d \\l'\\n(%du\\(ul'\n"
@@ -258,6 +385,21 @@ name|p1
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+name|printf
+argument_list|(
+literal|".ds %d \\l'\\n(%du'\n"
+argument_list|,
+name|c
+argument_list|,
+name|p1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 break|break;
 block|}
 name|nrwid
@@ -269,6 +411,9 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEQN
 if|if
 condition|(
 name|lfont
@@ -312,6 +457,37 @@ name|t
 argument_list|)
 expr_stmt|;
 comment|/* BUG - should go to right end of widest */
+else|#
+directive|else
+else|NEQN
+name|printf
+argument_list|(
+literal|".as %d \\h'-\\n(%du-\\n(%du/2u'\\v'0-\\n(10u'\\*(%d"
+argument_list|,
+name|p1
+argument_list|,
+name|p1
+argument_list|,
+name|c
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\\v'\\n(10u'\\h'-\\n(%du+\\n(%du/2u'\n"
+argument_list|,
+name|c
+argument_list|,
+name|p1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
+ifndef|#
+directive|ifndef
+name|NEQN
 if|if
 condition|(
 name|type
@@ -370,6 +546,51 @@ name|p1
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NEQN
+if|if
+condition|(
+name|type
+operator|!=
+name|UNDER
+condition|)
+name|eht
+index|[
+name|p1
+index|]
+operator|+=
+name|VERT
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dbg
+condition|)
+name|printf
+argument_list|(
+literal|".\tdiacrit: %c over S%d, h=%d, b=%d\n"
+argument_list|,
+name|type
+argument_list|,
+name|p1
+argument_list|,
+name|eht
+index|[
+name|p1
+index|]
+argument_list|,
+name|ebase
+index|[
+name|p1
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NEQN
 name|ofree
 argument_list|(
 name|c
