@@ -1035,6 +1035,15 @@ condition|(
 name|request
 operator|->
 name|bio
+operator|&&
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_TIMEOUT
+operator|)
 condition|)
 name|bio_taskqueue
 argument_list|(
@@ -1069,7 +1078,7 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_thread
 argument_list|,
 operator|&
 name|request
