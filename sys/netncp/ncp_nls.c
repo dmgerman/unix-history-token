@@ -2229,7 +2229,7 @@ name|name
 operator|=
 name|ncp_defnls
 operator|.
-name|toupper
+name|to_upper
 index|[
 operator|(
 name|u_char
@@ -2265,7 +2265,7 @@ name|name
 operator|=
 name|ncp_defnls
 operator|.
-name|tolower
+name|to_lower
 index|[
 operator|(
 name|u_char
@@ -2340,11 +2340,11 @@ operator|)
 condition|?
 name|nt
 operator|->
-name|toupper
+name|to_upper
 else|:
 name|nt
 operator|->
-name|tolower
+name|to_lower
 expr_stmt|;
 if|if
 condition|(
@@ -2592,7 +2592,7 @@ name|c
 operator|=
 name|nt
 operator|->
-name|toupper
+name|to_upper
 index|[
 operator|(
 name|u_char
@@ -2777,11 +2777,11 @@ operator|)
 condition|?
 name|nt
 operator|->
-name|tolower
+name|to_lower
 else|:
 name|nt
 operator|->
-name|toupper
+name|to_upper
 expr_stmt|;
 while|while
 condition|(

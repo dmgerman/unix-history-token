@@ -91,12 +91,12 @@ name|ncp_nlstables
 block|{
 name|u_char
 modifier|*
-name|tolower
+name|to_lower
 decl_stmt|;
 comment|/* local charset to lower case */
 name|u_char
 modifier|*
-name|toupper
+name|to_upper
 decl_stmt|;
 comment|/* local charset to upper case */
 name|u_char
