@@ -1062,7 +1062,7 @@ begin_define
 define|#
 directive|define
 name|DEFTAPE
-value|"/dev/nrsa0"
+value|"/dev/nsa0"
 end_define
 
 begin_endif
