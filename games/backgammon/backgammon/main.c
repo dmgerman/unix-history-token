@@ -106,6 +106,7 @@ comment|/* maximum number of users */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|instr
@@ -118,6 +119,7 @@ comment|/* text of instructions */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|message
