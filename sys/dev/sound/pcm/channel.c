@@ -4658,11 +4658,9 @@ name|devinfo
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"c->init() failed"
-argument_list|)
-expr_stmt|;
+return|return
+literal|1
+return|;
 name|chn_setdir
 argument_list|(
 name|c
