@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.17	81/05/09	*/
+comment|/*	ht.c	4.18	81/05/10	*/
 end_comment
 
 begin_include
@@ -635,9 +635,9 @@ condition|)
 block|{
 name|uprintf
 argument_list|(
-literal|"ht%d: not online\n"
+literal|"tu%d: not online\n"
 argument_list|,
-name|htunit
+name|tuunit
 argument_list|)
 expr_stmt|;
 name|u
@@ -667,9 +667,9 @@ condition|)
 block|{
 name|uprintf
 argument_list|(
-literal|"ht%d: no write ring\n"
+literal|"tu%d: no write ring\n"
 argument_list|,
-name|htunit
+name|tuunit
 argument_list|)
 expr_stmt|;
 name|u
@@ -707,9 +707,9 @@ condition|)
 block|{
 name|uprintf
 argument_list|(
-literal|"ht%d: can't change density in mid-tape\n"
+literal|"tu%d: can't change density in mid-tape\n"
 argument_list|,
-name|htunit
+name|tuunit
 argument_list|)
 expr_stmt|;
 name|u
