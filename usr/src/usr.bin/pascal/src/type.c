@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.4 %G%"
+literal|"@(#)type.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,6 +826,9 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC
 if|if
 condition|(
 name|w
@@ -858,6 +861,8 @@ operator|=
 name|NIL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|np
@@ -1570,6 +1575,9 @@ name|NIL
 expr_stmt|;
 continue|continue;
 block|}
+ifndef|#
+directive|ifndef
+name|PC
 if|if
 condition|(
 name|tp
@@ -1610,6 +1618,8 @@ endif|#
 directive|endif
 continue|continue;
 block|}
+endif|#
+directive|endif
 name|tp
 operator|=
 name|nlcopy
