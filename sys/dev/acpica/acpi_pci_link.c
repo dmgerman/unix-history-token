@@ -1007,18 +1007,11 @@ name|NumberOfInterrupts
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"acpi link get: empty IRQ resource\n"
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NULL_ENTRY
 argument_list|)
 expr_stmt|;
-block|}
 name|count
 operator|=
 literal|0
@@ -1669,7 +1662,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"_PRS nuffer is empty - %s\n"
+literal|"_PRS buffer is empty - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
