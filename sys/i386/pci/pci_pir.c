@@ -352,6 +352,9 @@ name|struct
 name|bios_regs
 name|args
 decl_stmt|;
+name|u_int
+name|mask
+decl_stmt|;
 switch|switch
 condition|(
 name|bytes
@@ -366,6 +369,10 @@ name|eax
 operator|=
 name|PCIBIOS_READ_CONFIG_BYTE
 expr_stmt|;
+name|mask
+operator|=
+literal|0xff
+expr_stmt|;
 break|break;
 case|case
 literal|2
@@ -376,6 +383,10 @@ name|eax
 operator|=
 name|PCIBIOS_READ_CONFIG_WORD
 expr_stmt|;
+name|mask
+operator|=
+literal|0xffff
+expr_stmt|;
 break|break;
 case|case
 literal|4
@@ -385,6 +396,10 @@ operator|.
 name|eax
 operator|=
 name|PCIBIOS_READ_CONFIG_DWORD
+expr_stmt|;
+name|mask
+operator|=
+literal|0xffffffff
 expr_stmt|;
 break|break;
 default|default:
@@ -450,6 +465,8 @@ operator|(
 name|args
 operator|.
 name|ecx
+operator|&
+name|mask
 operator|)
 return|;
 block|}
