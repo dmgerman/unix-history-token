@@ -2171,7 +2171,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bus_dmamap_load: Too many segs! buf_len = 0x%x\n"
+literal|"bus_dmamap_load: Too many segs! buf_len = 0x%lx\n"
 argument_list|,
 name|buflen
 argument_list|)
