@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.11 (Berkeley) %G%"
+literal|"@(#)fts.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2140,9 +2140,13 @@ name|descend
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * Return all the information possible; fts_read doing a 		 * relative walk of the tree will have to descend, so it 		 * can't succeed.  Fts_children or absolute walks of the 		 * tree can succeed, but no stat information will be available. 		 */
+comment|/* 		 * Return all the information possible; an fts_read doing a 		 * relative walk of the tree will have to descend, so it can't 		 * succeed.  Fts_children or absolute walks of the tree can 		 * succeed, but no stat information will be available.  Reset 		 * errno as necessary. 		 */
 else|else
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|type
@@ -2163,10 +2167,6 @@ operator|->
 name|fts_info
 operator|=
 name|FTS_DNX
-expr_stmt|;
-name|errno
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(
