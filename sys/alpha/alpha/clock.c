@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: clock.c,v 1.3 1998/07/22 08:16:34 dfr Exp $ */
+comment|/* $Id: clock.c,v 1.4 1998/10/06 08:40:18 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -218,9 +218,6 @@ specifier|static
 name|struct
 name|timecounter
 name|alpha_timecounter
-index|[
-literal|3
-index|]
 init|=
 block|{
 name|alpha_get_timecount
@@ -253,6 +250,7 @@ name|alpha_timecounter
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
 name|alpha_timecounter
 argument_list|,
 sizeof|sizeof
@@ -509,9 +507,6 @@ operator|/
 name|hz
 expr_stmt|;
 name|alpha_timecounter
-index|[
-literal|0
-index|]
 operator|.
 name|tc_frequency
 operator|=
@@ -519,6 +514,7 @@ name|cycles_per_sec
 expr_stmt|;
 name|init_timecounter
 argument_list|(
+operator|&
 name|alpha_timecounter
 argument_list|)
 expr_stmt|;
