@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * $Header: /home/ncvs/src/usr.sbin/xntpd/parse/clk_trimtsip.c,v 1.1.1.1 1994/09/29 23:01:31 wollman Exp $  *  * Trimble TSIP support - CURRENTLY VERY MUCH UNDER CONSTRUCTION  */
+comment|/*  * $Header: /home/ncvs/src/usr.sbin/xntpd/parse/clk_trimtsip.c,v 1.2 1995/05/30 03:54:13 rgrimes Exp $  *  * Trimble TSIP support - CURRENTLY VERY MUCH UNDER CONSTRUCTION  */
 end_comment
 
 begin_include
@@ -966,7 +966,7 @@ literal|0x45
 case|:
 name|printf
 argument_list|(
-literal|"sv6+ software: %d.%d (19%d/%d/%d)\n"
+literal|"sv6+ software: %d.%d (%d/%d/%d)\n"
 argument_list|,
 name|mb
 argument_list|(
@@ -982,12 +982,16 @@ argument_list|)
 operator|&
 literal|0xff
 argument_list|,
+operator|(
 name|mb
 argument_list|(
 literal|4
 argument_list|)
 operator|&
 literal|0xff
+operator|)
+operator|+
+literal|1900
 argument_list|,
 name|mb
 argument_list|(
@@ -2103,7 +2107,7 @@ comment|/* defined(PARSE)&& defined(CLOCK_TRIMTSIP) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * $Log: clk_trimtsip.c,v $  * Revision 1.1.1.1  1994/09/29  23:01:31  wollman  * xntp 3.4e from Dave Mills @ UDel  *  */
+comment|/*  * History:  *  * $Log: clk_trimtsip.c,v $  * Revision 1.2  1995/05/30 03:54:13  rgrimes  * Remove trailing whitespace.  *  * Revision 1.1.1.1  1994/09/29  23:01:31  wollman  * xntp 3.4e from Dave Mills @ UDel  *  */
 end_comment
 
 end_unit
