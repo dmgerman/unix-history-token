@@ -2948,9 +2948,15 @@ name|devid
 operator|==
 name|ES1371_PCI_ID3
 operator|&&
+operator|(
 name|revid
 operator|==
 literal|2
+operator|||
+name|revid
+operator|==
+literal|3
+operator|)
 operator|)
 condition|)
 block|{
