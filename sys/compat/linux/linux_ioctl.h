@@ -648,6 +648,35 @@ value|LINUX_SIOCDELMULTI
 end_define
 
 begin_comment
+comment|/*  * Device private ioctl calls   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SIOCDEVPRIVATE
+value|0x89F0
+end_define
+
+begin_comment
+comment|/* to 89FF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_PRIVATE_MIN
+value|LINUX_SIOCDEVPRIVATE
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IOCTL_PRIVATE_MAX
+value|LINUX_SIOCDEVPRIVATE+0xf
+end_define
+
+begin_comment
 comment|/*  * sound  */
 end_comment
 
@@ -2482,6 +2511,26 @@ directive|define
 name|LINUX_ASYNC_FLAGS
 value|0x0FFF
 end_define
+
+begin_comment
+comment|/*  * This doesn't really belong here, but I can't think of a better  * place to put it.  */
+end_comment
+
+begin_function_decl
+name|int
+name|linux_ifname
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
