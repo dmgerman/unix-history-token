@@ -79,6 +79,9 @@ modifier|*
 name|chip
 decl_stmt|;
 name|int
+name|channels
+decl_stmt|;
+name|int
 function_decl|(
 modifier|*
 name|chipinit
@@ -135,7 +138,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|locking
@@ -148,12 +151,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|int
-name|locked_ch
-decl_stmt|;
-name|int
-name|channels
-decl_stmt|;
 struct|struct
 block|{
 name|void

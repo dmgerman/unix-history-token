@@ -332,7 +332,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ata_pccard_locknoop
 parameter_list|(
 name|struct
@@ -343,7 +343,11 @@ parameter_list|,
 name|int
 name|type
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|1
+return|;
+block|}
 end_function
 
 begin_function

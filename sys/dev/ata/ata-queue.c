@@ -857,6 +857,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
 name|ch
 operator|->
 name|locking
@@ -865,7 +867,12 @@ name|ch
 argument_list|,
 name|ATA_LF_LOCK
 argument_list|)
-expr_stmt|;
+operator|==
+name|ch
+operator|->
+name|unit
+condition|)
+block|{
 name|mtx_lock
 argument_list|(
 operator|&
@@ -902,6 +909,7 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1022,6 +1030,11 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
+name|ata_finish
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
 name|ch
 operator|->
 name|locking
@@ -1029,11 +1042,6 @@ argument_list|(
 name|ch
 argument_list|,
 name|ATA_LF_UNLOCK
-argument_list|)
-expr_stmt|;
-name|ata_finish
-argument_list|(
-name|request
 argument_list|)
 expr_stmt|;
 block|}
@@ -2154,13 +2162,6 @@ operator|->
 name|running
 operator|=
 name|NULL
-expr_stmt|;
-comment|/* debug on */
-name|request
-operator|->
-name|flags
-operator||=
-name|ATA_R_DEBUG
 expr_stmt|;
 name|ATA_DEBUG_RQ
 argument_list|(

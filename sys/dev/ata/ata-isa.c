@@ -175,7 +175,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ata_isa_locknoop
 parameter_list|(
 name|struct
@@ -186,7 +186,13 @@ parameter_list|,
 name|int
 name|type
 parameter_list|)
-block|{ }
+block|{
+return|return
+name|ch
+operator|->
+name|unit
+return|;
+block|}
 end_function
 
 begin_function
