@@ -707,6 +707,25 @@ name|fifo_pull
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* This should be eliminated */
+comment|/* handle 8-bit input */
+if|if
+condition|(
+name|ch
+operator|&
+literal|0x80
+condition|)
+if|if
+condition|(
+operator|!
+name|win
+operator|->
+name|_use_meta
+condition|)
+name|ch
+operator|&=
+literal|0x7f
+expr_stmt|;
 comment|/* there must be a simpler way of doing this */
 if|if
 condition|(

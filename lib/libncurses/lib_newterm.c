@@ -187,6 +187,11 @@ name|use_it
 init|=
 name|_ncurses_copyright
 decl_stmt|;
+name|use_it
+operator|=
+name|use_it
+expr_stmt|;
+comment|/* shut up compiler */
 ifdef|#
 directive|ifdef
 name|TRACE
