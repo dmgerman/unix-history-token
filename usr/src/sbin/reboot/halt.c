@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)halt.c	4.5 (Berkeley) %G%"
+literal|"@(#)halt.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,8 @@ name|i
 expr_stmt|;
 specifier|register
 name|qflag
+operator|=
+literal|0
 expr_stmt|;
 name|howto
 operator|=
