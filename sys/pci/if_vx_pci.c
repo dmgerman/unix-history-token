@@ -110,12 +110,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -421,10 +415,6 @@ name|pci_map_int
 argument_list|(
 name|config_id
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|vxintr
 argument_list|,
 operator|(

@@ -110,12 +110,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/eisa/eisaconf.h>
 end_include
 
@@ -571,10 +565,6 @@ name|e_dev
 argument_list|,
 name|irq
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|vxintr
 argument_list|,
 operator|(
@@ -633,10 +623,6 @@ name|e_dev
 argument_list|,
 name|irq
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|vxintr
 argument_list|)
 expr_stmt|;
