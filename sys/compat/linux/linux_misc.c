@@ -375,6 +375,10 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* 1, 5, and 15 minute load averages */
+define|#
+directive|define
+name|LINUX_SYSINFO_LOADS_SCALE
+value|65536
 name|l_ulong
 name|totalram
 decl_stmt|;
@@ -403,10 +407,19 @@ name|l_ushort
 name|procs
 decl_stmt|;
 comment|/* Number of current processes */
+name|l_ulong
+name|totalbig
+decl_stmt|;
+name|l_ulong
+name|freebig
+decl_stmt|;
+name|l_uint
+name|mem_unit
+decl_stmt|;
 name|char
 name|_f
 index|[
-literal|22
+literal|6
 index|]
 decl_stmt|;
 comment|/* Pads structure to 64 bytes */
@@ -561,6 +574,12 @@ name|ldavg
 index|[
 name|i
 index|]
+operator|*
+name|LINUX_SYSINFO_LOADS_SCALE
+operator|/
+name|averunnable
+operator|.
+name|fscale
 expr_stmt|;
 name|sysinfo
 operator|.
@@ -674,9 +693,27 @@ name|sysinfo
 operator|.
 name|procs
 operator|=
-literal|20
+name|nprocs
 expr_stmt|;
-comment|/* Hack */
+comment|/* The following are only present in newer Linux kernels. */
+name|sysinfo
+operator|.
+name|totalbig
+operator|=
+literal|0
+expr_stmt|;
+name|sysinfo
+operator|.
+name|freebig
+operator|=
+literal|0
+expr_stmt|;
+name|sysinfo
+operator|.
+name|mem_unit
+operator|=
+literal|1
+expr_stmt|;
 return|return
 name|copyout
 argument_list|(
