@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nlist.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nlist.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -178,11 +178,13 @@ name|N_FORMAT
 value|"%08x"
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__STDC__
-end_ifdef
+operator|||
+name|c_plusplus
+end_if
 
 begin_function_decl
 specifier|extern

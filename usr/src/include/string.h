@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)string.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)string.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -63,15 +63,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ANSI C standard routines */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__STDC__
-end_ifdef
+operator|||
+name|c_plusplus
+end_if
 
 begin_function_decl
 name|void
@@ -413,10 +411,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !__STDC__ */
-end_comment
-
 begin_function_decl
 name|void
 modifier|*
@@ -591,10 +585,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __STDC__ */
-end_comment
-
-begin_comment
 comment|/* Nonstandard routines */
 end_comment
 
@@ -604,13 +594,13 @@ directive|ifndef
 name|_ANSI_SOURCE
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__STDC__
-name|*
-name|/
-end_ifdef
+operator|||
+name|c_plusplus
+end_if
 
 begin_function_decl
 name|int
@@ -805,10 +795,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !__STDC__ */
-end_comment
-
 begin_function_decl
 name|int
 name|bcmp
@@ -910,18 +896,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* __STDC__ */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _ANSI_SOURCE */
-end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -185,11 +185,13 @@ begin_comment
 comment|/* _POSIX_SOURCE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__STDC__
-end_ifdef
+operator|||
+name|c_plusplus
+end_if
 
 begin_function_decl
 specifier|extern

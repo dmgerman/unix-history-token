@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -135,11 +135,13 @@ begin_comment
 comment|/* XXX */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__STDC__
-end_ifdef
+operator|||
+name|c_plusplus
+end_if
 
 begin_function_decl
 name|void
@@ -466,7 +468,7 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|_ANSI_SOURCE
 end_ifndef
 
 begin_function_decl
@@ -636,10 +638,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !__STDC__ */
-end_comment
-
 begin_function_decl
 name|void
 name|abort
@@ -803,7 +801,7 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__STDC__
+name|_ANSI_SOURCE
 end_ifndef
 
 begin_function_decl
@@ -889,10 +887,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
 
 begin_endif
 endif|#
