@@ -1340,12 +1340,9 @@ begin_comment
 comment|/* Define to 1 if NLS is requested */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ENABLE_NLS
-value|1
-end_define
+begin_comment
+comment|/* #define ENABLE_NLS 1 */
+end_comment
 
 begin_comment
 comment|/* Define as 1 if you have gettext and don't want to use GNU gettext. */
