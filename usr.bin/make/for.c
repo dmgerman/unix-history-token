@@ -977,9 +977,6 @@ name|arg
 init|=
 name|argp
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|Var_Set
 argument_list|(
 name|arg
@@ -1024,8 +1021,7 @@ name|arg
 operator|->
 name|buf
 argument_list|,
-operator|&
-name|len
+name|NULL
 argument_list|)
 argument_list|,
 name|VAR_GLOBAL

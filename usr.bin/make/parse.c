@@ -5823,11 +5823,6 @@ name|c
 decl_stmt|,
 name|lastc
 decl_stmt|;
-name|size_t
-name|lineLength
-init|=
-literal|0
-decl_stmt|;
 name|Buffer
 modifier|*
 name|buf
@@ -6032,8 +6027,7 @@ name|Buf_GetAll
 argument_list|(
 name|buf
 argument_list|,
-operator|&
-name|lineLength
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -6114,10 +6108,6 @@ modifier|*
 name|ep
 decl_stmt|;
 comment|/* to strip trailing blanks */
-name|size_t
-name|lineLength
-decl_stmt|;
-comment|/* Length of result */
 name|int
 name|lineno
 decl_stmt|;
@@ -6508,8 +6498,7 @@ name|Buf_GetAll
 argument_list|(
 name|buf
 argument_list|,
-operator|&
-name|lineLength
+name|NULL
 argument_list|)
 expr_stmt|;
 name|Buf_Destroy
