@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.7 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,17 @@ define|#
 directive|define
 name|NBPI
 value|2048
+end_define
+
+begin_comment
+comment|/*  * Disks are assumed to rotate at 60HZ, unless otherwise specified.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFHZ
+value|60
 end_define
 
 begin_ifndef
@@ -386,7 +397,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usage: mkfs special size [ nsect ntrak bsize fsize cpg ]\n"
+literal|"usage: mkfs special size [ nsect ntrak bsize fsize cpg minfree rps ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2622,6 +2633,61 @@ name|fs_rotdelay
 operator|=
 name|ROTDELAY
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|7
+condition|)
+block|{
+name|sblock
+operator|.
+name|fs_minfree
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|7
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_minfree
+operator|<
+literal|0
+operator|||
+name|sblock
+operator|.
+name|fs_minfree
+operator|>
+literal|99
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: bogus minfree reset to %d%%\n"
+argument_list|,
+name|argv
+index|[
+literal|7
+index|]
+argument_list|,
+name|MINFREE
+argument_list|)
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_minfree
+operator|=
+name|MINFREE
+expr_stmt|;
+block|}
+block|}
+else|else
 name|sblock
 operator|.
 name|fs_minfree
@@ -2644,13 +2710,31 @@ operator|&
 name|sblock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|8
+condition|)
 name|sblock
 operator|.
 name|fs_rps
 operator|=
-literal|60
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|8
+index|]
+argument_list|)
 expr_stmt|;
-comment|/* assume disk speed == 60 HZ */
+else|else
+name|sblock
+operator|.
+name|fs_rps
+operator|=
+name|DEFHZ
+expr_stmt|;
 name|sblock
 operator|.
 name|fs_cgrotor
