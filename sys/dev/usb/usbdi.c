@@ -1587,6 +1587,10 @@ modifier|*
 name|status
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|priv
+condition|)
 operator|*
 name|priv
 operator|=
@@ -1594,6 +1598,10 @@ name|reqh
 operator|->
 name|priv
 expr_stmt|;
+if|if
+condition|(
+name|buffer
+condition|)
 operator|*
 name|buffer
 operator|=
@@ -1601,6 +1609,10 @@ name|reqh
 operator|->
 name|buffer
 expr_stmt|;
+if|if
+condition|(
+name|count
+condition|)
 operator|*
 name|count
 operator|=
@@ -1608,6 +1620,10 @@ name|reqh
 operator|->
 name|actlen
 expr_stmt|;
+if|if
+condition|(
+name|status
+condition|)
 operator|*
 name|status
 operator|=
