@@ -180,6 +180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NWNODE
@@ -192,6 +193,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NWFSHASH
@@ -385,7 +387,7 @@ argument_list|)
 expr_stmt|;
 name|vprint
 argument_list|(
-name|NULL
+literal|""
 argument_list|,
 name|vp
 argument_list|)
