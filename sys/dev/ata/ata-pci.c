@@ -697,6 +697,15 @@ name|ata_find_dev
 argument_list|(
 name|dev
 argument_list|,
+literal|0x06451039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
 literal|0x07301039
 argument_list|,
 literal|0x00
