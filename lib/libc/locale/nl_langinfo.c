@@ -73,7 +73,6 @@ break|break;
 case|case
 name|D_T_FMT
 case|:
-comment|/* XXX: ???, this is compatibility field for FreeBSD */
 name|ret
 operator|=
 operator|(
@@ -119,10 +118,9 @@ break|break;
 case|case
 name|T_FMT_AMPM
 case|:
-comment|/* XXX: ??? */
 name|ret
 operator|=
-literal|""
+literal|"%r"
 expr_stmt|;
 break|break;
 case|case
@@ -389,6 +387,7 @@ break|break;
 case|case
 name|RADIXCHAR
 case|:
+comment|/* deprecated */
 name|ret
 operator|=
 operator|(
@@ -404,6 +403,7 @@ break|break;
 case|case
 name|THOUSEP
 case|:
+comment|/* deprecated */
 name|ret
 operator|=
 operator|(
@@ -449,40 +449,35 @@ break|break;
 case|case
 name|YESSTR
 case|:
+comment|/* deprecated */
 name|ret
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|__get_current_messages_locale
-argument_list|()
-operator|->
-name|yesstr
+literal|""
 expr_stmt|;
 break|break;
 case|case
 name|NOSTR
 case|:
+comment|/* deprecated */
+name|ret
+operator|=
+literal|""
+expr_stmt|;
+break|break;
+case|case
+name|CRNCYSTR
+case|:
+comment|/* deprecated */
 name|ret
 operator|=
 operator|(
 name|char
 operator|*
 operator|)
-name|__get_current_messages_locale
+name|__get_current_monetary_locale
 argument_list|()
 operator|->
-name|nostr
-expr_stmt|;
-break|break;
-case|case
-name|CRNCYSTR
-case|:
-comment|/* XXX: ??? */
-name|ret
-operator|=
-literal|""
+name|currency_symbol
 expr_stmt|;
 break|break;
 default|default:
