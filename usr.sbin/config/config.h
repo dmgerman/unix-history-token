@@ -167,6 +167,13 @@ name|ISDUP
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|NOWERROR
+value|32
+end_define
+
 begin_struct
 struct|struct
 name|device
