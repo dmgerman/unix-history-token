@@ -751,7 +751,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Slab is managed seperately  */
+comment|/* Slab is managed separately  */
 end_comment
 
 begin_define
