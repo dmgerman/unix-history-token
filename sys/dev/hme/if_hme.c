@@ -141,13 +141,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<hme/if_hmereg.h>
+file|<dev/hme/if_hmereg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<hme/if_hmevar.h>
+file|<dev/hme/if_hmevar.h>
 end_include
 
 begin_function_decl

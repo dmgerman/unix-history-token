@@ -100,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mii/mii.h>
+file|<dev/mii/mii.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mii/miivar.h>
+file|<dev/mii/miivar.h>
 end_include
 
 begin_include
@@ -124,13 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<hme/if_hmereg.h>
+file|<dev/hme/if_hmereg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<hme/if_hmevar.h>
+file|<dev/hme/if_hmevar.h>
 end_include
 
 begin_include
