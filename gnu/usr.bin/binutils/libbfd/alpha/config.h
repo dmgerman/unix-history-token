@@ -8,6 +8,28 @@ comment|/* config.in.  Generated automatically from configure.in by autoheader. 
 end_comment
 
 begin_comment
+comment|/* Name of package.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"bfd"
+end_define
+
+begin_comment
+comment|/* Version of package.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"2.9.1"
+end_define
+
+begin_comment
 comment|/* Whether strstr must be declared even if<string.h> is included.  */
 end_comment
 
@@ -117,6 +139,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FCNTL
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the fdopen function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FDOPEN
 value|1
 end_define
 

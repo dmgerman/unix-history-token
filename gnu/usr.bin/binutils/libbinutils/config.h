@@ -19,28 +19,6 @@ value|"binutils"
 end_define
 
 begin_comment
-comment|/* Version of package.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VERSION
-value|"2.9.1"
-end_define
-
-begin_comment
-comment|/* Configured target name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET
-value|"i386-unknown-freebsdelf"
-end_define
-
-begin_comment
 comment|/* Whether strstr must be declared even if<string.h> is included.  */
 end_comment
 
