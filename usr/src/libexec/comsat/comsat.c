@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.2 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1062,6 +1062,15 @@ operator|.
 name|sg_flags
 operator|&
 name|CRMOD
+operator|)
+operator|&&
+operator|!
+operator|(
+name|gttybuf
+operator|.
+name|sg_flags
+operator|&
+name|RAW
 operator|)
 condition|?
 literal|""
