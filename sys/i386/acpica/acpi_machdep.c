@@ -89,13 +89,6 @@ directive|include
 file|<dev/acpica/acpiio.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|device_t
-name|acpi_dev
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * APM driver emulation   */
 end_comment
@@ -154,9 +147,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|apm_softc
-name|apm_softc
+name|int
+name|apm_active
 decl_stmt|;
 end_decl_stmt
 
@@ -474,9 +466,7 @@ name|aip
 operator|->
 name|ai_status
 operator|=
-name|apm_softc
-operator|.
-name|active
+name|apm_active
 expr_stmt|;
 name|aip
 operator|->
@@ -872,9 +862,14 @@ name|aiop
 decl_stmt|;
 name|acpi_sc
 operator|=
-name|device_get_softc
+name|devclass_get_softc
 argument_list|(
-name|acpi_dev
+name|devclass_find
+argument_list|(
+literal|"acpi"
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -902,9 +897,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|apm_softc
-operator|.
-name|active
+name|apm_active
 condition|)
 name|acpi_SetSleepState
 argument_list|(
@@ -941,9 +934,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|apm_softc
-operator|.
-name|active
+name|apm_active
 condition|)
 name|acpi_SetSleepState
 argument_list|(
@@ -1085,9 +1076,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-name|apm_softc
-operator|.
-name|active
+name|apm_active
 operator|=
 literal|1
 expr_stmt|;
@@ -1110,9 +1099,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-name|apm_softc
-operator|.
-name|active
+name|apm_active
 operator|=
 literal|0
 expr_stmt|;
@@ -1287,15 +1274,16 @@ name|acpi_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|acpi_dev
-operator|=
-name|dev
-expr_stmt|;
 name|sc
 operator|=
-name|device_get_softc
+name|devclass_get_softc
 argument_list|(
-name|acpi_dev
+name|devclass_find
+argument_list|(
+literal|"acpi"
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|acpi_capm_init
