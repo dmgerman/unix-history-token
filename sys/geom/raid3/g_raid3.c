@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<geom/geom.h>
 end_include
 
