@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2834,13 +2834,38 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/* 	 * If the vnode is in the process of being cleaned out for 	 * another use, we wait for the cleaning to finish and then 	 * return failure. Cleaning is determined either by checking 	 * that the VXLOCK flag is set, or that the use count is 	 * zero with the back pointer set to show that it has been 	 * removed from the free list by getnewvnode. The VXLOCK 	 * flag may not have been set yet because vclean is blocked in 	 * the VOP_LOCK call waiting for the VOP_INACTIVE to complete. 	 */
 if|if
 condition|(
+operator|(
 name|vp
 operator|->
 name|v_flag
 operator|&
 name|VXLOCK
+operator|)
+operator|||
+operator|(
+name|vp
+operator|->
+name|v_usecount
+operator|==
+literal|0
+operator|&&
+name|vp
+operator|->
+name|v_freelist
+operator|.
+name|tqe_prev
+operator|==
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|*
+operator|)
+literal|0xdeadb
+operator|)
 condition|)
 block|{
 name|vp
@@ -2918,7 +2943,6 @@ argument_list|,
 name|v_freelist
 argument_list|)
 expr_stmt|;
-block|}
 name|vp
 operator|->
 name|v_freelist
@@ -2947,17 +2971,11 @@ operator|)
 literal|0xdeadb
 expr_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 name|vp
 operator|->
 name|v_usecount
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|lockflag
@@ -2967,9 +2985,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|printcnt
@@ -2984,23 +2999,21 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_block
 
-begin_expr_stmt
-unit|}  int
+begin_decl_stmt
+name|int
 name|bug_refs
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Vnode reference, just increment the count  */
