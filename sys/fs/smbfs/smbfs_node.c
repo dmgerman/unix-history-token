@@ -140,9 +140,9 @@ name|smbfs_hash_lock
 parameter_list|(
 name|smp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
-value|lockmgr(&smp->sm_hashlock, LK_EXCLUSIVE, NULL, p)
+value|lockmgr(&smp->sm_hashlock, LK_EXCLUSIVE, NULL, td)
 end_define
 
 begin_define
@@ -152,9 +152,9 @@ name|smbfs_hash_unlock
 parameter_list|(
 name|smp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
-value|lockmgr(&smp->sm_hashlock, LK_RELEASE, NULL, p)
+value|lockmgr(&smp->sm_hashlock, LK_RELEASE, NULL, td)
 end_define
 
 begin_decl_stmt
@@ -682,11 +682,11 @@ name|vpp
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -799,7 +799,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -889,7 +889,7 @@ name|smbfs_hash_lock
 argument_list|(
 name|smp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|loop
@@ -956,7 +956,7 @@ name|smbfs_hash_unlock
 argument_list|(
 name|smp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -969,7 +969,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0
@@ -990,7 +990,7 @@ name|smbfs_hash_unlock
 argument_list|(
 name|smp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we don't have node attributes, then it is an explicit lookup 	 * for an existing vnode. 	 */
@@ -1201,14 +1201,14 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|smbfs_hash_lock
 argument_list|(
 name|smp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -1271,7 +1271,7 @@ name|smbfs_hash_unlock
 argument_list|(
 name|smp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1403,7 +1403,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_reclaim_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p;         } */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_p;         } */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1418,13 +1418,13 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -1468,7 +1468,7 @@ name|smbfs_hash_lock
 argument_list|(
 name|smp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|dvp
@@ -1546,7 +1546,7 @@ name|smbfs_hash_unlock
 argument_list|(
 name|smp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1627,26 +1627,28 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|ucred
 modifier|*
 name|cred
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 decl_stmt|;
@@ -1709,7 +1711,7 @@ name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -1719,7 +1721,7 @@ argument_list|(
 operator|&
 name|scred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1760,7 +1762,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

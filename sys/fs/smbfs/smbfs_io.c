@@ -333,7 +333,7 @@ name|scred
 argument_list|,
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 argument_list|,
 name|cred
 argument_list|)
@@ -972,9 +972,9 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|vattr
@@ -1036,11 +1036,11 @@ return|return
 name|EINVAL
 return|;
 comment|/*	if (uiop->uio_offset + uiop->uio_resid> smp->nm_maxfilesize) 		return EFBIG;*/
-name|p
+name|td
 operator|=
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
 expr_stmt|;
 if|if
 condition|(
@@ -1055,7 +1055,7 @@ name|lks
 operator|=
 name|LK_EXCLUSIVE
 expr_stmt|;
-comment|/*lockstatus(&vp->v_lock, p);*/
+comment|/*lockstatus(&vp->v_lock, td);*/
 if|if
 condition|(
 name|lks
@@ -1070,7 +1070,7 @@ name|LK_UPGRADE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1098,7 +1098,7 @@ name|LK_DOWNGRADE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1131,7 +1131,7 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1167,7 +1167,7 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1202,7 +1202,7 @@ name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -1233,7 +1233,7 @@ argument_list|(
 operator|&
 name|scred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1310,6 +1310,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -1361,11 +1366,17 @@ return|return
 name|EINVAL
 return|;
 comment|/*	if (uiop->uio_offset + uiop->uio_resid> smp->nm_maxfilesize) 		return (EFBIG);*/
-name|p
+name|td
 operator|=
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 if|if
 condition|(
@@ -1402,7 +1413,7 @@ name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -1442,7 +1453,7 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1501,19 +1512,25 @@ condition|)
 block|{
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|psignal
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|SIGXFSZ
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1525,7 +1542,7 @@ argument_list|(
 operator|&
 name|scred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1625,9 +1642,9 @@ modifier|*
 name|cr
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1705,16 +1722,16 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|smb_makescred
 argument_list|(
 operator|&
 name|scred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cr
 argument_list|)
@@ -2260,9 +2277,9 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ucred
@@ -2293,14 +2310,16 @@ name|ap
 operator|->
 name|a_vp
 expr_stmt|;
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* XXX */
 name|cred
 operator|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -2356,7 +2375,7 @@ argument_list|(
 operator|&
 name|scred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2481,9 +2500,9 @@ name|UIO_READ
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|error
 operator|=
@@ -2785,9 +2804,9 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ucred
@@ -2797,14 +2816,16 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SMBFS_RWGENERIC
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* XXX */
 name|cred
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -2817,7 +2838,7 @@ name|FWRITE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2835,7 +2856,7 @@ name|FWRITE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2888,19 +2909,21 @@ name|vm_page_t
 modifier|*
 name|pages
 decl_stmt|;
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* XXX */
 name|cred
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
 comment|/* XXX */
-comment|/*	VOP_OPEN(vp, FWRITE, cred, p);*/
+comment|/*	VOP_OPEN(vp, FWRITE, cred, td);*/
 name|np
 operator|=
 name|VTOSMB
@@ -3077,9 +3100,9 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|SMBVDEBUG
 argument_list|(
@@ -3102,7 +3125,7 @@ argument_list|(
 operator|&
 name|scred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -3126,7 +3149,7 @@ operator|&
 name|scred
 argument_list|)
 expr_stmt|;
-comment|/*	VOP_CLOSE(vp, FWRITE, cred, p);*/
+comment|/*	VOP_CLOSE(vp, FWRITE, cred, td);*/
 name|SMBVDEBUG
 argument_list|(
 literal|"paged write done: %d\n"
@@ -3240,7 +3263,7 @@ name|flags
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|intrflg
 parameter_list|)
@@ -3258,9 +3281,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|intrflg
@@ -3363,7 +3386,9 @@ name|error
 operator|=
 name|smb_proc_intr
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3394,7 +3419,7 @@ name|flags
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|slpflag
 argument_list|,
@@ -3470,7 +3495,7 @@ name|flags
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|slpflag
 argument_list|,
