@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.24 1998/12/04 22:54:57 archie Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.25 1999/01/08 17:31:29 eivind Exp $  */
 end_comment
 
 begin_include
@@ -696,12 +696,9 @@ name|z
 operator|->
 name|zitems
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INVARIANTS
-argument_list|)
 operator|(
 operator|(
 name|void
@@ -1311,12 +1308,9 @@ name|z
 operator|->
 name|zitems
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INVARIANTS
-argument_list|)
 operator|(
 operator|(
 name|void
@@ -1393,12 +1387,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INVARIANTS
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -1755,14 +1746,11 @@ return|;
 block|}
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INVARIANT_SUPPORT
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 name|void

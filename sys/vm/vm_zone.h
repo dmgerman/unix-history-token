@@ -1,17 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.h,v 1.10 1998/04/25 04:50:03 dyson Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.h,v 1.11 1999/01/08 17:31:30 eivind Exp $  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_SYS_ZONE_H
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -365,12 +361,9 @@ name|void
 modifier|*
 name|item
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INVARIANTS
-argument_list|)
 if|if
 condition|(
 name|z
@@ -422,12 +415,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INVARIANTS
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -515,12 +505,9 @@ name|z
 operator|->
 name|zitems
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INVARIANTS
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -630,12 +617,9 @@ modifier|*
 name|item
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SMP
-argument_list|)
 name|zfreei
 argument_list|(
 name|z

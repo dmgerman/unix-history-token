@@ -1097,6 +1097,17 @@ name|char
 modifier|*
 name|nbuf
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|n
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"negative snoop char count"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|n
@@ -1106,17 +1117,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|KASSERT
-argument_list|(
-name|n
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"negative snoop char count"
-operator|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
