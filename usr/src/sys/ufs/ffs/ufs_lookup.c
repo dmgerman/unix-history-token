@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.5	84/01/04	*/
+comment|/*	ufs_lookup.c	6.6	84/02/15	*/
 end_comment
 
 begin_include
@@ -2156,7 +2156,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 				 * If directory is setuid, then user must own 				 * the directory, or the file in it, else he 				 * may not delete it (unless he's root). This 				 * implements append-only directories. 				 */
+comment|/* 				 * If directory is "sticky", then user must own 				 * the directory, or the file in it, else he 				 * may not delete it (unless he's root). This 				 * implements append-only directories. 				 */
 if|if
 condition|(
 operator|(
@@ -2166,7 +2166,7 @@ name|u_pdir
 operator|->
 name|i_mode
 operator|&
-name|ISUID
+name|ISVTX
 operator|)
 operator|&&
 name|u
