@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: main.c,v 1.1.1.1 1996/06/19 09:32:11 asami Exp $ */
 end_comment
 
 begin_include
@@ -723,6 +723,13 @@ argument_list|,
 name|die
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|die
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|http
@@ -975,11 +982,6 @@ argument_list|,
 name|file_to_get
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|restart
-condition|)
-block|{
 name|modtime
 operator|=
 name|ftpGetModtime
@@ -996,15 +998,14 @@ operator|<
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warnx
 argument_list|(
-literal|1
+literal|"Couldn't get file time for %s - using current time"
 argument_list|,
-literal|"Unrecoverable error (ftpGetModtime)"
+name|file_to_get
 argument_list|)
 expr_stmt|;
-block|}
-else|else
 name|modtime
 operator|=
 operator|(
@@ -1013,6 +1014,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2092,6 +2094,9 @@ name|httpget
 parameter_list|()
 block|{
 name|char
+modifier|*
+name|cp
+decl_stmt|,
 name|str
 index|[
 literal|1000
@@ -2168,6 +2173,29 @@ operator|&
 name|fdset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|getenv
+argument_list|(
+literal|"HTTP_TIMEOUT"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|tout
+operator|.
+name|tv_sec
+operator|=
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+else|else
 name|tout
 operator|.
 name|tv_sec
