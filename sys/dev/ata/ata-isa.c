@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -379,19 +385,11 @@ begin_comment
 comment|/*   * the following is a bandaid to get ISA only setups to link,  * since these are getting rare the ugliness is kept here  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|==
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATA_NOPCI
+end_ifdef
 
 begin_function
 name|int
@@ -478,7 +476,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ata_dmastart
 parameter_list|(
 name|struct
@@ -495,7 +493,12 @@ parameter_list|,
 name|int
 name|dir
 parameter_list|)
-block|{ }
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
 end_function
 
 begin_function
