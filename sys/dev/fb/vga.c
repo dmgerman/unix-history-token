@@ -3395,23 +3395,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|filll_io
-parameter_list|(
-name|int
-name|val
-parameter_list|,
-name|vm_offset_t
-name|d
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3505,6 +3488,23 @@ ifndef|#
 directive|ifndef
 name|VGA_NO_MODE_CHANGE
 end_ifndef
+
+begin_function_decl
+specifier|static
+name|void
+name|filll_io
+parameter_list|(
+name|int
+name|val
+parameter_list|,
+name|vm_offset_t
+name|d
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -7928,6 +7928,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VGA_NO_MODE_CHANGE
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -8033,6 +8039,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !VGA_NO_MODE_CHANGE */
+end_comment
 
 begin_comment
 comment|/* entry points */
