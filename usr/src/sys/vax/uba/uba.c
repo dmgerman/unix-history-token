@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.34	81/07/08	*/
+comment|/*	uba.c	4.35	81/07/22	*/
 end_comment
 
 begin_include
@@ -1958,6 +1958,22 @@ block|}
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|ubawedgecnt
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ubacrazy
+init|=
+literal|500
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This routine is called by the locore code to  * process a UBA error on an 11/780.  The arguments are passed  * on the stack, and value-result (through some trickery).  * In particular, the uvec argument is used for further  * uba processing so the result aspect of it is very important.  * It must not be declared register.  */
 end_comment
@@ -2142,6 +2158,47 @@ name|uvec
 operator|&=
 name|UBABRRVR_DIV
 expr_stmt|;
+if|if
+condition|(
+operator|++
+name|uh
+operator|->
+name|uh_errcnt
+operator|%
+name|ubawedgecnt
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|uh
+operator|->
+name|uh_errcnt
+operator|>
+name|ubacrazy
+condition|)
+name|panic
+argument_list|(
+literal|"uba crazy"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ERROR LIMIT "
+argument_list|)
+expr_stmt|;
+name|ubareset
+argument_list|(
+name|uban
+argument_list|)
+expr_stmt|;
+name|uvec
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
 return|return;
 block|}
 end_block
