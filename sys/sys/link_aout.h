@@ -109,7 +109,13 @@ modifier|*
 name|r_brk
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|r_debug
+modifier|*
+parameter_list|,
+name|struct
+name|link_map
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* pointer to break point */
