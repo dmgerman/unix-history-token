@@ -120,6 +120,14 @@ define|\
 value|(offsetof(struct lc_time_T, alt_month[0]) / sizeof(char *))
 end_define
 
+begin_define
+define|#
+directive|define
+name|LCTIME_SIZE_2
+define|\
+value|(offsetof(struct lc_time_T, Ex_fmt) / sizeof(char *))
+end_define
+
 begin_decl_stmt
 specifier|const
 name|struct
@@ -218,7 +226,7 @@ comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, usin
 literal|"%m/%d/%y"
 block|,
 comment|/* 	** c_fmt (ctime-compatible) 	** Note that 	**	"%a %b %d %H:%M:%S %Y" 	** is used by Solaris 2.3. 	*/
-literal|"%a %b %e %X %Y"
+literal|"%a %Ex %X %Y"
 block|,
 comment|/* am */
 literal|"AM"
@@ -227,7 +235,7 @@ comment|/* pm */
 literal|"PM"
 block|,
 comment|/* date_fmt */
-literal|"%a %b %e %X %Z %Y"
+literal|"%a %Ex %X %Z %Y"
 block|,
 block|{
 literal|"January"
@@ -254,6 +262,9 @@ literal|"November"
 block|,
 literal|"December"
 block|}
+block|,
+comment|/* Ex_fmt 	** To determine months / day order 	*/
+literal|"%b %e"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -620,6 +631,17 @@ condition|)
 name|num_lines
 operator|=
 name|LCTIME_SIZE_FULL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|num_lines
+operator|>=
+name|LCTIME_SIZE_2
+condition|)
+name|num_lines
+operator|=
+name|LCTIME_SIZE_2
 expr_stmt|;
 elseif|else
 if|if

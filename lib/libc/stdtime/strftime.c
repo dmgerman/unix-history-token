@@ -379,7 +379,9 @@ name|ptlim
 decl_stmt|;
 block|{
 name|int
-name|alternative
+name|Ealternative
+decl_stmt|,
+name|Oalternative
 decl_stmt|;
 for|for
 control|(
@@ -399,7 +401,11 @@ operator|==
 literal|'%'
 condition|)
 block|{
-name|alternative
+name|Ealternative
+operator|=
+literal|0
+expr_stmt|;
+name|Oalternative
 operator|=
 literal|0
 expr_stmt|;
@@ -519,7 +525,7 @@ condition|?
 literal|"?"
 else|:
 operator|(
-name|alternative
+name|Oalternative
 condition|?
 name|Locale
 operator|->
@@ -666,13 +672,18 @@ continue|continue;
 case|case
 literal|'E'
 case|:
+name|Ealternative
+operator|++
+expr_stmt|;
+goto|goto
+name|label
+goto|;
 case|case
 literal|'O'
 case|:
 comment|/* 				** POSIX locale extensions, a la 				** Arnold Robbins' strftime version 3.0. 				** The sequences 				**	%Ec %EC %Ex %Ey %EY 				**	%Od %oe %OH %OI %Om %OM 				**	%OS %Ou %OU %OV %Ow %OW %Oy 				** are supposed to provide alternate 				** representations. 				** (ado, 5/24/93) 				*/
-name|alternative
-operator|=
-literal|1
+name|Oalternative
+operator|++
 expr_stmt|;
 goto|goto
 name|label
@@ -1530,6 +1541,12 @@ name|pt
 operator|=
 name|_fmt
 argument_list|(
+name|Ealternative
+condition|?
+name|Locale
+operator|->
+name|Ex_fmt
+else|:
 name|Locale
 operator|->
 name|x_fmt

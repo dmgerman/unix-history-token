@@ -81,6 +81,11 @@ index|[
 literal|12
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Ex_fmt
+decl_stmt|;
 block|}
 struct|;
 end_struct
