@@ -13,28 +13,13 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -82,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -2765,11 +2756,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
 specifier|static
 specifier|const
 name|char
@@ -2787,7 +2773,8 @@ name|stderr
 argument_list|,
 literal|"Usage: %s %s [special|node]...\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|common
 argument_list|)
