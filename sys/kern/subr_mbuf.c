@@ -4323,7 +4323,7 @@ name|m
 parameter_list|,
 name|ref
 parameter_list|)
-value|do {					\ 	if ((ref) == NULL)						\ 		malloc(sizeof(u_int), M_MBUF, M_NOWAIT);		\ 	else								\ 		(m)->m_ext.ref_cnt = (u_int *)(ref);			\ 	if ((m)->m_ext.ref_cnt != NULL) {				\ 		*((m)->m_ext.ref_cnt) = 0;				\ 		MEXT_ADD_REF((m));					\ 	}								\ } while (0)
+value|do {					\ 	(m)->m_ext.ref_cnt = ((ref) == NULL) ?				\ 	    malloc(sizeof(u_int), M_MBUF, M_NOWAIT) :			\ 	    (m)->m_ext.ref_cnt = (u_int *)(ref);			\ 	if ((m)->m_ext.ref_cnt != NULL) {				\ 		*((m)->m_ext.ref_cnt) = 0;				\ 		MEXT_ADD_REF((m));					\ 	}								\ } while (0)
 end_define
 
 begin_define
