@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.50 (Berkeley) %G%"
+literal|"@(#)headers.c	8.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,6 +405,42 @@ operator|->
 name|e_flags
 operator||=
 name|EF_RESENT
+expr_stmt|;
+comment|/* if this is an Errors-To: header keep track of it now */
+if|if
+condition|(
+name|UseErrorsTo
+operator|&&
+operator|!
+name|def
+operator|&&
+name|bitset
+argument_list|(
+name|H_ERRORSTO
+argument_list|,
+name|hi
+operator|->
+name|hi_flags
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|sendtolist
+argument_list|(
+name|fvalue
+argument_list|,
+name|NULLADDR
+argument_list|,
+operator|&
+name|e
+operator|->
+name|e_errorqueue
+argument_list|,
+literal|0
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 comment|/* if this means "end of header" quit now */
 if|if
@@ -1817,41 +1853,6 @@ operator|=
 name|h
 operator|->
 name|h_value
-expr_stmt|;
-comment|/* see if this is an errors-to header */
-if|if
-condition|(
-name|UseErrorsTo
-operator|&&
-name|bitset
-argument_list|(
-name|H_ERRORSTO
-argument_list|,
-name|h
-operator|->
-name|h_flags
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|sendtolist
-argument_list|(
-name|h
-operator|->
-name|h_value
-argument_list|,
-name|NULLADDR
-argument_list|,
-operator|&
-name|e
-operator|->
-name|e_errorqueue
-argument_list|,
-literal|0
-argument_list|,
-name|e
-argument_list|)
 expr_stmt|;
 block|}
 if|if

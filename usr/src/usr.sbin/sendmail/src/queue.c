@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.68 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.69 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.68 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.69 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1265,7 +1265,7 @@ name|e_envid
 operator|!=
 name|NULL
 condition|)
-comment|/* output list of error recipients */
+comment|/* output list of recipient addresses */
 name|printctladdr
 argument_list|(
 name|NULL
@@ -1274,74 +1274,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_for
-for|for
-control|(
-name|q
-operator|=
-name|e
-operator|->
-name|e_errorqueue
-init|;
-name|q
-operator|!=
-name|NULL
-condition|;
-name|q
-operator|=
-name|q
-operator|->
-name|q_next
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|QDONTSEND
-operator||
-name|QBADADDR
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
-name|printctladdr
-argument_list|(
-name|q
-argument_list|,
-name|tfp
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|tfp
-argument_list|,
-literal|"E%s\n"
-argument_list|,
-name|denlstring
-argument_list|(
-name|q
-operator|->
-name|q_paddr
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_for
-
-begin_comment
-comment|/* output list of recipient addresses */
-end_comment
 
 begin_for
 for|for
@@ -5519,29 +5451,7 @@ case|case
 literal|'E'
 case|:
 comment|/* specify error recipient */
-operator|(
-name|void
-operator|)
-name|sendtolist
-argument_list|(
-operator|&
-name|bp
-index|[
-literal|1
-index|]
-argument_list|,
-name|ctladdr
-argument_list|,
-operator|&
-name|e
-operator|->
-name|e_errorqueue
-argument_list|,
-literal|0
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
+comment|/* no longer used */
 break|break;
 case|case
 literal|'H'
