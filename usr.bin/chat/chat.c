@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chat.c,v 1.6 1997/02/22 19:54:23 peter Exp $"
+literal|"$Id: chat.c,v 1.7 1997/04/02 09:55:26 jmg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,13 +289,6 @@ end_comment
 begin_comment
 comment|/*************** Micro getopt() *********************************************/
 end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|program_name
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -604,6 +597,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -1076,11 +1070,6 @@ name|char
 modifier|*
 name|arg
 decl_stmt|;
-name|program_name
-operator|=
-operator|*
-name|argv
-expr_stmt|;
 name|tzset
 argument_list|()
 expr_stmt|;
@@ -1707,6 +1696,7 @@ comment|/*  *	We got an error parsing the command line.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -1715,9 +1705,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [-v] [-t timeout] [-r report-file] {-f chat-file | chat-script}\n"
+literal|"%s %s\n"
 argument_list|,
-name|program_name
+literal|"usage: chat [-v] [-t timeout] [-r report-file]"
+argument_list|,
+literal|"{-f chat-file | chat-script}"
 argument_list|)
 expr_stmt|;
 name|exit
