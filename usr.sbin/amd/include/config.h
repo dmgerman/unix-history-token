@@ -2510,28 +2510,6 @@ comment|/* #undef DEBUG_MEM */
 end_comment
 
 begin_comment
-comment|/* Define package name (must be defined by configure.in) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKAGE
-value|"am-utils"
-end_define
-
-begin_comment
-comment|/* Define version of package (must be defined by configure.in) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VERSION
-value|"6.0.9"
-end_define
-
-begin_comment
 comment|/* We [FREEBSD-NATIVE] pick some parameters from our local config file */
 end_comment
 
@@ -6087,7 +6065,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"6.0.7"
+value|"6.0.9"
 end_define
 
 begin_comment
