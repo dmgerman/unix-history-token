@@ -4619,7 +4619,7 @@ name|sc
 operator|->
 name|acpi_dev
 argument_list|,
-literal|"Power Button (fixed)"
+literal|"Power Button (fixed)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4667,7 +4667,7 @@ name|sc
 operator|->
 name|acpi_dev
 argument_list|,
-literal|"Sleep Button (fixed)"
+literal|"Sleep Button (fixed)\n"
 argument_list|)
 expr_stmt|;
 block|}
