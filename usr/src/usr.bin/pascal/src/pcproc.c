@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.6 %G%"
+literal|"@(#)pcproc.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1437,7 +1437,7 @@ name|filetype
 argument_list|,
 literal|"_RANG4"
 argument_list|,
-literal|"_RSGN4"
+literal|"_RSNG4"
 argument_list|)
 expr_stmt|;
 comment|/* and fall through */
