@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.25 1997/06/12 12:45:45 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.26 1997/06/22 17:54:27 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ name|defined
 argument_list|(
 name|__sparc__
 argument_list|)
-operator|||
+operator|&&
 name|defined
 argument_list|(
 name|sun
@@ -269,7 +269,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __FOORCPU__&& __BAROS__ */
+comment|/* __FOOCPU__&& __BAROS__ */
 end_comment
 
 begin_comment
@@ -844,6 +844,12 @@ name|malloc_junk
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_UTRACE
+end_ifdef
+
 begin_comment
 comment|/* utrace ?  */
 end_comment
@@ -854,12 +860,6 @@ name|int
 name|malloc_utrace
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAS_UTRACE
-end_ifdef
 
 begin_struct
 struct|struct
@@ -937,6 +937,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HAS_UTRACE */
+end_comment
 
 begin_comment
 comment|/* my last break. */
@@ -1670,6 +1674,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|HAS_UTRACE
 case|case
 literal|'u'
 case|:
@@ -1686,6 +1693,8 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'v'
 case|:
@@ -1771,6 +1780,15 @@ condition|(
 name|malloc_zero
 condition|)
 name|malloc_junk
+operator|=
+literal|1
+expr_stmt|;
+comment|/*      * If we run with junk (or implicitly from above: zero), we want to      * force realloc() to get new storage, so we can DTRT with it.      */
+if|if
+condition|(
+name|malloc_junk
+condition|)
+name|malloc_realloc
 operator|=
 literal|1
 expr_stmt|;
@@ -4371,18 +4389,6 @@ name|void
 modifier|*
 name|r
 decl_stmt|;
-if|if
-condition|(
-name|malloc_sysv
-operator|&&
-operator|!
-name|size
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|malloc_func
 operator|=
 literal|" in malloc():"
@@ -4410,6 +4416,18 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|malloc_sysv
+operator|&&
+operator|!
+name|size
+condition|)
+name|r
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|r
 operator|=
 name|imalloc
@@ -4623,121 +4641,6 @@ condition|)
 name|wrterror
 argument_list|(
 literal|"out of memory.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|r
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-modifier|*
-name|calloc
-parameter_list|(
-name|size_t
-name|num
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-block|{
-specifier|register
-name|void
-modifier|*
-name|r
-decl_stmt|;
-name|size
-operator|*=
-name|num
-expr_stmt|;
-if|if
-condition|(
-name|malloc_sysv
-operator|&&
-operator|!
-name|size
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|malloc_func
-operator|=
-literal|" in calloc():"
-expr_stmt|;
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|malloc_active
-operator|++
-condition|)
-block|{
-name|wrtwarning
-argument_list|(
-literal|"recursive call.\n"
-argument_list|)
-expr_stmt|;
-name|malloc_active
-operator|--
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|r
-operator|=
-name|imalloc
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-name|UTRACE
-argument_list|(
-literal|0
-argument_list|,
-name|size
-argument_list|,
-name|r
-argument_list|)
-expr_stmt|;
-name|malloc_active
-operator|--
-expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|malloc_xmalloc
-operator|&&
-operator|!
-name|r
-condition|)
-name|wrterror
-argument_list|(
-literal|"out of memory.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|r
-condition|)
-name|memset
-argument_list|(
-name|r
-argument_list|,
-literal|0
-argument_list|,
-name|size
 argument_list|)
 expr_stmt|;
 return|return
