@@ -524,7 +524,7 @@ name|options
 operator|->
 name|login_grace_time
 operator|=
-literal|600
+literal|60
 expr_stmt|;
 if|if
 condition|(
@@ -554,9 +554,9 @@ name|options
 operator|->
 name|permit_root_login
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-comment|/* yes */
+comment|/* no */
 if|if
 condition|(
 name|options
@@ -600,7 +600,7 @@ name|options
 operator|->
 name|check_mail
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 if|if
 condition|(
