@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.47 (Berkeley) %G%"
+literal|"@(#)main.c	6.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6207,7 +6207,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"from %s: "
+literal|"%s: "
 argument_list|,
 name|hostbuf
 argument_list|)
