@@ -5230,6 +5230,8 @@ argument_list|(
 operator|&
 name|ac
 operator|->
+name|addr
+operator|.
 name|ip
 operator|.
 name|addr
@@ -5240,6 +5242,8 @@ sizeof|sizeof
 argument_list|(
 name|ac
 operator|->
+name|addr
+operator|.
 name|ip
 operator|.
 name|addr
@@ -5251,6 +5255,8 @@ argument_list|(
 operator|&
 name|ac
 operator|->
+name|addr
+operator|.
 name|ip
 operator|.
 name|mask
@@ -5261,6 +5267,8 @@ sizeof|sizeof
 argument_list|(
 name|ac
 operator|->
+name|addr
+operator|.
 name|ip
 operator|.
 name|mask
@@ -5305,6 +5313,8 @@ argument_list|(
 operator|&
 name|ac
 operator|->
+name|addr
+operator|.
 name|ipv6
 operator|.
 name|ifid
@@ -5315,6 +5325,8 @@ sizeof|sizeof
 argument_list|(
 name|ac
 operator|->
+name|addr
+operator|.
 name|ipv6
 operator|.
 name|ifid
@@ -5774,6 +5786,8 @@ name|RAD_FRAMED_IP_ADDRESS
 argument_list|,
 name|ac
 operator|->
+name|addr
+operator|.
 name|ip
 operator|.
 name|addr
@@ -5793,6 +5807,8 @@ name|RAD_FRAMED_IP_NETMASK
 argument_list|,
 name|ac
 operator|->
+name|addr
+operator|.
 name|ip
 operator|.
 name|mask
@@ -5849,6 +5865,8 @@ name|RAD_FRAMED_INTERFACE_ID
 argument_list|,
 name|ac
 operator|->
+name|addr
+operator|.
 name|ipv6
 operator|.
 name|ifid
@@ -5857,6 +5875,8 @@ sizeof|sizeof
 argument_list|(
 name|ac
 operator|->
+name|addr
+operator|.
 name|ipv6
 operator|.
 name|ifid
