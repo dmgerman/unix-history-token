@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.2 1997/04/27 21:17:24 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.3 1997/04/28 00:24:47 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** TEST_UPPERPRIO, TEST_DEFAULT_CONFIG */
+comment|/** TEST_DEFAULT_CONFIG */
 end_comment
 
 begin_include
@@ -1236,23 +1236,6 @@ decl_stmt|;
 name|u_int
 name|ux
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_UPPERPRIO
-argument_list|)
-name|u_char
-name|select
-decl_stmt|;
-comment|/* the select register is 8 bits */
-name|u_int32_t
-name|flags
-decl_stmt|;
-comment|/* the window register is 32 bits */
-endif|#
-directive|endif
-comment|/* TEST_UPPERPRIO */
 endif|#
 directive|endif
 comment|/* APIC_IO */
@@ -1314,7 +1297,7 @@ operator|=
 name|ux
 expr_stmt|;
 block|}
-comment|/* 	 */
+comment|/* program each IO APIC in the system */
 for|for
 control|(
 name|apic
@@ -1363,111 +1346,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_UPPERPRIO
-argument_list|)
-if|#
-directive|if
-literal|1
-name|printf
-argument_list|(
-literal|"special IRQ10\n"
-argument_list|)
-expr_stmt|;
-name|select
-operator|=
-name|IOAPIC_REDTBL10
-expr_stmt|;
-comment|/** HARD_VECTORXXX:  */
-name|flags
-operator|=
-name|io_apic_read
-argument_list|(
-literal|0
-argument_list|,
-name|select
-argument_list|)
-expr_stmt|;
-name|flags
-operator|&=
-operator|~
-literal|0xff
-expr_stmt|;
-comment|/** clear vector */
-name|flags
-operator||=
-literal|64
-expr_stmt|;
-name|io_apic_write
-argument_list|(
-literal|0
-argument_list|,
-name|select
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"special IRQ10\n"
-argument_list|)
-expr_stmt|;
-name|cngetc
-argument_list|()
-expr_stmt|;
-name|select
-operator|=
-name|IOAPIC_REDTBL10
-expr_stmt|;
-comment|/** HARD_VECTORXXX:  */
-name|flags
-operator|=
-name|io_apic_read
-argument_list|(
-literal|0
-argument_list|,
-name|select
-argument_list|)
-expr_stmt|;
-name|flags
-operator|&=
-operator|~
-name|IOART_DELMOD
-expr_stmt|;
-comment|/* FIXED mode */
-name|io_apic_write
-argument_list|(
-literal|0
-argument_list|,
-name|select
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-name|io_apic_write
-argument_list|(
-literal|0
-argument_list|,
-name|select
-operator|+
-literal|1
-argument_list|,
-name|boot_cpu_id
-operator|<<
-literal|24
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/** 0/1 */
-endif|#
-directive|endif
-comment|/* TEST_UPPERPRIO */
 endif|#
 directive|endif
 comment|/* APIC_IO */
