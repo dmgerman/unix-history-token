@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.4 (Berkeley) %G%"
+literal|"@(#)ls.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<tzfile.h>
 end_include
 
@@ -61,13 +67,6 @@ end_include
 begin_comment
 comment|/* Derived from the print routines in the ls(1) source code. */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -96,10 +95,6 @@ name|sb
 decl_stmt|;
 comment|/* stat buffer */
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|char
 name|modep
 index|[
