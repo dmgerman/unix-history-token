@@ -118,7 +118,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -396,6 +396,10 @@ name|kernel
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* user-specified kernel */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -409,8 +413,10 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|ddname
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -457,11 +463,19 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* panic message */
+end_comment
+
 begin_decl_stmt
 name|int
 name|panicstr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* flag: dump was caused by panic */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -471,6 +485,10 @@ literal|1024
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* version of kernel that crashed */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -589,8 +607,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
+name|void
 name|find_dev
 name|__P
 argument_list|(
@@ -1050,15 +1067,10 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: nlist: %s"
+literal|"%s: nlist: %m"
 argument_list|,
 name|getbootfile
 argument_list|()
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1146,14 +1158,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: nlist: %s"
+literal|"%s: nlist: %m"
 argument_list|,
 name|dump_sys
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1394,8 +1401,6 @@ name|dumpmag
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ddname
-operator|=
 name|find_dev
 argument_list|(
 name|dumpdev
@@ -1656,15 +1661,19 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Clear the magic number in the dump header.  */
+end_comment
+
 begin_function
 name|void
 name|clear_dump
 parameter_list|()
 block|{
-name|long
-name|newdumplo
+name|int
+name|newdumpmag
 decl_stmt|;
-name|newdumplo
+name|newdumpmag
 operator|=
 literal|0
 expr_stmt|;
@@ -1673,11 +1682,11 @@ argument_list|(
 name|dumpfd
 argument_list|,
 operator|&
-name|newdumplo
+name|newdumpmag
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|newdumplo
+name|newdumpmag
 argument_list|)
 argument_list|,
 call|(
@@ -1707,6 +1716,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Check if a dump exists by looking for a magic number in the dump  * header.  */
+end_comment
 
 begin_function
 name|int
@@ -1801,6 +1814,10 @@ literal|1024
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Save the core dump.  */
+end_comment
 
 begin_function
 name|void
@@ -1897,14 +1914,9 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: %s"
+literal|"%s: %m"
 argument_list|,
 name|path
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bounds
@@ -2055,14 +2067,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s"
+literal|"%s: %m"
 argument_list|,
 name|path
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2217,20 +2224,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s"
+literal|"%s: %m"
 argument_list|,
 name|path
-argument_list|,
-name|strerror
-argument_list|(
-name|nw
-operator|==
-literal|0
-condition|?
-name|EIO
-else|:
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|err2
@@ -2341,14 +2337,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s"
+literal|"%s: %m"
 argument_list|,
 name|path
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2417,20 +2408,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s"
+literal|"%s: %m"
 argument_list|,
 name|path
-argument_list|,
-name|strerror
-argument_list|(
-name|nw
-operator|==
-literal|0
-condition|?
-name|EIO
-else|:
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -2458,7 +2438,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s"
+literal|"%s: %m"
 argument_list|,
 name|kernel
 condition|?
@@ -2466,11 +2446,6 @@ name|kernel
 else|:
 name|getbootfile
 argument_list|()
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -2502,9 +2477,86 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Verify that the specified device node exists and matches the  * specified device.  */
+end_comment
+
 begin_function
+name|int
+name|verify_dev
+parameter_list|(
+name|name
+parameter_list|,
+name|dev
+parameter_list|)
 name|char
 modifier|*
+name|name
+decl_stmt|;
+specifier|register
+name|dev_t
+name|dev
+decl_stmt|;
+block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+if|if
+condition|(
+name|lstat
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|S_ISCHR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|||
+name|sb
+operator|.
+name|st_rdev
+operator|!=
+name|dev
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Find the dump device.  *  *  1) try devname(3); see if it returns something sensible  *  2) scan /dev for the desired node  *  3) as a last resort, try to create the node we need  */
+end_comment
+
+begin_function
+name|void
 name|find_dev
 parameter_list|(
 name|dev
@@ -2514,10 +2566,38 @@ name|dev_t
 name|dev
 decl_stmt|;
 block|{
+name|struct
+name|dirent
+modifier|*
+name|ent
+decl_stmt|;
 name|char
 modifier|*
 name|dn
+decl_stmt|,
+modifier|*
+name|dnp
 decl_stmt|;
+name|DIR
+modifier|*
+name|d
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|ddname
+argument_list|,
+name|_PATH_DEV
+argument_list|)
+expr_stmt|;
+name|dnp
+operator|=
+name|ddname
+operator|+
+sizeof|sizeof
+name|_PATH_DEV
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2534,39 +2614,117 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|asprintf
+name|strcpy
 argument_list|(
-operator|&
-name|dn
-argument_list|,
-literal|"/dev/%s"
+name|dnp
 argument_list|,
 name|dn
 argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-return|return
-name|dn
-return|;
-name|syslog
+expr_stmt|;
+if|if
+condition|(
+name|verify_dev
 argument_list|(
-name|LOG_ERR
+name|ddname
 argument_list|,
-literal|"insufficient memory"
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
+block|}
+if|if
+condition|(
+operator|(
+name|d
+operator|=
+name|opendir
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+while|while
+condition|(
+operator|(
+name|ent
+operator|=
+name|readdir
+argument_list|(
+name|d
+argument_list|)
+operator|)
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|dnp
+argument_list|,
+name|ent
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verify_dev
+argument_list|(
+name|ddname
+argument_list|,
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|closedir
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+name|closedir
+argument_list|(
+name|d
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+name|strcpy
+argument_list|(
+name|dnp
+argument_list|,
+literal|"dump"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|ddname
+argument_list|,
+name|S_IFCHR
+operator||
+name|S_IRUSR
+operator||
+name|S_IWUSR
+argument_list|,
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't find device %d/%d"
+literal|"can't find device %d/%#x"
 argument_list|,
 name|major
 argument_list|(
@@ -2579,7 +2737,6 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|1
@@ -2587,6 +2744,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Extract the date and time of the crash from the dump header, and  * make sure it looks sane (within one week of current date and time).  */
+end_comment
 
 begin_function
 name|int
@@ -2708,6 +2869,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Extract the size of the dump from the dump header.  */
+end_comment
+
 begin_function
 name|void
 name|get_dumpsize
@@ -2753,6 +2918,10 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Check that sufficient space is available on the disk that holds the  * save directory.  */
+end_comment
 
 begin_function
 name|int
@@ -3672,19 +3841,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"write: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|n
-operator|==
-operator|-
-literal|1
-condition|?
-name|errno
-else|:
-name|EIO
-argument_list|)
+literal|"write: %m"
 argument_list|)
 expr_stmt|;
 name|exit
