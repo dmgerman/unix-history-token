@@ -714,12 +714,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MT_FREE
+name|MT_NOTMBUF
 value|0
 end_define
 
 begin_comment
-comment|/* should be on free list */
+comment|/* USED INTERNALLY ONLY! Object is not mbuf */
 end_comment
 
 begin_define
@@ -940,6 +940,12 @@ decl_stmt|;
 name|u_long
 name|mb_clpgs
 decl_stmt|;
+name|long
+name|mb_mbtypes
+index|[
+name|MT_NTYPES
+index|]
+decl_stmt|;
 name|short
 name|mb_active
 decl_stmt|;
@@ -948,7 +954,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * General mbuf statistics structure.  * XXX: Modifications of these are not protected by any mutex locks nor by  *	any atomic() manipulations. As a result, we may occasionally lose  *	a count or two. Luckily, not all of these fields are modified at all  *	and remain static, and those that are manipulated are only manipulated  *	in failure situations, which do not occur (hopefully) very often.  */
+comment|/*  * General mbuf allocator statistics structure.  * XXX: Modifications of these are not protected by any mutex locks nor by  *	any atomic() manipulations. As a result, we may occasionally lose  *	a count or two. Luckily, not all of these fields are modified at all  *	and remain static, and those that are manipulated are only manipulated  *	in failure situations, which do not occur (hopefully) very often.  */
 end_comment
 
 begin_struct
@@ -970,11 +976,11 @@ comment|/* times drained protocols for space */
 name|u_long
 name|m_mcfail
 decl_stmt|;
-comment|/* times m_copym failed */
+comment|/* XXX: times m_copym failed */
 name|u_long
 name|m_mpfail
 decl_stmt|;
-comment|/* times m_pullup failed */
+comment|/* XXX: times m_pullup failed */
 name|u_long
 name|m_msize
 decl_stmt|;
@@ -995,6 +1001,10 @@ name|u_long
 name|m_mhlen
 decl_stmt|;
 comment|/* length of data in a header mbuf */
+name|short
+name|m_numtypes
+decl_stmt|;
+comment|/* number of mbtypes (gives # elems in mbpstat's 				   mb_mbtypes[] array. */
 block|}
 struct|;
 end_struct
@@ -1284,7 +1294,7 @@ value|do {					\ 	struct	mbuf **_mmp =&(m);					\ 	struct	mbuf *_mm = *_mmp;				
 end_define
 
 begin_comment
-comment|/*  * change mbuf to new type  */
+comment|/*  * Change mbuf to new type.  * This is a relatively expensive operation and should be avoided.  */
 end_comment
 
 begin_define
@@ -1296,7 +1306,7 @@ name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|(m)->m_type = (t)
+value|m_chtype((m), (t))
 end_define
 
 begin_comment
@@ -1576,6 +1586,19 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|m_chtype
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|short
 parameter_list|)
 function_decl|;
 end_function_decl
