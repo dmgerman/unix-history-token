@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -416,7 +416,7 @@ operator|->
 name|va_rdev
 expr_stmt|;
 block|}
-comment|/* 	 * Remove inode so that it will be reloaded by iget and 	 * checked to see if it is an alias of an existing entry 	 * in the inode cache. 	 */
+comment|/* 	 * Remove inode so that it will be reloaded by VFS_VGET and 	 * checked to see if it is an alias of an existing entry in 	 * the inode cache. 	 */
 name|vput
 argument_list|(
 operator|*
@@ -5881,7 +5881,7 @@ name|v_type
 operator|=
 name|VDIR
 expr_stmt|;
-comment|/* Rest init'd in iget() */
+comment|/* Rest init'd in getnewvnode(). */
 name|ip
 operator|->
 name|i_nlink
@@ -9628,7 +9628,7 @@ argument_list|(
 name|mode
 argument_list|)
 expr_stmt|;
-comment|/* Rest init'd in iget() */
+comment|/* Rest init'd in getnewvnode(). */
 name|ip
 operator|->
 name|i_nlink
