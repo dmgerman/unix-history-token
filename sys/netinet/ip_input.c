@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_var.h>
 end_include
 
@@ -247,36 +253,6 @@ begin_include
 include|#
 directive|include
 file|<netkey/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"faith.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NFAITH
-argument_list|)
-operator|&&
-name|NFAITH
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
 end_include
 
 begin_endif
@@ -2358,6 +2334,14 @@ operator|==
 literal|0
 operator|)
 operator|&&
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|!=
+name|NULL
+operator|&&
 operator|(
 operator|(
 name|m
@@ -2669,16 +2653,6 @@ condition|)
 goto|goto
 name|ours
 goto|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NFAITH
-argument_list|)
-operator|&&
-literal|0
-operator|<
-name|NFAITH
 comment|/* 	 * FAITH(Firewall Aided Internet Translator) 	 */
 if|if
 condition|(
@@ -2729,8 +2703,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Not for us; forward if possible and desirable. 	 */
 if|if
 condition|(

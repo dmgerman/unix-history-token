@@ -299,12 +299,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"faith.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/net_osdep.h>
 end_include
 
@@ -2316,16 +2310,6 @@ block|}
 block|}
 comment|/* XXX indentation (see above) */
 comment|/* 	 * FAITH(Firewall Aided Internet Translator) 	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NFAITH
-argument_list|)
-operator|&&
-literal|0
-operator|<
-name|NFAITH
 if|if
 condition|(
 name|ip6_keepfaith
@@ -2373,8 +2357,6 @@ name|hbhcheck
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Now there is no reason to process the packet if it's not our own 	 * and we're not a router. 	 */
 if|if
 condition|(
