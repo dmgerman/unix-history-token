@@ -1843,7 +1843,7 @@ name|kmem_free
 argument_list|(
 name|kernel_map
 argument_list|,
-name|va
+name|sva
 argument_list|,
 name|size
 argument_list|)
