@@ -283,9 +283,6 @@ name|struct
 name|aac_command
 modifier|*
 name|cm
-parameter_list|,
-name|int
-name|timeout
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4633,7 +4630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Submit a command to the controller, return when it completes.  * XXX This is very dangerous!  If the card has gone out to lunch, we could  *     be stuck here forever.  At the same time, signals are not caught  *     because there is a risk that a signal could wakeup the tsleep before  *     the card has a chance to complete the command.  The passed in timeout  *     is ignored for the same reason.  Since there is no way to cancel a  *     command in progress, we should probably create a 'dead' queue where  *     commands go that have been interrupted/timed-out/etc, that keeps them  *     out of the free pool.  That way, if the card is just slow, it won't  *     spam the memory of a command that has been recycled.  */
+comment|/*  * Submit a command to the controller, return when it completes.  * XXX This is very dangerous!  If the card has gone out to lunch, we could  *     be stuck here forever.  At the same time, signals are not caught  *     because there is a risk that a signal could wakeup the sleep before  *     the card has a chance to complete the command.  Since there is no way  *     to cancel a command that is in progress, we can't protect against the  *     card completing a command late and spamming the command and data  *     memory.  So, we are held hostage until the command completes.  */
 end_comment
 
 begin_function
@@ -4645,9 +4642,6 @@ name|struct
 name|aac_command
 modifier|*
 name|cm
-parameter_list|,
-name|int
-name|timeout
 parameter_list|)
 block|{
 name|struct
@@ -4657,8 +4651,6 @@ name|sc
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -4688,24 +4680,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|!
-operator|(
-name|cm
-operator|->
-name|cm_flags
-operator|&
-name|AAC_CMD_COMPLETED
-operator|)
-operator|&&
-operator|(
-name|error
-operator|!=
-name|EWOULDBLOCK
-operator|)
-condition|)
-block|{
 name|error
 operator|=
 name|msleep
@@ -4724,7 +4698,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -11074,15 +11047,12 @@ operator|=
 name|aac_wait_command
 argument_list|(
 name|cm
-argument_list|,
-literal|30
 argument_list|)
 operator|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX user timeout? */
 name|device_printf
 argument_list|(
 name|sc
