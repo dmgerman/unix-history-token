@@ -3578,10 +3578,10 @@ if|if
 condition|(
 name|__rpc_get_local_uid
 argument_list|(
+name|trans
+argument_list|,
 operator|&
 name|uid
-argument_list|,
-name|trans
 argument_list|)
 operator|<
 literal|0
