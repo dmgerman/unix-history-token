@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.14	81/03/06	*/
+comment|/*	mba.c	4.15	81/03/06	*/
 end_comment
 
 begin_include
@@ -129,13 +129,6 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|mba_drv
-modifier|*
-name|mdp
-decl_stmt|;
-comment|/* drive registers */
-specifier|register
-name|struct
 name|buf
 modifier|*
 name|bp
@@ -166,12 +159,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mdp
-operator|=
-name|mi
-operator|->
-name|mi_drv
-expr_stmt|;
 comment|/* 	 * Let the drivers unit start routine have at it 	 * and then process the request further, per its instructions. 	 */
 switch|switch
 condition|(
@@ -197,6 +184,14 @@ operator|->
 name|mi_tab
 operator|.
 name|b_active
+operator|=
+literal|0
+expr_stmt|;
+name|mi
+operator|->
+name|mi_tab
+operator|.
+name|b_errcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -392,7 +387,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -681,12 +678,12 @@ name|int
 name|drive
 decl_stmt|;
 name|int
-name|mbastat
+name|mbasr
 decl_stmt|,
 name|as
 decl_stmt|;
 comment|/* 	 * Read out the massbus status register 	 * and attention status register and clear 	 * the bits in same by writing them back. 	 */
-name|mbastat
+name|mbasr
 operator|=
 name|mbp
 operator|->
@@ -696,14 +693,14 @@ name|mbp
 operator|->
 name|mba_sr
 operator|=
-name|mbastat
+name|mbasr
 expr_stmt|;
 if|#
 directive|if
 name|VAX750
 if|if
 condition|(
-name|mbastat
+name|mbasr
 operator|&
 name|MBS_CBHUNG
 condition|)
@@ -734,6 +731,8 @@ literal|0
 index|]
 operator|.
 name|mbd_as
+operator|&
+literal|0xff
 expr_stmt|;
 name|mbp
 operator|->
@@ -812,7 +811,7 @@ call|)
 argument_list|(
 name|mi
 argument_list|,
-name|mbastat
+name|mbasr
 argument_list|)
 condition|)
 block|{
@@ -899,35 +898,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|doattn
-label|:
 comment|/* 	 * Service drives which require attention 	 * after non-data-transfer operations. 	 */
-for|for
-control|(
+while|while
+condition|(
 name|drive
 operator|=
-literal|0
-init|;
+name|ffs
+argument_list|(
 name|as
-operator|&&
-name|drive
-operator|<
-literal|8
-condition|;
-name|drive
-operator|++
-control|)
-if|if
-condition|(
-name|as
-operator|&
-operator|(
-literal|1
-operator|<<
-name|drive
-operator|)
+argument_list|)
 condition|)
 block|{
+name|drive
+operator|--
+expr_stmt|;
+comment|/* was 1 origin */
 name|as
 operator|&=
 operator|~
@@ -937,7 +922,7 @@ operator|<<
 name|drive
 operator|)
 expr_stmt|;
-comment|/* 			 * Consistency check the implied attention, 			 * to make sure the drive should have interrupted. 			 */
+comment|/* 		 * driver has a handler for non-data transfer 		 * interrupts, give it a chance to tell us that 		 * the operation needs to be redone 		 */
 name|mi
 operator|=
 name|mhp
@@ -952,42 +937,8 @@ condition|(
 name|mi
 operator|==
 name|NULL
-operator|||
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_active
-operator|==
-literal|0
-operator|&&
-operator|(
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
-operator|==
-literal|0
-operator|||
-operator|(
-name|bp
-operator|=
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_actf
-operator|)
-operator|==
-name|NULL
 condition|)
 continue|continue;
-comment|/* unsolicited */
-comment|/* 			 * If this interrupt wasn't a notification that 			 * a dual ported drive is available, and if the 			 * driver has a handler for non-data transfer 			 * interrupts, give it a chance to tell us that 			 * the operation needs to be redone 			 */
 if|if
 condition|(
 name|mi
@@ -995,18 +946,6 @@ operator|->
 name|mi_driver
 operator|->
 name|md_ndint
-operator|&&
-operator|(
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|mi
@@ -1035,7 +974,7 @@ block|{
 case|case
 name|MBN_DONE
 case|:
-comment|/* 					 * Non-data transfer interrupt 					 * completed i/o request's processing. 					 */
+comment|/* 				 * Non-data transfer interrupt 				 * completed i/o request's processing. 				 */
 name|mi
 operator|->
 name|mi_tab
