@@ -69,6 +69,10 @@ name|MAXWIN
 index|]
 decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+literal|64
+argument_list|)
 struct|;
 end_struct
 
