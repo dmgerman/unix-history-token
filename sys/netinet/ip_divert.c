@@ -1491,7 +1491,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* in_pcbbind assumes that the nam is a sockaddr_in 	 * and in_pcbbind requires a valid address. Since divert 	 * sockets don't we need to make sure the address is 	 * filled in properly. 	 * XXX -- divert should not be abusing in_pcbind 	 * and should probably have its own family. 	 */
+comment|/* in_pcbbind assumes that nam is a sockaddr_in 	 * and in_pcbbind requires a valid address. Since divert 	 * sockets don't we need to make sure the address is 	 * filled in properly. 	 * XXX -- divert should not be abusing in_pcbind 	 * and should probably have its own family. 	 */
 if|if
 condition|(
 name|nam
