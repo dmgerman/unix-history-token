@@ -1924,6 +1924,12 @@ operator|->
 name|pp_name
 operator|!=
 name|NULL
+operator|&&
+name|ent
+operator|->
+name|pp_vendor
+operator|!=
+literal|0
 condition|;
 name|ent
 operator|=
@@ -1982,6 +1988,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|ent
+operator|->
+name|pp_name
+condition|)
 name|device_printf
 argument_list|(
 name|dev
