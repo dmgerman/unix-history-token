@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,33 +54,6 @@ end_comment
 
 begin_comment
 comment|/*-  * main.c --  *	The main file for this entire program. Exit routines etc  *	reside here.  *  * Utility functions defined in this file:  *	Main_ParseArgLine   	Takes a line of arguments, breaks them and  *	    	  	    	treats them as if they were given when first  *	    	  	    	invoked. Used by the parse module to implement  *	    	  	    	the .MFLAGS target.  *  *	Error	  	    	Print a tagged error message. The global  *	    	  	    	MAKE variable must have been defined. This  *	    	  	    	takes a format string and two optional  *	    	  	    	arguments for it.  *  *	Fatal	  	    	Print an error message and exit. Also takes  *	    	  	    	a format string and two arguments.  *  *	Punt	  	    	Aborts all jobs and exits with a message. Also  *	    	  	    	takes a format string and two arguments.  *  *	Finish	  	    	Finish things up by printing the number of  *	    	  	    	errors which occured, as passed to it, and  *	    	  	    	exiting.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|Sprite
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Sprite */
 end_comment
 
 begin_include
@@ -104,19 +77,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include

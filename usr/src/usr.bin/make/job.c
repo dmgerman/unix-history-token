@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.2 (Berkeley) %G%"
+literal|"@(#)job.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,41 +499,12 @@ literal|"set -"
 block|,
 literal|5
 block|,
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|Sprite
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|SYSV
-argument_list|)
-name|TRUE
-block|,
-literal|"set -e"
-block|,
-literal|"set +e"
-block|,
-else|#
-directive|else
 name|FALSE
 block|,
 literal|"echo \"%s\"\n"
 block|,
 literal|"sh -c '%s || exit 0'\n"
 block|,
-endif|#
-directive|endif
 literal|"v"
 block|,
 literal|"e"
@@ -1814,7 +1785,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 	 * If it exited non-zero and either we're doing things our 	 * way or we're not ignoring errors, the job is finished. 	 * Similarly, if the shell died because of a signal (the 	 * conditional on SIGCONT is to handle the mapping of Sprite 	 * signal semantics whereby wait will return a signal 	 * termination with SIGCONT being the signal to indicate that the 	 * child has resumed), the job is also finished. In these 	 * cases, finish out the job's output before printing the exit 	 * status... 	 */
+comment|/* 	 * If it exited non-zero and either we're doing things our 	 * way or we're not ignoring errors, the job is finished. 	 * Similarly, if the shell died because of a signal 	 * the job is also finished. In these 	 * cases, finish out the job's output before printing the exit 	 * status... 	 */
 if|if
 condition|(
 name|usePipes
@@ -6798,19 +6769,6 @@ argument_list|(
 name|JOB
 argument_list|)
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|Sprite
-name|printf
-argument_list|(
-literal|"Process %x exited or stopped.\n"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|printf
 argument_list|(
 literal|"Process %d exited or stopped.\n"
@@ -6818,10 +6776,6 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* Sprite */
-block|}
 name|jnode
 operator|=
 name|Lst_Find
@@ -6880,18 +6834,6 @@ operator|==
 name|NILLNODE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|Sprite
-name|Error
-argument_list|(
-literal|"Resumed child (%x) not in table"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|Error
 argument_list|(
 literal|"Resumed child (%d) not in table"
@@ -6899,9 +6841,6 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* Sprite */
 continue|continue;
 block|}
 name|job
@@ -6928,18 +6867,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|Sprite
-name|Error
-argument_list|(
-literal|"Child (%x) not in table?"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|Error
 argument_list|(
 literal|"Child (%d) not in table?"
@@ -6947,9 +6874,6 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* Sprite */
 continue|continue;
 block|}
 block|}
@@ -7306,21 +7230,6 @@ modifier|*
 name|begin
 decl_stmt|;
 comment|/* node for commands to do at the very start */
-ifdef|#
-directive|ifdef
-name|Sprite
-name|sprintf
-argument_list|(
-name|tfile
-argument_list|,
-literal|"/tmp/make%05x"
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|sprintf
 argument_list|(
 name|tfile
@@ -7331,9 +7240,6 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* Sprite */
 name|jobs
 operator|=
 name|Lst_Init

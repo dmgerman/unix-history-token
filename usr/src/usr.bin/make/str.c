@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.3 (Berkeley) %G%"
+literal|"@(#)str.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*-  * str.c --  *	General utilites for handling strings.  *  * Interface:  *	Str_Concat	     	Concatenate two strings, placing some sort  *	    	  	    	of separator between them and freeing  *	    	  	    	the two strings, all this under the control  *	    	  	    	of the STR_ flags given as the third arg.  *  *	Str_FindSubstring   	Find a substring within a string (from  *	    	  	    	original Sprite libc).  *  *	Str_Match   	    	Pattern match two strings.  */
+comment|/*-  * str.c --  *	General utilites for handling strings.  *  * Interface:  *	Str_Concat	     	Concatenate two strings, placing some sort  *	    	  	    	of separator between them and freeing  *	    	  	    	the two strings, all this under the control  *	    	  	    	of the STR_ flags given as the third arg.  *  *	Str_FindSubstring   	Find a substring within a string  *  *	Str_Match   	    	Pattern match two strings.  */
 end_comment
 
 begin_include
@@ -1071,12 +1071,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|Sprite
-end_ifndef
-
 begin_comment
 comment|/*  *----------------------------------------------------------------------  * Str_FindSubstring --  *	See if a string contains a particular substring.  *  * Results:  *	If string contains substring, the return value is the  *	location of the first matching instance of substring  *	in string.  If string doesn't contain substring, the  *	return value is NULL.  Matching is done on an exact  *	character-for-character basis with no wildcards or special  *	characters.  *  * Side effects:  *	None.  *----------------------------------------------------------------------  */
 end_comment
@@ -1188,15 +1182,6 @@ name|NULL
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !Sprite */
-end_comment
 
 begin_comment
 comment|/*  *----------------------------------------------------------------------  *  * Str_Match --  *  *      See if a particular string matches a particular pattern.  *  * Results:  *      Non-zero is returned if string matches pattern, 0 otherwise.  *      The matching operation permits the following special characters  *      in the pattern: *?\[] (see the man page for details on what  *      these mean).  *  * Side effects:  *      None.  *  *----------------------------------------------------------------------  */
