@@ -15,10 +15,16 @@ directive|define
 name|PORT_AFTER_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PORT_AFTER_H
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|CAN_RECONNECT
+name|PORT_AFTER_H
 end_define
 
 begin_define
@@ -357,6 +363,24 @@ end_endif
 begin_comment
 comment|/* HAS_INET6_STRUCTS */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISC_FACILITY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISC_FACILITY
+value|LOG_DAEMON
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

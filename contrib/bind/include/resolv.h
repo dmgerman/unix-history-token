@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium. 
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.29 1999/10/07 08:24:14 vixie Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.32 2000/12/23 08:14:49 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -388,6 +388,17 @@ begin_comment
 comment|/* Default #/tries. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RES_MAXTIME
+value|65535
+end_define
+
+begin_comment
+comment|/* Infinity, in milliseconds. */
+end_comment
+
 begin_struct
 struct|struct
 name|__res_state
@@ -492,13 +503,15 @@ name|res_h_errno
 decl_stmt|;
 comment|/* last one set for this context */
 name|int
-name|_sock
+name|_vcsock
 decl_stmt|;
-comment|/* PRIVATE: for res_send i/o */
+comment|/* PRIVATE: for res_send VC i/o */
 name|u_int
 name|_flags
 decl_stmt|;
 comment|/* PRIVATE: see below */
+union|union
+block|{
 name|char
 name|pad
 index|[
@@ -506,6 +519,37 @@ literal|52
 index|]
 decl_stmt|;
 comment|/* On an i386 this means 512b total. */
+struct|struct
+block|{
+name|u_int16_t
+name|nscount
+decl_stmt|;
+name|u_int16_t
+name|nstimes
+index|[
+name|MAXNS
+index|]
+decl_stmt|;
+comment|/* ms. */
+name|int
+name|nssocks
+index|[
+name|MAXNS
+index|]
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|nsaddrs
+index|[
+name|MAXNS
+index|]
+decl_stmt|;
+block|}
+name|_ext
+struct|;
+block|}
+name|_u
+union|;
 block|}
 struct|;
 end_struct
@@ -749,6 +793,17 @@ end_define
 
 begin_comment
 comment|/* do not strip TSIG records */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_BLAST
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* blast all recursive servers */
 end_comment
 
 begin_define
@@ -1580,8 +1635,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|res_npquery
-value|__res_npquery
+name|res_pquery
+value|__res_pquery
 end_define
 
 begin_define
@@ -2305,7 +2360,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|res_npquery
+name|res_pquery
 name|__P
 argument_list|(
 operator|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1996,1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: irs.h,v 8.4 1999/01/18 07:46:46 vixie Exp $  */
+comment|/*  * $Id: irs.h,v 8.5 2000/12/23 08:14:49 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -1512,6 +1512,16 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|irs_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * These forward declarations are for the semi-private functions in  * the get*.c files. Each of these funcs implements the real get*  * functionality and the standard versions are just wrappers that  * call these. Apart from the wrappers, only irpd is expected to  * call these directly, hence these decls are put here and not in  * the /usr/include replacements.  */

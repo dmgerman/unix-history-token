@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_stats.c,v 8.27 1999/10/13 16:39:12 vixie Exp $"
+literal|"$Id: ns_stats.c,v 8.32 2000/11/29 06:56:05 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -234,6 +234,128 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|ns_stats_cnt
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ns_stats_disabled
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|ns_stats_dumpandclear
+parameter_list|()
+block|{
+name|time_t
+name|timenow
+init|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+decl_stmt|;
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
+name|ns_stats
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|f
+operator|=
+name|fopen
+argument_list|(
+name|server_options
+operator|->
+name|stats_filename
+argument_list|,
+literal|"a"
+argument_list|)
+operator|)
+condition|)
+block|{
+name|ns_notice
+argument_list|(
+name|ns_log_statistics
+argument_list|,
+literal|"cannot open stat file, \"%s\""
+argument_list|,
+name|server_options
+operator|->
+name|stats_filename
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|f
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|user_id
+argument_list|,
+name|group_id
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"+++ Host Statistics Cleared +++ (%ld) %s"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|timenow
+argument_list|,
+name|checked_ctime
+argument_list|(
+operator|&
+name|timenow
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|my_fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+block|}
+name|ns_freestats
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|void
 name|ns_stats
@@ -291,6 +413,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|user_id
+argument_list|,
+name|group_id
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
@@ -452,6 +589,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|user_id
+argument_list|,
+name|group_id
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
@@ -700,6 +852,18 @@ comment|/* sent them a non autoritative answer */
 literal|"SNXD"
 block|,
 comment|/* sent them a negative response */
+literal|"RUQ"
+block|,
+comment|/* sent us an unapproved query */
+literal|"RURQ"
+block|,
+comment|/* sent us an unapproved recursive query */
+literal|"RUXFR"
+block|,
+comment|/* sent us an unapproved AXFR or IXFR */
+literal|"RUUpd"
+block|,
+comment|/* sent us an unapproved update */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -845,6 +1009,14 @@ expr_stmt|;
 name|nameserInit
 operator|++
 expr_stmt|;
+name|ns_stats_cnt
+operator|=
+literal|0
+expr_stmt|;
+name|ns_stats_disabled
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|dummy
 operator|.
@@ -888,6 +1060,45 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|server_options
+operator|->
+name|max_host_stats
+operator|!=
+literal|0
+operator|&&
+name|ns_stats_cnt
+operator|>
+name|server_options
+operator|->
+name|max_host_stats
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ns_stats_disabled
+condition|)
+name|ns_notice
+argument_list|(
+name|ns_log_statistics
+argument_list|,
+literal|"ns_stats_disabled: %s reached"
+argument_list|,
+literal|"host-statistics-max"
+argument_list|)
+expr_stmt|;
+name|ns_stats_disabled
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|ns
 operator|=
 operator|(
@@ -1002,6 +1213,9 @@ goto|goto
 name|nomem
 goto|;
 block|}
+name|ns_stats_cnt
+operator|++
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1299,6 +1513,7 @@ argument_list|(
 name|OPTION_HOSTSTATS
 argument_list|)
 condition|)
+block|{
 name|tree_trav
 argument_list|(
 operator|&
@@ -1307,6 +1522,18 @@ argument_list|,
 name|nameserStatsTravUAR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ns_stats_disabled
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"++ Host Statistics Incomplete ++\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|f
@@ -1355,7 +1582,7 @@ index|]
 decl_stmt|,
 name|header
 index|[
-literal|64
+literal|128
 index|]
 decl_stmt|;
 name|time_t
@@ -1407,11 +1634,12 @@ operator|&
 name|childu
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Get around a stupid compiler bug in gcc on solaris. 	 * There is a problem if three or more doubles are passed to 	 * sprintf. 	 *<http://gcc.gnu.org/cgi-bin/gnatsweb.pl?cmd=view&pr=337&database=gcc> 	 */
 name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"CPU=%gu/%gs CHILDCPU=%gu/%gs"
+literal|"CPU=%gu/%gs CHILDCPU="
 argument_list|,
 name|tv_float
 argument_list|(
@@ -1426,6 +1654,13 @@ name|usage
 operator|.
 name|ru_stime
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|header
+argument_list|,
+literal|"%gu/%gs"
 argument_list|,
 name|tv_float
 argument_list|(
@@ -1446,7 +1681,7 @@ name|ns_info
 argument_list|(
 name|ns_log_statistics
 argument_list|,
-literal|"USAGE %lu %lu %s"
+literal|"USAGE %lu %lu %s%s"
 argument_list|,
 operator|(
 name|u_long
@@ -1459,6 +1694,8 @@ operator|)
 name|boottime
 argument_list|,
 name|buffer
+argument_list|,
+name|header
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1756,6 +1993,14 @@ name|nameserFree
 argument_list|)
 expr_stmt|;
 name|nameserInit
+operator|=
+literal|0
+expr_stmt|;
+name|ns_stats_cnt
+operator|=
+literal|0
+expr_stmt|;
+name|ns_stats_disabled
 operator|=
 literal|0
 expr_stmt|;

@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getpwent.c,v 1.20 1999/10/13 16:39:31 vixie Exp $"
+literal|"$Id: getpwent.c,v 1.21 2000/02/21 21:40:56 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,14 +347,11 @@ init|=
 name|init
 argument_list|()
 decl_stmt|;
-return|return
-operator|(
 name|endpwent_p
 argument_list|(
 name|net_data
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind/src/lib/dst/dst_api.c,v 1.13 1999/10/13 16:39:22 vixie Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/dst_api.c,v 1.16 2000/11/13 04:09:23 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,7 +1073,7 @@ if|if
 condition|(
 operator|(
 name|type
-operator|&&
+operator|&
 operator|(
 name|DST_PUBLIC
 operator||
@@ -3231,6 +3231,8 @@ operator|&&
 name|key
 operator|->
 name|dk_func
+operator|->
+name|to_dns_key
 operator|!=
 name|NULL
 condition|)

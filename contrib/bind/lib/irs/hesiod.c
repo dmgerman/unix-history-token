@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: hesiod.c,v 1.20 1999/02/22 04:09:06 vixie Exp $"
+literal|"$Id: hesiod.c,v 1.21 2000/02/28 14:51:08 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,6 +337,12 @@ expr_stmt|;
 name|ctx
 operator|->
 name|RHS
+operator|=
+name|NULL
+expr_stmt|;
+name|ctx
+operator|->
+name|res
 operator|=
 name|NULL
 expr_stmt|;

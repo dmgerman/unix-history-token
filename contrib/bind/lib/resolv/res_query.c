@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 8.19 1999/10/15 19:49:11 vixie Exp $"
+literal|"$Id: res_query.c,v 8.20 2000/02/29 05:39:12 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +574,8 @@ name|int
 name|trailing_dot
 decl_stmt|,
 name|ret
+decl_stmt|,
+name|saved_herrno
 decl_stmt|;
 name|int
 name|got_nodata
@@ -585,6 +587,11 @@ init|=
 literal|0
 decl_stmt|,
 name|root_on_list
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|tried_as_is
 init|=
 literal|0
 decl_stmt|;
@@ -688,7 +695,12 @@ name|anslen
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * If there are enough dots in the name, do no searching. 	 * (The threshold can be set with the "ndots" option.) 	 */
+comment|/* 	 * If there are enough dots in the name, let's just give it a 	 * try 'as is'. The threshold can be set with the "ndots" option. 	 * Also, query 'as is', if there is a trailing dot in the name. 	 */
+name|saved_herrno
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|dots
@@ -699,8 +711,9 @@ name|ndots
 operator|||
 name|trailing_dot
 condition|)
-return|return
-operator|(
+block|{
+name|ret
+operator|=
 name|res_nquerydomain
 argument_list|(
 name|statp
@@ -717,8 +730,28 @@ name|answer
 argument_list|,
 name|anslen
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|>
+literal|0
+operator|||
+name|trailing_dot
+condition|)
+return|return
+operator|(
+name|ret
 operator|)
 return|;
+name|saved_herrno
+operator|=
+name|h_errno
+expr_stmt|;
+name|tried_as_is
+operator|++
+expr_stmt|;
+block|}
 comment|/* 	 * We do at least one level of search if 	 *	- there is no dot and RES_DEFNAME is set, or 	 *	- there is at least one dot, there is no trailing dot, 	 *	  and RES_DNSRCH is set. 	 */
 if|if
 condition|(
@@ -937,12 +970,19 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If the name has any dots at all, and "." is not on the search 	 * list, then try an as-is query now. 	 */
+comment|/* 	 * If the name has any dots at all, and no earlier 'as-is' query  	 * for the name, and "." is not on the search list, then try an as-is 	 * query now. 	 */
 if|if
 condition|(
 name|statp
 operator|->
 name|ndots
+operator|&&
+operator|!
+operator|(
+name|tried_as_is
+operator|||
+name|root_on_list
+operator|)
 condition|)
 block|{
 name|ret
@@ -977,6 +1017,21 @@ operator|)
 return|;
 block|}
 comment|/* if we got here, we didn't satisfy the search. 	 * if we did an initial full query, return that query's H_ERRNO 	 * (note that we wouldn't be here if that query had succeeded). 	 * else if we ever got a nodata, send that back as the reason. 	 * else send back meaningless H_ERRNO, that being the one from 	 * the last DNSRCH we did. 	 */
+if|if
+condition|(
+name|saved_herrno
+operator|!=
+operator|-
+literal|1
+condition|)
+name|RES_SET_H_ERRNO
+argument_list|(
+name|statp
+argument_list|,
+name|saved_herrno
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|got_nodata

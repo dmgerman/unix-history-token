@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl.c,v 1.15 1999/10/13 16:39:32 vixie Exp $"
+literal|"$Id: lcl.c,v 1.16 2000/02/28 07:52:16 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,7 +486,7 @@ operator|->
 name|res
 operator|->
 name|options
-operator||
+operator|&
 name|RES_INIT
 operator|)
 operator|==

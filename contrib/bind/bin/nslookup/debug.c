@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: debug.c,v 8.15 1999/10/13 16:39:16 vixie Exp $"
+literal|"$Id: debug.c,v 8.17 2000/11/08 06:47:31 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,12 @@ begin_comment
 comment|/*  *  Imported from res_debug.c  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_DECL_RES_OPCODES
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -136,6 +142,11 @@ name|_res_opcodes
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  Used to highlight the start of a record when printing it.  */
@@ -3207,6 +3218,49 @@ literal|2048
 index|]
 decl_stmt|;
 comment|/* XXX need to malloc/realloc. */
+name|char
+name|rrname
+index|[
+name|NS_MAXDNAME
+index|]
+decl_stmt|;
+name|cp2
+operator|=
+name|p_fqnname
+argument_list|(
+name|ocp
+argument_list|,
+name|msg
+argument_list|,
+name|NS_MAXCDNAME
+argument_list|,
+name|rrname
+argument_list|,
+sizeof|sizeof
+name|rrname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp2
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"(name truncated?)\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* compression error */
+block|}
 if|if
 condition|(
 name|ns_sprintrrf
@@ -3217,7 +3271,7 @@ name|eom
 operator|-
 name|msg
 argument_list|,
-literal|"?"
+name|rrname
 argument_list|,
 operator|(
 name|ns_class

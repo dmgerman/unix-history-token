@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind/src/lib/dst/rsaref_link.c,v 1.6 1999/10/13 16:39:24 vixie Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/rsaref_link.c,v 1.7 2000/07/17 07:36:53 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3408,6 +3408,21 @@ operator|&
 name|tv
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|tv
+operator|.
+name|tv_usec
+operator|>=
+literal|0
+operator|&&
+name|tv
+operator|.
+name|tv_usec
+operator|<
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|R_RandomUpdate

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns.c,v 1.14 1999/01/18 07:46:47 vixie Exp $"
+literal|"$Id: dns.c,v 1.15 2000/02/28 07:52:16 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -526,7 +526,7 @@ operator|->
 name|res
 operator|->
 name|options
-operator||
+operator|&
 name|RES_INIT
 operator|)
 operator|==

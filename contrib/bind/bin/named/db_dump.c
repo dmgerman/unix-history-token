@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 8.40 1999/10/13 16:39:01 vixie Exp $"
+literal|"$Id: db_dump.c,v 8.48 2000/12/23 08:14:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ comment|/*  * Portions Copyright (c) 1995 by International Business Machines, In
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -182,6 +182,27 @@ directive|include
 file|"named.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+end_ifdef
+
+begin_decl_stmt
+name|u_int32_t
+name|db_total_hits
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HITCOUNTS */
+end_comment
+
 begin_function_decl
 specifier|static
 specifier|const
@@ -194,6 +215,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|fwd_dump
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Dump current data base in a format similar to RFC 883.  */
 end_comment
@@ -201,7 +234,9 @@ end_comment
 begin_function
 name|void
 name|doadump
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -236,6 +271,28 @@ operator|&
 name|tt
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+if|if
+condition|(
+name|NS_OPTION_P
+argument_list|(
+name|OPTION_HITCOUNT
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"; Total hits: %d\n"
+argument_list|,
+name|db_total_hits
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 name|fprintf
 argument_list|(
 name|fp
@@ -261,6 +318,21 @@ operator|!=
 literal|0
 condition|)
 name|zt_dump
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fwddata
+operator|!=
+name|NULL
+operator|&&
+name|fwddata_count
+operator|!=
+literal|0
+condition|)
+name|fwd_dump
 argument_list|(
 name|fp
 argument_list|)
@@ -633,6 +705,84 @@ argument_list|(
 name|fp
 argument_list|,
 literal|";; --zone table--\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|fwd_dump
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|";; ++forwarders table++\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|fwddata_count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"; %s rtt=%d\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|fwddata
+index|[
+name|i
+index|]
+operator|->
+name|fwdaddr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|,
+name|fwddata
+index|[
+name|i
+index|]
+operator|->
+name|nsdata
+operator|->
+name|d_nstime
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|";; --forwarders table--\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1115,11 +1265,8 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d\t"
+literal|"%u\t"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|dp
 operator|->
 name|d_ttl
@@ -1130,7 +1277,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d\t"
+literal|"%u\t"
 argument_list|,
 name|zones
 index|[
@@ -2077,19 +2224,12 @@ argument_list|,
 name|preference
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -2108,20 +2248,12 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -2140,20 +2272,12 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -2172,7 +2296,6 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|fp
@@ -2970,7 +3093,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%sLAME=%d"
+literal|"%sLAME=%ld"
 argument_list|,
 name|sep
 argument_list|,
@@ -2993,9 +3116,14 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_ns
+name|d_addr
+operator|.
+name|s_addr
 operator|!=
-name|NULL
+name|htonl
+argument_list|(
+literal|0
+argument_list|)
 condition|)
 block|{
 name|fprintf
@@ -3010,9 +3138,7 @@ name|inet_ntoa
 argument_list|(
 name|dp
 operator|->
-name|d_ns
-operator|->
-name|addr
+name|d_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3021,6 +3147,38 @@ operator|=
 literal|" "
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+if|if
+condition|(
+name|NS_OPTION_P
+argument_list|(
+name|OPTION_HITCOUNT
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%shits=%d"
+argument_list|,
+name|sep
+argument_list|,
+name|dp
+operator|->
+name|d_hitcnt
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|" "
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 name|putc
 argument_list|(
 literal|'\n'

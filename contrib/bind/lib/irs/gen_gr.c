@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_gr.c,v 1.21 1999/10/13 16:39:29 vixie Exp $"
+literal|"$Id: gen_gr.c,v 1.22 2000/07/11 05:51:56 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1885,6 +1885,8 @@ decl_stmt|,
 name|ndst
 decl_stmt|,
 name|nnew
+decl_stmt|,
+name|memadj
 decl_stmt|;
 if|if
 condition|(
@@ -2148,6 +2150,14 @@ block|{
 comment|/* No harm done, no work done. */
 return|return;
 block|}
+name|memadj
+operator|=
+name|cp
+operator|-
+name|pvt
+operator|->
+name|membuf
+expr_stmt|;
 name|pvt
 operator|->
 name|membuf
@@ -2227,9 +2237,27 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|preserve
 condition|)
+block|{
+name|pvt
+operator|->
+name|group
+operator|.
+name|gr_name
+operator|+=
+name|memadj
+expr_stmt|;
+name|pvt
+operator|->
+name|group
+operator|.
+name|gr_passwd
+operator|+=
+name|memadj
+expr_stmt|;
+block|}
+else|else
 block|{
 name|pvt
 operator|->

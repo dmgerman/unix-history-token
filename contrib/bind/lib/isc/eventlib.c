@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eventlib.c,v 1.44 1999/10/13 17:11:20 vixie Exp $"
+literal|"$Id: eventlib.c,v 1.45 2000/02/04 07:25:39 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1737,7 +1737,9 @@ literal|0
 operator|&&
 operator|(
 name|nextTimer
-operator|&&
+operator|==
+name|NULL
+operator|||
 operator|!
 name|timerPast
 operator|)

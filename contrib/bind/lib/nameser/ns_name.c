@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_name.c,v 8.12.2.1 2000/11/09 23:15:32 vixie Exp $"
+literal|"$Id: ns_name.c,v 8.15 2000/03/30 22:53:46 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1641,6 +1641,10 @@ name|int
 name|n
 decl_stmt|,
 name|l
+decl_stmt|,
+name|first
+init|=
+literal|1
 decl_stmt|;
 name|srcp
 operator|=
@@ -1904,6 +1908,8 @@ name|msg
 operator|)
 operator|<
 literal|0x4000
+operator|&&
+name|first
 condition|)
 block|{
 operator|*
@@ -1916,6 +1922,10 @@ operator|*
 name|cpp
 operator|=
 name|NULL
+expr_stmt|;
+name|first
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -2572,16 +2582,44 @@ name|cpp
 operator|++
 control|)
 block|{
+name|sp
+operator|=
+operator|*
+name|cpp
+expr_stmt|;
+comment|/* 		 * terminate search on: 		 * root label 		 * compression pointer 		 * unusable offset 		 */
+while|while
+condition|(
+operator|*
+name|sp
+operator|!=
+literal|0
+operator|&&
+operator|(
+operator|*
+name|sp
+operator|&
+name|NS_CMPRSFLGS
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|sp
+operator|-
+name|msg
+operator|)
+operator|<
+literal|0x4000
+condition|)
+block|{
 name|dn
 operator|=
 name|domain
 expr_stmt|;
-name|sp
-operator|=
 name|cp
 operator|=
-operator|*
-name|cpp
+name|sp
 expr_stmt|;
 while|while
 condition|(
@@ -2596,7 +2634,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * check for indirection 			 */
+comment|/* 				 * check for indirection 				 */
 switch|switch
 condition|(
 name|n
@@ -2721,7 +2759,14 @@ block|}
 block|}
 name|next
 label|:
-empty_stmt|;
+name|sp
+operator|+=
+operator|*
+name|sp
+operator|+
+literal|1
+expr_stmt|;
+block|}
 block|}
 name|errno
 operator|=

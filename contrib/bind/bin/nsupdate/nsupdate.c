@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsupdate.c,v 8.21 1999/10/19 22:22:59 cyarnell Exp $"
+literal|"$Id: nsupdate.c,v 8.26 2000/12/23 08:14:48 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -633,18 +633,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -662,16 +658,6 @@ name|buf2
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|,
-name|hostbuf
-index|[
-literal|100
-index|]
-decl_stmt|,
-name|filebuf
-index|[
-literal|100
-index|]
 decl_stmt|;
 name|char
 name|dnbuf
@@ -683,28 +669,6 @@ name|data
 index|[
 name|MAXDATA
 index|]
-decl_stmt|;
-name|u_char
-name|packet
-index|[
-name|PACKETSZ
-index|]
-decl_stmt|,
-name|answer
-index|[
-name|PACKETSZ
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|host
-init|=
-name|hostbuf
-decl_stmt|,
-modifier|*
-name|batchfile
-init|=
-name|filebuf
 decl_stmt|;
 name|char
 modifier|*
@@ -794,10 +758,6 @@ decl_stmt|;
 name|ns_updque
 name|listuprec
 decl_stmt|;
-name|struct
-name|in_addr
-name|hostaddr
-decl_stmt|;
 specifier|extern
 name|int
 name|getopt
@@ -829,19 +789,6 @@ modifier|*
 name|keyname
 init|=
 name|NULL
-decl_stmt|,
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|pp
-decl_stmt|;
-name|int
-name|file_major
-decl_stmt|,
-name|file_minor
-decl_stmt|,
-name|alg
 decl_stmt|;
 name|progname
 operator|=
@@ -967,6 +914,11 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|INIT_LIST
+argument_list|(
+name|listuprec
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|keyfile
@@ -2047,6 +1999,15 @@ name|dnbuf
 expr_stmt|;
 name|r_ttl
 operator|=
+operator|(
+name|r_opcode
+operator|==
+name|ADD
+operator|)
+condition|?
+operator|-
+literal|1
+else|:
 literal|0
 expr_stmt|;
 name|r_type
@@ -2227,8 +2188,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nonzero ttl in prereq section: %ul\n"
+literal|"nonzero ttl in prereq section: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|r_ttl
 argument_list|)
 expr_stmt|;
@@ -2528,7 +2492,8 @@ if|if
 condition|(
 name|r_ttl
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 name|fprintf

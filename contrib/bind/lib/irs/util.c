@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.10 1999/01/08 19:25:11 vixie Exp $"
+literal|"$Id: util.c,v 1.11 2000/02/04 08:28:33 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,7 +183,7 @@ decl_stmt|;
 name|char
 name|tmp
 index|[
-name|INADDRSZ
+name|NS_INADDRSZ
 index|]
 decl_stmt|;
 name|int
@@ -196,7 +196,7 @@ name|tmp
 argument_list|,
 name|src
 argument_list|,
-name|INADDRSZ
+name|NS_INADDRSZ
 argument_list|)
 expr_stmt|;
 comment|/* Mark this ipv6 addr as a mapped ipv4. */
@@ -242,7 +242,7 @@ name|p
 argument_list|,
 name|tmp
 argument_list|,
-name|INADDRSZ
+name|NS_INADDRSZ
 argument_list|)
 expr_stmt|;
 block|}

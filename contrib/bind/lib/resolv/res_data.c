@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_data.c,v 8.17 1999/10/13 17:11:31 vixie Exp $"
+literal|"$Id: res_data.c,v 8.18 2000/12/23 08:14:58 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,25 +261,6 @@ parameter_list|,
 specifier|const
 name|struct
 name|sockaddr_in
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|res_pquery
-parameter_list|(
-specifier|const
-name|res_state
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|FILE
 modifier|*
 parameter_list|)
 function_decl|;

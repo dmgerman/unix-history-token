@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_sv.c,v 1.17 1999/09/04 22:06:14 vixie Exp $"
+literal|"$Id: dns_sv.c,v 1.19 2000/03/30 22:53:56 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -543,14 +543,16 @@ name|sv
 operator|->
 name|res_get
 operator|=
-name|sv_res_get
+name|NULL
 expr_stmt|;
+comment|/* sv_res_get; */
 name|sv
 operator|->
 name|res_set
 operator|=
-name|sv_res_set
+name|NULL
 expr_stmt|;
+comment|/* sv_res_set; */
 return|return
 operator|(
 name|sv
@@ -834,7 +836,10 @@ name|portstr
 argument_list|,
 literal|"%d"
 argument_list|,
+name|ntohs
+argument_list|(
 name|port
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1061,6 +1066,11 @@ operator|*
 name|p
 condition|)
 continue|continue;
+if|if
+condition|(
+name|proto
+condition|)
+block|{
 name|proto_len
 operator|=
 name|strlen
@@ -1100,6 +1110,7 @@ index|]
 argument_list|)
 condition|)
 continue|continue;
+block|}
 comment|/* OK, we've got a live one.  Let's parse it for real. */
 if|if
 condition|(

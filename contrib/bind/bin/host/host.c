@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.34 1999/11/11 19:39:10 cyarnell Exp $"
+literal|"$Id: host.c,v 8.42 2000/12/23 08:14:32 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,6 +256,23 @@ name|NO_INFO
 value|-2
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ERROR
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ERROR
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -497,8 +514,6 @@ specifier|static
 name|struct
 name|__res_state
 name|res
-decl_stmt|,
-name|orig
 decl_stmt|;
 end_decl_stmt
 
@@ -553,6 +568,17 @@ begin_decl_stmt
 specifier|static
 name|int
 name|gettype
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|querytype
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -886,10 +912,6 @@ modifier|*
 name|s
 decl_stmt|;
 name|int
-name|inverse
-init|=
-literal|0
-decl_stmt|,
 name|waitmode
 init|=
 literal|0
@@ -901,8 +923,6 @@ name|ch
 decl_stmt|;
 name|int
 name|nkeychains
-decl_stmt|,
-name|i
 decl_stmt|;
 name|dst_init
 argument_list|()
@@ -979,7 +999,7 @@ name|verbose
 operator|=
 literal|1
 expr_stmt|;
-name|gettype
+name|querytype
 operator|=
 name|ns_t_any
 expr_stmt|;
@@ -1035,7 +1055,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|gettype
+name|querytype
 operator|=
 name|parsetype
 argument_list|(
@@ -1082,9 +1102,15 @@ block|}
 block|}
 if|if
 condition|(
-name|gettype
+operator|(
+name|querytype
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|sigchase
+operator|)
 condition|)
 block|{
 if|if
@@ -1096,7 +1122,7 @@ argument_list|(
 literal|"Forcing `-t a' for signature trace.\n"
 argument_list|)
 expr_stmt|;
-name|gettype
+name|querytype
 operator|=
 name|ns_t_a
 expr_stmt|;
@@ -1357,9 +1383,9 @@ name|ListHosts
 argument_list|(
 name|getdomain
 argument_list|,
-name|gettype
+name|querytype
 condition|?
-name|gettype
+name|querytype
 else|:
 name|ns_t_a
 argument_list|)
@@ -1471,7 +1497,7 @@ argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
-name|gettype
+name|querytype
 operator|=
 name|ns_t_key
 expr_stmt|;
@@ -1502,7 +1528,7 @@ argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
-name|gettype
+name|querytype
 operator|=
 name|ns_t_sig
 expr_stmt|;
@@ -1544,8 +1570,6 @@ name|SD_SIG
 condition|?
 name|chase_signer
 else|:
-name|chase_domain
-argument_list|,
 name|chase_domain
 argument_list|,
 name|chase_lastgoodkey
@@ -2390,8 +2414,6 @@ name|tp
 decl_stmt|;
 name|int
 name|hp
-decl_stmt|,
-name|nDomain
 decl_stmt|;
 name|int
 name|asis
@@ -2746,7 +2768,7 @@ name|val2
 decl_stmt|;
 if|if
 condition|(
-name|gettype
+name|querytype
 condition|)
 return|return
 operator|(
@@ -2757,6 +2779,8 @@ argument_list|,
 name|domain
 argument_list|,
 name|gettype
+operator|=
+name|querytype
 argument_list|)
 operator|)
 return|;
@@ -2829,19 +2853,9 @@ name|int
 name|type
 parameter_list|)
 block|{
-name|HEADER
-modifier|*
-name|hp
-decl_stmt|;
 name|u_char
 modifier|*
 name|eom
-decl_stmt|,
-modifier|*
-name|bp
-decl_stmt|,
-modifier|*
-name|cp
 decl_stmt|;
 name|querybuf
 name|buf
@@ -2850,29 +2864,6 @@ name|answer
 decl_stmt|;
 name|int
 name|n
-decl_stmt|,
-name|n1
-decl_stmt|,
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|nmx
-decl_stmt|,
-name|ancount
-decl_stmt|,
-name|nscount
-decl_stmt|,
-name|arcount
-decl_stmt|,
-name|qdcount
-decl_stmt|,
-name|buflen
-decl_stmt|;
-name|u_short
-name|pref
-decl_stmt|,
-name|class
 decl_stmt|;
 name|char
 name|host
@@ -3078,12 +3069,6 @@ block|{
 name|int
 name|n
 decl_stmt|,
-name|n1
-decl_stmt|,
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
 name|nmx
 decl_stmt|,
 name|ancount
@@ -3097,11 +3082,6 @@ decl_stmt|,
 name|buflen
 decl_stmt|,
 name|savesigchase
-decl_stmt|;
-name|u_short
-name|pref
-decl_stmt|,
-name|class
 decl_stmt|;
 specifier|const
 name|u_char
@@ -3439,6 +3419,7 @@ name|cp
 operator|<
 name|eom
 condition|)
+block|{
 name|cp
 operator|=
 name|pr_rr
@@ -3454,6 +3435,20 @@ argument_list|,
 name|filter
 argument_list|)
 expr_stmt|;
+comment|/* 			 * When we ask for address and there is a CNAME, it 			 * seems to return both the CNAME and the address. 			 * Since we trace down the CNAME chain ourselves, we 			 * don't really want to print the address at this 			 * point. 			 */
+if|if
+condition|(
+name|cname
+operator|&&
+operator|!
+name|verbose
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -4838,7 +4833,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"(\n\t\t\t%ld\t;serial (version)"
+literal|"(\n\t\t\t%lu\t;serial (version)"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -4858,7 +4853,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"\n\t\t\t%ld\t;refresh period"
+literal|"\n\t\t\t%lu\t;refresh period"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -4878,7 +4873,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"\n\t\t\t%ld\t;retry refresh this often"
+literal|"\n\t\t\t%lu\t;retry refresh this often"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -4898,7 +4893,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"\n\t\t\t%ld\t;expiration period"
+literal|"\n\t\t\t%lu\t;expiration period"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -4918,7 +4913,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"\n\t\t\t%ld\t;minimum TTL\n\t\t\t)"
+literal|"\n\t\t\t%lu\t;minimum TTL\n\t\t\t)"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -5270,7 +5265,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%s"
+literal|" %s"
 argument_list|,
 name|name
 argument_list|)
@@ -6223,7 +6218,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|" %d"
+literal|" %ld"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -6246,7 +6241,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|" %d"
+literal|" %ld"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -6269,7 +6264,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|" %d"
+literal|" %ld"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -6422,7 +6417,7 @@ operator|&&
 name|chase_class
 operator|==
 name|class
-operator|&
+operator|&&
 name|chase_type
 operator|==
 name|tc
@@ -6746,7 +6741,7 @@ operator|&&
 name|getclass
 operator|==
 name|class
-operator|&
+operator|&&
 name|gettype
 operator|==
 name|type
@@ -7260,10 +7255,6 @@ argument_list|(
 name|file
 argument_list|,
 literal|" (chasing signature)"
-argument_list|,
-name|sigchase
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* unpack rr */
@@ -7853,6 +7844,11 @@ name|numnsaddr
 decl_stmt|,
 name|thisns
 decl_stmt|;
+name|int
+name|qdcount
+decl_stmt|,
+name|ancount
+decl_stmt|;
 comment|/* 	 * Normalize to not have trailing dot.  We do string compares below 	 * of info from name server, and it won't have trailing dots. 	 */
 name|i
 operator|=
@@ -8171,8 +8167,8 @@ name|qb2
 operator|+
 name|msglen
 expr_stmt|;
-if|if
-condition|(
+name|qdcount
+operator|=
 name|ntohs
 argument_list|(
 name|answer
@@ -8181,6 +8177,11 @@ name|qb1
 operator|.
 name|qdcount
 argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|qdcount
+operator|--
 operator|>
 literal|0
 condition|)
@@ -9314,8 +9315,8 @@ name|qb2
 operator|+
 name|HFIXEDSZ
 expr_stmt|;
-if|if
-condition|(
+name|qdcount
+operator|=
 name|ntohs
 argument_list|(
 name|buf
@@ -9324,6 +9325,11 @@ name|qb1
 operator|.
 name|qdcount
 argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|qdcount
+operator|--
 operator|>
 literal|0
 condition|)
@@ -9344,8 +9350,29 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|<
+operator|<=
 literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ERR_PRINTING
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|cp
+operator|+
+name|n
+operator|+
+name|QFIXEDSZ
+operator|>
+name|buf
+operator|.
+name|qb2
+operator|+
+name|len
 condition|)
 block|{
 name|error
@@ -9361,6 +9388,25 @@ operator|+
 name|QFIXEDSZ
 expr_stmt|;
 block|}
+name|ancount
+operator|=
+name|ntohs
+argument_list|(
+name|buf
+operator|.
+name|qb1
+operator|.
+name|ancount
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|ancount
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
 name|nmp
 operator|=
 name|cp
@@ -9381,7 +9427,7 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -9414,16 +9460,22 @@ name|ERR_PRINTING
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-operator|(
+name|type
+operator|=
 name|ns_get16
 argument_list|(
 name|cp
 argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|INT16SZ
+expr_stmt|;
+if|if
+condition|(
+name|type
 operator|==
 name|ns_t_soa
-operator|)
 condition|)
 block|{
 operator|(
@@ -9477,14 +9529,89 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-break|break;
+goto|goto
+name|done
+goto|;
 block|}
 else|else
 name|soacnt
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cp
+operator|+
+name|INT16SZ
+operator|*
+literal|2
+operator|+
+name|INT32SZ
+operator|>
+name|buf
+operator|.
+name|qb2
+operator|+
+name|len
+condition|)
+block|{
+name|error
+operator|=
+name|ERR_PRINTING
+expr_stmt|;
+break|break;
 block|}
+name|cp
+operator|+=
+name|INT32SZ
+operator|+
+name|INT16SZ
+expr_stmt|;
+name|dlen
+operator|=
+name|ns_get16
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|INT16SZ
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|+
+name|dlen
+operator|>
+name|buf
+operator|.
+name|qb2
+operator|+
+name|len
+condition|)
+block|{
+name|error
+operator|=
+name|ERR_PRINTING
+expr_stmt|;
+break|break;
+block|}
+name|cp
+operator|+=
+name|dlen
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|error
+operator|!=
+name|NO_ERRORS
+condition|)
+break|break;
+block|}
+name|done
+label|:
 operator|(
 name|void
 operator|)

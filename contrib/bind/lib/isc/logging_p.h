@@ -39,6 +39,12 @@ name|unsigned
 name|long
 name|max_size
 decl_stmt|;
+name|uid_t
+name|owner
+decl_stmt|;
+name|gid_t
+name|group
+decl_stmt|;
 block|}
 name|log_file_desc
 typedef|;

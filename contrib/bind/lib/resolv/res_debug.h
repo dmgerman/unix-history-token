@@ -60,6 +60,8 @@ define|#
 directive|define
 name|Aerror
 parameter_list|(
+name|statp
+parameter_list|,
 name|file
 parameter_list|,
 name|string
@@ -79,6 +81,8 @@ define|#
 directive|define
 name|Perror
 parameter_list|(
+name|statp
+parameter_list|,
 name|file
 parameter_list|,
 name|string

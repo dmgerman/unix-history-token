@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  *	$Id: nameser.h,v 8.36.2.1 2000/11/09 23:15:31 vixie Exp $  */
+comment|/*  *	$Id: nameser.h,v 8.41 2000/12/23 08:14:50 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -386,18 +386,6 @@ end_decl_stmt
 begin_comment
 comment|/* Accessor macros - this is part of the public interface. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ns_msg_getflag
-parameter_list|(
-name|handle
-parameter_list|,
-name|flag
-parameter_list|)
-value|( \ 			((handle)._flags& _ns_flagdata[flag].mask) \>> _ns_flagdata[flag].shift \ 			)
-end_define
 
 begin_define
 define|#
@@ -1093,6 +1081,11 @@ init|=
 literal|41
 block|,
 comment|/* EDNS0 option (meta-RR) */
+name|ns_t_tkey
+init|=
+literal|249
+block|,
+comment|/* Transaction key */
 name|ns_t_tsig
 init|=
 literal|250
@@ -1968,6 +1961,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ns_msg_getflag
+value|__ns_msg_getflag
+end_define
+
+begin_define
+define|#
+directive|define
 name|ns_get16
 value|__ns_get16
 end_define
@@ -2191,6 +2191,20 @@ end_define
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+name|int
+name|ns_msg_getflag
+name|__P
+argument_list|(
+operator|(
+name|ns_msg
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_int
 name|ns_get16
 name|__P

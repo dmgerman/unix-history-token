@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_glue.c,v 8.14 1999/10/19 02:06:26 gson Exp $"
+literal|"$Id: ns_glue.c,v 8.18 2000/11/08 06:16:36 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996-2000 by Internet Software Consortium, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -270,7 +270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX: sin_ntoa() should probably be in libc.  */
+comment|/*  * IP address to presentation format.  */
 end_comment
 
 begin_function
@@ -783,7 +783,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX This is for compatibility and will eventually be removed.  */
+comment|/*  * XXX This is for compatibility and should eventually be removed.  */
 end_comment
 
 begin_function
@@ -933,9 +933,7 @@ literal|1
 expr_stmt|;
 block|}
 else|else
-block|{
 break|break;
-block|}
 if|if
 condition|(
 operator|!
@@ -1080,6 +1078,21 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|ttp
+operator|->
+name|tv_usec
+operator|>=
+literal|0
+operator|&&
+name|ttp
+operator|->
+name|tv_usec
+operator|<
+literal|1000000
 argument_list|)
 expr_stmt|;
 block|}
@@ -1974,41 +1987,73 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ultrix
+end_ifdef
+
 begin_comment
-comment|/*  * rename() is lame (can't overwrite an existing file) on some systems.  * use movefile() instead, and let lame OS ports do what they need to.  */
+comment|/*  * Some library routines in libc need to be able to see the res_send  * and res_close symbols with out __ prefix otherwise we get multiply  * defined symbol errors when linking named.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_MOVEFILE
-end_ifndef
+begin_undef
+undef|#
+directive|undef
+name|res_send
+end_undef
 
 begin_function
 name|int
-name|movefile
+name|res_send
 parameter_list|(
 specifier|const
-name|char
+name|u_char
 modifier|*
-name|oldname
+name|buf
 parameter_list|,
-specifier|const
-name|char
+name|int
+name|buflen
+parameter_list|,
+name|u_char
 modifier|*
-name|newname
+name|ans
+parameter_list|,
+name|int
+name|anssiz
 parameter_list|)
 block|{
 return|return
-operator|(
-name|rename
+name|__res_send
 argument_list|(
-name|oldname
+name|buf
 argument_list|,
-name|newname
+name|buflen
+argument_list|,
+name|ans
+argument_list|,
+name|anssiz
 argument_list|)
-operator|)
 return|;
+block|}
+end_function
+
+begin_undef
+undef|#
+directive|undef
+name|_res_close
+end_undef
+
+begin_function
+name|void
+name|_res_close
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__res_close
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_p.c,v 8.6 1999/10/13 16:39:34 vixie Exp $"
+literal|"$Id: ctl_p.c,v 8.7 2000/02/04 08:28:33 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -586,6 +586,9 @@ name|buf
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 case|case
 name|AF_UNIX
 case|:
@@ -649,6 +652,8 @@ name|buf
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 default|default:
 return|return
 operator|(
@@ -706,6 +711,9 @@ name|src
 operator|)
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 case|case
 name|AF_UNIX
 case|:
@@ -730,6 +738,8 @@ name|src
 operator|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 operator|*
 name|dst

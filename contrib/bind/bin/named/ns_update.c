@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_update.c,v 8.68 1999/11/05 04:40:58 vixie Exp $"
+literal|"$Id: ns_update.c,v 8.89 2001/01/14 09:46:20 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -201,6 +201,12 @@ begin_include
 include|#
 directive|include
 file|<isc/dst.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/misc.h>
 end_include
 
 begin_include
@@ -436,9 +442,7 @@ block|{
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
-name|fp
-operator|=
+init|=
 name|fopen
 argument_list|(
 name|zp
@@ -447,7 +451,7 @@ name|z_updatelog
 argument_list|,
 literal|"a+"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|fp
@@ -469,6 +473,57 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+name|user_id
+argument_list|,
+name|group_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fseek
+argument_list|(
+name|fp
+argument_list|,
+literal|0L
+argument_list|,
+name|SEEK_END
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|ns_error
+argument_list|(
+name|ns_log_update
+argument_list|,
+literal|"can't fseek(%s, 0, SEEK_END)"
+argument_list|,
+name|zp
+operator|->
+name|z_updatelog
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -496,7 +551,23 @@ argument_list|,
 name|LogSignature
 argument_list|)
 expr_stmt|;
+name|zp
+operator|->
+name|z_serial_ixfr_start
+operator|=
+name|get_serial
+argument_list|(
+name|zp
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+name|zp
+operator|->
+name|z_serial_ixfr_start
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|fp
@@ -520,9 +591,7 @@ block|{
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
-name|fp
-operator|=
+init|=
 name|fopen
 argument_list|(
 name|zp
@@ -531,7 +600,7 @@ name|z_ixfr_base
 argument_list|,
 literal|"a+"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|fp
@@ -553,6 +622,57 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+name|user_id
+argument_list|,
+name|group_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fseek
+argument_list|(
+name|fp
+argument_list|,
+literal|0L
+argument_list|,
+name|SEEK_END
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|ns_error
+argument_list|(
+name|ns_log_update
+argument_list|,
+literal|"can't fseek(%s, 0, SEEK_END)"
+argument_list|,
+name|zp
+operator|->
+name|z_ixfr_base
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1068,11 +1188,6 @@ name|databuf
 modifier|*
 name|dp
 decl_stmt|;
-name|struct
-name|map
-modifier|*
-name|mp
-decl_stmt|;
 name|ns_updrec
 modifier|*
 name|rrecp
@@ -1116,6 +1231,15 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|zp
+operator|->
+name|z_maintain_ixfr_base
+operator|==
+literal|1
+condition|)
+block|{
 name|ifp
 operator|=
 name|open_ixfr_log
@@ -1142,6 +1266,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
+else|else
+name|ifp
+operator|=
+name|NULL
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|time
@@ -1183,6 +1313,10 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 name|fprintf
 argument_list|(
 name|ifp
@@ -1277,11 +1411,15 @@ argument_list|,
 name|old_serial
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 name|fprintf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"zone:\torigin %s class %s serial %u\n"
+literal|"zone:\torigin %s class %s serial %lu\n"
 argument_list|,
 name|zp
 operator|->
@@ -1294,6 +1432,9 @@ operator|->
 name|z_class
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|old_serial
 argument_list|)
 expr_stmt|;
@@ -1440,6 +1581,11 @@ name|dp
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ifp
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|ifp
@@ -1489,6 +1635,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|dp
 operator|=
 name|dp
@@ -1536,6 +1683,11 @@ name|updlist
 argument_list|,
 name|dp
 argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|ifp
 condition|)
 block|{
 name|fprintf
@@ -1610,6 +1762,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Update log. */
 name|fprintf
@@ -1837,6 +1990,11 @@ name|dp
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ifp
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|ifp
@@ -1910,6 +2068,7 @@ literal|"\n[END_DELTA]\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 break|break;
 default|default:
 break|break;
@@ -1932,6 +2091,10 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 operator|(
 name|void
 operator|)
@@ -2043,37 +2206,29 @@ condition|)
 block|{
 if|if
 condition|(
-name|incr_serial
-argument_list|(
 name|zp
-argument_list|)
-operator|<
-literal|0
+operator|->
+name|z_soaincrtime
+operator|>
+name|tt
+operator|.
+name|tv_sec
 condition|)
 block|{
-name|ns_error
-argument_list|(
-name|ns_log_update
-argument_list|,
-literal|"error updating serial number for %s from %d"
-argument_list|,
 name|zp
 operator|->
-name|z_origin
-argument_list|,
-name|zp
-operator|->
-name|z_serial
-argument_list|)
+name|z_soaincrtime
+operator|=
+name|tt
+operator|.
+name|tv_sec
 expr_stmt|;
-block|}
-else|else
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
-comment|/* 		 * Note we continue scheduling if for some reason 		 * incr_serial fails. 		 */
+block|}
 block|}
 if|if
 condition|(
@@ -2959,25 +3114,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|htp
-operator|=
-name|hashtab
-expr_stmt|;
-name|np
-operator|=
-name|nlookup
-argument_list|(
-name|dname
-argument_list|,
-operator|&
-name|htp
-argument_list|,
-operator|&
-name|fname
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|np
@@ -3263,15 +3399,6 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|dname
-init|=
-name|ur
-operator|->
-name|r_dname
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
 name|owner
 init|=
 name|ur
@@ -3309,11 +3436,6 @@ decl_stmt|;
 name|enum
 name|context
 name|context
-decl_stmt|;
-name|int
-name|ret
-init|=
-literal|1
 decl_stmt|;
 comment|/* We don't care about deletes */
 if|if
@@ -3695,28 +3817,44 @@ break|break;
 case|case
 name|ns_t_naptr
 case|:
-comment|/* 		 * Order (2) 		 * Preference (2) 		 * Flags (1) 		 */
+comment|/* 		 * Order (2) 		 * Preference (2) 		 */
 name|cp
 operator|+=
-literal|5
+literal|4
+expr_stmt|;
+comment|/* Flags (txt) */
+name|cp
+operator|+=
+operator|(
+operator|*
+name|cp
+operator|&
+literal|0xff
+operator|)
+operator|+
+literal|1
 expr_stmt|;
 comment|/* Service (txt) */
 name|cp
 operator|+=
-name|strlen
-argument_list|(
+operator|(
+operator|*
 name|cp
-argument_list|)
+operator|&
+literal|0xff
+operator|)
 operator|+
 literal|1
 expr_stmt|;
 comment|/* Pattern (txt) */
 name|cp
 operator|+=
-name|strlen
-argument_list|(
+operator|(
+operator|*
 name|cp
-argument_list|)
+operator|&
+literal|0xff
+operator|)
 operator|+
 literal|1
 expr_stmt|;
@@ -3990,15 +4128,6 @@ name|u_int16_t
 name|zclass
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|dname
-init|=
-name|ur
-operator|->
-name|r_dname
-decl_stmt|;
 name|u_int16_t
 name|class
 init|=
@@ -4029,21 +4158,6 @@ name|ur
 operator|->
 name|r_dp
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|struct
-name|hashbuf
-modifier|*
-name|htp
-decl_stmt|;
-name|struct
-name|namebuf
-modifier|*
-name|np
-decl_stmt|;
 if|if
 condition|(
 name|class
@@ -4072,6 +4186,35 @@ name|p_type
 argument_list|(
 name|type
 argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|rcodep
+operator|=
+name|FORMERR
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|ttl
+operator|>
+name|MAXIMUM_TTL
+condition|)
+block|{
+name|ns_debug
+argument_list|(
+name|ns_log_update
+argument_list|,
+literal|1
+argument_list|,
+literal|"prescan_update: invalid ttl (%u)"
+argument_list|,
+name|ttl
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4247,8 +4390,6 @@ name|from
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|,
 name|n
@@ -4278,11 +4419,6 @@ decl_stmt|;
 name|ns_updrec
 modifier|*
 name|ur
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|fname
 decl_stmt|;
 name|struct
 name|databuf
@@ -5156,6 +5292,9 @@ name|struct
 name|tsig_record
 modifier|*
 name|in_tsig
+parameter_list|,
+name|ns_updque
+name|curupd
 parameter_list|)
 block|{
 name|char
@@ -5190,10 +5329,6 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|,
-name|cnt
-decl_stmt|,
-name|found
-decl_stmt|,
 name|matches
 decl_stmt|,
 name|zonenum
@@ -5208,8 +5343,6 @@ init|=
 name|NOERROR
 decl_stmt|;
 name|u_int
-name|c
-decl_stmt|,
 name|section
 decl_stmt|;
 name|u_char
@@ -5217,11 +5350,6 @@ name|rdata
 index|[
 name|MAXDATA
 index|]
-decl_stmt|;
-name|struct
-name|qinfo
-modifier|*
-name|qp
 decl_stmt|;
 name|struct
 name|databuf
@@ -5232,18 +5360,6 @@ modifier|*
 name|nsp
 index|[
 name|NSMAX
-index|]
-decl_stmt|;
-name|struct
-name|databuf
-modifier|*
-modifier|*
-name|nspp
-init|=
-operator|&
-name|nsp
-index|[
-literal|0
 index|]
 decl_stmt|;
 name|struct
@@ -5261,19 +5377,8 @@ index|[
 name|MAXDNAME
 index|]
 decl_stmt|;
-name|int
-name|should_use_tcp
-decl_stmt|;
 name|u_int32_t
 name|old_serial
-decl_stmt|;
-name|int
-name|unapproved_ip
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|tsig_len
 decl_stmt|;
 name|DST_KEY
 modifier|*
@@ -5599,7 +5704,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_security
 argument_list|,
-literal|"unapproved update from %s for %s"
+literal|"denied update from %s for \"%s\""
 argument_list|,
 name|sin_ntoa
 argument_list|(
@@ -5612,6 +5717,15 @@ condition|?
 name|dname
 else|:
 literal|"."
+argument_list|)
+expr_stmt|;
+name|nameserIncr
+argument_list|(
+name|from
+operator|.
+name|sin_addr
+argument_list|,
+name|nssRcvdUUpd
 argument_list|)
 expr_stmt|;
 return|return
@@ -5666,13 +5780,19 @@ operator|==
 name|Z_SECONDARY
 condition|)
 block|{
-comment|/* 		 * XXX	The code below is broken. 		 *	Until fixed, we just refuse. 		 */
+comment|/* 		 * XXX	The code below is broken. 		 *	Until fixed, we just return NOTIMPL. 		 */
 if|#
 directive|if
 literal|1
+name|hp
+operator|->
+name|rcode
+operator|=
+name|ns_r_notimpl
+expr_stmt|;
 return|return
 operator|(
-name|Refuse
+name|Finish
 operator|)
 return|;
 else|#
@@ -6275,6 +6395,11 @@ name|z_origin
 argument_list|)
 expr_stmt|;
 comment|/* XXX - also record in dp->d_ns, which host this came from */
+name|DRCNTINC
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|rrecp
 operator|->
 name|r_dp
@@ -6560,6 +6685,24 @@ name|rrecp
 operator|->
 name|r_dp
 condition|)
+block|{
+name|DRCNTDEC
+argument_list|(
+name|rrecp
+operator|->
+name|r_dp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rrecp
+operator|->
+name|r_dp
+operator|->
+name|d_rcnt
+operator|==
+literal|0
+condition|)
 name|db_freedata
 argument_list|(
 name|rrecp
@@ -6567,6 +6710,7 @@ operator|->
 name|r_dp
 argument_list|)
 expr_stmt|;
+block|}
 name|res_freeupdrec
 argument_list|(
 name|rrecp
@@ -6673,10 +6817,41 @@ expr_stmt|;
 comment|/*  					 * XXXRTH  					 * 					 * We used to db_freedata() here, 					 * but I removed it because 'dp' was 					 * part of a hashtab before we called 					 * db_update(), and since our delete 					 * has succeeded, it should have been 					 * freed. 					 */
 block|}
 block|}
+name|DRCNTDEC
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_rcnt
+operator|==
+literal|0
+condition|)
+name|db_freedata
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* 			 * Databuf's matching this were deleted by this 			 * update, or were never executed (because we bailed 			 * out early). 			 */
+name|DRCNTDEC
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_rcnt
+operator|==
+literal|0
+condition|)
 name|db_freedata
 argument_list|(
 name|dp
@@ -6700,6 +6875,17 @@ block|{
 name|tmpdp
 operator|=
 name|dp
+expr_stmt|;
+name|DRCNTDEC
+argument_list|(
+name|tmpdp
+argument_list|)
+expr_stmt|;
+name|tmpdp
+operator|->
+name|d_next
+operator|=
+name|NULL
 expr_stmt|;
 name|dp
 operator|=
@@ -6742,12 +6928,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|tmpdp
-operator|->
-name|d_next
-operator|=
-name|NULL
-expr_stmt|;
 name|db_freedata
 argument_list|(
 name|tmpdp
@@ -6818,6 +6998,19 @@ name|tmpdp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tmpdp
+operator|->
+name|d_rcnt
+operator|==
+literal|0
+condition|)
+name|db_freedata
+argument_list|(
+name|tmpdp
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|res_freeupdrec
@@ -6878,6 +7071,9 @@ name|enum
 name|req_action
 name|ret
 decl_stmt|;
+name|ns_updque
+name|curupd
+decl_stmt|;
 name|INIT_LIST
 argument_list|(
 name|curupd
@@ -6902,6 +7098,8 @@ argument_list|,
 name|from
 argument_list|,
 name|in_tsig
+argument_list|,
+name|curupd
 argument_list|)
 expr_stmt|;
 name|free_rrecp
@@ -8700,7 +8898,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\\%03.3d"
+literal|"\\%03d"
 argument_list|,
 operator|*
 name|cp
@@ -9539,9 +9737,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|zonename
-decl_stmt|,
-modifier|*
-name|cp
 decl_stmt|;
 name|int
 name|tmpdnamelen
@@ -10092,11 +10287,6 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|,
-name|buf2
-index|[
-literal|100
-index|]
 decl_stmt|;
 name|FILE
 modifier|*
@@ -10199,10 +10389,6 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-name|u_char
-modifier|*
-name|serialp
-decl_stmt|;
 name|struct
 name|sockaddr_in
 name|empty_from
@@ -10213,6 +10399,9 @@ decl_stmt|;
 name|unsigned
 name|long
 name|l
+decl_stmt|;
+name|ns_updque
+name|curupd
 decl_stmt|;
 name|empty_from
 operator|.
@@ -10330,7 +10519,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * See if we really have a log file -- it might be a zone dump 	 * that was in the process of being movefiled, or it might 	 * be garbage! 	 */
+comment|/* 	 * See if we really have a log file -- it might be a zone dump 	 * that was in the process of being isc_movefiled, or it might 	 * be garbage! 	 */
 if|if
 condition|(
 name|fgets
@@ -10386,12 +10575,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* It's a dump; finish movefile that was interrupted. */
+comment|/* It's a dump; finish isc_movefile that was interrupted. */
 name|ns_info
 argument_list|(
 name|ns_log_update
 argument_list|,
-literal|"completing interrupted dump movefile for %s"
+literal|"completing interrupted dump isc_movefile for %s"
 argument_list|,
 name|zp
 operator|->
@@ -10405,7 +10594,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|movefile
+name|isc_movefile
 argument_list|(
 name|logname
 argument_list|,
@@ -10421,7 +10610,7 @@ name|ns_error
 argument_list|(
 name|ns_log_update
 argument_list|,
-literal|"movefile(%s,%s) failed: %s :1"
+literal|"isc_movefile(%s,%s) failed: %s :1"
 argument_list|,
 name|logname
 argument_list|,
@@ -11068,7 +11257,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|"origin %s class %s serial %ul"
+literal|"origin %s class %s serial %lu"
 argument_list|,
 name|origin
 argument_list|,
@@ -11381,7 +11570,7 @@ name|dnbuf
 argument_list|,
 name|fp
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -11922,6 +12111,8 @@ argument_list|(
 name|fp
 argument_list|,
 name|logname
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -11959,6 +12150,9 @@ argument_list|,
 name|logname
 argument_list|,
 name|GETNUM_SERIAL
+argument_list|,
+operator|&
+name|multiline
 argument_list|)
 expr_stmt|;
 if|if
@@ -12028,23 +12222,38 @@ block|}
 if|if
 condition|(
 name|multiline
-operator|&&
-operator|(
+condition|)
+block|{
+name|c
+operator|=
 name|getnonblank
 argument_list|(
 name|fp
 argument_list|,
 name|logname
+argument_list|,
+literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
 operator|!=
 literal|')'
-operator|)
 condition|)
 block|{
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
 name|err
 operator|++
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|n
 operator|=
@@ -12973,7 +13182,7 @@ name|type
 operator|=
 name|T_ANY
 expr_stmt|;
-comment|/* WTF?  C_NONE or C_ANY _must_ be the case if                      *       we really are to delete this.  If                      *       C_NONE is used, according to process_updates(),                      *       the class is gotten from the zone's class.                      *       This still isn't perfect, but it will at least                      *       work.                        *                             *       Question: What is so special about the class                       *       of the update while we are deleting??                      */
+comment|/* WTF?  C_NONE or C_ANY _must_ be the case if 		 *       we really are to delete this.  If                  *       C_NONE is used, according to process_updates(),                  *       the class is gotten from the zone's class.                  *       This still isn't perfect, but it will at least                  *       work.                    *                         *       Question: What is so special about the class                   *       of the update while we are deleting??                  */
 block|}
 else|else
 comment|/* if (zp->z_xferpid != XFER_ISIXFR) */
@@ -13114,6 +13323,11 @@ operator|=
 name|DB_S_INSECURE
 expr_stmt|;
 comment|/* should be UNCHECKED */
+name|DRCNTINC
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|rrecp
 operator|->
 name|r_dp
@@ -13141,6 +13355,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* for (;;) */
+name|INSIST
+argument_list|(
+name|EMPTY
+argument_list|(
+name|curupd
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|fp
@@ -13692,7 +13914,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|movefile
+name|isc_movefile
 argument_list|(
 name|tmp_name
 argument_list|,
@@ -13708,7 +13930,7 @@ name|ns_error
 argument_list|(
 name|ns_log_update
 argument_list|,
-literal|"movefile(%s,%s) failed: %s :2"
+literal|"isc_movefile(%s,%s) failed: %s :2"
 argument_list|,
 name|tmp_name
 argument_list|,
@@ -13764,7 +13986,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|movefile
+name|isc_movefile
 argument_list|(
 name|zp
 operator|->
@@ -13782,7 +14004,7 @@ name|ns_error
 argument_list|(
 name|ns_log_update
 argument_list|,
-literal|"movefile(%s,%s) failed: %s :3"
+literal|"isc_movefile(%s,%s) failed: %s :3"
 argument_list|,
 name|zp
 operator|->
@@ -13858,7 +14080,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|movefile
+name|isc_movefile
 argument_list|(
 name|tmp_name
 argument_list|,
@@ -13874,7 +14096,7 @@ name|ns_error
 argument_list|(
 name|ns_log_update
 argument_list|,
-literal|"movefile(%s,%s) failed: %s :4"
+literal|"isc_movefile(%s,%s) failed: %s :4"
 argument_list|,
 name|tmp_name
 argument_list|,
@@ -13897,7 +14119,7 @@ return|;
 block|}
 if|if
 condition|(
-name|movefile
+name|isc_movefile
 argument_list|(
 name|zp
 operator|->
@@ -13915,7 +14137,7 @@ name|ns_error
 argument_list|(
 name|ns_log_update
 argument_list|,
-literal|"movefile(%s,%s) failed: %s:5"
+literal|"isc_movefile(%s,%s) failed: %s :5"
 argument_list|,
 name|zp
 operator|->
@@ -13943,7 +14165,7 @@ else|else
 block|{
 if|if
 condition|(
-name|movefile
+name|isc_movefile
 argument_list|(
 name|tmp_name
 argument_list|,
@@ -13959,7 +14181,7 @@ name|ns_error
 argument_list|(
 name|ns_log_update
 argument_list|,
-literal|"movefile(%s,%s) failed: % s :6"
+literal|"isc_movefile(%s,%s) failed: %s :6"
 argument_list|,
 name|tmp_name
 argument_list|,
@@ -14557,6 +14779,32 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|zp
+operator|->
+name|z_maintain_ixfr_base
+condition|)
+block|{
+name|ifp
+operator|=
+name|open_ixfr_log
+argument_list|(
+name|zp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|dp
 operator|=
 name|findzonesoa
@@ -14748,6 +14996,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 comment|/* 	 * This shouldn't happen, but we check to be sure. 	 */
 if|if
 condition|(

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_update.c,v 1.24 1999/10/15 19:49:12 vixie Exp $"
+literal|"$Id: res_update.c,v 1.25 2000/11/22 01:20:47 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,6 +525,13 @@ operator|->
 name|z_flags
 operator|=
 literal|0
+expr_stmt|;
+name|INIT_LINK
+argument_list|(
+name|zptr
+argument_list|,
+name|z_link
+argument_list|)
 expr_stmt|;
 name|INIT_LIST
 argument_list|(
