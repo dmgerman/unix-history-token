@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1990,1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp/dev/grf.c		7.13 (Berkeley) 7/12/92  *  *	@(#)fb.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1990,1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp/dev/grf.c		7.13 (Berkeley) 7/12/92  *  *	@(#)fb.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<luna68k/dev/fbio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bmc.h"
 end_include
 
 begin_decl_stmt
@@ -173,7 +179,35 @@ name|cmd
 condition|)
 block|{
 case|case
-name|FBIOPUTRFCT
+name|FBIO_ON
+case|:
+if|#
+directive|if
+name|NBMC
+operator|>
+literal|0
+name|bmd_off
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
+name|FBIO_OFF
+case|:
+if|#
+directive|if
+name|NBMC
+operator|>
+literal|0
+name|bmd_on
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
+name|FBIOSETRFCT
 case|:
 operator|*
 name|rfcPtr
@@ -205,7 +239,6 @@ operator|=
 name|rfcVal
 expr_stmt|;
 break|break;
-comment|/* 	case GRFIOCON: 		error = grfon(dev); 		break;  	case GRFIOCOFF: 		error = grfoff(dev); 		break;  	case GRFIOCMAP: 		error = grfmmap(dev, (caddr_t *)data, p); 		break;  	case GRFIOCUNMAP: 		error = grfunmmap(dev, *(caddr_t *)data, p); 		break;  */
 default|default:
 name|error
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software developed by the Computer Systems  * Engineering group at Lawrence Berkeley Laboratory under DARPA  * contract BG 91-66 and contributed to Berkeley.  *  * %sccs.include.redist.c%  *  * from: $Header: fbio.h,v 1.3 91/12/13 22:16:32 torek Exp $ (LBL)  *  * from: sys/fbio.h		7.2 (Berkeley) 4/1/92  *  *	@(#)fbio.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software developed by the Computer Systems  * Engineering group at Lawrence Berkeley Laboratory under DARPA  * contract BG 91-66 and contributed to Berkeley.  *  * %sccs.include.redist.c%  *  * from: $Header: fbio.h,v 1.3 91/12/13 22:16:32 torek Exp $ (LBL)  *  * from: sys/fbio.h		7.2 (Berkeley) 4/1/92  *  *	@(#)fbio.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -65,6 +65,20 @@ name|FBIOGTYPE
 value|_IOR('F', 0, struct fbtype)
 end_define
 
+begin_define
+define|#
+directive|define
+name|FBIO_ON
+value|_IO('F', 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBIO_OFF
+value|_IO('F', 2)
+end_define
+
 begin_comment
 comment|/*  * Reflesh Countor I/O  */
 end_comment
@@ -86,15 +100,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|FBIOPUTRFCT
-value|_IOW('F', 1, struct fb_rfc)
+name|FBIOSETRFCT
+value|_IOW('F', 3, struct fb_rfc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FBIOGETRFCT
-value|_IOR('F', 2, struct fb_rfc)
+value|_IOR('F', 4, struct fb_rfc)
 end_define
 
 begin_comment
@@ -141,15 +155,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|FBIOPUTPALT
-value|_IOW('F', 3, struct fb_palette)
+name|FBIOSETPALT
+value|_IOW('F', 5, struct fb_palette)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FBIOGETPALT
-value|_IOR('F', 4, struct fb_palette)
+value|_IOR('F', 6, struct fb_palette)
 end_define
 
 begin_endif
