@@ -2415,6 +2415,10 @@ condition|(
 operator|!
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 name|i
@@ -2424,6 +2428,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 name|i
