@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -223,8 +223,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_HOSTNAME
+name|KERN_SECURELVL
 value|9
+end_define
+
+begin_comment
+comment|/* int: system security level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_HOSTNAME
+value|10
 end_define
 
 begin_comment
@@ -235,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|KERN_HOSTID
-value|10
+value|11
 end_define
 
 begin_comment
@@ -246,7 +257,7 @@ begin_define
 define|#
 directive|define
 name|KERN_CLOCKRATE
-value|11
+value|12
 end_define
 
 begin_comment
@@ -257,7 +268,7 @@ begin_define
 define|#
 directive|define
 name|KERN_VNODE
-value|12
+value|13
 end_define
 
 begin_comment
@@ -268,7 +279,7 @@ begin_define
 define|#
 directive|define
 name|KERN_PROC
-value|13
+value|14
 end_define
 
 begin_comment
@@ -279,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|KERN_FILE
-value|14
+value|15
 end_define
 
 begin_comment
@@ -290,7 +301,7 @@ begin_define
 define|#
 directive|define
 name|KERN_MAXID
-value|15
+value|16
 end_define
 
 begin_comment
@@ -301,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|CTL_KERN_NAMES
-value|{ \ 	"unspec", \ 	"ostype", \ 	"osrelease", \ 	"osrevision", \ 	"version", \ 	"posix1version", \ 	"maxproc", \ 	"maxfiles", \ 	"argmax", \ 	"hostname", \ 	"hostid", \ 	"clockrate", \ 	"vnode", \ 	"proc", \ 	"file", \ }
+value|{ \ 	"unspec", \ 	"ostype", \ 	"osrelease", \ 	"osrevision", \ 	"version", \ 	"posix1version", \ 	"maxproc", \ 	"maxfiles", \ 	"argmax", \ 	"securelevel", \ 	"hostname", \ 	"hostid", \ 	"clockrate", \ 	"vnode", \ 	"proc", \ 	"file", \ }
 end_define
 
 begin_comment
