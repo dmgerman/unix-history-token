@@ -1177,7 +1177,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
 argument_list|,
-literal|0644
+literal|0660
 argument_list|,
 literal|"usb%d"
 argument_list|,
@@ -1205,7 +1205,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
 argument_list|,
-literal|0644
+literal|0660
 argument_list|,
 literal|"usb"
 argument_list|)
