@@ -169,6 +169,10 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|excessdirs
+decl_stmt|,
+name|rewritecg
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|csum
@@ -294,7 +298,7 @@ name|fs_contigsumsize
 operator|=
 literal|0
 expr_stmt|;
-name|doinglevel1
+name|rewritecg
 operator|=
 literal|1
 expr_stmt|;
@@ -444,7 +448,7 @@ name|fs
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|doinglevel1
+name|rewritecg
 operator|=
 literal|1
 expr_stmt|;
@@ -910,7 +914,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|idesc
 index|[
 name|i
@@ -920,20 +923,6 @@ name|id_type
 operator|=
 name|ADDR
 expr_stmt|;
-if|if
-condition|(
-name|doinglevel2
-condition|)
-name|idesc
-index|[
-name|i
-index|]
-operator|.
-name|id_fix
-operator|=
-name|FIX
-expr_stmt|;
-block|}
 name|memset
 argument_list|(
 operator|&
@@ -1971,7 +1960,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|doinglevel1
+name|rewritecg
 condition|)
 block|{
 name|memmove

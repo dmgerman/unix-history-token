@@ -849,36 +849,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|doinglevel1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converting to new cylinder group format */
-end_comment
-
-begin_decl_stmt
-name|int
-name|doinglevel2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converting to new inode format */
-end_comment
-
-begin_decl_stmt
-name|int
-name|newinofmt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* filesystem has new inode format */
-end_comment
-
-begin_decl_stmt
-name|int
 name|bkgrdcheck
 decl_stmt|;
 end_decl_stmt

@@ -2863,11 +2863,6 @@ name|int
 name|sig
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|doinglevel2
-condition|)
 name|ckfini
 argument_list|(
 literal|0

@@ -3463,10 +3463,6 @@ expr_stmt|;
 name|inodirty
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|newinofmt
-condition|)
 name|inoinfo
 argument_list|(
 name|ino
