@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.67 1999/02/25 07:45:47 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.68 1999/04/24 20:13:58 peter Exp $ */
 end_comment
 
 begin_comment
@@ -27187,13 +27187,12 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|bktr_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

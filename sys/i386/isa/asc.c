@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.33 1999/01/27 10:10:00 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.34 1999/01/28 01:59:53 dillon Exp $  */
 end_comment
 
 begin_include
@@ -4231,13 +4231,12 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|asc_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

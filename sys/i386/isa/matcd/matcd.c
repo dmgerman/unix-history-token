@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.36 1998/07/15 10:11:21 bde Exp $ */
+comment|/* $Id: matcd.c,v 1.37 1998/12/13 23:36:16 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -11776,13 +11776,12 @@ begin_comment
 comment|/*FULLDRIVER*/
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|matcd_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

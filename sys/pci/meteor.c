@@ -9286,13 +9286,12 @@ begin_comment
 comment|/* XXX */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|meteor_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

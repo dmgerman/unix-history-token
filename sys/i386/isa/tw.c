@@ -5450,10 +5450,9 @@ endif|#
 directive|endif
 comment|/* HIRESTIME */
 specifier|static
+name|int
 name|tw_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
+decl_stmt|;
 specifier|static
 name|void
 name|tw_drvinit

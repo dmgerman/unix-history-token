@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.40 1998/07/13 09:53:02 bde Exp $ */
+comment|/* $Id: scd.c,v 1.41 1999/01/12 01:29:45 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -8388,13 +8388,12 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|scd_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
