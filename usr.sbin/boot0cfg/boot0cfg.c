@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: $"
+literal|"$Id: boot0cfg.c,v 1.1.1.1 1999/02/21 21:23:42 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -558,10 +558,16 @@ operator|=
 name|B_flag
 operator|||
 name|d_arg
+operator|!=
+operator|-
+literal|1
 operator|||
 name|o_flag
 operator|||
 name|t_arg
+operator|!=
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
