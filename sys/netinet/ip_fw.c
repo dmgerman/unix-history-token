@@ -3797,6 +3797,10 @@ name|ipfw_dyn_rule
 modifier|*
 name|q
 decl_stmt|;
+specifier|static
+name|int
+name|last_log
+decl_stmt|;
 name|u_long
 name|type
 init|=
@@ -3834,6 +3838,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|last_log
+operator|==
+name|time_second
+condition|)
+return|return ;
+name|last_log
+operator|=
+name|time_second
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" entry already present, done\n"
@@ -3863,6 +3878,17 @@ operator|>=
 name|dyn_max
 condition|)
 block|{
+if|if
+condition|(
+name|last_log
+operator|==
+name|time_second
+condition|)
+return|return ;
+name|last_log
+operator|=
+name|time_second
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" Too many dynamic rules, sorry\n"
