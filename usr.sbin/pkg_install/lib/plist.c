@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.12 1995/04/22 07:41:02 jkh Exp $"
+literal|"$Id: plist.c,v 1.14 1995/07/28 01:50:35 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1544,8 +1544,6 @@ condition|)
 name|printf
 argument_list|(
 literal|"Change working directory to %s\n"
-argument_list|,
-name|CMD_CHAR
 argument_list|,
 name|Where
 argument_list|)

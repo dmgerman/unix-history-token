@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.15 1995/05/10 23:00:06 jkh Exp $"
+literal|"$Id: perform.c,v 1.17 1995/07/30 01:44:38 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,6 +363,11 @@ elseif|else
 if|if
 condition|(
 name|fexists
+argument_list|(
+name|pkg
+argument_list|)
+operator|&&
+name|isfile
 argument_list|(
 name|pkg
 argument_list|)
