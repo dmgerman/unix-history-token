@@ -1138,32 +1138,11 @@ name|int
 name|n
 decl_stmt|;
 comment|/* count #vnodes held on mount list */
-name|mtx_lock
-argument_list|(
-operator|&
-name|mntvnode_mtx
-argument_list|)
-expr_stmt|;
 name|n
 operator|=
-literal|0
-expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|vp
-argument_list|,
-argument|&mp->mnt_nvnodelist
-argument_list|,
-argument|v_nmntvnodes
-argument_list|)
-name|n
-operator|++
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|mntvnode_mtx
-argument_list|)
+name|mp
+operator|->
+name|mnt_nvnodelistsize
 expr_stmt|;
 comment|/* if this is unchanged then stop */
 if|if
