@@ -1313,9 +1313,9 @@ name|RID_WILDCARD
 block|,
 name|UMASS_PROTO_ATAPI
 operator||
-name|UMASS_PROTO_CBI_I
+name|UMASS_PROTO_BBB
 block|,
-name|NO_QUIRKS
+name|NO_INQUIRY
 block|}
 block|,
 block|{
