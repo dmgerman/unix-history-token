@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)erf.c	5.5 (Berkeley) %G%"
+literal|"@(#)erf.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,7 +499,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|nerf
+name|erf
 parameter_list|(
 name|x
 parameter_list|)
@@ -1096,7 +1096,7 @@ end_function
 
 begin_function
 name|double
-name|nerfc
+name|erfc
 parameter_list|(
 name|x
 parameter_list|)
