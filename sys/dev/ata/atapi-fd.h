@@ -186,10 +186,6 @@ name|struct
 name|devstat
 name|stats
 decl_stmt|;
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* device place holder */
 block|}
 struct|;
 end_struct
