@@ -63,7 +63,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.60 %G%"
+literal|"@(#)sccs.c	1.61 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1228,6 +1228,28 @@ operator|=
 operator|++
 name|p
 expr_stmt|;
+if|if
+condition|(
+name|SccsPath
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|&&
+name|argv
+index|[
+literal|1
+index|]
+operator|!=
+name|NULL
+condition|)
+name|SccsPath
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
 break|break;
 case|case
 literal|'d'
@@ -1237,6 +1259,28 @@ name|SccsDir
 operator|=
 operator|++
 name|p
+expr_stmt|;
+if|if
+condition|(
+name|SccsDir
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|&&
+name|argv
+index|[
+literal|1
+index|]
+operator|!=
+name|NULL
+condition|)
+name|SccsDir
+operator|=
+operator|*
+operator|++
+name|argv
 expr_stmt|;
 break|break;
 endif|#
