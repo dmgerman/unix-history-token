@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.9 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -287,7 +287,7 @@ name|flags
 parameter_list|,
 name|interlkp
 parameter_list|,
-name|pid
+name|p
 parameter_list|)
 name|__volatile
 name|struct
@@ -299,24 +299,43 @@ name|u_int
 name|flags
 decl_stmt|;
 name|struct
-name|simple_lock
+name|simplelock
 modifier|*
 name|interlkp
 decl_stmt|;
-name|pid_t
-name|pid
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|int
 name|error
 decl_stmt|;
-name|__volatile
+name|pid_t
+name|pid
+decl_stmt|;
 name|int
 name|extflags
 decl_stmt|;
 name|error
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+name|pid
+operator|=
+name|p
+operator|->
+name|p_pid
+expr_stmt|;
+else|else
+name|pid
+operator|=
+name|LK_KERNPROC
 expr_stmt|;
 name|simple_lock
 argument_list|(
@@ -349,18 +368,38 @@ operator|)
 operator|&
 name|LK_EXTFLG_MASK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+comment|/* 	 * Once a lock has drained, the LK_DRAINING flag is set and an 	 * exclusive lock is returned. The only valid operation thereafter 	 * is a single release of that exclusive lock. This final release 	 * clears the LK_DRAINING flag and sets the LK_DRAINED flag. Any 	 * further requests of any sort will result in a panic. The bits 	 * selected for these two flags are chosen so that they will be set 	 * in memory that is freed (freed memory is filled with 0xdeadbeef). 	 */
 if|if
 condition|(
+name|lkp
+operator|->
+name|lk_flags
+operator|&
 operator|(
+name|LK_DRAINING
+operator||
+name|LK_DRAINED
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|lkp
 operator|->
 name|lk_flags
 operator|&
 name|LK_DRAINED
-operator|)
-operator|&&
-operator|(
-operator|(
+condition|)
+name|panic
+argument_list|(
+literal|"lockmgr: using decommissioned lock"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|flags
 operator|&
@@ -368,20 +407,39 @@ name|LK_TYPE_MASK
 operator|)
 operator|!=
 name|LK_RELEASE
-operator|)
 operator|||
 name|lkp
 operator|->
 name|lk_lockholder
 operator|!=
 name|pid
-operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"lockmgr: using decommissioned lock"
+literal|"lockmgr: non-release on draining lock: %d\n"
+argument_list|,
+name|flags
+operator|&
+name|LK_TYPE_MASK
 argument_list|)
 expr_stmt|;
+name|lkp
+operator|->
+name|lk_flags
+operator|&=
+operator|~
+name|LK_DRAINING
+expr_stmt|;
+name|lkp
+operator|->
+name|lk_flags
+operator||=
+name|LK_DRAINED
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DIAGNOSTIC
 switch|switch
 condition|(
 name|flags
@@ -990,6 +1048,20 @@ break|break;
 case|case
 name|LK_DRAIN
 case|:
+comment|/* 		 * Check that we do not already hold the lock, as it can  		 * never drain if we do. Unfortunately, we have no way to 		 * check for holding a shared lock, but at least we can 		 * check for an exclusive one. 		 */
+if|if
+condition|(
+name|lkp
+operator|->
+name|lk_lockholder
+operator|==
+name|pid
+condition|)
+name|panic
+argument_list|(
+literal|"lockmgr: draining against myself"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If we are just polling, check to see if we will sleep. 		 */
 if|if
 condition|(
@@ -1176,7 +1248,7 @@ name|lkp
 operator|->
 name|lk_flags
 operator||=
-name|LK_DRAINED
+name|LK_DRAINING
 operator||
 name|LK_HAVE_EXCL
 expr_stmt|;
@@ -1392,7 +1464,7 @@ parameter_list|(
 name|alp
 parameter_list|)
 name|struct
-name|simple_lock
+name|simplelock
 modifier|*
 name|alp
 decl_stmt|;
@@ -1414,7 +1486,7 @@ name|alp
 parameter_list|)
 name|__volatile
 name|struct
-name|simple_lock
+name|simplelock
 modifier|*
 name|alp
 decl_stmt|;
@@ -1449,7 +1521,7 @@ name|alp
 parameter_list|)
 name|__volatile
 name|struct
-name|simple_lock
+name|simplelock
 modifier|*
 name|alp
 decl_stmt|;
@@ -1489,7 +1561,7 @@ name|alp
 parameter_list|)
 name|__volatile
 name|struct
-name|simple_lock
+name|simplelock
 modifier|*
 name|alp
 decl_stmt|;
