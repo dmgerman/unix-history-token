@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpr.c,v 1.21 1997/09/24 06:48:07 charnier Exp $"
+literal|"$Id: lpr.c,v 1.22 1997/12/02 20:46:10 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1201,7 +1201,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"only %d copies are allowed"
+literal|"only %ld copies are allowed"
 argument_list|,
 name|pp
 operator|->
