@@ -395,12 +395,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|physmem
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cold
 init|=
