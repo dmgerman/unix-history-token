@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4141,6 +4141,17 @@ name|uio_rw
 operator|=
 name|UIO_READ
 expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|VOP_READ
@@ -4781,6 +4792,17 @@ operator|.
 name|uio_rw
 operator|=
 name|UIO_WRITE
+expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 name|error
 operator|=
