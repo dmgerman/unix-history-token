@@ -397,37 +397,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NTP_POSIX_SOURCE
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|getopt_l
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * main - parse arguments and handle options  */
 end_comment
@@ -459,12 +428,12 @@ literal|0
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 name|unsigned
 name|long
@@ -534,7 +503,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -589,7 +558,7 @@ name|writetickadj
 operator|=
 name|atoi
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 if|if
@@ -610,7 +579,7 @@ literal|"%s: unlikely value for tickadj: %s\n"
 argument_list|,
 name|progname
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -641,7 +610,7 @@ name|writetick
 operator|=
 name|atoi
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 if|if
@@ -662,7 +631,7 @@ literal|"%s: unlikely value for tick: %s\n"
 argument_list|,
 name|progname
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -680,7 +649,7 @@ if|if
 condition|(
 name|errflg
 operator|||
-name|optind
+name|ntp_optind
 operator|!=
 name|argc
 condition|)
@@ -789,10 +758,8 @@ argument_list|,
 literal|"No noprintf kernal variable\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|errflg
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -816,10 +783,8 @@ argument_list|,
 literal|"No dosynctodr kernal variable\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|errflg
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -843,10 +808,8 @@ argument_list|,
 literal|"No tickadj kernal variable\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|errflg
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -870,10 +833,8 @@ argument_list|,
 literal|"No tick kernal variable\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|errflg
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -1253,6 +1214,10 @@ name|setnoprintf
 condition|)
 name|exit
 argument_list|(
+name|errflg
+condition|?
+literal|1
+else|:
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1543,6 +1508,10 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
+name|errflg
+condition|?
+literal|1
+else|:
 literal|0
 argument_list|)
 expr_stmt|;
