@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.5 1997/09/01 07:37:01 smp Exp smp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.52 1997/09/01 07:45:25 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|"cy.h"
 end_include
 
 begin_comment
-comment|/*  * TODO:  * Check that cy16's work.  * Implement BREAK.  * Fix overflows when closing line.  * Atomic COR change.  * Consoles.  */
+comment|/*  * TODO:  * Implement BREAK.  * Fix overflows when closing line.  * Atomic COR change.  * Consoles.  */
 end_comment
 
 begin_comment
@@ -515,10 +515,6 @@ name|CD1400_xIVR_CHAN
 value|0x1F
 end_define
 
-begin_comment
-comment|/* XXX reduce to pack Cyclom-8Ys */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -596,7 +592,7 @@ name|MINOR_TO_UNIT
 parameter_list|(
 name|mynor
 parameter_list|)
-value|(((mynor)>> 16) * CY_MAX_PORTS + \ 				(((mynor)& 0xff)& ~MINOR_MAGIC_MASK))
+value|(((mynor)>> 16) * CY_MAX_PORTS \ 				 | (((mynor)& 0xff)& ~MINOR_MAGIC_MASK))
 end_define
 
 begin_comment
@@ -924,6 +920,10 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* output buffers */
+name|int
+name|cy_align
+decl_stmt|;
+comment|/* index for register alignment */
 name|cy_addr
 name|cy_iobase
 decl_stmt|;
@@ -932,10 +932,6 @@ name|cy_addr
 name|iobase
 decl_stmt|;
 comment|/* base address of this port's cd1400 */
-name|int
-name|cy_align
-decl_stmt|;
-comment|/* index for register alignment */
 name|struct
 name|tty
 modifier|*
@@ -1142,6 +1138,10 @@ directive|define
 name|siostrategy
 value|nostrategy
 end_define
+
+begin_comment
+comment|/* PCI driver entry point. */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1698,6 +1698,32 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|int
+name|cy_chip_offset
+index|[]
+init|=
+block|{
+literal|0x0000
+block|,
+literal|0x0200
+block|,
+literal|0x0400
+block|,
+literal|0x0600
+block|,
+literal|0x0100
+block|,
+literal|0x0300
+block|,
+literal|0x0500
+block|,
+literal|0x0700
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|cy_nr_cd1400s
 index|[
 name|NCY
@@ -1729,32 +1755,6 @@ name|CD1400_RX_FIFO_SIZE
 operator|/
 literal|2
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|cy_chip_offset
-index|[]
-init|=
-block|{
-literal|0x0000
-block|,
-literal|0x0400
-block|,
-literal|0x0800
-block|,
-literal|0x0c00
-block|,
-literal|0x0200
-block|,
-literal|0x0600
-block|,
-literal|0x0a00
-block|,
-literal|0x0e00
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1853,11 +1853,17 @@ name|int
 name|cy_align
 decl_stmt|;
 block|{
-name|cy_addr
-name|iobase
-decl_stmt|;
 name|int
 name|cyu
+decl_stmt|;
+name|u_char
+name|firmware_version
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|cy_addr
+name|iobase
 decl_stmt|;
 for|for
 control|(
@@ -1873,12 +1879,6 @@ operator|++
 name|cyu
 control|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|u_char
-name|firmware_version
-decl_stmt|;
 name|iobase
 operator|=
 name|cy_iobase
@@ -2117,19 +2117,22 @@ name|cy_align
 decl_stmt|;
 block|{
 name|int
-name|cyu
-decl_stmt|,
-name|ncyu
-decl_stmt|,
-name|unit
-decl_stmt|,
 name|adapter
+decl_stmt|;
+name|int
+name|cyu
 decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
 name|cy_addr
 name|iobase
+decl_stmt|;
+name|int
+name|ncyu
+decl_stmt|;
+name|int
+name|unit
 decl_stmt|;
 name|adapter
 operator|=
@@ -2378,6 +2381,12 @@ name|obuf2
 expr_stmt|;
 name|com
 operator|->
+name|cy_align
+operator|=
+name|cy_align
+expr_stmt|;
+name|com
+operator|->
 name|cy_iobase
 operator|=
 name|cy_iobase
@@ -2388,13 +2397,7 @@ name|iobase
 operator|=
 name|iobase
 expr_stmt|;
-name|com
-operator|->
-name|cy_align
-operator|=
-name|cy_align
-expr_stmt|;
-comment|/* 			 * We don't use all the flags from<sys/ttydefaults.h> since they 			 * are only relevant for logins.  It's important to have echo off 			 * initially so that the line doesn't start blathering before the 			 * echo flag can be turned off. 			 */
+comment|/* 	 * We don't use all the flags from<sys/ttydefaults.h> since they 	 * are only relevant for logins.  It's important to have echo off 	 * initially so that the line doesn't start blathering before the 	 * echo flag can be turned off. 	 */
 name|com
 operator|->
 name|it_in
@@ -3740,13 +3743,11 @@ name|tp
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|tp
 operator|->
 name|t_cflag
 operator|&
 name|HUPCL
-operator|)
 comment|/* 		     * XXX we will miss any carrier drop between here and the 		     * next open.  Perhaps we should watch DCD even when the 		     * port is closed; it is not sufficient to check it at 		     * the next open because it might go up and down while 		     * we're not watching. 		     */
 operator|||
 operator|!
@@ -4144,17 +4145,20 @@ name|int
 name|unit
 decl_stmt|;
 block|{
-name|cy_addr
-name|cy_iobase
-decl_stmt|,
-name|iobase
-decl_stmt|;
 name|int
 name|baseu
-decl_stmt|,
-name|cyu
-decl_stmt|,
+decl_stmt|;
+name|int
 name|cy_align
+decl_stmt|;
+name|cy_addr
+name|cy_iobase
+decl_stmt|;
+name|int
+name|cyu
+decl_stmt|;
+name|cy_addr
+name|iobase
 decl_stmt|;
 name|u_char
 name|status
@@ -4169,23 +4173,23 @@ name|unit
 operator|*
 name|CY_MAX_PORTS
 expr_stmt|;
-name|cy_iobase
+name|cy_align
 operator|=
 name|com_addr
 argument_list|(
 name|baseu
 argument_list|)
 operator|->
-name|cy_iobase
+name|cy_align
 expr_stmt|;
-name|cy_align
+name|cy_iobase
 operator|=
 name|com_addr
 argument_list|(
 name|baseu
 argument_list|)
 operator|->
-name|cy_align
+name|cy_iobase
 expr_stmt|;
 comment|/* check each CD1400 in turn */
 for|for
@@ -5763,10 +5767,10 @@ name|state
 operator||=
 name|CS_ODONE
 expr_stmt|;
+comment|/* handle at high level ASAP */
 name|setsofttty
 argument_list|()
 expr_stmt|;
-comment|/* handle at high level ASAP */
 block|}
 block|}
 block|}
