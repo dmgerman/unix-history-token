@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.4	81/03/06  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.5	81/03/06  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -646,7 +646,7 @@ argument_list|(
 name|wd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read standard/optional 	 */
+comment|/* 	 * Readad standard/optional 	 */
 name|next_word
 argument_list|(
 name|fp
