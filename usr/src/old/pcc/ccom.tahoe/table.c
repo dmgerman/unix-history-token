@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.8 (Berkeley) %G%"
+literal|"@(#)table.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,7 +262,33 @@ block|,
 name|SANY
 block|,
 name|TFLOAT
+block|,
+name|NAREG
 operator||
+name|NASL
+block|,
+name|RESC1
+operator||
+name|RESCC
+block|,
+literal|"	ZY\n"
+block|,
+name|SCONV
+block|,
+name|INAREG
+operator||
+name|INTAREG
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TUNSIGNED
+block|,
+name|SANY
+block|,
 name|TDOUBLE
 block|,
 name|NAREG
@@ -1533,6 +1559,62 @@ operator||
 name|RESCC
 block|,
 literal|"	movl	AR,TAL\n"
+block|,
+name|ASSIGN
+block|,
+name|INAREG
+operator||
+name|FOREFF
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TUNSIGNED
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+operator||
+name|TDOUBLE
+block|,
+literal|0
+block|,
+name|RLEFT
+block|,
+literal|"	ZW\n"
+block|,
+name|ASSIGN
+block|,
+name|INAREG
+operator||
+name|FOREFF
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+operator||
+name|TDOUBLE
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TUNSIGNED
+block|,
+literal|0
+block|,
+name|RLEFT
+block|,
+literal|"	ZY\n"
 block|,
 name|ASSIGN
 block|,
