@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"defs.h"
 end_include
 
@@ -128,11 +134,6 @@ name|int
 name|rrtimeout
 init|=
 name|REREADTIMEOUT
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 name|setlocale
 argument_list|(

@@ -9,6 +9,12 @@ directive|include
 file|"decode.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 name|unsigned
 name|char
@@ -450,19 +456,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|int
-name|opterr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 name|char
 name|devicename
 index|[
