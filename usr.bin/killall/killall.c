@@ -126,9 +126,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-l] [-v] [-m] [-sig] [-u user] [-t tty] [-c cmd] [cmd]...\n"
+literal|"usage: killall [-dlmsv] [-help]\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
-name|prog
+literal|"               [-u user] [-t tty] [-c cmd] [-SIGNAL] [cmd]...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
