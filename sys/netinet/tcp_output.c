@@ -459,11 +459,17 @@ name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_SIGNATURE
 name|int
 name|sigoff
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* TCP_SIGNATURE */
 name|struct
 name|mbuf
 modifier|*
