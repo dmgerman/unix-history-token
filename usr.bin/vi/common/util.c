@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.71 (Berkeley) 8/8/94"
+literal|"@(#)util.c	8.73 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,12 +130,13 @@ comment|/*  * binc --  *	Increase the size of a buffer.  */
 end_comment
 
 begin_function
-name|int
+name|void
+modifier|*
 name|binc
 parameter_list|(
 name|sp
 parameter_list|,
-name|argp
+name|bp
 parameter_list|,
 name|bsizep
 parameter_list|,
@@ -147,7 +149,7 @@ decl_stmt|;
 comment|/* sp MAY BE NULL!!! */
 name|void
 modifier|*
-name|argp
+name|bp
 decl_stmt|;
 name|size_t
 modifier|*
@@ -158,10 +160,6 @@ decl_stmt|;
 block|{
 name|size_t
 name|csize
-decl_stmt|;
-name|void
-modifier|*
-name|bpp
 decl_stmt|;
 comment|/* If already larger than the minimum, just return. */
 if|if
@@ -175,19 +173,9 @@ name|min
 condition|)
 return|return
 operator|(
-literal|0
+name|bp
 operator|)
 return|;
-name|bpp
-operator|=
-operator|*
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|argp
-expr_stmt|;
 name|csize
 operator|=
 operator|*
@@ -204,7 +192,7 @@ name|REALLOC
 argument_list|(
 name|sp
 argument_list|,
-name|bpp
+name|bp
 argument_list|,
 name|void
 operator|*
@@ -214,7 +202,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bpp
+name|bp
 operator|==
 name|NULL
 condition|)
@@ -227,7 +215,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|NULL
 operator|)
 return|;
 block|}
@@ -238,7 +226,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|bpp
+name|bp
 operator|+
 operator|*
 name|bsizep
@@ -252,23 +240,13 @@ name|bsizep
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|argp
-operator|=
-name|bpp
-expr_stmt|;
-operator|*
 name|bsizep
 operator|=
 name|csize
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|bp
 operator|)
 return|;
 block|}

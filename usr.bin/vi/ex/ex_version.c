@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_version.c	8.62 (Berkeley) 8/15/94"
+literal|"@(#)ex_version.c	8.64 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,10 +135,11 @@ name|cmdp
 decl_stmt|;
 block|{
 specifier|static
+specifier|const
 name|time_t
 name|then
 init|=
-literal|776975285
+literal|777130317
 decl_stmt|;
 operator|(
 name|void
@@ -146,7 +148,7 @@ name|ex_printf
 argument_list|(
 name|EXCOOKIE
 argument_list|,
-literal|"Version 1.32, %sThe CSRG, University of California, Berkeley.\n"
+literal|"Version 1.33, %sThe CSRG, University of California, Berkeley.\n"
 argument_list|,
 name|ctime
 argument_list|(

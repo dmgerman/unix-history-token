@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msg.c	8.9 (Berkeley) 8/14/94"
+literal|"@(#)msg.c	8.11 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -866,11 +867,15 @@ name|mp
 operator|->
 name|blen
 operator|&&
+operator|(
+name|mp
+operator|->
+name|mbuf
+operator|=
 name|binc
 argument_list|(
 name|sp
 argument_list|,
-operator|&
 name|mp
 operator|->
 name|mbuf
@@ -882,6 +887,9 @@ name|blen
 argument_list|,
 name|len
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|ret

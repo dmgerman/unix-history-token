@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)svi_split.c	8.46 (Berkeley) 8/9/94"
+literal|"@(#)svi_split.c	8.48 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -1065,6 +1066,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Everything's initialized, put the screen on the displayed queue.*/
+name|SIGBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|splitup
@@ -1108,6 +1116,13 @@ name|q
 argument_list|)
 expr_stmt|;
 block|}
+name|SIGUNBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
+argument_list|)
+expr_stmt|;
 comment|/* Clear the current information lines in both screens. */
 name|MOVE
 argument_list|(
@@ -1447,6 +1462,13 @@ operator|)
 return|;
 block|}
 comment|/* Move the old screen to the hidden queue. */
+name|SIGBLOCK
+argument_list|(
+name|csp
+operator|->
+name|gp
+argument_list|)
+expr_stmt|;
 name|CIRCLEQ_REMOVE
 argument_list|(
 operator|&
@@ -1473,6 +1495,13 @@ argument_list|,
 name|csp
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+name|SIGUNBLOCK
+argument_list|(
+name|csp
+operator|->
+name|gp
 argument_list|)
 expr_stmt|;
 comment|/* Switch screens. */
@@ -1875,6 +1904,13 @@ operator|)
 return|;
 block|}
 comment|/* Move the old screen to the hidden queue. */
+name|SIGBLOCK
+argument_list|(
+name|csp
+operator|->
+name|gp
+argument_list|)
+expr_stmt|;
 name|CIRCLEQ_REMOVE
 argument_list|(
 operator|&
@@ -1901,6 +1937,13 @@ argument_list|,
 name|csp
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+name|SIGUNBLOCK
+argument_list|(
+name|csp
+operator|->
+name|gp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2299,6 +2342,13 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * The new screen replaces the old screen in the parent/child list. 	 * We insert the new screen after the old one.  If we're exiting, 	 * the exit will delete the old one, if we're foregrounding, the fg 	 * code will move the old one to the hidden queue. 	 */
+name|SIGBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
+argument_list|)
+expr_stmt|;
 name|CIRCLEQ_REMOVE
 argument_list|(
 operator|&
@@ -2327,6 +2377,13 @@ argument_list|,
 name|sp
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+name|SIGUNBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
 argument_list|)
 expr_stmt|;
 name|F_SET

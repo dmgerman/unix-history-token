@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)seq.c	8.30 (Berkeley) 7/15/94"
+literal|"@(#)seq.c	8.32 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,7 +161,7 @@ name|SCR
 modifier|*
 name|sp
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|name
 decl_stmt|,
@@ -197,16 +198,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|CHAR_T
+modifier|*
+name|p
+decl_stmt|;
 name|SEQ
 modifier|*
 name|lastqp
 decl_stmt|,
 modifier|*
 name|qp
-decl_stmt|;
-name|CHAR_T
-modifier|*
-name|p
 decl_stmt|;
 name|int
 name|sv_errno
@@ -593,6 +594,17 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Set the fast lookup bit. */
+if|if
+condition|(
+name|qp
+operator|->
+name|input
+index|[
+literal|0
+index|]
+operator|<
+name|MAX_BIT_SEQ
+condition|)
 name|bit_set
 argument_list|(
 name|sp
@@ -637,7 +649,7 @@ name|SCR
 modifier|*
 name|sp
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|input
 decl_stmt|;
@@ -799,7 +811,7 @@ modifier|*
 modifier|*
 name|lastqp
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|input
 decl_stmt|;
@@ -1050,6 +1062,10 @@ name|int
 name|isname
 decl_stmt|;
 block|{
+name|CHAR_T
+modifier|*
+name|p
+decl_stmt|;
 name|SEQ
 modifier|*
 name|qp
@@ -1060,10 +1076,6 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|olen
-decl_stmt|;
-name|CHAR_T
-modifier|*
-name|p
 decl_stmt|;
 name|cnt
 operator|=
@@ -1370,6 +1382,10 @@ name|seqtype
 name|stype
 decl_stmt|;
 block|{
+name|CHAR_T
+modifier|*
+name|p
+decl_stmt|;
 name|SEQ
 modifier|*
 name|qp
@@ -1379,10 +1395,6 @@ name|olen
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|;
-name|char
-modifier|*
-name|p
 decl_stmt|;
 comment|/* Write a sequence command for all keys the user defined. */
 for|for

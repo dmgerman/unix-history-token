@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,11 +37,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.103 (Berkeley) 8/14/94"
+literal|"@(#)main.c	8.105 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -846,7 +848,7 @@ name|err
 goto|;
 block|}
 block|}
-comment|/* 	 * Build and initialize the first/current screen.  This is a bit 	 * tricky.  If an error is returned, we may or may not have a 	 * screen structure.  If we have a screen structure, put it on a 	 * display queue so that the error messages get displayed. 	 */
+comment|/* 	 * Build and initialize the first/current screen.  This is a bit 	 * tricky.  If an error is returned, we may or may not have a 	 * screen structure.  If we have a screen structure, put it on a 	 * display queue so that the error messages get displayed. 	 * 	 * !!! 	 * Signals not on, no need to block them for queue manipulation. 	 */
 if|if
 condition|(
 name|screen_init
@@ -1975,6 +1977,11 @@ operator|->
 name|hq
 condition|)
 block|{
+name|SIGBLOCK
+argument_list|(
+name|__global_list
+argument_list|)
+expr_stmt|;
 name|CIRCLEQ_REMOVE
 argument_list|(
 operator|&
@@ -2001,6 +2008,11 @@ argument_list|,
 name|sp
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+name|SIGUNBLOCK
+argument_list|(
+name|__global_list
 argument_list|)
 expr_stmt|;
 block|}
@@ -2141,6 +2153,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * !!! 	 * Signals not on, no need to block them for queue manipulation. 	 */
 name|CIRCLEQ_INIT
 argument_list|(
 operator|&

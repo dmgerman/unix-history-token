@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_set.c	8.4 (Berkeley) 7/22/94"
+literal|"@(#)ex_set.c	8.5 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 

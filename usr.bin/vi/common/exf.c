@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exf.c	8.94 (Berkeley) 8/7/94"
+literal|"@(#)exf.c	8.96 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -1136,7 +1137,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* Switch... */
+comment|/* 	 * Switch... 	 * 	 * !!! 	 * Note, because the EXF structure is examine at interrupt time, 	 * the underlying DB structures have to be consistent as soon as 	 * it's assigned to an SCR structure. 	 */
 operator|++
 name|ep
 operator|->

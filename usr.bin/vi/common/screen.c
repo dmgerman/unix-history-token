@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)screen.c	8.64 (Berkeley) 8/14/94"
+literal|"@(#)screen.c	8.66 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -1501,6 +1502,13 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Remove the screen from the displayed queue. */
+name|SIGBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
+argument_list|)
+expr_stmt|;
 name|CIRCLEQ_REMOVE
 argument_list|(
 operator|&
@@ -1513,6 +1521,13 @@ argument_list|,
 name|sp
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+name|SIGUNBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
 argument_list|)
 expr_stmt|;
 comment|/* Free the screen itself. */

@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)svi_screen.c	8.91 (Berkeley) 8/14/94"
+literal|"@(#)svi_screen.c	8.93 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -1160,6 +1161,13 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|SIGBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
+argument_list|)
+expr_stmt|;
 name|CIRCLEQ_REMOVE
 argument_list|(
 operator|&
@@ -1186,9 +1194,23 @@ argument_list|,
 name|tsp
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+name|SIGUNBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
 argument_list|)
 expr_stmt|;
 block|}
+name|SIGBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
+argument_list|)
+expr_stmt|;
 name|CIRCLEQ_REMOVE
 argument_list|(
 operator|&
@@ -1215,6 +1237,13 @@ argument_list|,
 name|sp
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+name|SIGUNBLOCK
+argument_list|(
+name|sp
+operator|->
+name|gp
 argument_list|)
 expr_stmt|;
 if|if
