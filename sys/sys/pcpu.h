@@ -84,7 +84,7 @@ name|pc_curpcb
 decl_stmt|;
 comment|/* Current pcb */
 name|struct
-name|timeval
+name|bintime
 name|pc_switchtime
 decl_stmt|;
 name|int

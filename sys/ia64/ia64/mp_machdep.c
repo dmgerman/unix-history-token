@@ -361,7 +361,7 @@ asm|__asm __volatile("ssm psr.ic|psr.i;; srlz.i;;");
 end_asm
 
 begin_expr_stmt
-name|microuptime
+name|binuptime
 argument_list|(
 name|PCPU_PTR
 argument_list|(

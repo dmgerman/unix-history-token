@@ -1743,6 +1743,16 @@ expr_stmt|;
 name|p
 operator|->
 name|p_runtime
+operator|.
+name|sec
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|p_runtime
+operator|.
+name|frac
 operator|=
 literal|0
 expr_stmt|;

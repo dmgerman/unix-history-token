@@ -1001,10 +1001,11 @@ name|itimerval
 name|p_realtimer
 decl_stmt|;
 comment|/* (h?/k?) Alarm timer. */
-name|u_int64_t
+name|struct
+name|bintime
 name|p_runtime
 decl_stmt|;
-comment|/* (j) Real time in microsec. */
+comment|/* (j) Real time. */
 name|int
 name|p_traceflag
 decl_stmt|;

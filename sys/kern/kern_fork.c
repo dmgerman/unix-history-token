@@ -3164,12 +3164,12 @@ name|PCPU_GET
 argument_list|(
 name|switchtime
 operator|.
-name|tv_sec
+name|sec
 argument_list|)
 operator|==
 literal|0
 condition|)
-name|microuptime
+name|binuptime
 argument_list|(
 name|PCPU_PTR
 argument_list|(

@@ -652,7 +652,7 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* nothing */
-name|microuptime
+name|binuptime
 argument_list|(
 name|PCPU_PTR
 argument_list|(
