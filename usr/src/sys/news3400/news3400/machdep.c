@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2889,6 +2889,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|panicstr
+condition|)
+name|traceback
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|boothowto
 operator|=
 name|howto
