@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -1612,6 +1618,59 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_pci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|legacy_host_mem_start
+init|=
+literal|0x80000000
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* No TUNABLE_ULONG :-( */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pci.host_mem_start"
+argument_list|,
+operator|&
+name|legacy_host_mem_start
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|host_mem_start
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|legacy_host_mem_start
+argument_list|,
+literal|0x80000000
+argument_list|,
+literal|"Limit the host bridge memory to being above this address.  Must be\n\ set at boot via a tunable."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|struct
@@ -1645,7 +1704,7 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
-comment|/*      * If no memory preference is given, use upper 32MB slot most      * bioses use for their memory window.  Typically other bridges      * before us get in the way to assert their preferences on memory.      * Hardcoding like this sucks, so a more MD/MI way needs to be      * found to do it.  This is typically only used on older laptops      * that don't have pci busses behind pci bridge, so assuming> 32MB      * is liekly OK.      */
+comment|/*      * If no memory preference is given, use upper 32MB slot most      * bioses use for their memory window.  Typically other bridges      * before us get in the way to assert their preferences on memory.      * Hardcoding like this sucks, so a more MD/MI way needs to be      * found to do it.  This is typically only used on older laptops      * that don't have pci busses behind pci bridge, so assuming> 32MB      * is liekly OK.      *      * However, this can cause problems for other chipsets, so we make      * this tunable by hw.pci.host_mem_start.      */
 if|if
 condition|(
 name|type
@@ -1663,7 +1722,7 @@ literal|0UL
 condition|)
 name|start
 operator|=
-literal|0xfe000000
+name|legacy_host_mem_start
 expr_stmt|;
 return|return
 operator|(
