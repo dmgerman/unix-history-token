@@ -31,6 +31,10 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_macro
+name|__BEGIN_DECLS
+end_macro
+
 begin_comment
 comment|/*  * ==== Editing ====  */
 end_comment
@@ -864,6 +868,10 @@ end_define
 begin_comment
 comment|/* , void);		*/
 end_comment
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
