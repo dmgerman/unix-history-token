@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.92.2.2 1996/11/12 09:08:30 phk Exp $  *  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.92.2.3 1996/12/21 18:33:43 bde Exp $  *  */
 end_comment
 
 begin_include
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"fd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_fdc.h"
 end_include
 
 begin_if
@@ -1222,6 +1228,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|enable_fifo
+parameter_list|(
+name|fdc_p
+name|fdc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_threshold
+init|=
+literal|8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX: should be accessible via sysctl */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1309,7 +1339,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|FDC_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -1391,7 +1421,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* DEBUG */
+comment|/* FDC_DEBUG */
 end_comment
 
 begin_define
@@ -1420,7 +1450,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DEBUG */
+comment|/* FDC_DEBUG */
 end_comment
 
 begin_comment
@@ -1817,6 +1847,213 @@ argument_list|)
 return|;
 block|}
 block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|enable_fifo
+parameter_list|(
+name|fdc_p
+name|fdc
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fdc
+operator|->
+name|flags
+operator|&
+name|FDC_HAS_FIFO
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * XXX:  		 * Cannot use fd_cmd the normal way here, since 		 * this might be an invalid command. Thus we send the 		 * first byte, and check for an early turn of data directon. 		 */
+if|if
+condition|(
+name|out_fdc
+argument_list|(
+name|fdc
+operator|->
+name|fdcu
+argument_list|,
+name|I8207X_CONFIGURE
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+name|fdc_err
+argument_list|(
+name|fdc
+operator|->
+name|fdcu
+argument_list|,
+literal|"Enable FIFO failed\n"
+argument_list|)
+return|;
+comment|/* If command is invalid, return */
+name|j
+operator|=
+literal|100000
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|i
+operator|=
+name|inb
+argument_list|(
+name|fdc
+operator|->
+name|baseport
+operator|+
+name|FDSTS
+argument_list|)
+operator|&
+operator|(
+name|NE7_DIO
+operator||
+name|NE7_RQM
+operator|)
+operator|)
+operator|!=
+name|NE7_RQM
+operator|&&
+name|j
+operator|--
+operator|>
+literal|0
+condition|)
+if|if
+condition|(
+name|i
+operator|==
+operator|(
+name|NE7_DIO
+operator||
+name|NE7_RQM
+operator|)
+condition|)
+block|{
+name|fdc_reset
+argument_list|(
+name|fdc
+argument_list|)
+expr_stmt|;
+return|return
+name|FD_FAILED
+return|;
+block|}
+if|if
+condition|(
+name|j
+operator|<
+literal|0
+operator|||
+name|fd_cmd
+argument_list|(
+name|fdc
+operator|->
+name|fdcu
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|fifo_threshold
+operator|-
+literal|1
+operator|)
+operator|&
+literal|0xf
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fdc_reset
+argument_list|(
+name|fdc
+argument_list|)
+expr_stmt|;
+return|return
+name|fdc_err
+argument_list|(
+name|fdc
+operator|->
+name|fdcu
+argument_list|,
+literal|"Enable FIFO failed\n"
+argument_list|)
+return|;
+block|}
+name|fdc
+operator|->
+name|flags
+operator||=
+name|FDC_HAS_FIFO
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|fd_cmd
+argument_list|(
+name|fdc
+operator|->
+name|fdcu
+argument_list|,
+literal|4
+argument_list|,
+name|I8207X_CONFIGURE
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|fifo_threshold
+operator|-
+literal|1
+operator|)
+operator|&
+literal|0xf
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+name|fdc_err
+argument_list|(
+name|fdc
+operator|->
+name|fdcu
+argument_list|,
+literal|"Re-enable FIFO failed\n"
+argument_list|)
+return|;
 return|return
 literal|0
 return|;
@@ -2642,6 +2879,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|FDC_PRINT_BOGUS_CHIPTYPE
 name|printf
 argument_list|(
 literal|"fdc%d: "
@@ -2649,6 +2889,8 @@ argument_list|,
 name|fdcu
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ic_type
 operator|=
 operator|(
@@ -2664,11 +2906,16 @@ block|{
 case|case
 literal|0x80
 case|:
+ifdef|#
+directive|ifdef
+name|FDC_PRINT_BOGUS_CHIPTYPE
 name|printf
 argument_list|(
 literal|"NEC 765\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fdc
 operator|->
 name|fdct
@@ -2679,11 +2926,16 @@ break|break;
 case|case
 literal|0x81
 case|:
+ifdef|#
+directive|ifdef
+name|FDC_PRINT_BOGUS_CHIPTYPE
 name|printf
 argument_list|(
 literal|"Intel 82077\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fdc
 operator|->
 name|fdct
@@ -2694,11 +2946,16 @@ break|break;
 case|case
 literal|0x90
 case|:
+ifdef|#
+directive|ifdef
+name|FDC_PRINT_BOGUS_CHIPTYPE
 name|printf
 argument_list|(
 literal|"NEC 72065B\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fdc
 operator|->
 name|fdct
@@ -2707,6 +2964,9 @@ name|FDC_NE72065
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|FDC_PRINT_BOGUS_CHIPTYPE
 name|printf
 argument_list|(
 literal|"unknown IC type %02x\n"
@@ -2714,6 +2974,8 @@ argument_list|,
 name|ic_type
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fdc
 operator|->
 name|fdct
@@ -2721,6 +2983,43 @@ operator|=
 name|FDC_UNKNOWN
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|fdc
+operator|->
+name|fdct
+operator|!=
+name|FDC_NE765
+operator|&&
+name|fdc
+operator|->
+name|fdct
+operator|!=
+name|FDC_UNKNOWN
+operator|&&
+name|enable_fifo
+argument_list|(
+name|fdc
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"fdc%d: FIFO enabled"
+argument_list|,
+name|fdcu
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", %d bytes threshold\n"
+argument_list|,
+name|fifo_threshold
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -3702,6 +4001,29 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fdc_data
+index|[
+name|fdcu
+index|]
+operator|.
+name|flags
+operator|&
+name|FDC_HAS_FIFO
+condition|)
+operator|(
+name|void
+operator|)
+name|enable_fifo
+argument_list|(
+operator|&
+name|fdc_data
+index|[
+name|fdcu
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -4103,6 +4425,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fdc
+operator|->
+name|flags
+operator|&
+name|FDC_HAS_FIFO
+condition|)
+operator|(
+name|void
+operator|)
+name|enable_fifo
+argument_list|(
+name|fdc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4207,7 +4545,7 @@ argument_list|)
 return|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|FDC_DEBUG
 name|i
 operator|=
 name|inb
@@ -4235,6 +4573,7 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* !FDC_DEBUG */
 return|return
 name|inb
 argument_list|(
@@ -4245,6 +4584,7 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+comment|/* FDC_DEBUG */
 block|}
 end_function
 
@@ -4346,7 +4686,7 @@ argument_list|)
 return|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|FDC_DEBUG
 name|i
 operator|=
 name|inb
@@ -4377,6 +4717,7 @@ literal|0
 return|;
 else|#
 directive|else
+comment|/* !FDC_DEBUG */
 name|i
 operator|=
 name|inb
@@ -4400,6 +4741,7 @@ literal|0
 return|;
 endif|#
 directive|endif
+comment|/* FDC_DEBUG */
 block|}
 end_function
 
