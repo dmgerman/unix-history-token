@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)finger.c	4.6 (Berkeley) %G%"
+literal|"@(#)finger.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -407,13 +407,17 @@ begin_comment
 comment|/* output buffer */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -7150,13 +7154,16 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|strcpy
 argument_list|(
 name|p
 argument_list|,
 name|s
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
