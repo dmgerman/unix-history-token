@@ -1615,16 +1615,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|lflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show routing table with use and ref */
-end_comment
-
-begin_decl_stmt
-name|int
 name|Lflag
 decl_stmt|;
 end_decl_stmt
@@ -2079,14 +2069,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'l'
-case|:
-name|lflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'L'
 case|:
 name|Lflag
@@ -2191,6 +2173,9 @@ expr_stmt|;
 break|break;
 case|case
 literal|'W'
+case|:
+case|case
+literal|'l'
 case|:
 name|Wflag
 operator|=
