@@ -15,6 +15,12 @@ directive|include
 file|<machine/asm.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PIC
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -22,8 +28,28 @@ name|SYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|2: jmp PIC_PLT(HIDENAME(cerror));	\ 			ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2b
+value|2: movq PIC_GOT(HIDENAME(cerror)),%rcx;		\ 			jmp *%rcx;					\ 			ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2b
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCALL
+parameter_list|(
+name|x
+parameter_list|)
+value|2: jmp HIDENAME(cerror);			\ 			ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2b
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
