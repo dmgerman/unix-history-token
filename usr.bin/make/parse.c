@@ -113,18 +113,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|Lst
-modifier|*
-name|targCmds
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* command lines for targets */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|Boolean
 name|inLine
 decl_stmt|;
@@ -7075,13 +7063,6 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|Lst_AtEnd
-argument_list|(
-name|targCmds
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 else|else
@@ -7350,11 +7331,6 @@ operator|=
 name|Lst_Init
 argument_list|()
 expr_stmt|;
-name|targCmds
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -7365,13 +7341,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|Lst_Destroy
-argument_list|(
-name|targCmds
-argument_list|,
-name|free
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|targets
