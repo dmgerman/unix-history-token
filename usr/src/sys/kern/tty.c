@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6431,7 +6431,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check the output queue on tp for space for a kernel message  * (from uprintf/tprintf).  Allow some space over the normal  * hiwater mark so we don't lose messages due to normal flow  * control, but don't let the tty run amok.  */
+comment|/*  * Check the output queue on tp for space for a kernel message  * (from uprintf/tprintf).  Allow some space over the normal  * hiwater mark so we don't lose messages due to normal flow  * control, but don't let the tty run amok.  * Sleeps here are not interruptible, but we return prematurely  * if new signals come in.  */
 end_comment
 
 begin_expr_stmt
@@ -6461,6 +6461,8 @@ name|int
 name|hiwat
 decl_stmt|,
 name|s
+decl_stmt|,
+name|oldsig
 decl_stmt|;
 name|hiwat
 operator|=
@@ -6473,6 +6475,14 @@ name|s
 operator|=
 name|spltty
 argument_list|()
+expr_stmt|;
+name|oldsig
+operator|=
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_sig
 expr_stmt|;
 if|if
 condition|(
@@ -6507,6 +6517,14 @@ condition|(
 name|wait
 operator|==
 literal|0
+operator|||
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_sig
+operator|!=
+name|oldsig
 condition|)
 block|{
 name|splx
@@ -6520,6 +6538,21 @@ literal|0
 operator|)
 return|;
 block|}
+name|timeout
+argument_list|(
+name|wakeup
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_state
@@ -6536,7 +6569,9 @@ name|tp
 operator|->
 name|t_outq
 argument_list|,
-name|TTOPRI
+name|PZERO
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -360,7 +360,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Uprintf prints to the current user's terminal.  * It may block if the tty queue is overfull.  * Should determine whether current terminal user is related  * to this process.  */
+comment|/*  * Uprintf prints to the current user's terminal.  * It may block if the tty queue is overfull.  * No message is printed if the queue does not clear  * in a reasonable time.  * Should determine whether current terminal user is related  * to this process.  */
 end_comment
 
 begin_comment
@@ -455,16 +455,15 @@ comment|/* doesn't account for setuid */
 return|return;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|ttycheckoutq
 argument_list|(
 name|tp
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
 name|prf
 argument_list|(
 name|fmt
