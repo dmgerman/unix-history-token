@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: announce.c,v 1.5 1996/09/22 21:55:15 wosch Exp $  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)announce.c	8.3 (Berkeley) 4/28/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)announce.c	8.3 (Berkeley) 4/28/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +139,50 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|print_mesg
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|,
+name|CTL_MSG
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ttymsg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|iovec
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Announce an invitation to talk.  */
 end_comment
@@ -134,30 +191,22 @@ begin_comment
 comment|/*  * See if the user is accepting messages. If so, announce that  * a talk is requested.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|announce
-argument_list|(
-argument|request
-argument_list|,
-argument|remote_machine
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|request
+parameter_list|,
+name|remote_machine
+parameter_list|)
 name|CTL_MSG
 modifier|*
 name|request
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|remote_machine
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|full_tty
@@ -238,7 +287,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -270,48 +319,34 @@ begin_comment
 comment|/*  * Build a block of characters containing the message.  * It is sent blank filled and in a single block to  * try to keep the message in one piece if the recipient  * in in vi at the time  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|print_mesg
-argument_list|(
-argument|tty
-argument_list|,
-argument|tf
-argument_list|,
-argument|request
-argument_list|,
-argument|remote_machine
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tty
+parameter_list|,
+name|tf
+parameter_list|,
+name|request
+parameter_list|,
+name|remote_machine
+parameter_list|)
 name|char
 modifier|*
 name|tty
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|tf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CTL_MSG
 modifier|*
 name|request
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|remote_machine
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|timeval
@@ -822,7 +857,7 @@ name|SUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
