@@ -3,6 +3,23 @@ begin_comment
 comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The lnc device requires the old pci compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

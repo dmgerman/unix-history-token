@@ -11,6 +11,23 @@ begin_comment
 comment|/*  *  * i f _ e n _ p c i . c    *  * author: Chuck Cranor<chuck@ccrc.wustl.edu>  * started: spring, 1996.  *  * FreeBSD PCI glue for the eni155p card.  * thanks to Matt Thomas for figuring out FreeBSD vs NetBSD vs etc.. diffs.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The en device requires the old pci compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

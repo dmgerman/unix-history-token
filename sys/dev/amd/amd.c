@@ -15,6 +15,23 @@ begin_comment
 comment|/* #define AMD_DEBUG_SCSI_PHASE */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The amd device requires the old pci compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
