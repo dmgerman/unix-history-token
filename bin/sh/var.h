@@ -161,25 +161,6 @@ name|localvars
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|ATTY
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|var
-name|vatty
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -235,25 +216,6 @@ name|var
 name|vps2
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|ATTY
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|var
-name|vterm
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -334,25 +296,6 @@ parameter_list|()
 value|(vps2.text + 4)
 end_define
 
-begin_if
-if|#
-directive|if
-name|ATTY
-end_if
-
-begin_define
-define|#
-directive|define
-name|termval
-parameter_list|()
-value|(vterm.text + 5)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -373,25 +316,6 @@ directive|define
 name|histsizeval
 parameter_list|()
 value|(vhistsize.text + 9)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|ATTY
-end_if
-
-begin_define
-define|#
-directive|define
-name|attyset
-parameter_list|()
-value|((vatty.flags& VUNSET) == 0)
 end_define
 
 begin_endif
