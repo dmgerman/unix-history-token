@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cmds.c,v 1.2.6.1 1997/08/20 07:06:26 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -664,6 +664,11 @@ argument_list|(
 literal|"Local file name? "
 argument_list|,
 name|copyname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|copyname
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -707,6 +712,11 @@ argument_list|(
 literal|"List command for remote system? "
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -771,6 +781,11 @@ argument_list|(
 literal|"[take] "
 argument_list|,
 name|copyname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|copyname
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -1770,6 +1785,11 @@ argument_list|(
 literal|"Local command? "
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -1820,6 +1840,11 @@ argument_list|(
 literal|"List command for remote system? "
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -2031,6 +2056,11 @@ argument_list|(
 literal|"Local file name? "
 argument_list|,
 name|fname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fname
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -2718,6 +2748,11 @@ argument_list|(
 literal|"[put] "
 argument_list|,
 name|copyname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|copyname
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -3091,6 +3126,11 @@ argument_list|(
 literal|"Local command? "
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -3610,6 +3650,11 @@ argument_list|(
 literal|"Local command? "
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -3897,7 +3942,7 @@ block|{
 name|char
 name|dirname
 index|[
-literal|80
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 specifier|register
@@ -3914,6 +3959,11 @@ argument_list|(
 literal|"[cd] "
 argument_list|,
 name|dirname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dirname
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -4476,6 +4526,11 @@ argument_list|(
 literal|"[set] "
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 condition|)
 return|return;

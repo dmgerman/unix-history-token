@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tip.c,v 1.2.2.1 1997/08/20 07:06:44 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,6 +325,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1625,6 +1627,8 @@ parameter_list|(
 name|s
 parameter_list|,
 name|p
+parameter_list|,
+name|sz
 parameter_list|)
 name|char
 modifier|*
@@ -1634,6 +1638,9 @@ specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|sz
 decl_stmt|;
 block|{
 specifier|register
@@ -1705,6 +1712,11 @@ operator|*
 name|p
 operator|!=
 literal|'\n'
+operator|&&
+operator|--
+name|sz
+operator|>
+literal|0
 condition|)
 name|p
 operator|++
