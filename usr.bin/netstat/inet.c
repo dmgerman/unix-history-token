@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet.c,v 1.26 1997/08/25 16:57:05 wollman Exp $"
+literal|"$Id: inet.c,v 1.27 1998/05/15 20:19:15 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1855,7 +1855,29 @@ name|p
 argument_list|(
 name|ips_forward
 argument_list|,
-literal|"\t%lu packet%s forwarded\n"
+literal|"\t%lu packet%s forwarded"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_fastforward
+argument_list|,
+literal|" (%lu packet%s fast forwarded)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ipstat
+operator|.
+name|ips_forward
+operator|||
+name|sflag
+operator|<=
+literal|1
+condition|)
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|p
