@@ -1593,7 +1593,7 @@ literal|"page %u %u\n"
 literal|"swap %u %u\n"
 literal|"intr %u\n"
 literal|"ctxt %u\n"
-literal|"btime %ld\n"
+literal|"btime %lld\n"
 argument_list|,
 name|T2J
 argument_list|(
@@ -1652,6 +1652,9 @@ name|cnt
 operator|.
 name|v_swtch
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|boottime
 operator|.
 name|tv_sec
@@ -1691,8 +1694,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%ld.%02ld %ld.%02ld\n"
+literal|"%lld.%02ld %ld.%02ld\n"
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|tv
 operator|.
 name|tv_sec
