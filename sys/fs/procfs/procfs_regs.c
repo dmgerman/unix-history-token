@@ -157,11 +157,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|kl
@@ -193,6 +188,12 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|uiomove
@@ -209,6 +210,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
