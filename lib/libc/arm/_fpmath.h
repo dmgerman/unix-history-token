@@ -13,6 +13,9 @@ name|e
 decl_stmt|;
 struct|struct
 block|{
+ifndef|#
+directive|ifndef
+name|__ARMEB__
 name|unsigned
 name|int
 name|manl
@@ -23,14 +26,22 @@ name|unsigned
 name|int
 name|manh
 range|:
-literal|32
+literal|20
 decl_stmt|;
 name|unsigned
 name|int
 name|exp
 range|:
-literal|15
+literal|11
 decl_stmt|;
+name|unsigned
+name|int
+name|sign
+range|:
+literal|1
+decl_stmt|;
+else|#
+directive|else
 name|unsigned
 name|int
 name|sign
@@ -39,10 +50,24 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|int
-name|junk
+name|exp
 range|:
-literal|16
+literal|11
 decl_stmt|;
+name|unsigned
+name|int
+name|manh
+range|:
+literal|20
+decl_stmt|;
+name|unsigned
+name|int
+name|manl
+range|:
+literal|32
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|bits
 struct|;
@@ -54,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_NBIT
-value|0x80000000
+value|0
 end_define
 
 begin_define
@@ -64,7 +89,7 @@ name|mask_nbit_l
 parameter_list|(
 name|u
 parameter_list|)
-value|((u).bits.manh&= ~LDBL_NBIT)
+value|((void)0)
 end_define
 
 begin_define
