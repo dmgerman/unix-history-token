@@ -1079,11 +1079,11 @@ name|time_t
 name|timestamp
 decl_stmt|;
 comment|/* this instance timestamp */
-name|int
+name|u_int
 name|disk_size
 decl_stmt|;
 comment|/* size of current media */
-name|int
+name|u_int
 name|block_size
 decl_stmt|;
 comment|/* blocksize currently used */
