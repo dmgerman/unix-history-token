@@ -490,6 +490,29 @@ begin_comment
 comment|/* COMPAT_43 */
 end_comment
 
+begin_comment
+comment|/*  * This is the FreeBSD-1.1 compatable uname(2) interface.  These  * days it is done in libc as a wrapper around a bunch of sysctl's.  * This must maintain the old 1.1 binary ABI.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SYS_NMLN
+operator|!=
+literal|32
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"FreeBSD-1.1 uname syscall has been broken"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef

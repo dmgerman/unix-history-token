@@ -68,15 +68,15 @@ end_include
 
 begin_function
 name|int
-name|uname
+name|__xuname
 parameter_list|(
-name|name
-parameter_list|)
-name|struct
-name|utsname
+name|int
+name|namesize
+parameter_list|,
+name|void
 modifier|*
-name|name
-decl_stmt|;
+name|namebuf
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -96,6 +96,57 @@ decl_stmt|;
 name|int
 name|oerrno
 decl_stmt|;
+struct|struct
+name|xutsname
+block|{
+name|char
+name|sysname
+index|[
+name|namesize
+index|]
+decl_stmt|;
+comment|/* Name of this OS. */
+name|char
+name|nodename
+index|[
+name|namesize
+index|]
+decl_stmt|;
+comment|/* Name of this network node. */
+name|char
+name|release
+index|[
+name|namesize
+index|]
+decl_stmt|;
+comment|/* Release level. */
+name|char
+name|version
+index|[
+name|namesize
+index|]
+decl_stmt|;
+comment|/* Version level. */
+name|char
+name|machine
+index|[
+name|namesize
+index|]
+decl_stmt|;
+comment|/* Hardware type. */
+block|}
+modifier|*
+name|name
+struct|;
+name|name
+operator|=
+operator|(
+expr|struct
+name|xutsname
+operator|*
+operator|)
+name|namebuf
+expr_stmt|;
 name|rval
 operator|=
 literal|0
