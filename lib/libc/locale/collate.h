@@ -100,6 +100,13 @@ name|__collate_substitute_nontrivial
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|__collate_substitute_table
+value|(*__collate_substitute_table_ptr)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|u_char
@@ -115,6 +122,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|__collate_char_pri_table
+value|(*__collate_char_pri_table_ptr)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -127,6 +141,13 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|__collate_chain_pri_table
+value|(*__collate_chain_pri_table_ptr)
+end_define
 
 begin_decl_stmt
 specifier|extern
