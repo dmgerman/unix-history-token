@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	4.14 (Berkeley) %G%"
+literal|"@(#)func.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4262,9 +4262,33 @@ specifier|register
 name|int
 name|limit
 decl_stmt|;
+name|char
+name|hard
+init|=
+literal|0
+decl_stmt|;
 name|v
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|eq
+argument_list|(
+operator|*
+name|v
+argument_list|,
+literal|"-h"
+argument_list|)
+condition|)
+block|{
+name|hard
+operator|=
+literal|1
+expr_stmt|;
+name|v
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -4278,8 +4302,6 @@ control|(
 name|lp
 operator|=
 name|limits
-operator|+
-literal|1
 init|;
 name|lp
 operator|->
@@ -4293,6 +4315,8 @@ control|)
 name|plim
 argument_list|(
 name|lp
+argument_list|,
+name|hard
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4320,6 +4344,8 @@ block|{
 name|plim
 argument_list|(
 name|lp
+argument_list|,
+name|hard
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4340,6 +4366,8 @@ condition|(
 name|setlim
 argument_list|(
 name|lp
+argument_list|,
+name|hard
 argument_list|,
 name|limit
 argument_list|)
@@ -4739,6 +4767,8 @@ begin_expr_stmt
 name|plim
 argument_list|(
 name|lp
+argument_list|,
+name|hard
 argument_list|)
 specifier|register
 expr|struct
@@ -4748,11 +4778,20 @@ name|lp
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|char
+name|hard
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
 name|rlimit
 name|rlim
+decl_stmt|;
+name|int
+name|limit
 decl_stmt|;
 name|printf
 argument_list|(
@@ -4776,11 +4815,21 @@ operator|&
 name|rlim
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|limit
+operator|=
+name|hard
+condition|?
+name|rlim
+operator|.
+name|rlim_max
+else|:
 name|rlim
 operator|.
 name|rlim_cur
+expr_stmt|;
+if|if
+condition|(
+name|limit
 operator|==
 name|RLIM_INFINITY
 condition|)
@@ -4803,9 +4852,7 @@ argument_list|(
 operator|(
 name|long
 operator|)
-name|rlim
-operator|.
-name|rlim_cur
+name|limit
 argument_list|)
 expr_stmt|;
 else|else
@@ -4813,9 +4860,7 @@ name|printf
 argument_list|(
 literal|"%d %s"
 argument_list|,
-name|rlim
-operator|.
-name|rlim_cur
+name|limit
 operator|/
 name|lp
 operator|->
@@ -4860,9 +4905,33 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+name|char
+name|hard
+init|=
+literal|0
+decl_stmt|;
 name|v
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|eq
+argument_list|(
+operator|*
+name|v
+argument_list|,
+literal|"-h"
+argument_list|)
+condition|)
+block|{
+name|hard
+operator|=
+literal|1
+expr_stmt|;
+name|v
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -4876,8 +4945,6 @@ control|(
 name|lp
 operator|=
 name|limits
-operator|+
-literal|1
 init|;
 name|lp
 operator|->
@@ -4893,6 +4960,8 @@ condition|(
 name|setlim
 argument_list|(
 name|lp
+argument_list|,
+name|hard
 argument_list|,
 operator|(
 name|int
@@ -4937,6 +5006,8 @@ name|setlim
 argument_list|(
 name|lp
 argument_list|,
+name|hard
+argument_list|,
 operator|(
 name|int
 operator|)
@@ -4959,6 +5030,8 @@ name|setlim
 argument_list|(
 name|lp
 argument_list|,
+name|hard
+argument_list|,
 name|limit
 argument_list|)
 specifier|register
@@ -4968,6 +5041,12 @@ operator|*
 name|lp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|char
+name|hard
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4988,6 +5067,17 @@ operator|&
 name|rlim
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hard
+condition|)
+name|rlim
+operator|.
+name|rlim_max
+operator|=
+name|limit
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|limit
@@ -5031,7 +5121,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: %s: Can't %s limit\n"
+literal|"%s: %s: Can't %s%s limit\n"
 argument_list|,
 name|bname
 argument_list|,
@@ -5046,6 +5136,12 @@ condition|?
 literal|"remove"
 else|:
 literal|"set"
+argument_list|,
+name|hard
+condition|?
+literal|" hard"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
