@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwsuspend.c	3.9 (Berkeley) %G%"
+literal|"@(#)wwsuspend.c	3.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,17 +116,13 @@ operator|&
 name|wwoldtty
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_init
-call|)
+name|xxstart
 argument_list|()
 expr_stmt|;
 name|wwredraw
 argument_list|()
 expr_stmt|;
+comment|/* XXX, clears the screen twice */
 operator|(
 name|void
 operator|)

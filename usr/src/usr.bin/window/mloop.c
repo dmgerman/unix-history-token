@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.13 (Berkeley) %G%"
+literal|"@(#)mloop.c	3.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,15 +47,6 @@ end_macro
 
 begin_block
 block|{
-name|kill
-argument_list|(
-name|getpid
-argument_list|()
-argument_list|,
-name|SIGIO
-argument_list|)
-expr_stmt|;
-comment|/* catch typeahead before ASYNC was set */
 while|while
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tt.h	3.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tt.h	3.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ comment|/* startup and cleanup */
 name|int
 function_decl|(
 modifier|*
-name|tt_init
+name|tt_start
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -137,6 +137,22 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* set display modes */
+name|int
+function_decl|(
+modifier|*
+name|tt_set_token
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* define a token */
+name|int
+function_decl|(
+modifier|*
+name|tt_put_token
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* refer to a defined token */
 comment|/* internal variables */
 name|char
 name|tt_modes
@@ -191,6 +207,26 @@ name|char
 name|tt_retain
 decl_stmt|;
 comment|/* can retain below (db flag) */
+name|int
+name|tt_ntoken
+decl_stmt|;
+comment|/* number of compression tokens */
+name|int
+name|tt_token_min
+decl_stmt|;
+comment|/* minimun token size */
+name|int
+name|tt_token_max
+decl_stmt|;
+comment|/* maximum token size */
+name|int
+name|tt_set_token_cost
+decl_stmt|;
+comment|/* cost in addition to string */
+name|int
+name|tt_put_token_cost
+decl_stmt|;
+comment|/* constant cost */
 comment|/* the frame characters */
 name|short
 modifier|*

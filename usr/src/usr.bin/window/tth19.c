@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tth19.c	3.20 (Berkeley) %G%"
+literal|"@(#)tth19.c	3.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -818,7 +818,7 @@ block|}
 end_block
 
 begin_macro
-name|h19_init
+name|h19_start
 argument_list|()
 end_macro
 
@@ -1102,9 +1102,9 @@ argument_list|)
 expr_stmt|;
 name|tt
 operator|.
-name|tt_init
+name|tt_start
 operator|=
-name|h19_init
+name|h19_start
 expr_stmt|;
 name|tt
 operator|.

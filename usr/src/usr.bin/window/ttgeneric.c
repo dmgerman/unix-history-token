@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.38 (Berkeley) %G%"
+literal|"@(#)ttgeneric.c	3.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1553,7 +1553,7 @@ block|}
 end_block
 
 begin_macro
-name|gen_init
+name|gen_start
 argument_list|()
 end_macro
 
@@ -2743,9 +2743,9 @@ name|gen_LI
 expr_stmt|;
 name|tt
 operator|.
-name|tt_init
+name|tt_start
 operator|=
-name|gen_init
+name|gen_start
 expr_stmt|;
 name|tt
 operator|.

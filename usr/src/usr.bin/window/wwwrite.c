@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwwrite.c	3.28 (Berkeley) %G%"
+literal|"@(#)wwwrite.c	3.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1354,6 +1354,13 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'X'
+case|:
+name|wwupdate
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 literal|'Y'
 case|:
 name|UPDATE
@@ -1364,6 +1371,18 @@ operator|->
 name|ww_wstate
 operator|=
 literal|2
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|wwupdate
+argument_list|()
+expr_stmt|;
+name|xxflush
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.36 (Berkeley) %G%"
+literal|"@(#)main.c	3.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -502,9 +502,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|wwflush
 argument_list|()
 expr_stmt|;
@@ -575,9 +572,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|wwflush
 argument_list|()
 expr_stmt|;
@@ -630,9 +624,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|wwflush
 argument_list|()
 expr_stmt|;
@@ -662,16 +653,6 @@ argument_list|()
 expr_stmt|;
 name|wwflush
 argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|wwchild
-argument_list|)
 expr_stmt|;
 name|setvars
 argument_list|()
