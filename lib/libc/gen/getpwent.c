@@ -2248,9 +2248,9 @@ condition|)
 do|;
 if|if
 condition|(
-name|res
-operator|==
-name|NULL
+name|rv
+operator|!=
+literal|0
 condition|)
 name|errno
 operator|=
