@@ -3067,11 +3067,6 @@ operator|.
 name|d_name
 operator|=
 literal|"loran"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|MAJOR_AUTO
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -552,11 +552,6 @@ operator|=
 literal|"zstty"
 block|,
 operator|.
-name|d_maj
-operator|=
-name|MAJOR_AUTO
-block|,
-operator|.
 name|d_flags
 operator|=
 name|D_TTY
