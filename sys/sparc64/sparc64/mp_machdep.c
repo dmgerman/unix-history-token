@@ -1898,7 +1898,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"ipi_send: outstanding dispatch"
+literal|"cpu_ipi_send: outstanding dispatch"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2017,7 +2017,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"ipi_send: couldn't send ipi to module %u\n"
+literal|"cpu_ipi_send: couldn't send ipi to module %u\n"
 argument_list|,
 name|mid
 argument_list|)
@@ -2025,7 +2025,7 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"ipi_send: couldn't send ipi"
+literal|"cpu_ipi_send: couldn't send ipi"
 argument_list|)
 expr_stmt|;
 block|}
