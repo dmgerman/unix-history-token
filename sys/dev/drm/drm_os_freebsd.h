@@ -868,7 +868,7 @@ parameter_list|,
 name|_filp
 parameter_list|)
 define|\
-value|do {								\ 	if (_filp != (DRMFILE)DRM_CURRENTPID) {			\ 		DRM_ERROR("filp doesn't match curproc\n");	\ 		return EINVAL;					\ 	}							\ 	DRM_LOCK();						\ 	_priv = DRM(find_file_by_proc)(dev, DRM_CURPROC);	\ 	DRM_UNLOCK();						\ 	if (_priv == NULL) {					\ 		DRM_DEBUG("can't find authenticator\n");	\ 		return EINVAL;					\ 	}							\ } while (0)
+value|do {								\ 	if (_filp != (DRMFILE)(intptr_t)DRM_CURRENTPID) {	\ 		DRM_ERROR("filp doesn't match curproc\n");	\ 		return EINVAL;					\ 	}							\ 	DRM_LOCK();						\ 	_priv = DRM(find_file_by_proc)(dev, DRM_CURPROC);	\ 	DRM_UNLOCK();						\ 	if (_priv == NULL) {					\ 		DRM_DEBUG("can't find authenticator\n");	\ 		return EINVAL;					\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -1203,6 +1203,39 @@ directive|define
 name|DRM_MEMORYBARRIER
 parameter_list|()
 value|alpha_mb();
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|DRM_READMEMORYBARRIER
+parameter_list|()
+value|__asm __volatile( \ 					"lock; addl $0,0(%%rsp)" : : : "memory");
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_WRITEMEMORYBARRIER
+parameter_list|()
+value|__asm __volatile("" : : : "memory");
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MEMORYBARRIER
+parameter_list|()
+value|__asm __volatile( \ 					"lock; addl $0,0(%%rsp)" : : : "memory");
 end_define
 
 begin_endif
