@@ -617,7 +617,7 @@ name|pcb_r4
 operator|=
 name|FDESC_FUNC
 argument_list|(
-name|child_return
+name|fork_return
 argument_list|)
 expr_stmt|;
 name|up
