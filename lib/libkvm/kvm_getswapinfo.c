@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kvm_getswapinfo.c,v 1.2 1999/01/22 10:57:03 dillon Exp $"
+literal|"$Id: kvm_getswapinfo.c,v 1.3 1999/01/25 04:07:07 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -279,7 +279,9 @@ name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
-name|kvm_swap_t
+name|struct
+name|kvm_swap
+modifier|*
 name|swap_ary
 parameter_list|,
 name|int
@@ -300,7 +302,9 @@ name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
-name|kvm_swap_t
+name|struct
+name|kvm_swap
+modifier|*
 name|swap_ary
 parameter_list|,
 name|int
@@ -1015,7 +1019,9 @@ parameter_list|,
 name|int
 name|nswdev
 parameter_list|,
-name|kvm_swap_t
+name|struct
+name|kvm_swap
+modifier|*
 name|swap_ary
 parameter_list|,
 name|int
@@ -1587,7 +1593,9 @@ name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
-name|kvm_swap_t
+name|struct
+name|kvm_swap
+modifier|*
 name|swap_ary
 parameter_list|,
 name|int
@@ -1721,7 +1729,9 @@ name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
-name|kvm_swap_t
+name|struct
+name|kvm_swap
+modifier|*
 name|swap_ary
 parameter_list|,
 name|int
