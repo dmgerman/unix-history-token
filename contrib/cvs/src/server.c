@@ -6136,6 +6136,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* If the time field is not currently empty, then one of 	     * serve_modified, serve_is_modified,& serve_unchanged were 	     * already called for this file.  We would like to ignore the 	     * reinvocation silently or, better yet, exit with an error 	     * message, but we just avoid the copy-forward and overwrite the 	     * value from the last invocation instead.  See the comment below 	     * for more. 	     */
 if|if
 condition|(
 operator|*
@@ -6144,6 +6145,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
+comment|/* Copy forward one character.  Space was allocated for this 		 * already in serve_entry().  */
 name|cp
 operator|=
 name|timefield
@@ -6180,12 +6182,13 @@ operator|--
 name|cp
 expr_stmt|;
 block|}
+block|}
+comment|/* If *TIMEFIELD wasn't "/", we assume that it was because of 	     * multiple calls to Is-Modified& Unchanged by the client and 	     * just overwrite the value from the last call.  Technically, we 	     * should probably either ignore calls after the first or send the 	     * client an error, since the client/server protocol specification 	     * specifies that only one call to either Is-Modified or Unchanged 	     * is allowed, but broken versions of WinCVS& TortoiseCVS rely on 	     * this behavior. 	     */
 operator|*
 name|timefield
 operator|=
 literal|'='
 expr_stmt|;
-block|}
 break|break;
 block|}
 block|}
@@ -6320,6 +6323,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* If the time field is not currently empty, then one of 	     * serve_modified, serve_is_modified,& serve_unchanged were 	     * already called for this file.  We would like to ignore the 	     * reinvocation silently or, better yet, exit with an error 	     * message, but we just avoid the copy-forward and overwrite the 	     * value from the last invocation instead.  See the comment below 	     * for more. 	     */
 if|if
 condition|(
 operator|*
@@ -6328,6 +6332,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
+comment|/* Copy forward one character.  Space was allocated for this 		 * already in serve_entry().  */
 name|cp
 operator|=
 name|timefield
@@ -6364,12 +6369,13 @@ operator|--
 name|cp
 expr_stmt|;
 block|}
+block|}
+comment|/* If *TIMEFIELD wasn't "/", we assume that it was because of 	     * multiple calls to Is-Modified& Unchanged by the client and 	     * just overwrite the value from the last call.  Technically, we 	     * should probably either ignore calls after the first or send the 	     * client an error, since the client/server protocol specification 	     * specifies that only one call to either Is-Modified or Unchanged 	     * is allowed, but broken versions of WinCVS& TortoiseCVS rely on 	     * this behavior. 	     */
 operator|*
 name|timefield
 operator|=
 literal|'M'
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kopt
