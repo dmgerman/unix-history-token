@@ -46,42 +46,38 @@ end_comment
 begin_typedef
 typedef|typedef
 name|int
-argument_list|(
-argument|*ifm_change_cb_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|ifm_change_cb_t
+function_decl|)
+parameter_list|(
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 name|void
-argument_list|(
-argument|*ifm_stat_cb_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|ifm_stat_cb_t
+function_decl|)
+parameter_list|(
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|ifmediareq
-operator|*
+modifier|*
 name|req
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_comment
@@ -161,77 +157,68 @@ begin_comment
 comment|/* Initialize an interface's struct if_media field. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ifmedia_init
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifmedia
-operator|*
+modifier|*
 name|ifm
-operator|,
+parameter_list|,
 name|int
 name|dontcare_mask
-operator|,
+parameter_list|,
 name|ifm_change_cb_t
 name|change_callback
-operator|,
+parameter_list|,
 name|ifm_stat_cb_t
 name|status_callback
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Remove all mediums from a struct ifmedia.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ifmedia_removeall
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifmedia
-operator|*
+modifier|*
 name|ifm
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Add one supported medium to a struct ifmedia. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ifmedia_add
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifmedia
-operator|*
+modifier|*
 name|ifm
-operator|,
+parameter_list|,
 name|int
 name|mword
-operator|,
+parameter_list|,
 name|int
 name|data
-operator|,
+parameter_list|,
 name|void
-operator|*
+modifier|*
 name|aux
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Add an array (of ifmedia_entry) media to a struct ifmedia. */
@@ -261,55 +248,49 @@ begin_comment
 comment|/* Set default media type on initialization. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ifmedia_set
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifmedia
-operator|*
+modifier|*
 name|ifm
-operator|,
+parameter_list|,
 name|int
 name|mword
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Common ioctl function for getting/setting media, called by driver. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ifmedia_ioctl
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|ifreq
-operator|*
+modifier|*
 name|ifr
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|ifmedia
-operator|*
+modifier|*
 name|ifm
-operator|,
+parameter_list|,
 name|u_long
 name|cmd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -922,6 +903,28 @@ begin_comment
 comment|/* Operate in Host AP mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_IBSS
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Operate in IBSS mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_IBSSMASTER
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Operate as an IBSS master */
+end_comment
+
 begin_comment
 comment|/*  * Shared media sub-types  */
 end_comment
@@ -1317,7 +1320,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_OPTION_DESCRIPTIONS
-value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ IFM_IEEE80211_IBSS, "ibss" },					\ 	{ IFM_IEEE80211_IBSSMASTER, "ibss-master" },			\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
