@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.17	81/03/09	*/
+comment|/*	vfs_cluster.c	4.18	81/03/11	*/
 end_comment
 
 begin_include
@@ -325,12 +325,10 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 name|trace
 argument_list|(
-name|TR_BREAD
-operator||
-name|TR_HIT
+name|TR_BREADHIT
 argument_list|,
 name|dev
 argument_list|,
@@ -385,12 +383,10 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 name|trace
 argument_list|(
-name|TR_BREAD
-operator||
-name|TR_MISS
+name|TR_BREADMISS
 argument_list|,
 name|dev
 argument_list|,
@@ -531,12 +527,10 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 name|trace
 argument_list|(
-name|TR_BREAD
-operator||
-name|TR_MISS
+name|TR_BREADMISS
 argument_list|,
 name|dev
 argument_list|,
@@ -566,13 +560,11 @@ comment|/* pay for read */
 block|}
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 else|else
 name|trace
 argument_list|(
-name|TR_BREAD
-operator||
-name|TR_HIT
+name|TR_BREADHIT
 argument_list|,
 name|dev
 argument_list|,
@@ -620,14 +612,10 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 name|trace
 argument_list|(
-name|TR_BREAD
-operator||
-name|TR_HIT
-operator||
-name|TR_RA
+name|TR_BREADHITRA
 argument_list|,
 name|dev
 argument_list|,
@@ -671,14 +659,10 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 name|trace
 argument_list|(
-name|TR_BREAD
-operator||
-name|TR_MISS
-operator||
-name|TR_RA
+name|TR_BREADMISSRA
 argument_list|,
 name|dev
 argument_list|,
@@ -817,7 +801,7 @@ expr_stmt|;
 comment|/* noone paid yet */
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 name|trace
 argument_list|(
 name|TR_BWRITE
@@ -1821,7 +1805,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 name|trace
 argument_list|(
 name|TR_BRELSE
@@ -2043,7 +2027,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|EPAWNJ
+name|TRACE
 name|trace
 argument_list|(
 name|TR_BRELSE
