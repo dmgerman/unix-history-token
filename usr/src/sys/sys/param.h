@@ -1,10 +1,55 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.22	82/10/10	*/
+comment|/*	param.h	4.23	82/10/31	*/
 end_comment
 
 begin_comment
-comment|/*  * Tunable variables which do not usually vary per system.  *  * The sizes of most system tables are configured  * into each system description.  The file system buffer  * cache size is assigned based on available memory.  * The tables whose sizes don't vary often are given here.  */
+comment|/*  * Macine type dependent parameters.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|vax
+end_if
+
+begin_include
+include|#
+directive|include
+file|"../vax/param.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|sun
+end_if
+
+begin_include
+include|#
+directive|include
+file|"../sun/param.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NPTEPG
+value|(NBPG/(sizeof (struct pte)))
+end_define
+
+begin_comment
+comment|/*  * Machine-independent constants  */
 end_comment
 
 begin_define
@@ -38,28 +83,6 @@ end_define
 
 begin_comment
 comment|/* max processes per user */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSIZE
-value|4
-end_define
-
-begin_comment
-comment|/* initial stack size (*512 bytes) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SINCR
-value|4
-end_define
-
-begin_comment
-comment|/* increment of stack (*512 bytes) */
 end_comment
 
 begin_define
@@ -99,8 +122,19 @@ begin_comment
 comment|/* # characters in exec arglist */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NGROUPS
+value|8
+end_define
+
 begin_comment
-comment|/*  * priorities  * probably should not be  * altered too much  */
+comment|/* max number groups */
+end_comment
+
+begin_comment
+comment|/*  * Priorities  */
 end_comment
 
 begin_define
@@ -181,7 +215,7 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * signals  * dont change  */
+comment|/*  * Signals  */
 end_comment
 
 begin_ifndef
@@ -212,44 +246,7 @@ value|((p)->p_sig&& \ 	((p)->p_flag&STRC || ((p)->p_sig&~ (p)->p_ignsig))&& issi
 end_define
 
 begin_comment
-comment|/*  * Return values from tsleep().  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_OK
-value|0
-end_define
-
-begin_comment
-comment|/* normal wakeup */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_TIME
-value|1
-end_define
-
-begin_comment
-comment|/* timed-out wakeup */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_SIG
-value|2
-end_define
-
-begin_comment
-comment|/* asynchronous signal wakeup */
-end_comment
-
-begin_comment
-comment|/*  * fundamental constants of the implementation--  * cannot be changed easily.  */
+comment|/*  * Fundamental constants of the implementation.  */
 end_comment
 
 begin_define
@@ -277,46 +274,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NBPG
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|PGOFSET
-value|(NBPG-1)
-end_define
-
-begin_comment
-comment|/* byte offset into page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PGSHIFT
-value|9
-end_define
-
-begin_comment
-comment|/* LOG2(NBPG) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPAGES
-value|8
-end_define
-
-begin_comment
-comment|/* pages of u-area */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NULL
 value|0
 end_define
@@ -339,27 +296,9 @@ name|NODEV
 value|(dev_t)(-1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NGROUPS
-value|8
-end_define
-
-begin_comment
-comment|/* max number groups */
-end_comment
-
 begin_comment
 comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from vm.h) pages each... BSIZE must  * be CLSIZE*NBPG in the current implementation, that is the paging subsystem  * deals with the same size blocks that the file system uses.  *  * NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CLSIZE
-value|2
-end_define
 
 begin_define
 define|#
@@ -400,8 +339,41 @@ begin_define
 define|#
 directive|define
 name|CLSHIFT
-value|(PGSHIFT+1)
+value|(PGSHIFT+CLSIZELOG2)
 end_define
+
+begin_if
+if|#
+directive|if
+name|CLSIZE
+operator|==
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|clbase
+parameter_list|(
+name|i
+parameter_list|)
+value|(i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|clrnd
+parameter_list|(
+name|i
+parameter_list|)
+value|(i)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/* give the base virtual address (first of CLSIZE) */
@@ -430,6 +402,11 @@ name|i
 parameter_list|)
 value|(((i) + (CLSIZE-1))&~ (CLSIZE-1))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -488,76 +465,6 @@ begin_comment
 comment|/* clist rounding; sizeof(int *) + CBSIZE -1*/
 end_comment
 
-begin_comment
-comment|/*  * Some macros for units conversion  */
-end_comment
-
-begin_comment
-comment|/* Core clicks (512 bytes) to segments and vice versa */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ctos
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|stoc
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_comment
-comment|/* Core clicks (512 bytes) to disk blocks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ctod
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_comment
-comment|/* clicks to bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ctob
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<<9)
-end_define
-
-begin_comment
-comment|/* bytes to clicks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|btoc
-parameter_list|(
-name|x
-parameter_list|)
-value|((((unsigned)(x)+511)>>9))
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -585,41 +492,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Machine-dependent bits and macros  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMODE
-value|PSL_CURMOD
-end_define
-
-begin_comment
-comment|/* usermode bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USERMODE
-parameter_list|(
-name|ps
-parameter_list|)
-value|(((ps)& UMODE) == UMODE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BASEPRI
-parameter_list|(
-name|ps
-parameter_list|)
-value|(((ps)& PSL_IPL) != 0)
-end_define
 
 begin_comment
 comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units,  * with smaller units (fragments) only in the last direct block.  * MAXBSIZE primarily determines the size of buffers in the buffer  * pool. It may be made larger without any effect on existing  * file systems; however making it smaller make make some file  * systems unmountable.  *  * Note that the blocked devices are assumed to have DEV_BSIZE  * "sectors" and that fragments must be some multiple of this size.  * Block devices are read in BLKDEV_IOSIZE units. This number must  * be a power of two and in the range of  *	DEV_BSIZE<= BLKDEV_IOSIZE<= MAXBSIZE  * This size has no effect upon the file system, but is usually set  * to the block size of the root file system, so as to maximize the  * speed of ``fsck''.  */
@@ -664,7 +536,7 @@ name|bdbtofsb
 parameter_list|(
 name|bn
 parameter_list|)
-value|((bn) / CLSIZE)
+value|((bn) / (BLKDEV_IOSIZE/DEV_BSIZE))
 end_define
 
 begin_comment
