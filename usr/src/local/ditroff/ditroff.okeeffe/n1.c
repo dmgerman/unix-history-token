@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	2.1 (CWI) 85/07/18"
+literal|"@(#)n1.c	2.2 (CWI) 88/03/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -3574,16 +3574,6 @@ name|k
 condition|)
 block|{
 case|case
-literal|'X'
-case|:
-comment|/* \X'...' for copy through */
-name|setxon
-argument_list|()
-expr_stmt|;
-goto|goto
-name|g0
-goto|;
-case|case
 literal|'\n'
 case|:
 comment|/* concealed newline */
@@ -3900,6 +3890,16 @@ condition|(
 name|k
 condition|)
 block|{
+case|case
+literal|'X'
+case|:
+comment|/* \X'...' for copy through */
+name|setxon
+argument_list|()
+expr_stmt|;
+goto|goto
+name|g0
+goto|;
 case|case
 literal|'p'
 case|:
