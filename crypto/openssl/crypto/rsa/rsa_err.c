@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -617,7 +617,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_RSA

@@ -15,13 +15,14 @@ end_include
 
 begin_function
 name|void
-name|des_encrypt1
+name|DES_encrypt1
 parameter_list|(
 name|DES_LONG
 modifier|*
 name|data
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks
 parameter_list|,
 name|int
@@ -54,7 +55,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|des_SPtrans
+name|DES_SPtrans
 decl_stmt|;
 endif|#
 directive|endif
@@ -93,7 +94,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-comment|/* Things have been modified so that the initial rotate is 	 * done outside the loop.  This required the 	 * des_SPtrans values in sp.h to be rotated 1 bit to the right. 	 * One perl script later and things have a 5% speed up on a sparc2. 	 * Thanks to Richard Outerbridge<71755.204@CompuServe.COM> 	 * for pointing this out. */
+comment|/* Things have been modified so that the initial rotate is 	 * done outside the loop.  This required the 	 * DES_SPtrans values in sp.h to be rotated 1 bit to the right. 	 * One perl script later and things have a 5% speed up on a sparc2. 	 * Thanks to Richard Outerbridge<71755.204@CompuServe.COM> 	 * for pointing this out. */
 comment|/* clear the top bits on machines with 8byte longs */
 comment|/* shift left by 2 */
 name|r
@@ -123,7 +124,7 @@ operator|=
 name|ks
 operator|->
 name|ks
-operator|.
+operator|->
 name|deslong
 expr_stmt|;
 comment|/* I don't know if it is worth the effort of loop unrolling the 	 * inner loop */
@@ -657,13 +658,14 @@ end_function
 
 begin_function
 name|void
-name|des_encrypt2
+name|DES_encrypt2
 parameter_list|(
 name|DES_LONG
 modifier|*
 name|data
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks
 parameter_list|,
 name|int
@@ -696,7 +698,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|des_SPtrans
+name|DES_SPtrans
 decl_stmt|;
 endif|#
 directive|endif
@@ -728,7 +730,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* Things have been modified so that the initial rotate is 	 * done outside the loop.  This required the 	 * des_SPtrans values in sp.h to be rotated 1 bit to the right. 	 * One perl script later and things have a 5% speed up on a sparc2. 	 * Thanks to Richard Outerbridge<71755.204@CompuServe.COM> 	 * for pointing this out. */
+comment|/* Things have been modified so that the initial rotate is 	 * done outside the loop.  This required the 	 * DES_SPtrans values in sp.h to be rotated 1 bit to the right. 	 * One perl script later and things have a 5% speed up on a sparc2. 	 * Thanks to Richard Outerbridge<71755.204@CompuServe.COM> 	 * for pointing this out. */
 comment|/* clear the top bits on machines with 8byte longs */
 name|r
 operator|=
@@ -757,7 +759,7 @@ operator|=
 name|ks
 operator|->
 name|ks
-operator|.
+operator|->
 name|deslong
 expr_stmt|;
 comment|/* I don't know if it is worth the effort of loop unrolling the 	 * inner loop */
@@ -1276,19 +1278,22 @@ end_function
 
 begin_function
 name|void
-name|des_encrypt3
+name|DES_encrypt3
 parameter_list|(
 name|DES_LONG
 modifier|*
 name|data
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks1
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks2
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks3
 parameter_list|)
 block|{
@@ -1333,7 +1338,7 @@ index|]
 operator|=
 name|r
 expr_stmt|;
-name|des_encrypt2
+name|DES_encrypt2
 argument_list|(
 operator|(
 name|DES_LONG
@@ -1346,7 +1351,7 @@ argument_list|,
 name|DES_ENCRYPT
 argument_list|)
 expr_stmt|;
-name|des_encrypt2
+name|DES_encrypt2
 argument_list|(
 operator|(
 name|DES_LONG
@@ -1359,7 +1364,7 @@ argument_list|,
 name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
-name|des_encrypt2
+name|DES_encrypt2
 argument_list|(
 operator|(
 name|DES_LONG
@@ -1412,19 +1417,22 @@ end_function
 
 begin_function
 name|void
-name|des_decrypt3
+name|DES_decrypt3
 parameter_list|(
 name|DES_LONG
 modifier|*
 name|data
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks1
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks2
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks3
 parameter_list|)
 block|{
@@ -1469,7 +1477,7 @@ index|]
 operator|=
 name|r
 expr_stmt|;
-name|des_encrypt2
+name|DES_encrypt2
 argument_list|(
 operator|(
 name|DES_LONG
@@ -1482,7 +1490,7 @@ argument_list|,
 name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
-name|des_encrypt2
+name|DES_encrypt2
 argument_list|(
 operator|(
 name|DES_LONG
@@ -1495,7 +1503,7 @@ argument_list|,
 name|DES_ENCRYPT
 argument_list|)
 expr_stmt|;
-name|des_encrypt2
+name|DES_encrypt2
 argument_list|(
 operator|(
 name|DES_LONG
@@ -1565,12 +1573,12 @@ file|"ncbc_enc.c"
 end_include
 
 begin_comment
-comment|/* des_ncbc_encrypt */
+comment|/* DES_ncbc_encrypt */
 end_comment
 
 begin_function
 name|void
-name|des_ede3_cbc_encrypt
+name|DES_ede3_cbc_encrypt
 parameter_list|(
 specifier|const
 name|unsigned
@@ -1586,16 +1594,19 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks1
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks2
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks3
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|ivec
 parameter_list|,
@@ -1737,7 +1748,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt3
+name|DES_encrypt3
 argument_list|(
 operator|(
 name|DES_LONG
@@ -1824,7 +1835,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt3
+name|DES_encrypt3
 argument_list|(
 operator|(
 name|DES_LONG
@@ -1967,7 +1978,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_decrypt3
+name|DES_decrypt3
 argument_list|(
 operator|(
 name|DES_LONG
@@ -2071,7 +2082,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_decrypt3
+name|DES_decrypt3
 argument_list|(
 operator|(
 name|DES_LONG

@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/asn1_mac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/conf.h>
 end_include
 

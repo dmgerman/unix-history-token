@@ -28,7 +28,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifdef
 
 begin_define
@@ -197,13 +197,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 argument_list|)
 name|meth
 operator|=
@@ -215,7 +215,7 @@ directive|elif
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 argument_list|)
 name|meth
 operator|=
@@ -227,7 +227,7 @@ directive|elif
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 argument_list|)
 name|meth
 operator|=
@@ -265,7 +265,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -320,7 +320,7 @@ literal|1
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 elseif|else
 if|if
 condition|(
@@ -343,7 +343,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 elseif|else
 if|if
 condition|(
@@ -366,7 +366,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_TLS1
+name|OPENSSL_NO_TLS1
 elseif|else
 if|if
 condition|(
@@ -462,6 +462,8 @@ control|)
 name|BIO_printf
 argument_list|(
 name|bio_err
+argument_list|,
+literal|"%s"
 argument_list|,
 operator|*
 name|pp
@@ -641,7 +643,8 @@ argument_list|)
 argument_list|,
 name|buf
 argument_list|,
-literal|512
+sizeof|sizeof
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -702,7 +705,10 @@ argument_list|(
 name|STDout
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

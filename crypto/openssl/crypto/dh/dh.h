@@ -22,7 +22,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_DH
+name|OPENSSL_NO_DH
 end_ifdef
 
 begin_error
@@ -39,7 +39,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 end_ifndef
 
 begin_include
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
 end_include
 
 begin_define
@@ -121,6 +127,7 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|pub_key
@@ -136,6 +143,7 @@ modifier|*
 name|bn_mod_exp
 function_decl|)
 parameter_list|(
+specifier|const
 name|DH
 modifier|*
 name|dh
@@ -144,6 +152,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
@@ -218,7 +227,7 @@ name|BIGNUM
 modifier|*
 name|g
 decl_stmt|;
-name|int
+name|long
 name|length
 decl_stmt|;
 comment|/* optional */
@@ -266,9 +275,14 @@ decl_stmt|;
 name|CRYPTO_EX_DATA
 name|ex_data
 decl_stmt|;
+specifier|const
 name|DH_METHOD
 modifier|*
 name|meth
+decl_stmt|;
+name|ENGINE
+modifier|*
+name|engine
 decl_stmt|;
 block|}
 struct|;
@@ -362,6 +376,7 @@ parameter_list|)
 value|ASN1_i2d_bio(i2d_DHparams,(bp), \ 		(unsigned char *)(x))
 endif|#
 directive|endif
+specifier|const
 name|DH_METHOD
 modifier|*
 name|DH_OpenSSL
@@ -372,11 +387,13 @@ function_decl|;
 name|void
 name|DH_set_default_method
 parameter_list|(
+specifier|const
 name|DH_METHOD
 modifier|*
 name|meth
 parameter_list|)
 function_decl|;
+specifier|const
 name|DH_METHOD
 modifier|*
 name|DH_get_default_method
@@ -384,14 +401,14 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|DH_METHOD
-modifier|*
+name|int
 name|DH_set_method
 parameter_list|(
 name|DH
 modifier|*
 name|dh
 parameter_list|,
+specifier|const
 name|DH_METHOD
 modifier|*
 name|meth
@@ -401,9 +418,9 @@ name|DH
 modifier|*
 name|DH_new_method
 parameter_list|(
-name|DH_METHOD
+name|ENGINE
 modifier|*
-name|meth
+name|engine
 parameter_list|)
 function_decl|;
 name|DH
@@ -422,8 +439,17 @@ name|dh
 parameter_list|)
 function_decl|;
 name|int
+name|DH_up_ref
+parameter_list|(
+name|DH
+modifier|*
+name|dh
+parameter_list|)
+function_decl|;
+name|int
 name|DH_size
 parameter_list|(
+specifier|const
 name|DH
 modifier|*
 name|dh
@@ -511,6 +537,7 @@ function_decl|;
 name|int
 name|DH_check
 parameter_list|(
+specifier|const
 name|DH
 modifier|*
 name|dh
@@ -536,6 +563,7 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|pub_key
@@ -554,6 +582,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -567,6 +596,7 @@ function_decl|;
 name|int
 name|i2d_DHparams
 parameter_list|(
+specifier|const
 name|DH
 modifier|*
 name|a
@@ -580,7 +610,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 name|int
 name|DHparams_print_fp
 parameter_list|(
@@ -588,6 +618,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|DH
 modifier|*
 name|x
@@ -597,7 +628,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 name|int
 name|DHparams_print
 parameter_list|(
@@ -605,6 +636,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|DH
 modifier|*
 name|x
@@ -619,6 +651,7 @@ name|char
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|DH
 modifier|*
 name|x
@@ -658,7 +691,7 @@ name|DH_F_DH_GENERATE_PARAMETERS
 value|104
 define|#
 directive|define
-name|DH_F_DH_NEW
+name|DH_F_DH_NEW_METHOD
 value|105
 comment|/* Reason codes. */
 define|#

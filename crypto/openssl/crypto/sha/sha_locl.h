@@ -503,7 +503,7 @@ value|0xc3d2e1f0UL
 end_define
 
 begin_function
-name|void
+name|int
 name|HASH_INIT
 parameter_list|(
 name|SHA_CTX
@@ -559,6 +559,9 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -927,7 +930,7 @@ name|d
 decl_stmt|;
 specifier|register
 name|unsigned
-name|long
+name|MD32_REG_T
 name|A
 decl_stmt|,
 name|B
@@ -944,7 +947,7 @@ ifndef|#
 directive|ifndef
 name|MD32_XARRAY
 name|unsigned
-name|long
+name|MD32_REG_T
 name|XX0
 decl_stmt|,
 name|XX1
@@ -3977,7 +3980,7 @@ name|p
 decl_stmt|;
 specifier|register
 name|unsigned
-name|long
+name|MD32_REG_T
 name|A
 decl_stmt|,
 name|B
@@ -3996,7 +3999,7 @@ ifndef|#
 directive|ifndef
 name|MD32_XARRAY
 name|unsigned
-name|long
+name|MD32_REG_T
 name|XX0
 decl_stmt|,
 name|XX1

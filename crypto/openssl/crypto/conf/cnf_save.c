@@ -20,6 +20,7 @@ file|<openssl/conf.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|print_conf
 parameter_list|(
@@ -29,6 +30,18 @@ name|cv
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+specifier|static
+name|IMPLEMENT_LHASH_DOALL_FN
+argument_list|(
+name|print_conf
+argument_list|,
+name|CONF_VALUE
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|main
@@ -79,13 +92,17 @@ name|lh_doall
 argument_list|(
 name|conf
 argument_list|,
+name|LHASH_DOALL_FN
+argument_list|(
 name|print_conf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_conf
 parameter_list|(

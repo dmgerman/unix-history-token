@@ -25,10 +25,16 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_MD5
+name|OPENSSL_NO_MD5
 end_ifdef
 
 begin_function
@@ -61,6 +67,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<openssl/evp.h>
+end_include
 
 begin_include
 include|#
@@ -168,6 +180,13 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|unsigned
+name|char
+name|md
+index|[
+name|MD5_DIGEST_LENGTH
+index|]
+decl_stmt|;
 name|P
 operator|=
 operator|(
@@ -200,11 +219,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|p
-operator|=
-name|pt
-argument_list|(
-name|MD5
+name|EVP_Digest
 argument_list|(
 operator|&
 operator|(
@@ -231,8 +246,21 @@ operator|*
 name|P
 argument_list|)
 argument_list|,
+name|md
+argument_list|,
+name|NULL
+argument_list|,
+name|EVP_md5
+argument_list|()
+argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|pt
+argument_list|(
+name|md
 argument_list|)
 expr_stmt|;
 if|if
@@ -292,7 +320,7 @@ name|P
 operator|++
 expr_stmt|;
 block|}
-name|exit
+name|EXIT
 argument_list|(
 name|err
 argument_list|)

@@ -317,10 +317,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|HEADER_DES_H
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HEADER_NEW_DES_H
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -931,6 +938,16 @@ end_endif
 begin_comment
 comment|/* HEADER_DES_LOCL_H */
 end_comment
+
+begin_comment
+comment|/* The Kerberos 5 support is MIT-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_NO_KRB5
+end_define
 
 end_unit
 

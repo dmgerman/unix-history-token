@@ -26,7 +26,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifdef
 
 begin_error
@@ -43,7 +43,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 end_ifndef
 
 begin_include
@@ -69,10 +69,16 @@ directive|include
 file|<openssl/crypto.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 end_ifndef
 
 begin_include
@@ -324,7 +330,7 @@ comment|/* This first variable is used to pick up errors where 	 * a DSA is pass
 name|int
 name|pad
 decl_stmt|;
-name|int
+name|long
 name|version
 decl_stmt|;
 name|int
@@ -377,9 +383,15 @@ decl_stmt|;
 name|CRYPTO_EX_DATA
 name|ex_data
 decl_stmt|;
+specifier|const
 name|DSA_METHOD
 modifier|*
 name|meth
+decl_stmt|;
+comment|/* functional reference if 'meth' is ENGINE-provided */
+name|ENGINE
+modifier|*
+name|engine
 decl_stmt|;
 block|}
 struct|;
@@ -444,6 +456,7 @@ function_decl|;
 name|int
 name|i2d_DSA_SIG
 parameter_list|(
+specifier|const
 name|DSA_SIG
 modifier|*
 name|a
@@ -464,6 +477,7 @@ modifier|*
 modifier|*
 name|v
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -513,6 +527,7 @@ modifier|*
 name|dsa
 parameter_list|)
 function_decl|;
+specifier|const
 name|DSA_METHOD
 modifier|*
 name|DSA_OpenSSL
@@ -523,10 +538,12 @@ function_decl|;
 name|void
 name|DSA_set_default_method
 parameter_list|(
+specifier|const
 name|DSA_METHOD
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|const
 name|DSA_METHOD
 modifier|*
 name|DSA_get_default_method
@@ -534,14 +551,14 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|DSA_METHOD
-modifier|*
+name|int
 name|DSA_set_method
 parameter_list|(
 name|DSA
 modifier|*
 name|dsa
 parameter_list|,
+specifier|const
 name|DSA_METHOD
 modifier|*
 parameter_list|)
@@ -557,14 +574,32 @@ name|DSA
 modifier|*
 name|DSA_new_method
 parameter_list|(
-name|DSA_METHOD
+name|ENGINE
 modifier|*
-name|meth
+name|engine
+parameter_list|)
+function_decl|;
+name|void
+name|DSA_free
+parameter_list|(
+name|DSA
+modifier|*
+name|r
+parameter_list|)
+function_decl|;
+comment|/* "up" the DSA object's reference count */
+name|int
+name|DSA_up_ref
+parameter_list|(
+name|DSA
+modifier|*
+name|r
 parameter_list|)
 function_decl|;
 name|int
 name|DSA_size
 parameter_list|(
+specifier|const
 name|DSA
 modifier|*
 parameter_list|)
@@ -637,6 +672,7 @@ parameter_list|,
 name|int
 name|dgst_len
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -648,14 +684,6 @@ parameter_list|,
 name|DSA
 modifier|*
 name|dsa
-parameter_list|)
-function_decl|;
-name|void
-name|DSA_free
-parameter_list|(
-name|DSA
-modifier|*
-name|r
 parameter_list|)
 function_decl|;
 name|int
@@ -717,6 +745,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -736,6 +765,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -755,6 +785,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -819,6 +850,7 @@ function_decl|;
 name|int
 name|i2d_DSAPublicKey
 parameter_list|(
+specifier|const
 name|DSA
 modifier|*
 name|a
@@ -833,6 +865,7 @@ function_decl|;
 name|int
 name|i2d_DSAPrivateKey
 parameter_list|(
+specifier|const
 name|DSA
 modifier|*
 name|a
@@ -847,6 +880,7 @@ function_decl|;
 name|int
 name|i2d_DSAparams
 parameter_list|(
+specifier|const
 name|DSA
 modifier|*
 name|a
@@ -860,7 +894,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 name|int
 name|DSAparams_print
 parameter_list|(
@@ -868,6 +902,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|DSA
 modifier|*
 name|x
@@ -880,6 +915,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|DSA
 modifier|*
 name|x
@@ -892,7 +928,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 name|int
 name|DSAparams_print_fp
 parameter_list|(
@@ -900,6 +936,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|DSA
 modifier|*
 name|x
@@ -912,6 +949,7 @@ name|FILE
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|DSA
 modifier|*
 name|x
@@ -941,12 +979,13 @@ define|\
 value|BN_is_prime(n, DSS_prime_checks, callback, NULL, cb_arg)
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 comment|/* Convert DSA structure (key or just parameters) into DH structure  * (be careful to avoid small subgroup attacks when using this!) */
 name|DH
 modifier|*
 name|DSA_dup_DH
 parameter_list|(
+specifier|const
 name|DSA
 modifier|*
 name|r
@@ -986,7 +1025,7 @@ name|DSA_F_DSA_DO_VERIFY
 value|113
 define|#
 directive|define
-name|DSA_F_DSA_NEW
+name|DSA_F_DSA_NEW_METHOD
 value|103
 define|#
 directive|define
@@ -1016,6 +1055,10 @@ define|#
 directive|define
 name|DSA_F_I2D_DSA_SIG
 value|111
+define|#
+directive|define
+name|DSA_F_SIG_CB
+value|114
 comment|/* Reason codes. */
 define|#
 directive|define

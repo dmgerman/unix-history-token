@@ -4,6 +4,10 @@ comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  *
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * exit returns 	 0 ==> success -1 ==> error   */
 end_comment
 
@@ -884,9 +888,8 @@ literal|127
 expr_stmt|;
 else|#
 directive|else
-name|des_new_random_key
+name|des_random_key
 argument_list|(
-operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
@@ -2005,13 +2008,6 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Initialize non shared random sequence */
-name|des_init_random_number_generator
-argument_list|(
-operator|&
-name|master_key
-argument_list|)
-expr_stmt|;
 comment|/* lookup the default values */
 name|n
 operator|=

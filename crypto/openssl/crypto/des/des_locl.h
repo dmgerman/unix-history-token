@@ -19,30 +19,36 @@ directive|define
 name|HEADER_DES_LOCL_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 end_if
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 end_define
 
 begin_endif
@@ -67,16 +73,10 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 end_ifndef
 
 begin_if
@@ -85,7 +85,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 operator|||
 name|defined
@@ -147,7 +147,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 end_ifdef
 
 begin_comment
@@ -193,7 +193,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 operator|||
 name|defined
@@ -203,7 +203,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 argument_list|)
 end_if
 
@@ -212,6 +212,30 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_BUILD_SHLIBCRYPTO
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|OPENSSL_EXTERN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_EXTERN
+value|OPENSSL_EXPORT
+end_define
 
 begin_endif
 endif|#
@@ -354,7 +378,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 operator|&&
 name|defined
@@ -375,10 +399,88 @@ parameter_list|)
 value|(_lrotr(a,n))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|2
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STRICT_ANSI__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_ASM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_INLINE_ASM
+argument_list|)
+end_elif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ROTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|({ register unsigned int ret;	\ 				asm ("rorl %1,%0"	\ 					: "=r"(ret)	\ 					: "I"(n),"0"(a)	\ 					: "cc");	\ 			   ret;				\ 			})
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ROTATE
+end_ifndef
 
 begin_define
 define|#
@@ -646,7 +748,7 @@ name|R
 parameter_list|,
 name|S
 parameter_list|)
-value|{\ 	unsigned int u1,u2,u3; \ 	LOAD_DATA(R,S,u,t,E0,E1,u1); \ 	u>>=2L; \ 	t=ROTATE(t,6); \ 	u2=(int)u>>8L; \ 	u1=(int)u&0x3f; \ 	u2&=0x3f; \ 	u>>=16L; \ 	LL^=des_SPtrans[0][u1]; \ 	LL^=des_SPtrans[2][u2]; \ 	u3=(int)u>>8L; \ 	u1=(int)u&0x3f; \ 	u3&=0x3f; \ 	LL^=des_SPtrans[4][u1]; \ 	LL^=des_SPtrans[6][u3]; \ 	u2=(int)t>>8L; \ 	u1=(int)t&0x3f; \ 	u2&=0x3f; \ 	t>>=16L; \ 	LL^=des_SPtrans[1][u1]; \ 	LL^=des_SPtrans[3][u2]; \ 	u3=(int)t>>8L; \ 	u1=(int)t&0x3f; \ 	u3&=0x3f; \ 	LL^=des_SPtrans[5][u1]; \ 	LL^=des_SPtrans[7][u3]; }
+value|{\ 	unsigned int u1,u2,u3; \ 	LOAD_DATA(R,S,u,t,E0,E1,u1); \ 	u>>=2L; \ 	t=ROTATE(t,6); \ 	u2=(int)u>>8L; \ 	u1=(int)u&0x3f; \ 	u2&=0x3f; \ 	u>>=16L; \ 	LL^=DES_SPtrans[0][u1]; \ 	LL^=DES_SPtrans[2][u2]; \ 	u3=(int)u>>8L; \ 	u1=(int)u&0x3f; \ 	u3&=0x3f; \ 	LL^=DES_SPtrans[4][u1]; \ 	LL^=DES_SPtrans[6][u3]; \ 	u2=(int)t>>8L; \ 	u1=(int)t&0x3f; \ 	u2&=0x3f; \ 	t>>=16L; \ 	LL^=DES_SPtrans[1][u1]; \ 	LL^=DES_SPtrans[3][u2]; \ 	u3=(int)t>>8L; \ 	u1=(int)t&0x3f; \ 	u3&=0x3f; \ 	LL^=DES_SPtrans[5][u1]; \ 	LL^=DES_SPtrans[7][u3]; }
 end_define
 
 begin_endif
@@ -671,7 +773,7 @@ name|R
 parameter_list|,
 name|S
 parameter_list|)
-value|{\ 	unsigned int u1,u2,s1,s2; \ 	LOAD_DATA(R,S,u,t,E0,E1,u1); \ 	u>>=2L; \ 	t=ROTATE(t,6); \ 	u2=(int)u>>8L; \ 	u1=(int)u&0x3f; \ 	u2&=0x3f; \ 	LL^=des_SPtrans[0][u1]; \ 	LL^=des_SPtrans[2][u2]; \ 	s1=(int)u>>16L; \ 	s2=(int)u>>24L; \ 	s1&=0x3f; \ 	s2&=0x3f; \ 	LL^=des_SPtrans[4][s1]; \ 	LL^=des_SPtrans[6][s2]; \ 	u2=(int)t>>8L; \ 	u1=(int)t&0x3f; \ 	u2&=0x3f; \ 	LL^=des_SPtrans[1][u1]; \ 	LL^=des_SPtrans[3][u2]; \ 	s1=(int)t>>16; \ 	s2=(int)t>>24L; \ 	s1&=0x3f; \ 	s2&=0x3f; \ 	LL^=des_SPtrans[5][s1]; \ 	LL^=des_SPtrans[7][s2]; }
+value|{\ 	unsigned int u1,u2,s1,s2; \ 	LOAD_DATA(R,S,u,t,E0,E1,u1); \ 	u>>=2L; \ 	t=ROTATE(t,6); \ 	u2=(int)u>>8L; \ 	u1=(int)u&0x3f; \ 	u2&=0x3f; \ 	LL^=DES_SPtrans[0][u1]; \ 	LL^=DES_SPtrans[2][u2]; \ 	s1=(int)u>>16L; \ 	s2=(int)u>>24L; \ 	s1&=0x3f; \ 	s2&=0x3f; \ 	LL^=DES_SPtrans[4][s1]; \ 	LL^=DES_SPtrans[6][s2]; \ 	u2=(int)t>>8L; \ 	u1=(int)t&0x3f; \ 	u2&=0x3f; \ 	LL^=DES_SPtrans[1][u1]; \ 	LL^=DES_SPtrans[3][u2]; \ 	s1=(int)t>>16; \ 	s2=(int)t>>24L; \ 	s1&=0x3f; \ 	s2&=0x3f; \ 	LL^=DES_SPtrans[5][s1]; \ 	LL^=DES_SPtrans[7][s2]; }
 end_define
 
 begin_endif
@@ -695,7 +797,7 @@ name|R
 parameter_list|,
 name|S
 parameter_list|)
-value|{\ 	LOAD_DATA_tmp(R,S,u,t,E0,E1); \ 	t=ROTATE(t,4); \ 	LL^=\ 		des_SPtrans[0][(u>> 2L)&0x3f]^ \ 		des_SPtrans[2][(u>>10L)&0x3f]^ \ 		des_SPtrans[4][(u>>18L)&0x3f]^ \ 		des_SPtrans[6][(u>>26L)&0x3f]^ \ 		des_SPtrans[1][(t>> 2L)&0x3f]^ \ 		des_SPtrans[3][(t>>10L)&0x3f]^ \ 		des_SPtrans[5][(t>>18L)&0x3f]^ \ 		des_SPtrans[7][(t>>26L)&0x3f]; }
+value|{\ 	LOAD_DATA_tmp(R,S,u,t,E0,E1); \ 	t=ROTATE(t,4); \ 	LL^=\ 		DES_SPtrans[0][(u>> 2L)&0x3f]^ \ 		DES_SPtrans[2][(u>>10L)&0x3f]^ \ 		DES_SPtrans[4][(u>>18L)&0x3f]^ \ 		DES_SPtrans[6][(u>>26L)&0x3f]^ \ 		DES_SPtrans[1][(t>> 2L)&0x3f]^ \ 		DES_SPtrans[3][(t>>10L)&0x3f]^ \ 		DES_SPtrans[5][(t>>18L)&0x3f]^ \ 		DES_SPtrans[7][(t>>26L)&0x3f]; }
 end_define
 
 begin_endif
@@ -760,7 +862,7 @@ begin_decl_stmt
 name|OPENSSL_EXTERN
 specifier|const
 name|DES_LONG
-name|des_SPtrans
+name|DES_SPtrans
 index|[
 literal|8
 index|]
@@ -778,7 +880,8 @@ name|DES_LONG
 modifier|*
 name|out
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks
 parameter_list|,
 name|DES_LONG

@@ -110,20 +110,6 @@ name|encrypt_debug_mode
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|des_set_random_generator_seed
-parameter_list|(
-name|des_cblock
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -214,9 +200,6 @@ name|keyid
 index|[
 literal|2
 index|]
-decl_stmt|;
-name|int
-name|once
 decl_stmt|;
 struct|struct
 name|stinfo
@@ -939,7 +922,7 @@ literal|"Creating new feed\r\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Create a random feed and send it over. 		 */
-name|des_new_random_key
+name|des_random_key
 argument_list|(
 operator|(
 name|Block
@@ -1932,33 +1915,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fbp
-operator|->
-name|once
-operator|==
-literal|0
-condition|)
-block|{
-name|des_set_random_generator_seed
-argument_list|(
-operator|(
-name|Block
-operator|*
-operator|)
-name|fbp
-operator|->
-name|krbdes_key
-argument_list|)
-expr_stmt|;
-name|fbp
-operator|->
-name|once
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|des_key_sched
 argument_list|(
 operator|(

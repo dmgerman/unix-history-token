@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -467,6 +467,19 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|X509V3_F_X509V3_ADD_I2D
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"X509V3_ADD_I2D"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|X509V3_F_X509V3_ADD_VALUE
 argument_list|,
 literal|0
@@ -567,6 +580,19 @@ literal|"X509_PURPOSE_add"
 block|}
 block|,
 block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|X509V3_F_X509_PURPOSE_SET
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"X509_PURPOSE_set"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -619,6 +645,12 @@ literal|"error converting zone"
 block|}
 block|,
 block|{
+name|X509V3_R_ERROR_CREATING_EXTENSION
+block|,
+literal|"error creating extension"
+block|}
+block|,
+block|{
 name|X509V3_R_ERROR_IN_EXTENSION
 block|,
 literal|"error in extension"
@@ -628,6 +660,12 @@ block|{
 name|X509V3_R_EXPECTED_A_SECTION_NAME
 block|,
 literal|"expected a section name"
+block|}
+block|,
+block|{
+name|X509V3_R_EXTENSION_EXISTS
+block|,
+literal|"extension exists"
 block|}
 block|,
 block|{
@@ -724,6 +762,12 @@ block|{
 name|X509V3_R_INVALID_POLICY_IDENTIFIER
 block|,
 literal|"invalid policy identifier"
+block|}
+block|,
+block|{
+name|X509V3_R_INVALID_PURPOSE
+block|,
+literal|"invalid purpose"
 block|}
 block|,
 block|{
@@ -884,7 +928,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_X509V3

@@ -19,6 +19,12 @@ directive|define
 name|HEADER_BLOWFISH_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -33,7 +39,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NO_BF
+name|OPENSSL_NO_BF
 error|#
 directive|error
 error|BF is disabled.
@@ -52,7 +58,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 operator|||
 name|defined
@@ -67,7 +73,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_CRAY
+name|OPENSSL_SYS_CRAY
 argument_list|)
 operator|||
 name|defined

@@ -42,12 +42,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 end_if
 
@@ -102,7 +102,7 @@ literal|"<<ERROR>>"
 block|,
 literal|"err"
 block|,
-literal|"err_hash"
+literal|"ex_data"
 block|,
 literal|"x509"
 block|,
@@ -132,6 +132,8 @@ literal|"ssl_sess_cert"
 block|,
 literal|"ssl"
 block|,
+literal|"ssl_method"
+block|,
 literal|"rand"
 block|,
 literal|"rand2"
@@ -156,11 +158,18 @@ literal|"dso"
 block|,
 literal|"dynlock"
 block|,
+literal|"engine"
+block|,
+literal|"ui"
+block|,
+literal|"hwcrhk"
+block|,
+comment|/* This is a HACK which will disappear in 0.9.8 */
 if|#
 directive|if
 name|CRYPTO_NUM_LOCKS
 operator|!=
-literal|29
+literal|33
 error|#
 directive|error
 literal|"Inconsistency between crypto.h and cryptlib.c"
@@ -375,18 +384,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* A hack to make Visual C++ 5.0 work correctly when linking as 	 * a DLL using /MT. Without this, the application cannot use 	 * and floating point printf's. 	 * It also seems to be needed for Visual C 1.5 (win16) */
 if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
+comment|/* A hack to make Visual C++ 5.0 work correctly when linking as 	 * a DLL using /MT. Without this, the application cannot use 	 * and floating point printf's. 	 * It also seems to be needed for Visual C 1.5 (win16) */
 name|SSLeay_MSVC5_hack
 operator|=
 operator|(
@@ -700,11 +709,25 @@ operator|==
 operator|-
 literal|1
 condition|)
+comment|/* Since sk_push() returns the number of items on the 		   stack, not the location of the pushed item, we need 		   to transform the returned number into a position, 		   by decreasing it.  */
 name|i
 operator|=
 name|sk_CRYPTO_dynlock_push
 argument_list|(
 name|dyn_locks
+argument_list|,
+name|pointer
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+else|else
+comment|/* If we found a place with a NULL pointer, put our pointer 		   in it.  */
+name|sk_CRYPTO_dynlock_set
+argument_list|(
+name|dyn_locks
+argument_list|,
+name|i
 argument_list|,
 name|pointer
 argument_list|)
@@ -716,8 +739,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|i
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|dynlock_destroy_callback
@@ -1388,7 +1413,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 name|ret
 operator|=
 operator|(
@@ -1402,7 +1427,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 name|ret
 operator|=
@@ -1566,14 +1591,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|int
-name|i
-init|=
-operator|-
-name|type
-operator|-
-literal|1
-decl_stmt|;
+if|if
+condition|(
+name|dynlock_lock_callback
+operator|!=
+name|NULL
+condition|)
+block|{
 name|struct
 name|CRYPTO_dynlock_value
 modifier|*
@@ -1581,16 +1605,16 @@ name|pointer
 init|=
 name|CRYPTO_get_dynlock_value
 argument_list|(
-name|i
+name|type
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|OPENSSL_assert
+argument_list|(
 name|pointer
-operator|&&
-name|dynlock_lock_callback
-condition|)
-block|{
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|dynlock_lock_callback
 argument_list|(
 name|mode
@@ -1602,12 +1626,12 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-block|}
 name|CRYPTO_destroy_dynlockid
 argument_list|(
-name|i
+name|type
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1844,7 +1868,7 @@ condition|(
 name|type
 operator|-
 name|CRYPTO_NUM_LOCKS
-operator|>=
+operator|>
 name|sk_num
 argument_list|(
 name|app_locks
@@ -1880,7 +1904,7 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|OPENSSL_SYS_WIN32
 end_ifdef
 
 begin_comment
@@ -1946,6 +1970,43 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|void
+name|OpenSSLDie
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|assertion
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s(%d): OpenSSL internal error, assertion failed: %s\n"
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|assertion
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

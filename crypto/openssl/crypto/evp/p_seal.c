@@ -28,7 +28,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_include
@@ -68,6 +68,7 @@ name|EVP_CIPHER_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|type
@@ -119,11 +120,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|EVP_EncryptInit
+name|EVP_EncryptInit_ex
 argument_list|(
 name|ctx
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -136,14 +139,17 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|npubk
 operator|<=
 literal|0
+operator|)
+operator|||
+operator|!
+name|pubk
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+literal|1
 return|;
 if|if
 condition|(
@@ -157,9 +163,7 @@ operator|<=
 literal|0
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 if|if
 condition|(
@@ -181,9 +185,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|EVP_EncryptInit
+name|EVP_EncryptInit_ex
 argument_list|(
 name|ctx
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -263,7 +269,7 @@ comment|/* MACRO void EVP_SealUpdate(ctx,out,outl,in,inl) EVP_CIPHER_CTX *ctx; u
 end_comment
 
 begin_function
-name|void
+name|int
 name|EVP_SealFinal
 parameter_list|(
 name|EVP_CIPHER_CTX
@@ -280,7 +286,12 @@ modifier|*
 name|outl
 parameter_list|)
 block|{
-name|EVP_EncryptFinal
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+name|EVP_EncryptFinal_ex
 argument_list|(
 name|ctx
 argument_list|,
@@ -289,7 +300,7 @@ argument_list|,
 name|outl
 argument_list|)
 expr_stmt|;
-name|EVP_EncryptInit
+name|EVP_EncryptInit_ex
 argument_list|(
 name|ctx
 argument_list|,
@@ -298,8 +309,13 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+name|i
+return|;
 block|}
 end_function
 

@@ -25,10 +25,16 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_SHA
+name|OPENSSL_NO_SHA
 end_ifdef
 
 begin_function
@@ -61,6 +67,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<openssl/evp.h>
+end_include
 
 begin_include
 include|#
@@ -253,7 +265,7 @@ decl_stmt|,
 modifier|*
 name|r
 decl_stmt|;
-name|SHA_CTX
+name|EVP_MD_CTX
 name|c
 decl_stmt|;
 name|unsigned
@@ -310,6 +322,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|EVP_MD_CTX_init
+argument_list|(
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
 name|P
 operator|=
 operator|(
@@ -342,11 +360,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|p
-operator|=
-name|pt
-argument_list|(
-name|SHA
+name|EVP_Digest
 argument_list|(
 operator|*
 name|P
@@ -365,8 +379,21 @@ operator|*
 name|P
 argument_list|)
 argument_list|,
+name|md
+argument_list|,
+name|NULL
+argument_list|,
+name|EVP_sha
+argument_list|()
+argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|pt
+argument_list|(
+name|md
 argument_list|)
 expr_stmt|;
 if|if
@@ -450,10 +477,15 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*CHARSET_EBCDIC*/
-name|SHA_Init
+name|EVP_DigestInit_ex
 argument_list|(
 operator|&
 name|c
+argument_list|,
+name|EVP_sha
+argument_list|()
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -469,7 +501,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|SHA_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|c
@@ -479,12 +511,14 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-name|SHA_Final
+name|EVP_DigestFinal_ex
 argument_list|(
-name|md
-argument_list|,
 operator|&
 name|c
+argument_list|,
+name|md
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|p
@@ -536,7 +570,13 @@ argument_list|(
 literal|"test 3 ok\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EVP_MD_CTX_cleanup
+argument_list|(
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
+name|EXIT
 argument_list|(
 name|err
 argument_list|)

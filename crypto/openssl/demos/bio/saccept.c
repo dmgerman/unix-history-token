@@ -149,6 +149,17 @@ expr_stmt|;
 name|SSL_load_error_strings
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WATT32
+name|dbug_init
+argument_list|()
+expr_stmt|;
+name|sock_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Add ciphers and message digests */
 name|OpenSSL_add_ssl_algorithms
 argument_list|()

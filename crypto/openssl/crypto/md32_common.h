@@ -4,7 +4,7 @@ comment|/* crypto/md32_common.h */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -244,11 +244,12 @@ end_ifndef
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
+literal|0
 end_if
+
+begin_comment
+comment|/* defined(_MSC_VER) */
+end_comment
 
 begin_define
 define|#
@@ -354,13 +355,13 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_ASM
+name|OPENSSL_NO_ASM
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_INLINE_ASM
+name|OPENSSL_NO_INLINE_ASM
 argument_list|)
 end_elif
 
@@ -379,6 +380,16 @@ operator|||
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
 argument_list|)
 end_if
 
@@ -449,13 +460,13 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_ASM
+name|OPENSSL_NO_ASM
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_INLINE_ASM
+name|OPENSSL_NO_INLINE_ASM
 argument_list|)
 end_if
 
@@ -475,6 +486,16 @@ operator|||
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
 argument_list|)
 operator|)
 operator|&&
@@ -524,7 +545,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|ULTRASPARC
+name|OPENSSL_SYS_ULTRASPARC
 argument_list|)
 end_elif
 
@@ -1092,7 +1113,7 @@ comment|/*  * Time for some action:-)  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|HASH_UPDATE
 parameter_list|(
 name|HASH_CTX
@@ -1142,7 +1163,9 @@ name|len
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|l
 operator|=
 operator|(
@@ -1379,6 +1402,10 @@ operator|&
 literal|0x03
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+condition|)
 name|l
 operator|=
 name|p
@@ -1452,7 +1479,9 @@ name|l
 expr_stmt|;
 block|}
 block|}
-return|return;
+return|return
+literal|1
+return|;
 block|}
 block|}
 name|sw
@@ -1672,6 +1701,9 @@ operator|=
 name|l
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1783,7 +1815,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|HASH_FINAL
 parameter_list|(
 name|unsigned
@@ -2061,9 +2093,34 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
-comment|/* clear stuff, HASH_BLOCK may be leaving some stuff on the stack 	 * but I'm not worried :-) 	memset((void *)c,0,sizeof(HASH_CTX)); 	 */
+comment|/* clear stuff, HASH_BLOCK may be leaving some stuff on the stack 	 * but I'm not worried :-) 	OPENSSL_cleanse((void *)c,sizeof(HASH_CTX)); 	 */
+return|return
+literal|1
+return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MD32_REG_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MD32_REG_T
+value|long
+end_define
+
+begin_comment
+comment|/*  * This comment was originaly written for MD5, which is why it  * discusses A-D. But it basically applies to all 32-bit digests,  * which is why it was moved to common header file.  *  * In case you wonder why A-D are declared as long and not  * as MD5_LONG. Doing so results in slight performance  * boost on LP64 architectures. The catch is we don't  * really care if 32 MSBs of a 64-bit register get polluted  * with eventual overflows as we *save* only 32 LSBs in  * *either* case. Now declaring 'em long excuses the compiler  * from keeping 32 MSBs zeroed resulting in 13% performance  * improvement under SPARC Solaris7/64 and 5% under AlphaLinux.  * Well, to be honest it should say that this *prevents*   * performance degradation.  *<appro@fy.chalmers.se>  * Apparently there're LP64 compilers that generate better  * code if A-D are declared int. Most notably GCC-x86_64  * generates better code.  *<appro@fy.chalmers.se>  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/* ssl/s2_lib.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  *  * $FreeBSD$  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 end_ifndef
 
 begin_include
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/objects.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/evp.h>
 end_include
 
 begin_include
@@ -778,11 +784,9 @@ operator|->
 name|wbuf
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|s2
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 expr|*
@@ -908,7 +912,7 @@ parameter_list|,
 name|long
 name|larg
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|parg
 parameter_list|)
@@ -985,7 +989,7 @@ parameter_list|,
 name|long
 name|larg
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|parg
 parameter_list|)
@@ -1085,6 +1089,11 @@ argument_list|(
 name|CRYPTO_LOCK_SSL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|init
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -1122,14 +1131,15 @@ argument_list|,
 argument|FP_ICC ssl_cipher_ptr_id_cmp
 argument_list|)
 empty_stmt|;
+name|init
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_SSL
 argument_list|)
-expr_stmt|;
-name|init
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|id
@@ -1351,7 +1361,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|MD5_CTX
+name|EVP_MD_CTX
 name|ctx
 decl_stmt|;
 name|unsigned
@@ -1365,6 +1375,16 @@ name|c
 init|=
 literal|'0'
 decl_stmt|;
+specifier|const
+name|EVP_MD
+modifier|*
+name|md5
+decl_stmt|;
+name|md5
+operator|=
+name|EVP_md5
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CHARSET_EBCDIC
@@ -1378,6 +1398,12 @@ expr_stmt|;
 comment|/* Must be an ASCII '0', not EBCDIC '0', 				see SSLv2 docu */
 endif|#
 directive|endif
+name|EVP_MD_CTX_init
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
+expr_stmt|;
 name|km
 operator|=
 name|s
@@ -1414,7 +1440,7 @@ name|SSLerr
 argument_list|(
 name|SSL_F_SSL2_GENERATE_KEY_MATERIAL
 argument_list|,
-name|SSL_R_INTERNAL_ERROR
+name|ERR_R_INTERNAL_ERROR
 argument_list|)
 expr_stmt|;
 return|return
@@ -1437,7 +1463,10 @@ name|key_material_length
 condition|;
 name|i
 operator|+=
-name|MD5_DIGEST_LENGTH
+name|EVP_MD_size
+argument_list|(
+name|md5
+argument_list|)
 control|)
 block|{
 if|if
@@ -1453,7 +1482,10 @@ operator|->
 name|key_material
 operator|)
 operator|+
-name|MD5_DIGEST_LENGTH
+name|EVP_MD_size
+argument_list|(
+name|md5
+argument_list|)
 operator|)
 operator|>
 sizeof|sizeof
@@ -1464,25 +1496,53 @@ operator|->
 name|key_material
 condition|)
 block|{
-comment|/* MD5_Final() below would write beyond buffer */
+comment|/* EVP_DigestFinal_ex() below would write beyond buffer */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL2_GENERATE_KEY_MATERIAL
 argument_list|,
-name|SSL_R_INTERNAL_ERROR
+name|ERR_R_INTERNAL_ERROR
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-name|MD5_Init
+name|EVP_DigestInit_ex
 argument_list|(
 operator|&
 name|ctx
+argument_list|,
+name|md5
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|OPENSSL_assert
+argument_list|(
+name|s
+operator|->
+name|session
+operator|->
+name|master_key_length
+operator|>=
+literal|0
+operator|&&
+name|s
+operator|->
+name|session
+operator|->
+name|master_key_length
+operator|<
+sizeof|sizeof
+name|s
+operator|->
+name|session
+operator|->
+name|master_key
+argument_list|)
+expr_stmt|;
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|ctx
@@ -1500,7 +1560,7 @@ operator|->
 name|master_key_length
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|ctx
@@ -1514,7 +1574,7 @@ expr_stmt|;
 name|c
 operator|++
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|ctx
@@ -1532,7 +1592,7 @@ operator|->
 name|challenge_length
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|ctx
@@ -1550,19 +1610,30 @@ operator|->
 name|conn_id_length
 argument_list|)
 expr_stmt|;
-name|MD5_Final
+name|EVP_DigestFinal_ex
 argument_list|(
-name|km
-argument_list|,
 operator|&
 name|ctx
+argument_list|,
+name|km
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|km
 operator|+=
-name|MD5_DIGEST_LENGTH
+name|EVP_MD_size
+argument_list|(
+name|md5
+argument_list|)
 expr_stmt|;
 block|}
+name|EVP_MD_CTX_cleanup
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -1680,19 +1751,18 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|OPENSSL_assert
+argument_list|(
 name|error
-operator|<
+operator|>=
 literal|0
-operator|||
+operator|&&
 name|error
-operator|>
+operator|<=
 sizeof|sizeof
 name|buf
-condition|)
-comment|/* can't happen */
-return|return;
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|ssl2_write
@@ -1725,15 +1795,8 @@ name|error
 operator|=
 name|error
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|i
-operator|!=
-name|s
-operator|->
-name|error
-condition|)
+else|else
+block|{
 name|s
 operator|->
 name|error
@@ -1742,6 +1805,45 @@ name|error
 operator|-
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|error
+operator|==
+literal|0
+condition|)
+if|if
+condition|(
+name|s
+operator|->
+name|msg_callback
+condition|)
+name|s
+operator|->
+name|msg_callback
+argument_list|(
+literal|1
+argument_list|,
+name|s
+operator|->
+name|version
+argument_list|,
+literal|0
+argument_list|,
+name|buf
+argument_list|,
+literal|3
+argument_list|,
+name|s
+argument_list|,
+name|s
+operator|->
+name|msg_callback_arg
+argument_list|)
+expr_stmt|;
+comment|/* ERROR */
+block|}
 block|}
 end_function
 
@@ -1778,7 +1880,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !NO_SSL2 */
+comment|/* !OPENSSL_NO_SSL2 */
 end_comment
 
 begin_if

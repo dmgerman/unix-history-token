@@ -194,6 +194,29 @@ return|;
 endif|#
 directive|endif
 block|}
+if|if
+condition|(
+name|t
+operator|==
+name|SSLEAY_DIR
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|OPENSSLDIR
+return|return
+literal|"OPENSSLDIR: \""
+name|OPENSSLDIR
+literal|"\""
+return|;
+else|#
+directive|else
+return|return
+literal|"OPENSSLDIR: N/A"
+return|;
+endif|#
+directive|endif
+block|}
 return|return
 operator|(
 literal|"not available"

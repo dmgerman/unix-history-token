@@ -1659,9 +1659,8 @@ operator|.
 name|max_life
 argument_list|)
 expr_stmt|;
-name|des_new_random_key
+name|des_random_key
 argument_list|(
-operator|&
 name|session
 argument_list|)
 expr_stmt|;
@@ -2336,9 +2335,8 @@ operator|&
 name|key
 argument_list|)
 expr_stmt|;
-name|des_new_random_key
+name|des_random_key
 argument_list|(
-operator|&
 name|session
 argument_list|)
 expr_stmt|;
@@ -4638,12 +4636,6 @@ argument_list|,
 literal|"\nCurrent Kerberos master key version is %d\n"
 argument_list|,
 name|master_key_version
-argument_list|)
-expr_stmt|;
-name|des_init_random_number_generator
-argument_list|(
-operator|&
-name|master_key
 argument_list|)
 expr_stmt|;
 if|if

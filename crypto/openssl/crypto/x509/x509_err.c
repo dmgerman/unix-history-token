@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -493,6 +493,32 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|X509_F_X509_STORE_CTX_INIT
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"X509_STORE_CTX_init"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|X509_F_X509_STORE_CTX_NEW
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"X509_STORE_CTX_new"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|X509_F_X509_STORE_CTX_PURPOSE_INHERIT
 argument_list|,
 literal|0
@@ -525,6 +551,19 @@ literal|0
 argument_list|)
 block|,
 literal|"X509_TRUST_add"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|X509_F_X509_TRUST_SET
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"X509_TRUST_set"
 block|}
 block|,
 block|{
@@ -596,6 +635,12 @@ block|{
 name|X509_R_INVALID_FIELD_NAME
 block|,
 literal|"invalid field name"
+block|}
+block|,
+block|{
+name|X509_R_INVALID_TRUST
+block|,
+literal|"invalid trust"
 block|}
 block|,
 block|{
@@ -726,7 +771,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_X509

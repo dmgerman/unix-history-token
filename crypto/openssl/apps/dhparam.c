@@ -14,7 +14,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 end_ifndef
 
 begin_include
@@ -86,7 +86,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_include
@@ -169,6 +169,12 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|ENGINE
+modifier|*
+name|e
+init|=
+name|NULL
+decl_stmt|;
 name|DH
 modifier|*
 name|dh
@@ -188,7 +194,7 @@ literal|0
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 name|int
 name|dsaparam
 init|=
@@ -243,6 +249,11 @@ modifier|*
 name|inrand
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|engine
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|num
@@ -287,6 +298,19 @@ operator||
 name|BIO_FP_TEXT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|load_config
+argument_list|(
+name|bio_err
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+goto|goto
+name|end
+goto|;
 name|infile
 operator|=
 name|NULL
@@ -468,6 +492,39 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-engine"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|--
+name|argc
+operator|<
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+name|engine
+operator|=
+operator|*
+operator|(
+operator|++
+name|argv
+operator|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-check"
 argument_list|)
 operator|==
@@ -496,7 +553,7 @@ literal|1
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 elseif|else
 if|if
 condition|(
@@ -706,7 +763,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -762,6 +819,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -engine e     use engine e, possibly a hardware device.\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -rand file%cfile%c...\n"
 argument_list|,
 name|LIST_SEPARATOR_CHAR
@@ -797,6 +861,17 @@ block|}
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
+name|e
+operator|=
+name|setup_engine
+argument_list|(
+name|bio_err
+argument_list|,
+name|engine
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|g
@@ -810,7 +885,7 @@ name|DEFBITS
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 if|if
 condition|(
 name|dsaparam
@@ -900,7 +975,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 if|if
 condition|(
 name|dsaparam
@@ -1132,7 +1207,7 @@ goto|;
 block|}
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 if|if
 condition|(
 name|dsaparam
@@ -1326,7 +1401,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -1719,7 +1794,7 @@ name|length
 condition|)
 name|printf
 argument_list|(
-literal|"\tdh->length = %d;\n"
+literal|"\tdh->length = %ld;\n"
 argument_list|,
 name|dh
 operator|->
@@ -1849,7 +1924,10 @@ argument_list|(
 name|dh
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

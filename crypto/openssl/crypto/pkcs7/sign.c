@@ -105,7 +105,7 @@ literal|0
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_MD2
+name|OPENSSL_NO_MD2
 name|EVP_add_digest
 argument_list|(
 name|EVP_md2
@@ -116,7 +116,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_MD5
+name|OPENSSL_NO_MD5
 name|EVP_add_digest
 argument_list|(
 name|EVP_md5
@@ -127,7 +127,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_SHA1
+name|OPENSSL_NO_SHA1
 name|EVP_add_digest
 argument_list|(
 name|EVP_sha1
@@ -138,7 +138,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_MDC2
+name|OPENSSL_NO_MDC2
 name|EVP_add_digest
 argument_list|(
 name|EVP_mdc2

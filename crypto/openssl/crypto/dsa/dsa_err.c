@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -116,12 +116,12 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
-name|DSA_F_DSA_NEW
+name|DSA_F_DSA_NEW_METHOD
 argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"DSA_new"
+literal|"DSA_new_method"
 block|}
 block|,
 block|{
@@ -216,6 +216,19 @@ literal|"i2d_DSA_SIG"
 block|}
 block|,
 block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|DSA_F_SIG_CB
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"SIG_CB"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -281,7 +294,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_DSA

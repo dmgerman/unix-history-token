@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ssl_locl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/bio.h>
 end_include
 
@@ -41,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/pem.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssl_locl.h"
 end_include
 
 begin_function_decl
@@ -157,7 +157,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_function
@@ -460,7 +460,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_function
@@ -553,16 +553,9 @@ literal|0
 operator|)
 return|;
 block|}
-name|CRYPTO_add
+name|RSA_up_ref
 argument_list|(
-operator|&
 name|rsa
-operator|->
-name|references
-argument_list|,
-literal|1
-argument_list|,
-name|CRYPTO_LOCK_RSA
 argument_list|)
 expr_stmt|;
 name|EVP_PKEY_assign_RSA
@@ -704,7 +697,7 @@ argument_list|()
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 comment|/* Don't check the public/private key, this is mostly 		 * for smart cards. */
 if|if
 condition|(
@@ -958,13 +951,13 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_function
@@ -1196,6 +1189,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1272,7 +1266,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !NO_RSA */
+comment|/* !OPENSSL_NO_RSA */
 end_comment
 
 begin_function
@@ -1358,7 +1352,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_function
@@ -1839,7 +1833,7 @@ argument_list|()
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 comment|/* Don't check the public/private key, this is mostly 		 * for smart cards. */
 if|if
 condition|(
@@ -1990,7 +1984,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* NO_RSA */
+comment|/* OPENSSL_NO_RSA */
 block|}
 else|else
 name|ok
@@ -2110,7 +2104,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_function
@@ -2409,7 +2403,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_function
@@ -2502,16 +2496,9 @@ literal|0
 operator|)
 return|;
 block|}
-name|CRYPTO_add
+name|RSA_up_ref
 argument_list|(
-operator|&
 name|rsa
-operator|->
-name|references
-argument_list|,
-literal|1
-argument_list|,
-name|CRYPTO_LOCK_RSA
 argument_list|)
 expr_stmt|;
 name|EVP_PKEY_assign_RSA
@@ -2548,7 +2535,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_function
@@ -2776,6 +2763,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2852,7 +2840,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !NO_RSA */
+comment|/* !OPENSSL_NO_RSA */
 end_comment
 
 begin_function
@@ -2931,7 +2919,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_function
@@ -3215,7 +3203,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifndef
 
 begin_comment
@@ -3455,7 +3443,7 @@ block|}
 comment|/* When the while loop ends, it's usually just EOF. */
 name|err
 operator|=
-name|ERR_peek_error
+name|ERR_peek_last_error
 argument_list|()
 expr_stmt|;
 if|if

@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"des_ver.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"spr.h"
 end_include
 
@@ -53,7 +59,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
-name|des_options
+name|DES_options
 parameter_list|(
 name|void
 parameter_list|)
@@ -208,17 +214,18 @@ end_function
 
 begin_function
 name|void
-name|des_ecb_encrypt
+name|DES_ecb_encrypt
 parameter_list|(
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|input
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|output
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks
 parameter_list|,
 name|int
@@ -292,7 +299,7 @@ index|]
 operator|=
 name|l
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|ll
 argument_list|,

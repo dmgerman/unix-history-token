@@ -782,7 +782,7 @@ name|length
 expr_stmt|;
 if|if
 condition|(
-name|BUF_MEM_grow
+name|BUF_MEM_grow_clean
 argument_list|(
 name|bm
 argument_list|,
@@ -1216,11 +1216,16 @@ name|j
 operator|<=
 literal|0
 condition|)
+block|{
+operator|*
+name|buf
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
+block|}
 name|p
 operator|=
 name|bm

@@ -19,30 +19,30 @@ end_comment
 
 begin_function
 name|void
-name|des_3cbc_encrypt
+name|DES_3cbc_encrypt
 parameter_list|(
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|input
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|output
 parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
 name|ks1
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
 name|ks2
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|iv1
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|iv2
 parameter_list|,
@@ -79,7 +79,7 @@ operator|)
 operator|*
 literal|8
 decl_stmt|;
-name|des_cblock
+name|DES_cblock
 name|niv1
 decl_stmt|,
 name|niv2
@@ -91,7 +91,7 @@ operator|==
 name|DES_ENCRYPT
 condition|)
 block|{
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 operator|(
 name|unsigned
@@ -109,6 +109,7 @@ name|output
 argument_list|,
 name|length
 argument_list|,
+operator|&
 name|ks1
 argument_list|,
 name|iv1
@@ -122,7 +123,7 @@ name|length
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 condition|)
 name|memcpy
@@ -136,11 +137,11 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 operator|(
 name|unsigned
@@ -158,6 +159,7 @@ name|output
 argument_list|,
 name|l8
 argument_list|,
+operator|&
 name|ks2
 argument_list|,
 name|iv1
@@ -166,7 +168,7 @@ operator|!
 name|enc
 argument_list|)
 expr_stmt|;
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 operator|(
 name|unsigned
@@ -184,6 +186,7 @@ name|output
 argument_list|,
 name|l8
 argument_list|,
+operator|&
 name|ks1
 argument_list|,
 name|iv2
@@ -197,7 +200,7 @@ name|length
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 condition|)
 name|memcpy
@@ -211,7 +214,7 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -224,7 +227,7 @@ name|length
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 condition|)
 name|memcpy
@@ -238,11 +241,11 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 operator|(
 name|unsigned
@@ -260,6 +263,7 @@ name|output
 argument_list|,
 name|l8
 argument_list|,
+operator|&
 name|ks1
 argument_list|,
 name|iv2
@@ -267,7 +271,7 @@ argument_list|,
 name|enc
 argument_list|)
 expr_stmt|;
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 operator|(
 name|unsigned
@@ -285,6 +289,7 @@ name|output
 argument_list|,
 name|l8
 argument_list|,
+operator|&
 name|ks2
 argument_list|,
 name|iv1
@@ -299,7 +304,7 @@ name|length
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 condition|)
 name|memcpy
@@ -313,11 +318,11 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 operator|(
 name|unsigned
@@ -335,6 +340,7 @@ name|output
 argument_list|,
 name|length
 argument_list|,
+operator|&
 name|ks1
 argument_list|,
 name|iv1
@@ -352,7 +358,7 @@ name|niv1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -365,7 +371,7 @@ name|niv2
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 argument_list|)
 expr_stmt|;

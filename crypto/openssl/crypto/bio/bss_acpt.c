@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SOCK
+name|OPENSSL_NO_SOCK
 end_ifndef
 
 begin_include
@@ -46,7 +46,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 end_ifdef
 
 begin_define
@@ -83,7 +83,7 @@ directive|if
 operator|(
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 operator|&&
 name|__VMS_VER
@@ -900,6 +900,17 @@ goto|goto
 name|again
 goto|;
 block|}
+name|BIO_clear_retry_flags
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+name|b
+operator|->
+name|retry_reason
+operator|=
+literal|0
+expr_stmt|;
 name|i
 operator|=
 name|BIO_accept
@@ -916,6 +927,31 @@ name|addr
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* -2 return means we should retry */
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|2
+condition|)
+block|{
+name|BIO_set_retry_special
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+name|b
+operator|->
+name|retry_reason
+operator|=
+name|BIO_RR_ACCEPT
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|i

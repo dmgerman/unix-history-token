@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"openssl/e_os.h"
+file|"e_os.h"
 end_include
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifdef
 
 begin_function
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/rsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
 end_include
 
 begin_define
@@ -560,6 +566,19 @@ decl_stmt|;
 name|int
 name|num
 decl_stmt|;
+name|CRYPTO_malloc_debug_init
+argument_list|()
+expr_stmt|;
+name|CRYPTO_dbg_set_options
+argument_list|(
+name|V_CRYPTO_MDEBUG_ALL
+argument_list|)
+expr_stmt|;
+name|CRYPTO_mem_ctrl
+argument_list|(
+name|CRYPTO_MEM_CHECK_ON
+argument_list|)
+expr_stmt|;
 name|RAND_seed
 argument_list|(
 name|rnd_seed
@@ -569,11 +588,6 @@ name|rnd_seed
 argument_list|)
 expr_stmt|;
 comment|/* or OAEP may fail */
-name|CRYPTO_mem_ctrl
-argument_list|(
-name|CRYPTO_MEM_CHECK_ON
-argument_list|)
-expr_stmt|;
 name|plen
 operator|=
 sizeof|sizeof
@@ -918,6 +932,9 @@ name|key
 argument_list|)
 expr_stmt|;
 block|}
+name|CRYPTO_cleanup_all_ex_data
+argument_list|()
+expr_stmt|;
 name|ERR_remove_state
 argument_list|(
 literal|0
@@ -925,7 +942,7 @@ argument_list|)
 expr_stmt|;
 name|CRYPTO_mem_leaks_fp
 argument_list|(
-name|stdout
+name|stderr
 argument_list|)
 expr_stmt|;
 return|return

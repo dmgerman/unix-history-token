@@ -69,7 +69,7 @@ value|(unsigned long)0x10325476L
 end_define
 
 begin_function
-name|void
+name|int
 name|MD4_Init
 parameter_list|(
 name|MD4_CTX
@@ -119,6 +119,9 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -154,7 +157,7 @@ name|data
 decl_stmt|;
 specifier|register
 name|unsigned
-name|long
+name|MD32_REG_T
 name|A
 decl_stmt|,
 name|B
@@ -163,7 +166,6 @@ name|C
 decl_stmt|,
 name|D
 decl_stmt|;
-comment|/* 	 * In case you wonder why A-D are declared as long and not 	 * as MD4_LONG. Doing so results in slight performance 	 * boost on LP64 architectures. The catch is we don't 	 * really care if 32 MSBs of a 64-bit register get polluted 	 * with eventual overflows as we *save* only 32 LSBs in 	 * *either* case. Now declaring 'em long excuses the compiler 	 * from keeping 32 MSBs zeroed resulting in 13% performance 	 * improvement under SPARC Solaris7/64 and 5% under AlphaLinux. 	 * Well, to be honest it should say that this *prevents*  	 * performance degradation. 	 * 	 *<appro@fy.chalmers.se> 	 */
 name|A
 operator|=
 name|c
@@ -1253,7 +1255,7 @@ name|data_
 decl_stmt|;
 specifier|register
 name|unsigned
-name|long
+name|MD32_REG_T
 name|A
 decl_stmt|,
 name|B
@@ -1264,13 +1266,12 @@ name|D
 decl_stmt|,
 name|l
 decl_stmt|;
-comment|/* 	 * In case you wonder why A-D are declared as long and not 	 * as MD4_LONG. Doing so results in slight performance 	 * boost on LP64 architectures. The catch is we don't 	 * really care if 32 MSBs of a 64-bit register get polluted 	 * with eventual overflows as we *save* only 32 LSBs in 	 * *either* case. Now declaring 'em long excuses the compiler 	 * from keeping 32 MSBs zeroed resulting in 13% performance 	 * improvement under SPARC Solaris7/64 and 5% under AlphaLinux. 	 * Well, to be honest it should say that this *prevents*  	 * performance degradation. 	 * 	 *<appro@fy.chalmers.se> 	 */
 ifndef|#
 directive|ifndef
 name|MD32_XARRAY
 comment|/* See comment in crypto/sha/sha_locl.h for details. */
 name|unsigned
-name|long
+name|MD32_REG_T
 name|XX0
 decl_stmt|,
 name|XX1

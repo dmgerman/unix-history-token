@@ -41,6 +41,12 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DSA
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -56,6 +62,11 @@ name|pkey
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Extract a private key from a PKCS8 structure */
@@ -79,7 +90,7 @@ name|NULL
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 name|RSA
 modifier|*
 name|rsa
@@ -90,7 +101,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 name|DSA
 modifier|*
 name|dsa
@@ -141,6 +152,12 @@ name|unsigned
 name|char
 modifier|*
 name|p
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 name|int
 name|pkeylen
@@ -266,10 +283,14 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 case|case
 name|NID_rsaEncryption
 case|:
+name|cp
+operator|=
+name|p
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -281,7 +302,7 @@ argument_list|(
 name|NULL
 argument_list|,
 operator|&
-name|p
+name|cp
 argument_list|,
 name|pkeylen
 argument_list|)
@@ -311,7 +332,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 case|case
 name|NID_dsa
 case|:
@@ -551,6 +572,8 @@ goto|goto
 name|dsaerr
 goto|;
 block|}
+name|cp
+operator|=
 name|p
 operator|=
 name|param
@@ -582,7 +605,7 @@ argument_list|(
 name|NULL
 argument_list|,
 operator|&
-name|p
+name|cp
 argument_list|,
 name|plen
 argument_list|)
@@ -960,7 +983,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 case|case
 name|EVP_PKEY_RSA
 case|:
@@ -1046,7 +1069,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 case|case
 name|EVP_PKEY_DSA
 case|:
@@ -1192,7 +1215,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_function

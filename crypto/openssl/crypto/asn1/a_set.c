@@ -25,6 +25,12 @@ directive|include
 file|<openssl/asn1_mac.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_ASN1_OLD
+end_ifndef
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1007,6 +1013,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -51,7 +51,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|OPENSSL_SYS_WIN32
 end_ifdef
 
 begin_include
@@ -179,7 +179,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifdef
 
 begin_define
@@ -3157,7 +3157,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|OPENSSL_SYS_WIN32
 end_ifdef
 
 begin_decl_stmt
@@ -3651,7 +3651,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* OPENSSL_SYS_WIN32 */
 end_comment
 
 begin_ifdef

@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -109,6 +109,32 @@ literal|0
 argument_list|)
 block|,
 literal|"EVP_DecryptFinal"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|EVP_F_EVP_DIGESTINIT
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"EVP_DigestInit"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|EVP_F_EVP_ENCRYPTFINAL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"EVP_EncryptFinal"
 block|}
 block|,
 block|{
@@ -298,6 +324,19 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|EVP_F_EVP_RIJNDAEL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"EVP_RIJNDAEL"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|EVP_F_EVP_SIGNFINAL
 argument_list|,
 literal|0
@@ -388,9 +427,21 @@ index|[]
 init|=
 block|{
 block|{
+name|EVP_R_BAD_BLOCK_LENGTH
+block|,
+literal|"bad block length"
+block|}
+block|,
+block|{
 name|EVP_R_BAD_DECRYPT
 block|,
 literal|"bad decrypt"
+block|}
+block|,
+block|{
+name|EVP_R_BAD_KEY_LENGTH
+block|,
+literal|"bad key length"
 block|}
 block|,
 block|{
@@ -421,6 +472,12 @@ block|{
 name|EVP_R_CTRL_OPERATION_NOT_IMPLEMENTED
 block|,
 literal|"ctrl operation not implemented"
+block|}
+block|,
+block|{
+name|EVP_R_DATA_NOT_MULTIPLE_OF_BLOCK_LENGTH
+block|,
+literal|"data not multiple of block length"
 block|}
 block|,
 block|{
@@ -505,6 +562,12 @@ block|{
 name|EVP_R_NO_CIPHER_SET
 block|,
 literal|"no cipher set"
+block|}
+block|,
+block|{
+name|EVP_R_NO_DIGEST_SET
+block|,
+literal|"no digest set"
 block|}
 block|,
 block|{
@@ -641,7 +704,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_EVP

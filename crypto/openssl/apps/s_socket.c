@@ -37,6 +37,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_comment
 comment|/* With IPv6, it looks like Digital has mixed up the proper order of    recursive header file inclusion, resulting in the compiler complaining    that u_int isn't defined, but only if _POSIX_C_SOURCE is defined, which    is needed to have fileno() declared correctly...  So let's define u_int */
 end_comment
@@ -46,12 +52,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VMS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__DECC
+name|OPENSSL_SYS_VMS_DECC
 argument_list|)
 operator|&&
 operator|!
@@ -139,13 +140,13 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 end_ifdef
 
 begin_function_decl
 specifier|static
 name|void
-name|sock_cleanup
+name|ssl_sock_cleanup
 parameter_list|(
 name|void
 parameter_list|)
@@ -160,7 +161,7 @@ end_endif
 begin_function_decl
 specifier|static
 name|int
-name|sock_init
+name|ssl_sock_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -265,7 +266,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 end_ifdef
 
 begin_define
@@ -299,7 +300,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 end_ifdef
 
 begin_decl_stmt
@@ -322,7 +323,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 end_ifdef
 
 begin_decl_stmt
@@ -413,7 +414,7 @@ operator|)
 name|lpTopWndProc
 argument_list|)
 expr_stmt|;
-name|sock_cleanup
+name|ssl_sock_cleanup
 argument_list|()
 expr_stmt|;
 break|break;
@@ -467,7 +468,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* OPENSSL_SYS_WIN32 */
 end_comment
 
 begin_endif
@@ -476,19 +477,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINDOWS */
+comment|/* OPENSSL_SYS_WINDOWS */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 end_ifdef
 
 begin_function
 specifier|static
 name|void
-name|sock_cleanup
+name|ssl_sock_cleanup
 parameter_list|(
 name|void
 parameter_list|)
@@ -502,9 +503,14 @@ name|wsa_init_done
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_WINCE
 name|WSACancelBlockingCall
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|WSACleanup
 argument_list|()
 expr_stmt|;
@@ -520,14 +526,41 @@ end_endif
 begin_function
 specifier|static
 name|int
-name|sock_init
+name|ssl_sock_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|WATT32
+specifier|extern
+name|int
+name|_watt_do_exit
+decl_stmt|;
+name|_watt_do_exit
+operator|=
+literal|0
+expr_stmt|;
+name|dbug_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|sock_init
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|OPENSSL_SYS_WINDOWS
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -553,7 +586,7 @@ argument_list|(
 name|int
 argument_list|)
 operator|)
-name|sock_cleanup
+name|ssl_sock_cleanup
 argument_list|)
 expr_stmt|;
 endif|#
@@ -610,7 +643,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 name|EnumTaskWindows
 argument_list|(
 name|GetCurrentTask
@@ -659,11 +692,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* WIN16 */
+comment|/* OPENSSL_SYS_WIN16 */
 block|}
 endif|#
 directive|endif
-comment|/* WINDOWS */
+comment|/* OPENSSL_SYS_WINDOWS */
 return|return
 operator|(
 literal|1
@@ -784,7 +817,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|sock_init
+name|ssl_sock_init
 argument_list|()
 condition|)
 return|return
@@ -926,7 +959,7 @@ return|;
 block|}
 ifndef|#
 directive|ifndef
-name|MPE
+name|OPENSSL_SYS_MPE
 name|i
 operator|=
 literal|0
@@ -1215,7 +1248,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|sock_init
+name|ssl_sock_init
 argument_list|()
 condition|)
 return|return
@@ -1389,7 +1422,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 name|perror
 argument_list|(
 literal|"bind"
@@ -1533,7 +1566,7 @@ comment|/*	struct linger ling; */
 if|if
 condition|(
 operator|!
-name|sock_init
+name|ssl_sock_init
 argument_list|()
 condition|)
 return|return
@@ -1543,7 +1576,7 @@ operator|)
 return|;
 ifndef|#
 directive|ifndef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 name|redoit
 label|:
 endif|#
@@ -1604,7 +1637,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 name|i
 operator|=
 name|WSAGetLastError
@@ -2148,7 +2181,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|sock_init
+name|ssl_sock_init
 argument_list|()
 condition|)
 return|return
@@ -2574,7 +2607,23 @@ name|NULL
 operator|)
 return|;
 comment|/* else add to cache */
-name|strncpy
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|<
+sizeof|sizeof
+name|ghbn_cache
+index|[
+literal|0
+index|]
+operator|.
+name|name
+condition|)
+block|{
+name|strcpy
 argument_list|(
 name|ghbn_cache
 index|[
@@ -2584,8 +2633,6 @@ operator|.
 name|name
 argument_list|,
 name|name
-argument_list|,
-literal|128
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2624,6 +2671,7 @@ name|ghbn_miss
 operator|+
 name|ghbn_hits
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ret

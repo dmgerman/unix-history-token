@@ -22,7 +22,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_include
@@ -45,7 +45,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 end_ifndef
 
 begin_include
@@ -62,7 +62,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_LHASH
+name|OPENSSL_NO_LHASH
 end_ifndef
 
 begin_include
@@ -88,14 +88,9 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* The following is a bit of a trick to help the object files only contain  * the 'name of the file' string once.  Since 'err.h' is protected by the  * HEADER_ERR_H stuff, this should be included only once per file. */
-define|#
-directive|define
-name|ERR_file_name
-value|__FILE__
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 define|#
 directive|define
 name|ERR_PUT_error
@@ -240,10 +235,7 @@ define|#
 directive|define
 name|ERR_LIB_X509
 value|11
-define|#
-directive|define
-name|ERR_LIB_METH
-value|12
+comment|/* #define ERR_LIB_METH         12 */
 define|#
 directive|define
 name|ERR_LIB_ASN1
@@ -258,28 +250,17 @@ name|ERR_LIB_CRYPTO
 value|15
 define|#
 directive|define
+name|ERR_LIB_EC
+value|16
+define|#
+directive|define
 name|ERR_LIB_SSL
 value|20
-define|#
-directive|define
-name|ERR_LIB_SSL23
-value|21
-define|#
-directive|define
-name|ERR_LIB_SSL2
-value|22
-define|#
-directive|define
-name|ERR_LIB_SSL3
-value|23
-define|#
-directive|define
-name|ERR_LIB_RSAREF
-value|30
-define|#
-directive|define
-name|ERR_LIB_PROXY
-value|31
+comment|/* #define ERR_LIB_SSL23        21 */
+comment|/* #define ERR_LIB_SSL2         22 */
+comment|/* #define ERR_LIB_SSL3         23 */
+comment|/* #define ERR_LIB_RSAREF       30 */
+comment|/* #define ERR_LIB_PROXY        31 */
 define|#
 directive|define
 name|ERR_LIB_BIO
@@ -306,6 +287,18 @@ name|ERR_LIB_DSO
 value|37
 define|#
 directive|define
+name|ERR_LIB_ENGINE
+value|38
+define|#
+directive|define
+name|ERR_LIB_OCSP
+value|39
+define|#
+directive|define
+name|ERR_LIB_UI
+value|40
+define|#
+directive|define
 name|ERR_LIB_COMP
 value|41
 define|#
@@ -320,7 +313,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_SYS,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_SYS,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|BNerr
@@ -329,7 +322,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_BN,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_BN,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|RSAerr
@@ -338,7 +331,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_RSA,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_RSA,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|DHerr
@@ -347,7 +340,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_DH,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_DH,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|EVPerr
@@ -356,7 +349,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_EVP,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_EVP,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|BUFerr
@@ -365,16 +358,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_BUF,(f),(r),ERR_file_name,__LINE__)
-define|#
-directive|define
-name|BIOerr
-parameter_list|(
-name|f
-parameter_list|,
-name|r
-parameter_list|)
-value|ERR_PUT_error(ERR_LIB_BIO,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_BUF,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|OBJerr
@@ -383,7 +367,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_OBJ,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_OBJ,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|PEMerr
@@ -392,7 +376,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_PEM,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_PEM,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|DSAerr
@@ -401,7 +385,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_DSA,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_DSA,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|X509err
@@ -410,16 +394,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_X509,(f),(r),ERR_file_name,__LINE__)
-define|#
-directive|define
-name|METHerr
-parameter_list|(
-name|f
-parameter_list|,
-name|r
-parameter_list|)
-value|ERR_PUT_error(ERR_LIB_METH,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_X509,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|ASN1err
@@ -428,7 +403,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_ASN1,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_ASN1,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|CONFerr
@@ -437,7 +412,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_CONF,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_CONF,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|CRYPTOerr
@@ -446,7 +421,16 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_CRYPTO,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_CRYPTO,(f),(r),__FILE__,__LINE__)
+define|#
+directive|define
+name|ECerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_EC,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|SSLerr
@@ -455,52 +439,16 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_SSL,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_SSL,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
-name|SSL23err
+name|BIOerr
 parameter_list|(
 name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_SSL23,(f),(r),ERR_file_name,__LINE__)
-define|#
-directive|define
-name|SSL2err
-parameter_list|(
-name|f
-parameter_list|,
-name|r
-parameter_list|)
-value|ERR_PUT_error(ERR_LIB_SSL2,(f),(r),ERR_file_name,__LINE__)
-define|#
-directive|define
-name|SSL3err
-parameter_list|(
-name|f
-parameter_list|,
-name|r
-parameter_list|)
-value|ERR_PUT_error(ERR_LIB_SSL3,(f),(r),ERR_file_name,__LINE__)
-define|#
-directive|define
-name|RSAREFerr
-parameter_list|(
-name|f
-parameter_list|,
-name|r
-parameter_list|)
-value|ERR_PUT_error(ERR_LIB_RSAREF,(f),(r),ERR_file_name,__LINE__)
-define|#
-directive|define
-name|PROXYerr
-parameter_list|(
-name|f
-parameter_list|,
-name|r
-parameter_list|)
-value|ERR_PUT_error(ERR_LIB_PROXY,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_BIO,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|PKCS7err
@@ -509,7 +457,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_PKCS7,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_PKCS7,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|X509V3err
@@ -518,7 +466,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_X509V3,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_X509V3,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|PKCS12err
@@ -527,7 +475,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_PKCS12,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_PKCS12,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|RANDerr
@@ -536,7 +484,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_RAND,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_RAND,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|DSOerr
@@ -545,7 +493,34 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_DSO,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_DSO,(f),(r),__FILE__,__LINE__)
+define|#
+directive|define
+name|ENGINEerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_ENGINE,(f),(r),__FILE__,__LINE__)
+define|#
+directive|define
+name|OCSPerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_OCSP,(f),(r),__FILE__,__LINE__)
+define|#
+directive|define
+name|UIerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_UI,(f),(r),__FILE__,__LINE__)
 define|#
 directive|define
 name|COMPerr
@@ -554,7 +529,7 @@ name|f
 parameter_list|,
 name|r
 parameter_list|)
-value|ERR_PUT_error(ERR_LIB_COMP,(f),(r),ERR_file_name,__LINE__)
+value|ERR_PUT_error(ERR_LIB_COMP,(f),(r),__FILE__,__LINE__)
 comment|/* Borland C seems too stupid to be able to shift and do longs in  * the pre-processor :-( */
 define|#
 directive|define
@@ -639,110 +614,163 @@ name|SYS_F_OPENDIR
 value|10
 define|#
 directive|define
-name|ERR_R_FATAL
-value|32
+name|SYS_F_FREAD
+value|11
 comment|/* reasons */
 define|#
 directive|define
 name|ERR_R_SYS_LIB
 value|ERR_LIB_SYS
+comment|/* 2 */
 define|#
 directive|define
 name|ERR_R_BN_LIB
 value|ERR_LIB_BN
+comment|/* 3 */
 define|#
 directive|define
 name|ERR_R_RSA_LIB
 value|ERR_LIB_RSA
-define|#
-directive|define
-name|ERR_R_DSA_LIB
-value|ERR_LIB_DSA
+comment|/* 4 */
 define|#
 directive|define
 name|ERR_R_DH_LIB
 value|ERR_LIB_DH
+comment|/* 5 */
 define|#
 directive|define
 name|ERR_R_EVP_LIB
 value|ERR_LIB_EVP
+comment|/* 6 */
 define|#
 directive|define
 name|ERR_R_BUF_LIB
 value|ERR_LIB_BUF
-define|#
-directive|define
-name|ERR_R_BIO_LIB
-value|ERR_LIB_BIO
+comment|/* 7 */
 define|#
 directive|define
 name|ERR_R_OBJ_LIB
 value|ERR_LIB_OBJ
+comment|/* 8 */
 define|#
 directive|define
 name|ERR_R_PEM_LIB
 value|ERR_LIB_PEM
+comment|/* 9 */
+define|#
+directive|define
+name|ERR_R_DSA_LIB
+value|ERR_LIB_DSA
+comment|/* 10 */
 define|#
 directive|define
 name|ERR_R_X509_LIB
 value|ERR_LIB_X509
-define|#
-directive|define
-name|ERR_R_METH_LIB
-value|ERR_LIB_METH
+comment|/* 11 */
 define|#
 directive|define
 name|ERR_R_ASN1_LIB
 value|ERR_LIB_ASN1
+comment|/* 13 */
 define|#
 directive|define
 name|ERR_R_CONF_LIB
 value|ERR_LIB_CONF
+comment|/* 14 */
 define|#
 directive|define
 name|ERR_R_CRYPTO_LIB
 value|ERR_LIB_CRYPTO
+comment|/* 15 */
+define|#
+directive|define
+name|ERR_R_EC_LIB
+value|ERR_LIB_EC
+comment|/* 16 */
 define|#
 directive|define
 name|ERR_R_SSL_LIB
 value|ERR_LIB_SSL
-define|#
-directive|define
-name|ERR_R_SSL23_LIB
-value|ERR_LIB_SSL23
-define|#
-directive|define
-name|ERR_R_SSL2_LIB
-value|ERR_LIB_SSL2
-define|#
-directive|define
-name|ERR_R_SSL3_LIB
-value|ERR_LIB_SSL3
-define|#
-directive|define
-name|ERR_R_PROXY_LIB
-value|ERR_LIB_PROXY
+comment|/* 20 */
 define|#
 directive|define
 name|ERR_R_BIO_LIB
 value|ERR_LIB_BIO
+comment|/* 32 */
 define|#
 directive|define
 name|ERR_R_PKCS7_LIB
 value|ERR_LIB_PKCS7
+comment|/* 33 */
+define|#
+directive|define
+name|ERR_R_X509V3_LIB
+value|ERR_LIB_X509V3
+comment|/* 34 */
 define|#
 directive|define
 name|ERR_R_PKCS12_LIB
 value|ERR_LIB_PKCS12
+comment|/* 35 */
+define|#
+directive|define
+name|ERR_R_RAND_LIB
+value|ERR_LIB_RAND
+comment|/* 36 */
 define|#
 directive|define
 name|ERR_R_DSO_LIB
 value|ERR_LIB_DSO
+comment|/* 37 */
+define|#
+directive|define
+name|ERR_R_ENGINE_LIB
+value|ERR_LIB_ENGINE
+comment|/* 38 */
+define|#
+directive|define
+name|ERR_R_OCSP_LIB
+value|ERR_LIB_OCSP
+comment|/* 39 */
+define|#
+directive|define
+name|ERR_R_UI_LIB
+value|ERR_LIB_UI
+comment|/* 40 */
 define|#
 directive|define
 name|ERR_R_COMP_LIB
 value|ERR_LIB_COMP
+comment|/* 41 */
+define|#
+directive|define
+name|ERR_R_NESTED_ASN1_ERROR
+value|58
+define|#
+directive|define
+name|ERR_R_BAD_ASN1_OBJECT_HEADER
+value|59
+define|#
+directive|define
+name|ERR_R_BAD_GET_ASN1_OBJECT_CALL
+value|60
+define|#
+directive|define
+name|ERR_R_EXPECTING_AN_ASN1_SEQUENCE
+value|61
+define|#
+directive|define
+name|ERR_R_ASN1_LENGTH_MISMATCH
+value|62
+define|#
+directive|define
+name|ERR_R_MISSING_ASN1_EOS
+value|63
 comment|/* fatal error */
+define|#
+directive|define
+name|ERR_R_FATAL
+value|64
 define|#
 directive|define
 name|ERR_R_MALLOC_FAILURE
@@ -757,28 +785,9 @@ name|ERR_R_PASSED_NULL_PARAMETER
 value|(3|ERR_R_FATAL)
 define|#
 directive|define
-name|ERR_R_NESTED_ASN1_ERROR
-value|(4)
-define|#
-directive|define
-name|ERR_R_BAD_ASN1_OBJECT_HEADER
-value|(5)
-define|#
-directive|define
-name|ERR_R_BAD_GET_ASN1_OBJECT_CALL
-value|(6)
-define|#
-directive|define
-name|ERR_R_EXPECTING_AN_ASN1_SEQUENCE
-value|(7)
-define|#
-directive|define
-name|ERR_R_ASN1_LENGTH_MISMATCH
-value|(8)
-define|#
-directive|define
-name|ERR_R_MISSING_ASN1_EOS
-value|(9)
+name|ERR_R_INTERNAL_ERROR
+value|(4|ERR_R_FATAL)
+comment|/* 99 is the maximum possible ERR_R_... code, higher values  * are reserved for the individual libraries */
 typedef|typedef
 struct|struct
 name|ERR_string_data_st
@@ -921,6 +930,53 @@ modifier|*
 name|flags
 parameter_list|)
 function_decl|;
+name|unsigned
+name|long
+name|ERR_peek_last_error
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|unsigned
+name|long
+name|ERR_peek_last_error_line
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|file
+parameter_list|,
+name|int
+modifier|*
+name|line
+parameter_list|)
+function_decl|;
+name|unsigned
+name|long
+name|ERR_peek_last_error_line_data
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|file
+parameter_list|,
+name|int
+modifier|*
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|data
+parameter_list|,
+name|int
+modifier|*
+name|flags
+parameter_list|)
+function_decl|;
 name|void
 name|ERR_clear_error
 parameter_list|(
@@ -985,9 +1041,36 @@ name|long
 name|e
 parameter_list|)
 function_decl|;
+name|void
+name|ERR_print_errors_cb
+parameter_list|(
+name|int
+function_decl|(
+modifier|*
+name|cb
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|void
+modifier|*
+name|u
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|u
+parameter_list|)
+function_decl|;
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 name|void
 name|ERR_print_errors_fp
 parameter_list|(
@@ -1000,7 +1083,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 name|void
 name|ERR_print_errors
 parameter_list|(
@@ -1022,6 +1105,17 @@ endif|#
 directive|endif
 name|void
 name|ERR_load_strings
+parameter_list|(
+name|int
+name|lib
+parameter_list|,
+name|ERR_STRING_DATA
+name|str
+index|[]
+parameter_list|)
+function_decl|;
+name|void
+name|ERR_unload_strings
 parameter_list|(
 name|int
 name|lib
@@ -1067,7 +1161,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|NO_LHASH
+name|OPENSSL_NO_LHASH
 name|LHASH
 modifier|*
 name|ERR_get_string_table
@@ -1082,13 +1176,37 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* even less thread-safe than 				       * ERR_get_string_table :-) */
 endif|#
 directive|endif
 name|int
 name|ERR_get_next_error_library
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+comment|/* This opaque type encapsulates the low-level error-state functions */
+typedef|typedef
+name|struct
+name|st_ERR_FNS
+name|ERR_FNS
+typedef|;
+comment|/* An application can use this function and provide the return value to loaded  * modules that should use the application's ERR state/functionality */
+specifier|const
+name|ERR_FNS
+modifier|*
+name|ERR_get_implementation
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* A loaded module should call this function prior to any ERR operations using  * the application's "ERR_FNS". */
+name|int
+name|ERR_set_implementation
+parameter_list|(
+specifier|const
+name|ERR_FNS
+modifier|*
+name|fns
 parameter_list|)
 function_decl|;
 ifdef|#

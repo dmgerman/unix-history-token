@@ -31,12 +31,6 @@ directive|include
 file|<openssl/bio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/evp.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|int
@@ -2402,15 +2396,11 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|flag
-operator|)
 operator|||
-operator|(
-name|i
-operator|==
 name|size
-operator|)
+operator|==
+literal|0
 condition|)
 block|{
 operator|*

@@ -11,7 +11,7 @@ begin_decl_stmt
 name|OPENSSL_GLOBAL
 specifier|const
 name|DES_LONG
-name|des_SPtrans
+name|DES_SPtrans
 index|[
 literal|8
 index|]

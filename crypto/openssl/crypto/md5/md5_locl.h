@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/opensslconf.h>
+file|<openssl/e_os2.h>
 end_include
 
 begin_include
@@ -100,7 +100,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|ULTRASPARC
+name|OPENSSL_SYS_ULTRASPARC
 argument_list|)
 end_elif
 

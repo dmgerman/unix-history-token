@@ -20,15 +20,18 @@ file|"ssl_locl.h"
 end_include
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|SSL_state_string_long
 parameter_list|(
+specifier|const
 name|SSL
 modifier|*
 name|s
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -122,7 +125,7 @@ expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 case|case
 name|SSL2_ST_CLIENT_START_ENCRYPTION
 case|:
@@ -431,7 +434,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 comment|/* SSLv3 additions */
 case|case
 name|SSL3_ST_CW_CLNT_HELLO_A
@@ -875,13 +878,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 argument_list|)
 comment|/* SSLv2/v3 compatibility states */
 comment|/* client */
@@ -952,15 +955,18 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|SSL_rstate_string_long
 parameter_list|(
+specifier|const
 name|SSL
 modifier|*
 name|s
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1012,15 +1018,18 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|SSL_state_string
 parameter_list|(
+specifier|const
 name|SSL
 modifier|*
 name|s
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1066,7 +1075,7 @@ expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 case|case
 name|SSL2_ST_CLIENT_START_ENCRYPTION
 case|:
@@ -1375,7 +1384,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 comment|/* SSLv3 additions */
 case|case
 name|SSL3_ST_SW_FLUSH
@@ -1819,13 +1828,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 argument_list|)
 comment|/* SSLv2/v3 compatibility states */
 comment|/* client */
@@ -1896,6 +1905,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|SSL_alert_type_string_long
@@ -1941,6 +1951,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|SSL_alert_type_string
@@ -1986,6 +1997,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|SSL_alert_desc_string
@@ -1994,6 +2006,7 @@ name|int
 name|value
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2213,6 +2226,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|SSL_alert_desc_string_long
@@ -2221,6 +2235,7 @@ name|int
 name|value
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2440,15 +2455,18 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|SSL_rstate_string
 parameter_list|(
+specifier|const
 name|SSL
 modifier|*
 name|s
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str

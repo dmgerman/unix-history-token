@@ -36,7 +36,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 end_ifndef
 
 begin_decl_stmt
@@ -376,6 +376,19 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|BIO_F_FILE_READ
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"FILE_READ"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|BIO_F_LINEBUFFER_CTRL
 argument_list|,
 literal|0
@@ -567,6 +580,12 @@ literal|"no port specified"
 block|}
 block|,
 block|{
+name|BIO_R_NO_SUCH_FILE
+block|,
+literal|"no such file"
+block|}
+block|,
+block|{
 name|BIO_R_NULL_PARAMETER
 block|,
 literal|"null parameter"
@@ -658,7 +677,7 @@ literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_ERR
+name|OPENSSL_NO_ERR
 name|ERR_load_strings
 argument_list|(
 name|ERR_LIB_BIO

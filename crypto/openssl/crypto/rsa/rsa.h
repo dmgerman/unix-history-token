@@ -4,10 +4,6 @@ comment|/* crypto/rsa/rsa.h */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
@@ -23,10 +19,16 @@ directive|define
 name|HEADER_RSA_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/asn1.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 end_ifndef
 
 begin_include
@@ -52,10 +54,16 @@ directive|include
 file|<openssl/crypto.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/ossl_typ.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifdef
 
 begin_error
@@ -104,6 +112,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -131,6 +140,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -158,6 +168,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -185,6 +196,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -213,6 +225,7 @@ name|BIGNUM
 modifier|*
 name|r0
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|I
@@ -233,6 +246,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
@@ -291,7 +305,6 @@ name|app_data
 decl_stmt|;
 comment|/* may be needed! */
 comment|/* New sign and verify functions: some libraries don't allow arbitrary data  * to be signed/verified: this allows them to be used. Note: for this to work  * the RSA_public_decrypt() and RSA_private_encrypt() should *NOT* be used  * RSA_sign(), RSA_verify() should be used instead. Note: for backwards  * compatibility this functionality is only enabled if the RSA_FLAG_SIGN_VER  * option is set in 'flags'.  */
-comment|/* changed m_len to m_length to avoid a conflict with a #define in    vxworks for m_len for the mbuf code.  This only shows up in apps    that have USE_SOCKETS defined */
 name|int
 function_decl|(
 modifier|*
@@ -301,6 +314,7 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -320,6 +334,7 @@ name|int
 modifier|*
 name|siglen
 parameter_list|,
+specifier|const
 name|RSA
 modifier|*
 name|rsa
@@ -334,6 +349,7 @@ parameter_list|(
 name|int
 name|dtype
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -352,6 +368,7 @@ name|unsigned
 name|int
 name|siglen
 parameter_list|,
+specifier|const
 name|RSA
 modifier|*
 name|rsa
@@ -367,12 +384,18 @@ comment|/* The first parameter is used to pickup errors where 	 * this is passed
 name|int
 name|pad
 decl_stmt|;
-name|int
+name|long
 name|version
 decl_stmt|;
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|meth
+decl_stmt|;
+comment|/* functional reference if 'meth' is ENGINE-provided */
+name|ENGINE
+modifier|*
+name|engine
 decl_stmt|;
 name|BIGNUM
 modifier|*
@@ -497,6 +520,10 @@ name|RSA_PKCS1_OAEP_PADDING
 value|4
 define|#
 directive|define
+name|RSA_PKCS1_PADDING_SIZE
+value|11
+define|#
+directive|define
 name|RSA_set_app_data
 parameter_list|(
 name|s
@@ -522,14 +549,15 @@ name|RSA
 modifier|*
 name|RSA_new_method
 parameter_list|(
-name|RSA_METHOD
+name|ENGINE
 modifier|*
-name|method
+name|engine
 parameter_list|)
 function_decl|;
 name|int
 name|RSA_size
 parameter_list|(
+specifier|const
 name|RSA
 modifier|*
 parameter_list|)
@@ -567,6 +595,7 @@ function_decl|;
 name|int
 name|RSA_check_key
 parameter_list|(
+specifier|const
 name|RSA
 modifier|*
 parameter_list|)
@@ -578,6 +607,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -602,6 +632,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -626,6 +657,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -650,6 +682,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -676,9 +709,19 @@ modifier|*
 name|r
 parameter_list|)
 function_decl|;
+comment|/* "up" the RSA object's reference count */
+name|int
+name|RSA_up_ref
+parameter_list|(
+name|RSA
+modifier|*
+name|r
+parameter_list|)
+function_decl|;
 name|int
 name|RSA_flags
 parameter_list|(
+specifier|const
 name|RSA
 modifier|*
 name|r
@@ -687,11 +730,13 @@ function_decl|;
 name|void
 name|RSA_set_default_method
 parameter_list|(
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|meth
 parameter_list|)
 function_decl|;
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|RSA_get_default_method
@@ -699,23 +744,25 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|RSA_get_method
 parameter_list|(
+specifier|const
 name|RSA
 modifier|*
 name|rsa
 parameter_list|)
 function_decl|;
-name|RSA_METHOD
-modifier|*
+name|int
 name|RSA_set_method
 parameter_list|(
 name|RSA
 modifier|*
 name|rsa
 parameter_list|,
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|meth
@@ -730,15 +777,8 @@ modifier|*
 name|r
 parameter_list|)
 function_decl|;
-comment|/* If you have RSAref compiled in. */
-name|RSA_METHOD
-modifier|*
-name|RSA_PKCS1_RSAref
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
 comment|/* these are the actual SSLeay RSA functions */
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|RSA_PKCS1_SSLeay
@@ -746,6 +786,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|RSA_null_method
@@ -753,75 +794,21 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|RSA
-modifier|*
-name|d2i_RSAPublicKey
-parameter_list|(
-name|RSA
-modifier|*
-modifier|*
-name|a
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|pp
-parameter_list|,
-name|long
-name|length
-parameter_list|)
-function_decl|;
-name|int
-name|i2d_RSAPublicKey
-parameter_list|(
-name|RSA
-modifier|*
-name|a
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|pp
-parameter_list|)
-function_decl|;
-name|RSA
-modifier|*
-name|d2i_RSAPrivateKey
-parameter_list|(
-name|RSA
-modifier|*
-modifier|*
-name|a
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|pp
-parameter_list|,
-name|long
-name|length
-parameter_list|)
-function_decl|;
-name|int
-name|i2d_RSAPrivateKey
-parameter_list|(
-name|RSA
-modifier|*
-name|a
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|pp
-parameter_list|)
-function_decl|;
+name|DECLARE_ASN1_ENCODE_FUNCTIONS_const
+argument_list|(
+argument|RSA
+argument_list|,
+argument|RSAPublicKey
+argument_list|)
+name|DECLARE_ASN1_ENCODE_FUNCTIONS_const
+argument_list|(
+argument|RSA
+argument_list|,
+argument|RSAPrivateKey
+argument_list|)
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 name|int
 name|RSA_print_fp
 parameter_list|(
@@ -829,6 +816,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|RSA
 modifier|*
 name|r
@@ -841,7 +829,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 name|int
 name|RSA_print
 parameter_list|(
@@ -849,6 +837,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|RSA
 modifier|*
 name|r
@@ -862,6 +851,7 @@ directive|endif
 name|int
 name|i2d_RSA_NET
 parameter_list|(
+specifier|const
 name|RSA
 modifier|*
 name|a
@@ -892,35 +882,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|pp
-parameter_list|,
-name|long
-name|length
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|cb
-function_decl|)
-parameter_list|()
-parameter_list|,
-name|int
-name|sgckey
-parameter_list|)
-function_decl|;
-name|RSA
-modifier|*
-name|d2i_RSA_NET_2
-parameter_list|(
-name|RSA
-modifier|*
-modifier|*
-name|a
-parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -944,6 +906,7 @@ function_decl|;
 name|int
 name|i2d_Netscape_RSA
 parameter_list|(
+specifier|const
 name|RSA
 modifier|*
 name|a
@@ -971,33 +934,7 @@ modifier|*
 modifier|*
 name|a
 parameter_list|,
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|pp
-parameter_list|,
-name|long
-name|length
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|cb
-function_decl|)
-parameter_list|()
-parameter_list|)
-function_decl|;
-comment|/* Naughty internal function required elsewhere, to handle a MS structure  * that is the same as the netscape one :-) */
-name|RSA
-modifier|*
-name|d2i_Netscape_RSA_2
-parameter_list|(
-name|RSA
-modifier|*
-modifier|*
-name|a
-parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1022,6 +959,7 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1052,6 +990,7 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1082,6 +1021,7 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1112,6 +1052,7 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1166,6 +1107,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1186,6 +1128,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1209,6 +1152,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1229,6 +1173,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1252,6 +1197,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1260,6 +1206,7 @@ parameter_list|,
 name|int
 name|fl
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1280,6 +1227,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1291,6 +1239,7 @@ parameter_list|,
 name|int
 name|rsa_len
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1311,6 +1260,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1331,6 +1281,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1354,6 +1305,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1374,6 +1326,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1428,12 +1381,31 @@ name|void
 modifier|*
 name|RSA_get_ex_data
 parameter_list|(
+specifier|const
 name|RSA
 modifier|*
 name|r
 parameter_list|,
 name|int
 name|idx
+parameter_list|)
+function_decl|;
+name|RSA
+modifier|*
+name|RSAPublicKey_dup
+parameter_list|(
+name|RSA
+modifier|*
+name|rsa
+parameter_list|)
+function_decl|;
+name|RSA
+modifier|*
+name|RSAPrivateKey_dup
+parameter_list|(
+name|RSA
+modifier|*
+name|rsa
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */

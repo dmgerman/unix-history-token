@@ -98,7 +98,7 @@ directive|endif
 end_endif
 
 begin_function
-name|void
+name|int
 name|RIPEMD160_Init
 parameter_list|(
 name|RIPEMD160_CTX
@@ -154,6 +154,9 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -216,7 +219,7 @@ name|p
 decl_stmt|;
 specifier|register
 name|unsigned
-name|long
+name|MD32_REG_T
 name|A
 decl_stmt|,
 name|B
@@ -229,7 +232,7 @@ name|E
 decl_stmt|;
 specifier|register
 name|unsigned
-name|long
+name|MD32_REG_T
 name|a
 decl_stmt|,
 name|b
@@ -3431,7 +3434,7 @@ name|p
 decl_stmt|;
 specifier|register
 name|unsigned
-name|long
+name|MD32_REG_T
 name|A
 decl_stmt|,
 name|B
@@ -3443,7 +3446,7 @@ decl_stmt|,
 name|E
 decl_stmt|;
 name|unsigned
-name|long
+name|MD32_REG_T
 name|a
 decl_stmt|,
 name|b
@@ -3461,7 +3464,7 @@ directive|ifndef
 name|MD32_XARRAY
 comment|/* See comment in crypto/sha/sha_locl.h for details. */
 name|unsigned
-name|long
+name|MD32_REG_T
 name|XX0
 decl_stmt|,
 name|XX1

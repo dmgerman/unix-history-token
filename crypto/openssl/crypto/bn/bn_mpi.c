@@ -238,6 +238,7 @@ name|BIGNUM
 modifier|*
 name|BN_mpi2bn
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

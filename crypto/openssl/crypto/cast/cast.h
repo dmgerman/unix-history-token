@@ -33,7 +33,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NO_CAST
+name|OPENSSL_NO_CAST
 error|#
 directive|error
 error|CAST is disabled.

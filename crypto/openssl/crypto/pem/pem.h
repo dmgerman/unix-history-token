@@ -22,7 +22,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 end_ifndef
 
 begin_include
@@ -39,7 +39,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_STACK
+name|OPENSSL_NO_STACK
 end_ifndef
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/pem2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
 end_include
 
 begin_ifdef
@@ -275,6 +281,7 @@ define|#
 directive|define
 name|PEM_STRING_DSAPARAMS
 value|"DSA PARAMETERS"
+comment|/* Note that this structure is initialised by PEM_SealInit and cleaned up      by PEM_SealFinal (at least for now) */
 typedef|typedef
 struct|struct
 name|PEM_Encode_Seal_st
@@ -326,12 +333,7 @@ decl_stmt|;
 name|int
 name|key_enc
 decl_stmt|;
-name|char
-name|iv
-index|[
-literal|8
-index|]
-decl_stmt|;
+comment|/*	char iv[8]; unused and wrong size */
 block|}
 name|PEM_USER
 typedef|;
@@ -363,13 +365,7 @@ block|{
 name|int
 name|cipher
 decl_stmt|;
-name|unsigned
-name|char
-name|iv
-index|[
-literal|8
-index|]
-decl_stmt|;
+comment|/* unused, and wrong size 	   unsigned char iv[8]; */
 block|}
 name|DEK_info
 struct|;
@@ -387,7 +383,7 @@ name|recipient
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_STACK
+name|OPENSSL_NO_STACK
 name|STACK
 modifier|*
 name|x509_chain
@@ -435,14 +431,7 @@ modifier|*
 name|key
 decl_stmt|;
 comment|/* key */
-name|unsigned
-name|char
-name|iv
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* the iv */
+comment|/* unused, and wrong size 	   unsigned char iv[8]; */
 name|int
 name|data_enc
 decl_stmt|;
@@ -461,7 +450,7 @@ typedef|;
 comment|/* These macros make the PEM_read/PEM_write functions easier to maintain and  * write. Now they are all implemented with either:  * IMPLEMENT_PEM_rw(...) or IMPLEMENT_PEM_rw_cb(...)  */
 ifdef|#
 directive|ifdef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 define|#
 directive|define
 name|IMPLEMENT_PEM_read_fp
@@ -650,12 +639,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 argument_list|)
 define|#
 directive|define
@@ -720,7 +709,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 define|#
 directive|define
 name|DECLARE_PEM_read_bio
@@ -1508,7 +1497,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 name|int
 name|PEM_read_bio
 parameter_list|(
@@ -1560,6 +1549,42 @@ name|data
 parameter_list|,
 name|long
 name|len
+parameter_list|)
+function_decl|;
+name|int
+name|PEM_bytes_read_bio
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|pdata
+parameter_list|,
+name|long
+modifier|*
+name|plen
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|pnm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|BIO
+modifier|*
+name|bp
+parameter_list|,
+name|pem_password_cb
+modifier|*
+name|cb
+parameter_list|,
+name|void
+modifier|*
+name|u
 parameter_list|)
 function_decl|;
 name|char
@@ -1705,7 +1730,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 name|int
 name|PEM_read
 parameter_list|(
@@ -2012,6 +2037,24 @@ modifier|*
 name|pkey
 parameter_list|)
 function_decl|;
+name|int
+name|PEM_def_callback
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|num
+parameter_list|,
+name|int
+name|w
+parameter_list|,
+name|void
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
 name|void
 name|PEM_proc_type
 parameter_list|(
@@ -2105,7 +2148,7 @@ argument|PKCS8_PRIV_KEY_INFO
 argument_list|)
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 name|DECLARE_PEM_rw_cb
 argument_list|(
 argument|RSAPrivateKey
@@ -2128,7 +2171,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 name|DECLARE_PEM_rw_cb
 argument_list|(
 argument|DSAPrivateKey
@@ -2151,7 +2194,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 name|DECLARE_PEM_rw
 argument_list|(
 argument|DHparams

@@ -47,6 +47,12 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|DSA_SIG
@@ -256,6 +262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|DSA_METHOD
 modifier|*
 name|DSA_OpenSSL
@@ -1158,6 +1165,36 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dsa
+operator|->
+name|p
+operator|||
+operator|!
+name|dsa
+operator|->
+name|q
+operator|||
+operator|!
+name|dsa
+operator|->
+name|g
+condition|)
+block|{
+name|DSAerr
+argument_list|(
+name|DSA_F_DSA_DO_VERIFY
+argument_list|,
+name|DSA_R_MISSING_PARAMETERS
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 operator|(

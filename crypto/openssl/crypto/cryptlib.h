@@ -34,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"openssl/e_os.h"
+file|"e_os.h"
 end_include
 
 begin_include
@@ -81,7 +81,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|VMS
+name|OPENSSL_SYS_VMS
 define|#
 directive|define
 name|X509_CERT_AREA
@@ -126,7 +126,7 @@ define|#
 directive|define
 name|X509_CERT_FILE_EVP
 value|"SSL_CERT_FILE"
-comment|/* size of string represenations */
+comment|/* size of string representations */
 define|#
 directive|define
 name|DECIMAL_SIZE
@@ -140,7 +140,7 @@ name|HEX_SIZE
 parameter_list|(
 name|type
 parameter_list|)
-value|((sizeof(type)*2)
+value|(sizeof(type)*2)
 ifdef|#
 directive|ifdef
 name|__cplusplus

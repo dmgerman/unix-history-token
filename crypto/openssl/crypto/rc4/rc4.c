@@ -284,6 +284,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"%s"
+argument_list|,
 operator|*
 name|pp
 argument_list|)
@@ -376,7 +378,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 comment|/* This should set the file to binary mode. */
 block|{
 include|#
@@ -433,11 +435,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZ
 argument_list|)
@@ -460,7 +460,7 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
-name|MD5
+name|EVP_Digest
 argument_list|(
 operator|(
 name|unsigned
@@ -479,13 +479,16 @@ name|keystr
 argument_list|)
 argument_list|,
 name|md
+argument_list|,
+name|NULL
+argument_list|,
+name|EVP_md5
+argument_list|()
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|keystr
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(

@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../e_os.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/crypto.h>
 end_include
 
@@ -61,10 +67,16 @@ directive|include
 file|<openssl/err.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 end_ifdef
 
 begin_include
@@ -81,7 +93,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifdef
 
 begin_function
@@ -124,7 +136,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 end_ifdef
 
 begin_define
@@ -640,17 +652,6 @@ name|unsigned
 name|int
 name|siglen
 decl_stmt|;
-name|ERR_load_crypto_strings
-argument_list|()
-expr_stmt|;
-name|RAND_seed
-argument_list|(
-name|rnd_seed
-argument_list|,
-sizeof|sizeof
-name|rnd_seed
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bio_err
@@ -666,9 +667,28 @@ argument_list|,
 name|BIO_NOCLOSE
 argument_list|)
 expr_stmt|;
+name|CRYPTO_malloc_debug_init
+argument_list|()
+expr_stmt|;
+name|CRYPTO_dbg_set_options
+argument_list|(
+name|V_CRYPTO_MDEBUG_ALL
+argument_list|)
+expr_stmt|;
 name|CRYPTO_mem_ctrl
 argument_list|(
 name|CRYPTO_MEM_CHECK_ON
+argument_list|)
+expr_stmt|;
+name|ERR_load_crypto_strings
+argument_list|()
+expr_stmt|;
+name|RAND_seed
+argument_list|(
+name|rnd_seed
+argument_list|,
+sizeof|sizeof
+name|rnd_seed
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -1040,10 +1060,16 @@ argument_list|(
 name|dsa
 argument_list|)
 expr_stmt|;
+name|CRYPTO_cleanup_all_ex_data
+argument_list|()
+expr_stmt|;
 name|ERR_remove_state
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|ERR_free_strings
+argument_list|()
 expr_stmt|;
 name|CRYPTO_mem_leaks
 argument_list|(
@@ -1067,7 +1093,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|exit
+name|EXIT
 argument_list|(
 operator|!
 name|ret
@@ -1078,6 +1104,29 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|cb_exit
+parameter_list|(
+name|int
+name|ec
+parameter_list|)
+block|{
+name|EXIT
+argument_list|(
+name|ec
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* To keep some compilers quiet */
 block|}
 end_function
 
@@ -1211,7 +1260,7 @@ argument_list|,
 literal|"error in dsatest\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|cb_exit
 argument_list|(
 literal|1
 argument_list|)

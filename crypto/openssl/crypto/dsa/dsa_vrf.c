@@ -53,6 +53,12 @@ directive|include
 file|<openssl/asn1_mac.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
+end_include
+
 begin_function
 name|int
 name|DSA_do_verify
@@ -118,6 +124,7 @@ parameter_list|,
 name|int
 name|dgst_len
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

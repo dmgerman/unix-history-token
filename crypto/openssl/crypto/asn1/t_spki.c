@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/asn1_mac.h>
+file|<openssl/asn1.h>
 end_include
 
 begin_comment
@@ -138,7 +138,7 @@ else|else
 block|{
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 if|if
 condition|(
 name|pkey
@@ -185,7 +185,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 if|if
 condition|(
 name|pkey

@@ -47,6 +47,12 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
+end_include
+
 begin_function
 name|DSA_SIG
 modifier|*

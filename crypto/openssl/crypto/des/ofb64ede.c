@@ -19,7 +19,7 @@ end_comment
 
 begin_function
 name|void
-name|des_ede3_ofb64_encrypt
+name|DES_ede3_ofb64_encrypt
 parameter_list|(
 specifier|register
 specifier|const
@@ -37,16 +37,19 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|k1
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|k2
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|k3
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|ivec
 parameter_list|,
@@ -74,7 +77,7 @@ name|l
 init|=
 name|length
 decl_stmt|;
-name|des_cblock
+name|DES_cblock
 name|d
 decl_stmt|;
 specifier|register
@@ -174,7 +177,7 @@ condition|)
 block|{
 comment|/* ti[0]=v0; */
 comment|/* ti[1]=v1; */
-name|des_encrypt3
+name|DES_encrypt3
 argument_list|(
 name|ti
 argument_list|,
@@ -321,7 +324,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|des_ede2_ofb64_encrypt
+name|DES_ede2_ofb64_encrypt
 argument_list|(
 specifier|register
 name|unsigned
@@ -338,13 +341,13 @@ argument_list|,
 name|long
 name|length
 argument_list|,
-name|des_key_schedule
+name|DES_key_schedule
 name|k1
 argument_list|,
-name|des_key_schedule
+name|DES_key_schedule
 name|k2
 argument_list|,
-name|des_cblock
+name|DES_cblock
 argument_list|(
 operator|*
 name|ivec
@@ -355,7 +358,7 @@ operator|*
 name|num
 argument_list|)
 block|{
-name|des_ede3_ofb64_encrypt
+name|DES_ede3_ofb64_encrypt
 argument_list|(
 name|in
 argument_list|,

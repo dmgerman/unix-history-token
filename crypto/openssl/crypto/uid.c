@@ -13,6 +13,12 @@ directive|include
 file|<openssl/crypto.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -36,7 +42,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+include|OPENSSL_UNISTD
 end_include
 
 begin_function
@@ -58,7 +64,12 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYS_VXWORKS
 argument_list|)
 end_elif
 
@@ -83,7 +94,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+include|OPENSSL_UNISTD
 end_include
 
 begin_include

@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_include
@@ -93,7 +93,7 @@ value|dsa_main
 end_define
 
 begin_comment
-comment|/* -inform arg	- input format - default PEM (one of DER, NET or PEM)  * -outform arg - output format - default PEM  * -in arg	- input file - default stdin  * -out arg	- output file - default stdout  * -des		- encrypt output if PEM format with DES in cbc mode  * -des3	- encrypt output if PEM format  * -idea	- encrypt output if PEM format  * -text	- print a text version  * -modulus	- print the DSA public key  */
+comment|/* -inform arg	- input format - default PEM (one of DER, NET or PEM)  * -outform arg - output format - default PEM  * -in arg	- input file - default stdin  * -out arg	- output file - default stdout  * -des		- encrypt output if PEM format with DES in cbc mode  * -des3	- encrypt output if PEM format  * -idea	- encrypt output if PEM format  * -aes128	- encrypt output if PEM format  * -aes192	- encrypt output if PEM format  * -aes256	- encrypt output if PEM format  * -text	- print a text version  * -modulus	- print the DSA public key  */
 end_comment
 
 begin_function_decl
@@ -122,6 +122,12 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|ENGINE
+modifier|*
+name|e
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -189,6 +195,9 @@ name|outfile
 decl_stmt|,
 modifier|*
 name|prog
+decl_stmt|,
+modifier|*
+name|engine
 decl_stmt|;
 name|char
 modifier|*
@@ -250,6 +259,23 @@ name|BIO_NOCLOSE
 operator||
 name|BIO_FP_TEXT
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|load_config
+argument_list|(
+name|bio_err
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+goto|goto
+name|end
+goto|;
+name|engine
+operator|=
+name|NULL
 expr_stmt|;
 name|infile
 operator|=
@@ -498,6 +524,39 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-engine"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|--
+name|argc
+operator|<
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+name|engine
+operator|=
+operator|*
+operator|(
+operator|++
+name|argv
+operator|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-noout"
 argument_list|)
 operator|==
@@ -691,6 +750,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -engine e       use engine e, possibly a hardware device.\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -des            encrypt PEM output with cbc des\n"
 argument_list|)
 expr_stmt|;
@@ -703,12 +769,31 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_IDEA
+name|OPENSSL_NO_IDEA
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
 literal|" -idea           encrypt PEM output with cbc idea\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_AES
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -aes128, -aes192, -aes256\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"                 encrypt PEM output with cbc aes\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -740,6 +825,17 @@ goto|;
 block|}
 name|ERR_load_crypto_strings
 argument_list|()
+expr_stmt|;
+name|e
+operator|=
+name|setup_engine
+argument_list|(
+name|bio_err
+argument_list|,
+name|engine
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -982,7 +1078,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -1272,7 +1368,10 @@ argument_list|(
 name|passout
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

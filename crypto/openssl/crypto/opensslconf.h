@@ -11,37 +11,73 @@ begin_comment
 comment|/* OpenSSL was configured with the following options: */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_DOING_MAKEDEPEND
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_KRB5
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_NO_KRB5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL_DOING_MAKEDEPEND */
+end_comment
+
+begin_comment
+comment|/* The OPENSSL_NO_* macros are also defined as NO_* if the application    asks for it.  This is a transient feature that is provided for those    who haven't had the time to do the appropriate changes in their    applications.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|OPENSSL_ALGORITHM_DEFINES
 end_ifdef
 
-begin_comment
-comment|/* no ciphers excluded */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_NO_KRB5
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_KRB5
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_KRB5
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_THREAD_DEFINES
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_OTHER_DEFINES
-end_ifdef
 
 begin_endif
 endif|#
@@ -115,12 +151,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|OPENSSL_UNISTD
+end_undef
+
 begin_define
 define|#
 directive|define
 name|OPENSSL_UNISTD
 value|<unistd.h>
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|OPENSSL_EXPORT_VAR_AS_FUNCTION
+end_undef
 
 begin_if
 if|#
@@ -279,10 +327,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|HEADER_NEW_DES_H
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|HEADER_DES_H
 argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -837,6 +892,11 @@ directive|elif
 name|defined
 argument_list|(
 name|i386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
 argument_list|)
 end_elif
 

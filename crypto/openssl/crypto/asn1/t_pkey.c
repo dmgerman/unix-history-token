@@ -34,7 +34,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_include
@@ -51,7 +51,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 end_ifndef
 
 begin_include
@@ -68,7 +68,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_include
@@ -114,13 +114,13 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -131,6 +131,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|RSA
 modifier|*
 name|x
@@ -220,6 +221,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|RSA
 modifier|*
 name|x
@@ -506,31 +508,6 @@ goto|;
 block|}
 if|if
 condition|(
-name|off
-condition|)
-block|{
-if|if
-condition|(
-name|off
-operator|>
-literal|128
-condition|)
-name|off
-operator|=
-literal|128
-expr_stmt|;
-name|memset
-argument_list|(
-name|str
-argument_list|,
-literal|' '
-argument_list|,
-name|off
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|x
 operator|->
 name|d
@@ -540,20 +517,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|off
-operator|&&
-operator|(
-name|BIO_write
+operator|!
+name|BIO_indent
 argument_list|(
 name|bp
 argument_list|,
-name|str
-argument_list|,
 name|off
+argument_list|,
+literal|128
 argument_list|)
-operator|<=
-literal|0
-operator|)
 condition|)
 goto|goto
 name|err
@@ -823,19 +795,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NO_RSA */
+comment|/* OPENSSL_NO_RSA */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -846,6 +818,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|DSA
 modifier|*
 name|x
@@ -935,6 +908,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|DSA
 modifier|*
 name|x
@@ -943,12 +917,6 @@ name|int
 name|off
 parameter_list|)
 block|{
-name|char
-name|str
-index|[
-literal|128
-index|]
-decl_stmt|;
 name|unsigned
 name|char
 modifier|*
@@ -1132,31 +1100,6 @@ goto|;
 block|}
 if|if
 condition|(
-name|off
-condition|)
-block|{
-if|if
-condition|(
-name|off
-operator|>
-literal|128
-condition|)
-name|off
-operator|=
-literal|128
-expr_stmt|;
-name|memset
-argument_list|(
-name|str
-argument_list|,
-literal|' '
-argument_list|,
-name|off
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|x
 operator|->
 name|priv_key
@@ -1166,20 +1109,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|off
-operator|&&
-operator|(
-name|BIO_write
+operator|!
+name|BIO_indent
 argument_list|(
 name|bp
 argument_list|,
-name|str
-argument_list|,
 name|off
+argument_list|,
+literal|128
 argument_list|)
-operator|<=
-literal|0
-operator|)
 condition|)
 goto|goto
 name|err
@@ -1382,7 +1320,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !NO_DSA */
+comment|/* !OPENSSL_NO_DSA */
 end_comment
 
 begin_function
@@ -1417,12 +1355,6 @@ name|n
 decl_stmt|,
 name|i
 decl_stmt|;
-name|char
-name|str
-index|[
-literal|128
-index|]
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1453,47 +1385,19 @@ literal|""
 expr_stmt|;
 if|if
 condition|(
-name|off
-condition|)
-block|{
-if|if
-condition|(
-name|off
-operator|>
-literal|128
-condition|)
-name|off
-operator|=
-literal|128
-expr_stmt|;
-name|memset
-argument_list|(
-name|str
-argument_list|,
-literal|' '
-argument_list|,
-name|off
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|BIO_write
+operator|!
+name|BIO_indent
 argument_list|(
 name|bp
 argument_list|,
-name|str
-argument_list|,
 name|off
+argument_list|,
+literal|128
 argument_list|)
-operator|<=
-literal|0
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
-block|}
 if|if
 condition|(
 name|BN_num_bytes
@@ -1643,51 +1547,31 @@ operator|==
 literal|0
 condition|)
 block|{
-name|str
-index|[
-literal|0
-index|]
-operator|=
-literal|'\n'
-expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-operator|(
-name|str
-index|[
-literal|1
-index|]
-operator|)
-argument_list|,
-literal|' '
-argument_list|,
-name|off
-operator|+
-literal|4
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|BIO_write
+name|BIO_puts
 argument_list|(
 name|bp
 argument_list|,
-name|str
-argument_list|,
-name|off
-operator|+
-literal|1
-operator|+
-literal|4
+literal|"\n"
 argument_list|)
 operator|<=
 literal|0
+operator|||
+operator|!
+name|BIO_indent
+argument_list|(
+name|bp
+argument_list|,
+name|off
+operator|+
+literal|4
+argument_list|,
+literal|128
+argument_list|)
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 if|if
@@ -1756,13 +1640,13 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 end_ifndef
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -1773,6 +1657,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|DH
 modifier|*
 name|x
@@ -1857,6 +1742,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|DH
 modifier|*
 name|x
@@ -2100,13 +1986,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -2117,6 +2003,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|DSA
 modifier|*
 name|x
@@ -2201,6 +2088,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|DSA
 modifier|*
 name|x
@@ -2454,7 +2342,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !NO_DSA */
+comment|/* !OPENSSL_NO_DSA */
 end_comment
 
 end_unit

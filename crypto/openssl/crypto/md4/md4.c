@@ -256,7 +256,8 @@ name|fd
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZE
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 if|if

@@ -17,13 +17,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|NO_HMAC
+name|OPENSSL_NO_HMAC
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_SHA
+name|OPENSSL_NO_SHA
 argument_list|)
 end_if
 
@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"cryptlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/x509.h>
 end_include
 
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/hmac.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
 end_include
 
 begin_comment
@@ -168,6 +168,12 @@ decl_stmt|;
 name|HMAC_CTX
 name|hctx
 decl_stmt|;
+name|HMAC_CTX_init
+argument_list|(
+operator|&
+name|hctx
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|out
@@ -293,7 +299,7 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|HMAC_Init
+name|HMAC_Init_ex
 argument_list|(
 operator|&
 name|hctx
@@ -304,6 +310,8 @@ name|passlen
 argument_list|,
 name|EVP_sha1
 argument_list|()
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|HMAC_Update
@@ -413,7 +421,7 @@ operator|+=
 name|cplen
 expr_stmt|;
 block|}
-name|HMAC_cleanup
+name|HMAC_CTX_cleanup
 argument_list|(
 operator|&
 name|hctx
@@ -590,10 +598,12 @@ name|ASN1_TYPE
 modifier|*
 name|param
 parameter_list|,
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|EVP_MD
 modifier|*
 name|md
@@ -763,11 +773,13 @@ name|err
 goto|;
 block|}
 comment|/* Fixup cipher based on AlgorithmIdentifier */
-name|EVP_CipherInit
+name|EVP_CipherInit_ex
 argument_list|(
 name|ctx
 argument_list|,
 name|cipher
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -808,6 +820,14 @@ operator|=
 name|EVP_CIPHER_CTX_key_length
 argument_list|(
 name|ctx
+argument_list|)
+expr_stmt|;
+name|OPENSSL_assert
+argument_list|(
+name|keylen
+operator|<=
+sizeof|sizeof
+name|key
 argument_list|)
 expr_stmt|;
 comment|/* Now decode key derivation function */
@@ -1030,9 +1050,11 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-name|EVP_CipherInit
+name|EVP_CipherInit_ex
 argument_list|(
 name|ctx
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1043,11 +1065,9 @@ argument_list|,
 name|en_de
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|keylen
 argument_list|)

@@ -524,7 +524,7 @@ operator|!
 operator|(
 name|asafes
 operator|=
-name|M_PKCS12_unpack_authsafes
+name|PKCS12_unpack_authsafes
 argument_list|(
 name|p12
 argument_list|)
@@ -577,7 +577,7 @@ condition|)
 block|{
 name|bags
 operator|=
-name|M_PKCS12_unpack_p7data
+name|PKCS12_unpack_p7data
 argument_list|(
 name|p7
 argument_list|)
@@ -593,7 +593,7 @@ condition|)
 block|{
 name|bags
 operator|=
-name|M_PKCS12_unpack_p7encdata
+name|PKCS12_unpack_p7encdata
 argument_list|(
 name|p7
 argument_list|,
@@ -1078,7 +1078,7 @@ operator|!
 operator|(
 name|p8
 operator|=
-name|M_PKCS12_decrypt_skey
+name|PKCS12_decrypt_skey
 argument_list|(
 name|bag
 argument_list|,
@@ -1142,7 +1142,7 @@ operator|!
 operator|(
 name|x509
 operator|=
-name|M_PKCS12_certbag2x509
+name|PKCS12_certbag2x509
 argument_list|(
 name|bag
 argument_list|)

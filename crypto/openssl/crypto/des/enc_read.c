@@ -39,22 +39,25 @@ begin_comment
 comment|/*extern int errno;*/
 end_comment
 
-begin_decl_stmt
-name|OPENSSL_GLOBAL
+begin_expr_stmt
+name|OPENSSL_IMPLEMENT_GLOBAL
+argument_list|(
 name|int
-name|des_rw_mode
-init|=
+argument_list|,
+name|DES_rw_mode
+argument_list|)
+operator|=
 name|DES_PCBC_MODE
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/*  * WARNINGS:  *  *  -  The data format used by des_enc_write() and des_enc_read()  *     has a cryptographic weakness: When asked to write more  *     than MAXWRITE bytes, des_enc_write will split the data  *     into several chunks that are all encrypted  *     using the same IV.  So don't use these functions unless you  *     are sure you know what you do (in which case you might  *     not want to use them anyway).  *  *  -  This code cannot handle non-blocking sockets.  *  *  -  This function uses an internal state and thus cannot be  *     used on multiple files.  */
+comment|/*  * WARNINGS:  *  *  -  The data format used by DES_enc_write() and DES_enc_read()  *     has a cryptographic weakness: When asked to write more  *     than MAXWRITE bytes, DES_enc_write will split the data  *     into several chunks that are all encrypted  *     using the same IV.  So don't use these functions unless you  *     are sure you know what you do (in which case you might  *     not want to use them anyway).  *  *  -  This code cannot handle non-blocking sockets.  *  *  -  This function uses an internal state and thus cannot be  *     used on multiple files.  */
 end_comment
 
 begin_function
 name|int
-name|des_enc_read
+name|DES_enc_read
 parameter_list|(
 name|int
 name|fd
@@ -66,10 +69,11 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|sched
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|iv
 parameter_list|)
@@ -509,11 +513,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|des_rw_mode
+name|DES_rw_mode
 operator|&
 name|DES_PCBC_MODE
 condition|)
-name|des_pcbc_encrypt
+name|DES_pcbc_encrypt
 argument_list|(
 name|net
 argument_list|,
@@ -529,7 +533,7 @@ name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
 else|else
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 name|net
 argument_list|,
@@ -581,11 +585,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|des_rw_mode
+name|DES_rw_mode
 operator|&
 name|DES_PCBC_MODE
 condition|)
-name|des_pcbc_encrypt
+name|DES_pcbc_encrypt
 argument_list|(
 name|net
 argument_list|,
@@ -601,7 +605,7 @@ name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
 else|else
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 name|net
 argument_list|,
@@ -631,11 +635,11 @@ else|else
 block|{
 if|if
 condition|(
-name|des_rw_mode
+name|DES_rw_mode
 operator|&
 name|DES_PCBC_MODE
 condition|)
-name|des_pcbc_encrypt
+name|DES_pcbc_encrypt
 argument_list|(
 name|net
 argument_list|,
@@ -651,7 +655,7 @@ name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
 else|else
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 name|net
 argument_list|,

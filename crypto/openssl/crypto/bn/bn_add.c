@@ -53,6 +53,13 @@ name|BIGNUM
 modifier|*
 name|tmp
 decl_stmt|;
+name|int
+name|a_neg
+init|=
+name|a
+operator|->
+name|neg
+decl_stmt|;
 name|bn_check_top
 argument_list|(
 name|a
@@ -66,9 +73,7 @@ expr_stmt|;
 comment|/*  a +  b	a+b 	 *  a + -b	a-b 	 * -a +  b	b-a 	 * -a + -b	-(a+b) 	 */
 if|if
 condition|(
-name|a
-operator|->
-name|neg
+name|a_neg
 operator|^
 name|b
 operator|->
@@ -78,9 +83,7 @@ block|{
 comment|/* only one is negative */
 if|if
 condition|(
-name|a
-operator|->
-name|neg
+name|a_neg
 condition|)
 block|{
 name|tmp
@@ -167,26 +170,6 @@ return|;
 block|}
 if|if
 condition|(
-name|a
-operator|->
-name|neg
-condition|)
-comment|/* both are neg */
-name|r
-operator|->
-name|neg
-operator|=
-literal|1
-expr_stmt|;
-else|else
-name|r
-operator|->
-name|neg
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 operator|!
 name|BN_uadd
 argument_list|(
@@ -202,6 +185,24 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|a_neg
+condition|)
+comment|/* both are neg */
+name|r
+operator|->
+name|neg
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|r
+operator|->
+name|neg
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -490,6 +491,12 @@ operator|)
 expr_stmt|;
 block|}
 comment|/* memcpy(rp,ap,sizeof(*ap)*(max-i));*/
+name|r
+operator|->
+name|neg
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -949,6 +956,12 @@ operator|->
 name|top
 operator|=
 name|max
+expr_stmt|;
+name|r
+operator|->
+name|neg
+operator|=
+literal|0
 expr_stmt|;
 name|bn_fix_top
 argument_list|(

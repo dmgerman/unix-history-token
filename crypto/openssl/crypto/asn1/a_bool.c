@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/asn1.h>
+file|<openssl/asn1t.h>
 end_include
 
 begin_function

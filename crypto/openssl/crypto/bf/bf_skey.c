@@ -80,16 +80,8 @@ name|end
 decl_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|key
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|bf_init
 argument_list|,
