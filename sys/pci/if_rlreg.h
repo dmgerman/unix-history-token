@@ -868,6 +868,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_LOOPTEST_ON_CPLUS
+value|0x00060000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_HWREV_8169
 value|0x00000000
 end_define
@@ -2815,7 +2822,7 @@ begin_define
 define|#
 directive|define
 name|RL_RDESC_CMD_BUFLEN
-value|0x00003FFF
+value|0x00001FFF
 end_define
 
 begin_define
@@ -3004,6 +3011,17 @@ begin_define
 define|#
 directive|define
 name|RL_RDESC_STAT_FRAGLEN
+value|0x00001FFF
+end_define
+
+begin_comment
+comment|/* RX'ed frame/frag len */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_RDESC_STAT_GFRAGLEN
 value|0x00003FFF
 end_define
 
@@ -3210,7 +3228,7 @@ name|RL_RXBYTES
 parameter_list|(
 name|x
 parameter_list|)
-value|(le32toh((x)->rl_cmdstat)&	\ 				 RL_RDESC_STAT_FRAGLEN)
+value|(le32toh((x)->rl_cmdstat)& sc->rl_rxlenmask)
 end_define
 
 begin_define
@@ -3514,6 +3532,9 @@ name|rl_tail
 decl_stmt|;
 name|u_int32_t
 name|rl_hwrev
+decl_stmt|;
+name|u_int32_t
+name|rl_rxlenmask
 decl_stmt|;
 name|int
 name|rl_testmode
