@@ -441,10 +441,7 @@ name|fakechan
 decl_stmt|;
 name|unsigned
 name|chancount
-decl_stmt|,
-name|defaultchan
 decl_stmt|;
-comment|/* struct snd_mixer *mixer; */
 name|unsigned
 name|flags
 decl_stmt|;

@@ -637,11 +637,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|SLIST_EMPTY
+argument_list|(
+operator|&
 name|d
 operator|->
-name|chancount
-operator|>
-literal|0
+name|channels
+argument_list|)
 condition|)
 block|{
 name|pc
