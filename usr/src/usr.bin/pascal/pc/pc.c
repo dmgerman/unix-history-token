@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c	5.5 (Berkeley) %G%"
+literal|"@(#)pc.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1814,7 +1814,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|remove
+name|removetemps
 argument_list|()
 expr_stmt|;
 block|}
@@ -2719,7 +2719,7 @@ name|errs
 operator|=
 literal|1
 expr_stmt|;
-name|remove
+name|removetemps
 argument_list|()
 expr_stmt|;
 block|}
@@ -2740,7 +2740,7 @@ end_macro
 
 begin_block
 block|{
-name|remove
+name|removetemps
 argument_list|()
 expr_stmt|;
 name|exit
@@ -2752,7 +2752,7 @@ block|}
 end_block
 
 begin_macro
-name|remove
+name|removetemps
 argument_list|()
 end_macro
 
@@ -2878,6 +2878,9 @@ parameter_list|)
 name|char
 modifier|*
 name|as
+decl_stmt|;
+name|int
+name|ch
 decl_stmt|;
 block|{
 specifier|register
