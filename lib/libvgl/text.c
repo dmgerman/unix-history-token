@@ -62,6 +62,8 @@ condition|(
 name|VGLTextFont
 operator|->
 name|BitmapArray
+operator|!=
+name|VGLFont
 condition|)
 name|free
 argument_list|(
