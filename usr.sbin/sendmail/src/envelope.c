@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.104 (Berkeley) 6/3/97"
+literal|"@(#)envelope.c	8.105 (Berkeley) 6/24/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -645,7 +645,7 @@ name|e_from
 operator|.
 name|q_paddr
 argument_list|,
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|e

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.62 (Berkeley) 6/5/97"
+literal|"@(#)err.c	8.64 (Berkeley) 7/25/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,6 +292,10 @@ if|if
 condition|(
 operator|!
 name|panic
+operator|&&
+name|CurEnv
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -416,6 +420,12 @@ else|:
 name|LOG_CRIT
 argument_list|,
 name|CurEnv
+operator|==
+name|NULL
+condition|?
+name|NOQID
+else|:
+name|CurEnv
 operator|->
 name|e_id
 argument_list|,
@@ -537,13 +547,6 @@ expr_stmt|;
 if|if
 condition|(
 name|QuickAbort
-operator|||
-operator|(
-name|OnlyOneError
-operator|&&
-operator|!
-name|HoldErrs
-operator|)
 condition|)
 name|longjmp
 argument_list|(
@@ -767,13 +770,6 @@ expr_stmt|;
 if|if
 condition|(
 name|QuickAbort
-operator|||
-operator|(
-name|OnlyOneError
-operator|&&
-operator|!
-name|HoldErrs
-operator|)
 condition|)
 name|longjmp
 argument_list|(
@@ -1165,6 +1161,10 @@ operator|!
 name|heldmsg
 operator|&&
 name|CurEnv
+operator|!=
+name|NULL
+operator|&&
+name|CurEnv
 operator|->
 name|e_xfp
 operator|!=
@@ -1290,6 +1290,13 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OutChannel
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* if DisConnected, OutChannel now points to the transcript */
 if|if
 condition|(
@@ -1401,6 +1408,10 @@ return|return;
 comment|/* 	**  Error on output -- if reporting lost channel, just ignore it. 	**  Also, ignore errors from QUIT response (221 message) -- some 	**	rude servers don't read result. 	*/
 if|if
 condition|(
+name|InChannel
+operator|==
+name|NULL
+operator|||
 name|feof
 argument_list|(
 name|InChannel
@@ -1504,10 +1515,26 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* be careful about multiple error messages */
+if|if
+condition|(
+name|OnlyOneError
+condition|)
+name|HoldErrs
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* signal the error */
 name|Errors
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|CurEnv
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|msgcode

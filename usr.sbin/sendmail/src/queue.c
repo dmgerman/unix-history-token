@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.169 (Berkeley) 6/14/97 (with queueing)"
+literal|"@(#)queue.c	8.174 (Berkeley) 7/23/97 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.169 (Berkeley) 6/14/97 (without queueing)"
+literal|"@(#)queue.c	8.174 (Berkeley) 7/23/97 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2051,6 +2051,9 @@ argument_list|)
 operator|<
 literal|0
 operator|||
+operator|(
+name|SuperSafe
+operator|&&
 name|fsync
 argument_list|(
 name|fileno
@@ -2060,6 +2063,7 @@ argument_list|)
 argument_list|)
 operator|<
 literal|0
+operator|)
 operator|||
 name|ferror
 argument_list|(
@@ -2553,16 +2557,6 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
-specifier|extern
-name|void
-name|drop_privileges
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
 name|DoQueueRun
 operator|=
 name|FALSE
@@ -3000,8 +2994,13 @@ name|uid_t
 operator|)
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|drop_privileges
-argument_list|()
+argument_list|(
+name|FALSE
+argument_list|)
 expr_stmt|;
 comment|/* 	**  Create ourselves an envelope 	*/
 name|CurEnv
@@ -3040,8 +3039,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|OnlyOneError
-operator|=
 name|QuickAbort
 operator|=
 name|FALSE
@@ -5896,6 +5893,12 @@ name|e
 operator|->
 name|e_id
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_id
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -9299,6 +9302,8 @@ name|char
 name|buf
 index|[
 name|MAXQFNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -9314,34 +9319,39 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|e
-operator|->
-name|e_id
-argument_list|)
-operator|>
-operator|(
-name|SIZE_T
-operator|)
-sizeof|sizeof
-name|buf
-operator|-
-literal|4
-condition|)
-return|return;
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
+name|p
+operator|=
 name|queuename
 argument_list|(
 name|e
 argument_list|,
 literal|'q'
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+operator|>
+name|MAXQFNAME
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"loseqfile: queuename (%s) too long"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|p
