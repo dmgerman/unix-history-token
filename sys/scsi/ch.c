@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.29 1995/12/14 19:51:12 bde Exp $  */
+comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.30 1996/03/10 07:13:05 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -2245,7 +2245,7 @@ name|u_char
 modifier|*
 name|b
 decl_stmt|;
-name|int32
+name|int32_t
 name|i
 decl_stmt|,
 name|l
