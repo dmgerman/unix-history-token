@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.4 %G%"
+literal|"@(#)asjxxx.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,6 +507,7 @@ specifier|register
 name|int
 name|mask
 decl_stmt|;
+comment|/* 	 *	Problem with .align 	 * 	 *	When the loader constructs an executable file from 	 *	a number of objects, it effectively concatnates 	 *	together all of the text segments from all objects, 	 *	and then all of the data segments. 	 * 	 *	If we do an align by a large value, we can align 	 *	within the a.out this assembly produces, but 	 *	after the loader concatnates, the alignment can't 	 *	be guaranteed if the objects preceding this one 	 *	in the load are also aligned to the same size. 	 * 	 *	Currently, the loader guarantees full word alignment. 	 *	So, ridiculous aligns are caught here and converted 	 *	to a .align 2, if possible. 	 */
 if|if
 condition|(
 operator|(
@@ -543,28 +544,23 @@ return|return;
 block|}
 if|if
 condition|(
-operator|(
 name|xp
 operator|->
 name|e_xvalue
 operator|>
-literal|3
-operator|)
-operator|&&
-operator|(
-name|dotp
-operator|!=
-operator|&
-name|usedot
-index|[
-literal|0
-index|]
-operator|)
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+name|passno
+operator|==
+literal|1
 condition|)
 block|{
 name|yywarning
 argument_list|(
-literal|"Alignment by %d in segments other than text 0 may not work."
+literal|".align %d in any segment is NOT preserved by the loader"
 argument_list|,
 name|xp
 operator|->
@@ -573,8 +569,19 @@ argument_list|)
 expr_stmt|;
 name|yywarning
 argument_list|(
-literal|"Phase errors may occur after this .align in the second pass."
+literal|".align %d converted to .align 2"
+argument_list|,
+name|xp
+operator|->
+name|e_xvalue
 argument_list|)
+expr_stmt|;
+block|}
+name|xp
+operator|->
+name|e_xvalue
+operator|=
+literal|2
 expr_stmt|;
 block|}
 name|flushfield
