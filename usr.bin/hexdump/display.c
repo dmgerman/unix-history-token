@@ -1702,6 +1702,10 @@ operator|*
 name|_argv
 condition|)
 block|{
+name|done
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1736,8 +1740,6 @@ expr_stmt|;
 continue|continue;
 block|}
 name|statok
-operator|=
-name|done
 operator|=
 literal|1
 expr_stmt|;
