@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 65 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -519,7 +519,7 @@ operator|->
 name|Parent
 condition|)
 block|{
-comment|/*              * Check if we need to replace the operator and its subtree              * with a return value op              */
+comment|/*              * Check if we need to replace the operator and its subtree              * with a return value op (placeholder op)              */
 name|ParentInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -543,10 +543,105 @@ case|case
 name|OPTYPE_CONTROL
 case|:
 comment|/* IF, ELSE, WHILE only */
+break|break;
 case|case
 name|OPTYPE_NAMED_OBJECT
 case|:
 comment|/* Scope, method, etc. */
+comment|/*                   * These opcodes contain TermArg operands.  The current                            * op must be replace by a placeholder return op                  */
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_REGION_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_CREATE_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_BIT_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_BYTE_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_WORD_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_DWORD_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_QWORD_FIELD_OP
+operator|)
+condition|)
+block|{
+name|ReplacementOp
+operator|=
+name|AcpiPsAllocOp
+argument_list|(
+name|AML_RETURN_VALUE_OP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ReplacementOp
+condition|)
+block|{
+name|return_VALUE
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 break|break;
 default|default:
 name|ReplacementOp
@@ -1039,6 +1134,10 @@ name|ACPI_PARSE_STATE
 modifier|*
 name|ParserState
 decl_stmt|;
+name|UINT8
+modifier|*
+name|AmlOpStart
+decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
 literal|"PsParseLoop"
@@ -1257,6 +1356,12 @@ name|Op
 condition|)
 block|{
 comment|/* Get the next opcode from the AML stream */
+name|AmlOpStart
+operator|=
+name|ParserState
+operator|->
+name|Aml
+expr_stmt|;
 name|AmlOffset
 operator|=
 name|ParserState
@@ -1335,7 +1440,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ParseLoop: Found unknown opcode 0x%lX at AML offset 0x%X, ignoring\n"
+literal|"ParseLoop: Found unknown opcode %lX at AML offset %X, ignoring\n"
 operator|,
 name|Opcode
 operator|,
@@ -1537,16 +1642,12 @@ condition|(
 name|DeferredOp
 condition|)
 block|{
-comment|/*                          * Skip parsing of control method or opregion body,                          * because we don't have enough info in the first pass                          * to parse them correctly.                          *                          * Backup to beginning of OpRegion declaration (2 for                          * Opcode, 4 for name)                          *                          * BodyLength is unknown until we parse the body                          */
+comment|/*                          * Defer final parsing of an OperationRegion body,                          * because we don't have enough info in the first pass                          * to parse it correctly (i.e., there may be method                          * calls within the TermArg elements of the body.                          *                           * However, we must continue parsing because                           * the opregion is not a standalone package --                          * we don't know where the end is at this point.                          *                          * (Length is unknown until parse of the body complete)                          */
 name|DeferredOp
 operator|->
 name|Data
 operator|=
-name|ParserState
-operator|->
-name|Aml
-operator|-
-literal|6
+name|AmlOpStart
 expr_stmt|;
 name|DeferredOp
 operator|->
@@ -1622,7 +1723,7 @@ name|AML_DWORD_FIELD_OP
 operator|)
 condition|)
 block|{
-comment|/*                      * Backup to beginning of CreateXXXfield declaration (1 for                      * Opcode)                      *                      * BodyLength is unknown until we parse the body                      */
+comment|/*                      * Backup to beginning of CreateXXXfield declaration                       * BodyLength is unknown until we parse the body                      */
 name|DeferredOp
 operator|=
 operator|(
@@ -1635,11 +1736,7 @@ name|DeferredOp
 operator|->
 name|Data
 operator|=
-name|ParserState
-operator|->
-name|Aml
-operator|-
-literal|1
+name|AmlOpStart
 expr_stmt|;
 name|DeferredOp
 operator|->
@@ -2061,9 +2158,17 @@ name|Opcode
 operator|==
 name|AML_DWORD_FIELD_OP
 operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Opcode
+operator|==
+name|AML_QWORD_FIELD_OP
+operator|)
 condition|)
 block|{
-comment|/*                  * Backup to beginning of CreateXXXfield declaration (1 for                  * Opcode)                  *                  * BodyLength is unknown until we parse the body                  * -4 for the name (last) -- TBD: namestring: may be longer                  * than 4?                  */
+comment|/*                  * Backup to beginning of CreateXXXfield declaration (1 for                  * Opcode)                  *                  * BodyLength is unknown until we parse the body                  */
 name|DeferredOp
 operator|=
 operator|(
@@ -2161,13 +2266,18 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
+switch|switch
 condition|(
 name|Status
-operator|==
-name|AE_CTRL_TRANSFER
 condition|)
 block|{
+case|case
+name|AE_OK
+case|:
+break|break;
+case|case
+name|AE_CTRL_TRANSFER
+case|:
 comment|/*                  * We are about to transfer to a called method.                  */
 name|WalkState
 operator|->
@@ -2186,15 +2296,10 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Status
-operator|==
+break|break;
+case|case
 name|AE_CTRL_END
-condition|)
-block|{
+case|:
 name|AcpiPsPopScope
 argument_list|(
 name|ParserState
@@ -2246,15 +2351,10 @@ name|Status
 operator|=
 name|AE_OK
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Status
-operator|==
+break|break;
+case|case
 name|AE_CTRL_TERMINATE
-condition|)
-block|{
+case|:
 name|Status
 operator|=
 name|AE_OK
@@ -2300,16 +2400,9 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
+break|break;
+default|default:
+comment|/* All other non-AE_OK status */
 if|if
 condition|(
 name|Op
@@ -2350,6 +2443,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 comment|/* This scope complete? */
 if|if

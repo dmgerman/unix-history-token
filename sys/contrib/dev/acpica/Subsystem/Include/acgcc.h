@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 1 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 2 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -151,7 +151,7 @@ parameter_list|,
 name|Acq
 parameter_list|)
 define|\
-value|do { \     __asm__ volatile ("1:  ld4      r29=%1\n"  \         ";;\n"                  \         "mov    ar.ccv=r29\n"   \         "mov    r2=r29\n"       \         "shr.u  r30=r29,1\n"    \         "and    r29=-4,r29\n"   \         ";;\n"                  \         "add    r29=2,r29\n"    \         "and    r30=1,r30\n"    \         ";;\n"                  \         "add    r29=r29,r30\n"  \         ";;\n"                  \         "cmpxchg4.acq   r30=%1,r29,ar.ccv\n" \         ";;\n"                  \         "cmp.eq p6,p7=r2,r30\n" \         "(p7) br.dpnt.few 1b\n" \         "cmp.gt p8,p9=3,r29\n"  \         ";;\n"                  \         "(p8) mov %0=-1\n"      \         "(p9) mov %0=r0\n"      \         :"=r"(Acq):"m" __atomic_fool_gcc((GLptr)):"r2","r29","r30","memory"); \     } while (0)
+value|do { \     __asm__ volatile ("1:  ld4      r29=%1\n"  \         ";;\n"                  \         "mov    ar.ccv=r29\n"   \         "mov    r2=r29\n"       \         "shr.u  r30=r29,1\n"    \         "and    r29=-4,r29\n"   \         ";;\n"                  \         "add    r29=2,r29\n"    \         "and    r30=1,r30\n"    \         ";;\n"                  \         "add    r29=r29,r30\n"  \         ";;\n"                  \         "cmpxchg4.acq   r30=%1,r29,ar.ccv\n" \         ";;\n"                  \         "cmp.eq p6,p7=r2,r30\n" \         "(p7) br.dpnt.few 1b\n" \         "cmp.gt p8,p9=3,r29\n"  \         ";;\n"                  \         "(p8) mov %0=-1\n"      \         "(p9) mov %0=r0\n"      \         :"=r"(Acq):"m"(GLptr):"r2","r29","r30","memory"); \     } while (0)
 end_define
 
 begin_define
@@ -164,7 +164,7 @@ parameter_list|,
 name|Acq
 parameter_list|)
 define|\
-value|do { \     __asm__ volatile ("1:  ld4      r29=%1\n" \         ";;\n"                  \         "mov    ar.ccv=r29\n"   \         "mov    r2=r29\n"       \         "and    r29=-4,r29\n"   \         ";;\n"                  \         "cmpxchg4.acq   r30=%1,r29,ar.ccv\n" \         ";;\n"                  \         "cmp.eq p6,p7=r2,r30\n" \         "(p7) br.dpnt.few 1b\n" \         "and    %0=1,r2\n"      \         ";;\n"                  \         :"=r"(Acq):"m" __atomic_fool_gcc((GLptr)):"r2","r29","r30","memory"); \     } while (0)
+value|do { \     __asm__ volatile ("1:  ld4      r29=%1\n" \         ";;\n"                  \         "mov    ar.ccv=r29\n"   \         "mov    r2=r29\n"       \         "and    r29=-4,r29\n"   \         ";;\n"                  \         "cmpxchg4.acq   r30=%1,r29,ar.ccv\n" \         ";;\n"                  \         "cmp.eq p6,p7=r2,r30\n" \         "(p7) br.dpnt.few 1b\n" \         "and    %0=1,r2\n"      \         ";;\n"                  \         :"=r"(Acq):"m"(GLptr):"r2","r29","r30","memory"); \     } while (0)
 end_define
 
 begin_comment
