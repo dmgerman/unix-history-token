@@ -310,9 +310,6 @@ init|=
 name|NULL
 decl_stmt|,
 name|parent
-decl_stmt|,
-modifier|*
-name|children
 decl_stmt|;
 name|int
 name|bmsr
@@ -320,8 +317,6 @@ decl_stmt|,
 name|capmask
 init|=
 literal|0xFFFFFFFF
-decl_stmt|,
-name|nchildren
 decl_stmt|;
 name|mii
 operator|=
@@ -365,22 +360,6 @@ name|mii_phyno
 operator|++
 control|)
 block|{
-name|device_get_children
-argument_list|(
-name|dev
-argument_list|,
-operator|&
-name|children
-argument_list|,
-operator|&
-name|nchildren
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nchildren
-condition|)
-break|break;
 comment|/* 		 * Check to see if there is a PHY at this address.  Note, 		 * many braindead PHYs report 0/0 in their ID registers, 		 * so we test for media in the BMSR. 	 	 */
 name|bmsr
 operator|=
