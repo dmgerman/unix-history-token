@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bio.h>
 end_include
 
@@ -60,19 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/reboot.h>
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/cons.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/eventhandler.h>
 end_include
 
 begin_include
@@ -96,13 +90,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
@@ -112,7 +112,7 @@ file|<sys/smp.h>
 end_include
 
 begin_comment
-comment|/* smp_active, cpuid */
+comment|/* smp_active */
 end_comment
 
 begin_include
@@ -124,19 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysproto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/cons.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -1026,6 +1020,15 @@ name|setrunqueue
 argument_list|(
 name|curproc
 argument_list|)
+expr_stmt|;
+name|curproc
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_nvcsw
+operator|++
 expr_stmt|;
 name|mi_switch
 argument_list|()
