@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.4 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1301,9 +1301,7 @@ call|(
 name|long
 call|)
 argument_list|(
-name|SBLOCK
-operator|*
-name|DEV_BSIZE
+name|SBOFF
 argument_list|)
 argument_list|,
 literal|0
@@ -1343,33 +1341,15 @@ operator|)
 return|;
 name|spacefree
 operator|=
-operator|(
+name|freespace
+argument_list|(
+operator|&
 name|fs
-operator|.
-name|fs_cstotal
-operator|.
-name|cs_nbfree
-operator|*
-name|fs
-operator|.
-name|fs_frag
-operator|+
-name|fs
-operator|.
-name|fs_cstotal
-operator|.
-name|cs_nffree
-operator|-
-name|fs
-operator|.
-name|fs_dsize
-operator|*
+argument_list|,
 name|fs
 operator|.
 name|fs_minfree
-operator|/
-literal|100
-operator|)
+argument_list|)
 operator|*
 name|fs
 operator|.
