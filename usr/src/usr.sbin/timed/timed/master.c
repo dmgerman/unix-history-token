@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.10 (Berkeley) %G%"
+literal|"@(#)master.c	2.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,7 +78,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|short
+name|u_short
 name|sequence
 decl_stmt|;
 end_decl_stmt
@@ -2496,6 +2496,12 @@ argument_list|,
 argument|seq
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|u_short
+name|seq
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

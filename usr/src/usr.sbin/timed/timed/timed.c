@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.8 (Berkeley) %G%"
+literal|"@(#)timed.c	2.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,6 +159,13 @@ name|long
 name|delay2
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|long
+name|random
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
@@ -354,23 +361,6 @@ name|servent
 modifier|*
 name|srvp
 decl_stmt|;
-name|struct
-name|tsp
-name|resp
-decl_stmt|,
-name|conflict
-decl_stmt|,
-modifier|*
-name|answer
-decl_stmt|,
-modifier|*
-name|readmsg
-argument_list|()
-decl_stmt|,
-modifier|*
-name|acksend
-argument_list|()
-decl_stmt|;
 name|long
 name|casual
 parameter_list|()
@@ -426,11 +416,10 @@ decl_stmt|;
 name|u_short
 name|port
 decl_stmt|;
-name|int
-name|havemaster
-init|=
-literal|0
-decl_stmt|;
+name|uid_t
+name|getuid
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -574,9 +563,6 @@ name|addnetname
 argument_list|(
 operator|*
 name|argv
-argument_list|,
-operator|&
-name|nets
 argument_list|)
 expr_stmt|;
 block|}
@@ -627,9 +613,6 @@ name|addnetname
 argument_list|(
 operator|*
 name|argv
-argument_list|,
-operator|&
-name|nets
 argument_list|)
 expr_stmt|;
 block|}
@@ -1094,9 +1077,6 @@ name|ioctl
 argument_list|(
 name|sock
 argument_list|,
-operator|(
-name|int
-operator|)
 name|SIOCGIFCONF
 argument_list|,
 operator|(
@@ -1220,9 +1200,6 @@ name|ioctl
 argument_list|(
 name|sock
 argument_list|,
-operator|(
-name|int
-operator|)
 name|SIOCGIFFLAGS
 argument_list|,
 operator|(
@@ -1305,9 +1282,6 @@ name|ioctl
 argument_list|(
 name|sock
 argument_list|,
-operator|(
-name|int
-operator|)
 name|SIOCGIFNETMASK
 argument_list|,
 operator|(
@@ -1361,9 +1335,6 @@ name|ioctl
 argument_list|(
 name|sock
 argument_list|,
-operator|(
-name|int
-operator|)
 name|SIOCGIFBRDADDR
 argument_list|,
 operator|(
@@ -1410,9 +1381,6 @@ name|ioctl
 argument_list|(
 name|sock
 argument_list|,
-operator|(
-name|int
-operator|)
 name|SIOCGIFDSTADDR
 argument_list|,
 operator|(
@@ -1788,9 +1756,6 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-operator|(
-name|int
-operator|)
 name|TIOCNOTTY
 argument_list|,
 operator|(
@@ -2543,6 +2508,9 @@ control|)
 block|{
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|ntp
 operator|->
 name|status
@@ -2591,6 +2559,9 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|ntp
 operator|->
 name|status
@@ -2818,10 +2789,6 @@ block|{
 name|float
 name|value
 decl_stmt|;
-name|long
-name|random
-parameter_list|()
-function_decl|;
 name|value
 operator|=
 call|(
@@ -2984,6 +2951,10 @@ expr_stmt|;
 block|}
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|*
 name|netlist
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)measure.c	2.3 (Berkeley) %G%"
+literal|"@(#)measure.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -630,6 +630,10 @@ name|recvfrom
 argument_list|(
 name|sock_raw
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|packet
 argument_list|,
 name|PACKET_IN

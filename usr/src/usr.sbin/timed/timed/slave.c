@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.14 (Berkeley) %G%"
+literal|"@(#)slave.c	2.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|short
+name|u_short
 name|sequence
 decl_stmt|;
 end_decl_stmt
@@ -110,8 +110,6 @@ decl_stmt|;
 name|struct
 name|timeval
 name|time
-decl_stmt|,
-name|mytime
 decl_stmt|,
 name|otime
 decl_stmt|;
