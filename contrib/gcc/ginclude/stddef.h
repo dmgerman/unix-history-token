@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1989, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -176,10 +176,18 @@ argument_list|(
 name|____386BSD____
 argument_list|)
 operator|||
+operator|(
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD__
+operator|<
+literal|5
+operator|)
+operator|)
 operator|||
 name|defined
 argument_list|(
@@ -191,6 +199,36 @@ begin_include
 include|#
 directive|include
 file|<machine/ansi.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD__
+operator|>=
+literal|5
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
 end_include
 
 begin_endif
@@ -907,6 +945,26 @@ end_ifndef
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_BSD_SIZE_T_DEFINED_
+end_ifndef
+
+begin_comment
+comment|/* Darwin */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
+
+begin_comment
+comment|/* FreeBSD 5 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|___int_size_t_h
 end_ifndef
 
@@ -1005,6 +1063,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|_BSD_SIZE_T_DEFINED_
+end_define
+
+begin_comment
+comment|/* Darwin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
+
+begin_comment
+comment|/* FreeBSD 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|___int_size_t_h
 end_define
 
@@ -1020,11 +1098,40 @@ directive|define
 name|_SIZET_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD__
+operator|>=
+literal|5
+operator|)
+end_if
+
+begin_comment
+comment|/* __size_t is a typedef on FreeBSD 5!, must not trash it. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|__size_t
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1133,6 +1240,24 @@ end_endif
 
 begin_comment
 comment|/* ___int_size_t_h */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SIZE_T_DECLARED */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _BSD_SIZE_T_DEFINED_ */
 end_comment
 
 begin_endif
@@ -1340,6 +1465,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_BSD_RUNE_T_DEFINED_
+end_ifndef
+
+begin_comment
+comment|/* Darwin */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WCHAR_T_DECLARED
+end_ifndef
+
+begin_comment
+comment|/* FreeBSD 5 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_WCHAR_T_DEFINED_
 end_ifndef
 
@@ -1465,6 +1610,12 @@ directive|define
 name|_GCC_WCHAR_T
 end_define
 
+begin_define
+define|#
+directive|define
+name|_WCHAR_T_DECLARED
+end_define
+
 begin_comment
 comment|/* On BSD/386 1.1, at least, machine/ansi.h defines _BSD_WCHAR_T_    instead of _WCHAR_T_, and _BSD_RUNE_T_ (which, unlike the other    symbols in the _FOO_T_ family, stays defined even after its    corresponding type is defined).  If we define wchar_t, then we    must undef _WCHAR_T_; for BSD/386 1.1 (and perhaps others), if    we undef _WCHAR_T_, then we must also define rune_t, since     headers like runetype.h assume that if machine/ansi.h is included,    and _BSD_WCHAR_T_ is not defined, then rune_t is available.    machine/ansi.h says, "Note that _WCHAR_T_ and _RUNE_T_ must be of    the same type." */
 end_comment
@@ -1516,6 +1667,16 @@ directive|define
 name|_BSD_WCHAR_T_DEFINED_
 end_define
 
+begin_define
+define|#
+directive|define
+name|_BSD_RUNE_T_DEFINED_
+end_define
+
+begin_comment
+comment|/* Darwin */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -1523,6 +1684,12 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD__
+operator|<
+literal|5
+operator|)
 end_if
 
 begin_comment
@@ -1534,6 +1701,86 @@ undef|#
 directive|undef
 name|_BSD_RUNE_T_
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FreeBSD 5 can't be handled well using "traditional" logic above    since it no longer defines _BSD_RUNE_T_ yet still desires to export    rune_t in some cases... */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD__
+operator|>=
+literal|5
+operator|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_RUNE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__rune_t
+name|rune_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_RUNE_T_DECLARED
+end_define
 
 begin_endif
 endif|#
@@ -1620,6 +1867,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _WCHAR_T_DECLARED */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _BSD_RUNE_T_DEFINED_ */
+end_comment
 
 begin_endif
 endif|#
