@@ -336,6 +336,31 @@ value|0x00200000
 end_define
 
 begin_comment
+comment|/*  * Constants for different interrupt models used with acpi_SetIntrModel().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTR_PIC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTR_APIC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTR_SAPIC
+value|2
+end_define
+
+begin_comment
 comment|/*  * This is a cheap and nasty way to get around the horrid counted list  * argument format that AcpiEvalateObject uses.  */
 end_comment
 
@@ -1118,6 +1143,17 @@ parameter_list|,
 name|ACPI_RESOURCE
 modifier|*
 name|res
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ACPI_STATUS
+name|acpi_SetIntrModel
+parameter_list|(
+name|int
+name|model
 parameter_list|)
 function_decl|;
 end_function_decl
