@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.11	83/03/11	*/
+comment|/*	lpr.c	4.12	83/03/17	*/
 end_comment
 
 begin_comment
@@ -1598,7 +1598,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"jobs queued, but line printer is down.\n"
+literal|"jobs queued, but %s is down.\n"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 name|exit
