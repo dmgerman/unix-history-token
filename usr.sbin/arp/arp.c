@@ -1164,6 +1164,11 @@ condition|(
 operator|*
 name|p
 operator|==
+literal|'\n'
+operator|||
+operator|*
+name|p
+operator|==
 literal|'\0'
 condition|)
 continue|continue;
