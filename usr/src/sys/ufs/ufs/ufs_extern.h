@@ -911,6 +911,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ufs_revoke
+value|vop_revoke
+end_define
+
 begin_decl_stmt
 name|int
 name|ufs_rmdir
