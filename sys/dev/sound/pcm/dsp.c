@@ -5104,6 +5104,13 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pcm_dev
+operator|==
+name|NULL
+condition|)
+return|return;
 name|SLIST_FOREACH
 argument_list|(
 argument|pcm_chan
