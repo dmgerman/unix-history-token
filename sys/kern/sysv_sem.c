@@ -4564,12 +4564,16 @@ name|struct
 name|sembuf
 modifier|*
 name|sopptr
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|struct
 name|sem
 modifier|*
 name|semptr
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|sem_undo
