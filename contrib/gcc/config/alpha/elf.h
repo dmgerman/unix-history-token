@@ -23,6 +23,7 @@ begin_define
 define|#
 directive|define
 name|OBJECT_FORMAT_ELF
+value|1
 end_define
 
 begin_comment
@@ -147,6 +148,7 @@ begin_define
 define|#
 directive|define
 name|SCCS_DIRECTIVE
+value|1
 end_define
 
 begin_comment
