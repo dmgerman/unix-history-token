@@ -2066,7 +2066,17 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-comment|/* 	 * PC-98 kernel sets the `i386' string to the utsname.machine and 	 * it cannot be distinguished from IBM-PC by uname(3).  Therefore, 	 * we check machine.ispc98 and adjust the machine variable before 	 * using usname(3) below. 	 */
+operator|&&
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+expr|\
+name|__FreeBSD_version
+operator|>
+literal|300003
+comment|/* 	 * PC-98 kernel sets the `i386' string to the utsname.machine and 	 * it cannot be distinguished from IBM-PC by uname(3).  Therefore, 	 * we check machine.ispc98 and adjust the machine variable before 	 * using usname(3) below. 	 * NOTE: machdep.ispc98 was defined on 1998/8/31. At that time, 	 * __FreeBSD_version was defined as 300003. So, this check can 	 * safely be done with any kernel with version> 300003. 	 */
 if|if
 condition|(
 operator|!
