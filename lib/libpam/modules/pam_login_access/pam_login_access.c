@@ -77,21 +77,11 @@ directive|include
 file|<pam_mod_misc.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|login_access
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"pam_login_access.h"
+end_include
 
 begin_function
 name|PAM_EXTERN
