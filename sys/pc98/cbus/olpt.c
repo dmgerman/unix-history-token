@@ -111,12 +111,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/lpt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -124,6 +118,12 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/lptreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ppbus/lptio.h>
 end_include
 
 begin_ifdef
