@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -80,20 +86,6 @@ include|#
 directive|include
 file|<netinet/if_ether.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|struct
-name|ether_addr
-modifier|*
-name|ether_aton
-parameter_list|(
-name|char
-modifier|*
-name|a
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_include
 include|#
