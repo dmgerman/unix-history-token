@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1651,8 +1651,15 @@ begin_function
 name|void
 name|munmapfd
 parameter_list|(
+name|p
+parameter_list|,
 name|fd
 parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
@@ -1670,7 +1677,7 @@ name|printf
 argument_list|(
 literal|"munmapfd(%d): fd %d\n"
 argument_list|,
-name|curproc
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -1680,7 +1687,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * XXX should vm_deallocate any regions mapped to this file 	 */
-name|curproc
+name|p
 operator|->
 name|p_fd
 operator|->
