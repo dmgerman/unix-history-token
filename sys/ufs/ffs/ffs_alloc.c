@@ -218,29 +218,6 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|void
-name|ffs_clusteracct
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|fs
-operator|*
-operator|,
-expr|struct
-name|cg
-operator|*
-operator|,
-name|ufs_daddr_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|ufs_daddr_t
 name|ffs_clusteralloc
 name|__P
@@ -9448,7 +9425,6 @@ comment|/*  * Update the cluster map because of an allocation or free.  *  * Cnt
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ffs_clusteracct
 parameter_list|(
