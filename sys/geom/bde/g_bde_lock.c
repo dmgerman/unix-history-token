@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/md5.h>
 end_include
 
@@ -412,7 +418,7 @@ block|{
 case|case
 literal|0
 case|:
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|p
 argument_list|,
@@ -429,7 +435,7 @@ break|break;
 case|case
 literal|1
 case|:
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|p
 argument_list|,
@@ -446,7 +452,7 @@ break|break;
 case|case
 literal|2
 case|:
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|p
 argument_list|,
@@ -463,7 +469,7 @@ break|break;
 case|case
 literal|3
 case|:
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|p
 argument_list|,
@@ -480,7 +486,7 @@ break|break;
 case|case
 literal|4
 case|:
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|p
 argument_list|,
@@ -506,7 +512,7 @@ case|:
 case|case
 literal|8
 case|:
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|p
 argument_list|,
@@ -779,7 +785,7 @@ name|gl
 operator|->
 name|sector0
 operator|=
-name|g_dec_le8
+name|le64dec
 argument_list|(
 name|p
 argument_list|)
@@ -796,7 +802,7 @@ name|gl
 operator|->
 name|sectorN
 operator|=
-name|g_dec_le8
+name|le64dec
 argument_list|(
 name|p
 argument_list|)
@@ -813,7 +819,7 @@ name|gl
 operator|->
 name|keyoffset
 operator|=
-name|g_dec_le8
+name|le64dec
 argument_list|(
 name|p
 argument_list|)
@@ -830,7 +836,7 @@ name|gl
 operator|->
 name|sectorsize
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|p
 argument_list|)
@@ -847,7 +853,7 @@ name|gl
 operator|->
 name|flags
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|p
 argument_list|)
@@ -881,7 +887,7 @@ operator|-
 literal|5
 index|]
 operator|=
-name|g_dec_le8
+name|le64dec
 argument_list|(
 name|p
 argument_list|)
@@ -1103,7 +1109,7 @@ decl_stmt|;
 name|cipherInstance
 name|ci
 decl_stmt|;
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|buf
 argument_list|,
@@ -1113,7 +1119,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|buf
 operator|+
@@ -1270,7 +1276,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|g_dec_le8
+name|le64dec
 argument_list|(
 name|buf
 argument_list|)
@@ -1280,7 +1286,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|g_dec_le8
+name|le64dec
 argument_list|(
 name|buf
 operator|+

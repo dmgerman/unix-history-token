@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/md5.h>
 end_include
 
@@ -119,7 +125,7 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* We have to be architecture neutral */
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|buf2
 argument_list|,
