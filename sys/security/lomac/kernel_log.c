@@ -105,7 +105,7 @@ parameter_list|(
 name|level
 parameter_list|)
 define|\
-value|unsigned int lomac_verbose_##level## = 1;			\ 	SYSCTL_UINT(_kern_lomac_verbose, OID_AUTO, level,		\ 	    CTLFLAG_RW,&lomac_verbose_##level##, 1, "")
+value|unsigned int lomac_verbose_##level = 1;				\ 	SYSCTL_UINT(_kern_lomac_verbose, OID_AUTO, level,		\ 	    CTLFLAG_RW,&lomac_verbose_##level, 1, "")
 end_define
 
 begin_include
