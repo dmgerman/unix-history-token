@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	8.3 (Berkeley) %G%"
+literal|"@(#)function.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2481,9 +2481,9 @@ argument_list|,
 literal|1
 argument_list|)
 condition|?
-literal|1
-else|:
 literal|0
+else|:
+literal|1
 operator|)
 return|;
 block|}
@@ -2552,9 +2552,9 @@ argument_list|,
 literal|1
 argument_list|)
 condition|?
-literal|1
-else|:
 literal|0
+else|:
+literal|1
 operator|)
 return|;
 block|}
