@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: compress.c,v 1.4 1999/11/24 19:53:46 markus Exp $"
+literal|"$Id: compress.c,v 1.5 2000/03/16 20:56:14 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -232,6 +232,11 @@ name|outgoing_stream
 operator|.
 name|next_in
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buffer_ptr
 argument_list|(
 name|input_buffer
@@ -254,6 +259,11 @@ name|outgoing_stream
 operator|.
 name|next_out
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|outgoing_stream
@@ -382,6 +392,11 @@ name|incoming_stream
 operator|.
 name|next_in
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buffer_ptr
 argument_list|(
 name|input_buffer
@@ -400,6 +415,11 @@ name|incoming_stream
 operator|.
 name|next_out
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|incoming_stream
@@ -455,6 +475,11 @@ name|incoming_stream
 operator|.
 name|next_out
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|incoming_stream

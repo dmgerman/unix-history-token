@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh-agent.c,v 1.25 2000/01/02 21:51:03 markus Exp $	*/
+comment|/*	$OpenBSD: ssh-agent.c,v 1.26 2000/03/16 20:56:14 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-agent.c,v 1.25 2000/01/02 21:51:03 markus Exp $"
+literal|"$OpenBSD: ssh-agent.c,v 1.26 2000/03/16 20:56:14 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2163,6 +2163,9 @@ name|len
 decl_stmt|,
 name|sock
 decl_stmt|;
+name|socklen_t
+name|slen
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2218,7 +2221,7 @@ name|readset
 argument_list|)
 condition|)
 block|{
-name|len
+name|slen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -2245,7 +2248,7 @@ operator|&
 name|sunaddr
 argument_list|,
 operator|&
-name|len
+name|slen
 argument_list|)
 expr_stmt|;
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: servconf.c,v 1.29 2000/01/04 00:07:59 markus Exp $"
+literal|"$Id: servconf.c,v 1.31 2000/03/07 20:40:41 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -466,7 +466,7 @@ name|options
 operator|->
 name|ignore_rhosts
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -526,7 +526,7 @@ name|options
 operator|->
 name|x11_forwarding
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -541,7 +541,7 @@ name|options
 operator|->
 name|x11_display_offset
 operator|=
-literal|1
+literal|10
 expr_stmt|;
 if|if
 condition|(
@@ -641,7 +641,7 @@ name|options
 operator|->
 name|rhosts_rsa_authentication
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -803,7 +803,7 @@ name|options
 operator|->
 name|permit_empty_passwd
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2165,7 +2165,7 @@ operator|->
 name|ignore_user_known_hosts
 expr_stmt|;
 goto|goto
-name|parse_int
+name|parse_flag
 goto|;
 case|case
 name|sRhostsAuthentication

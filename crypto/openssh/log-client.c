@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: log-client.c,v 1.6 1999/11/24 00:26:02 deraadt Exp $"
+literal|"$Id: log-client.c,v 1.7 2000/02/27 18:50:09 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -98,7 +98,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|MSGBUFSIZE
+name|MSGBUFSIZ
 value|1024
 end_define
 
@@ -121,7 +121,7 @@ block|{
 name|char
 name|msgbuf
 index|[
-name|MSGBUFSIZE
+name|MSGBUFSIZ
 index|]
 decl_stmt|;
 if|if

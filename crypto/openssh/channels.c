@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: channels.c,v 1.38 2000/01/24 20:37:29 markus Exp $"
+literal|"$Id: channels.c,v 1.39 2000/03/16 20:56:14 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4274,6 +4274,7 @@ decl_stmt|,
 modifier|*
 name|originator_string
 decl_stmt|;
+name|unsigned
 name|int
 name|host_len
 decl_stmt|,
@@ -5505,6 +5506,7 @@ decl_stmt|,
 modifier|*
 name|remote_host
 decl_stmt|;
+name|unsigned
 name|int
 name|remote_len
 decl_stmt|;

@@ -537,6 +537,7 @@ name|cleanup_registered
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tkt_root
@@ -768,6 +769,9 @@ name|r
 decl_stmt|,
 name|s
 decl_stmt|;
+name|socklen_t
+name|slen
+decl_stmt|;
 name|u_int
 name|cksum
 decl_stmt|;
@@ -785,7 +789,7 @@ operator|=
 name|packet_get_connection_in
 argument_list|()
 expr_stmt|;
-name|r
+name|slen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -820,7 +824,7 @@ operator|&
 name|local
 argument_list|,
 operator|&
-name|r
+name|slen
 argument_list|)
 operator|<
 literal|0
@@ -835,7 +839,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|r
+name|slen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -870,7 +874,7 @@ operator|&
 name|foreign
 argument_list|,
 operator|&
-name|r
+name|slen
 argument_list|)
 operator|<
 literal|0

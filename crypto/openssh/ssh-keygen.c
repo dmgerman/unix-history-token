@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-keygen.c,v 1.16 2000/02/04 14:34:09 markus Exp $"
+literal|"$Id: ssh-keygen.c,v 1.17 2000/03/16 20:56:14 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -372,6 +372,10 @@ decl_stmt|,
 name|invalid
 init|=
 literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|ignore
 decl_stmt|;
 name|struct
 name|stat
@@ -734,7 +738,7 @@ operator|&
 name|cp
 argument_list|,
 operator|&
-name|i
+name|ignore
 argument_list|,
 name|e
 argument_list|,
