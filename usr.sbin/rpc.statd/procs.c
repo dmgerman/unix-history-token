@@ -67,11 +67,16 @@ begin_function
 name|struct
 name|sm_stat_res
 modifier|*
-name|sm_stat_1
+name|sm_stat_1_svc
 parameter_list|(
 name|sm_name
 modifier|*
 name|arg
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|req
 parameter_list|)
 block|{
 specifier|static
@@ -157,11 +162,16 @@ begin_function
 name|struct
 name|sm_stat_res
 modifier|*
-name|sm_mon_1
+name|sm_mon_1_svc
 parameter_list|(
 name|mon
 modifier|*
 name|arg
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|req
 parameter_list|)
 block|{
 specifier|static
@@ -442,7 +452,7 @@ comment|/* do_unmon ------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*    Purpose:	Remove a monitor request from a host    Returns:	TRUE if found, FALSE if not found.    Notes:	Common code from sm_unmon_1 and sm_unmon_all_1 		In the unlikely event of more than one identical monitor 		request, all are removed. */
+comment|/*    Purpose:	Remove a monitor request from a host    Returns:	TRUE if found, FALSE if not found.    Notes:	Common code from sm_unmon_1_svc and sm_unmon_all_1_svc 		In the unlikely event of more than one identical monitor 		request, all are removed. */
 end_comment
 
 begin_function
@@ -607,11 +617,16 @@ begin_function
 name|struct
 name|sm_stat
 modifier|*
-name|sm_unmon_1
+name|sm_unmon_1_svc
 parameter_list|(
 name|mon_id
 modifier|*
 name|arg
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|req
 parameter_list|)
 block|{
 specifier|static
@@ -767,11 +782,16 @@ begin_function
 name|struct
 name|sm_stat
 modifier|*
-name|sm_unmon_all_1
+name|sm_unmon_all_1_svc
 parameter_list|(
 name|my_id
 modifier|*
 name|arg
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|req
 parameter_list|)
 block|{
 specifier|static
@@ -880,9 +900,16 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|sm_simu_crash_1
+name|sm_simu_crash_1_svc
 parameter_list|(
 name|void
+modifier|*
+name|v
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|req
 parameter_list|)
 block|{
 specifier|static
@@ -989,11 +1016,16 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|sm_notify_1
+name|sm_notify_1_svc
 parameter_list|(
 name|stat_chge
 modifier|*
 name|arg
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|req
 parameter_list|)
 block|{
 name|struct

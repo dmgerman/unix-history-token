@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<rpcsvc/sm_inter.h>
+file|"sm_inter.h"
 end_include
 
 begin_comment
