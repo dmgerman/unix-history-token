@@ -230,13 +230,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|__stdcall
-value|__attribute__((__stdcall__))
-end_define
-
-begin_define
-define|#
-directive|define
 name|NDIS_DUMMY_PATH
 value|"\\\\some\\bogus\\path"
 end_define

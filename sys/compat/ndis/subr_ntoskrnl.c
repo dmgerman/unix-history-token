@@ -152,13 +152,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|__stdcall
-value|__attribute__((__stdcall__))
-end_define
-
-begin_define
-define|#
-directive|define
 name|__regparm
 value|__attribute__((regparm(3)))
 end_define

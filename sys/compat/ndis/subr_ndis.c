@@ -276,13 +276,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|__stdcall
-value|__attribute__((__stdcall__))
-end_define
-
-begin_define
-define|#
-directive|define
 name|FUNC
 value|void(*)(void)
 end_define
