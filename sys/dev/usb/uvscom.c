@@ -3348,7 +3348,7 @@ name|sc_dying
 condition|)
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 name|DPRINTF
@@ -3420,7 +3420,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -3500,7 +3500,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -3594,7 +3594,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -3629,7 +3629,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 block|}

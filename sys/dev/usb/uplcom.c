@@ -2962,7 +2962,7 @@ name|sc_dying
 condition|)
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 name|DPRINTF
