@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_icmp.h	8.1 (Berkeley) 6/10/93  * $Id: ip_icmp.h,v 1.3 1994/08/21 05:27:31 paul Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_icmp.h	8.1 (Berkeley) 6/10/93  * $Id: ip_icmp.h,v 1.7 1996/01/30 22:58:24 mpp Exp $  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,24 @@ end_define
 begin_comment
 comment|/*  * Interface Control Message Protocol Definitions.  * Per RFC 792, September 1981.  */
 end_comment
+
+begin_comment
+comment|/*  * Internal of an ICMP Router Advertisement  */
+end_comment
+
+begin_struct
+struct|struct
+name|icmp_ra_addr
+block|{
+name|u_int32_t
+name|ira_addr
+decl_stmt|;
+name|u_int32_t
+name|ira_preference
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Structure of an icmp header.  */
@@ -78,6 +96,21 @@ decl_stmt|;
 block|}
 name|ih_pmtu
 struct|;
+struct|struct
+name|ih_rtradv
+block|{
+name|u_char
+name|irt_num_addrs
+decl_stmt|;
+name|u_char
+name|irt_wpa
+decl_stmt|;
+name|u_int16_t
+name|irt_lifetime
+decl_stmt|;
+block|}
+name|ih_rtradv
+struct|;
 block|}
 name|icmp_hun
 union|;
@@ -109,6 +142,18 @@ define|#
 directive|define
 name|icmp_nextmtu
 value|icmp_hun.ih_pmtu.ipm_nextmtu
+define|#
+directive|define
+name|icmp_num_addrs
+value|icmp_hun.ih_rtradv.irt_num_addrs
+define|#
+directive|define
+name|icmp_wpa
+value|icmp_hun.ih_rtradv.irt_wpa
+define|#
+directive|define
+name|icmp_lifetime
+value|icmp_hun.ih_rtradv.irt_lifetime
 union|union
 block|{
 struct|struct
@@ -137,6 +182,10 @@ comment|/* options and then 64 bits of data */
 block|}
 name|id_ip
 struct|;
+name|struct
+name|icmp_ra_addr
+name|id_radv
+decl_stmt|;
 name|u_long
 name|id_mask
 decl_stmt|;
@@ -167,6 +216,10 @@ name|icmp_ip
 value|icmp_dun.id_ip.idi_ip
 define|#
 directive|define
+name|icmp_radv
+value|icmp_dun.id_radv
+define|#
+directive|define
 name|icmp_mask
 value|icmp_dun.id_mask
 define|#
@@ -178,7 +231,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Lower bounds on packet lengths for various types.  * For the error advice packets must first insure that the  * packet is large enought to contain the returned ip header.  * Only then can we do the check to see if 64 bits of packet  * data have been returned, since we need to check the returned  * ip header length.  */
+comment|/*  * Lower bounds on packet lengths for various types.  * For the error advice packets must first insure that the  * packet is large enough to contain the returned ip header.  * Only then can we do the check to see if 64 bits of packet  * data have been returned, since we need to check the returned  * ip header length.  */
 end_comment
 
 begin_define
