@@ -1579,7 +1579,7 @@ operator|<
 name|len
 operator|+
 operator|(
-name|f
+name|len
 condition|?
 literal|1
 else|:
@@ -1589,7 +1589,7 @@ condition|)
 break|break;
 if|if
 condition|(
-name|f
+name|len
 condition|)
 name|cmd
 index|[
@@ -1622,13 +1622,6 @@ return|return
 name|PacketAliasProxyRule
 argument_list|(
 name|cmd
-operator|+
-name|strspn
-argument_list|(
-name|cmd
-argument_list|,
-literal|" \t"
-argument_list|)
 argument_list|)
 return|;
 block|}
