@@ -373,14 +373,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|hostname
-argument_list|,
 name|rhost
-argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|PAM_LOG
@@ -406,6 +401,15 @@ condition|)
 name|PAM_RETURN
 argument_list|(
 name|PAM_SUCCESS
+argument_list|)
+expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"%s is not allowed to log in on %s"
+argument_list|,
+name|user
+argument_list|,
+name|tty
 argument_list|)
 expr_stmt|;
 block|}
@@ -434,6 +438,15 @@ condition|)
 name|PAM_RETURN
 argument_list|(
 name|PAM_SUCCESS
+argument_list|)
+expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"%s is not allowed to log in from %s"
+argument_list|,
+name|user
+argument_list|,
+name|rhost
 argument_list|)
 expr_stmt|;
 block|}
