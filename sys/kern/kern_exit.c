@@ -154,7 +154,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|volatile
 name|void
 name|rexit
 parameter_list|(
@@ -202,7 +201,6 @@ comment|/*  * Exit: deallocate address space and other resources,  * change proc
 end_comment
 
 begin_function
-specifier|volatile
 name|void
 name|kexit
 parameter_list|(
@@ -239,6 +237,12 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|acct
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* do process accounting -- must be done before 			   address space is released */
 ifdef|#
 directive|ifdef
 name|PGINPROF
