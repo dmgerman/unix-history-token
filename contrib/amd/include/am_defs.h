@@ -3413,29 +3413,15 @@ begin_comment
 comment|/* HAVE_SYS_FS_UFS_MOUNT_H */
 end_comment
 
+begin_comment
+comment|/*   * HAVE_UFS_UFS_UFSMOUNT_H should NOT be defined on netbsd/openbsd because it  * causes errors with other header files.  Instead, add it to the specific  * conf/nfs_prot_*.h file.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_UFS_UFS_UFSMOUNT_H_off
+name|HAVE_UFS_UFS_UFSMOUNT_H
 end_ifdef
-
-begin_error
-error|#
-directive|error
-error|do not include this file here because on netbsd/openbsd it
-end_error
-
-begin_error
-error|#
-directive|error
-error|causes errors with other header files.  Instead, add it to the
-end_error
-
-begin_error
-error|#
-directive|error
-error|specific conf/nfs_prot_*.h file.
-end_error
 
 begin_include
 include|#
@@ -4754,27 +4740,6 @@ end_endif
 
 begin_comment
 comment|/* HAVE_UFS_UFS_MOUNT_H */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UFS_UFS_UFSMOUNT_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/ufsmount.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_UFS_UFS_UFSMOUNT_H */
 end_comment
 
 begin_comment
