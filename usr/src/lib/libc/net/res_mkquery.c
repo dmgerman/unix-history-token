@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.15 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,6 +473,10 @@ name|__putshort
 argument_list|(
 name|type
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -487,6 +491,10 @@ name|__putshort
 argument_list|(
 name|class
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -579,6 +587,10 @@ name|__putshort
 argument_list|(
 name|T_NULL
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -593,6 +605,10 @@ name|__putshort
 argument_list|(
 name|class
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -607,6 +623,10 @@ name|__putlong
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -621,6 +641,10 @@ name|__putshort
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -672,6 +696,10 @@ name|__putshort
 argument_list|(
 name|type
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -686,6 +714,10 @@ name|__putshort
 argument_list|(
 name|class
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -700,6 +732,10 @@ name|__putlong
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;
@@ -714,6 +750,10 @@ name|__putshort
 argument_list|(
 name|datalen
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.35 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.36 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.35 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,10 @@ name|__p_class
 argument_list|()
 decl_stmt|,
 modifier|*
+name|__p_time
+argument_list|()
+decl_stmt|,
+modifier|*
 name|__p_type
 argument_list|()
 decl_stmt|;
@@ -107,10 +111,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|p_rr
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_time
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -996,7 +996,7 @@ name|file
 argument_list|,
 literal|", ttl = %s"
 argument_list|,
-name|p_time
+name|__p_time
 argument_list|(
 name|_getlong
 argument_list|(
@@ -1326,7 +1326,7 @@ name|file
 argument_list|,
 literal|"\n\trefresh = %s"
 argument_list|,
-name|p_time
+name|__p_time
 argument_list|(
 name|_getlong
 argument_list|(
@@ -1348,7 +1348,7 @@ name|file
 argument_list|,
 literal|"\n\tretry = %s"
 argument_list|,
-name|p_time
+name|__p_time
 argument_list|(
 name|_getlong
 argument_list|(
@@ -1370,7 +1370,7 @@ name|file
 argument_list|,
 literal|"\n\texpire = %s"
 argument_list|,
-name|p_time
+name|__p_time
 argument_list|(
 name|_getlong
 argument_list|(
@@ -1392,7 +1392,7 @@ name|file
 argument_list|,
 literal|"\n\tmin = %s\n"
 argument_list|,
-name|p_time
+name|__p_time
 argument_list|(
 name|_getlong
 argument_list|(
@@ -2231,10 +2231,9 @@ comment|/*  * Return a mnemonic for a time to live  */
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
-name|p_time
+name|__p_time
 parameter_list|(
 name|value
 parameter_list|)

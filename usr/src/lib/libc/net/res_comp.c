@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.20 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -881,6 +881,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|u_char
 modifier|*
 name|comp_dn
@@ -903,6 +904,10 @@ name|n
 decl_stmt|;
 name|cp
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|comp_dn
 expr_stmt|;
 while|while
@@ -1339,28 +1344,41 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|void
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|__putshort
-argument_list|(
-name|s
-argument_list|,
-name|msgp
-argument_list|)
+parameter_list|(
 specifier|register
 name|u_short
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+specifier|register
+name|u_char
+modifier|*
+name|msgp
+parameter_list|)
+else|#
+directive|else
+function|__putshort
+parameter_list|(
+name|s
+parameter_list|,
+name|msgp
+parameter_list|)
+specifier|register
+name|u_short
+name|s
+decl_stmt|;
 specifier|register
 name|u_char
 modifier|*
 name|msgp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+endif|#
+directive|endif
 block|{
 name|msgp
 index|[
@@ -1379,30 +1397,25 @@ operator|>>
 literal|8
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|__putlong
-argument_list|(
+parameter_list|(
 name|l
-argument_list|,
+parameter_list|,
 name|msgp
-argument_list|)
+parameter_list|)
 specifier|register
 name|u_long
 name|l
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|u_char
 modifier|*
 name|msgp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|msgp
 index|[
@@ -1443,7 +1456,7 @@ operator|>>
 literal|8
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
