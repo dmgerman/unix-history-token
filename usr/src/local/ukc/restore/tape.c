@@ -1959,6 +1959,19 @@ operator|.
 name|c_dev
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Volume %d of the dump, starting at inode %d\n"
+argument_list|,
+name|spcl
+operator|.
+name|c_volume
+argument_list|,
+name|spcl
+operator|.
+name|c_inumber
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
