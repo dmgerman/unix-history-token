@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.9 (Berkeley) %G%"
+literal|"@(#)option.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,10 @@ block|}
 name|OPTION
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* NB: the following table must be sorted in machine (strcmp) order */
+end_comment
 
 begin_decl_stmt
 name|OPTION
@@ -375,10 +379,6 @@ block|,
 name|c_xdev
 block|,
 name|O_ZERO
-block|,
-block|{
-name|NULL
-block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
