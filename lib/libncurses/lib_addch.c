@@ -81,7 +81,7 @@ argument_list|)
 expr_stmt|;
 name|TR
 argument_list|(
-name|TRACE_VIRTPUT
+name|TRACE_CHARPUT
 argument_list|,
 operator|(
 literal|"bkg = %#lx -> ch = %#lx"
