@@ -711,7 +711,7 @@ expr_stmt|;
 case|case
 name|FTS_NS
 case|:
-comment|/* 			 * FTS_NS: assume that if can't stat the file, it 			 * can't be unlinked. 			 */
+comment|/* 			 * Assume that since fts_read() couldn't stat the 			 * file, it can't be unlinked. 			 */
 if|if
 condition|(
 operator|!
@@ -1070,6 +1070,16 @@ expr_stmt|;
 continue|continue;
 block|}
 break|break;
+case|case
+name|FTS_NS
+case|:
+comment|/* 				 * Assume that since fts_read() couldn't stat 				 * the file, it can't be unlinked. 				 */
+if|if
+condition|(
+name|fflag
+condition|)
+continue|continue;
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(
