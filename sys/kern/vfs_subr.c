@@ -1017,7 +1017,7 @@ name|SYSCTL_INT
 argument_list|(
 name|_kern
 argument_list|,
-name|KERN_MAXVNODES
+name|OID_AUTO
 argument_list|,
 name|minvnodes
 argument_list|,
