@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)skpc.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)skpc.c	7.3 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"libkern.h"
+end_include
 
 begin_function
 name|int
@@ -25,8 +31,7 @@ name|cp0
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|,
@@ -42,8 +47,7 @@ expr_stmt|;
 name|cp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|cp0
