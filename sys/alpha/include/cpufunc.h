@@ -77,7 +77,7 @@ return|return
 operator|(
 name|alpha_pal_swpipl
 argument_list|(
-name|ALPHA_PSL_IPL_HIGH
+name|ALPHA_PSL_IPL_MCES
 argument_list|)
 operator|)
 return|;

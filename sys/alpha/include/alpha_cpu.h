@@ -263,6 +263,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ALPHA_PSL_IPL_MCES
+value|0x0007
+end_define
+
+begin_comment
+comment|/* all interrupts disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ALPHA_PSL_MUST_BE_ZERO
 value|0xfffffffffffffff0
 end_define
