@@ -10012,8 +10012,6 @@ block|,
 literal|"security"
 block|,
 comment|/* help file */
-name|NULL
-block|,
 block|{
 block|{
 literal|"X Exit"
