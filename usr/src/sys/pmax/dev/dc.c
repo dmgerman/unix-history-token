@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.4 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
+comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.5 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -201,14 +201,46 @@ name|NDCLINE
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
 name|dcDivertXInput
-decl_stmt|;
-end_decl_stmt
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* true if diverting KBD input to X */
+comment|/* X windows keyboard input routine */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|dcMouseEvent
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X windows mouse motion event routine */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|dcMouseButtons
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X windows mouse buttons event routine */
 end_comment
 
 begin_ifdef
@@ -3954,7 +3986,10 @@ condition|(
 name|dcDivertXInput
 condition|)
 block|{
-name|pmKbdEvent
+call|(
+modifier|*
+name|dcDivertXInput
+call|)
 argument_list|(
 name|cc
 argument_list|)
@@ -3986,23 +4021,25 @@ name|dc_tty
 index|[
 name|MOUSE_PORT
 index|]
+operator|&&
+name|dcMouseButtons
 condition|)
 block|{
 specifier|register
 name|MouseReport
 modifier|*
-name|newRepPtr
+name|mrp
 decl_stmt|;
 specifier|static
 name|MouseReport
 name|currentRep
 decl_stmt|;
-name|newRepPtr
+name|mrp
 operator|=
 operator|&
 name|currentRep
 expr_stmt|;
-name|newRepPtr
+name|mrp
 operator|->
 name|byteCount
 operator|++
@@ -4015,7 +4052,7 @@ name|MOUSE_START_FRAME
 condition|)
 block|{
 comment|/* 				 * The first mouse report byte (button state). 				 */
-name|newRepPtr
+name|mrp
 operator|->
 name|state
 operator|=
@@ -4023,13 +4060,13 @@ name|cc
 expr_stmt|;
 if|if
 condition|(
-name|newRepPtr
+name|mrp
 operator|->
 name|byteCount
 operator|>
 literal|1
 condition|)
-name|newRepPtr
+name|mrp
 operator|->
 name|byteCount
 operator|=
@@ -4039,7 +4076,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|newRepPtr
+name|mrp
 operator|->
 name|byteCount
 operator|==
@@ -4047,7 +4084,7 @@ literal|2
 condition|)
 block|{
 comment|/* 				 * The second mouse report byte (delta x). 				 */
-name|newRepPtr
+name|mrp
 operator|->
 name|dx
 operator|=
@@ -4057,7 +4094,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|newRepPtr
+name|mrp
 operator|->
 name|byteCount
 operator|==
@@ -4065,13 +4102,13 @@ literal|3
 condition|)
 block|{
 comment|/* 				 * The final mouse report byte (delta y). 				 */
-name|newRepPtr
+name|mrp
 operator|->
 name|dy
 operator|=
 name|cc
 expr_stmt|;
-name|newRepPtr
+name|mrp
 operator|->
 name|byteCount
 operator|=
@@ -4079,13 +4116,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|newRepPtr
+name|mrp
 operator|->
 name|dx
 operator|!=
 literal|0
 operator|||
-name|newRepPtr
+name|mrp
 operator|->
 name|dy
 operator|!=
@@ -4093,15 +4130,21 @@ literal|0
 condition|)
 block|{
 comment|/* 					 * If the mouse moved, 					 * post a motion event. 					 */
-name|pmMouseEvent
+call|(
+modifier|*
+name|dcMouseEvent
+call|)
 argument_list|(
-name|newRepPtr
+name|mrp
 argument_list|)
 expr_stmt|;
 block|}
-name|pmMouseButtons
+call|(
+modifier|*
+name|dcMouseButtons
+call|)
 argument_list|(
-name|newRepPtr
+name|mrp
 argument_list|)
 expr_stmt|;
 block|}
@@ -4579,7 +4622,7 @@ argument_list|)
 operator|&
 literal|0x7f
 expr_stmt|;
-name|pmPutc
+name|cnputc
 argument_list|(
 name|cc
 argument_list|)
