@@ -3681,6 +3681,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+comment|/*      * Since we don't set allowLargePackets bit in MacControl register,      * we can assume that totlen<= 1500bytes.      * The while loop will be performed iff we have a packet with      * MLEN< m_len< MINCLSIZE.      */
 while|while
 condition|(
 name|totlen
@@ -3817,12 +3818,6 @@ name|len
 operator|>
 literal|3
 condition|)
-block|{
-name|len
-operator|&=
-operator|~
-literal|3
-expr_stmt|;
 name|insl
 argument_list|(
 name|BASE
@@ -3842,8 +3837,13 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+name|len
+operator|&
+literal|3
+condition|)
+block|{
 name|insb
 argument_list|(
 name|BASE
@@ -3857,10 +3857,20 @@ argument_list|,
 name|u_int8_t
 operator|*
 argument_list|)
+operator|+
+operator|(
+name|len
+operator|&
+operator|~
+literal|3
+operator|)
 argument_list|,
 name|len
+operator|&
+literal|3
 argument_list|)
 expr_stmt|;
+block|}
 name|m
 operator|->
 name|m_len
