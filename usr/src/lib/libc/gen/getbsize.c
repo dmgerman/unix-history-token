@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getbsize.c	5.4 (Berkeley) %G%"
+literal|"@(#)getbsize.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -40,21 +46,21 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_function
 name|char
 modifier|*
 name|getbsize
 parameter_list|(
-name|prog
-parameter_list|,
 name|headerlenp
 parameter_list|,
 name|blocksizep
 parameter_list|)
-name|char
-modifier|*
-name|prog
-decl_stmt|;
 name|int
 modifier|*
 name|headerlenp
@@ -258,16 +264,9 @@ break|break;
 default|default:
 name|fmterr
 label|:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: unknown blocksize\n"
-argument_list|,
-name|prog
+literal|"%s: unknown blocksize"
 argument_list|,
 name|p
 argument_list|)
@@ -289,16 +288,9 @@ operator|>
 name|max
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: maximum blocksize is %dG\n"
-argument_list|,
-name|prog
+literal|"maximum blocksize is %dG"
 argument_list|,
 name|MAXB
 operator|/
@@ -325,16 +317,9 @@ condition|)
 block|{
 name|underflow
 label|:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: minimum blocksize is 512\n"
-argument_list|,
-name|prog
+literal|"minimum blocksize is 512"
 argument_list|)
 expr_stmt|;
 name|form
