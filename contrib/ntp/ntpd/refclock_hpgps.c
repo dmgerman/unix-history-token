@@ -1986,6 +1986,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|peer

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntp_rfc2553.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -917,7 +923,7 @@ name|u_fp
 operator|,
 name|int
 operator|,
-name|int
+name|short
 operator|,
 name|int
 operator|)
@@ -939,7 +945,7 @@ name|u_long
 operator|,
 name|int
 operator|,
-name|int
+name|short
 operator|,
 name|int
 operator|)
@@ -993,7 +999,7 @@ argument_list|(
 operator|(
 name|s_fp
 operator|,
-name|int
+name|short
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1009,23 +1015,7 @@ argument_list|(
 operator|(
 name|s_fp
 operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|fptoms
-name|P
-argument_list|(
-operator|(
-name|s_fp
-operator|,
-name|int
+name|short
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1225,11 +1215,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|stoa
+parameter_list|(
+name|_sin
+parameter_list|)
+value|socktoa((_sin))
+end_define
+
+begin_define
+define|#
+directive|define
+name|stohost
+parameter_list|(
+name|_sin
+parameter_list|)
+value|socktohost((_sin))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ntoa
 parameter_list|(
 name|_sin
 parameter_list|)
-value|numtoa((_sin)->sin_addr.s_addr)
+value|stoa(_sin)
 end_define
 
 begin_define
@@ -1239,7 +1249,7 @@ name|ntohost
 parameter_list|(
 name|_sin
 parameter_list|)
-value|numtohost((_sin)->sin_addr.s_addr)
+value|stohost(_sin)
 end_define
 
 begin_define

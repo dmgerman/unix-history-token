@@ -260,7 +260,7 @@ name|SAMPLE
 parameter_list|(
 name|x
 parameter_list|)
-value|pp->filter[pp->coderecv++ % MAXSTAGE] = (x); \ 			if (pp->coderecv % MAXSTAGE == pp->codeproc % MAXSTAGE) \ 				pp->codeproc++;
+value|pp->coderecv = (pp->coderecv + 1) % MAXSTAGE; \ 			pp->filter[pp->coderecv] = (x); \ 			if (pp->coderecv == pp->codeproc) \ 				pp->codeproc = (pp->codeproc + 1) % MAXSTAGE;
 end_define
 
 begin_comment
@@ -558,7 +558,7 @@ name|int
 name|datalen
 decl_stmt|;
 comment|/* lenth of data */
-name|int
+name|SOCKET
 name|fd
 decl_stmt|;
 comment|/* file descriptor */
@@ -832,14 +832,10 @@ name|int
 name|second
 decl_stmt|;
 comment|/* second of minute */
-name|int
-name|msec
-decl_stmt|;
-comment|/* millisecond of second */
 name|long
-name|usec
+name|nsec
 decl_stmt|;
-comment|/* microsecond of second (alt) */
+comment|/* nanosecond of second */
 name|u_long
 name|yearstart
 decl_stmt|;
@@ -855,11 +851,11 @@ comment|/* get pointer */
 name|l_fp
 name|lastref
 decl_stmt|;
-comment|/* timecode timestamp */
+comment|/* reference timestamp */
 name|l_fp
 name|lastrec
 decl_stmt|;
-comment|/* local timestamp */
+comment|/* receive timestamp */
 name|double
 name|offset
 decl_stmt|;
@@ -888,6 +884,10 @@ name|double
 name|fudgetime2
 decl_stmt|;
 comment|/* fudge time2 */
+name|u_char
+name|stratum
+decl_stmt|;
+comment|/* server stratum */
 name|u_int32
 name|refid
 decl_stmt|;
@@ -1137,7 +1137,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -1156,7 +1156,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct

@@ -704,6 +704,42 @@ comment|/* 0 */
 end_comment
 
 begin_comment
+comment|/*  * Define these here for non-Windows NT systems  * SOCKET and INVALID_SOCKET are native macros  * on Windows NT and since they have different  * requirements we use them in the code and  * make them macros for everyone else  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SOCKET
+value|int
+end_define
+
+begin_define
+define|#
+directive|define
+name|INVALID_SOCKET
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|closesocket
+value|close
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Windows NT  */
 end_comment
 
@@ -732,10 +768,11 @@ name|__config
 argument_list|)
 end_if
 
-begin_expr_stmt
-name|error
-literal|"NT requires config.h to be included"
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
 
 begin_endif
 endif|#
@@ -745,6 +782,24 @@ end_endif
 begin_comment
 comment|/* HAVE_CONFIG_H) */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<windows.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ws2tcpip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<winsock2.h>
+end_include
 
 begin_define
 define|#
@@ -784,6 +839,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|zz_family
+value|sin_family
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IFREG
+value|_S_IFREG
+end_define
+
+begin_define
+define|#
+directive|define
+name|stat
+value|_stat
+end_define
+
+begin_define
+define|#
+directive|define
 name|isascii
 value|__isascii
 end_define
@@ -802,17 +878,52 @@ name|mktemp
 value|_mktemp
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_define
+define|#
+directive|define
+name|unlink
+value|_unlink
+end_define
 
 begin_define
 define|#
 directive|define
-name|getpid
-value|GetCurrentProcessId
+name|fileno
+value|_fileno
+end_define
+
+begin_define
+define|#
+directive|define
+name|write
+value|_write
+end_define
+
+begin_define
+define|#
+directive|define
+name|vsnprintf
+value|_vsnprintf
+end_define
+
+begin_define
+define|#
+directive|define
+name|snprintf
+value|_snprintf
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|close
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|close
+value|_close
 end_define
 
 begin_endif
@@ -820,23 +931,45 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<windows.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ws2tcpip.h>
-end_include
-
 begin_undef
 undef|#
 directive|undef
 name|interface
 end_undef
+
+begin_include
+include|#
+directive|include
+file|<process.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|getpid
+value|_getpid
+end_define
+
+begin_comment
+comment|/*  * Defining registers are not a good idea on Windows  * This gets rid of the usage  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|register
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|register
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -845,6 +978,13 @@ modifier|*
 name|caddr_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|vsnprintf
+value|_vsnprintf
+end_define
 
 begin_endif
 endif|#
@@ -1905,6 +2045,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_TIMEGM
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|time_t
+name|timegm
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|tm
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2019,7 +2185,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Byte order woes.  The DES code is sensitive to byte order.  This  * used to be resolved by calling ntohl() and htonl() to swap things  * around, but this turned out to be quite costly on Vaxes where those  * things are actual functions.  The code now straightens out byte  * order troubles on its own, with no performance penalty for little  * end first machines, but at great expense to cleanliness.  */
+comment|/*  * Byte order woes.  * This used to be resolved by calling ntohl() and htonl() to swap things  * around, but this turned out to be quite costly on Vaxes where those  * things are actual functions.  The code now straightens out byte  * order troubles on its own, with no performance penalty for little  * end first machines, but at great expense to cleanliness.  */
 end_comment
 
 begin_if

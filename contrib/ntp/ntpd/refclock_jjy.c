@@ -829,7 +829,7 @@ argument_list|)
 argument_list|,
 name|peer
 operator|->
-name|ttlmax
+name|ttl
 argument_list|)
 expr_stmt|;
 name|printf
@@ -883,12 +883,12 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 	 * peer->ttlmax is a mode number specified by "127.127.40.X mode N" in the ntp.conf 	 */
+comment|/* 	 * peer->ttl is a mode number specified by "127.127.40.X mode N" in the ntp.conf 	 */
 switch|switch
 condition|(
 name|peer
 operator|->
-name|ttlmax
+name|ttl
 condition|)
 block|{
 case|case
@@ -927,7 +927,7 @@ argument_list|)
 argument_list|,
 name|peer
 operator|->
-name|ttlmax
+name|ttl
 argument_list|)
 expr_stmt|;
 name|free
@@ -1037,12 +1037,12 @@ name|linediscipline
 operator|=
 name|iDiscipline
 expr_stmt|;
-comment|/* 	 * peer->ttlmax is a mode number specified by "127.127.40.X mode N" in the ntp.conf 	 */
+comment|/* 	 * peer->ttl is a mode number specified by "127.127.40.X mode N" in the ntp.conf 	 */
 switch|switch
 condition|(
 name|peer
 operator|->
-name|ttlmax
+name|ttl
 condition|)
 block|{
 case|case
@@ -1134,7 +1134,7 @@ argument_list|)
 argument_list|,
 name|peer
 operator|->
-name|ttlmax
+name|ttl
 argument_list|)
 expr_stmt|;
 name|close
@@ -2029,17 +2029,13 @@ name|second
 expr_stmt|;
 name|pp
 operator|->
-name|msec
+name|nsec
 operator|=
 name|up
 operator|->
 name|msecond
-expr_stmt|;
-name|pp
-operator|->
-name|usec
-operator|=
-literal|0
+operator|*
+literal|1000000
 expr_stmt|;
 comment|/*  	 * JST to UTC  	 */
 name|pp
@@ -2255,6 +2251,19 @@ operator|->
 name|second
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -2263,11 +2272,6 @@ operator|->
 name|srcadr
 argument_list|,
 name|sLogText
-argument_list|)
-expr_stmt|;
-name|refclock_receive
-argument_list|(
-name|peer
 argument_list|)
 expr_stmt|;
 block|}

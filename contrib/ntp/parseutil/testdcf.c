@@ -67,7 +67,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* LEAP warning (1 hour prior to occurence) */
+comment|/* LEAP warning (1 hour prior to occurrence) */
 end_comment
 
 begin_define

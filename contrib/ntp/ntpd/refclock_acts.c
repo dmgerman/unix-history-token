@@ -2095,6 +2095,19 @@ condition|)
 return|return;
 block|}
 comment|/* 	 * We have a filtered sample offset ready for peer processing. 	 * We use lastrec as both the reference time and receive time in 	 * order to avoid being cute, like setting the reference time 	 * later than the receive time, which may cause a paranoid 	 * protocol module to chuck out the data. Finaly, we unhook the 	 * timeout, arm for the next call, fold the tent and go home. 	 * The little dance with the '%' character is an undocumented 	 * ACTS feature that hangs up the phone real quick without 	 * waiting for carrier loss or long-space disconnect, but we do 	 * these clumsy things anyway. 	 */
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -2105,11 +2118,6 @@ argument_list|,
 name|pp
 operator|->
 name|a_lastcode
-argument_list|)
-expr_stmt|;
-name|refclock_receive
-argument_list|(
-name|peer
 argument_list|)
 expr_stmt|;
 name|pp
@@ -2314,7 +2322,7 @@ switch|switch
 condition|(
 name|peer
 operator|->
-name|ttlmax
+name|ttl
 condition|)
 block|{
 comment|/* 		 * In manual mode the ACTS calling program is activated 		 * by the ntpdc program using the enable flag (fudge 		 * flag1), either manually or by a cron job. 		 */

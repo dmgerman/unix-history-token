@@ -9,6 +9,82 @@ directive|include
 file|"ntp_types.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ntpsim.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GETTIMEOFDAY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(node_gettime(&ntp_node, a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SETTIMEOFDAY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(node_settime(&ntp_node, a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADJTIMEOFDAY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(node_adjtime(&ntp_node, a, b))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ADJTIMEOFDAY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(adjtime(a, b))
+end_define
+
 begin_comment
 comment|/* gettimeofday() takes two args in BSD and only one in SYSV */
 end_comment
@@ -193,6 +269,15 @@ end_endif
 
 begin_comment
 comment|/* not (HAVE_SYS_TIMERS_H&& HAVE_GETCLOCK) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SIM */
 end_comment
 
 begin_comment

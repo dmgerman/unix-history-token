@@ -2139,6 +2139,14 @@ name|l_ui
 argument_list|)
 condition|)
 block|{
+name|datum_pts
+operator|->
+name|lastref
+operator|.
+name|l_uf
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|datum_pts
@@ -2416,6 +2424,14 @@ endif|#
 directive|endif
 comment|/* 	** Pass the new time to ntpd through the refclock_receive function. Note 	** that we are not trying to make any corrections due to the time it takes 	** for the Datum PTS to send the message back. I am (erroneously) assuming 	** that the time for the Datum PTS to send the time back to us is negligable. 	** I suspect that this time delay may be as much as 15 ms or so (but probably 	** less). For our needs at JPL, this kind of error is ok so it is not 	** necessary to use fudge factors in the ntp.conf file. Maybe later we will. 	*/
 comment|/*LFPTOD(&tstmp, doffset);*/
+name|datum_pts
+operator|->
+name|lastref
+operator|=
+name|datum_pts
+operator|->
+name|lastrec
+expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|datum_pts

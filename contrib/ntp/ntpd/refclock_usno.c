@@ -873,7 +873,7 @@ comment|/* 	 * We have a filtered sample offset ready for peer processing. 	 * W
 end_comment
 
 begin_endif
-unit|record_clock_stats(&peer->srcadr, pp->a_lastcode); 	refclock_receive(peer); 	pp->sloppyclockflag&= ~CLK_FLAG1; 	up->pollcnt = 0; 	up->state = 0; 	usno_disc(peer); }
+unit|pp->lastref = pp->lastrec; 	refclock_receive(peer); 	record_clock_stats(&peer->srcadr, pp->a_lastcode); 	pp->sloppyclockflag&= ~CLK_FLAG1; 	up->pollcnt = 0; 	up->state = 0; 	usno_disc(peer); }
 endif|#
 directive|endif
 end_endif
@@ -998,7 +998,7 @@ comment|/* conditional if clause for conditional syslog */
 end_comment
 
 begin_comment
-unit|msyslog(LOG_NOTICE, "clock %s USNO calling %s\n", 				ntoa(&peer->srcadr), PHONE); 		up->state = 2; 		up->pollcnt++; 		pp->polls++; 		peer->nextdate = current_time + ANSWER; 		return; 	} 	switch (peer->ttlmax) {
+unit|msyslog(LOG_NOTICE, "clock %s USNO calling %s\n", 				ntoa(&peer->srcadr), PHONE); 		up->state = 2; 		up->pollcnt++; 		pp->polls++; 		peer->nextdate = current_time + ANSWER; 		return; 	} 	switch (peer->ttl) {
 comment|/* 		 * In manual mode the calling program is activated 		 * by the ntpdc program using the enable flag (fudge 		 * flag1), either manually or by a cron job. 		 */
 end_comment
 

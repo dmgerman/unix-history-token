@@ -1005,7 +1005,7 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"%2d:%3d:%2d:%2d:%2d.%3d"
+literal|"%2d:%3d:%2d:%2d:%2d.%3ld"
 argument_list|,
 operator|&
 name|pp
@@ -1035,7 +1035,7 @@ argument_list|,
 operator|&
 name|pp
 operator|->
-name|msec
+name|nsec
 argument_list|)
 operator|!=
 literal|6
@@ -1050,6 +1050,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pp
+operator|->
+name|nsec
+operator|*=
+literal|1000000
+expr_stmt|;
 comment|/* 	 * Test for synchronization (this is a temporary crock). 	 */
 if|if
 condition|(

@@ -110,6 +110,17 @@ begin_comment
 comment|/* IP network address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_VERSION
+value|0x5
+end_define
+
+begin_comment
+comment|/* IP version */
+end_comment
+
 begin_comment
 comment|/*  * Arguments are returned in a union  */
 end_comment
@@ -128,7 +139,8 @@ decl_stmt|;
 name|u_long
 name|uval
 decl_stmt|;
-name|u_int32
+name|struct
+name|sockaddr_storage
 name|netnum
 decl_stmt|;
 block|}
@@ -220,6 +232,27 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
+name|impl_ver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|showhostnames
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|s_port
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|doquery
 name|P
 argument_list|(
@@ -248,6 +281,8 @@ operator|*
 operator|*
 operator|,
 name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -261,7 +296,9 @@ name|nntohost
 name|P
 argument_list|(
 operator|(
-name|u_int32
+expr|struct
+name|sockaddr_storage
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

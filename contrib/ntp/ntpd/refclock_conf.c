@@ -1021,7 +1021,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|PPS
+name|HAVE_PPSAPI
 argument_list|)
 end_if
 

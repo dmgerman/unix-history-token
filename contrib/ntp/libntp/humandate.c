@@ -120,11 +120,6 @@ decl_stmt|;
 name|time_t
 name|sec
 decl_stmt|;
-name|LIB_GETBUF
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|sec
 operator|=
 name|ntptime
@@ -137,6 +132,19 @@ name|localtime
 argument_list|(
 operator|&
 name|sec
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tm
+condition|)
+return|return
+literal|"--- --- -- ---- --:--:--"
+return|;
+name|LIB_GETBUF
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 operator|(
@@ -230,6 +238,14 @@ operator|&
 name|cursec
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tm
+condition|)
+return|return
+literal|"-- --- --:--:--"
+return|;
 name|LIB_GETBUF
 argument_list|(
 name|bp

@@ -45,6 +45,13 @@ name|ALT_CONFIG_FILE
 value|"%windir%\\ntp.conf"
 end_define
 
+begin_define
+define|#
+directive|define
+name|NTP_KEYSDIR
+value|"%windir%\\system32\\drivers\\etc"
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -242,14 +249,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONFIG_CLIENTLIMIT
+name|CONFIG_DISCARD
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONFIG_CLIENTPERIOD
+name|CONFIG_ADJ
 value|25
 end_define
 
@@ -309,24 +316,52 @@ name|CONFIG_MANYCASTSERVER
 value|33
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PUBKEY
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|CONFIG_CRYPTO
+name|CONFIG_TOS
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONFIG_KEYSDIR
+name|CONFIG_TTL
 value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONFIG_INCLUDEFILE
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONFIG_KEYSDIR
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONFIG_CDELAY
+value|38
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CONFIG_CRYPTO
+value|39
 end_define
 
 begin_endif
@@ -335,15 +370,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PUBKEY */
+comment|/* OPENSSL */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CONFIG_INCLUDEFILE
-value|36
-end_define
 
 begin_comment
 comment|/*  * "peer", "server", "broadcast" modifier keywords  */
@@ -425,28 +453,6 @@ directive|define
 name|CONF_MOD_NOSELECT
 value|11
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PUBKEY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CONF_MOD_PUBLICKEY
-value|12
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PUBKEY */
-end_comment
 
 begin_comment
 comment|/*  * "restrict" modifier keywords  */
@@ -693,6 +699,31 @@ value|3
 end_define
 
 begin_comment
+comment|/*  * "discard" modifier keywords  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONF_DISCARD_AVERAGE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_DISCARD_MINIMUM
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_DISCARD_MONITOR
+value|3
+end_define
+
+begin_comment
 comment|/*  * "tinker" modifier keywords  */
 end_comment
 
@@ -727,28 +758,67 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONF_CLOCK_MINPOLL
+name|CONF_CLOCK_ALLAN
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CLOCK_ALLAN
+name|CONF_CLOCK_HUFFPUFF
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CLOCK_HUFFPUFF
+name|CONF_CLOCK_FREQ
 value|7
+end_define
+
+begin_comment
+comment|/*  * "tos" modifier keywords  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_MINCLOCK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_MINSANE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_FLOOR
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_CEILING
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_COHORT
+value|5
 end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PUBKEY
+name|OPENSSL
 end_ifdef
 
 begin_comment
@@ -758,43 +828,71 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_DH
+name|CONF_CRYPTO_RSA
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_PRIVATEKEY
+name|CONF_CRYPTO_SIGN
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_PUBLICKEY
+name|CONF_CRYPTO_LEAP
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_LEAP
+name|CONF_CRYPTO_CERT
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_FLAGS
+name|CONF_CRYPTO_RAND
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_CERT
+name|CONF_CRYPTO_KEYS
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_CRYPTO_IFFPAR
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_CRYPTO_GQPAR
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_CRYPTO_MVPAR
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_CRYPTO_PW
+value|10
 end_define
 
 begin_endif
@@ -803,8 +901,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PUBKEY */
+comment|/* OPENSSL */
 end_comment
+
+begin_comment
+comment|/*  * Address selection, IPv4 or IPv6  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONF_ADDR_IPV4
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_ADDR_IPV6
+value|2
+end_define
 
 end_unit
 

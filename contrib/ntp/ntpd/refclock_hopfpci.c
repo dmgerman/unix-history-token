@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -570,8 +576,7 @@ name|io
 operator|.
 name|fd
 operator|=
-operator|-
-literal|1
+name|INVALID_SOCKET
 expr_stmt|;
 name|pp
 operator|->
@@ -717,7 +722,7 @@ directive|else
 name|CloseHopfDevice
 argument_list|()
 expr_stmt|;
-comment|//	UnmapViewOfFile (up);
+comment|/*	UnmapViewOfFile (up); */
 endif|#
 directive|endif
 block|}
@@ -845,17 +850,13 @@ name|wSecond
 expr_stmt|;
 name|pp
 operator|->
-name|msec
+name|nsec
 operator|=
 name|m_time
 operator|.
 name|wMilliseconds
-expr_stmt|;
-name|pp
-operator|->
-name|usec
-operator|=
-literal|0
+operator|*
+literal|1000000
 expr_stmt|;
 if|if
 condition|(
@@ -884,7 +885,7 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"ST: %02X T: %02d:%02d:%02d.%03d D: %02d.%02d.%04d"
+literal|"ST: %02X T: %02d:%02d:%02d.%03ld D: %02d.%02d.%04d"
 argument_list|,
 name|m_time
 operator|.
@@ -904,7 +905,9 @@ name|second
 argument_list|,
 name|pp
 operator|->
-name|msec
+name|nsec
+operator|/
+literal|1000000
 argument_list|,
 name|m_time
 operator|.
@@ -923,6 +926,9 @@ name|pp
 operator|->
 name|lencode
 operator|=
+operator|(
+name|u_short
+operator|)
 name|strlen
 argument_list|(
 name|pp
@@ -1029,6 +1035,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|peer

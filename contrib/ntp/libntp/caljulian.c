@@ -386,6 +386,9 @@ name|jt
 operator|->
 name|monthday
 operator|=
+operator|(
+name|u_char
+operator|)
 name|monthday
 expr_stmt|;
 block|}

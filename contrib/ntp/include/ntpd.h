@@ -45,24 +45,6 @@ directive|include
 file|"recvbuff.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|MAXINTERFACES
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXFILENAME
-value|128
-end_define
-
-begin_comment
-comment|/* maximum length of a file name */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -133,18 +115,6 @@ comment|/* milliseconds */
 value|);
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|closesocket
-value|close
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -200,7 +170,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -236,7 +206,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -436,10 +406,9 @@ name|ctl_var
 operator|*
 operator|*
 operator|,
-name|unsigned
-name|long
+name|u_long
 operator|,
-name|int
+name|u_short
 operator|)
 argument_list|)
 decl_stmt|;
@@ -476,10 +445,9 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|unsigned
-name|long
+name|u_long
 operator|,
-name|int
+name|u_short
 operator|)
 argument_list|)
 decl_stmt|;
@@ -495,10 +463,9 @@ operator|(
 name|char
 operator|*
 operator|,
-name|unsigned
-name|long
+name|u_long
 operator|,
-name|int
+name|u_short
 operator|)
 argument_list|)
 decl_stmt|;
@@ -515,7 +482,8 @@ name|ntp_res_name
 name|P
 argument_list|(
 operator|(
-name|u_int32
+expr|struct
+name|sockaddr_storage
 operator|,
 name|u_short
 operator|)
@@ -563,7 +531,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|)
 argument_list|)
@@ -580,7 +548,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|)
 argument_list|)
@@ -660,7 +628,8 @@ name|io_multicast_add
 name|P
 argument_list|(
 operator|(
-name|u_int32
+expr|struct
+name|sockaddr_storage
 operator|)
 argument_list|)
 decl_stmt|;
@@ -673,7 +642,8 @@ name|io_multicast_del
 name|P
 argument_list|(
 operator|(
-name|u_int32
+expr|struct
+name|sockaddr_storage
 operator|)
 argument_list|)
 decl_stmt|;
@@ -686,7 +656,7 @@ name|kill_asyncio
 name|P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -700,7 +670,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -993,7 +963,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -1016,7 +986,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -1059,7 +1029,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -1076,7 +1046,7 @@ name|int
 operator|,
 name|u_int
 operator|,
-name|u_int
+name|u_char
 operator|,
 name|int
 operator|,
@@ -1122,7 +1092,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -1173,7 +1143,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
@@ -1217,7 +1187,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUTOKEY
+name|OPENSSL
 end_ifdef
 
 begin_decl_stmt
@@ -1239,7 +1209,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AUTOKEY */
+comment|/* OPENSSL */
 end_comment
 
 begin_decl_stmt
@@ -1271,6 +1241,244 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* ntp_crypto.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|crypto_recv
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|,
+expr|struct
+name|recvbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|crypto_xmit
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|pkt
+operator|*
+operator|,
+expr|struct
+name|sockaddr_storage
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|exten
+operator|*
+operator|,
+name|keyid_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|keyid_t
+name|session_key
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_storage
+operator|*
+operator|,
+expr|struct
+name|sockaddr_storage
+operator|*
+operator|,
+name|keyid_t
+operator|,
+name|keyid_t
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|make_keylist
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|,
+expr|struct
+name|interface
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|key_expire
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|crypto_update
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|crypto_config
+name|P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|crypto_setup
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|crypto_ident
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|exten
+modifier|*
+name|crypto_args
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|,
+name|u_int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|crypto_public
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|value_free
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|value
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL */
+end_comment
 
 begin_comment
 comment|/* ntp_proto.c */
@@ -1316,6 +1524,9 @@ operator|(
 expr|struct
 name|peer
 operator|*
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1347,6 +1558,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|clock_select
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|kod_proto
 name|P
 argument_list|(
 operator|(
@@ -1438,6 +1662,10 @@ operator|,
 name|u_long
 operator|,
 name|double
+operator|,
+expr|struct
+name|sockaddr_storage
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1607,7 +1835,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|)
 argument_list|)
@@ -1624,11 +1852,11 @@ operator|(
 name|int
 operator|,
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 name|int
@@ -1647,6 +1875,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|init_timer
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|reinit_timer
 name|P
 argument_list|(
 operator|(
@@ -1685,7 +1926,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUTOKEY
+name|OPENSSL
 end_ifdef
 
 begin_decl_stmt
@@ -1709,7 +1950,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AUTOKEY */
+comment|/* OPENSSL */
 end_comment
 
 begin_comment
@@ -1766,7 +2007,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 name|int
@@ -1812,7 +2053,7 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 specifier|const
@@ -1831,11 +2072,11 @@ name|P
 argument_list|(
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 expr|struct
-name|sockaddr_in
+name|sockaddr_storage
 operator|*
 operator|,
 name|l_fp
@@ -1848,6 +2089,53 @@ name|l_fp
 operator|*
 operator|,
 name|l_fp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|record_sys_stats
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|record_crypto_stats
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_storage
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sock_hash
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_storage
 operator|*
 operator|)
 argument_list|)
@@ -2270,7 +2558,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default interface */
+comment|/* default ipv4 interface */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|interface
+modifier|*
+name|any6_interface
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default ipv6 interface */
 end_comment
 
 begin_decl_stmt
@@ -2484,17 +2785,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|allow_step
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* allow step correction */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|allow_panic
 decl_stmt|;
 end_decl_stmt
@@ -2525,6 +2815,17 @@ begin_comment
 comment|/* count of ntpdate peers */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|forground_process
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* run the process in the forground */
+end_comment
+
 begin_comment
 comment|/*  * Clock state machine variables  */
 end_comment
@@ -2538,17 +2839,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* system poll interval (log2 s) */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|sys_minpoll
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* min system poll interval (log2 s) */
 end_comment
 
 begin_decl_stmt
@@ -2597,7 +2887,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_char
+name|double
 name|allan_xpt
 decl_stmt|;
 end_decl_stmt
@@ -2984,7 +3274,74 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1 => respond to manycast client pkts */
+comment|/* respond to manycast client pkts */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sys_minclock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minimum survivors */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sys_minsane
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minimum candidates */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sys_floor
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cluster stratum floor */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sys_ceiling
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cluster stratum ceiling */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|sys_ttl
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ttl mapping vector */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sys_ttlmax
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max ttl mapping vector index */
 end_comment
 
 begin_comment
@@ -3005,12 +3362,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|u_long
-name|sys_badstratum
+name|sys_restricted
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* packets with invalid stratum */
+comment|/* restricted packets */
 end_comment
 
 begin_decl_stmt
@@ -3021,7 +3378,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* old version packets received */
+comment|/* old version packets */
 end_comment
 
 begin_decl_stmt
@@ -3032,7 +3389,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* new version packets received */
+comment|/* new version packets  */
 end_comment
 
 begin_decl_stmt
@@ -3054,7 +3411,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* packets with bad length */
+comment|/* bad length or format */
 end_comment
 
 begin_decl_stmt
@@ -3076,7 +3433,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* packets dropped because of auth */
+comment|/* bad authentication */
 end_comment
 
 begin_decl_stmt
@@ -3087,7 +3444,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pkts rejected due to client count per net */
+comment|/* rate limit exceeded */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|sys_received
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* packets received */
 end_comment
 
 begin_comment
@@ -3168,22 +3536,46 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the restriction list */
+comment|/* the ipv4 restriction list */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|restrictlist6
+modifier|*
+name|restrictlist6
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the ipv6 restriction list */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|u_long
-name|client_limit
+name|res_min_interval
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|u_long
-name|client_limit_period
+name|res_avg_interval
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|mon_age
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* monitor preempt age */
+end_comment
 
 begin_comment
 comment|/* ntp_timer.c */
@@ -3203,13 +3595,13 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|u_char
 name|sys_revoke
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* keys revoke timeout */
+comment|/* keys revoke timeout (log2 s) */
 end_comment
 
 begin_decl_stmt
@@ -3304,6 +3696,53 @@ end_decl_stmt
 begin_comment
 comment|/* initializing flag */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CLOCKCTL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|user
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user to switch to */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|group
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* group to switch to */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|chrootdir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* directory to chroot to */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* refclock_conf.c */

@@ -321,6 +321,17 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|struct
+name|shmTime
+modifier|*
+name|getShmTime
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|struct
 name|shmTime
@@ -741,9 +752,6 @@ return|;
 block|}
 endif|#
 directive|endif
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -982,6 +990,10 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
+comment|/* HMS: shmdt()wants char* or const void * */
+operator|(
+name|void
+operator|)
 name|shmdt
 argument_list|(
 name|up
@@ -1314,17 +1326,13 @@ name|tm_sec
 expr_stmt|;
 name|pp
 operator|->
-name|msec
-operator|=
-literal|0
-expr_stmt|;
-name|pp
-operator|->
-name|usec
+name|nsec
 operator|=
 name|tvt
 operator|.
 name|tv_usec
+operator|*
+literal|1000
 expr_stmt|;
 name|peer
 operator|->
@@ -1371,13 +1379,7 @@ argument_list|,
 name|CEVNT_TIMEOUT
 argument_list|)
 expr_stmt|;
-name|msyslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"SHM: no new value found in shared memory"
-argument_list|)
-expr_stmt|;
+comment|/* 		msyslog (LOG_NOTICE, "SHM: no new value found in shared memory"); 		*/
 return|return;
 block|}
 if|if
@@ -1398,6 +1400,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|peer

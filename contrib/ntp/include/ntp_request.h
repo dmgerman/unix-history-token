@@ -3,6 +3,18 @@ begin_comment
 comment|/*  * ntp_request.h - definitions for the ntpd remote query facility  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NTP_REQUEST_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NTP_REQUEST_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -15,21 +27,6 @@ end_comment
 
 begin_comment
 comment|/*  * A request packet.  These are almost a fixed length.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXFILENAME
-value|128
-end_define
-
-begin_comment
-comment|/* max key file name length */
-end_comment
-
-begin_comment
-comment|/* NOTE: also in ntp.h */
 end_comment
 
 begin_struct
@@ -65,10 +62,11 @@ name|data
 index|[
 name|MAXFILENAME
 operator|+
-literal|16
+literal|48
 index|]
 decl_stmt|;
-comment|/* data area [32 prev](144 byte max) */
+comment|/* data area [32 prev](176 byte max) */
+comment|/* struct conf_peer must fit */
 name|l_fp
 name|tstamp
 decl_stmt|;
@@ -442,7 +440,7 @@ name|INFO_ITEMSIZE
 parameter_list|(
 name|mbz_itemsize
 parameter_list|)
-value|(ntohs(mbz_itemsize)&0xfff)
+value|((u_short)(ntohs(mbz_itemsize)&0xfff))
 end_define
 
 begin_define
@@ -469,9 +467,24 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMPL_XNTPD
+name|IMPL_XNTPD_OLD
 value|2
 end_define
+
+begin_comment
+comment|/* Used by pre ipv6 ntpdc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPL_XNTPD
+value|3
+end_define
+
+begin_comment
+comment|/* Used by post ipv6 ntpdc */
+end_comment
 
 begin_comment
 comment|/*  * Some limits related to authentication.  Frames which are  * authenticated must include a time stamp which differs from  * the receive time stamp by no more than 10 seconds.  */
@@ -966,6 +979,20 @@ comment|/* Here is a hostname + assoc_id */
 end_comment
 
 begin_comment
+comment|/* Determine size of pre-v6 version of structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|v4sizeof
+parameter_list|(
+name|type
+parameter_list|)
+value|offsetof(type, v6_flag)
+end_define
+
+begin_comment
 comment|/*  * Flags in the peer information returns  */
 end_comment
 
@@ -1094,7 +1121,7 @@ struct|struct
 name|info_peer_list
 block|{
 name|u_int32
-name|address
+name|addr
 decl_stmt|;
 comment|/* address of peer */
 name|u_short
@@ -1109,6 +1136,19 @@ name|u_char
 name|flags
 decl_stmt|;
 comment|/* flags (from above) */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused1
+decl_stmt|;
+comment|/* (unused) padding for addr6 */
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* v6 address of peer */
 block|}
 struct|;
 end_struct
@@ -1169,6 +1209,24 @@ name|u_fp
 name|dispersion
 decl_stmt|;
 comment|/* peer.estdisp */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused1
+decl_stmt|;
+comment|/* (unused) padding for dstadr6 */
+name|struct
+name|in6_addr
+name|dstadr6
+decl_stmt|;
+comment|/* local address (v6) */
+name|struct
+name|in6_addr
+name|srcadr6
+decl_stmt|;
+comment|/* source address (v6) */
 block|}
 struct|;
 end_struct
@@ -1188,7 +1246,7 @@ comment|/* local address */
 name|u_int32
 name|srcadr
 decl_stmt|;
-comment|/* remote address */
+comment|/* source address */
 name|u_short
 name|srcport
 decl_stmt|;
@@ -1359,6 +1417,24 @@ name|s_fp
 name|estbdelay
 decl_stmt|;
 comment|/* broadcast offset */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused9
+decl_stmt|;
+comment|/* (unused) padding for dstadr6 */
+name|struct
+name|in6_addr
+name|dstadr6
+decl_stmt|;
+comment|/* local address (v6-like) */
+name|struct
+name|in6_addr
+name|srcadr6
+decl_stmt|;
+comment|/* sources address (v6-like) */
 block|}
 struct|;
 end_struct
@@ -1467,6 +1543,24 @@ name|u_char
 name|unused8
 decl_stmt|;
 comment|/* (unused) */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused9
+decl_stmt|;
+comment|/* (unused) padding for dstadr6 */
+name|struct
+name|in6_addr
+name|dstadr6
+decl_stmt|;
+comment|/* local address */
+name|struct
+name|in6_addr
+name|srcadr6
+decl_stmt|;
+comment|/* remote address */
 block|}
 struct|;
 end_struct
@@ -1506,7 +1600,7 @@ block|{
 name|u_int32
 name|peer
 decl_stmt|;
-comment|/* system peer address */
+comment|/* system peer address (v4) */
 name|u_char
 name|peer_mode
 decl_stmt|;
@@ -1575,6 +1669,19 @@ name|u_fp
 name|stability
 decl_stmt|;
 comment|/* clock stability (scaled ppm) */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused4
+decl_stmt|;
+comment|/* unused, padding for peer6 */
+name|struct
+name|in6_addr
+name|peer6
+decl_stmt|;
+comment|/* system peer address (v6) */
 block|}
 struct|;
 end_struct
@@ -1590,31 +1697,31 @@ block|{
 name|u_int32
 name|timeup
 decl_stmt|;
-comment|/* time we have been up and running */
+comment|/* time since restart */
 name|u_int32
 name|timereset
 decl_stmt|;
-comment|/* time since these were last cleared */
+comment|/* time since reset */
 name|u_int32
-name|badstratum
+name|denied
 decl_stmt|;
-comment|/* packets claiming an invalid stratum */
+comment|/* access denied */
 name|u_int32
 name|oldversionpkt
 decl_stmt|;
-comment|/* old version packets received */
+comment|/* recent version */
 name|u_int32
 name|newversionpkt
 decl_stmt|;
-comment|/* new version packets received */
+comment|/* current version */
 name|u_int32
 name|unknownversion
 decl_stmt|;
-comment|/* don't know version packets */
+comment|/* bad version */
 name|u_int32
 name|badlength
 decl_stmt|;
-comment|/* packets with bad length */
+comment|/* bad length or format */
 name|u_int32
 name|processed
 decl_stmt|;
@@ -1622,15 +1729,15 @@ comment|/* packets processed */
 name|u_int32
 name|badauth
 decl_stmt|;
-comment|/* packets dropped because of authorization */
+comment|/* bad authentication */
 name|u_int32
-name|wanderhold
+name|received
 decl_stmt|;
-comment|/* (obsolete) */
+comment|/* packets received */
 name|u_int32
 name|limitrejected
 decl_stmt|;
-comment|/* rejected because of client limitation */
+comment|/* rate exceeded */
 block|}
 struct|;
 end_struct
@@ -1646,31 +1753,31 @@ block|{
 name|u_int32
 name|timeup
 decl_stmt|;
-comment|/* time we have been up and running */
+comment|/* time since restart */
 name|u_int32
 name|timereset
 decl_stmt|;
-comment|/* time since these were last cleared */
+comment|/* time since reset */
 name|u_int32
-name|badstratum
+name|denied
 decl_stmt|;
-comment|/* packets claiming an invalid stratum */
+comment|/* access denied */
 name|u_int32
 name|oldversionpkt
 decl_stmt|;
-comment|/* old version packets received */
+comment|/* recent version */
 name|u_int32
 name|newversionpkt
 decl_stmt|;
-comment|/* new version packets received */
+comment|/* current version */
 name|u_int32
 name|unknownversion
 decl_stmt|;
-comment|/* don't know version packets */
+comment|/* bad version */
 name|u_int32
 name|badlength
 decl_stmt|;
-comment|/* packets with bad length */
+comment|/* bad length or format */
 name|u_int32
 name|processed
 decl_stmt|;
@@ -1678,10 +1785,11 @@ comment|/* packets processed */
 name|u_int32
 name|badauth
 decl_stmt|;
-comment|/* packets dropped because of authorization */
+comment|/* bad authentication */
 name|u_int32
 name|wanderhold
 decl_stmt|;
+comment|/* (not used) */
 block|}
 struct|;
 end_struct
@@ -1892,7 +2000,7 @@ name|ttl
 decl_stmt|;
 comment|/* time to live (multicast) or refclock mode */
 name|u_short
-name|unused
+name|unused1
 decl_stmt|;
 comment|/* unused */
 name|keyid_t
@@ -1906,6 +2014,19 @@ name|MAXFILENAME
 index|]
 decl_stmt|;
 comment|/* public key file name*/
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused2
+decl_stmt|;
+comment|/* unused, padding for peeraddr6 */
+name|struct
+name|in6_addr
+name|peeraddr6
+decl_stmt|;
+comment|/* ipv6 address to poll */
 block|}
 struct|;
 end_struct
@@ -1964,6 +2085,15 @@ name|u_int32
 name|peeraddr
 decl_stmt|;
 comment|/* address of peer */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|struct
+name|in6_addr
+name|peeraddr6
+decl_stmt|;
+comment|/* address of peer (v6) */
 block|}
 struct|;
 end_struct
@@ -2071,6 +2201,24 @@ name|u_short
 name|mflags
 decl_stmt|;
 comment|/* match flags */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused1
+decl_stmt|;
+comment|/* unused, padding for addr6 */
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* match address (v6) */
+name|struct
+name|in6_addr
+name|mask6
+decl_stmt|;
+comment|/* match mask (v6) */
 block|}
 struct|;
 end_struct
@@ -2099,6 +2247,20 @@ name|u_short
 name|mflags
 decl_stmt|;
 comment|/* match flags */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* match address (v6) */
+name|struct
+name|in6_addr
+name|mask6
+decl_stmt|;
+comment|/* match mask (v6) */
 block|}
 struct|;
 end_struct
@@ -2130,7 +2292,7 @@ comment|/* count of packets received */
 name|u_int32
 name|addr
 decl_stmt|;
-comment|/* host address */
+comment|/* host address V4 style */
 name|u_int32
 name|daddr
 decl_stmt|;
@@ -2151,6 +2313,24 @@ name|u_char
 name|version
 decl_stmt|;
 comment|/* version number of last packet */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused1
+decl_stmt|;
+comment|/* unused, padding for addr6 */
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* host address V6 style */
+name|struct
+name|in6_addr
+name|daddr6
+decl_stmt|;
+comment|/* host address V6 style */
 block|}
 struct|;
 end_struct
@@ -2195,6 +2375,19 @@ name|u_char
 name|version
 decl_stmt|;
 comment|/* version number of last packet */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|u_int
+name|unused1
+decl_stmt|;
+comment|/* unused, padding for addr6 */
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* host v6 address */
 block|}
 struct|;
 end_struct
@@ -2235,6 +2428,15 @@ name|u_char
 name|version
 decl_stmt|;
 comment|/* version number of last packet */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* host address  (v6)*/
 block|}
 struct|;
 end_struct
@@ -2370,11 +2572,11 @@ block|{
 name|u_int32
 name|local_address
 decl_stmt|;
-comment|/* local interface address */
+comment|/* local interface addres (v4) */
 name|u_int32
 name|trap_address
 decl_stmt|;
-comment|/* remote client's address */
+comment|/* remote client's addres (v4) */
 name|u_short
 name|trap_port
 decl_stmt|;
@@ -2399,6 +2601,20 @@ name|u_int32
 name|flags
 decl_stmt|;
 comment|/* trap flags, as defined in ntp_control.h */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|struct
+name|in6_addr
+name|local_address6
+decl_stmt|;
+comment|/* local interface address (v6) */
+name|struct
+name|in6_addr
+name|trap_address6
+decl_stmt|;
+comment|/* remote client's address (v6) */
 block|}
 struct|;
 end_struct
@@ -2414,11 +2630,11 @@ block|{
 name|u_int32
 name|local_address
 decl_stmt|;
-comment|/* local interface address */
+comment|/* remote client's address */
 name|u_int32
 name|trap_address
 decl_stmt|;
-comment|/* remote client's address */
+comment|/* local interface address */
 name|u_short
 name|trap_port
 decl_stmt|;
@@ -2427,6 +2643,20 @@ name|u_short
 name|unused
 decl_stmt|;
 comment|/* (unused) */
+name|u_int
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 or not */
+name|struct
+name|in6_addr
+name|local_address6
+decl_stmt|;
+comment|/* local interface address (v6) */
+name|struct
+name|in6_addr
+name|trap_address6
+decl_stmt|;
+comment|/* remote client's address (v6) */
 block|}
 struct|;
 end_struct
@@ -2766,6 +2996,15 @@ comment|/* hostname */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NTP_REQUEST_H */
+end_comment
 
 end_unit
 

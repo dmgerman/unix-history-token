@@ -2015,6 +2015,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|off
+operator|.
+name|l_uf
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 name|pp
@@ -2123,16 +2129,24 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * If clock is good we send a NOMINAL message so that 		 * any previous BAD messages are nullified 		 */
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 name|refclock_report
 argument_list|(
 name|peer
 argument_list|,
 name|CEVNT_NOMINAL
-argument_list|)
-expr_stmt|;
-name|refclock_receive
-argument_list|(
-name|peer
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We have succedded in answering the poll. 		 * Turn off the flag and return 		 */

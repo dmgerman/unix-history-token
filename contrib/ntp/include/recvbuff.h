@@ -177,15 +177,19 @@ comment|/*  * Format of a recvbuf.  These are used by the asynchronous receive  
 end_comment
 
 begin_comment
-comment|/*  *  the maximum length NTP packet is a full length NTP control message with  *  the maximum length message authenticator.  I hate to hard-code 468 and 12,  *  but only a few modules include ntp_control.h...  */
+comment|/*  *  the maximum length NTP packet contains the NTP header, one Autokey  *  request, one Autokey response and the MAC. Assuming certificates don't  *  get too big, the maximum packet length is set arbitrarily at 1000.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RX_BUFF_SIZE
-value|(468+12+MAX_MAC_LEN)
+value|1000
 end_define
+
+begin_comment
+comment|/* hail Mary */
+end_comment
 
 begin_struct
 struct|struct
@@ -200,7 +204,7 @@ comment|/* next buffer in chain */
 union|union
 block|{
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|X_recv_srcadr
 decl_stmt|;
 name|caddr_t
@@ -242,7 +246,7 @@ decl_stmt|;
 else|#
 directive|else
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|srcadr
 decl_stmt|;
 comment|/* where packet came from */
@@ -254,7 +258,7 @@ modifier|*
 name|dstadr
 decl_stmt|;
 comment|/* interface datagram arrived thru */
-name|int
+name|SOCKET
 name|fd
 decl_stmt|;
 comment|/* fd on which it was received */

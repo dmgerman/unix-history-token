@@ -829,7 +829,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* open failed -- keep previous state 		 * 		 * If the file was open before keep the previous generation. 		 * This will cause output to end up in the 'wrong' file, 		 * but I think this is still better than loosing output 		 * 		 * ignore errors due to missing directories 		 */
+comment|/* open failed -- keep previous state 		 * 		 * If the file was open before keep the previous generation. 		 * This will cause output to end up in the 'wrong' file, 		 * but I think this is still better than losing output 		 * 		 * ignore errors due to missing directories 		 */
 if|if
 condition|(
 name|errno
@@ -1158,12 +1158,21 @@ expr_stmt|;
 name|cal
 operator|.
 name|yearday
-operator|-=
+operator|=
+call|(
+name|u_short
+call|)
+argument_list|(
+name|cal
+operator|.
+name|yearday
+operator|-
 name|cal
 operator|.
 name|monthday
-operator|-
+operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 name|cal
 operator|.
@@ -1431,12 +1440,18 @@ name|gen
 operator|->
 name|type
 operator|=
+operator|(
+name|u_char
+operator|)
 name|type
 expr_stmt|;
 name|gen
 operator|->
 name|flag
 operator|=
+operator|(
+name|u_char
+operator|)
 name|flag
 expr_stmt|;
 comment|/* 	 * make filegen use the new settings 	 * special action is only required when a generation file 	 * is currently open 	 * otherwise the new settings will be used anyway at the next open 	 */

@@ -25,6 +25,33 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|SYS_WINNT
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|close
+end_undef
+
+begin_define
+define|#
+directive|define
+name|close
+value|closesocket
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|REFCLOCK
 argument_list|)
 operator|&&
@@ -922,9 +949,9 @@ modifier|*
 name|peer
 decl_stmt|;
 name|int
-name|sync
+name|synch
 decl_stmt|;
-comment|/* synchronization indicator */
+comment|/* synchhronization indicator */
 name|int
 name|DoW
 decl_stmt|;
@@ -984,6 +1011,9 @@ name|pp
 operator|->
 name|lencode
 operator|=
+operator|(
+name|u_short
+operator|)
 name|refclock_gtlin
 argument_list|(
 name|rbufp
@@ -1029,7 +1059,7 @@ comment|/* stx...cr,lf,etx */
 endif|#
 directive|endif
 operator|&
-name|sync
+name|synch
 argument_list|,
 operator|&
 name|DoW
@@ -1215,7 +1245,7 @@ comment|/* preparation for timecode ntpq rl command ! */
 if|#
 directive|if
 literal|0
-block|wsprintf(pp->a_lastcode, 		 "STATUS: %1X%1X, DATE: %02d.%02d.%04d  TIME: %02d:%02d:%02d", 		 sync, 		 DoW, 		 day, 		 month, 		 pp->year, 		 pp->hour, 		 pp->minute, 		 pp->second);  	pp->lencode = strlen(pp->a_lastcode); 	if ((sync&& 0xc) == 0 ){
+block|wsprintf(pp->a_lastcode, 		 "STATUS: %1X%1X, DATE: %02d.%02d.%04d  TIME: %02d:%02d:%02d", 		 synch, 		 DoW, 		 day, 		 month, 		 pp->year, 		 pp->hour, 		 pp->minute, 		 pp->second);  	pp->lencode = strlen(pp->a_lastcode); 	if ((synch&& 0xc) == 0 ){
 comment|/* time ok? */
 block|refclock_report(peer, CEVNT_BADTIME); 		pp->leap = LEAP_NOTINSYNC; 		return; 	}
 endif|#
@@ -1224,7 +1254,7 @@ comment|/* 	 * If clock has no valid status then report error and exit 	 */
 if|if
 condition|(
 operator|(
-name|sync
+name|synch
 operator|&
 name|HOPF_OPMODE
 operator|)
@@ -1252,7 +1282,7 @@ comment|/* 	 * Test if time is running on internal quarz 	 * if CLK_FLAG1 is set
 if|if
 condition|(
 operator|(
-name|sync
+name|synch
 operator|&
 name|HOPF_OPMODE
 operator|)
@@ -1307,6 +1337,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|peer
@@ -1315,7 +1353,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|msyslog(LOG_ERR, " D:%x  D:%d D:%d",sync,pp->minute,pp->second);
+block|msyslog(LOG_ERR, " D:%x  D:%d D:%d",synch,pp->minute,pp->second);
 endif|#
 directive|endif
 name|record_clock_stats

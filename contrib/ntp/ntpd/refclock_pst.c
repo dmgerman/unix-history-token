@@ -82,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|DEVICE
-value|"/dev/pst%d"
+value|"/dev/wwv%d"
 end_define
 
 begin_comment
@@ -174,7 +174,7 @@ begin_struct
 struct|struct
 name|pstunit
 block|{
-name|u_char
+name|int
 name|tcswitch
 decl_stmt|;
 comment|/* timecode switch */
@@ -505,12 +505,6 @@ name|precision
 operator|=
 name|PRECISION
 expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-name|NSTAGE
-expr_stmt|;
 name|pp
 operator|->
 name|clockdesc
@@ -532,6 +526,12 @@ name|WWVREFID
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+name|peer
+operator|->
+name|burst
+operator|=
+name|MAXSTAGE
 expr_stmt|;
 return|return
 operator|(
@@ -737,10 +737,11 @@ expr_stmt|;
 comment|/* 	 * Note we get a buffer and timestamp for each<cr>, but only 	 * the first timestamp is retained. 	 */
 if|if
 condition|(
-operator|!
 name|up
 operator|->
 name|tcswitch
+operator|==
+literal|0
 condition|)
 name|pp
 operator|->
@@ -774,28 +775,6 @@ operator|<
 literal|3
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"pst: timecode %d %s\n"
-argument_list|,
-name|pp
-operator|->
-name|lencode
-argument_list|,
-name|pp
-operator|->
-name|a_lastcode
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. If the timecode has invalid length or is not in 	 * proper format, we declare bad format and exit. 	 */
 if|if
 condition|(
@@ -824,7 +803,7 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"%c%2d:%2d:%2d.%3d%c %9s%3d%13s%4ld"
+literal|"%c%2d:%2d:%2d.%3ld%c %9s%3d%13s%4ld"
 argument_list|,
 operator|&
 name|ampmchar
@@ -847,7 +826,7 @@ argument_list|,
 operator|&
 name|pp
 operator|->
-name|msec
+name|nsec
 argument_list|,
 operator|&
 name|daychar
@@ -877,6 +856,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pp
+operator|->
+name|nsec
+operator|*=
+literal|1000000
+expr_stmt|;
 comment|/* 	 * Decode synchronization, quality and last update. If 	 * unsynchronized, set the leap bits accordingly and exit. Once 	 * synchronized, the dispersion depends only on when the clock 	 * was last heard, which depends on the time since last update, 	 * as reported by the clock. 	 */
 if|if
 condition|(
@@ -951,6 +936,20 @@ name|pp
 operator|->
 name|refid
 expr_stmt|;
+if|if
+condition|(
+name|ltemp
+operator|==
+literal|0
+condition|)
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
 name|pp
 operator|->
 name|disp
@@ -958,6 +957,8 @@ operator|=
 name|PST_PHI
 operator|*
 name|ltemp
+operator|*
+literal|60
 expr_stmt|;
 comment|/* 	 * Process the new sample in the median filter and determine the 	 * timecode timestamp. 	 */
 if|if
@@ -1007,7 +1008,7 @@ name|refclockproc
 modifier|*
 name|pp
 decl_stmt|;
-comment|/* 	 * Time to poll the clock. The PSTI/Traconex clock responds to a 	 * "QTQDQMT" by returning a timecode in the format specified 	 * above. If nothing is heard from the clock for two polls, 	 * declare a timeout and keep going. 	 */
+comment|/* 	 * Time to poll the clock. The PSTI/Traconex clock responds to a 	 * "QTQDQMT" by returning a timecode in the format specified 	 * above. Note there is no checking on state, since this may not 	 * be the only customer reading the clock. Only one customer 	 * need poll the clock; all others just listen in. If the clock 	 * becomes unreachable, declare a timeout and keep going. 	 */
 name|pp
 operator|=
 name|peer
@@ -1063,12 +1064,6 @@ argument_list|,
 name|CEVNT_FAULT
 argument_list|)
 expr_stmt|;
-else|else
-name|pp
-operator|->
-name|polls
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|peer
@@ -1098,6 +1093,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -1110,16 +1110,38 @@ operator|->
 name|a_lastcode
 argument_list|)
 expr_stmt|;
-name|refclock_receive
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
 argument_list|(
-name|peer
+literal|"pst: timecode %d %s\n"
+argument_list|,
+name|pp
+operator|->
+name|lencode
+argument_list|,
+name|pp
+operator|->
+name|a_lastcode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|peer
 operator|->
 name|burst
 operator|=
-name|NSTAGE
+name|MAXSTAGE
+expr_stmt|;
+name|pp
+operator|->
+name|polls
+operator|++
 expr_stmt|;
 block|}
 end_function

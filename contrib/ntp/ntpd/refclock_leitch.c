@@ -2003,6 +2003,14 @@ name|STATE_IDLE
 expr_stmt|;
 break|break;
 block|}
+name|leitch
+operator|->
+name|reftime1
+operator|.
+name|l_uf
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
