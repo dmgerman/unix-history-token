@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdbparam.h	7.3	86/11/23	*/
+comment|/*	kdbparam.h	7.4	86/11/23	*/
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ name|ishiddenreg
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)<= reglist[8])
+value|((p)<=&reglist[8])
 end_define
 
 begin_define
