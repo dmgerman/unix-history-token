@@ -693,7 +693,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-8.8s%s\n"
+literal|"%-12.12s%s\n"
 argument_list|,
 name|hsp
 operator|->
@@ -719,7 +719,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"%-8.8s%s,  %4d user%s  load %*.2f, %*.2f, %*.2f\n"
+literal|"%-12.12s%s,  %4d user%s  load %*.2f, %*.2f, %*.2f\n"
 argument_list|,
 name|hsp
 operator|->
