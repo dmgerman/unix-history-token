@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	5.2 (Berkeley) %G%"
+literal|"@(#)subr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1722,6 +1722,12 @@ block|{
 literal|"B9600"
 block|,
 literal|"std.9600"
+block|}
+block|,
+block|{
+literal|"B19200"
+block|,
+literal|"std.19200"
 block|}
 block|,
 block|{
