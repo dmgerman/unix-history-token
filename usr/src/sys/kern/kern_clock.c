@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.33	82/07/13	*/
+comment|/*	kern_clock.c	4.34	82/07/21	*/
 end_comment
 
 begin_include
@@ -114,6 +114,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bk.h"
 end_include
 
@@ -193,6 +205,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|protofast
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ifnetslow
 decl_stmt|;
 end_decl_stmt
 
@@ -643,6 +661,9 @@ expr_stmt|;
 operator|--
 name|protofast
 expr_stmt|;
+operator|--
+name|ifnetslow
+expr_stmt|;
 if|#
 directive|if
 name|VAX780
@@ -1008,6 +1029,23 @@ operator|/
 name|PR_SLOWHZ
 expr_stmt|;
 name|pfslowtimo
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ifnetslow
+operator|<=
+literal|0
+condition|)
+block|{
+name|ifnetslow
+operator|=
+name|hz
+operator|/
+name|IFNET_SLOWHZ
+expr_stmt|;
+name|if_slowtimo
 argument_list|()
 expr_stmt|;
 block|}
