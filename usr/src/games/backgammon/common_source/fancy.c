@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fancy.c	5.1 (Berkeley) %G%"
+literal|"@(#)fancy.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,6 +391,13 @@ name|int
 name|realc
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|addbuf
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_macro
 name|fboard
@@ -2825,11 +2832,6 @@ modifier|*
 name|m
 decl_stmt|;
 comment|/* string containing CM movement */
-name|int
-name|addbuf
-parameter_list|()
-function_decl|;
-comment|/* add a char to the output buffer */
 if|if
 condition|(
 name|realr
@@ -3673,10 +3675,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|int
-name|addbuff
-parameter_list|()
-function_decl|;
 comment|/* double space if can't clear */
 if|if
 condition|(
@@ -3994,10 +3992,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|int
-name|addbuf
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|CD
@@ -4111,10 +4105,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|int
-name|addbuf
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|curc
