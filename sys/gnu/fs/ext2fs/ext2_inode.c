@@ -2639,10 +2639,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Remove the inode from its hash chain. 	 */
-name|ext2_ihashrem
+name|vfs_hash_remove
 argument_list|(
-name|ip
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Purge old data structures associated with the inode. 	 */

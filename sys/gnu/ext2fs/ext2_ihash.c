@@ -109,11 +109,9 @@ define|#
 directive|define
 name|INOHASH
 parameter_list|(
-name|device
-parameter_list|,
 name|inum
 parameter_list|)
-value|(&ihashtbl[(minor(device) + (inum))& ihash])
+value|(&ihashtbl[(inum)& ihash])
 end_define
 
 begin_decl_stmt
@@ -236,7 +234,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|ip
 argument_list|,
-argument|INOHASH(dev, inum)
+argument|INOHASH(inum)
 argument_list|,
 argument|i_hash
 argument_list|)
@@ -353,7 +351,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|ip
 argument_list|,
-argument|INOHASH(dev, inum)
+argument|INOHASH(inum)
 argument_list|,
 argument|i_hash
 argument_list|)
@@ -505,10 +503,6 @@ name|ipp
 operator|=
 name|INOHASH
 argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|,
 name|ip
 operator|->
 name|i_number
