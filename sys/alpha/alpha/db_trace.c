@@ -1265,7 +1265,7 @@ operator|&
 name|ALPHA_PSL_USERMODE
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"--- user mode ---\n"
 argument_list|)
