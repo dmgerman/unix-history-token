@@ -1159,9 +1159,7 @@ literal|"%p, 0x%lx"
 argument|, 		    (void *)uap->addr, uap->len);
 endif|#
 directive|endif
-argument|return (munmap(td, (void *)uap)); }
-comment|/*  * linux/alpha has 2 mappings for this,  * This is here purely to shut the compiler up.  */
-argument|int linux_setpgid(td, uap) 	struct thread *td; 	struct linux_setpgid_args *uap; {  	return (setpgid(td, (void *)uap)); }   static unsigned int linux_to_bsd_resource[LINUX_RLIM_NLIMITS] = { 	RLIMIT_CPU, RLIMIT_FSIZE, RLIMIT_DATA, RLIMIT_STACK, 	RLIMIT_CORE, RLIMIT_RSS, RLIMIT_NOFILE, -
+argument|return (munmap(td, (void *)uap)); }  static unsigned int linux_to_bsd_resource[LINUX_RLIM_NLIMITS] = { 	RLIMIT_CPU, RLIMIT_FSIZE, RLIMIT_DATA, RLIMIT_STACK, 	RLIMIT_CORE, RLIMIT_RSS, RLIMIT_NOFILE, -
 literal|1
 argument|, 	RLIMIT_NPROC, RLIMIT_MEMLOCK };  int linux_setrlimit(td, uap) 	struct thread *td; 	struct linux_setrlimit_args *uap; { 	struct rlimit rlim; 	u_int which; 	int error;
 ifdef|#
