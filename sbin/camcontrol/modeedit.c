@@ -712,7 +712,7 @@ name|RTRIM
 parameter_list|(
 name|string
 parameter_list|)
-value|do {						\ 	int _length;						\ 	while (isspace(string[_length = strlen(string) - 1]))		\ 		string[_length] = '\0';					\ } while (0)
+value|do {						\ 	int _length;							\ 	while (isspace(string[_length = strlen(string) - 1]))		\ 		string[_length] = '\0';					\ } while (0)
 end_define
 
 begin_function
