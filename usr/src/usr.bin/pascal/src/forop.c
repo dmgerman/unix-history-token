@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forop.c 1.7 %G%"
+literal|"@(#)forop.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1372,7 +1372,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|forctype
+name|P2INT
 argument_list|,
 literal|0
 argument_list|)
@@ -1392,7 +1392,7 @@ else|:
 name|P2MINUS
 operator|)
 argument_list|,
-name|forctype
+name|P2INT
 argument_list|)
 expr_stmt|;
 if|if
