@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.33 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2254,6 +2254,28 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|q
+operator|->
+name|q_alias
+operator|!=
+name|NULL
+condition|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"\t%s\n"
+argument_list|,
+name|q
+operator|->
+name|q_alias
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+else|else
 name|sprintf
 argument_list|(
 name|buf
