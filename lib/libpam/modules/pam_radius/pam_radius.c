@@ -1048,6 +1048,11 @@ literal|0
 condition|)
 name|free
 argument_list|(
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 name|msgs
 index|[
 operator|--
@@ -1055,6 +1060,7 @@ name|num_msgs
 index|]
 operator|.
 name|msg
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
