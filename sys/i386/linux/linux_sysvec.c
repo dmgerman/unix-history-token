@@ -1340,6 +1340,13 @@ decl_stmt|;
 name|int
 name|oonstack
 decl_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|regs
 operator|=
 name|p
@@ -1390,11 +1397,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Allocate space for the signal handler context. 	 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1573,11 +1575,6 @@ argument_list|(
 name|p
 argument_list|,
 name|SIGILL
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2150,6 +2147,11 @@ operator|->
 name|tf_ss
 operator|=
 name|_udatasel
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 block|}
 end_function

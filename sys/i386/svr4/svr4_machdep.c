@@ -1706,9 +1706,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|PROC_LOCK
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|psp
@@ -2132,6 +2134,11 @@ operator|->
 name|tf_ss
 operator|=
 name|_udatasel
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

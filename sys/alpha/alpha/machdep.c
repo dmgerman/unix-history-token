@@ -4591,11 +4591,6 @@ argument_list|,
 name|SIGILL
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Build the signal context to be used by sigreturn. 	 */
@@ -4991,11 +4986,6 @@ index|]
 operator|=
 name|code
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|frame
 operator|->
 name|tf_regs
@@ -5088,9 +5078,11 @@ name|oonstack
 decl_stmt|,
 name|rndfsize
 decl_stmt|;
-name|PROC_LOCK
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|psp
@@ -5612,11 +5604,6 @@ argument_list|,
 name|SIGILL
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* save the floating-point state, if necessary, then copy it. */
@@ -5850,11 +5837,6 @@ name|FRAME_A1
 index|]
 operator|=
 name|code
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|frame
 operator|->

@@ -1335,9 +1335,11 @@ name|p
 operator|=
 name|curproc
 expr_stmt|;
-name|PROC_LOCK
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|psp
@@ -1533,11 +1535,6 @@ argument_list|(
 name|p
 argument_list|,
 name|SIGILL
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2179,6 +2176,11 @@ name|tf_ss
 operator|=
 name|_udatasel
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2244,9 +2246,11 @@ name|p
 operator|=
 name|curproc
 expr_stmt|;
-name|PROC_LOCK
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|psp
@@ -2270,11 +2274,6 @@ name|sig
 argument_list|)
 condition|)
 block|{
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|osendsig
 argument_list|(
 name|catcher
@@ -2599,11 +2598,6 @@ argument_list|(
 name|p
 argument_list|,
 name|SIGILL
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2999,6 +2993,11 @@ operator|->
 name|tf_ss
 operator|=
 name|_udatasel
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 block|}
 end_function

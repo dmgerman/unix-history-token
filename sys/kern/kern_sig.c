@@ -5630,12 +5630,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* XXX ??? */
 call|(
 modifier|*
 name|p
@@ -5663,11 +5657,6 @@ operator|->
 name|p_sigmask
 argument_list|,
 name|code
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|SIGSETOR
@@ -7561,11 +7550,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|p
@@ -7583,11 +7567,6 @@ operator|&
 name|returnmask
 argument_list|,
 name|code
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 block|}
