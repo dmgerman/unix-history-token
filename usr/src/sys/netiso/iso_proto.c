@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: iso_proto.c,v 4.4 88/09/08 08:38:42 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso_proto.c,v $   *	@(#)iso_proto.c	7.6 (Berkeley) %G% *  *  * iso_proto.c : protocol switch tables in the ISO domain  *  * ISO protocol family includes TP, CLTP, CLNP, 8208  * TP and CLNP are implemented here.  */
+comment|/* $Header: iso_proto.c,v 4.4 88/09/08 08:38:42 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso_proto.c,v $   *	@(#)iso_proto.c	7.7 (Berkeley) %G% *  *  * iso_proto.c : protocol switch tables in the ISO domain  *  * ISO protocol family includes TP, CLTP, CLNP, 8208  * TP and CLNP are implemented here.  */
 end_comment
 
 begin_ifndef
@@ -156,6 +156,16 @@ name|tp_slowtimo
 argument_list|()
 decl_stmt|,
 name|tp_drain
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cons_init
+argument_list|()
+decl_stmt|,
+name|tpcons_input
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -398,7 +408,45 @@ name|tp_slowtimo
 block|,
 name|tp_drain
 block|, }
-block|,  }
+block|,
+ifdef|#
+directive|ifdef
+name|TPCONS
+comment|/* ISOPROTO_TP */
+block|{
+name|SOCK_SEQPACKET
+block|,
+operator|&
+name|isodomain
+block|,
+name|ISOPROTO_TP0
+block|,
+name|PR_CONNREQUIRED
+operator||
+name|PR_WANTRCVD
+block|,
+name|tpcons_input
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|tp_ctloutput
+block|,
+name|tp_usrreq
+block|,
+name|cons_init
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
