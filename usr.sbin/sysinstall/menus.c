@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.50 1996/04/13 13:31:58 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.51 1996/04/23 01:29:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -8,6 +8,249 @@ include|#
 directive|include
 file|"sysinstall.h"
 end_include
+
+begin_comment
+comment|/* Miscellaneous work routines for menus */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|setSrc
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|Dists
+operator||=
+name|DIST_SRC
+expr_stmt|;
+name|SrcDists
+operator|=
+name|DIST_SRC_ALL
+operator||
+name|DIST_SRC_SMAILCF
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|clearSrc
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|Dists
+operator|&=
+operator|~
+name|DIST_SRC
+expr_stmt|;
+name|SrcDists
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|setX11All
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator|=
+name|DIST_XF86_ALL
+expr_stmt|;
+name|XF86ServerDists
+operator|=
+name|DIST_XF86_SERVER_ALL
+expr_stmt|;
+name|XF86FontDists
+operator|=
+name|DIST_XF86_FONTS_ALL
+expr_stmt|;
+name|Dists
+operator||=
+name|DIST_XF86
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|clearX11All
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator|=
+literal|0
+expr_stmt|;
+name|XF86ServerDists
+operator|=
+literal|0
+expr_stmt|;
+name|XF86FontDists
+operator|=
+literal|0
+expr_stmt|;
+name|Dists
+operator|&=
+operator|~
+name|DIST_XF86
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|setX11Misc
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator||=
+name|DIST_XF86_MISC_ALL
+expr_stmt|;
+name|Dists
+operator||=
+name|DIST_XF86
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|clearX11Misc
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator|&=
+operator|~
+name|DIST_XF86_MISC_ALL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|XF86ServerDists
+operator|&&
+operator|!
+name|XF86FontDists
+condition|)
+name|Dists
+operator|&=
+operator|~
+name|DIST_XF86
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|setX11Servers
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator||=
+name|DIST_XF86_SERVER
+expr_stmt|;
+name|XF86ServerDists
+operator|=
+name|DIST_XF86_SERVER_ALL
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|clearX11Servers
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator|&=
+operator|~
+name|DIST_XF86_SERVER
+expr_stmt|;
+name|XF86ServerDists
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* All the system menus go here.  *  * Hardcoded things like version number strings will disappear from  * these menus just as soon as I add the code for doing inline variable  * expansion.  */
@@ -157,6 +400,8 @@ block|,
 literal|"Exit this menu (and the installation)"
 block|,
 name|NULL
+block|,
+name|dmenuCancel
 block|}
 block|,
 block|{
@@ -513,6 +758,8 @@ name|MenuMouse
 init|=
 block|{
 name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select your mouse type from the following menu"
 block|,
@@ -746,7 +993,7 @@ name|DMenu
 name|MenuMediaFTP
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_RADIO_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -1875,6 +2122,8 @@ name|MenuMedia
 init|=
 block|{
 name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose Installation Media"
 block|,
@@ -2054,17 +2303,7 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"7 Everything"
-block|,
-literal|"All sources, binaries and XFree86 binaries [700MB]"
-block|,
-name|NULL
-block|,
-name|distSetEverything
-block|}
-block|,
-block|{
-literal|"8 Custom"
+literal|"7 Custom"
 block|,
 literal|"Specify your own distribution set [?]"
 block|,
@@ -2079,9 +2318,19 @@ name|MenuSubDistributions
 block|}
 block|,
 block|{
+literal|"8 All"
+block|,
+literal|"All sources, binaries and XFree86 binaries [700MB]"
+block|,
+name|NULL
+block|,
+name|distSetEverything
+block|}
+block|,
+block|{
 literal|"9 Clear"
 block|,
-literal|"Reset selected distribution list to None"
+literal|"Reset selected distribution list to nothing [0MB]"
 block|,
 name|NULL
 block|,
@@ -2117,9 +2366,7 @@ name|item
 parameter_list|)
 block|{
 return|return
-name|Dists
-operator|&
-name|DIST_DES
+name|DESDists
 return|;
 block|}
 end_function
@@ -2135,9 +2382,7 @@ name|item
 parameter_list|)
 block|{
 return|return
-name|Dists
-operator|&
-name|DIST_SRC
+name|SrcDists
 return|;
 block|}
 end_function
@@ -2153,9 +2398,7 @@ name|item
 parameter_list|)
 block|{
 return|return
-name|Dists
-operator|&
-name|DIST_XF86
+name|XF86Dists
 return|;
 block|}
 end_function
@@ -2166,6 +2409,8 @@ name|MenuSubDistributions
 init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the distributions you wish to install."
 block|,
@@ -2483,9 +2728,19 @@ name|DIST_EXPERIMENTAL
 block|}
 block|,
 block|{
+literal|"All"
+block|,
+literal|"All sources, binaries and XFree86 binaries [700MB]"
+block|,
+name|NULL
+block|,
+name|distSetEverything
+block|}
+block|,
+block|{
 literal|"Clear"
 block|,
-literal|"Reset selected distribution list to None"
+literal|"Reset all of the above [0MB]"
 block|,
 name|NULL
 block|,
@@ -2536,6 +2791,8 @@ name|MenuDESDistributions
 init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the encryption facilities you wish to install."
 block|,
@@ -2672,6 +2929,8 @@ name|MenuSrcDistributions
 init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the sub-components of src you wish to install."
 block|,
@@ -3051,13 +3310,33 @@ name|DIST_SRC_SMAILCF
 block|}
 block|,
 block|{
-literal|"Clear"
+literal|"All"
 block|,
-literal|"Reset selected source distribution list to None"
+literal|"Select all of the above [120MB]"
 block|,
 name|NULL
 block|,
-name|distSrcReset
+name|setSrc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Clear"
+block|,
+literal|"Reset all of the above [0MB]"
+block|,
+name|NULL
+block|,
+name|clearSrc
 block|,
 name|NULL
 block|,
@@ -3098,122 +3377,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|int
-name|clearx11
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|XF86Dists
-operator|=
-literal|0
-expr_stmt|;
-name|XF86ServerDists
-operator|=
-literal|0
-expr_stmt|;
-name|XF86FontDists
-operator|=
-literal|0
-expr_stmt|;
-name|Dists
-operator|&=
-operator|~
-name|DIST_XF86
-expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|clearx11Servers
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|XF86Dists
-operator|&=
-operator|~
-name|DIST_XF86_SERVER
-expr_stmt|;
-name|XF86ServerDists
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|checkx11Basic
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-return|return
-name|XF86Dists
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|checkx11Servers
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-return|return
-name|XF86ServerDists
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|checkx11Fonts
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-return|return
-name|XF86FontDists
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 name|DMenu
 name|MenuXF86Select
 init|=
 block|{
-name|DMENU_CHECKLIST_TYPE
+name|DMENU_NORMAL_TYPE
 block|,
 literal|"XFree86 3.1.2-S Distribution"
 block|,
@@ -3229,7 +3398,7 @@ literal|"Basic"
 block|,
 literal|"Basic component menu (required)"
 block|,
-name|checkx11Basic
+name|NULL
 block|,
 name|dmenuSubmenu
 block|,
@@ -3244,7 +3413,7 @@ literal|"Server"
 block|,
 literal|"X server menu"
 block|,
-name|checkx11Servers
+name|NULL
 block|,
 name|dmenuSubmenu
 block|,
@@ -3259,7 +3428,7 @@ literal|"Fonts"
 block|,
 literal|"Font set menu"
 block|,
-name|checkx11Fonts
+name|NULL
 block|,
 name|dmenuSubmenu
 block|,
@@ -3270,23 +3439,23 @@ name|MenuXF86SelectFonts
 block|}
 block|,
 block|{
+literal|"All"
+block|,
+literal|"Select the entire XFree86 distribution"
+block|,
+name|NULL
+block|,
+name|setX11All
+block|}
+block|,
+block|{
 literal|"Clear"
 block|,
 literal|"Reset XFree86 distribution list"
 block|,
 name|NULL
 block|,
-name|clearx11
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
+name|clearX11All
 block|}
 block|,
 block|{
@@ -3323,6 +3492,8 @@ name|MenuXF86SelectCore
 init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"XFree86 3.1.2-S base distribution types"
 block|,
@@ -3633,13 +3804,33 @@ name|DIST_XF86_SRC
 block|}
 block|,
 block|{
-literal|"Clear"
+literal|"All"
 block|,
-literal|"Reset XFree86 distribution list"
+literal|"Select all of the above [20MB]"
 block|,
 name|NULL
 block|,
-name|clearx11
+name|setX11Misc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Clear"
+block|,
+literal|"Reset all of the above [0MB]"
+block|,
+name|NULL
+block|,
+name|clearX11Misc
 block|,
 name|NULL
 block|,
@@ -3686,6 +3877,8 @@ name|MenuXF86SelectFonts
 init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Font distribution selection."
 block|,
@@ -3868,6 +4061,8 @@ name|MenuXF86SelectServer
 init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"X Server selection."
 block|,
@@ -4155,13 +4350,33 @@ name|DIST_XF86_SERVER_NEST
 block|}
 block|,
 block|{
-literal|"Clear"
+literal|"All"
 block|,
-literal|"Reset XFree86 server list"
+literal|"Select all of the above [25MB]"
 block|,
 name|NULL
 block|,
-name|clearx11Servers
+name|setX11Servers
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Clear"
+block|,
+literal|"Reset all of the above [0MB]"
+block|,
+name|NULL
+block|,
+name|clearX11Servers
 block|,
 name|NULL
 block|,
@@ -4208,10 +4423,12 @@ name|MenuDiskDevices
 init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select Drive(s)"
 block|,
-literal|"Please select the drive, or drives, on which you wish to perform\n\ this operation.  If you are attempting to install a boot partition\n\ on a drive other than the first one or have multiple operating\n\ systems on your machine, you will have the option to install a boot\n\ manager later.  To select a drive, use the arrow keys to move to it\n\ and press [SPACE].  When you're finished, select Cancel to go on to\n\ the next step."
+literal|"Please select the drive, or drives, on which you wish to perform\n\ this operation.  If you are attempting to install a boot partition\n\ on a drive other than the first one or have multiple operating\n\ systems on your machine, you will have the option to install a boot\n\ manager later.  To select a drive, use the arrow keys to move to it\n\ and press [SPACE].\n\n\ When you're finished, select Cancel to go on to the next step."
 block|,
 literal|"Press F1 for important information regarding disk geometry!"
 block|,
@@ -4418,6 +4635,8 @@ name|MenuMBRType
 init|=
 block|{
 name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"overwrite me"
 block|,
@@ -4429,8 +4648,8 @@ literal|"from the second one, the boot selector will also make it possible\n"
 literal|"to do so (limitations in the PC BIOS usually prevent this otherwise).\n"
 literal|"If you do not want a boot selector, or wish to replace an existing\n"
 literal|"one, select \"standard\".  If you would prefer your Master Boot\n"
-literal|"Record to remain untouched then select \"none\".  NOTE:  PC-DOS users\n"
-literal|"will almost certainly NOT want to select one!"
+literal|"Record to remain untouched then select \"None\".\n\n"
+literal|"  NOTE:  PC-DOS users will almost certainly require \"None\"!"
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -4901,6 +5120,8 @@ name|MenuNTP
 init|=
 block|{
 name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"NTPDATE Server Selection"
 block|,
@@ -5280,6 +5501,8 @@ name|MenuSysconsKeymap
 init|=
 block|{
 name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keymap"
 block|,
@@ -5514,6 +5737,8 @@ name|MenuSysconsKeyrate
 init|=
 block|{
 name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keyboard Repeat Rate"
 block|,
@@ -5594,6 +5819,8 @@ name|MenuSysconsSaver
 init|=
 block|{
 name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Screen Saver"
 block|,

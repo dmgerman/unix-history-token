@@ -415,6 +415,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_XF86_MISC_ALL
+value|0x3FFF
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_XF86_SERVER
 value|0x4000
 end_define
