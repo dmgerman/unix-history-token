@@ -2523,7 +2523,16 @@ name|failure_keep
 goto|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|us
+operator|.
+name|size
+operator|!=
+operator|-
+literal|1
+condition|)
 block|{
 if|if
 condition|(
