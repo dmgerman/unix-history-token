@@ -3890,8 +3890,6 @@ argument_list|,
 name|MTX_NETWORK_LOCK
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 if|if
