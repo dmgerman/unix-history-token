@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	2.4	%G%"
+literal|"@(#)parseaddr.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|DELIMCHARS
-value|"()<>@!.,;:\\\""
+value|"()<>@!.,;:\\\" \t\r\n"
 end_define
 
 begin_comment
