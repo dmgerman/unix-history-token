@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.36 1998/08/19 10:50:32 sos Exp $ */
+comment|/* $Id: ccd.c,v 1.37 1998/09/15 08:15:26 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -501,7 +507,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Called by main() during pseudo-device attachment */
+comment|/* called during module initialization */
 end_comment
 
 begin_decl_stmt
@@ -512,21 +518,28 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|PSEUDO_SET
+begin_decl_stmt
+specifier|static
+name|int
+name|ccd_modevent
+name|__P
 argument_list|(
-name|ccdattach
-argument_list|,
-name|ccd
+operator|(
+name|module_t
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* called by biodone() at interrupt time */
@@ -794,15 +807,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ccd_devsw_installed
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Number of blocks to untouched in front of a component partition.  * This is to avoid violating its disklabel area when it starts at the  * beginning of the slice.  */
 end_comment
@@ -837,13 +841,7 @@ begin_function
 specifier|static
 name|void
 name|ccdattach
-parameter_list|(
-name|dummy
-parameter_list|)
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1020,37 +1018,90 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|if
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ccd_modevent
+parameter_list|(
+name|mod
+parameter_list|,
+name|type
+parameter_list|,
+name|data
+parameter_list|)
+name|module_t
+name|mod
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+switch|switch
 condition|(
-operator|!
-name|ccd_devsw_installed
+name|type
 condition|)
 block|{
-name|cdevsw_add_generic
+case|case
+name|MOD_LOAD
+case|:
+name|ccdattach
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MOD_UNLOAD
+case|:
+name|printf
 argument_list|(
+literal|"ccd0: Unload not supported!\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
+default|default:
+comment|/* MOD_SHUTDOWN etc */
+break|break;
+block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|BDEV_MODULE
+argument_list|(
+name|ccd
+argument_list|,
 name|BDEV_MAJOR
 argument_list|,
 name|CDEV_MAJOR
 argument_list|,
-operator|&
 name|ccd_cdevsw
+argument_list|,
+name|ccd_modevent
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|ccd_devsw_installed
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"huh?\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+end_expr_stmt
 
 begin_function
 specifier|static
