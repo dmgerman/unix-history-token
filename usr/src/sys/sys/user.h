@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.25	83/05/18	*/
+comment|/*	user.h	4.26	83/05/21	*/
 end_comment
 
 begin_ifdef
@@ -65,6 +65,17 @@ directive|define
 name|SHSIZE
 value|32
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAXCOMLEN
+value|16
+end_define
+
+begin_comment
+comment|/*<= MAXNAMLEN,>= sizeof(a_comm) */
+end_comment
 
 begin_struct
 struct|struct
