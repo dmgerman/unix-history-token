@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c 4.2 %G%"
+literal|"@(#)ld.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4096,6 +4096,12 @@ name|N_EXT
 operator|+
 name|N_UNDF
 case|:
+if|if
+condition|(
+name|arflag
+operator|==
+literal|0
+condition|)
 name|errlev
 operator||=
 literal|01
