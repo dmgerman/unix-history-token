@@ -128,15 +128,6 @@ directive|include
 file|"def.flag.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
