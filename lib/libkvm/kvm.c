@@ -1147,6 +1147,7 @@ specifier|const
 name|char
 modifier|*
 name|sf
+name|__unused
 decl_stmt|;
 name|int
 name|flag
@@ -1267,6 +1268,7 @@ specifier|const
 name|char
 modifier|*
 name|sf
+name|__unused
 decl_stmt|;
 name|int
 name|flag
