@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_hdh.c	7.4 (Berkeley) %G% */
+comment|/*	@(#)if_hdh.c	7.5 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -2282,10 +2282,6 @@ argument_list|(
 name|sc
 operator|->
 name|hdh_imp
-operator|->
-name|imp_if
-operator|.
-name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -2422,10 +2418,6 @@ argument_list|(
 name|sc
 operator|->
 name|hdh_imp
-operator|->
-name|imp_if
-operator|.
-name|if_unit
 argument_list|)
 expr_stmt|;
 break|break;
