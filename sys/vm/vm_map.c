@@ -7604,6 +7604,13 @@ name|old_entry
 expr_stmt|;
 name|new_entry
 operator|->
+name|eflags
+operator|&=
+operator|~
+name|MAP_ENTRY_USER_WIRED
+expr_stmt|;
+name|new_entry
+operator|->
 name|wired_count
 operator|=
 literal|0
@@ -7669,6 +7676,13 @@ name|new_entry
 operator|=
 operator|*
 name|old_entry
+expr_stmt|;
+name|new_entry
+operator|->
+name|eflags
+operator|&=
+operator|~
+name|MAP_ENTRY_USER_WIRED
 expr_stmt|;
 name|new_entry
 operator|->
