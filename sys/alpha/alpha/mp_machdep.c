@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -127,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/prom.h>
 end_include
 
 begin_comment
@@ -1146,7 +1158,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -1159,7 +1173,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 			 * The TurboLaser PCS_PA bit doesn't seem to be set 			 * correctly. 			 */
+if|if
+condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|!=
+name|ST_DEC_21000
+condition|)
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -1172,14 +1197,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 continue|continue;
+block|}
 if|if
 condition|(
 name|i
 operator|>
 name|MAXCPU
 condition|)
+block|{
 continue|continue;
+block|}
 name|cpus
 operator|++
 expr_stmt|;
@@ -1228,6 +1257,9 @@ name|i
 operator|++
 control|)
 block|{
+name|int
+name|dv
+decl_stmt|;
 name|struct
 name|pcs
 modifier|*
@@ -1295,6 +1327,25 @@ condition|)
 block|{
 if|if
 condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|==
+name|ST_DEC_21000
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Ignoring PA bit for CPU %d.\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|bootverbose
 condition|)
 name|printf
@@ -1305,6 +1356,7 @@ name|i
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 if|if
 condition|(
@@ -1361,11 +1413,45 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
+name|dv
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+literal|"cpu"
+argument_list|,
+name|i
+argument_list|,
+literal|"disable"
+argument_list|,
+operator|&
+name|dv
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|dv
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CPU %d disabled by loader.\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|all_cpus
 operator||=
+operator|(
 literal|1
 operator|<<
 name|i
+operator|)
 expr_stmt|;
 name|mp_ncpus
 operator|++
@@ -1412,9 +1498,11 @@ if|if
 condition|(
 name|all_cpus
 operator|&
+operator|(
 literal|1
 operator|<<
 name|i
+operator|)
 condition|)
 name|smp_start_secondary
 argument_list|(
@@ -1428,7 +1516,9 @@ end_function
 begin_function
 name|void
 name|cpu_mp_announce
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
