@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: bitmapif.c,v 4.300 91/06/09 06:14:40 root Rel41 $ SONY  *  *	@(#)bitmapif.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: bitmapif.c,v 4.300 91/06/09 06:14:40 root Rel41 $ SONY  *  *	@(#)bitmapif.c	7.3 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -138,12 +132,6 @@ begin_comment
 comment|/* CPU_SINGLE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPC_MRX
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -161,36 +149,6 @@ modifier|*
 name|ext_fnt24_addr
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|ext_fnt_addr
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|ext_fnt24_addr
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
