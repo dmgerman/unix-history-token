@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_witness.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -35,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -2939,36 +2951,37 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KDEBUG
+name|DDB
 end_ifdef
 
 begin_comment
-comment|/*  * When WITNESS_KDEBUG is set to 1, it will cause the system to  * drop into kdebug() when:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
+comment|/*  * When DDB is enabled and witness_ddb is set to 1, it will cause the system to  * drop into kdebug() when:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WITNESS_KDEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WITNESS_KDEBUG
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS_DDB
+end_ifdef
 
 begin_decl_stmt
 name|int
-name|witness_kdebug
+name|witness_ddb
 init|=
-name|WITNESS_KDEBUG
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|witness_ddb
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2977,43 +2990,98 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* KDEBUG */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WITNESS_SKIPSPIN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WITNESS_SKIPSPIN
-value|0
-end_define
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|witness_ddb
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|witness_ddb
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS_SKIPSPIN
+end_ifdef
 
 begin_decl_stmt
 name|int
 name|witness_skipspin
 init|=
-name|WITNESS_SKIPSPIN
+literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|w_mtx
+name|int
+name|witness_skipspin
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|witness_skipspin
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|witness_skipspin
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(
+specifier|static
+argument_list|,
+name|w_mtx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3302,12 +3370,6 @@ init|=
 block|{
 literal|"witness lock"
 block|,
-literal|"Kdebug"
-block|,
-comment|/* breaks rules and may or may not work */
-literal|"Page Alias"
-block|,
-comment|/* sparc only, witness lock won't block intr */
 name|NULL
 block|}
 decl_stmt|;
@@ -3323,26 +3385,11 @@ init|=
 block|{
 literal|"sched lock"
 block|,
-literal|"log mtx"
+literal|"clk"
 block|,
-literal|"zslock"
+literal|"sio"
 block|,
-comment|/* sparc only above log, this one is a real hack */
-literal|"time lock"
-block|,
-comment|/* above callout */
-literal|"callout mtx"
-block|,
-comment|/* above wayout */
 comment|/* 	 * leaf locks 	 */
-literal|"wayout mtx"
-block|,
-literal|"kernel_pmap"
-block|,
-comment|/* sparc only, logically equal "pmap" below */
-literal|"pmap"
-block|,
-comment|/* sparc only */
 name|NULL
 block|}
 decl_stmt|;
@@ -3356,86 +3403,6 @@ name|order_list
 index|[]
 init|=
 block|{
-literal|"tcb"
-block|,
-literal|"inp"
-block|,
-literal|"so_snd"
-block|,
-literal|"so_rcv"
-block|,
-literal|"Giant lock"
-block|,
-name|NULL
-block|,
-literal|"udb"
-block|,
-literal|"inp"
-block|,
-name|NULL
-block|,
-literal|"unp head"
-block|,
-literal|"unp"
-block|,
-literal|"so_snd"
-block|,
-name|NULL
-block|,
-literal|"de0"
-block|,
-literal|"Giant lock"
-block|,
-name|NULL
-block|,
-literal|"ifnet"
-block|,
-literal|"Giant lock"
-block|,
-name|NULL
-block|,
-literal|"fifo"
-block|,
-literal|"so_snd"
-block|,
-name|NULL
-block|,
-literal|"hme0"
-block|,
-literal|"Giant lock"
-block|,
-name|NULL
-block|,
-literal|"esp0"
-block|,
-literal|"Giant lock"
-block|,
-name|NULL
-block|,
-literal|"hfa0"
-block|,
-literal|"Giant lock"
-block|,
-name|NULL
-block|,
-literal|"so_rcv"
-block|,
-literal|"atm_global"
-block|,
-name|NULL
-block|,
-literal|"so_snd"
-block|,
-literal|"atm_global"
-block|,
-name|NULL
-block|,
-literal|"NFS"
-block|,
-literal|"Giant lock"
-block|,
-name|NULL
-block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -3449,18 +3416,6 @@ name|dup_list
 index|[]
 init|=
 block|{
-literal|"inp"
-block|,
-literal|"process group"
-block|,
-literal|"session"
-block|,
-literal|"unp"
-block|,
-literal|"rtentry"
-block|,
-literal|"rawcb"
-block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -3660,15 +3615,15 @@ name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KDEBUG
+name|DDB
 name|int
-name|go_into_kdebug
+name|go_into_ddb
 init|=
 literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* KDEBUG */
+comment|/* DDB */
 name|w
 operator|=
 name|m
@@ -3948,14 +3903,14 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KDEBUG
-name|go_into_kdebug
+name|DDB
+name|go_into_ddb
 operator|=
 literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* KDEBUG */
+comment|/* DDB */
 goto|goto
 name|out
 goto|;
@@ -4198,14 +4153,14 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KDEBUG
-name|go_into_kdebug
+name|DDB
+name|go_into_ddb
 operator|=
 literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* KDEBUG */
+comment|/* DDB */
 goto|goto
 name|out
 goto|;
@@ -4245,19 +4200,21 @@ name|out
 label|:
 ifdef|#
 directive|ifdef
-name|KDEBUG
+name|DDB
 if|if
 condition|(
-name|witness_kdebug
+name|witness_ddb
 operator|&&
-name|go_into_kdebug
+name|go_into_ddb
 condition|)
-name|kdebug
-argument_list|()
+name|Debugger
+argument_list|(
+literal|"witness_enter"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* KDEBUG */
+comment|/* DDB */
 name|w
 operator|->
 name|w_file
@@ -4965,19 +4922,21 @@ label|:
 block|}
 ifdef|#
 directive|ifdef
-name|KDEBUG
+name|DDB
 if|if
 condition|(
-name|witness_kdebug
+name|witness_ddb
 operator|&&
 name|n
 condition|)
-name|kdebug
-argument_list|()
+name|Debugger
+argument_list|(
+literal|"witness_sleep"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* KDEBUG */
+comment|/* DDB */
 return|return
 operator|(
 name|n
@@ -5078,6 +5037,8 @@ name|w_mtx
 argument_list|,
 literal|"witness lock"
 argument_list|,
+name|MTX_COLD
+operator||
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
