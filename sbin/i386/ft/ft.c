@@ -2244,10 +2244,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|tape
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
 decl_stmt|;
 comment|/* Get device from environment, command line will override. */
 if|if
