@@ -27,12 +27,6 @@ directive|include
 file|<machine/psl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"libi386.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -49,6 +43,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"libi386.h"
+end_include
 
 begin_if
 if|#
@@ -148,7 +148,9 @@ end_ifdef
 begin_function_decl
 name|void
 name|end_term
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -222,6 +224,16 @@ name|fg
 parameter_list|,
 name|int
 name|bg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pow10
+parameter_list|(
+name|int
+name|i
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -486,7 +498,11 @@ name|arg
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|vidc_started
 operator|=
 literal|1
@@ -1298,10 +1314,10 @@ name|int
 name|rows
 parameter_list|,
 name|int
-name|fg
+name|fgcol
 parameter_list|,
 name|int
-name|bg
+name|bgcol
 parameter_list|)
 block|{
 ifdef|#
@@ -1394,9 +1410,9 @@ operator|)
 operator|=
 name|at2pc98
 argument_list|(
-name|fg
+name|fgcol
 argument_list|,
-name|bg
+name|bgcol
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1447,13 +1463,13 @@ operator|.
 name|ebx
 operator|=
 operator|(
-name|bg
+name|bgcol
 operator|<<
 literal|12
 operator|)
 operator|+
 operator|(
-name|fg
+name|fgcol
 operator|<<
 literal|8
 operator|)
@@ -1490,10 +1506,10 @@ name|int
 name|c
 parameter_list|,
 name|int
-name|fg
+name|fgcol
 parameter_list|,
 name|int
-name|bg
+name|bgcol
 parameter_list|)
 block|{
 ifdef|#
@@ -1521,9 +1537,9 @@ operator|)
 operator|=
 name|at2pc98
 argument_list|(
-name|fg
+name|fgcol
 argument_list|,
-name|bg
+name|bgcol
 argument_list|)
 expr_stmt|;
 else|#
@@ -1557,12 +1573,12 @@ operator|.
 name|ebx
 operator|=
 operator|(
-name|bg
+name|bgcol
 operator|<<
 literal|4
 operator|)
 operator|+
-name|fg
+name|fgcol
 expr_stmt|;
 name|v86
 operator|.
