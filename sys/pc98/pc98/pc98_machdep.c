@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) KATO Takenori, 1996.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) KATO Takenori, 1996, 1997.  *  * All rights reserved.  Unpublished rights reserved under the copyright  * laws of Japan.  *  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -113,6 +113,12 @@ name|Maxmem_under16M
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -125,6 +131,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void
@@ -150,6 +161,90 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Initialize DMA controller  */
+end_comment
+
+begin_function
+name|void
+name|pc98_init_dmac
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+literal|0x439
+argument_list|,
+operator|(
+name|inb
+argument_list|(
+literal|0x439
+argument_list|)
+operator|&
+literal|0xfb
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* DMA Accsess Control over 1MB */
+name|outb
+argument_list|(
+literal|0x29
+argument_list|,
+operator|(
+literal|0x0c
+operator||
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Bank Mode Reg. 16M mode */
+name|outb
+argument_list|(
+literal|0x29
+argument_list|,
+operator|(
+literal|0x0c
+operator||
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Bank Mode Reg. 16M mode */
+name|outb
+argument_list|(
+literal|0x29
+argument_list|,
+operator|(
+literal|0x0c
+operator||
+literal|2
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Bank Mode Reg. 16M mode */
+name|outb
+argument_list|(
+literal|0x29
+argument_list|,
+operator|(
+literal|0x0c
+operator||
+literal|3
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Bank Mode Reg. 16M mode */
+name|outb
+argument_list|(
+literal|0x11
+argument_list|,
+literal|0x50
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -168,6 +263,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Disconnect phisical memory in 15-16MB region.  *  * EPSON PC-486GR, P, SR, SE, HX, HG and HA only.  Other system support  * this feature with software DIP switch.  */
+end_comment
 
 begin_function
 specifier|static
@@ -693,86 +792,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|void
-name|pc98_init_dmac
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|outb
-argument_list|(
-literal|0x439
-argument_list|,
-operator|(
-name|inb
-argument_list|(
-literal|0x439
-argument_list|)
-operator|&
-literal|0xfb
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* DMA Accsess Control over 1MB */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|0
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|3
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x11
-argument_list|,
-literal|0x50
-argument_list|)
-expr_stmt|;
-comment|/* PC98 must be 0x40 */
-block|}
-end_function
+begin_comment
+comment|/*  * Get physical memory size  */
+end_comment
 
 begin_function
 name|void
