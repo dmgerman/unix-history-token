@@ -1,19 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<kvm.h>
-end_include
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)md-sparc.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -67,6 +80,36 @@ begin_include
 include|#
 directive|include
 file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_ifndef
@@ -129,6 +172,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 operator|-
 name|NBPG
 argument_list|,
@@ -147,6 +193,9 @@ operator|-=
 name|NBPG
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|read
 argument_list|(
 name|fd
@@ -156,6 +205,9 @@ argument_list|,
 name|NBPG
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|fd
@@ -172,6 +224,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 operator|-
 literal|2
 operator|*
@@ -189,7 +244,7 @@ comment|/*  * Fix up the core image for the sparc.  We need to flush any registe
 end_comment
 
 begin_function
-name|int
+name|void
 name|md_core
 parameter_list|(
 name|kd
@@ -281,8 +336,10 @@ name|cc
 operator|<
 literal|0
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"kvm_read: %s (reading kernel trapframe)"
 argument_list|,
 name|kvm_geterr
@@ -300,8 +357,10 @@ argument_list|(
 name|tf
 argument_list|)
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"cannot read kernel trapframe"
 argument_list|)
 expr_stmt|;
@@ -340,18 +399,18 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"lseek"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"lseek: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -359,10 +418,6 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|tf
 argument_list|,
@@ -426,8 +481,10 @@ name|cc
 operator|<
 literal|0
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"kvm_read: %s (fpu state)"
 argument_list|,
 name|kvm_geterr
@@ -445,8 +502,10 @@ argument_list|(
 name|fs
 argument_list|)
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"cannot read fpu state"
 argument_list|)
 expr_stmt|;
@@ -478,6 +537,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|offsetof
 argument_list|(
 expr|struct
@@ -492,18 +554,18 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"lseek"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"lseek: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|cc
 operator|=
 name|read
@@ -526,35 +588,39 @@ expr_stmt|;
 if|if
 condition|(
 name|cc
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"read"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|cc
 operator|!=
 sizeof|sizeof
 argument_list|(
 name|pcb
 argument_list|)
 condition|)
-name|error
+block|{
+if|if
+condition|(
+name|cc
+operator|<
+literal|0
+condition|)
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"read: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|err
+argument_list|(
+literal|1
+argument_list|,
 literal|"couldn't read pcb from core file"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Write any unsaved windows to the appropriate stack locations. 	 */
 name|nsaved
 operator|=
@@ -568,11 +634,7 @@ name|nsaved
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|rw
 operator|=
 operator|&
@@ -657,8 +719,10 @@ operator|<
 operator|-
 name|NBPG
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"cannot copy pcb windows to stack"
 argument_list|)
 expr_stmt|;
@@ -696,6 +760,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|offsetof
 argument_list|(
 expr|struct
@@ -718,10 +785,6 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ki
 operator|->
@@ -756,19 +819,20 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"cannot copy pcb windows to stack"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|rw
 argument_list|,
 sizeof|sizeof
@@ -788,11 +852,6 @@ literal|6
 index|]
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
