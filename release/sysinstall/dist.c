@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.29 1997/05/16 07:46:59 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.30 1997/06/06 13:01:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -377,7 +377,7 @@ block|,
 else|#
 directive|else
 block|{
-literal|"XF8632"
+literal|"XF8633"
 block|,
 literal|"/usr"
 block|,
@@ -725,7 +725,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"XF8632"
+literal|"XF8633"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -738,7 +738,7 @@ name|XF86FontDistTable
 block|}
 block|,
 block|{
-literal|"XF8632"
+literal|"XF8633"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -777,7 +777,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32bin"
+literal|"X33bin"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -790,7 +790,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32cfg"
+literal|"X33cfg"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -803,7 +803,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32doc"
+literal|"X33doc"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -816,7 +816,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32html"
+literal|"X33html"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -829,7 +829,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32lib"
+literal|"X33lib"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -842,7 +842,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32lk98"
+literal|"X33lk98"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -855,7 +855,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32lkit"
+literal|"X33lkit"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -868,7 +868,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32man"
+literal|"X33man"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -881,7 +881,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32prog"
+literal|"X33prog"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -894,7 +894,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32ps"
+literal|"X33ps"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -907,7 +907,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32set"
+literal|"X33set"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -938,7 +938,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"X328514"
+literal|"X338514"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -951,7 +951,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329480"
+literal|"X339480"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -964,7 +964,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329EGC"
+literal|"X339EGC"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -977,7 +977,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329GA9"
+literal|"X339GA9"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -990,7 +990,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329GAN"
+literal|"X339GAN"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1003,7 +1003,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329LPW"
+literal|"X339LPW"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1016,7 +1016,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329NKV"
+literal|"X339NKV"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1029,7 +1029,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329NS3"
+literal|"X339NS3"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1042,7 +1042,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329SPW"
+literal|"X339SPW"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1055,7 +1055,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329TGU"
+literal|"X339TGU"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1068,7 +1068,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329WEP"
+literal|"X339WEP"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1081,7 +1081,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329WS"
+literal|"X339WS"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1094,7 +1094,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X329WSN"
+literal|"X339WSN"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1107,7 +1107,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32AGX"
+literal|"X33AGX"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1120,7 +1120,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32I128"
+literal|"X33I128"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1133,7 +1133,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32Ma8"
+literal|"X33Ma8"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1146,7 +1146,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32Ma32"
+literal|"X33Ma32"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1159,7 +1159,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32Ma64"
+literal|"X33Ma64"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1172,7 +1172,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32Mono"
+literal|"X33Mono"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1185,7 +1185,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32P9K"
+literal|"X33P9K"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1198,7 +1198,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32S3"
+literal|"X33S3"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1211,7 +1211,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32S3V"
+literal|"X33S3V"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1224,7 +1224,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32SVGA"
+literal|"X33SVGA"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1237,7 +1237,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32VG16"
+literal|"X33VG16"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1250,7 +1250,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32W32"
+literal|"X33W32"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1263,7 +1263,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32nest"
+literal|"X33nest"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1276,7 +1276,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32vfb"
+literal|"X33vfb"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1307,7 +1307,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"X32fnts"
+literal|"X33fnts"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1320,7 +1320,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32f100"
+literal|"X33f100"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1333,7 +1333,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32fcyr"
+literal|"X33fcyr"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1346,7 +1346,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32fscl"
+literal|"X33fscl"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1359,7 +1359,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32fnon"
+literal|"X33fnon"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1372,7 +1372,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X32fsrv"
+literal|"X33fsrv"
 block|,
 literal|"/usr/X11R6"
 block|,
