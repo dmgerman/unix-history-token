@@ -4238,7 +4238,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -4262,7 +4262,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -4375,7 +4375,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4476,7 +4476,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5299,7 +5299,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5762,7 +5762,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7449,7 +7449,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7746,7 +7746,7 @@ literal|16
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -8041,7 +8041,7 @@ literal|16
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10030,7 +10030,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10526,7 +10526,7 @@ argument|ntohs(fp->mode.rreqq.dest_hi), 				ntohl(fp->mode.rreqq.dest_lo), 				f
 literal|"fw_rcv: cannot response(bus reset)!\n"
 argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
 literal|16
-argument|, M_DEVBUF, M_DONTWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
+argument|, M_DEVBUF, M_NOWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
 literal|12
 argument|; 				break; 			case FWTCODE_RREQQ: 				resfp->mode.hdr.tcode = FWTCODE_RRESQ; 				xfer->send.len =
 literal|16
@@ -10601,7 +10601,7 @@ argument|; 	xfer->spd =
 literal|0
 argument|; 	xfer->send.buf = malloc(
 literal|24
-argument|, M_DEVBUF, M_DONTWAIT); 	if(xfer->send.buf == NULL){ 		fw_xfer_free( xfer); 		return; 	}  	fc->status = FWBUSMGRELECT;  	xfer->send.off =
+argument|, M_DEVBUF, M_NOWAIT); 	if(xfer->send.buf == NULL){ 		fw_xfer_free( xfer); 		return; 	}  	fc->status = FWBUSMGRELECT;  	xfer->send.off =
 literal|0
 argument|;  	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.lreq.dest_hi = htons(
 literal|0xffff

@@ -3640,7 +3640,7 @@ name|NDVCHUNK
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
@@ -3721,7 +3721,7 @@ name|dvpacket
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
@@ -3930,7 +3930,7 @@ name|nchunk
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3973,7 +3973,7 @@ name|nchunk
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4027,7 +4027,7 @@ operator|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4117,7 +4117,7 @@ operator|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5229,7 +5229,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -7220,7 +7220,7 @@ name|ndb
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7345,7 +7345,7 @@ name|PAGE_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -10598,7 +10598,7 @@ name|ndb
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -8094,7 +8094,7 @@ name|SBP_NUM_OCB
 argument_list|,
 name|M_SBP
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|0x10000
 argument_list|,
