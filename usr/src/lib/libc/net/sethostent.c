@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sethostent.c	6.2 (Berkeley) %G%"
+literal|"@(#)sethostent.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,9 +34,29 @@ directive|endif
 endif|LIBC_SCCS and not lint
 end_endif
 
-begin_comment
-comment|/*  * These are dummy routines to allow old programs that used /etc/hosts  * to compile and work with the BIND name server  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
+end_include
 
 begin_macro
 name|sethostent
@@ -47,15 +67,18 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|lint
+if|if
+condition|(
 name|stayopen
-operator|=
-name|stayopen
+condition|)
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_STAYOPEN
+operator||
+name|RES_USEVC
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -65,7 +88,22 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{
+name|_res
+operator|.
+name|options
+operator|&=
+operator|~
+operator|(
+name|RES_STAYOPEN
+operator||
+name|RES_USEVC
+operator|)
+expr_stmt|;
+name|_res_close
+argument_list|()
+expr_stmt|;
+block|}
 end_block
 
 begin_macro
