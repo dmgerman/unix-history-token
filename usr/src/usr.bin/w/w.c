@@ -1249,9 +1249,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %d users"
+literal|"  %d user%s"
 argument_list|,
 name|nusers
+argument_list|,
+name|nusers
+operator|>
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Print 1, 5, and 15 minute load averages. 		 * (Found by looking in kernel for avenrun). 		 */
