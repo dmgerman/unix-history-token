@@ -20,7 +20,7 @@ name|char
 name|route_c_rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.7 1993/11/17 20:48:56 wollman Exp $"
+literal|"$Id: route.c,v 1.8 1993/11/17 23:02:57 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1755,7 +1755,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|" %x%x"
+literal|" %02x%02x"
 argument_list|,
 name|s
 index|[
