@@ -608,20 +608,8 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|name
-operator|-
-literal|1
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|name
-index|[
-sizeof|sizeof
-name|name
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -1999,6 +1987,13 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EAFNOSUPPORT
+condition|)
+return|return;
 name|perror
 argument_list|(
 literal|"ifconfig: socket"
@@ -2030,6 +2025,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|errno
+operator|==
+name|EADDRNOTAVAIL
+operator|||
 name|errno
 operator|==
 name|EAFNOSUPPORT
