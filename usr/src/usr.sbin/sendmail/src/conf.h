@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.87 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.88 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3727,11 +3727,11 @@ begin_define
 define|#
 directive|define
 name|SFS_TYPE
-value|SFS_MOUNT
+value|SFS_4ARGS
 end_define
 
 begin_comment
-comment|/* use<sys/mount.h> statfs() impl */
+comment|/* four argument statfs() call */
 end_comment
 
 begin_ifndef
