@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_global.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ata.h"
 end_include
 
@@ -3498,6 +3492,11 @@ name|flags
 operator||=
 name|ADR_F_FORCE_PIO
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" trying PIO mode\n"
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3554,6 +3553,15 @@ operator|->
 name|flags
 operator|&
 name|ADR_F_FORCE_PIO
+operator|&&
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ADR_F_ERROR
+operator|)
 condition|)
 name|ata_prtdev
 argument_list|(
@@ -5181,7 +5189,7 @@ name|DEV_BSIZE
 argument_list|,
 literal|0
 argument_list|,
-name|ATA_WAIT_INTR
+name|ATA_WAIT_READY
 argument_list|)
 expr_stmt|;
 if|if

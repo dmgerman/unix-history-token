@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_global.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ata.h"
 end_include
 

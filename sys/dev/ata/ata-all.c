@@ -2730,48 +2730,6 @@ name|retry
 init|=
 literal|0
 decl_stmt|;
-comment|/* select drive */
-name|ATA_OUTB
-argument_list|(
-name|atadev
-operator|->
-name|channel
-operator|->
-name|r_io
-argument_list|,
-name|ATA_DRIVE
-argument_list|,
-name|ATA_D_IBM
-operator||
-name|atadev
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* enable interrupt */
-name|ATA_OUTB
-argument_list|(
-name|atadev
-operator|->
-name|channel
-operator|->
-name|r_altio
-argument_list|,
-name|ATA_ALTSTAT
-argument_list|,
-name|ATA_A_4BIT
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* apparently some devices needs this repeated */
 do|do
 block|{
@@ -2789,7 +2747,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ATA_WAIT_INTR
+name|ATA_WAIT_READY
 argument_list|)
 condition|)
 block|{
