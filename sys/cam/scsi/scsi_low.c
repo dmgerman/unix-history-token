@@ -131,6 +131,12 @@ directive|include
 file|<sys/bio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/devicestat.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -140,12 +146,6 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devicestat.h>
 end_include
 
 begin_include
