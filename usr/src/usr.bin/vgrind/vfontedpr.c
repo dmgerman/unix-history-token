@@ -1420,12 +1420,12 @@ argument_list|)
 expr_stmt|;
 name|ps
 argument_list|(
-literal|"'wh 0 he"
+literal|"'wh 0 he\n"
 argument_list|)
 expr_stmt|;
 name|ps
 argument_list|(
-literal|"'wh -1i fo"
+literal|"'wh -1i fo\n"
 argument_list|)
 expr_stmt|;
 block|}
