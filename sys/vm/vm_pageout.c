@@ -4295,6 +4295,13 @@ operator|=
 name|tpcount
 expr_stmt|;
 block|}
+else|else
+block|{
+name|fullintervalcount
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|m
 operator|=
 name|TAILQ_FIRST
