@@ -402,7 +402,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  * -C config      configuration file  * -q             quiet operation  * -n name        login name  * -u uid         user id  * -c comment     user name/comment  * -d directory   home directory  * -e date        account expiry date  * -p date        password expiry date  * -g grp         primary group  * -G grp1,grp2   additional groups  * -m [ -k dir ]  create and set up home  * -s shell       name of login shell  * -o             duplicate uid ok  * -L class       user class  * -l name        new login name  * -h fd          password filehandle  * -F             force print or add  *   Setting defaults:  * -D             set user defaults  * -b dir         default home root dir  * -e period      default expiry period  * -p period      default password change period  * -g group       default group  * -G             grp1,grp2.. default additional groups  * -L class       default login class  * -k dir         default home skeleton  * -s shell       default shell  * -w method      default password method  */
+comment|/*-  * -C config      configuration file  * -q             quiet operation  * -n name        login name  * -u uid         user id  * -c comment     user name/comment  * -d directory   home directory  * -e date        account expiry date  * -p date        password expiry date  * -g grp         primary group  * -G grp1,grp2   additional groups  * -m [ -k dir ]  create and set up home  * -s shell       name of login shell  * -o             duplicate uid ok  * -L class       user class  * -l name        new login name  * -h fd          password filehandle  * -H fd          encrypted password filehandle  * -F             force print or add  *   Setting defaults:  * -D             set user defaults  * -b dir         default home root dir  * -e period      default expiry period  * -p period      default password change period  * -g group       default group  * -G             grp1,grp2.. default additional groups  * -L class       default login class  * -k dir         default home skeleton  * -s shell       default shell  * -w method      default password method  */
 end_comment
 
 begin_function
@@ -3358,6 +3358,15 @@ literal|'h'
 argument_list|)
 operator|==
 name|NULL
+operator|&&
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'H'
+argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|login_cap_t
@@ -3735,6 +3744,19 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|||
+operator|(
+name|arg
+operator|=
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'H'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3790,6 +3812,17 @@ name|arg
 operator|->
 name|val
 argument_list|)
+decl_stmt|;
+name|int
+name|precrypt
+init|=
+operator|(
+name|arg
+operator|->
+name|ch
+operator|==
+literal|'H'
+operator|)
 decl_stmt|;
 name|int
 name|b
@@ -3862,7 +3895,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sassword for user %s:"
+literal|"%s%spassword for user %s:"
 argument_list|,
 operator|(
 name|mode
@@ -3870,9 +3903,15 @@ operator|==
 name|M_UPDATE
 operator|)
 condition|?
-literal|"New p"
+literal|"new "
 else|:
-literal|"P"
+literal|""
+argument_list|,
+name|precrypt
+condition|?
+literal|"encrypted "
+else|:
+literal|""
 argument_list|,
 name|pwd
 operator|->
@@ -3940,7 +3979,13 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"-h file descriptor"
+literal|"-%c file descriptor"
+argument_list|,
+name|precrypt
+condition|?
+literal|'H'
+else|:
+literal|'h'
 argument_list|)
 expr_stmt|;
 return|return
@@ -3989,6 +4034,34 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|precrypt
+condition|)
+block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|line
+argument_list|,
+literal|':'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+name|EX_DATAERR
+return|;
+name|pwd
+operator|->
+name|pw_passwd
+operator|=
+name|line
+expr_stmt|;
+block|}
+else|else
+block|{
 name|lc
 operator|=
 name|login_getpwclass
@@ -4032,6 +4105,7 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 name|edited
 operator|=
 literal|1
@@ -6567,6 +6641,15 @@ argument_list|(
 name|args
 argument_list|,
 literal|'h'
+argument_list|)
+operator|==
+name|NULL
+operator|&&
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'H'
 argument_list|)
 operator|==
 name|NULL
