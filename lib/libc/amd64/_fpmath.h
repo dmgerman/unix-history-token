@@ -39,9 +39,15 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|int
-name|junk
+name|junkl
 range|:
 literal|16
+decl_stmt|;
+name|unsigned
+name|int
+name|junkh
+range|:
+literal|32
 decl_stmt|;
 block|}
 name|bits
