@@ -2076,6 +2076,14 @@ directive|endif
 name|ttycheck
 label|:
 comment|/* 		 * If trying to log in as root without Kerberos, 		 * but with insecure terminal, refuse the login attempt. 		 */
+if|if
+condition|(
+name|pwd
+operator|&&
+operator|!
+name|rval
+condition|)
+block|{
 if|#
 directive|if
 name|defined
@@ -2092,24 +2100,23 @@ condition|(
 name|authok
 operator|==
 literal|0
-condition|)
-endif|#
-directive|endif
-if|if
-condition|(
-name|pwd
-operator|&&
-operator|!
-name|rval
 operator|&&
 name|rootlogin
 operator|&&
 operator|!
 name|rootok
 condition|)
-block|{
-comment|/* use same message as for authentication failure */
-comment|/* (void)fprintf(stderr, "%s login refused on this terminal.\n", pwd->pw_name); */
+else|#
+directive|else
+if|if
+condition|(
+name|rootlogin
+operator|&&
+operator|!
+name|rootok
+condition|)
+endif|#
+directive|endif
 name|refused
 argument_list|(
 name|NULL
@@ -2119,19 +2126,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* preserve backoff behaviour even for failed root */
-comment|/* continue; */
-block|}
+else|else
 comment|/* valid password& authenticated */
-elseif|else
-if|if
-condition|(
-name|pwd
-operator|&&
-operator|!
-name|rval
-condition|)
 break|break;
+block|}
 operator|(
 name|void
 operator|)
@@ -2965,11 +2963,24 @@ name|pw_gid
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Preserve TERM if it happens to be already set. 	 */
+if|if
+condition|(
+operator|(
 name|term
 operator|=
 name|getenv
 argument_list|(
 literal|"TERM"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|term
+operator|=
+name|strdup
+argument_list|(
+name|term
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Exclude cons/vt/ptys only, assume dialup otherwise 	 * TODO: Make dialup tty determination a library call 	 * for consistency (finger etc.) 	 */
