@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dol.c	5.18 (Berkeley) %G%"
+literal|"@(#)dol.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1868,6 +1868,10 @@ block|{
 operator|*
 name|np
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|tnp
 expr_stmt|;
 if|if
@@ -1889,13 +1893,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SIGN_EXTEND_CHAR
-argument_list|(
-name|tnp
-argument_list|)
-operator|<=
-literal|0
-operator|||
 name|tnp
 operator|==
 literal|'\n'
