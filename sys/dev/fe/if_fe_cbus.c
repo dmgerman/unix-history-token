@@ -48,18 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sockio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -108,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_mib.h>
 end_include
 
@@ -126,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -139,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpf.h>
 end_include
 
 begin_include
@@ -163,12 +133,6 @@ begin_include
 include|#
 directive|include
 file|<dev/fe/if_fevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isa/isavar.h>
 end_include
 
 begin_comment
