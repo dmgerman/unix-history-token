@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)intr.c	8.1 (Berkeley) %G%  *  * from: $Header: intr.c,v 1.20 92/11/26 03:04:53 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)intr.c	8.2 (Berkeley) %G%  *  * from: $Header: intr.c,v 1.22 93/09/26 19:48:06 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -117,12 +123,6 @@ operator|.
 name|tv_sec
 operator|-
 name|straytime
-expr_stmt|;
-name|straytime
-operator|=
-name|time
-operator|.
-name|tv_sec
 expr_stmt|;
 if|if
 condition|(
@@ -993,6 +993,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* kernel text is write protected -- let us in for a moment */
+name|pmap_changeprot
+argument_list|(
+name|kernel_pmap
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|tv
+argument_list|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|tv
 operator|->
 name|tv_instr
@@ -1038,6 +1055,20 @@ name|I_L0
 argument_list|)
 expr_stmt|;
 comment|/* mov %psr, %l0 */
+name|pmap_changeprot
+argument_list|(
+name|kernel_pmap
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|tv
+argument_list|,
+name|VM_PROT_READ
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|fastvec
 operator||=
 literal|1
