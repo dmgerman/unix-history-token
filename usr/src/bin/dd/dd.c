@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.6 (Berkeley) %G%"
+literal|"@(#)dd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1445,29 +1445,13 @@ operator|.
 name|dbsz
 condition|)
 block|{
-comment|/* If sync, fill the block with NULs. */
+comment|/* If sync, use the entire block. */
 if|if
 condition|(
 name|ddflags
 operator|&
 name|C_SYNC
 condition|)
-block|{
-name|bzero
-argument_list|(
-name|in
-operator|.
-name|dbp
-operator|+
-name|n
-argument_list|,
-name|in
-operator|.
-name|dbsz
-operator|-
-name|n
-argument_list|)
-expr_stmt|;
 name|in
 operator|.
 name|dbcnt
@@ -1480,7 +1464,6 @@ name|in
 operator|.
 name|dbsz
 expr_stmt|;
-block|}
 else|else
 name|in
 operator|.
