@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ktrace.c,v 1.6 1996/09/19 19:50:13 phk Exp $"
+literal|"$Id: ktrace.c,v 1.6.2.1 1997/03/15 10:40:15 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -792,7 +792,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\tktrace [-aCcid] [-f trfile] [-g pgid] [-p pid] [-t [cnisuv]\n\tktrace [-aCcid] [-f trfile] [-t [cnisuw] command\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: ktrace [-aCcid] [-f trfile] [-g pgid] [-p pid] [-t [cnisuv]"
+argument_list|,
+literal|"       ktrace [-aCcid] [-f trfile] [-t [cnisuw] command"
 argument_list|)
 expr_stmt|;
 name|exit
