@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.87
+literal|3.88
 operator|%
 name|G
 operator|%
@@ -1230,6 +1230,8 @@ name|pv
 index|[
 literal|0
 index|]
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1364,6 +1366,8 @@ name|pv
 index|[
 literal|0
 index|]
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2674,7 +2678,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|bool
 name|force
 decl_stmt|;
 end_decl_stmt

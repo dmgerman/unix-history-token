@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
@@ -616,13 +616,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPQUIT -- close the SMTP connection. ** **	Parameters: **		name -- name of mailer we are quitting. ** **	Returns: **		none. ** **	Side Effects: **		sends the final protocol and closes the connection. */
+comment|/* **  SMTPQUIT -- close the SMTP connection. ** **	Parameters: **		name -- name of mailer we are quitting. **		showresp -- if set, give a response message. ** **	Returns: **		none. ** **	Side Effects: **		sends the final protocol and closes the connection. */
 end_comment
 
 begin_macro
 name|smtpquit
 argument_list|(
 argument|name
+argument_list|,
+argument|showresp
 argument_list|)
 end_macro
 
@@ -630,6 +632,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|showresp
 decl_stmt|;
 end_decl_stmt
 
@@ -645,14 +653,7 @@ name|SmtpPid
 operator|<
 literal|0
 condition|)
-block|{
-name|i
-operator|=
-name|SmtpErrstat
-expr_stmt|;
-block|}
-else|else
-block|{
+return|return;
 name|smtpmessage
 argument_list|(
 literal|"QUIT"
@@ -689,7 +690,10 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|showresp
+condition|)
 name|giveresponse
 argument_list|(
 name|i
@@ -773,12 +777,22 @@ return|;
 if|if
 condition|(
 name|Verbose
+operator|&&
+operator|!
+name|HoldErrs
 condition|)
 name|fputs
 argument_list|(
 name|buf
 argument_list|,
 name|stdout
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+name|buf
+argument_list|,
+name|Xscript
 argument_list|)
 expr_stmt|;
 if|if
@@ -878,32 +892,40 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"\r\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|Debug
+operator|||
+operator|(
+name|Verbose
+operator|&&
+operator|!
+name|HoldErrs
+operator|)
 condition|)
-name|fputs
+name|printf
 argument_list|(
-name|buf
+literal|">>> %s\n"
 argument_list|,
-name|stdout
+name|buf
 argument_list|)
 expr_stmt|;
-name|fputs
+name|fprintf
 argument_list|(
-name|buf
+name|Xscript
 argument_list|,
+literal|">>> %s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
 name|SmtpOut
+argument_list|,
+literal|"%s\r\n"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
