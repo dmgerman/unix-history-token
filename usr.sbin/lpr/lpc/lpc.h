@@ -13,6 +13,28 @@ name|printer
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|LPC_PRIVCMD
+value|0x0001
+end_define
+
+begin_comment
+comment|/* a privileged command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPC_MSGOPT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* command recognizes -msg option */
+end_comment
+
 begin_struct
 struct|struct
 name|cmd
@@ -31,9 +53,9 @@ decl_stmt|;
 comment|/* help message */
 specifier|const
 name|int
-name|c_priv
+name|c_opts
 decl_stmt|;
-comment|/* privileged command */
+comment|/* flags (eg: privileged command) */
 comment|/* routine to do all the work for plain cmds, or 		 * initialization work for generic-printer cmds: */
 name|void
 function_decl|(
