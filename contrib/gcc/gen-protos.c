@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gen-protos.c - massages a list of prototypes, for use by fixproto.    Copyright (C) 1993, 94-96, 1998 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* gen-protos.c - massages a list of prototypes, for use by fixproto.    Copyright (C) 1993, 1994, 1995, 1996, 1998,    1999 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -21,18 +21,6 @@ directive|include
 file|"scan.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cpplib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cpphash.h"
-end_include
-
 begin_undef
 undef|#
 directive|undef
@@ -48,9 +36,46 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|progname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|add_hash
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|parse_fn_proto
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+expr|struct
+name|fn_decl
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +105,12 @@ name|next_index
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|collisions
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -87,6 +118,7 @@ name|add_hash
 parameter_list|(
 name|fname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -100,7 +132,7 @@ decl_stmt|;
 comment|/* NOTE:  If you edit this, also edit lookup_std_proto in fix-header.c !! */
 name|i
 operator|=
-name|hashf
+name|hashstr
 argument_list|(
 name|fname
 argument_list|,
@@ -108,9 +140,9 @@ name|strlen
 argument_list|(
 name|fname
 argument_list|)
-argument_list|,
-name|HASH_SIZE
 argument_list|)
+operator|%
+name|HASH_SIZE
 expr_stmt|;
 name|i0
 operator|=
@@ -126,6 +158,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|collisions
+operator|++
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -210,7 +245,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|ptr
@@ -420,20 +454,11 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-name|ISALNUM
+name|ISIDNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|ptr
 argument_list|)
-operator|||
-operator|*
-name|ptr
-operator|==
-literal|'_'
 condition|)
 operator|--
 name|ptr
@@ -536,6 +561,23 @@ literal|1
 return|;
 block|}
 end_block
+
+begin_decl_stmt
+specifier|extern
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -825,6 +867,17 @@ argument_list|(
 name|outf
 argument_list|,
 literal|"};\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"gen-protos: %d entries %d collisions\n"
+argument_list|,
+name|next_index
+argument_list|,
+name|collisions
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Configuration for an OpenBSD i386 target.        Copyright (C) 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Configuration for an OpenBSD i386 target.    Copyright (C) 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -17,16 +17,6 @@ begin_include
 include|#
 directive|include
 file|<i386/gstabs.h>
-end_include
-
-begin_comment
-comment|/* Get perform_* macros to build libgcc.a.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/perform.h>
 end_include
 
 begin_comment
@@ -52,13 +42,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 define|\
 value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
 end_define
@@ -71,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__unix__ -D__i386__ -D__OpenBSD__ -Asystem(unix) -Asystem(OpenBSD) -Acpu(i386) -Amachine(i386)"
+value|"-D__unix__ -D__OpenBSD__ \  -Asystem=unix -Asystem=bsd -Asystem=OpenBSD"
 end_define
 
 begin_comment
@@ -162,56 +152,6 @@ define|#
 directive|define
 name|ASM_APP_OFF
 value|"#NO_APP\n"
-end_define
-
-begin_comment
-comment|/* The following macros were originally stolen from i386v4.h.    These have to be defined to get PIC code correct.  */
-end_comment
-
-begin_comment
-comment|/* Assembler format: dispatch tables.  */
-end_comment
-
-begin_comment
-comment|/* How to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|BODY
-parameter_list|,
-name|VALUE
-parameter_list|,
-name|REL
-parameter_list|)
-define|\
-value|fprintf (FILE, "\t.long _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", LPREFIX, VALUE)
-end_define
-
-begin_comment
-comment|/* Assembler format: sections.  */
-end_comment
-
-begin_comment
-comment|/* Indicate when jump tables go in the text section.  This is    necessary when compiling PIC code.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JUMP_TABLES_IN_TEXT_SECTION
-value|(flag_pic)
 end_define
 
 begin_comment
@@ -313,6 +253,12 @@ name|DWARF2_UNWIND_INFO
 value|0
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_PREFERRED_EH_DATA_FORMAT
+end_undef
+
 begin_comment
 comment|/* Assembler format: alignment output.  */
 end_comment
@@ -350,6 +296,19 @@ end_endif
 begin_comment
 comment|/* Note that we pick up ASM_OUTPUT_MI_THUNK from unix.h.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_COMMENT_START
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_COMMENT_START
+value|";#"
+end_define
 
 end_unit
 

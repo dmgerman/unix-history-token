@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code to allocate RTL structures.    Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code to allocate RTL structures.    Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -15,12 +15,6 @@ directive|include
 file|"system.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|abort
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -33,6 +27,336 @@ directive|include
 file|"rtl.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|abort
+end_undef
+
+begin_include
+include|#
+directive|include
+file|"real.h"
+end_include
+
+begin_comment
+comment|/* Calculate the format for CONST_DOUBLE.  This depends on the relative    widths of HOST_WIDE_INT and REAL_VALUE_TYPE.     We need to go out to e0wwwww, since REAL_ARITHMETIC assumes 16-bits    per element in REAL_VALUE_TYPE.     This is duplicated in rtl.c.     A number of places assume that there are always at least two 'w'    slots in a CONST_DOUBLE, so we provide them even if one would suffice.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REAL_ARITHMETIC
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|MAX_LONG_DOUBLE_TYPE_SIZE
+operator|==
+literal|96
+end_if
+
+begin_define
+define|#
+directive|define
+name|REAL_WIDTH
+define|\
+value|(11*8 + HOST_BITS_PER_WIDE_INT)/HOST_BITS_PER_WIDE_INT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|MAX_LONG_DOUBLE_TYPE_SIZE
+operator|==
+literal|128
+end_if
+
+begin_define
+define|#
+directive|define
+name|REAL_WIDTH
+define|\
+value|(19*8 + HOST_BITS_PER_WIDE_INT)/HOST_BITS_PER_WIDE_INT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|HOST_FLOAT_FORMAT
+operator|!=
+name|TARGET_FLOAT_FORMAT
+end_if
+
+begin_define
+define|#
+directive|define
+name|REAL_WIDTH
+define|\
+value|(7*8 + HOST_BITS_PER_WIDE_INT)/HOST_BITS_PER_WIDE_INT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* REAL_ARITHMETIC */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|REAL_WIDTH
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|*
+literal|2
+operator|>=
+name|MAX_LONG_DOUBLE_TYPE_SIZE
+end_if
+
+begin_define
+define|#
+directive|define
+name|REAL_WIDTH
+value|2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|*
+literal|3
+operator|>=
+name|MAX_LONG_DOUBLE_TYPE_SIZE
+end_if
+
+begin_define
+define|#
+directive|define
+name|REAL_WIDTH
+value|3
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|*
+literal|4
+operator|>=
+name|MAX_LONG_DOUBLE_TYPE_SIZE
+end_if
+
+begin_define
+define|#
+directive|define
+name|REAL_WIDTH
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* REAL_WIDTH */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|REAL_WIDTH
+operator|==
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|CONST_DOUBLE_FORMAT
+value|"0ww"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|REAL_WIDTH
+operator|==
+literal|2
+end_if
+
+begin_define
+define|#
+directive|define
+name|CONST_DOUBLE_FORMAT
+value|"0ww"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|REAL_WIDTH
+operator|==
+literal|3
+end_if
+
+begin_define
+define|#
+directive|define
+name|CONST_DOUBLE_FORMAT
+value|"0www"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|REAL_WIDTH
+operator|==
+literal|4
+end_if
+
+begin_define
+define|#
+directive|define
+name|CONST_DOUBLE_FORMAT
+value|"0wwww"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|REAL_WIDTH
+operator|==
+literal|5
+end_if
+
+begin_define
+define|#
+directive|define
+name|CONST_DOUBLE_FORMAT
+value|"0wwwww"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CONST_DOUBLE_FORMAT
+end_define
+
+begin_comment
+comment|/* nothing - will cause syntax error */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|rtx_definition
@@ -40,12 +364,15 @@ block|{
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|enumname
 decl_stmt|,
 modifier|*
+decl_stmt|const
 name|name
 decl_stmt|,
 modifier|*
+decl_stmt|const
 name|format
 decl_stmt|;
 block|}
@@ -65,10 +392,12 @@ name|FORMAT
 parameter_list|,
 name|CLASS
 parameter_list|)
-value|{ STRINGIFY(ENUM), NAME, FORMAT },
+value|{ STRINGX(ENUM), NAME, FORMAT },
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|rtx_definition
 name|defs
@@ -84,6 +413,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -100,7 +430,7 @@ specifier|const
 name|char
 modifier|*
 name|type_from_format
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -115,7 +445,7 @@ specifier|const
 name|char
 modifier|*
 name|accessor_from_format
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -128,7 +458,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|special_format
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -143,7 +473,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|special_rtx
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -156,7 +486,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|find_formats
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -169,12 +499,9 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gendecl
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
-operator|,
 specifier|const
 name|char
 operator|*
@@ -187,12 +514,9 @@ begin_decl_stmt
 specifier|static
 name|void
 name|genmacro
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
-operator|,
 name|int
 operator|)
 argument_list|)
@@ -203,12 +527,9 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gendef
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
-operator|,
 specifier|const
 name|char
 operator|*
@@ -221,11 +542,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|genlegend
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -235,11 +555,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|genheader
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -249,15 +568,17 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gencode
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Decode a format letter into a C type string.  */
@@ -285,19 +606,19 @@ case|case
 literal|'i'
 case|:
 return|return
-literal|"int"
+literal|"int "
 return|;
 case|case
 literal|'w'
 case|:
 return|return
-literal|"HOST_WIDE_INT"
+literal|"HOST_WIDE_INT "
 return|;
 case|case
 literal|'s'
 case|:
 return|return
-literal|"char *"
+literal|"const char *"
 return|;
 case|case
 literal|'e'
@@ -306,27 +627,28 @@ case|case
 literal|'u'
 case|:
 return|return
-literal|"rtx"
+literal|"rtx "
 return|;
 case|case
 literal|'E'
 case|:
 return|return
-literal|"rtvec"
+literal|"rtvec "
 return|;
-comment|/* ?!? These should be bitmap and tree respectively, but those types        are not available in many of the files which include the output        of gengenrtl.         These are only used in prototypes, so I think we can assume that        void * is useable.  */
 case|case
 literal|'b'
 case|:
 return|return
-literal|"void *"
+literal|"struct bitmap_head_def *"
 return|;
+comment|/* bitmap - typedef not available */
 case|case
 literal|'t'
 case|:
 return|return
-literal|"void *"
+literal|"union tree_node *"
 return|;
+comment|/* tree - typedef not available */
 default|default:
 name|abort
 argument_list|()
@@ -411,7 +733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if a format character doesn't need normal processing.  */
+comment|/* Return nonzero if we should ignore FMT, an RTL format, when making    the list of formats we write routines to create.  */
 end_comment
 
 begin_function
@@ -470,7 +792,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if an rtx requires special processing.  */
+comment|/* Return nonzero if the RTL code given by index IDX is one that we should not    generate a gen_RTX_FOO function foo (because that function is present    elsewhere in the compiler).  */
 end_comment
 
 begin_function
@@ -537,6 +859,20 @@ index|]
 operator|.
 name|enumname
 argument_list|,
+literal|"SUBREG"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|defs
+index|[
+name|idx
+index|]
+operator|.
+name|enumname
+argument_list|,
 literal|"MEM"
 argument_list|)
 operator|==
@@ -547,7 +883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fill `formats' with all unique format strings.  */
+comment|/* Place a list of all format specifiers we use into the array FORMAT.  */
 end_comment
 
 begin_function
@@ -569,8 +905,8 @@ name|i
 operator|<
 name|NUM_RTX_CODE
 condition|;
-operator|++
 name|i
+operator|++
 control|)
 block|{
 specifier|const
@@ -601,8 +937,8 @@ init|;
 operator|*
 name|f
 condition|;
-operator|++
 name|f
+operator|++
 control|)
 if|if
 condition|(
@@ -623,9 +959,10 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|!
 operator|*
 name|f
+operator|==
+literal|0
 condition|)
 operator|*
 name|f
@@ -642,7 +979,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Emit a prototype for the rtx generator for a format.  */
+comment|/* Write the declarations for the routine to allocate RTL with FORMAT.  */
 end_comment
 
 begin_function
@@ -650,14 +987,8 @@ specifier|static
 name|void
 name|gendecl
 parameter_list|(
-name|f
-parameter_list|,
 name|format
 parameter_list|)
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -671,16 +1002,22 @@ name|p
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|pos
 decl_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|f
-argument_list|,
-literal|"extern rtx gen_rtx_fmt_%s PROTO((RTX_CODE, enum machine_mode mode"
+literal|"extern rtx gen_rtx_fmt_%s\tPARAMS ((RTX_CODE, "
 argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"enum machine_mode mode"
+argument_list|)
+expr_stmt|;
+comment|/* Write each parameter that is needed and start a new line when the line      would overflow.  */
 for|for
 control|(
 name|p
@@ -690,12 +1027,18 @@ operator|,
 name|i
 operator|=
 literal|0
+operator|,
+name|pos
+operator|=
+literal|75
 init|;
 operator|*
 name|p
+operator|!=
+literal|0
 condition|;
-operator|++
 name|p
+operator|++
 control|)
 if|if
 condition|(
@@ -704,11 +1047,52 @@ name|p
 operator|!=
 literal|'0'
 condition|)
-name|fprintf
+block|{
+name|int
+name|ourlen
+init|=
+name|strlen
 argument_list|(
-name|f
-argument_list|,
-literal|", %s arg%d"
+name|type_from_format
+argument_list|(
+operator|*
+name|p
+argument_list|)
+argument_list|)
+operator|+
+literal|6
+operator|+
+operator|(
+name|i
+operator|>
+literal|9
+operator|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|","
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pos
+operator|+
+name|ourlen
+operator|>
+literal|76
+condition|)
+name|printf
+argument_list|(
+literal|"\n\t\t\t\t      "
+argument_list|)
+operator|,
+name|pos
+operator|=
+literal|39
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %sarg%d"
 argument_list|,
 name|type_from_format
 argument_list|(
@@ -720,10 +1104,13 @@ name|i
 operator|++
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|pos
+operator|+=
+name|ourlen
+expr_stmt|;
+block|}
+name|printf
 argument_list|(
-name|f
-argument_list|,
 literal|"));\n"
 argument_list|)
 expr_stmt|;
@@ -731,7 +1118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Emit a define mapping an rtx code to the generator for its format.  */
+comment|/* Generate macros to generate RTL of code IDX using the functions we    write.  */
 end_comment
 
 begin_function
@@ -739,14 +1126,8 @@ specifier|static
 name|void
 name|genmacro
 parameter_list|(
-name|f
-parameter_list|,
 name|idx
 parameter_list|)
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
@@ -759,13 +1140,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|fprintf
+comment|/* We write a macro that defines gen_rtx_RTLCODE to be an equivalent to      gen_rtx_fmt_FORMAT where FORMAT is the RTX_FORMAT of RTLCODE.  */
+name|printf
 argument_list|(
-name|f
+literal|"#define gen_rtx_%s%s(MODE"
 argument_list|,
-literal|"#define gen_rtx_%s%s(mode"
-argument_list|,
-operator|(
 name|special_rtx
 argument_list|(
 name|idx
@@ -774,7 +1153,6 @@ condition|?
 literal|"raw_"
 else|:
 literal|""
-operator|)
 argument_list|,
 name|defs
 index|[
@@ -801,9 +1179,11 @@ literal|0
 init|;
 operator|*
 name|p
+operator|!=
+literal|0
 condition|;
-operator|++
 name|p
+operator|++
 control|)
 if|if
 condition|(
@@ -812,28 +1192,17 @@ name|p
 operator|!=
 literal|'0'
 condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|f
-argument_list|,
-literal|", arg%d"
+literal|", ARG%d"
 argument_list|,
 name|i
 operator|++
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|f
-argument_list|,
-literal|")   "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"gen_rtx_fmt_%s(%s,(mode)"
+literal|") \\\n  gen_rtx_fmt_%s (%s, (MODE)"
 argument_list|,
 name|defs
 index|[
@@ -867,9 +1236,11 @@ literal|0
 init|;
 operator|*
 name|p
+operator|!=
+literal|0
 condition|;
-operator|++
 name|p
+operator|++
 control|)
 if|if
 condition|(
@@ -878,28 +1249,24 @@ name|p
 operator|!=
 literal|'0'
 condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|f
-argument_list|,
-literal|",(arg%d)"
+literal|", (ARG%d)"
 argument_list|,
 name|i
 operator|++
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|puts
 argument_list|(
-name|f
-argument_list|,
-literal|")\n"
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Emit the implementation for the rtx generator for a format.  */
+comment|/* Generate the code for the function to generate RTL whose    format is FORMAT.  */
 end_comment
 
 begin_function
@@ -907,14 +1274,8 @@ specifier|static
 name|void
 name|gendef
 parameter_list|(
-name|f
-parameter_list|,
 name|format
 parameter_list|)
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -931,10 +1292,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|fprintf
+comment|/* Start by writing the definition of the function name and the types      of the arguments.  */
+name|printf
 argument_list|(
-name|f
-argument_list|,
 literal|"rtx\ngen_rtx_fmt_%s (code, mode"
 argument_list|,
 name|format
@@ -952,9 +1312,11 @@ literal|0
 init|;
 operator|*
 name|p
+operator|!=
+literal|0
 condition|;
-operator|++
 name|p
+operator|++
 control|)
 if|if
 condition|(
@@ -963,21 +1325,17 @@ name|p
 operator|!=
 literal|'0'
 condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|f
-argument_list|,
 literal|", arg%d"
 argument_list|,
 name|i
 operator|++
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|puts
 argument_list|(
-name|f
-argument_list|,
-literal|")\n     RTX_CODE code;\n     enum machine_mode mode;\n"
+literal|")\n     RTX_CODE code;\n     enum machine_mode mode;"
 argument_list|)
 expr_stmt|;
 for|for
@@ -992,9 +1350,11 @@ literal|0
 init|;
 operator|*
 name|p
+operator|!=
+literal|0
 condition|;
-operator|++
 name|p
+operator|++
 control|)
 if|if
 condition|(
@@ -1003,11 +1363,9 @@ name|p
 operator|!=
 literal|'0'
 condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|f
-argument_list|,
-literal|"     %s arg%d;\n"
+literal|"     %sarg%d;\n"
 argument_list|,
 name|type_from_format
 argument_list|(
@@ -1019,19 +1377,20 @@ name|i
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* See rtx_alloc in rtl.c for comments.  */
-name|fprintf
+comment|/* Now write out the body of the function itself, which allocates      the memory and initializes it.  */
+name|puts
 argument_list|(
-name|f
-argument_list|,
-literal|"{\n"
+literal|"{"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|puts
 argument_list|(
-name|f
-argument_list|,
-literal|"  rtx rt = obstack_alloc_rtx (sizeof (struct rtx_def) + %d * sizeof (rtunion));\n"
+literal|"  rtx rt;"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  rt = ggc_alloc_rtx (%d);\n"
 argument_list|,
 operator|(
 name|int
@@ -1040,22 +1399,21 @@ name|strlen
 argument_list|(
 name|format
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|puts
 argument_list|(
-name|f
-argument_list|,
-literal|"  PUT_CODE (rt, code);\n"
+literal|"  memset (rt, 0, sizeof (struct rtx_def) - sizeof (rtunion));\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|puts
 argument_list|(
-name|f
-argument_list|,
-literal|"  PUT_MODE (rt, mode);\n"
+literal|"  PUT_CODE (rt, code);"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"  PUT_MODE (rt, mode);"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1086,11 +1444,8 @@ name|p
 operator|!=
 literal|'0'
 condition|)
-block|{
-name|fprintf
+name|printf
 argument_list|(
-name|f
-argument_list|,
 literal|"  %s (rt, %d) = arg%d;\n"
 argument_list|,
 name|accessor_from_format
@@ -1105,65 +1460,49 @@ name|j
 operator|++
 argument_list|)
 expr_stmt|;
-block|}
-name|fprintf
+else|else
+name|printf
 argument_list|(
-name|f
+literal|"  X0EXP (rt, %d) = NULL_RTX;\n"
 argument_list|,
-literal|"\n  return rt;\n}\n\n"
+name|i
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"\n  return rt;\n}\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Emit the `do not edit' banner.  */
+comment|/* Generate the documentation header for files we write.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|genlegend
-parameter_list|(
-name|f
-parameter_list|)
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
+parameter_list|()
 block|{
-name|fputs
+name|puts
 argument_list|(
-literal|"/* Generated automaticaly by the program `gengenrtl'\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"   from the RTL description file `rtl.def' */\n\n"
-argument_list|,
-name|f
+literal|"/* Generated automatically by gengenrtl from rtl.def.  */\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Emit "genrtl.h".  */
+comment|/* Generate the text of the header file we make, genrtl.h.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|genheader
-parameter_list|(
-name|f
-parameter_list|)
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1174,6 +1513,16 @@ modifier|*
 modifier|*
 name|fmt
 decl_stmt|;
+name|puts
+argument_list|(
+literal|"#ifndef GCC_GENRTL_H"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"#define GCC_GENRTL_H\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|fmt
@@ -1188,17 +1537,13 @@ name|fmt
 control|)
 name|gendecl
 argument_list|(
-name|f
-argument_list|,
 operator|*
 name|fmt
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|putchar
 argument_list|(
-name|f
-argument_list|,
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 for|for
@@ -1214,9 +1559,9 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
+operator|!
 name|special_format
 argument_list|(
 name|defs
@@ -1227,33 +1572,28 @@ operator|.
 name|format
 argument_list|)
 condition|)
-continue|continue;
 name|genmacro
 argument_list|(
-name|f
-argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
+name|puts
+argument_list|(
+literal|"\n#endif /* GCC_GENRTL_H */"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Emit "genrtl.c".  */
+comment|/* Generate the text of the code file we write, genrtl.c.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|gencode
-parameter_list|(
-name|f
-parameter_list|)
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
+parameter_list|()
 block|{
 specifier|const
 name|char
@@ -1261,81 +1601,54 @@ modifier|*
 modifier|*
 name|fmt
 decl_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"#include \"config.h\"\n"
-argument_list|,
-name|f
+literal|"#include \"config.h\""
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"#include \"system.h\"\n"
-argument_list|,
-name|f
+literal|"#include \"system.h\""
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"#include \"obstack.h\"\n"
-argument_list|,
-name|f
+literal|"#include \"obstack.h\""
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"#include \"rtl.h\"\n\n"
-argument_list|,
-name|f
+literal|"#include \"rtl.h\""
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"extern struct obstack *rtl_obstack;\n\n"
-argument_list|,
-name|f
+literal|"#include \"ggc.h\"\n"
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"static rtx obstack_alloc_rtx PROTO((int length));\n"
-argument_list|,
-name|f
+literal|"extern struct obstack *rtl_obstack;\n"
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"static rtx obstack_alloc_rtx (length)\n"
-argument_list|,
-name|f
+literal|"#define obstack_alloc_rtx(n)					\\"
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"     register int length;\n{\n"
-argument_list|,
-name|f
+literal|"    ((rtx) obstack_alloc (rtl_obstack,				\\"
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"  rtx rt = (rtx) obstack_alloc (rtl_obstack, length);\n\n"
-argument_list|,
-name|f
+literal|"			  sizeof (struct rtx_def)		\\"
 argument_list|)
 expr_stmt|;
-name|fputs
+name|puts
 argument_list|(
-literal|"  memset(rt, 0, sizeof(struct rtx_def) - sizeof(rtunion));\n\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"  return rt;\n}\n\n"
-argument_list|,
-name|f
+literal|"			  + ((n) - 1) * sizeof (rtunion)))\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1346,14 +1659,14 @@ name|formats
 init|;
 operator|*
 name|fmt
+operator|!=
+literal|0
 condition|;
-operator|++
 name|fmt
+operator|++
 control|)
 name|gendef
 argument_list|(
-name|f
-argument_list|,
 operator|*
 name|fmt
 argument_list|)
@@ -1361,72 +1674,26 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_C_ALLOCA
-argument_list|)
-end_if
-
-begin_function
-name|PTR
-name|xmalloc
-parameter_list|(
-name|nbytes
-parameter_list|)
-name|size_t
-name|nbytes
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|tmp
-init|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|nbytes
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|tmp
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"can't allocate %d bytes (out of virtual memory)\n"
-argument_list|,
-name|nbytes
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|tmp
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* USE_C_ALLOCA */
+comment|/* This is the main program.  We accept only one argument, "-h", which    says we are writing the genrtl.h file.  Otherwise we are writing the    genrtl.c file.  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -1445,125 +1712,68 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|!=
-literal|3
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|find_formats
 argument_list|()
 expr_stmt|;
-name|f
-operator|=
-name|fopen
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"w"
-argument_list|)
+name|genlegend
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|f
+name|argc
 operator|==
-name|NULL
-condition|)
-block|{
-name|perror
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|genlegend
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-name|genheader
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-name|f
-operator|=
-name|fopen
-argument_list|(
-name|argv
-index|[
 literal|2
-index|]
-argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|f
-operator|==
-name|NULL
-condition|)
-block|{
-name|perror
-argument_list|(
+operator|&&
 name|argv
 index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|genlegend
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-name|gencode
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+index|]
+index|[
 literal|0
-argument_list|)
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'h'
+condition|)
+name|genheader
+argument_list|()
 expr_stmt|;
+else|else
+name|gencode
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|stdout
+argument_list|)
+operator|||
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+operator|||
+name|fclose
+argument_list|(
+name|stdout
+argument_list|)
+condition|)
+return|return
+name|FATAL_EXIT_CODE
+return|;
+return|return
+name|SUCCESS_EXIT_CODE
+return|;
 block|}
 end_function
 

@@ -20,13 +20,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 value|(MASK_80387 | MASK_FLOAT_RETURNS)
 end_define
 
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -DM_UNIX -DM_I386 -DM_COFF -DM_WORDSWAP -Asystem(svr3)"
+value|"-Dunix -DM_UNIX -DM_I386 -DM_COFF -DM_WORDSWAP -Asystem=svr3"
 end_define
 
 begin_undef
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|" -Acpu(i386) -Amachine(i386) %{scointl:-DM_INTERNAT}"
+value|"%(cpp_cpu) %{scointl:-DM_INTERNAT}"
 end_define
 
 begin_comment
@@ -139,16 +139,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Use atexit for static destructors, instead of defining    our own exit function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-end_define
-
-begin_comment
 comment|/* caller has to pop the extra argument passed to functions that return    structures. */
 end_comment
 
@@ -176,16 +166,6 @@ end_define
 begin_comment
 comment|/* On other 386 systems, the last line looks like this:    : (aggregate_value_p (TREE_TYPE (FUNTYPE))) ? GET_MODE_SIZE (Pmode) : 0)  */
 end_comment
-
-begin_comment
-comment|/* Use periods rather than dollar signs in special g++ assembler names.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_DOLLAR_IN_LABEL
-end_define
 
 begin_comment
 comment|/* Handle #pragma pack. */

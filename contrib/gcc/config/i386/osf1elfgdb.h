@@ -7,18 +7,18 @@ begin_comment
 comment|/* Use stabs instead of DWARF debug format.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
 begin_define
 define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
 value|DBX_DEBUG
 end_define
-
-begin_include
-include|#
-directive|include
-file|"i386/osf1elf.h"
-end_include
 
 end_unit
 

@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* XCOFF definitions.  These are needed in dbxout.c, final.c,    and xcoffout.h.     Copyright (C) 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* XCOFF definitions.  These are needed in dbxout.c, final.c,    and xcoffout.h.     Copyright (C) 1998, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ASM_STABS_OP
-value|".stabx"
+value|"\t.stabx\t"
 end_define
 
 begin_comment
@@ -135,7 +135,7 @@ parameter_list|)
 define|\
 value|{								\   if (current_sym_addr&& current_sym_code == N_FUN)		\     fprintf (asmfile, "\",.");					\   else								\     fprintf (asmfile, "\",");					\
 comment|/* If we are writing a function name, we must ensure that	\      there is no storage-class suffix on the name.  */
-value|\   if (current_sym_addr&& current_sym_code == N_FUN		\&& GET_CODE (current_sym_addr) == SYMBOL_REF)		\     {								\       char *_p = XSTR (current_sym_addr, 0);			\       if (*_p == '*')						\ 	fprintf (asmfile, "%s", _p+1);				\       else							\         for (; *_p != '['&& *_p; _p++)				\ 	  fprintf (asmfile, "%c", *_p);				\     }								\   else if (current_sym_addr)					\     output_addr_const (asmfile, current_sym_addr);		\   else if (current_sym_code == N_GSYM)				\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (sym), 0), 0)); \   else								\     fprintf (asmfile, "%d", current_sym_value);			\   fprintf (asmfile, ",%d,0\n", stab_to_sclass (current_sym_code)); \ }
+value|\   if (current_sym_addr&& current_sym_code == N_FUN		\&& GET_CODE (current_sym_addr) == SYMBOL_REF)		\     {								\       const char *_p = XSTR (current_sym_addr, 0);		\       if (*_p == '*')						\ 	fprintf (asmfile, "%s", _p+1);				\       else							\         for (; *_p != '['&& *_p; _p++)				\ 	  fprintf (asmfile, "%c", *_p);				\     }								\   else if (current_sym_addr)					\     output_addr_const (asmfile, current_sym_addr);		\   else if (current_sym_code == N_GSYM)				\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (sym), 0), 0)); \   else								\     fprintf (asmfile, "%d", current_sym_value);			\   fprintf (asmfile, ",%d,0\n", stab_to_sclass (current_sym_code)); \ }
 end_define
 
 begin_comment
@@ -192,6 +192,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|xcoff_current_include_file
@@ -232,6 +233,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|xcoff_lastfile
@@ -288,6 +290,50 @@ value|{							\   if (xcoff_current_include_file)			\     {							\       fputs 
 end_define
 
 begin_comment
+comment|/* .stabx has the type in a different place.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Do not emit any marker for XCOFF until assembler allows XFT_CV.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBX_OUTPUT_GCC_MARKER
+parameter_list|(
+name|FILE
+parameter_list|)
+define|\
+value|fprintf ((FILE), "%s\"%s\",0,%d,0\n", ASM_STABS_OP, STABS_GCC_MARKER, \ 	   stab_to_sclass (N_GSYM))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DBX_OUTPUT_GCC_MARKER
+parameter_list|(
+name|FILE
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Do not break .stabs pseudos into continuations.  */
 end_comment
 
@@ -319,14 +365,14 @@ name|DEBUG_SYMS_TEXT
 end_define
 
 begin_comment
-comment|/* Prototype functions in xcoffout.c. */
+comment|/* Prototype functions in xcoffout.c.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|stab_to_sclass
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -344,14 +390,16 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|void
-name|xcoffout_begin_function
-name|PROTO
+name|xcoffout_begin_prologue
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
-operator|,
+name|unsigned
 name|int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -361,15 +409,12 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|xcoffout_begin_block
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|unsigned
 operator|,
-name|int
-operator|,
-name|int
+name|unsigned
 operator|)
 argument_list|)
 decl_stmt|;
@@ -379,11 +424,10 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|xcoffout_end_epilogue
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -393,12 +437,10 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|xcoffout_end_function
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
-operator|,
+name|unsigned
 name|int
 operator|)
 argument_list|)
@@ -409,15 +451,12 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|xcoffout_end_block
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|unsigned
 operator|,
-name|int
-operator|,
-name|int
+name|unsigned
 operator|)
 argument_list|)
 decl_stmt|;
@@ -442,7 +481,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|xcoff_output_standard_types
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -461,7 +500,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|xcoffout_declare_function
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|FILE
@@ -469,6 +508,7 @@ operator|*
 operator|,
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -510,16 +550,15 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|xcoffout_source_line
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|unsigned
+name|int
 operator|,
+specifier|const
 name|char
 operator|*
-operator|,
-name|rtx
 operator|)
 argument_list|)
 decl_stmt|;

@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU_SPEC
-value|"\ -Asystem(unix) -Acpu(i386) -Amachine(i386) \ %{!ansi:-Di386} -D__i386 -D__i386__ \ %{march=i386:-DCPU=I80386} \ %{march=i486:-DCPU=I80486 %(cpp_486)} \ %{march=pentium:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUM %(cpp_586)} \ %{march=pentiumpro:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUMPRO %(cpp_686)} \ %{!march=*: \  %{mcpu=i386:-DCPU=I80386} \  %{mcpu=i486:-DCPU=I80486 %(cpp_486)} %{m486:-DCPU=I80486 %(cpp_486)} \  %{mpentium:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUM %(cpp_586)} \  %{mcpu=pentium:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUM %(cpp_586)} \  %{mpentiumpro:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUMPRO %(cpp_686)} \  %{mcpu=pentiumpro:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUMPRO %(cpp_686)} \  %{!mcpu*:%{!m486:%{!mpentium*:-DCPU=I80386 %(cpp_cpu_default)}}}}"
+value|"\ -Asystem=unix -Acpu=i386 -Amachine=i386 \ %{!ansi:-Di386} -D__i386 -D__i386__ \ %{march=i386:-DCPU=I80386} \ %{march=i486:-DCPU=I80486 %(cpp_486)} \ %{march=pentium:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUM %(cpp_586)} \ %{march=pentiumpro:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUMPRO %(cpp_686)} \ %{!march=*: \  %{mcpu=i386:-DCPU=I80386} \  %{mcpu=i486:-DCPU=I80486 %(cpp_486)} %{m486:-DCPU=I80486 %(cpp_486)} \  %{mpentium:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUM %(cpp_586)} \  %{mcpu=pentium:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUM %(cpp_586)} \  %{mpentiumpro:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUMPRO %(cpp_686)} \  %{mcpu=pentiumpro:-DCPU=PENTIUM -DCPU_VARIANT=PENTIUMPRO %(cpp_686)} \  %{!mcpu*:%{!m486:%{!mpentium*:-DCPU=I80386 %(cpp_cpu_default)}}}}"
 end_define
 
 begin_include
@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__vxworks -D__i386__"
+value|"-D__vxworks"
 end_define
 
 begin_comment
@@ -59,7 +59,7 @@ value|""
 end_define
 
 begin_comment
-comment|/* VxWorks uses object files, not loadable images.  make linker just    combine objects. */
+comment|/* VxWorks uses object files, not loadable images.  make linker just    combine objects.  */
 end_comment
 
 begin_undef

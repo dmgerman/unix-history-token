@@ -4,7 +4,7 @@ comment|/* Assembler-independent definitions for an Intel 386 running    Interac
 end_comment
 
 begin_comment
-comment|/* Use crt1.o, not crt0.o, as a startup file, and crtn.o as a closing file. */
+comment|/* Use crt1.o, not crt0.o, as a startup file, and crtn.o as a closing file.  */
 end_comment
 
 begin_undef
@@ -99,7 +99,7 @@ comment|/* This is apparently not true: ISC versions up to 3.0, at least, use   
 end_comment
 
 begin_comment
-comment|/* caller has to pop the extra argument passed to functions that return    structures. */
+comment|/* caller has to pop the extra argument passed to functions that return    structures.  */
 end_comment
 
 begin_undef
@@ -143,19 +143,19 @@ name|HANDLE_SYSV_PRAGMA
 end_define
 
 begin_comment
-comment|/* By default, target has a 80387, uses IEEE compatible arithmetic,    and returns float values in the 387, ie,    (TARGET_80387 | TARGET_FLOAT_RETURNS_IN_80387)     ISC's software emulation of a 387 fails to handle the `fucomp'    opcode.  fucomp is only used when generating IEEE compliant code.    So don't make TARGET_IEEE_FP default for ISC. */
+comment|/* By default, target has a 80387, uses IEEE compatible arithmetic,    and returns float values in the 387, ie,    (TARGET_80387 | TARGET_FLOAT_RETURNS_IN_80387)     ISC's software emulation of a 387 fails to handle the `fucomp'    opcode.  fucomp is only used when generating IEEE compliant code.    So don't make TARGET_IEEE_FP default for ISC.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 value|(MASK_80387 | MASK_FLOAT_RETURNS)
 end_define
 
@@ -194,13 +194,13 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {							\     int len = strlen (main_input_filename);		\     char *na = main_input_filename + len;		\     char shorter[15];					\
+value|do {							\     const int len = strlen (main_input_filename);	\     const char *na = main_input_filename + len;		\     char shorter[15];					\
 comment|/* NA gets MAIN_INPUT_FILENAME sans directory names.  */
 value|\     while (na> main_input_filename)			\       {							\ 	if (na[-1] == '/')				\ 	  break;					\ 	na--;						\       }							\     strncpy (shorter, na, 14);				\     shorter[14] = 0;					\     fprintf (FILE, "\t.file\t");			\     output_quoted_string (FILE, shorter);		\     fprintf (FILE, "\n");				\   } while (0)
 end_define
 
 begin_comment
-comment|/* Work around assembler forward label references generated in exception    handling code. */
+comment|/* Work around assembler forward label references generated in exception    handling code.  */
 end_comment
 
 begin_define

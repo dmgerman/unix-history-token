@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OSF/rose half-pic support definitions.    Copyright (C) 1992, 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* OSF/rose half-pic support definitions.    Copyright (C) 1992, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -8,33 +8,6 @@ ifndef|#
 directive|ifndef
 name|NO_HALF_PIC
 end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_union_decl
-union_decl|union
-name|tree_node
-union_decl|;
-end_union_decl
-
-begin_comment
-comment|/* forward reference */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|rtx_def
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Declare the variable flag_half_pic as 'int' instead of 'extern    int', so that BSS variables are created (even though this is not    strict ANSI).  This is because rtl.c now refers to the    CONSTANT_ADDRESS_P macro, which in turn refers to flag_half_pic,    and wants to call half_pic_address_p, whose address we also store    in a BSS variable.  This way, the gen* programs won't get    unknown symbol errors when being linked (flag_half_pic will never    be true in the gen* programs).  */
@@ -50,15 +23,24 @@ begin_comment
 comment|/* Global half-pic flag.  */
 end_comment
 
-begin_function_decl
+begin_macro
 name|int
-function_decl|(
-modifier|*
-name|ptr_half_pic_address_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+argument|*ptr_half_pic_address_p
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ptr to half_pic_address_p () */
@@ -90,7 +72,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|half_pic_encode
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|union
@@ -109,9 +91,10 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|half_pic_declare
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -127,9 +110,10 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|half_pic_external
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -145,7 +129,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|half_pic_init
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -162,7 +146,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|half_pic_address_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -183,7 +167,7 @@ name|struct
 name|rtx_def
 modifier|*
 name|half_pic_ptr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -198,23 +182,34 @@ begin_comment
 comment|/* return RTX for half-pic pointer */
 end_comment
 
-begin_comment
-comment|/* Can't use prototype since FILE isn't defined yet.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|half_pic_finish
-parameter_list|(
-comment|/* FILE * */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* half_pic termination */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Macros to provide access to the half-pic stuff (so they can easily    be stubbed out.  */

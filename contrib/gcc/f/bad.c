@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bad.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Handles the displaying of diagnostic messages regarding the user's source       files.     Modifications: */
+comment|/* bad.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 2002 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Handles the displaying of diagnostic messages regarding the user's source       files.     Modifications: */
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"flags.j"
+file|"flags.h"
 end_include
 
 begin_include
@@ -45,13 +45,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"toplev.j"
+file|"toplev.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"where.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"intl.h"
 end_include
 
 begin_comment
@@ -97,12 +103,14 @@ begin_struct
 struct|struct
 name|_ffebad_message_
 block|{
+specifier|const
 name|ffebadSeverity
 name|severity
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|message
 decl_stmt|;
 block|}
@@ -115,6 +123,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|_ffebad_message_
 name|ffebad_messages_
@@ -123,15 +132,15 @@ init|=
 block|{
 define|#
 directive|define
-name|FFEBAD_MSGS1
+name|FFEBAD_MSG
 parameter_list|(
-name|KWD
+name|kwd
 parameter_list|,
-name|SEV
+name|sev
 parameter_list|,
-name|MSG
+name|msgid
 parameter_list|)
-value|{ SEV, MSG },
+value|{ sev, msgid },
 if|#
 directive|if
 name|FFEBAD_LONG_MSGS_
@@ -139,32 +148,32 @@ operator|==
 literal|0
 define|#
 directive|define
-name|FFEBAD_MSGS2
+name|LONG
 parameter_list|(
-name|KWD
-parameter_list|,
-name|SEV
-parameter_list|,
-name|LMSG
-parameter_list|,
-name|SMSG
+name|m
 parameter_list|)
-value|{ SEV, SMSG },
+define|#
+directive|define
+name|SHORT
+parameter_list|(
+name|m
+parameter_list|)
+value|m
 else|#
 directive|else
 define|#
 directive|define
-name|FFEBAD_MSGS2
+name|LONG
 parameter_list|(
-name|KWD
-parameter_list|,
-name|SEV
-parameter_list|,
-name|LMSG
-parameter_list|,
-name|SMSG
+name|m
 parameter_list|)
-value|{ SEV, LMSG },
+value|m
+define|#
+directive|define
+name|SHORT
+parameter_list|(
+name|m
+parameter_list|)
 endif|#
 directive|endif
 include|#
@@ -172,10 +181,13 @@ directive|include
 file|"bad.def"
 undef|#
 directive|undef
-name|FFEBAD_MSGS1
+name|FFEBAD_MSG
 undef|#
 directive|undef
-name|FFEBAD_MSGS2
+name|LONG
+undef|#
+directive|undef
+name|SHORT
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -439,7 +451,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|message
+name|msgid
 parameter_list|)
 block|{
 name|unsigned
@@ -480,12 +492,15 @@ name|severity
 expr_stmt|;
 name|ffebad_message_
 operator|=
+name|gettext
+argument_list|(
 name|ffebad_messages_
 index|[
 name|errnum
 index|]
 operator|.
 name|message
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -496,20 +511,12 @@ name|sev
 expr_stmt|;
 name|ffebad_message_
 operator|=
-name|message
+name|gettext
+argument_list|(
+name|msgid
+argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-block|{
-specifier|extern
-name|int
-name|inhibit_warnings
-decl_stmt|;
-comment|/* From toplev.c. */
 switch|switch
 condition|(
 name|ffebad_severity_
@@ -601,10 +608,6 @@ break|break;
 default|default:
 break|break;
 block|}
-block|}
-endif|#
-directive|endif
-comment|/* FFECOM_targetCURRENT == FFECOM_targetGCC */
 name|ffebad_is_temp_inhibited_
 operator|=
 name|FALSE
@@ -1024,6 +1027,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|spaces
 init|=
 literal|"...>\ \040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\ \040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\ \040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\ \040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\ \040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\ \040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\ \040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\ \040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\ \040\040\040"
@@ -1103,7 +1107,10 @@ name|FFEBAD_severityINFORMATIONAL
 case|:
 name|s
 operator|=
+name|_
+argument_list|(
 literal|"note:"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1111,7 +1118,10 @@ name|FFEBAD_severityWARNING
 case|:
 name|s
 operator|=
+name|_
+argument_list|(
 literal|"warning:"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1119,7 +1129,10 @@ name|FFEBAD_severitySEVERE
 case|:
 name|s
 operator|=
+name|_
+argument_list|(
 literal|"fatal:"
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -1237,29 +1250,15 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|report_error_function
 argument_list|(
 name|fn
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* FFECOM_targetCURRENT == FFECOM_targetGCC */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-if|#
-directive|if
-literal|0
-argument_list|"Line %" ffewhereLineNumber_f "u of %s:\n   %s\n   %s%c", 		   rn, fn,
-else|#
-directive|else
 comment|/* the trailing space on the<file>:<line>: line 		      fools emacs19 compilation mode into finding the 		      report */
 literal|"%s:%"
 name|ffewhereLineNumber_f
@@ -1269,8 +1268,6 @@ name|fn
 argument_list|,
 name|rn
 argument_list|,
-endif|#
-directive|endif
 name|s
 argument_list|,
 name|ffewhere_line_content
@@ -1307,7 +1304,10 @@ name|cn
 expr_stmt|;
 name|s
 operator|=
+name|_
+argument_list|(
 literal|"(continued):"
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1359,30 +1359,12 @@ block|{
 comment|/* Didn't output "warning:" string, capitalize it for message.  */
 if|if
 condition|(
-operator|(
 name|s
 index|[
 literal|0
 index|]
 operator|!=
 literal|'\0'
-operator|)
-operator|&&
-name|ISALPHA
-argument_list|(
-name|s
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-name|ISLOWER
-argument_list|(
-name|s
-index|[
-literal|0
-index|]
-argument_list|)
 condition|)
 block|{
 name|char
@@ -1390,7 +1372,7 @@ name|c
 decl_stmt|;
 name|c
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 name|s
 index|[
@@ -1521,11 +1503,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ISALPHA
-argument_list|(
-name|c
-argument_list|)
-operator|&&
 name|ISUPPER
 argument_list|(
 name|c
@@ -1561,7 +1538,10 @@ name|buf
 argument_list|,
 name|bufi
 argument_list|,
+name|_
+argument_list|(
 literal|"[REPORT BUG!!] %"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bufi
@@ -1599,7 +1579,10 @@ name|buf
 argument_list|,
 name|bufi
 argument_list|,
+name|_
+argument_list|(
 literal|"[REPORT BUG!!]"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1654,7 +1637,10 @@ name|buf
 argument_list|,
 name|bufi
 argument_list|,
+name|_
+argument_list|(
 literal|"[REPORT BUG!!] %"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bufi
@@ -1776,7 +1762,10 @@ name|buf
 argument_list|,
 name|bufi
 argument_list|,
+name|_
+argument_list|(
 literal|"[REPORT BUG!!]"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bufi

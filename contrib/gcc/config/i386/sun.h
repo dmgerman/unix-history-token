@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -Dsun386 -Dsun -Asystem(unix) -Asystem(bsd) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Dsun386 -Dsun -Asystem=unix -Asystem=bsd"
 end_define
 
 begin_comment

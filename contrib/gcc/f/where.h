@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_where
+name|GCC_F_WHERE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_where
+name|GCC_F_WHERE_H
 end_define
 
 begin_comment
@@ -206,7 +206,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"glimits.j"
+file|"glimits.h"
 end_include
 
 begin_include
@@ -295,6 +295,7 @@ begin_function_decl
 name|ffewhereFile
 name|ffewhere_file_new
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -687,6 +688,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_EHERE_H */
+end_comment
 
 end_unit
 

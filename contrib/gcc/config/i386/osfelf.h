@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-DOSF -DOSF1 -Dunix -Asystem(xpg4)"
+value|"-DOSF -DOSF1 -Dunix -Asystem=xpg4"
 end_define
 
 begin_undef
@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"\ %{gline:%{!g:%{!g0:%{!g1:%{!g2: -g1}}}}} \ %{!melf: %{!mrose: -melf }} \ %{!mrose: %{!munderscores: %{!mno-underscores: -mno-underscores }} \ 	  %{!mmcount: %{!mno-mcount: %{!mmcount-ptr: -mmcount-ptr }}}} \ %{mrose: %{!mmcount: %{!mno-mcount: %{!mmcount-ptr: -mmcount }}} \ 	 %{pic-extern: -mhalf-pic } %{pic-lib: -mhalf-pic } \ 	 %{!pic-extern: %{!pic-lib: %{pic-none: -mno-half-pic} %{!pic-none: -mhalf-pic}}} \ 	 %{pic-calls: } %{pic-names*: }}"
+value|"%(cc1_cpu) \ %{gline:%{!g:%{!g0:%{!g1:%{!g2: -g1}}}}} \ %{!melf: %{!mrose: -melf }} \ %{!mrose: %{!munderscores: %{!mno-underscores: -mno-underscores }} \ 	  %{!mmcount: %{!mno-mcount: %{!mmcount-ptr: -mmcount-ptr }}}} \ %{mrose: %{!mmcount: %{!mno-mcount: %{!mmcount-ptr: -mmcount }}} \ 	 %{pic-extern: -mhalf-pic } %{pic-lib: -mhalf-pic } \ 	 %{!pic-extern: %{!pic-lib: %{pic-none: -mno-half-pic} %{!pic-none: -mhalf-pic}}} \ 	 %{pic-calls: } %{pic-names*: }}"
 end_define
 
 begin_undef

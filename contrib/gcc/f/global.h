@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_global
+name|GCC_F_GLOBAL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_global
+name|GCC_F_GLOBAL_H
 end_define
 
 begin_comment
@@ -576,50 +576,12 @@ begin_comment
 comment|/* Define macros. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetFFE
-end_if
-
-begin_define
-define|#
-directive|define
-name|FFEGLOBAL_ENABLED
-value|0
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_elif
-
 begin_define
 define|#
 directive|define
 name|FFEGLOBAL_ENABLED
 value|1
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -881,6 +843,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_GLOBAL_H */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Sun assembler syntax for the Intel 80386.    Copyright (C) 1988, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Sun assembler syntax for the Intel 80386.    Copyright (C) 1988, 1996, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -46,30 +46,27 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASM_BYTE_OP
-value|"\t.byte"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ASM_SHORT
-value|"\t.value"
+value|"\t.value\t"
 end_define
 
 begin_define
 define|#
 directive|define
 name|ASM_LONG
-value|"\t.long"
+value|"\t.long\t"
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASM_DOUBLE
-value|"\t.double"
+name|ASM_QUAD
+value|"\t.quad\t"
 end_define
+
+begin_comment
+comment|/* Should not be used for 32bit compilation.  */
+end_comment
 
 begin_comment
 comment|/* How to output an ASCII string constant.  */
@@ -82,12 +79,12 @@ name|ASM_OUTPUT_ASCII
 parameter_list|(
 name|FILE
 parameter_list|,
-name|p
+name|PTR
 parameter_list|,
-name|size
+name|SIZE
 parameter_list|)
 define|\
-value|do								\ { int i = 0; 							\   while (i< (size))						\     { if (i%10 == 0) { if (i!=0) fprintf ((FILE), "\n");	\ 		       fprintf ((FILE), "%s ", ASM_BYTE_OP); }	\       else fprintf ((FILE), ",");				\       fprintf ((FILE), "0x%x", ((p)[i++]& 0377)) ;}		\       fprintf ((FILE), "\n");					\ } while (0)
+value|do								\ { size_t i = 0, limit = (SIZE); 				\   while (i< limit)						\     { if (i%10 == 0) { if (i!=0) fprintf ((FILE), "\n");	\ 		       fputs ("\t.byte\t", (FILE)); }		\       else fprintf ((FILE), ",");				\       fprintf ((FILE), "0x%x", ((PTR)[i++]& 0377)) ;}		\       fprintf ((FILE), "\n");					\ } while (0)
 end_define
 
 begin_comment
@@ -112,9 +109,9 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {							\     extern char *version_string, *language_string;	\     {							\       int len = strlen (main_input_filename);		\       char *na = main_input_filename + len;		\       char shorter[15];					\
+value|do {							\     {							\       const int len = strlen (main_input_filename);	\       const char *na = main_input_filename + len;	\       char shorter[15];					\
 comment|/* NA gets MAIN_INPUT_FILENAME sans directory names.  */
-value|\       while (na> main_input_filename)			\ 	{						\ 	  if (na[-1] == '/')				\ 	    break;					\ 	  na--;						\ 	}						\       strncpy (shorter, na, 14);			\       shorter[14] = 0;					\       fprintf (FILE, "\t.file\t");			\       output_quoted_string (FILE, shorter);		\       fprintf (FILE, "\n");				\     }							\     fprintf (FILE, "\t.version\t\"%s %s\"\n",		\ 	     language_string, version_string);		\     if (optimize) ASM_FILE_START_1 (FILE);		\   } while (0)
+value|\       while (na> main_input_filename)			\ 	{						\ 	  if (na[-1] == '/')				\ 	    break;					\ 	  na--;						\ 	}						\       strncpy (shorter, na, 14);			\       shorter[14] = 0;					\       fprintf (FILE, "\t.file\t");			\       output_quoted_string (FILE, shorter);		\       fprintf (FILE, "\n");				\     }							\     fprintf (FILE, "\t.version\t\"%s %s\"\n",		\ 	     lang_hooks.name, version_string);		\     if (optimize) ASM_FILE_START_1 (FILE);		\   } while (0)
 end_define
 
 begin_define
@@ -175,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|TEXT_SECTION_ASM_OP
-value|".text"
+value|"\t.text"
 end_define
 
 begin_comment
@@ -192,7 +189,7 @@ begin_define
 define|#
 directive|define
 name|DATA_SECTION_ASM_OP
-value|".data"
+value|"\t.data"
 end_define
 
 begin_comment
@@ -257,11 +254,11 @@ parameter_list|,
 name|NUMBER
 parameter_list|)
 define|\
-value|sprintf ((BUF), "*.%s%d", (PREFIX), (NUMBER))
+value|sprintf ((BUF), "*.%s%ld", (PREFIX), (long)(NUMBER))
 end_define
 
 begin_comment
-comment|/* The prefix to add to user-visible assembler symbols. */
+comment|/* The prefix to add to user-visible assembler symbols.  */
 end_comment
 
 begin_define

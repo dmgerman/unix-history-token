@@ -51,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{posix:-D_POSIX_SOURCE} -D_SEQUENT_=1"
+value|"%(cpp_cpu) %{posix:-D_POSIX_SOURCE} -D_SEQUENT_=1"
 end_define
 
 begin_comment
@@ -65,7 +65,7 @@ name|INVOKE__main
 end_define
 
 begin_comment
-comment|/* Assembler pseudo-op for initialized shared variables (.shdata). */
+comment|/* Assembler pseudo-op for initialized shared variables (.shdata).  */
 end_comment
 
 begin_undef
@@ -78,11 +78,11 @@ begin_define
 define|#
 directive|define
 name|SHARED_SECTION_ASM_OP
-value|".section .shdata, \"ws\""
+value|"\t.section .shdata, \"ws\""
 end_define
 
 begin_comment
-comment|/* Assembler pseudo-op for uninitialized shared global variables (.shbss). */
+comment|/* Assembler pseudo-op for uninitialized shared global variables (.shbss).  */
 end_comment
 
 begin_undef
@@ -109,7 +109,7 @@ value|( fputs(".comm ", (FILE)),			\   assemble_name((FILE), (NAME)),		\    fpri
 end_define
 
 begin_comment
-comment|/* Assembler pseudo-op for uninitialized shared local variables (.shbss). */
+comment|/* Assembler pseudo-op for uninitialized shared local variables (.shbss).  */
 end_comment
 
 begin_undef
@@ -122,7 +122,17 @@ begin_define
 define|#
 directive|define
 name|SHARED_BSS_SECTION_ASM_OP
-value|".section .shbss, \"bs\""
+value|"\t.section .shbss, \"bs\""
+end_define
+
+begin_comment
+comment|/* seq2-sysv3.h used to define HAVE_ATEXIT, so I assume ptx1 needs this...  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_ATEXIT
 end_define
 
 end_unit

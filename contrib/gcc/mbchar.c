@@ -1,27 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Multibyte Character Functions.    Copyright (C) 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Multibyte Character Functions.    Copyright (C) 1998 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* These functions are used to manipulate multibyte characters.  */
+comment|/* Note regarding cross compilation:     In general, translation of multibyte characters to wide characters can    only work in a native compiler since the translation function (mbtowc)    needs to know about both the source and target character encoding.  However,    this particular implementation for JIS, SJIS and EUCJP source characters    will work for any compiler with a newlib target.  Other targets may also    work provided that their wchar_t implementation is 2 bytes and the encoding    leaves the source character values unchanged (except for removing the    state shifting markers).  */
 end_comment
-
-begin_comment
-comment|/* Note regarding cross compilation:     In general translation of multibyte characters to wide characters can    only work in a native compiler since the translation function (mbtowc)    needs to know about both the source and target character encoding.  However,    this particular implementation for JIS, SJIS and EUCJP source characters    will work for any compiler with a newlib target.  Other targets may also    work provided that their wchar_t implementation is 2 bytes and the encoding    leaves the source character values unchanged (except for removing the    state shifting markers).  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIBYTE_CHARS
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|"config.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MULTIBYTE_CHARS
+end_ifdef
 
 begin_include
 include|#
@@ -126,7 +122,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*****************************************************************************  * state/action tables for processing JIS encoding  * Where possible, switches to JIS are grouped with proceding JIS characters  * and switches to ASCII are grouped with preceding JIS characters.  * Thus, maximum returned length is:  *   2 (switch to JIS) + 2 (JIS characters) + 2 (switch back to ASCII) = 6.  *****************************************************************************/
+comment|/* State/action tables for processing JIS encoding:     Where possible, switches to JIS are grouped with proceding JIS characters    and switches to ASCII are grouped with preceding JIS characters.    Thus, maximum returned length is:      2 (switch to JIS) + 2 (JIS characters) + 2 (switch back to ASCII) = 6.  */
 end_comment
 
 begin_decl_stmt
@@ -141,7 +137,7 @@ name|JIS_C_NUM
 index|]
 init|=
 block|{
-comment|/*            ESCAPE DOLLAR   BRACKET   AT     B      J     NUL JIS_CHAR OTHER*/
+comment|/*            ESCAPE DOLLAR   BRACKET   AT     B      J     NUL JIS_CHAR OTH*/
 comment|/*ASCII*/
 block|{
 name|A_ESC
@@ -367,7 +363,7 @@ name|JIS_C_NUM
 index|]
 init|=
 block|{
-comment|/*            ESCAPE DOLLAR BRACKET AT     B       J      NUL  JIS_CHAR OTHER */
+comment|/*            ESCAPE DOLLAR BRACKET AT     B       J      NUL  JIS_CHAR OTH */
 comment|/*ASCII */
 block|{
 name|NOOP
@@ -582,6 +578,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|literal_codeset
@@ -589,6 +586,10 @@ init|=
 name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Store into *PWC (if PWC is not null) the wide character    corresponding to the multibyte character at the start of the    buffer S of size N.  Return the number of bytes in the multibyte    character.  Return -1 if the bytes do not form a valid character,    or 0 if S is null or points to a null byte.     This function behaves like the Standard C function mbtowc, except    it treats locale names of the form "C-..." specially.  */
+end_comment
 
 begin_function
 name|int
@@ -624,12 +625,14 @@ name|curr_state
 init|=
 name|save_state
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|t
 init|=
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -663,9 +666,8 @@ argument_list|)
 operator|<=
 literal|1
 condition|)
-block|{
 comment|/* This must be the "C" locale or unknown locale -- fall thru */
-block|}
+empty_stmt|;
 elseif|else
 if|if
 condition|(
@@ -687,10 +689,10 @@ name|s
 operator|==
 name|NULL
 condition|)
+comment|/* Not state-dependent.  */
 return|return
 literal|0
 return|;
-comment|/* not state-dependent */
 name|char1
 operator|=
 operator|*
@@ -822,10 +824,10 @@ name|s
 operator|==
 name|NULL
 condition|)
+comment|/* Not state-dependent.  */
 return|return
 literal|0
 return|;
-comment|/* not state-dependent */
 name|char1
 operator|=
 operator|*
@@ -954,12 +956,13 @@ decl_stmt|;
 name|JIS_CHAR_TYPE
 name|ch
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|ptr
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|,
 name|curr_ch
@@ -975,10 +978,10 @@ name|save_state
 operator|=
 name|ASCII
 expr_stmt|;
+comment|/* State-dependent.  */
 return|return
 literal|1
 return|;
-comment|/* state-dependent */
 block|}
 name|ptr
 operator|=
@@ -994,8 +997,8 @@ name|i
 operator|<
 name|n
 condition|;
-operator|++
 name|i
+operator|++
 control|)
 block|{
 name|curr_ch
@@ -1160,11 +1163,9 @@ operator|=
 name|curr_state
 expr_stmt|;
 return|return
-operator|(
 name|i
 operator|+
 literal|1
-operator|)
 return|;
 case|case
 name|COPYJ
@@ -1207,11 +1208,9 @@ operator|=
 name|curr_state
 expr_stmt|;
 return|return
-operator|(
 name|i
 operator|+
 literal|1
-operator|)
 return|;
 case|case
 name|COPYJ2
@@ -1254,11 +1253,9 @@ operator|=
 name|curr_state
 expr_stmt|;
 return|return
-operator|(
 name|ptr
 operator|-
 name|t
-operator|)
 operator|+
 literal|2
 return|;
@@ -1271,6 +1268,8 @@ case|:
 name|ptr
 operator|=
 operator|(
+specifier|const
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -1293,11 +1292,11 @@ literal|1
 return|;
 block|}
 block|}
+comment|/* More than n bytes needed.  */
 return|return
 operator|-
 literal|1
 return|;
-comment|/* n< bytes needed */
 block|}
 ifdef|#
 directive|ifdef
@@ -1308,10 +1307,10 @@ name|s
 operator|==
 name|NULL
 condition|)
+comment|/* Not state-dependent.  */
 return|return
 literal|0
 return|;
-comment|/* not state-dependent */
 if|if
 condition|(
 name|pwc
@@ -1329,7 +1328,7 @@ literal|1
 return|;
 else|#
 directive|else
-comment|/* This must be the "C" locale or unknown locale. */
+comment|/* This must be the "C" locale or unknown locale.  */
 return|return
 name|mbtowc
 argument_list|(
@@ -1344,6 +1343,10 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_comment
+comment|/* Return the number of bytes in the multibyte character at the start    of the buffer S of size N.  Return -1 if the bytes do not form a    valid character, or 0 if S is null or points to a null byte.     This function behaves like the Standard C function mblen, except    it treats locale names of the form "C-..." specially.  */
+end_comment
 
 begin_function
 name|int
@@ -1374,6 +1377,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Return the maximum mumber of bytes in a multibyte character.     This function returns the same value as the Standard C macro MB_CUR_MAX,    except it treats locale names of the form "C-..." specially.  */
+end_comment
 
 begin_function
 name|int
@@ -1462,6 +1469,26 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* MULTIBYTE_CHARS */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* silence 'ANSI C forbids an empty source file' warning */
+end_comment
 
 begin_endif
 endif|#

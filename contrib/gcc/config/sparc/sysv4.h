@@ -1,59 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for Sparc running System V.4    Copyright (C) 1991, 92, 95, 96, 97, 1998 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GNU compiler for Sparc running System V.4    Copyright (C) 1991, 1992, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"sparc/sparc.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_VERSION
+end_ifndef
 
-begin_comment
-comment|/* Undefine some symbols which are defined in "sparc.h" but which are    appropriate only for SunOS 4.x, and not for svr4.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (sparc ELF)");
+end_define
 
-begin_undef
-undef|#
-directive|undef
-name|WORD_SWITCH_TAKES_ARG
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_SOURCE_LINE
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|SELECT_SECTION
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_DECLARE_FUNCTION_NAME
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|TEXT_SECTION_ASM_OP
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|DATA_SECTION_ASM_OP
-end_undef
-
-begin_include
-include|#
-directive|include
-file|"svr4.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ??? Put back the SIZE_TYPE/PTRDIFF_TYPE definitions set by sparc.h.    Why, exactly, is svr4.h messing with this?  Seems like the chip     would know best.  */
@@ -151,12 +117,18 @@ begin_comment
 comment|/* Provide a set of pre-definitions and pre-assertions appropriate for    the Sparc running svr4.  __svr4__ is our extension.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|CPP_PREDEFINES
+end_undef
+
 begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-Dsparc -Dunix -D__svr4__ -Asystem(unix) -Asystem(svr4)"
+value|"-Dsparc -Dunix -D__svr4__ -Asystem=unix -Asystem=svr4"
 end_define
 
 begin_comment
@@ -210,9 +182,11 @@ parameter_list|(
 name|MODE
 parameter_list|,
 name|RTX
+parameter_list|,
+name|ALIGN
 parameter_list|)
 define|\
-value|{						\   if (flag_pic&& symbolic_operand (RTX))	\     data_section ();				\   else						\     const_section ();				\ }
+value|{						\   if (flag_pic&& symbolic_operand ((RTX), (MODE))) \     data_section ();				\   else						\     const_section ();				\ }
 end_define
 
 begin_comment
@@ -223,73 +197,35 @@ begin_define
 define|#
 directive|define
 name|STRING_ASM_OP
-value|".asciz"
+value|"\t.asciz\t"
 end_define
 
 begin_define
 define|#
 directive|define
 name|COMMON_ASM_OP
-value|".common"
+value|"\t.common\t"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SKIP_ASM_OP
-value|".skip"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNALIGNED_DOUBLE_INT_ASM_OP
-value|".uaxword"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNALIGNED_INT_ASM_OP
-value|".uaword"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNALIGNED_SHORT_ASM_OP
-value|".uahalf"
+value|"\t.skip\t"
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUSHSECTION_ASM_OP
-value|".pushsection"
+value|"\t.pushsection\t"
 end_define
 
 begin_define
 define|#
 directive|define
 name|POPSECTION_ASM_OP
-value|".popsection"
-end_define
-
-begin_comment
-comment|/* This is defined in sparc.h but is not used by svr4.h.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_LONG
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_LONG
-value|".long"
+value|"\t.popsection"
 end_define
 
 begin_comment
@@ -311,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|PUSHSECTION_FORMAT
-value|"\t%s\t\"%s\"\n"
+value|"%s\"%s\"\n"
 end_define
 
 begin_undef
@@ -378,42 +314,42 @@ begin_define
 define|#
 directive|define
 name|TEXT_SECTION_ASM_OP
-value|".section\t\".text\""
+value|"\t.section\t\".text\""
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATA_SECTION_ASM_OP
-value|".section\t\".data\""
+value|"\t.section\t\".data\""
 end_define
 
 begin_define
 define|#
 directive|define
 name|BSS_SECTION_ASM_OP
-value|".section\t\".bss\""
+value|"\t.section\t\".bss\""
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONST_SECTION_ASM_OP
-value|".section\t\".rodata\""
+value|"\t.section\t\".rodata\""
 end_define
 
 begin_define
 define|#
 directive|define
 name|INIT_SECTION_ASM_OP
-value|".section\t\".init\""
+value|"\t.section\t\".init\""
 end_define
 
 begin_define
 define|#
 directive|define
 name|FINI_SECTION_ASM_OP
-value|".section\t\".fini\""
+value|"\t.section\t\".fini\""
 end_define
 
 begin_comment
@@ -430,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|CTORS_SECTION_ASM_OP
-value|".section\t\".ctors\",#alloc,#write"
+value|"\t.section\t\".ctors\",#alloc,#write"
 end_define
 
 begin_undef
@@ -443,51 +379,24 @@ begin_define
 define|#
 directive|define
 name|DTORS_SECTION_ASM_OP
-value|".section\t\".dtors\",#alloc,#write"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EH_FRAME_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EH_FRAME_SECTION_ASM_OP
-value|".section\t\".eh_frame\",#alloc,#write"
+value|"\t.section\t\".dtors\",#alloc,#write"
 end_define
 
 begin_comment
-comment|/* A C statement to output something to the assembler file to switch to section    NAME for object DECL which is either a FUNCTION_DECL, a VAR_DECL or    NULL_TREE.  Some target formats do not support arbitrary sections.  Do not    define this macro in such cases.  */
+comment|/* Switch into a generic section.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_SECTION_NAME
+name|TARGET_ASM_NAMED_SECTION
 end_undef
-
-begin_comment
-comment|/* Override svr4.h's definition.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_SECTION_NAME
-parameter_list|(
-name|FILE
-parameter_list|,
-name|DECL
-parameter_list|,
-name|NAME
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|do {									\   if ((DECL)&& TREE_CODE (DECL) == FUNCTION_DECL)			\     fprintf (FILE, ".section\t\"%s\",#alloc,#execinstr\n",		\ 	                                      (NAME));		\   else if ((DECL)&& DECL_READONLY_SECTION (DECL, RELOC))		\     fprintf (FILE, ".section\t\"%s\",#alloc\n", (NAME));		\   else									\     fprintf (FILE, ".section\t\"%s\",#alloc,#write\n", (NAME));		\ } while (0)
+name|TARGET_ASM_NAMED_SECTION
+value|sparc_elf_asm_named_section
 end_define
 
 begin_comment

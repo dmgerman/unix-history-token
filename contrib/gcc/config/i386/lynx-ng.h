@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -DI386 -DLynx -DIBITS32 -Asystem(unix) -Asystem(lynx) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -DI386 -DLynx -DIBITS32 \   -Asystem=unix -Asystem=lynx"
 end_define
 
 begin_comment

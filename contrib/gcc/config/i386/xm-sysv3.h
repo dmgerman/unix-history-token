@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"i386/xm-i386.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xm-svr3.h"
 end_include
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    hosting on U/WIN (Windows32), using GNU tools and the Windows32 API     Library, as distinct from winnt.h, which is used to build GCC for use     with a windows style library and tool set and uses the Microsoft tools.    Copyright (C) 1999 Free Software Foundation, Inc.    Contributed by Mumit Khan<khan@xraylith.wisc.edu>.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Operating system specific defines to be used when targeting GCC for    hosting on U/WIN (Windows32), using GNU tools and the Windows32 API     Library, as distinct from winnt.h, which is used to build GCC for use     with a windows style library and tool set and uses the Microsoft tools.    Copyright (C) 1999 Free Software Foundation, Inc.    Contributed by Mumit Khan<khan@xraylith.wisc.edu>.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -30,6 +30,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|MD_STARTFILE_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MD_STARTFILE_PREFIX
+value|"/usr/gnu/lib/"
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|CPP_PREDEFINES
 end_undef
 
@@ -37,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__i386__ -D_WIN32 -D__WIN32__ \   -D_UWIN -DWINNT  -D_X86_=1 -D__STDC__=1 \   -D__UWIN__ -D__MSVCRT__ \   -D_STD_INCLUDE_DIR=mingw32 \   -D__stdcall=__attribute__((__stdcall__)) \   _D_stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   -D__declspec(x)=__attribute__((x)) \   -Asystem(winnt) -Acpu(i386) -Amachine(i386)"
+value|"-D_WIN32 -D__WIN32__ \   -D_UWIN -DWINNT  -D_X86_=1 -D__STDC__=1 \   -D__UWIN__ -D__MSVCRT__ \   -D_STD_INCLUDE_DIR=mingw32 \   -D__stdcall=__attribute__((__stdcall__)) \   _D_stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   -D__declspec(x)=__attribute__((x)) \   -Asystem=winnt"
 end_define
 
 begin_undef
@@ -68,11 +81,11 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{mwindows:-luser32 -lgdi32 -lcomdlg32} -lkernel32 -ladvapi32"
+value|"%{pg:-lgmon} %{mwindows:-luser32 -lgdi32 -lcomdlg32} -lkernel32 -ladvapi32"
 end_define
 
 begin_comment
-comment|/* This is needed in g77spec.c for now. Will be removed in the future. */
+comment|/* This is needed in g77spec.c for now. Will be removed in the future.  */
 end_comment
 
 begin_define
@@ -114,7 +127,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{mwindows:--subsystem windows} %{mdll:--dll -e _DllMainCRTStartup@12}"
+value|"%{mwindows:--subsystem windows} %{mdll:--dll -e _DllMainCRTStartup@12} \   %{!mdll:-u _main}"
 end_define
 
 begin_undef
@@ -127,11 +140,15 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"%{mdll:dllcrt2%O%s} %{!mdll:crt2%O%s}"
+value|"%{mdll:dllcrt2%O%s} %{!mdll:crt2%O%s} %{pg:gcrt2%O%s}"
 end_define
 
 begin_comment
-comment|/* These are PE BFD bug workarounds. Should go away eventually. */
+comment|/* These are PE BFD bug workarounds. Should go away eventually.  */
+end_comment
+
+begin_comment
+comment|/* Write the extra assembler code needed to declare a function    properly.  If we are generating SDB debugging information, this    will happen automatically, so we only need to handle other cases.  */
 end_comment
 
 begin_undef
@@ -152,8 +169,8 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do									\     {									\       if (i386_pe_dllexport_name_p (NAME))				\ 	{								\ 	  drectve_section ();						\ 	  fprintf ((FILE), "\t.ascii \" -export:%s\"\n", 		\ 		   I386_PE_STRIP_ENCODING (NAME));			\ 	  function_section (DECL);					\ 	}								\
-comment|/* disable i386_pe_declare_function_type for UWIN */
+value|do									\     {									\       if (i386_pe_dllexport_name_p (NAME))				\ 	i386_pe_record_exported_symbol (NAME, 0);			\
+comment|/* UWIN binutils bug workaround.  */
 value|\       if (0&& write_symbols != SDB_DEBUG)				\ 	i386_pe_declare_function_type (FILE, NAME, TREE_PUBLIC (DECL));	\       ASM_OUTPUT_LABEL (FILE, NAME);					\     }									\   while (0)
 end_define
 
@@ -169,10 +186,14 @@ directive|undef
 name|ASM_OUTPUT_EXTERNAL_LIBCALL
 end_undef
 
+begin_comment
+comment|/* Override Cygwin's definition. This is necessary now due to the way    Cygwin profiling code is written. Once "fixed", we can remove this.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
-name|ASM_FILE_END
+name|SUBTARGET_PROLOGUE
 end_undef
 
 end_unit

@@ -5,26 +5,10 @@ directive|ifndef
 name|_LIMITS_H___
 end_ifndef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_MACH_MACHLIMITS_H_
-end_ifndef
-
-begin_comment
-comment|/* _MACH_MACHLIMITS_H_ is used on OSF/1.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|_LIMITS_H___
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MACH_MACHLIMITS_H_
 end_define
 
 begin_comment
@@ -185,6 +169,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__SHRT_MAX__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__SHRT_MAX__
+value|32767
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Minimum and maximum values a `signed short int' can hold.  */
 end_comment
@@ -195,15 +197,11 @@ directive|undef
 name|SHRT_MIN
 end_undef
 
-begin_comment
-comment|/* For the sake of 16 bit hosts, we may not use -32768 */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SHRT_MIN
-value|(-32767-1)
+value|(-SHRT_MAX-1)
 end_define
 
 begin_undef
@@ -216,24 +214,7 @@ begin_define
 define|#
 directive|define
 name|SHRT_MAX
-value|32767
-end_define
-
-begin_comment
-comment|/* Maximum value an `unsigned short int' can hold.  (Minimum is 0).  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|USHRT_MAX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|USHRT_MAX
-value|65535
+value|__SHRT_MAX__
 end_define
 
 begin_comment
@@ -285,6 +266,48 @@ value|__INT_MAX__
 end_define
 
 begin_comment
+comment|/* Maximum value an `unsigned short int' can hold.  (Minimum is 0).  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USHRT_MAX
+end_undef
+
+begin_if
+if|#
+directive|if
+name|__SHRT_MAX__
+operator|==
+name|__INT_MAX__
+end_if
+
+begin_define
+define|#
+directive|define
+name|USHRT_MAX
+value|(SHRT_MAX * 2U + 1U)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|USHRT_MAX
+value|(SHRT_MAX * 2 + 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Maximum value an `unsigned int' can hold.  (Minimum is 0).  */
 end_comment
 
@@ -322,19 +345,14 @@ operator|||
 operator|(
 name|defined
 argument_list|(
-name|_ARCH_PPC
+name|__sparc__
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|__64BIT__
+name|__arch64__
 argument_list|)
 operator|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc_v9__
-argument_list|)
 operator|||
 name|defined
 argument_list|(
@@ -418,6 +436,89 @@ name|ULONG_MAX
 value|(LONG_MAX * 2UL + 1)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LONG_LONG_MAX__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__LONG_LONG_MAX__
+value|9223372036854775807LL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|199901L
+end_if
+
+begin_comment
+comment|/* Minimum and maximum values a `signed long long int' can hold.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LLONG_MIN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LLONG_MIN
+value|(-LLONG_MAX-1)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LLONG_MAX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LLONG_MAX
+value|__LONG_LONG_MAX__
+end_define
+
+begin_comment
+comment|/* Maximum value an `unsigned long long int' can hold.  (Minimum is 0).  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ULLONG_MAX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ULLONG_MAX
+value|(LLONG_MAX * 2ULL + 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -441,24 +542,6 @@ end_if
 begin_comment
 comment|/* Minimum and maximum values a `signed long long int' can hold.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__LONG_LONG_MAX__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__LONG_LONG_MAX__
-value|9223372036854775807LL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -507,15 +590,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _MACH_MACHLIMITS_H_ */
-end_comment
 
 begin_endif
 endif|#

@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_target
+name|GCC_F_TARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_target
+name|GCC_F_TARGET_H
 end_define
 
 begin_ifdef
@@ -46,7 +46,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"tree.j"
+file|"tree.h"
 end_include
 
 begin_endif
@@ -994,6 +994,97 @@ name|FFETARGET_f2cTYQUAD
 value|14
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|_ARCH_PPC
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__64BIT__
+argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__sparcv9
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__arch64__
+argument_list|)
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__hppa__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__s390x__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FFETARGET_32bit_longs
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Typedefs. */
 end_comment
@@ -1085,11 +1176,11 @@ directive|if
 name|FFETARGET_okINTEGER1
 end_if
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FFETARGET_32bit_longs
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -1332,11 +1423,11 @@ directive|if
 name|FFETARGET_okLOGICAL1
 end_if
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FFETARGET_32bit_longs
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -1585,11 +1676,11 @@ directive|ifdef
 name|REAL_ARITHMETIC
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FFETARGET_32bit_longs
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -1717,11 +1808,11 @@ directive|ifdef
 name|REAL_ARITHMETIC
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FFETARGET_32bit_longs
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -4697,12 +4788,6 @@ begin_comment
 comment|/* Define macros. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|BUILT_FOR_280
-end_if
-
 begin_define
 define|#
 directive|define
@@ -4715,33 +4800,8 @@ parameter_list|,
 name|kt
 parameter_list|)
 define|\
-value|REAL_VALUE_FROM_INT (resr, (long) lf, (long) ((lf< 0) ? -1 : 0), ((kt == 1) ? SFmode : DFmode))
+value|REAL_VALUE_FROM_INT (resr, (long) lf, (long) ((lf< 0) ? -1 : 0),	\ 		       ((kt == 1) ? SFmode : DFmode))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FFETARGET_REAL_VALUE_FROM_INT_
-parameter_list|(
-name|resr
-parameter_list|,
-name|lf
-parameter_list|,
-name|kt
-parameter_list|)
-define|\
-value|REAL_VALUE_FROM_INT (resr, (long) lf, (long) ((lf< 0) ? -1 : 0))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -8439,11 +8499,11 @@ name|ffetarget_init_4
 parameter_list|()
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FFETARGET_32bit_longs
+end_ifdef
 
 begin_define
 define|#
@@ -10757,6 +10817,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_TARGET_H */
+end_comment
 
 end_unit
 

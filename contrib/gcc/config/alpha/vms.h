@@ -1,13 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output variables, constants and external declarations, for GNU compiler.    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output variables, constants and external declarations, for GNU compiler.    Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|OPEN_VMS
-value|1
+name|TARGET_OBJECT_SUFFIX
+value|".obj"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_EXECUTABLE_SUFFIX
+value|".exe"
 end_define
 
 begin_comment
@@ -37,7 +44,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-D__ALPHA -Dvms -DVMS -D__vms__ -D__VMS__ -Asystem(vms)"
+value|"-D__ALPHA -Dvms -DVMS -D__vms__ -D__VMS__ -Asystem=vms"
 end_define
 
 begin_undef
@@ -51,54 +58,6 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 value|"\ %{mfloat-ieee:-D__IEEE_FLOAT} \ %{mfloat-vax:-D__G_FLOAT} \ %{!mfloat-vax:-D__IEEE_FLOAT}"
-end_define
-
-begin_comment
-comment|/* Under OSF4, -p and -pg require -lprof1, and -lprof1 requires -lpdf.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-value|"%{p:-lprof1 -lpdf} %{pg:-lprof1 -lpdf} %{a:-lprof2} -lc"
-end_define
-
-begin_comment
-comment|/* Pass "-G 8" to ld because Alpha's CC does.  Pass -O3 if we are    optimizing, -O1 if we are not.  Pass -shared, -non_shared or    -call_shared as appropriate.  Also pass -pg.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-define|\
-value|"-G 8 %{O*:-O3} %{!O*:-O1} %{static:-non_shared} \    %{!static:%{shared:-shared} %{!shared:-call_shared}} %{pg} %{taso} \    %{rpath*}"
-end_define
-
-begin_comment
-comment|/* We allow $'s in identifiers unless -ansi is used .. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOLLARS_IN_IDENTIFIERS
-value|2
-end_define
-
-begin_comment
-comment|/* These match the definitions used in DECCRTL, the VMS C run-time library  #define SIZE_TYPE	"unsigned int" #define PTRDIFF_TYPE	"int" */
-end_comment
-
-begin_comment
-comment|/* Use memcpy for structure copying, and so forth.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_MEM_FUNCTIONS
 end_define
 
 begin_comment
@@ -128,13 +87,13 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|TARGET_OPEN_VMS
+name|TARGET_ABI_OPEN_VMS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_OPEN_VMS
+name|TARGET_ABI_OPEN_VMS
 value|1
 end_define
 
@@ -188,17 +147,7 @@ name|PCC_STATIC_STRUCT_RETURN
 end_undef
 
 begin_comment
-comment|/* no floating emulation.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|REAL_ARITHMETIC
-end_undef
-
-begin_comment
-comment|/* "long" is 32 bits.  */
+comment|/* "long" is 32 bits, but 64 bits for Ada.  */
 end_comment
 
 begin_undef
@@ -214,8 +163,15 @@ name|LONG_TYPE_SIZE
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|ADA_LONG_TYPE_SIZE
+value|64
+end_define
+
 begin_comment
-comment|/* Pointer is 32 bits but the hardware has 64-bit addresses, sign extended. */
+comment|/* Pointer is 32 bits but the hardware has 64-bit addresses, sign extended.  */
 end_comment
 
 begin_undef
@@ -277,6 +233,24 @@ define|\
 value|{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, \   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
 end_define
 
+begin_comment
+comment|/* List the order in which to allocate registers.  Each register must be    listed once, even those in FIXED_REGISTERS.     We allocate in the following order:    $f1			(nonsaved floating-point register)    $f10-$f15		(likewise)    $f22-$f30		(likewise)    $f21-$f16		(likewise, but input args)    $f0			(nonsaved, but return value)    $f2-$f9		(saved floating-point registers)    $1			(nonsaved integer registers)    $22-$25		(likewise)    $28			(likewise)    $0			(likewise, but return value)    $21-$16		(likewise, but input args)    $27			(procedure value in OSF, nonsaved in NT)    $2-$8		(saved integer registers)    $9-$14		(saved integer registers)    $26			(return PC)    $15			(frame pointer)    $29			(global pointer)    $30, $31, $f31	(stack pointer and always zero/ap& fp)  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|REG_ALLOC_ORDER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|REG_ALLOC_ORDER
+define|\
+value|{33,					\    42, 43, 44, 45, 46, 47,		\    54, 55, 56, 57, 58, 59, 60, 61, 62,	\    53, 52, 51, 50, 49, 48,		\    32,					\    34, 35, 36, 37, 38, 39, 40, 41,	\    1,					\    22, 23, 24, 25,			\    28,					\    0,					\    21, 20, 19, 18, 17, 16,		\    27,					\    2, 3, 4, 5, 6, 7, 8,			\    9, 10, 11, 12, 13, 14,		\    26,					\    15,					\    29,					\    30, 31, 63 }
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -288,6 +262,26 @@ define|#
 directive|define
 name|HARD_FRAME_POINTER_REGNUM
 value|29
+end_define
+
+begin_comment
+comment|/* Define registers used by the epilogue and return instruction.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|EPILOGUE_USES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|EPILOGUE_USES
+parameter_list|(
+name|REGNO
+parameter_list|)
+value|((REGNO) == 26 || (REGNO) == 29)
 end_define
 
 begin_undef
@@ -327,7 +321,7 @@ parameter_list|,
 name|OFFSET
 parameter_list|)
 define|\
-value|{ if ((FROM) == FRAME_POINTER_REGNUM)					\     (OFFSET) = alpha_sa_size () + alpha_pv_save_size ();		\   else if ((FROM) == ARG_POINTER_REGNUM)				\     (OFFSET) = (ALPHA_ROUND (alpha_sa_size () + alpha_pv_save_size ()	\ 			     + get_frame_size ()			\ 			     + current_function_pretend_args_size)	\ 		- current_function_pretend_args_size);			\   if ((TO) == STACK_POINTER_REGNUM)					\     (OFFSET) += ALPHA_ROUND (current_function_outgoing_args_size);	\ }
+value|{ if ((FROM) == FRAME_POINTER_REGNUM)					\     (OFFSET) = alpha_sa_size () + alpha_pv_save_size ();		\   else if ((FROM) == ARG_POINTER_REGNUM)				\     (OFFSET) = (ALPHA_ROUND (alpha_sa_size () + alpha_pv_save_size ()	\ 			     + get_frame_size ()			\ 			     + current_function_pretend_args_size)	\ 		- current_function_pretend_args_size);			\   else									\     abort();								\   if ((TO) == STACK_POINTER_REGNUM)					\     (OFFSET) += ALPHA_ROUND (current_function_outgoing_args_size);	\ }
 end_define
 
 begin_escape
@@ -360,7 +354,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
+name|int
 name|num_args
 decl_stmt|;
 name|enum
@@ -415,56 +409,6 @@ define|\
 value|(CUM).num_args = 0;						\   (CUM).atypes[0] = (CUM).atypes[1] = (CUM).atypes[2] = I64;	\   (CUM).atypes[3] = (CUM).atypes[4] = (CUM).atypes[5] = I64;
 end_define
 
-begin_comment
-comment|/* Update the data in CUM to advance over an argument    of mode MODE and data type TYPE.    (TYPE is null for libcalls where that information may not be available.)  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|enum
-name|avms_arg_type
-name|alpha_arg_type
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Determine where to put an argument to a function.    Value is zero to push the argument on the stack,    or a hard register in which to store the argument.     MODE is the argument's machine mode (or VOIDmode for no more args).    TYPE is the data type of the argument (as a tree).     This is null for libcalls where that information may     not be available.    CUM is a variable of type CUMULATIVE_ARGS which gives info about     the preceding args and about the function being called.    NAMED is nonzero if this argument is a named parameter     (otherwise it is an extra parameter matching an ellipsis).     On Alpha the first 6 words of args are normally in registers    and the rest are pushed.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|struct
-name|rtx_def
-modifier|*
-name|alpha_arg_info_reg_val
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_ARG
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_ARG
-parameter_list|(
-name|CUM
-parameter_list|,
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|,
-name|NAMED
-parameter_list|)
-define|\
-value|((MODE) == VOIDmode ? alpha_arg_info_reg_val (CUM)		\  : ((CUM.num_args)< 6&& ! MUST_PASS_IN_STACK (MODE, TYPE)	\     ? gen_rtx(REG, (MODE),					\ 	      ((CUM).num_args + 16				\ 	       + ((TARGET_FPREGS				\&& (GET_MODE_CLASS (MODE) == MODE_COMPLEX_FLOAT \ 		       || GET_MODE_CLASS (MODE) == MODE_FLOAT)) \ 		  * 32)))			\     : 0))
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -516,7 +460,7 @@ value|((CUM).num_args< 6&& 6< (CUM).num_args				\    + ALPHA_ARG_SIZE (MODE, TYP
 end_define
 
 begin_comment
-comment|/* Perform any needed actions needed for a function that is receiving a    variable number of arguments.      CUM is as for INIT_CUMULATIVE_ARGS.     MODE and TYPE are the mode and type of the current parameter.     PRETEND_SIZE is a variable that should be set to the amount of stack    that must be pushed by the prolog to pretend that our caller pushed    it.     Normally, this macro will push all remaining incoming registers on the    stack and set PRETEND_SIZE to the length of the registers pushed.      For VMS, we allocate space for all 6 arg registers plus a count.     However, if NO registers need to be saved, don't allocate any space.    This is not only because we won't need the space, but because AP includes    the current_pretend_args_size and we don't want to mess up any    ap-relative addresses already made.   */
+comment|/* Perform any needed actions needed for a function that is receiving a    variable number of arguments.      CUM is as for INIT_CUMULATIVE_ARGS.     MODE and TYPE are the mode and type of the current parameter.     PRETEND_SIZE is a variable that should be set to the amount of stack    that must be pushed by the prolog to pretend that our caller pushed    it.     Normally, this macro will push all remaining incoming registers on the    stack and set PRETEND_SIZE to the length of the registers pushed.      For VMS, we allocate space for all 6 arg registers plus a count.     However, if NO registers need to be saved, don't allocate any space.    This is not only because we won't need the space, but because AP includes    the current_pretend_args_size and we don't want to mess up any    ap-relative addresses already made.  */
 end_comment
 
 begin_undef
@@ -541,7 +485,24 @@ parameter_list|,
 name|NO_RTL
 parameter_list|)
 define|\
-value|{ if ((CUM).num_args< 6)				\     {							\       if (! (NO_RTL))					\ 	{						\ 	  emit_move_insn (gen_rtx (REG, DImode, 1),	\ 			  virtual_incoming_args_rtx);	\ 	  emit_insn (gen_arg_home ());			\ 	}						\ 						        \       PRETEND_SIZE = 7 * UNITS_PER_WORD;		\     }							\ }
+value|{ if ((CUM).num_args< 6)				\     {							\       if (! (NO_RTL))					\ 	{						\ 	  emit_move_insn (gen_rtx_REG (DImode, 1),	\ 			  virtual_incoming_args_rtx);	\ 	  emit_insn (gen_arg_home ());			\ 	}						\ 						        \       PRETEND_SIZE = 7 * UNITS_PER_WORD;		\     }							\ }
+end_define
+
+begin_comment
+comment|/* ABI has stack checking, but it's broken.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STACK_CHECK_BUILTIN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STACK_CHECK_BUILTIN
+value|0
 end_define
 
 begin_undef
@@ -561,58 +522,39 @@ define|\
 value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");				\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_FLOAT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_FLOAT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|VALUE
-parameter_list|)
-define|\
-value|{									\     if (REAL_VALUE_ISINF (VALUE)					\         || REAL_VALUE_ISNAN (VALUE)					\ 	|| REAL_VALUE_MINUS_ZERO (VALUE))				\       {									\ 	long t;								\ 	REAL_VALUE_TO_TARGET_SINGLE ((VALUE), t);			\ 	fprintf (FILE, "\t.long 0x%lx\n", t& 0xffffffff);		\       }									\     else								\       {									\ 	char str[30];							\ 	REAL_VALUE_TO_DECIMAL ((VALUE), "%.20e", str);			\ 	fprintf (FILE, "\t.%c_floating %s\n", (TARGET_FLOAT_VAX)?'f':'s', str);	\       }									\   }
-end_define
-
 begin_define
 define|#
 directive|define
 name|LINK_SECTION_ASM_OP
-value|".link"
+value|"\t.link"
 end_define
 
 begin_define
 define|#
 directive|define
 name|READONLY_SECTION_ASM_OP
-value|".rdata"
+value|"\t.rdata"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LITERALS_SECTION_ASM_OP
-value|".literals"
+value|"\t.literals"
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTORS_SECTION_ASM_OP
-value|".ctors"
+value|"\t.ctors"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DTORS_SECTION_ASM_OP
-value|".dtors"
+value|"\t.dtors"
 end_define
 
 begin_undef
@@ -625,7 +567,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_link, in_rdata, in_literals, in_ctors, in_dtors
+value|in_link, in_rdata, in_literals
 end_define
 
 begin_undef
@@ -639,8 +581,47 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|void								\ readonly_section ()						\ {								\   if (in_section != in_rdata)				\     {								\       fprintf (asm_out_file, "%s\n", READONLY_SECTION_ASM_OP);	\       in_section = in_rdata;				\     }								\ }								\ void								\ link_section ()							\ {								\   if (in_section != in_link)					\     {								\       fprintf (asm_out_file, "%s\n", LINK_SECTION_ASM_OP); 	\       in_section = in_link;					\     }								\ }                                                               \ void								\ literals_section ()						\ {								\   if (in_section != in_literals)				\     {								\       fprintf (asm_out_file, "%s\n", LITERALS_SECTION_ASM_OP); 	\       in_section = in_literals;					\     }								\ }								\ void								\ ctors_section ()						\ {								\   if (in_section != in_ctors)					\     {								\       fprintf (asm_out_file, "%s\n", CTORS_SECTION_ASM_OP);	\       in_section = in_ctors;					\     }								\ }								\ void								\ dtors_section ()						\ {								\   if (in_section != in_dtors)					\     {								\       fprintf (asm_out_file, "%s\n", DTORS_SECTION_ASM_OP);	\       in_section = in_dtors;					\     }								\ }
+value|void								\ readonly_section ()						\ {								\   if (in_section != in_rdata)				\     {								\       fprintf (asm_out_file, "%s\n", READONLY_SECTION_ASM_OP);	\       in_section = in_rdata;				\     }								\ }								\ void								\ link_section ()							\ {								\   if (in_section != in_link)					\     {								\       fprintf (asm_out_file, "%s\n", LINK_SECTION_ASM_OP); 	\       in_section = in_link;					\     }								\ }                                                               \ void								\ literals_section ()						\ {								\   if (in_section != in_literals)				\     {								\       fprintf (asm_out_file, "%s\n", LITERALS_SECTION_ASM_OP); 	\       in_section = in_literals;					\     }								\ }
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|readonly_section
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|link_section
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|literals_section
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_undef
 undef|#
@@ -756,7 +737,7 @@ begin_define
 define|#
 directive|define
 name|COMMON_ASM_OP
-value|".comm"
+value|"\t.comm\t"
 end_define
 
 begin_undef
@@ -779,20 +760,14 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "\t%s\t", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO_MD_PROTOTYPES
+value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\ } while (0)
 end_define
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Output assembler code for a block containing the constant parts    of a trampoline, leaving space for the variable parts.     The trampoline should set the static chain pointer to value placed    into the trampoline and should branch to the specified routine.      Note that $27 has been set to the address of the trampoline, so we can    use it for addressability of the two data items.  Trampolines are always    aligned to FUNCTION_BOUNDARY, which is 64 bits.  */
+comment|/* Output assembler code for a block containing the constant parts    of a trampoline, leaving space for the variable parts.     The trampoline should set the static chain pointer to value placed    into the trampoline and should branch to the specified routine.      Note that $27 has been set to the address of the trampoline, so we can    use it for addressability of the two data items.  */
 end_comment
 
 begin_undef
@@ -830,6 +805,23 @@ value|32
 end_define
 
 begin_comment
+comment|/* The alignment of a trampoline, in bits.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TRAMPOLINE_ALIGNMENT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TRAMPOLINE_ALIGNMENT
+value|64
+end_define
+
+begin_comment
 comment|/* Emit RTL insns to initialize the variable parts of a trampoline.    FNADDR is an RTX for the address of the function's pure code.    CXT is an RTX for the static chain value for the function.  */
 end_comment
 
@@ -855,63 +847,22 @@ value|alpha_initialize_trampoline (TRAMP, FNADDR, CXT, 16, 24, -1)
 end_define
 
 begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global constructors.  */
+comment|/* Control how constructors and destructors are emitted.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {							\     ctors_section ();					\     fprintf (FILE, "\t.quad "); 			\     assemble_name (FILE, NAME); 			\     fprintf (FILE, "\n");				\   } while (0)
-end_define
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global destructors.	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {							\     dtors_section ();					\     fprintf (FILE, "\t.quad "); 			\     assemble_name (FILE, NAME); 			\     fprintf (FILE, "\n");				\   } while (0)
+name|TARGET_ASM_CONSTRUCTOR
+value|vms_asm_out_constructor
 end_define
 
 begin_define
 define|#
 directive|define
-name|VALID_MACHINE_DECL_ATTRIBUTE
-parameter_list|(
-name|DECL
-parameter_list|,
-name|ATTRIBUTES
-parameter_list|,
-name|NAME
-parameter_list|,
-name|ARGS
-parameter_list|)
-define|\
-value|(vms_valid_decl_attribute_p (DECL, ATTRIBUTES, NAME, ARGS))
+name|TARGET_ASM_DESTRUCTOR
+value|vms_asm_out_destructor
 end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|vms_valid_decl_attribute_p
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_undef
 undef|#
@@ -937,6 +888,78 @@ directive|define
 name|DWARF2_DEBUGGING_INFO
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMS_DEBUGGING_INFO
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|EH_RETURN_HANDLER_RTX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|EH_RETURN_HANDLER_RTX
+define|\
+value|gen_rtx_MEM (Pmode, plus_constant (stack_pointer_rtx, 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_EH_SPEC
+value|"vms-dwarf2eh.o%s "
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_LIBGCC2
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libicb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pdscdef.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|MD_FALLBACK_FRAME_STATE_FOR
+parameter_list|(
+name|CONTEXT
+parameter_list|,
+name|FS
+parameter_list|,
+name|SUCCESS
+parameter_list|)
+define|\
+value|do {									\   unsigned long handle;							\   PDSCDEF *pv;								\   INVO_CONTEXT_BLK invo;						\ 									\   memset (&invo, 0, sizeof (INVO_CONTEXT_BLK));				\ 									\   invo.libicb$q_ireg [29] = *((long long *) (CONTEXT)->reg [29]);	\   invo.libicb$q_ireg [30] = (long long) (CONTEXT)->cfa;			\   handle = LIB$GET_INVO_HANDLE (&invo);					\   LIB$GET_INVO_CONTEXT (handle,&invo);					\   pv = (PDSCDEF *) invo.libicb$ph_procedure_descriptor;			\ 									\   if (pv&& ((pv->pdsc$w_flags& 0xf) == PDSC$K_KIND_FP_STACK))		\     {									\       int i, j;								\ 									\       (FS)->cfa_offset = pv->pdsc$l_size;				\       (FS)->cfa_reg = pv->pdsc$w_flags& PDSC$M_BASE_REG_IS_FP ? 29 : 30; \       (FS)->retaddr_column = 26;					\       (FS)->cfa_how = CFA_REG_OFFSET;					\       (FS)->regs.reg[27].loc.offset = -pv->pdsc$l_size;			\       (FS)->regs.reg[27].how = REG_SAVED_OFFSET;			\       (FS)->regs.reg[26].loc.offset					\ 	 = -(pv->pdsc$l_size - pv->pdsc$w_rsa_offset);			\       (FS)->regs.reg[26].how = REG_SAVED_OFFSET;			\ 									\       for (i = 0, j = 0; i< 32; i++)					\ 	if (1<<i& pv->pdsc$l_ireg_mask)				\ 	  {								\ 	    (FS)->regs.reg[i].loc.offset				\ 	      = -(pv->pdsc$l_size - pv->pdsc$w_rsa_offset - 8 * ++j);	\ 	    (FS)->regs.reg[i].how = REG_SAVED_OFFSET;			\ 	  }								\ 									\       goto SUCCESS;							\     }									\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* This is how to output an assembler line    that says to advance the location counter    to a multiple of 2**LOG bytes.  */
 end_comment
@@ -960,17 +983,15 @@ define|\
 value|fprintf (FILE, "\t.align %d\n", LOG);
 end_define
 
+begin_comment
+comment|/* Switch into a generic section.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_SECTION
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SECTION
-parameter_list|)
-define|\
-value|(strcmp (SECTION, ".text") == 0)				\      ? text_section ()						\      : named_section (NULL_TREE, SECTION, 0),			\        ASM_OUTPUT_ALIGN (FILE, 0)				\  #define ASM_OUTPUT_SECTION_NAME(FILE,DECL,NAME,RELOC)		\   do								\     {								\       char *flags;					 	\       int ovr = 0;						\       if (DECL&& DECL_MACHINE_ATTRIBUTES (DECL)		\&& lookup_attribute					\ 	      ("overlaid", DECL_MACHINE_ATTRIBUTES (DECL)))	\ 	flags = ",OVR", ovr = 1;				\       else if (strncmp (NAME,".debug", 6) == 0)			\ 	flags = ",NOWRT";					\       else							\ 	flags = "";						\       fputc ('\n', (FILE));					\       fprintf (FILE, ".section\t%s%s\n", NAME, flags);		\       if (ovr)							\         (NAME) = "";						\     } while (0)
+name|TARGET_ASM_NAMED_SECTION
+value|vms_asm_named_section
 end_define
 
 begin_define
@@ -998,7 +1019,7 @@ begin_define
 define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
-value|DWARF2_DEBUG
+value|VMS_AND_DWARF2_DEBUG
 end_define
 
 begin_undef
@@ -1044,11 +1065,57 @@ directive|undef
 name|ASM_FINAL_SPEC
 end_undef
 
+begin_comment
+comment|/* The VMS convention is to always provide minimal debug info    for a traceback unless specifically overridden.  Defaulting this here    is a kludge.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTIMIZATION_OPTIONS
+parameter_list|(
+name|OPTIMIZE
+parameter_list|,
+name|OPTIMIZE_SIZE
+parameter_list|)
+define|\
+value|{                                                  \    write_symbols = VMS_DEBUG;                      \    debug_info_level = (enum debug_info_level) 1;   \ }
+end_define
+
+begin_comment
+comment|/* Override traceback debug info on -g0.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|OVERRIDE_OPTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|OVERRIDE_OPTIONS
+define|\
+value|{                                                  \    if (write_symbols == NO_DEBUG)                  \      debug_info_level = (enum debug_info_level) 0; \    override_options ();                            \ }
+end_define
+
+begin_comment
+comment|/* Link with vms-dwarf2.o if -g (except -g0). This causes the    VMS link to pull all the dwarf2 debug sections together. */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|LINK_SPEC
 end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"%{g:-g vms-dwarf2.o%s} %{g0} %{g1:-g1 vms-dwarf2.o%s} \ %{g2:-g2 vms-dwarf2.o%s} %{g3:-g3 vms-dwarf2.o%s} %{shared} %{v} %{map}"
+end_define
 
 begin_undef
 undef|#
@@ -1059,15 +1126,21 @@ end_undef
 begin_define
 define|#
 directive|define
-name|ASM_SPEC
-value|"-nocpp %{pg}"
+name|STARTFILE_SPEC
+value|"%{!shared:%{mvms-return-codes:vcrt0.o%s} \ %{!mvms-return-codes:pcrt0.o%s}}"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LIB_SPEC
+end_undef
 
 begin_define
 define|#
 directive|define
-name|LINK_SPEC
-value|"%{g3:-g3} %{g0:-g0} %{shared:-shared} %{v:-v}"
+name|LIB_SPEC
+value|"-lc"
 end_define
 
 begin_comment
@@ -1133,15 +1206,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIR_SEPARATOR
-value|']'
+name|NAME__MAIN
+value|"__gccmain"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PREFIX
-value|"GNU_ROOT:"
+name|SYMBOL__MAIN
+value|__gccmain
+end_define
+
+begin_comment
+comment|/* Specify the list of include file directories.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCLUDE_DEFAULTS
+define|\
+value|{					\   { "/gnu_gxx_include", 0, 1, 1 },	\   { "/gnu_cc_include", 0, 0, 0 },	\   { "/gnu/include", 0, 0, 0 },	        \   { 0, 0, 0, 0 }			\ }
 end_define
 
 end_unit

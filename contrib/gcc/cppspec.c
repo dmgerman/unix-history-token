@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Specific flags and argument handling of the C preprocessor.    Copyright (C) 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Specific flags and argument handling of the C preprocessor.    Copyright (C) 1999 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -15,8 +15,14 @@ directive|include
 file|"system.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gcc.h"
+end_include
+
 begin_comment
-comment|/* The `cpp' executable installed in $(bindir) and $(cpp_install_dir)    is a customized version of the gcc driver.  It forces -E; -S and -c    are errors.  It defaults to -x c for files with unrecognized    extensions, unless -x options appear in argv, in which case we    assume the user knows what they're doing.  If no explicit input is    mentioned, it will read stdin. */
+comment|/* The `cpp' executable installed in $(bindir) and $(cpp_install_dir)    is a customized version of the gcc driver.  It forces -E; -S and -c    are errors.  It defaults to -x c for files with unrecognized    extensions, unless -x options appear in argv, in which case we    assume the user knows what they're doing.  If no explicit input is    mentioned, it will read stdin.  */
 end_comment
 
 begin_comment
@@ -71,7 +77,7 @@ parameter_list|(
 name|STR
 parameter_list|)
 define|\
-value|(!strcmp (STR, "Tdata") || !strcmp (STR, "Ttext")	\   || !strcmp (STR, "Tbss") || !strcmp (STR, "include")	\   || !strcmp (STR, "imacros") || !strcmp (STR, "aux-info") \   || !strcmp (STR, "idirafter") || !strcmp (STR, "iprefix") \   || !strcmp (STR, "iwithprefix") || !strcmp (STR, "iwithprefixbefore") \   || !strcmp (STR, "isystem") || !strcmp (STR, "specs"))
+value|(!strcmp (STR, "Tdata") || !strcmp (STR, "Ttext")	\   || !strcmp (STR, "Tbss") || !strcmp (STR, "include")	\   || !strcmp (STR, "imacros") || !strcmp (STR, "aux-info") \   || !strcmp (STR, "idirafter") || !strcmp (STR, "iprefix") \   || !strcmp (STR, "iwithprefix") || !strcmp (STR, "iwithprefixbefore") \   || !strcmp (STR, "isystem") || !strcmp (STR, "specs") \   || !strcmp (STR, "MF") || !strcmp (STR, "MT") || !strcmp (STR, "MQ"))
 end_define
 
 begin_ifndef
@@ -133,66 +139,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Filter argc and argv before processing by the gcc driver proper. */
+comment|/* Filter argc and argv before processing by the gcc driver proper.  */
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|lang_specific_driver
 parameter_list|(
-name|errfn
-parameter_list|,
 name|in_argc
 parameter_list|,
 name|in_argv
 parameter_list|,
 name|in_added_libraries
 parameter_list|)
-function_decl|void
-parameter_list|(
-function_decl|*errfn
-end_function_decl
-
-begin_expr_stmt
-unit|)
-name|PVPROTO
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|in_argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 modifier|*
 name|in_argv
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|in_added_libraries
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|argc
@@ -200,8 +176,10 @@ init|=
 operator|*
 name|in_argc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 init|=
@@ -232,7 +210,7 @@ name|seen_input
 init|=
 literal|0
 decl_stmt|;
-comment|/* Positions to insert -xc, -xassembler-with-cpp, and -o, if necessary.      0 means unnecessary. */
+comment|/* Positions to insert -xc, -xassembler-with-cpp, and -o, if necessary.      0 means unnecessary.  */
 name|int
 name|lang_c_here
 init|=
@@ -260,7 +238,10 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|quote
+init|=
+literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -269,6 +250,14 @@ decl_stmt|;
 name|int
 name|new_argc
 decl_stmt|;
+specifier|extern
+name|int
+name|is_cpp_driver
+decl_stmt|;
+name|is_cpp_driver
+operator|=
+literal|1
+expr_stmt|;
 comment|/* First pass.  If we see an -S or -c, barf.  If we see an input file,      turn off read_stdin.  If we see a second input file, it is actually      the output file.  If we see a third input file, barf.  */
 for|for
 control|(
@@ -380,12 +369,9 @@ operator|==
 literal|'c'
 condition|)
 block|{
-call|(
-modifier|*
-name|errfn
-call|)
+name|fatal
 argument_list|(
-literal|"`%s' is not a legal option to the preprocessor"
+literal|"\"%s\" is not a valid option to the preprocessor"
 argument_list|,
 name|argv
 index|[
@@ -519,10 +505,7 @@ operator|==
 literal|3
 condition|)
 block|{
-call|(
-modifier|*
-name|errfn
-call|)
+name|fatal
 argument_list|(
 literal|"too many input files"
 argument_list|)
@@ -689,11 +672,22 @@ operator|==
 name|argc
 condition|)
 return|return;
+comment|/* One more slot for a terminating null.  */
 name|new_argv
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
+operator|(
 name|new_argc
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -819,9 +813,17 @@ condition|)
 name|new_argv
 index|[
 name|j
+operator|++
 index|]
 operator|=
 literal|"-"
+expr_stmt|;
+name|new_argv
+index|[
+name|j
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 operator|*
 name|in_argc
@@ -834,10 +836,10 @@ operator|=
 name|new_argv
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* Called before linking.  Returns 0 on success and -1 on failure. */
+comment|/* Called before linking.  Returns 0 on success and -1 on failure.  */
 end_comment
 
 begin_function
@@ -848,12 +850,12 @@ block|{
 return|return
 literal|0
 return|;
-comment|/* Not used for cpp. */
+comment|/* Not used for cpp.  */
 block|}
 end_function
 
 begin_comment
-comment|/* Number of extra output files that lang_specific_pre_link may generate. */
+comment|/* Number of extra output files that lang_specific_pre_link may generate.  */
 end_comment
 
 begin_decl_stmt
@@ -865,7 +867,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Not used for cpp. */
+comment|/* Not used for cpp.  */
 end_comment
 
 end_unit

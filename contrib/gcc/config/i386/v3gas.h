@@ -32,13 +32,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|FRAME_POINTER_REQUIRED
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FRAME_POINTER_REQUIRED
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 define|\
 value|(current_function_calls_setjmp || current_function_calls_longjmp)
 end_define

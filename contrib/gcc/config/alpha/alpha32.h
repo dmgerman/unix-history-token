@@ -6,13 +6,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_WINDOWS_NT
+name|TARGET_ABI_WINDOWS_NT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_WINDOWS_NT
+name|TARGET_ABI_WINDOWS_NT
 value|1
 end_define
 
@@ -28,7 +28,7 @@ value|"unsigned int"
 end_define
 
 begin_comment
-comment|/* Pointer is 32 bits but the hardware has 64-bit addresses, sign extended. */
+comment|/* Pointer is 32 bits but the hardware has 64-bit addresses, sign extended.  */
 end_comment
 
 begin_undef
@@ -111,7 +111,24 @@ value|24
 end_define
 
 begin_comment
-comment|/* Emit RTL insns to initialize the variable parts of a trampoline.    FNADDR is an RTX for the address of the function's pure code.    CXT is an RTX for the static chain value for the function.   */
+comment|/* The alignment of a trampoline, in bits.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TRAMPOLINE_ALIGNMENT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TRAMPOLINE_ALIGNMENT
+value|32
+end_define
+
+begin_comment
+comment|/* Emit RTL insns to initialize the variable parts of a trampoline.    FNADDR is an RTX for the address of the function's pure code.    CXT is an RTX for the static chain value for the function.  */
 end_comment
 
 begin_undef
@@ -133,37 +150,6 @@ name|CXT
 parameter_list|)
 define|\
 value|alpha_initialize_trampoline (TRAMP, FNADDR, CXT, 20, 16, 12)
-end_define
-
-begin_comment
-comment|/* Output code to add DELTA to the first argument, and then jump to FUNCTION.    Used for C++ multiple inheritance.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_MI_THUNK
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_MI_THUNK
-parameter_list|(
-name|FILE
-parameter_list|,
-name|THUNK_FNDECL
-parameter_list|,
-name|DELTA
-parameter_list|,
-name|FUNCTION
-parameter_list|)
-define|\
-value|do {									\   char *op, *fn_name = XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0);		\   int reg;								\ 									\
-comment|/* Mark end of prologue.  */
-value|\   output_end_prologue (FILE);						\ 									\
-comment|/* Rely on the assembler to macro expand a large delta.  */
-value|\   reg = aggregate_value_p (TREE_TYPE (TREE_TYPE (FUNCTION))) ? 17 : 16; \   fprintf (FILE, "\tlda $%d,%ld($%d)\n", reg, (long)(DELTA), reg);      \ 									\   op = "jsr";								\   if (current_file_function_operand (XEXP (DECL_RTL (FUNCTION), 0)))	\     op = "br";								\   fprintf (FILE, "\t%s $31,", op);					\   assemble_name (FILE, fn_name);					\   fputc ('\n', FILE);							\ } while (0)
 end_define
 
 end_unit

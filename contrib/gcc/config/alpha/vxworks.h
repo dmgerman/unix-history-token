@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"\ -D__vxworks -D__alpha_vxworks -Asystem(vxworks) \ -Asystem(embedded) -D_LONGLONG"
+value|"\ -D__vxworks -D__alpha_vxworks -Asystem=vxworks \ -Asystem=embedded -D_LONGLONG"
 end_define
 
 begin_comment

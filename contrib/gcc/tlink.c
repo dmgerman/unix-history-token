@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Scan linker error messages for missing template instantiations and provide    them.     Copyright (C) 1995, 1998 Free Software Foundation, Inc.    Contributed by Jason Merrill (jason@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Scan linker error messages for missing template instantiations and provide    them.     Copyright (C) 1995, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Jason Merrill (jason@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"intl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hash.h"
 end_include
 
@@ -25,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"demangle.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"toplev.h"
 end_include
 
 begin_include
@@ -63,59 +63,6 @@ directive|define
 name|obstack_chunk_free
 value|free
 end_define
-
-begin_comment
-comment|/* Defined in collect2.c.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vflag
-decl_stmt|,
-name|debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|ldout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|c_file_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|obstack
-name|temporary_obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|obstack
-name|permanent_obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|temporary_firstobj
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Defined in the automatically-generated underscore.c.  */
@@ -265,7 +212,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|boolean
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -347,7 +294,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|boolean
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -429,6 +376,7 @@ name|tlink_execute
 name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -436,6 +384,7 @@ name|char
 operator|*
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -451,6 +400,7 @@ name|frob_extension
 name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -646,6 +596,7 @@ name|table
 decl_stmt|;
 name|hash_table_key
 name|string
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -752,7 +703,7 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|boolean
+name|int
 name|create
 decl_stmt|;
 block|{
@@ -769,13 +720,13 @@ operator|&
 name|symbol_table
 argument_list|,
 operator|(
+specifier|const
 name|hash_table_key
 operator|)
 name|string
 argument_list|,
 name|create
 argument_list|,
-operator|&
 name|string_copy
 argument_list|)
 operator|)
@@ -820,6 +771,7 @@ name|table
 decl_stmt|;
 name|hash_table_key
 name|string
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -938,13 +890,13 @@ operator|&
 name|file_table
 argument_list|,
 operator|(
+specifier|const
 name|hash_table_key
 operator|)
 name|string
 argument_list|,
 name|true
 argument_list|,
-operator|&
 name|string_copy
 argument_list|)
 operator|)
@@ -989,6 +941,7 @@ name|table
 decl_stmt|;
 name|hash_table_key
 name|string
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -1077,7 +1030,7 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|boolean
+name|int
 name|create
 decl_stmt|;
 block|{
@@ -1094,13 +1047,13 @@ operator|&
 name|demangled_table
 argument_list|,
 operator|(
+specifier|const
 name|hash_table_key
 operator|)
 name|string
 argument_list|,
 name|create
 argument_list|,
-operator|&
 name|string_copy
 argument_list|)
 operator|)
@@ -1429,6 +1382,7 @@ name|void
 name|tlink_init
 parameter_list|()
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1440,10 +1394,8 @@ name|symbol_table
 argument_list|,
 name|symbol_hash_newfunc
 argument_list|,
-operator|&
 name|string_hash
 argument_list|,
-operator|&
 name|string_compare
 argument_list|)
 expr_stmt|;
@@ -1454,10 +1406,8 @@ name|file_table
 argument_list|,
 name|file_hash_newfunc
 argument_list|,
-operator|&
 name|string_hash
 argument_list|,
-operator|&
 name|string_compare
 argument_list|)
 expr_stmt|;
@@ -1468,10 +1418,8 @@ name|demangled_table
 argument_list|,
 name|demangled_hash_newfunc
 argument_list|,
-operator|&
 name|string_hash
 argument_list|,
-operator|&
 name|string_compare
 argument_list|)
 expr_stmt|;
@@ -1546,6 +1494,7 @@ name|argv
 parameter_list|,
 name|redir
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|prog
@@ -1555,6 +1504,7 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|redir
@@ -1588,6 +1538,7 @@ name|s
 parameter_list|,
 name|ext
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1598,11 +1549,12 @@ modifier|*
 name|ext
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
 init|=
-name|rindex
+name|strrchr
 argument_list|(
 name|s
 argument_list|,
@@ -1620,7 +1572,7 @@ name|s
 expr_stmt|;
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|p
 argument_list|,
@@ -1834,6 +1786,7 @@ modifier|*
 name|sym
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2001,7 +1954,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"collect: reading %s\n"
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -2280,6 +2236,22 @@ name|file
 modifier|*
 name|f
 decl_stmt|;
+name|putenv
+argument_list|(
+name|xstrdup
+argument_list|(
+literal|"COMPILER_PATH"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|putenv
+argument_list|(
+name|xstrdup
+argument_list|(
+literal|"LIBRARY_PATH"
+argument_list|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2318,8 +2290,10 @@ argument_list|,
 literal|"r"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|outname
 init|=
 name|frob_extension
@@ -2529,7 +2503,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"collect: recompiling %s\n"
+argument_list|)
 argument_list|,
 name|f
 operator|->
@@ -2617,10 +2594,29 @@ name|object
 operator|++
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
-init|=
+decl_stmt|;
+name|file
+modifier|*
+name|f
+decl_stmt|;
+comment|/* Don't bother trying for ld flags.  */
+if|if
+condition|(
+operator|*
+name|object
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+continue|continue;
+name|p
+operator|=
 name|frob_extension
 argument_list|(
 operator|*
@@ -2628,11 +2624,7 @@ name|object
 argument_list|,
 literal|".rpo"
 argument_list|)
-decl_stmt|;
-name|file
-modifier|*
-name|f
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2708,6 +2700,7 @@ name|demangled
 modifier|*
 name|dem
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -2916,6 +2909,73 @@ argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
+comment|/* Some SVR4 linkers produce messages like 	 ld: 0711-317 ERROR: Undefined symbol: .g__t3foo1Zi 	 */
+if|if
+condition|(
+operator|!
+name|sym
+operator|&&
+operator|!
+name|end
+operator|&&
+name|strstr
+argument_list|(
+name|q
+operator|+
+literal|1
+argument_list|,
+literal|"Undefined symbol: "
+argument_list|)
+condition|)
+block|{
+name|char
+modifier|*
+name|p
+init|=
+name|strrchr
+argument_list|(
+name|q
+operator|+
+literal|1
+argument_list|,
+literal|' '
+argument_list|)
+decl_stmt|;
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'.'
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'_'
+operator|&&
+name|prepends_underscore
+condition|)
+name|p
+operator|++
+expr_stmt|;
+name|sym
+operator|=
+name|symbol_hash_lookup
+argument_list|(
+name|p
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2926,6 +2986,7 @@ name|end
 condition|)
 comment|/* Try a mangled name in quotes.  */
 block|{
+specifier|const
 name|char
 modifier|*
 name|oldq
@@ -2947,7 +3008,7 @@ expr_stmt|;
 comment|/* First try `GNU style'.  */
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|oldq
 argument_list|,
@@ -2963,7 +3024,7 @@ operator|++
 operator|,
 name|q
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -2976,7 +3037,7 @@ if|if
 condition|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|oldq
 argument_list|,
@@ -2990,16 +3051,60 @@ operator|++
 operator|,
 name|q
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
 literal|'"'
 argument_list|)
 expr_stmt|;
+comment|/* Don't let the strstr's below see the demangled name; we 	     might get spurious matches.  */
+if|if
+condition|(
+name|p
+condition|)
+name|p
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* We need to check for certain error keywords here, or we would 	     mistakenly use GNU ld's "In function `foo':" message.  */
 if|if
 condition|(
 name|q
+operator|&&
+operator|(
+name|strstr
+argument_list|(
+name|oldq
+argument_list|,
+literal|"ndefined"
+argument_list|)
+operator|||
+name|strstr
+argument_list|(
+name|oldq
+argument_list|,
+literal|"nresolved"
+argument_list|)
+operator|||
+name|strstr
+argument_list|(
+name|oldq
+argument_list|,
+literal|"nsatisfied"
+argument_list|)
+operator|||
+name|strstr
+argument_list|(
+name|oldq
+argument_list|,
+literal|"ultiple"
+argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -3095,7 +3200,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"collect: tweaking %s in %s\n"
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -3178,6 +3286,7 @@ decl_stmt|,
 decl|*
 modifier|*
 name|object_lst
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 end_function
 
@@ -3264,7 +3373,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"collect: relinking\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit

@@ -1,20 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|<sparc/sparc.h>
-end_include
-
-begin_comment
-comment|/* Get generic NetBSD definitions.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netbsd.h>
-end_include
-
 begin_comment
 comment|/* Names to predefine in the preprocessor for this target machine.  */
 end_comment
@@ -29,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Dsparc -D__NetBSD__ -Asystem(unix) -Asystem(NetBSD) -Acpu(sparc) -Amachine(sparc)"
+value|"-Dunix -Dsparc -D__NetBSD__ -Asystem=unix -Asystem=NetBSD -Acpu=sparc -Amachine=sparc"
 end_define
 
 begin_comment

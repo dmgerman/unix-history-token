@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_equiv
+name|GCC_F_EQUIV_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_equiv
+name|GCC_F_EQUIV_H
 end_define
 
 begin_comment
@@ -121,29 +121,6 @@ name|t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetFFE
-end_if
-
-begin_function_decl
-name|void
-name|ffeequiv_dump
-parameter_list|(
-name|ffeequiv
-name|eq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -433,6 +410,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_EQUIV_H */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate check macros for tree codes.    Copyright (C) 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate check macros for tree codes.    Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -28,13 +28,15 @@ name|TYPE
 parameter_list|,
 name|LEN
 parameter_list|)
-value|STRINGIFY(SYM),
+value|STRINGX(SYM),
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|tree_codes
 index|[]
 init|=
@@ -42,6 +44,9 @@ block|{
 include|#
 directive|include
 file|"tree.def"
+include|#
+directive|include
+file|"c-common.def"
 include|#
 directive|include
 file|"gencheck.h"
@@ -54,20 +59,51 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
 block|{
-name|fprintf
+name|fputs
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Usage: gencheck\n"
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|extern
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -82,8 +118,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
@@ -103,15 +139,25 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-name|printf
+name|puts
 argument_list|(
 literal|"/* This file is generated using gencheck. Do not edit. */\n"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"#ifndef GCC_TREE_CHECK_H"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"#define GCC_TREE_CHECK_H\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -144,98 +190,17 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+block|}
+name|puts
 argument_list|(
-literal|"#define %s_CHECK1(t)\tTREE_CHECK1 (t, %s)\n"
-argument_list|,
-name|tree_codes
-index|[
-name|i
-index|]
-argument_list|,
-name|tree_codes
-index|[
-name|i
-index|]
+literal|"\n#endif /* GCC_TREE_CHECK_H */"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_C_ALLOCA
-argument_list|)
-end_if
-
-begin_comment
-comment|/* FIXME: We only need an xmalloc definition because we are forced to    link with alloca.o on some platforms.  This should go away if/when    we link against libiberty.a. (ghazi@caip.rutgers.edu 6/3/98) */
-end_comment
-
-begin_function
-name|PTR
-name|xmalloc
-parameter_list|(
-name|nbytes
-parameter_list|)
-name|size_t
-name|nbytes
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|tmp
-init|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|nbytes
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|tmp
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"can't allocate %d bytes (out of virtual memory)\n"
-argument_list|,
-name|nbytes
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|tmp
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_C_ALLOCA */
-end_comment
 
 end_unit
 

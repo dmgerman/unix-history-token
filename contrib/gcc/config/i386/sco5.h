@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running SCO Unix System V 3.2 Version 5.    Copyright (C) 1992, 95-98, 1999 Free Software Foundation, Inc.    Contributed by Kean Johnston (hug@netcom.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running SCO Unix System V 3.2 Version 5.    Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by Kean Johnston (hug@netcom.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|ALIGN_ASM_OP
-value|"\t.align"
+value|"\t.align\t"
 end_define
 
 begin_undef
@@ -72,20 +72,7 @@ begin_define
 define|#
 directive|define
 name|ASCII_DATA_ASM_OP
-value|"\t.ascii"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_BYTE_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_BYTE_OP
-value|"\t.byte"
+value|"\t.ascii\t"
 end_define
 
 begin_undef
@@ -98,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|IDENT_ASM_OP
-value|"\t.ident"
+value|"\t.ident\t"
 end_define
 
 begin_undef
@@ -111,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|COMMON_ASM_OP
-value|"\t.comm"
+value|"\t.comm\t"
 end_define
 
 begin_undef
@@ -124,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|SET_ASM_OP
-value|"\t.set"
+value|"\t.set\t"
 end_define
 
 begin_undef
@@ -137,20 +124,7 @@ begin_define
 define|#
 directive|define
 name|LOCAL_ASM_OP
-value|"\t.local"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|INT_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INT_ASM_OP
-value|"\t.long"
+value|"\t.local\t"
 end_define
 
 begin_undef
@@ -163,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SHORT
-value|"\t.value"
+value|"\t.value\t"
 end_define
 
 begin_undef
@@ -176,21 +150,14 @@ begin_define
 define|#
 directive|define
 name|ASM_LONG
-value|"\t.long"
+value|"\t.long\t"
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_DOUBLE
+name|ASM_QUAD
 end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_DOUBLE
-value|"\t.double"
-end_define
 
 begin_undef
 undef|#
@@ -202,7 +169,7 @@ begin_define
 define|#
 directive|define
 name|TYPE_ASM_OP
-value|"\t.type"
+value|"\t.type\t"
 end_define
 
 begin_undef
@@ -215,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|SIZE_ASM_OP
-value|"\t.size"
+value|"\t.size\t"
 end_define
 
 begin_undef
@@ -228,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|STRING_ASM_OP
-value|"\t.string"
+value|"\t.string\t"
 end_define
 
 begin_undef
@@ -241,7 +208,7 @@ begin_define
 define|#
 directive|define
 name|SKIP_ASM_OP
-value|"\t.zero"
+value|"\t.zero\t"
 end_define
 
 begin_undef
@@ -254,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|GLOBAL_ASM_OP
-value|"\t.globl"
+value|"\t.globl\t"
 end_define
 
 begin_undef
@@ -266,23 +233,23 @@ end_undef
 begin_define
 define|#
 directive|define
-name|EH_FRAME_SECTION_ASM_OP_COFF
-value|"\t.section\t.ehfram, \"x\""
+name|EH_FRAME_SECTION_NAME_COFF
+value|".ehfram"
 end_define
 
 begin_define
 define|#
 directive|define
-name|EH_FRAME_SECTION_ASM_OP_ELF
-value|"\t.section\t.eh_frame, \"aw\""
+name|EH_FRAME_SECTION_NAME_ELF
+value|".eh_frame"
 end_define
 
 begin_define
 define|#
 directive|define
-name|EH_FRAME_SECTION_ASM_OP
+name|EH_FRAME_SECTION_NAME
 define|\
-value|((TARGET_ELF) ? EH_FRAME_SECTION_ASM_OP_ELF : EH_FRAME_SECTION_ASM_OP_COFF)
+value|((TARGET_ELF) ? EH_FRAME_SECTION_NAME_ELF : EH_FRAME_SECTION_NAME_COFF)
 end_define
 
 begin_comment
@@ -366,11 +333,15 @@ name|INIT_SECTION_ASM_OP_ELF
 value|"\t.section\t.init"
 end_define
 
+begin_comment
+comment|/* Rename these for COFF because crt1.o will try to run them.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|INIT_SECTION_ASM_OP_COFF
-value|"\t.section\t.init ,\"x\""
+value|"\t.section\t.ctor ,\"x\""
 end_define
 
 begin_define
@@ -454,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|FINI_SECTION_ASM_OP_COFF
-value|"\t.section\t.fini, \"x\""
+value|"\t.section\t.dtor, \"x\""
 end_define
 
 begin_define
@@ -584,7 +555,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     if (TARGET_ELF) {							\       fprintf (FILE, "%s\t ", TYPE_ASM_OP);				\       assemble_name (FILE, NAME);					\       putc (',', FILE);							\       fprintf (FILE, TYPE_OPERAND_FMT, "function");			\       putc ('\n', FILE);						\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\       ASM_OUTPUT_LABEL(FILE, NAME);					\     } else								\       SCO_DEFAULT_ASM_COFF(FILE, NAME);					\ } while (0)
+value|do {									\     if (TARGET_ELF) {							\       fprintf (FILE, "%s", TYPE_ASM_OP);				\       assemble_name (FILE, NAME);					\       putc (',', FILE);							\       fprintf (FILE, TYPE_OPERAND_FMT, "function");			\       putc ('\n', FILE);						\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\       ASM_OUTPUT_LABEL(FILE, NAME);					\     } else								\       SCO_DEFAULT_ASM_COFF(FILE, NAME);					\ } while (0)
 end_define
 
 begin_undef
@@ -605,7 +576,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     if (TARGET_ELF) { if (!flag_inhibit_size_directive)			\       {									\ 	fprintf (FILE, "%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",.-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }	}								\   } while (0)
+value|do {									\     if (TARGET_ELF) { if (!flag_inhibit_size_directive)			\       {									\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",.-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }	}								\   } while (0)
 end_define
 
 begin_undef
@@ -626,7 +597,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     if (TARGET_ELF) {							\       fprintf (FILE, "%s\t ", TYPE_ASM_OP);				\       assemble_name (FILE, NAME);					\       putc (',', FILE);							\       fprintf (FILE, TYPE_OPERAND_FMT, "object");			\       putc ('\n', FILE);						\       size_directive_output = 0;					\       if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\         {								\   	size_directive_output = 1;					\ 	fprintf (FILE, "%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\         }								\       ASM_OUTPUT_LABEL(FILE, NAME);					\     } else								\       SCO_DEFAULT_ASM_COFF(FILE, NAME);					\   } while (0)
+value|do {									\     if (TARGET_ELF) {							\       fprintf (FILE, "%s", TYPE_ASM_OP);				\       assemble_name (FILE, NAME);					\       putc (',', FILE);							\       fprintf (FILE, TYPE_OPERAND_FMT, "object");			\       putc ('\n', FILE);						\       size_directive_output = 0;					\       if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\         {								\   	size_directive_output = 1;					\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\         }								\       ASM_OUTPUT_LABEL(FILE, NAME);					\     } else								\       SCO_DEFAULT_ASM_COFF(FILE, NAME);					\   } while (0)
 end_define
 
 begin_undef
@@ -664,23 +635,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|ASM_FILE_END
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_END
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do {									\      if (!flag_no_ident)						\ 	fprintf ((FILE), "%s\t\"GCC: (GNU) %s\"\n",			\ 		 IDENT_ASM_OP, version_string);				\ } while (0)
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|ASM_FINISH_DECLARE_OBJECT
 end_undef
 
@@ -698,7 +652,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {									 \   if (TARGET_ELF) {							\      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 fprintf (FILE, "%s\t ", SIZE_ASM_OP);			 	 \ 	 assemble_name (FILE, name);					 \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL))); \        }								 \     }									 \ } while (0)
+value|do {									 \   if (TARGET_ELF) {							\      const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 fprintf (FILE, "%s", SIZE_ASM_OP);			 	 \ 	 assemble_name (FILE, name);					 \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL))); \        }								 \     }									 \ } while (0)
 end_define
 
 begin_undef
@@ -719,30 +673,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|do {									\   if (TARGET_ELF)							\     sprintf (LABEL, "*.%s%d", (PREFIX), (NUM));				\   else									\     sprintf (LABEL, ".%s%d", (PREFIX), (NUM));				\ } while (0)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|BODY
-parameter_list|,
-name|VALUE
-parameter_list|,
-name|REL
-parameter_list|)
-define|\
-value|do {									\   if (TARGET_ELF)							\     fprintf (FILE, "%s _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", ASM_LONG, LPREFIX, VALUE); \   else									\     fprintf (FILE, "\t.word %s%d-%s%d\n", LPREFIX,VALUE,LPREFIX,REL);	\ } while (0)
+value|do {									\   if (TARGET_ELF)							\     sprintf (LABEL, "*.%s%ld", (PREFIX), (long)(NUM));			\   else									\     sprintf (LABEL, ".%s%ld", (PREFIX), (long)(NUM));			\ } while (0)
 end_define
 
 begin_undef
@@ -765,7 +696,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "%s\t", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   if (TARGET_ELF)							\     fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\   else									\     fprintf ((FILE), ",%u\n", (SIZE));					\ } while (0)
+value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   if (TARGET_ELF)							\     fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\   else									\     fprintf ((FILE), ",%u\n", (SIZE));					\ } while (0)
 end_define
 
 begin_undef
@@ -788,7 +719,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   if (TARGET_ELF) {							\     fprintf ((FILE), "%s\t", LOCAL_ASM_OP);				\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), "\n");						\     ASM_OUTPUT_ALIGNED_COMMON (FILE, NAME, SIZE, ALIGN);		\   } else {								\     int align = exact_log2 (ALIGN);					\     if (align> 2) align = 2;						\     if (TARGET_SVR3_SHLIB)						\       data_section ();							\     else								\       bss_section ();							\     ASM_OUTPUT_ALIGN ((FILE), align == -1 ? 2 : align);			\     fprintf ((FILE), "%s\t", "\t.lcomm");				\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), ",%u\n", (SIZE));					\    }									\ } while (0)
+value|do {									\   if (TARGET_ELF) {							\     fprintf ((FILE), "%s", LOCAL_ASM_OP);				\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), "\n");						\     ASM_OUTPUT_ALIGNED_COMMON (FILE, NAME, SIZE, ALIGN);		\   } else {								\     int align = exact_log2 (ALIGN);					\     if (align> 2) align = 2;						\     if (TARGET_SVR3_SHLIB)						\       data_section ();							\     else								\       bss_section ();							\     ASM_OUTPUT_ALIGN ((FILE), align == -1 ? 2 : align);			\     fprintf ((FILE), "%s\t", "\t.lcomm");				\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), ",%u\n", (SIZE));					\    }									\ } while (0)
 end_define
 
 begin_comment
@@ -857,7 +788,7 @@ parameter_list|,
 name|STR
 parameter_list|)
 define|\
-value|do									\     {									\       register unsigned char *_limited_str = (unsigned char *) (STR);	\       register unsigned ch;						\       fprintf ((FILE), "%s\t\"", STRING_ASM_OP);			\       for (; (ch = *_limited_str); _limited_str++)			\         {								\ 	  register int escape;						\ 	  switch (escape = ESCAPES[ch])					\ 	    {								\ 	    case 0:							\ 	      putc (ch, (FILE));					\ 	      break;							\ 	    case 1:							\ 	      fprintf ((FILE), "\\%03o", ch);				\ 	      break;							\ 	    default:							\ 	      putc ('\\', (FILE));					\ 	      putc (escape, (FILE));					\ 	      break;							\ 	    }								\         }								\       fprintf ((FILE), "\"\n");						\     }									\   while (0)
+value|do									\     {									\       register const unsigned char *_limited_str =			\         (const unsigned char *) (STR);					\       register unsigned ch;						\       fprintf ((FILE), "%s\"", STRING_ASM_OP);				\       for (; (ch = *_limited_str); _limited_str++)			\         {								\ 	  register int escape;						\ 	  switch (escape = ESCAPES[ch])					\ 	    {								\ 	    case 0:							\ 	      putc (ch, (FILE));					\ 	      break;							\ 	    case 1:							\ 	      fprintf ((FILE), "\\%03o", ch);				\ 	      break;							\ 	    default:							\ 	      putc ('\\', (FILE));					\ 	      putc (escape, (FILE));					\ 	      break;							\ 	    }								\         }								\       fprintf ((FILE), "\"\n");						\     }									\   while (0)
 end_define
 
 begin_undef
@@ -878,7 +809,7 @@ parameter_list|,
 name|LENGTH
 parameter_list|)
 define|\
-value|do {									\       register unsigned char *_ascii_bytes = (unsigned char *) (STR);	\       register unsigned char *limit = _ascii_bytes + (LENGTH);		\       register unsigned bytes_in_chunk = 0;				\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  register unsigned char *p;					\ 	  if (bytes_in_chunk>= 64)					\ 	    {								\ 	      fputc ('\n', (FILE));					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\ 	  if (p< limit&& (p - _ascii_bytes)<= STRING_LIMIT)		\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fputc ('\n', (FILE));					\ 		  bytes_in_chunk = 0;					\ 		}							\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "%s\t", ASM_BYTE_OP);			\ 	      else							\ 		fputc (',', (FILE));					\ 	      fprintf ((FILE), "0x%02x", *_ascii_bytes);		\ 	      bytes_in_chunk += 5;					\ 	    }								\ 	}								\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\n");						\ } while (0)
+value|do {									\       register const unsigned char *_ascii_bytes =			\         (const unsigned char *) (STR);					\       register const unsigned char *limit = _ascii_bytes + (LENGTH);	\       register unsigned bytes_in_chunk = 0;				\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  register unsigned const char *p;				\ 	  if (bytes_in_chunk>= 64)					\ 	    {								\ 	      fputc ('\n', (FILE));					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\ 	  if (p< limit&& (p - _ascii_bytes)<= (long) STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fputc ('\n', (FILE));					\ 		  bytes_in_chunk = 0;					\ 		}							\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      if (bytes_in_chunk == 0)					\ 		fputs ("\t.byte\t", (FILE));				\ 	      else							\ 		fputc (',', (FILE));					\ 	      fprintf ((FILE), "0x%02x", *_ascii_bytes);		\ 	      bytes_in_chunk += 5;					\ 	    }								\ 	}								\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\n");						\ } while (0)
 end_define
 
 begin_comment
@@ -899,9 +830,11 @@ parameter_list|(
 name|MODE
 parameter_list|,
 name|RTX
+parameter_list|,
+name|ALIGN
 parameter_list|)
 define|\
-value|{									\   if (TARGET_ELF) {							\     if (flag_pic&& symbolic_operand (RTX))				\       data_section ();							\     else								\       const_section ();							\   } else								\     readonly_data_section();						\ }
+value|{									\   if (TARGET_ELF) {							\     if (flag_pic&& symbolic_operand (RTX, VOIDmode))			\       data_section ();							\     else								\       const_section ();							\   } else								\     readonly_data_section();						\ }
 end_define
 
 begin_undef
@@ -930,44 +863,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\   if (TARGET_ELF) {							\      ctors_section ();							\      fprintf (FILE, "%s\t ", INT_ASM_OP);				\      assemble_name (FILE, NAME);					\      fprintf (FILE, "\n");						\   } else {								\     init_section ();							\     fprintf (FILE, "\tpushl $");					\     assemble_name (FILE, NAME);						\     fprintf (FILE, "\n"); }						\   } while (0)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_DESTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\   if (TARGET_ELF) {							\     dtors_section ();                   				\     fprintf (FILE, "%s\t ", INT_ASM_OP);				\     assemble_name (FILE, NAME);              				\     fprintf (FILE, "\n");						\   } else {								\     fini_section ();                   					\     fprintf (FILE, "%s\t ", ASM_LONG);					\     assemble_name (FILE, NAME);              				\     fprintf (FILE, "\n"); }						\   } while (0)
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|ASM_OUTPUT_IDENT
 end_undef
 
@@ -981,7 +876,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|fprintf (FILE, "%s\t\"%s\"\n", IDENT_ASM_OP, NAME);
+value|fprintf (FILE, "%s\"%s\"\n", IDENT_ASM_OP, NAME);
 end_define
 
 begin_undef
@@ -1000,7 +895,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|(fprintf ((FILE), "%s ", GLOBAL_ASM_OP), assemble_name (FILE, NAME), fputs ("\n", FILE))
+value|(fprintf ((FILE), "%s", GLOBAL_ASM_OP), assemble_name (FILE, NAME), fputs ("\n", FILE))
 end_define
 
 begin_undef
@@ -1044,7 +939,7 @@ value|fprintf (FILE, ".%s%d:\n", PREFIX, NUM)
 end_define
 
 begin_comment
-comment|/* The prefix to add to user-visible assembler symbols. */
+comment|/* The prefix to add to user-visible assembler symbols.  */
 end_comment
 
 begin_undef
@@ -1061,30 +956,22 @@ value|""
 end_define
 
 begin_comment
-comment|/*   * Compensate for the difference between ELF and COFF assembler syntax.  * Otherwise, this is cribbed from ../svr4.h.  * We rename 'gcc_except_table' to the shorter name in preparation  * for the day when we're ready to do DWARF2 eh unwinding under COFF   */
+comment|/*   * We rename 'gcc_except_table' to the shorter name in preparation  * for the day when we're ready to do DWARF2 eh unwinding under COFF.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_SECTION_NAME
-end_undef
+begin_comment
+comment|/* #define EXCEPTION_SECTION()		named_section (NULL, ".gccexc", 1) */
+end_comment
+
+begin_comment
+comment|/* Switch into a generic section.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_SECTION_NAME
-parameter_list|(
-name|FILE
-parameter_list|,
-name|DECL
-parameter_list|,
-name|NAME
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|do {									\   static struct section_info                                            \     {                                                                   \       struct section_info *next;                                        \       char *name;                                                       \       enum sect_enum {SECT_RW, SECT_RO, SECT_EXEC} type;                \     } *sections;                                                        \   struct section_info *s;                                               \   char *mode;                                                           \   enum sect_enum type;                                                  \   char *sname = NAME ;							\   if (strcmp(NAME, ".gcc_except_table") == 0) sname = ".gccexc" ;	\                                                                         \   for (s = sections; s; s = s->next)                                    \     if (!strcmp (NAME, s->name))                                        \       break;                                                            \                                                                         \   if (DECL&& TREE_CODE (DECL) == FUNCTION_DECL)                        \     type = SECT_EXEC, mode = (TARGET_ELF) ? "ax" : "x" ;                \   else if (DECL&& DECL_READONLY_SECTION (DECL, RELOC))                 \     type = SECT_RO, mode = "a";                                         \   else                                                                  \     type = SECT_RW, mode = (TARGET_ELF) ? "aw" : "w" ;                  \                                                                         \   if (s == 0)                                                           \     {                                                                   \       s = (struct section_info *) xmalloc (sizeof (struct section_info));  \       s->name = xmalloc ((strlen (NAME) + 1) * sizeof (*NAME));         \       strcpy (s->name, NAME);                                           \       s->type = type;                                                   \       s->next = sections;                                               \       sections = s;                                                     \       fprintf (FILE, ".section\t%s,\"%s\"%s\n", sname, mode,		\ 		(TARGET_ELF) ? ",@progbits" : "" );    			\     }                                                                   \   else                                                                  \     {                                                                   \       if (DECL&& s->type != type)                                      \         error_with_decl (DECL, "%s causes a section type conflict");    \                                                                         \       fprintf (FILE, ".section\t%s\n", sname);                          \     }                                                                   \ } while (0)
+name|TARGET_ASM_NAMED_SECTION
+value|default_elf_asm_named_section
 end_define
 
 begin_undef
@@ -1103,7 +990,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|do {									\   if (TARGET_ELF)							\     fprintf (FILE, "%s\t%u\n", SKIP_ASM_OP, (SIZE));			\   else									\     fprintf ((FILE), "%s\t.,.+%u\n", SET_ASM_OP, (SIZE));		\ } while (0)
+value|do {									\   if (TARGET_ELF)							\     fprintf (FILE, "%s%u\n", SKIP_ASM_OP, (SIZE));			\   else									\     fprintf ((FILE), "%s.,.+%u\n", SET_ASM_OP, (SIZE));		\ } while (0)
 end_define
 
 begin_undef
@@ -1174,8 +1061,14 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|((TARGET_ELF) ?								\  ((n) == 0 ? 0 								\   : (n) == 1 ? 2 							\   : (n) == 2 ? 1 							\   : (n) == 3 ? 3 							\   : (n) == 4 ? 6 							\   : (n) == 5 ? 7 							\   : (n) == 6 ? 5 							\   : (n) == 7 ? 4 							\   : ((n)>= FIRST_STACK_REG&& (n)<= LAST_STACK_REG) ? (n)+3 		\   : (-1))								\  :									\  ((n) == 0 ? 0 : 							\   (n) == 1 ? 2 : 							\   (n) == 2 ? 1 : 							\   (n) == 3 ? 3 : 							\   (n) == 4 ? 6 : 							\   (n) == 5 ? 7 : 							\   (n) == 6 ? 4 : 							\   (n) == 7 ? 5 : 							\   (n) + 4))
+value|((TARGET_ELF) ? svr4_dbx_register_map[n] : dbx_register_map[n])
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|DWARF2_DEBUGGING_INFO
+end_undef
 
 begin_undef
 undef|#
@@ -1204,6 +1097,13 @@ end_undef
 begin_define
 define|#
 directive|define
+name|DWARF2_DEBUGGING_INFO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|DWARF_DEBUGGING_INFO
 value|1
 end_define
@@ -1227,7 +1127,7 @@ define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
 define|\
-value|((TARGET_ELF) ? DWARF_DEBUG: SDB_DEBUG)
+value|((TARGET_ELF) ? DWARF2_DEBUG: SDB_DEBUG)
 end_define
 
 begin_undef
@@ -1240,7 +1140,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_const, in_init, in_fini, in_ctors, in_dtors
+value|in_const, in_init, in_fini
 end_define
 
 begin_undef
@@ -1254,7 +1154,7 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|CONST_SECTION_FUNCTION						\   INIT_SECTION_FUNCTION							\   FINI_SECTION_FUNCTION							\   CTORS_SECTION_FUNCTION						\   DTORS_SECTION_FUNCTION
+value|CONST_SECTION_FUNCTION						\   INIT_SECTION_FUNCTION							\   FINI_SECTION_FUNCTION
 end_define
 
 begin_undef
@@ -1268,7 +1168,7 @@ define|#
 directive|define
 name|CONST_SECTION_FUNCTION
 define|\
-value|void									\ const_section ()							\ {									\   extern void text_section();						\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
+value|void									\ const_section ()							\ {									\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
 end_define
 
 begin_undef
@@ -1302,56 +1202,15 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CTORS_SECTION_FUNCTION
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CTORS_SECTION_FUNCTION
-define|\
-value|void									\ ctors_section ()							\ {									\   if (in_section != in_ctors)						\     {									\       fprintf (asm_out_file, "%s\n", CTORS_SECTION_ASM_OP);		\       in_section = in_ctors;						\     }									\ }
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DTORS_SECTION_FUNCTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DTORS_SECTION_FUNCTION
-define|\
-value|void									\ dtors_section ()							\ {									\   if (in_section != in_dtors)						\     {									\       fprintf (asm_out_file, "%s\n", DTORS_SECTION_ASM_OP);		\       in_section = in_dtors;						\     }									\ }
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|FRAME_POINTER_REQUIRED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FRAME_POINTER_REQUIRED
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 define|\
 value|((TARGET_ELF) ? 0 : 							\    (current_function_calls_setjmp || current_function_calls_longjmp))
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|JUMP_TABLES_IN_TEXT_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|JUMP_TABLES_IN_TEXT_SECTION
-value|(TARGET_ELF&& flag_pic)
 end_define
 
 begin_undef
@@ -1443,7 +1302,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|((TARGET_ELF) ?							\   (i386_return_pops_args (FUNDECL, FUNTYPE, SIZE)) : 			\   (((FUNDECL)&& (TREE_CODE (FUNDECL) == IDENTIFIER_NODE)) ? 0		\    : (TARGET_RTD							\&& (TYPE_ARG_TYPES (FUNTYPE) == 0					\ 	  || (TREE_VALUE (tree_last (TYPE_ARG_TYPES (FUNTYPE)))		\ 	      == void_type_node))) ? (SIZE)				\    : 0))
+value|((TARGET_ELF) ?							\   (ix86_return_pops_args (FUNDECL, FUNTYPE, SIZE)) : 			\   (((FUNDECL)&& (TREE_CODE (FUNDECL) == IDENTIFIER_NODE)) ? 0		\    : (TARGET_RTD							\&& (TYPE_ARG_TYPES (FUNTYPE) == 0					\ 	  || (TREE_VALUE (tree_last (TYPE_ARG_TYPES (FUNTYPE)))		\ 	      == void_type_node))) ? (SIZE)				\    : 0))
 end_define
 
 begin_undef
@@ -1460,6 +1319,8 @@ parameter_list|(
 name|DECL
 parameter_list|,
 name|RELOC
+parameter_list|,
+name|ALIGN
 parameter_list|)
 define|\
 value|{									\   if (TARGET_ELF&& flag_pic&& RELOC)					\      data_section ();							\   else if (TREE_CODE (DECL) == STRING_CST)				\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if (! DECL_READONLY_SECTION (DECL, RELOC)) 			\ 	data_section ();						\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
@@ -1502,13 +1363,13 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS)
 end_define
 
@@ -1526,7 +1387,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Though OpenServer support .weak in COFF, g++ doesn't play nice with it  * so we'll punt on it for now  */
+comment|/* Though OpenServer supports .weak in COFF, we don't use it.  * G++ will frequently emit a symol as .weak and then (in the same .s   * file) declare it global.   The COFF assembler finds this unamusing.  */
 end_comment
 
 begin_define
@@ -1666,7 +1527,7 @@ name|USE_GAS
 end_if
 
 begin_comment
-comment|/* Leave ASM_SPEC undefined so we pick up the master copy from gcc.c     * Undef MD_EXEC_PREFIX becuase we don't know where GAS is, but it's not    * likely in /usr/ccs/bin/     */
+comment|/* Leave ASM_SPEC undefined so we pick up the master copy from gcc.c     * Undef MD_EXEC_PREFIX because we don't know where GAS is, but it's not    * likely in /usr/ccs/bin/     */
 end_comment
 
 begin_undef
@@ -1736,7 +1597,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-Asystem(svr3)"
+value|"-Asystem=svr3"
 end_define
 
 begin_comment
@@ -1771,7 +1632,7 @@ value|"-b %{!mcoff:elf}%{mcoff:coff \    %{static:%e-static not valid with -mcof
 end_define
 
 begin_comment
-comment|/* The SCO COFF linker gets confused on the difference between "-ofoo"    and "-o foo".   So we just always force a single space. */
+comment|/* The SCO COFF linker gets confused on the difference between "-ofoo"    and "-o foo".   So we just always force a single space.  */
 end_comment
 
 begin_define
@@ -1827,16 +1688,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TARGET_COFF
-value|(target_flags& MASK_COFF)
+name|TARGET_ELF
+value|(1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|TARGET_ELF
-value|(!(target_flags& MASK_COFF))
-end_define
+begin_comment
+comment|/* (!(target_flags& MASK_COFF)) */
+end_comment
 
 begin_undef
 undef|#
@@ -1849,7 +1707,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "coff", MASK_COFF, "Generate COFF output" }, 		\ 	{ "elf", -MASK_COFF, "Generate ELF output"  },
+value|{ "elf", -MASK_COFF, N_("Generate ELF output")  },
 end_define
 
 begin_define
@@ -1859,7 +1717,7 @@ name|NO_DOLLAR_IN_LABEL
 end_define
 
 begin_comment
-comment|/* Implicit library calls should use memcpy, not bcopy, etc.  They are     faster on OpenServer libraries. */
+comment|/* Implicit library calls should use memcpy, not bcopy, etc.  They are     faster on OpenServer libraries.  */
 end_comment
 
 begin_define
@@ -1877,6 +1735,27 @@ define|#
 directive|define
 name|MAX_OFILE_ALIGNMENT
 value|(32768*8)
+end_define
+
+begin_comment
+comment|/* Define the `__builtin_va_list' type for the ABI.  On OpenServer, this    type is `char *'.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|BUILD_VA_LIST_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|BUILD_VA_LIST_TYPE
+parameter_list|(
+name|VALIST
+parameter_list|)
+define|\
+value|(VALIST) = build_pointer_type (char_type_node)
 end_define
 
 begin_comment
@@ -1911,12 +1790,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|HAVE_ATEXIT
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|INIT_SECTION_ASM_OP
 end_undef
 
@@ -1941,7 +1814,7 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|EH_FRAME_SECTION_ASM_OP
+name|EH_FRAME_SECTION_NAME
 end_undef
 
 begin_undef
@@ -1980,13 +1853,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_ATEXIT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|INIT_SECTION_ASM_OP
 value|INIT_SECTION_ASM_OP_ELF
 end_define
@@ -2015,8 +1881,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|EH_FRAME_SECTION_ASM_OP
-value|EH_FRAME_SECTION_ASM_OP_ELF
+name|EH_FRAME_SECTION_NAME
+value|EH_FRAME_SECTION_NAME_ELF
 end_define
 
 begin_else
@@ -2059,8 +1925,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|EH_FRAME_SECTION_ASM_OP
-value|""
+name|EH_FRAME_SECTION_NAME
+value|EH_FRAME_SECTION_NAME_COFF
 end_define
 
 begin_define
@@ -2102,6 +1968,96 @@ end_endif
 begin_comment
 comment|/* CRT_BEGIN !! CRT_END */
 end_comment
+
+begin_comment
+comment|/* Handle special EH pointer encodings.  Absolute, pc-relative, and    indirect are handled automatically.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_MAYBE_OUTPUT_ENCODED_ADDR_RTX
+parameter_list|(
+name|FILE
+parameter_list|,
+name|ENCODING
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|ADDR
+parameter_list|,
+name|DONE
+parameter_list|)
+define|\
+value|do {									\     if ((SIZE) == 4&& ((ENCODING)& 0x70) == DW_EH_PE_datarel)		\       {									\         fputs (ASM_LONG, FILE);						\         assemble_name (FILE, XSTR (ADDR, 0));				\ 	fputs (((ENCODING)& DW_EH_PE_indirect ? "@GOT" : "@GOTOFF"), FILE); \         goto DONE;							\       }									\   } while (0)
+end_define
+
+begin_comment
+comment|/* Used by crtstuff.c to initialize the base of data-relative relocations.    These are GOT relative on x86, so return the pic register.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__PIC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CRT_GET_RFIB_DATA
+parameter_list|(
+name|BASE
+parameter_list|)
+define|\
+value|{						\     register void *ebx_ __asm__("ebx");		\     BASE = ebx_;				\   }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CRT_GET_RFIB_DATA
+parameter_list|(
+name|BASE
+parameter_list|)
+define|\
+value|__asm__ ("call\t.LPR%=\n"						\ 	   ".LPR%=:\n\t"						\ 	   "popl\t%0\n\t"						\
+comment|/* Due to a GAS bug, this cannot use EAX.  That encodes	\ 	      smaller than the traditional EBX, which results in the	\ 	      offset being off by one.  */
+value|\ 	   "addl\t$_GLOBAL_OFFSET_TABLE_+[.-.LPR%=],%0"			\ 	   : "=d"(BASE))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Select a format to encode pointers in exception handling data.  CODE    is 0 for data, 1 for code labels, 2 for function pointers.  GLOBAL is    true if the symbol may be affected by dynamic relocations.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_PREFERRED_EH_DATA_FORMAT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_PREFERRED_EH_DATA_FORMAT
+parameter_list|(
+name|CODE
+parameter_list|,
+name|GLOBAL
+parameter_list|)
+define|\
+value|(flag_pic ? (GLOBAL ? DW_EH_PE_indirect : 0) | DW_EH_PE_datarel	\    : DW_EH_PE_absptr)
+end_define
 
 end_unit
 

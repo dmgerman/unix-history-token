@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Sequent Intel 386.    Copyright (C) 1988, 1994, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Sequent Intel 386.    Copyright (C) 1988, 1994, 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -26,13 +26,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 value|(MASK_80387 | MASK_FLOAT_RETURNS)
 end_define
 
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -Dsequent -Asystem(unix) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Dsequent -Asystem=unix"
 end_define
 
 begin_comment
@@ -129,10 +129,6 @@ begin_comment
 comment|/* gcc order is ax, dx, cx, bx, si, di, bp, sp, st, st.  * dbx order is ax, dx, cx, st(0), st(1), bx, si, di, st(2), st(3),  * 		st(4), st(5), st(6), st(7), sp, bp  */
 end_comment
 
-begin_comment
-comment|/* ??? The right thing would be to change the ordering of the    registers to correspond to the conventions of this system,    and get rid of DBX_REGISTER_NUMBER.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -170,7 +166,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|fprintf (asmfile, "%s %d,0,%d,", ASM_STABN_OP, N_LBRAC, depth); \ 	      assemble_name (asmfile, buf); \ 	      fprintf (asmfile, "\n");
+value|fprintf (asmfile, "%s%d,0,%d,", ASM_STABN_OP, N_LBRAC, depth); \ 	      assemble_name (asmfile, buf); \ 	      fprintf (asmfile, "\n");
 end_define
 
 begin_undef
@@ -189,7 +185,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|fprintf (asmfile, "%s %d,0,%d,", ASM_STABN_OP, N_RBRAC, depth); \ 	      assemble_name (asmfile, buf); \ 	      fprintf (asmfile, "\n");
+value|fprintf (asmfile, "%s%d,0,%d,", ASM_STABN_OP, N_RBRAC, depth); \ 	      assemble_name (asmfile, buf); \ 	      fprintf (asmfile, "\n");
 end_define
 
 begin_comment
@@ -216,7 +212,7 @@ value|(((REGNO)< 2 ? 1							\     : (REGNO)< 4 ? 1							\     : FP_REGNO_P (RE
 end_define
 
 begin_comment
-comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry. */
+comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  */
 end_comment
 
 begin_undef
@@ -239,14 +235,14 @@ value|fprintf (FILE, "\tmovl $.LP%d,%%eax\n\tcall mcount\n", (LABELNO));
 end_define
 
 begin_comment
-comment|/* Assembler pseudo-op for shared data segment. */
+comment|/* Assembler pseudo-op for shared data segment.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SHARED_SECTION_ASM_OP
-value|".shdata"
+value|"\t.shdata"
 end_define
 
 begin_comment
@@ -301,7 +297,7 @@ parameter_list|,
 name|NUMBER
 parameter_list|)
 define|\
-value|sprintf ((BUF), "*.%s%d", (PREFIX), (NUMBER))
+value|sprintf ((BUF), "*.%s%ld", (PREFIX), (long)(NUMBER))
 end_define
 
 begin_undef
@@ -326,7 +322,7 @@ value|fprintf (FILE, ".%s%d:\n", PREFIX, NUM)
 end_define
 
 begin_comment
-comment|/* The native compiler passes the address of the returned structure in eax. */
+comment|/* The native compiler passes the address of the returned structure in eax.  */
 end_comment
 
 begin_undef

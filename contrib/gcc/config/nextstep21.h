@@ -63,13 +63,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
+name|TARGET_ASM_CONSTRUCTOR
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_DESTRUCTOR
+name|TARGET_ASM_DESTRUCTOR
 end_undef
 
 begin_undef
@@ -86,7 +86,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {								\     extern char *language_string;				\       if (strcmp (language_string, "GNU C++") == 0)		\       {								\ 	ASM_OUTPUT_ALIGN (FILE, 1);				\       }								\   } while (0)
+value|do {								\       if (strcmp (lang_hooks.name, "GNU C++") == 0)		\       {								\ 	ASM_OUTPUT_ALIGN (FILE, 1);				\       }								\   } while (0)
 end_define
 
 begin_comment

@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_src
+name|GCC_F_SRC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_src
+name|GCC_F_SRC_H
 end_define
 
 begin_include
@@ -30,26 +30,6 @@ include|#
 directive|include
 file|"top.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|ffesrc_toupper_
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|ffesrc_tolower_
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -471,26 +451,6 @@ name|ffesrc_terminate_4
 parameter_list|()
 end_define
 
-begin_define
-define|#
-directive|define
-name|ffesrc_toupper
-parameter_list|(
-name|c
-parameter_list|)
-value|(ffesrc_toupper_[(unsigned int) (c)])
-end_define
-
-begin_define
-define|#
-directive|define
-name|ffesrc_tolower
-parameter_list|(
-name|c
-parameter_list|)
-value|(ffesrc_tolower_[(unsigned int) (c)])
-end_define
-
 begin_comment
 comment|/* End of #include file. */
 end_comment
@@ -499,6 +459,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_SRC_H */
+end_comment
 
 end_unit
 

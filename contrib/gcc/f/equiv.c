@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* equiv.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995-1998 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Handles the EQUIVALENCE relationships in a program unit.     Modifications: */
+comment|/* equiv.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Handles the EQUIVALENCE relationships in a program unit.     Modifications: */
 end_comment
 
 begin_define
@@ -3486,66 +3486,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ffeequiv_dump -- Dump info on equivalence object     ffeequiv eq;    ffeequiv_dump(eq);  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetFFE
-end_if
-
-begin_function
-name|void
-name|ffeequiv_dump
-parameter_list|(
-name|ffeequiv
-name|eq
-parameter_list|)
-block|{
-if|if
-condition|(
-name|ffeequiv_common
-argument_list|(
-name|eq
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|fprintf
-argument_list|(
-name|dmpout
-argument_list|,
-literal|"(common %s) "
-argument_list|,
-name|ffesymbol_text
-argument_list|(
-name|ffeequiv_common
-argument_list|(
-name|eq
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ffebld_dump
-argument_list|(
-name|ffeequiv_list
-argument_list|(
-name|eq
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* ffeequiv_exec_transition -- Do the hard work on all the equivalence objects     ffeequiv_exec_transition();	*/

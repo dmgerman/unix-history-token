@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Specific flags and argument handling of the Fortran front-end.    Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Specific flags and argument handling of the Fortran front-end.    Copyright (C) 1997, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"gcc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<f/version.h>
 end_include
 
@@ -36,6 +42,24 @@ define|#
 directive|define
 name|MATH_LIBRARY
 value|"-lm"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FORTRAN_INIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FORTRAN_INIT
+value|"-lfrtbegin"
 end_define
 
 begin_endif
@@ -145,23 +169,55 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|g77_xargv
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
-function_decl|(
-modifier|*
-name|g77_fn
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+name|lookup_option
+name|PARAMS
+argument_list|(
+operator|(
+name|Option
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|append_arg
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* The new argument list will be built here.  */
@@ -176,18 +232,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|g77_newargv
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|version_string
 decl_stmt|;
 end_decl_stmt
 
@@ -296,11 +345,13 @@ name|int
 modifier|*
 name|xskip
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|xarg
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|text
@@ -314,6 +365,7 @@ decl_stmt|;
 name|int
 name|skip
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -779,6 +831,22 @@ name|strcmp
 argument_list|(
 name|text
 argument_list|,
+literal|"-fversion"
+argument_list|)
+condition|)
+comment|/* Really --version!! */
+name|opt
+operator|=
+name|OPTION_version
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|text
+argument_list|,
 literal|"-Xlinker"
 argument_list|)
 operator|||
@@ -872,6 +940,7 @@ name|append_arg
 parameter_list|(
 name|arg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -949,6 +1018,7 @@ comment|/* This should handle all. */
 name|g77_newargv
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -995,10 +1065,7 @@ name|g77_newargc
 operator|==
 name|newargsize
 condition|)
-call|(
-modifier|*
-name|g77_fn
-call|)
+name|fatal
 argument_list|(
 literal|"overflowed output arg list for `%s'"
 argument_list|,
@@ -1016,51 +1083,33 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
 name|lang_specific_driver
-argument_list|(
-name|fn
-argument_list|,
+parameter_list|(
 name|in_argc
-argument_list|,
+parameter_list|,
 name|in_argv
-argument_list|,
+parameter_list|,
 name|in_added_libraries
-argument_list|)
-name|void
-argument_list|(
-operator|*
-name|fn
-argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|)
 name|int
 modifier|*
 name|in_argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 modifier|*
 name|in_argv
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|in_added_libraries
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|argc
@@ -1068,8 +1117,10 @@ init|=
 operator|*
 name|in_argc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 init|=
@@ -1090,22 +1141,18 @@ decl_stmt|;
 name|int
 name|skip
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|arg
 decl_stmt|;
 comment|/* This will be NULL if we encounter a situation where we should not      link in libf2c.  */
+specifier|const
 name|char
 modifier|*
 name|library
 init|=
 name|FORTRAN_LIBRARY
-decl_stmt|;
-comment|/* This will become 0 if anything other than -v and kin (like -V)      is seen, meaning the user is trying to accomplish something.      If it remains nonzero, and the user wants version info, add stuff to      the command line to make gcc invoke all the appropriate phases      to get all the version info.  */
-name|int
-name|add_version_magic
-init|=
-literal|1
 decl_stmt|;
 comment|/* 0 => -xnone in effect.      1 => -xfoo in effect.  */
 name|int
@@ -1116,6 +1163,12 @@ decl_stmt|;
 comment|/* 0 => initial/reset state      1 => last arg was -l<library>      2 => last two args were -l<library> -lm.  */
 name|int
 name|saw_library
+init|=
+literal|0
+decl_stmt|;
+comment|/* 0 => initial/reset state      1 => FORTRAN_INIT linked in */
+name|int
+name|use_init
 init|=
 literal|0
 decl_stmt|;
@@ -1163,11 +1216,13 @@ literal|0
 expr_stmt|;
 name|g77_newargv
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
 name|argv
-expr_stmt|;
-name|g77_fn
-operator|=
-name|fn
 expr_stmt|;
 comment|/* First pass through arglist.       If -nostdlib or a "turn-off-linking" option is anywhere in the      command line, don't do any library-option processing (except      relating to -x).  Also, if -v is specified, but no other options      that do anything special (allowing -V version, etc.), remember      to add special stuff to make gcc command actually invoke all      the different phases of the compilation process so all the version      numbers can be seen.       Also, here is where all problems with missing arguments to options      are caught.  If this loop is exited normally, it means all options      have the appropriate number of arguments as far as the rest of this      program is concerned.  */
 for|for
@@ -1211,10 +1266,6 @@ literal|'e'
 operator|)
 condition|)
 block|{
-name|add_version_magic
-operator|=
-literal|0
-expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -1246,10 +1297,6 @@ condition|)
 block|{
 operator|++
 name|n_infiles
-expr_stmt|;
-name|add_version_magic
-operator|=
-literal|0
 expr_stmt|;
 continue|continue;
 block|}
@@ -1300,20 +1347,12 @@ name|library
 operator|=
 literal|0
 expr_stmt|;
-name|add_version_magic
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|OPTION_l
 case|:
 operator|++
 name|n_infiles
-expr_stmt|;
-name|add_version_magic
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1322,30 +1361,10 @@ case|:
 operator|++
 name|n_outfiles
 expr_stmt|;
-name|add_version_magic
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|OPTION_v
 case|:
-if|if
-condition|(
-operator|!
-name|verbose
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"g77 version %s (from FSF-g77 version %s)\n"
-argument_list|,
-name|version_string
-argument_list|,
-name|ffe_version_string
-argument_list|)
-expr_stmt|;
 name|verbose
 operator|=
 literal|1
@@ -1373,7 +1392,9 @@ name|OPTION_version
 case|:
 name|printf
 argument_list|(
-literal|"\ GNU Fortran %s\n\ Copyright (C) 1997 Free Software Foundation, Inc.\n\ For more version information on components of the GNU Fortran\n\ compilation system, especially useful when reporting bugs,\n\ type the command `g77 --verbose'.\n\ \n\ GNU Fortran comes with NO WARRANTY, to the extent permitted by law.\n\ You may redistribute copies of GNU Fortran\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the file named COPYING\n\ or type the command `info -f g77 Copying'.\n\ "
+literal|"\ GNU Fortran (GCC %s) %s\n\ Copyright (C) 2002 Free Software Foundation, Inc.\n\ \n\ GNU Fortran comes with NO WARRANTY, to the extent permitted by law.\n\ You may redistribute copies of GNU Fortran\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the file named COPYING\n\ or type the command `info -f g77 Copying'.\n\ "
+argument_list|,
+name|version_string
 argument_list|,
 name|ffe_version_string
 argument_list|)
@@ -1387,36 +1408,18 @@ break|break;
 case|case
 name|OPTION_help
 case|:
-comment|/* Let gcc.c handle this, as the egcs version has a really 	     cool facility for handling --help and --verbose --help.  */
+comment|/* Let gcc.c handle this, as it has a really 	     cool facility for handling --help and --verbose --help.  */
 return|return;
-if|#
-directive|if
-literal|0
-block|printf ("\ Usage: g77 [OPTION]... FORTRAN-SOURCE...\n\ \n\ Compile and link Fortran source code to produce an executable program,\n\ which by default is named `a.out', and can be invoked with the UNIX\n\ command `./a.out'.\n\ \n\ Options:\n\ --debug                include debugging information in executable.\n\ --help                 display this help and exit.\n\ --optimize[=LEVEL]     take extra time and memory to make generated\n\                          executable run faster.  LEVEL is 0 for no\n\                          optimization, 1 for normal optimization, and\n\                          increases through 3 for more optimization.\n\ --output=PROGRAM       name the executable PROGRAM instead of a.out;\n\                          invoke with the command `./PROGRAM'.\n\ --version              display version information and exit.\n\ \n\ Many other options exist to tailor the compilation process, specify\n\ the dialect of the Fortran source code, specify details of the\n\ code-generation methodology, and so on.\n\ \n\ For more information on g77 and gcc, type the commands `info -f g77'\n\ and `info -f gcc' to read the Info documentation.\n\ \n\ For bug reporting instructions, please see:\n\ %s.\n", GCCBUGURL); 	  exit (0); 	  break;
-endif|#
-directive|endif
 case|case
 name|OPTION_driver
 case|:
-call|(
-modifier|*
-name|fn
-call|)
+name|fatal
 argument_list|(
 literal|"--driver no longer supported"
-argument_list|,
-name|argv
-index|[
-name|i
-index|]
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|add_version_magic
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 block|}
 comment|/* This is the one place we check for missing arguments in the 	 program.  */
@@ -1433,10 +1436,7 @@ operator|+=
 name|skip
 expr_stmt|;
 else|else
-call|(
-modifier|*
-name|fn
-call|)
+name|fatal
 argument_list|(
 literal|"argument to `%s' missing"
 argument_list|,
@@ -1461,13 +1461,21 @@ operator|==
 literal|0
 operator|)
 condition|)
-call|(
-modifier|*
-name|fn
-call|)
+name|fatal
 argument_list|(
-literal|"No input files; unwilling to write output files"
+literal|"no input files; unwilling to write output files"
 argument_list|)
+expr_stmt|;
+comment|/* If there are no input files, no need for the library.  */
+if|if
+condition|(
+name|n_infiles
+operator|==
+literal|0
+condition|)
+name|library
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Second pass through arglist, transforming arguments as appropriate.  */
 name|append_arg
@@ -1612,6 +1620,7 @@ name|OPTION_x
 condition|)
 block|{
 comment|/* Track input language. */
+specifier|const
 name|char
 modifier|*
 name|lang
@@ -1736,11 +1745,30 @@ literal|2
 expr_stmt|;
 comment|/* -l<library> -lm. */
 else|else
+block|{
+if|if
+condition|(
+literal|0
+operator|==
+name|use_init
+condition|)
+block|{
+name|append_arg
+argument_list|(
+name|FORTRAN_INIT
+argument_list|)
+expr_stmt|;
+name|use_init
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|append_arg
 argument_list|(
 name|FORTRAN_LIBRARY
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1796,9 +1824,6 @@ block|}
 comment|/* Append `-lg2c -lm' as necessary.  */
 if|if
 condition|(
-operator|!
-name|add_version_magic
-operator|&&
 name|library
 condition|)
 block|{
@@ -1820,6 +1845,23 @@ block|{
 case|case
 literal|0
 case|:
+if|if
+condition|(
+literal|0
+operator|==
+name|use_init
+condition|)
+block|{
+name|append_arg
+argument_list|(
+name|FORTRAN_INIT
+argument_list|)
+expr_stmt|;
+name|use_init
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|append_arg
 argument_list|(
 name|library
@@ -1841,35 +1883,83 @@ default|default:
 break|break;
 block|}
 block|}
-elseif|else
+ifdef|#
+directive|ifdef
+name|ENABLE_SHARED_LIBGCC
 if|if
 condition|(
-name|add_version_magic
-operator|&&
-name|verbose
+name|library
 condition|)
 block|{
-name|append_arg
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|g77_newargc
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|g77_newargv
+index|[
+name|i
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+if|if
+condition|(
+name|strcmp
 argument_list|(
-literal|"-c"
+name|g77_newargv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-static-libgcc"
 argument_list|)
-expr_stmt|;
-name|append_arg
+operator|==
+literal|0
+operator|||
+name|strcmp
 argument_list|(
-literal|"-xf77-version"
+name|g77_newargv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-static"
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|==
+name|g77_newargc
+condition|)
 name|append_arg
 argument_list|(
-literal|"/dev/null"
-argument_list|)
-expr_stmt|;
-name|append_arg
-argument_list|(
-literal|"-xnone"
+literal|"-shared-libgcc"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|verbose
@@ -1930,7 +2020,7 @@ operator|=
 name|g77_newargv
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Called before linking.  Returns 0 on success and -1 on failure. */

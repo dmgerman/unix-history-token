@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implementation of Fortran lexer    Copyright (C) 1995-1998 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Implementation of Fortran lexer    Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -45,113 +45,41 @@ directive|include
 file|"src.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
-
 begin_include
 include|#
 directive|include
-file|"flags.j"
+file|"debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"input.j"
+file|"flags.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"toplev.j"
+file|"input.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tree.j"
+file|"toplev.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"output.j"
+file|"output.h"
 end_include
 
-begin_comment
-comment|/* Must follow tree.j so TREE_CODE is defined! */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DWARF_DEBUGGING_INFO
-end_ifdef
-
-begin_function_decl
-name|void
-name|dwarfout_resume_previous_source_file
-parameter_list|(
-specifier|register
-name|unsigned
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|dwarfout_start_new_source_file
-parameter_list|(
-specifier|register
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|dwarfout_define
-parameter_list|(
-specifier|register
-name|unsigned
-parameter_list|,
-specifier|register
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|dwarfout_undef
-parameter_list|(
-specifier|register
-name|unsigned
-parameter_list|,
-specifier|register
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-endif|DWARF_DEBUGGING_INFO
-end_endif
+begin_include
+include|#
+directive|include
+file|"ggc.h"
+end_include
 
 begin_function_decl
 specifier|static
@@ -245,14 +173,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
-
 begin_function_decl
 specifier|static
 name|int
@@ -281,11 +201,6 @@ name|f
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1354,7 +1269,7 @@ literal|'\0'
 expr_stmt|;
 name|ffebad_start_msg_lex
 argument_list|(
-literal|"Non-ANSI-C-standard escape sequence `\\%A' at %0"
+literal|"Non-ISO-C-standard escape sequence `\\%A' at %0"
 argument_list|,
 name|FFEBAD_severityPEDANTIC
 argument_list|)
@@ -1538,92 +1453,24 @@ literal|2
 case|:
 if|if
 condition|(
-operator|(
+name|ISXDIGIT
+argument_list|(
 name|c
-operator|>=
-literal|'a'
-operator|&&
-name|c
-operator|<=
-literal|'f'
-operator|)
-operator|||
-operator|(
-name|c
-operator|>=
-literal|'A'
-operator|&&
-name|c
-operator|<=
-literal|'F'
-operator|)
-operator|||
-operator|(
-name|c
-operator|>=
-literal|'0'
-operator|&&
-name|c
-operator|<=
-literal|'9'
-operator|)
+argument_list|)
 condition|)
 block|{
 name|code
-operator|*=
+operator|=
+operator|(
+name|code
+operator|*
 literal|16
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|>=
-literal|'a'
-operator|&&
-name|c
-operator|<=
-literal|'f'
-condition|)
-name|code
-operator|+=
-name|c
-operator|-
-literal|'a'
+operator|)
 operator|+
-literal|10
-expr_stmt|;
-if|if
-condition|(
+name|hex_value
+argument_list|(
 name|c
-operator|>=
-literal|'A'
-operator|&&
-name|c
-operator|<=
-literal|'F'
-condition|)
-name|code
-operator|+=
-name|c
-operator|-
-literal|'A'
-operator|+
-literal|10
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|>=
-literal|'0'
-operator|&&
-name|c
-operator|<=
-literal|'9'
-condition|)
-name|code
-operator|+=
-name|c
-operator|-
-literal|'0'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2162,14 +2009,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -2222,19 +2061,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
 
 begin_function
 specifier|static
@@ -2335,37 +2161,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
+name|ISXDIGIT
+argument_list|(
 name|c
-operator|>=
-literal|'a'
-operator|&&
-name|c
-operator|<=
-literal|'f'
-operator|)
-operator|&&
-operator|!
-operator|(
-name|c
-operator|>=
-literal|'A'
-operator|&&
-name|c
-operator|<=
-literal|'F'
-operator|)
-operator|&&
-operator|!
-operator|(
-name|c
-operator|>=
-literal|'0'
-operator|&&
-name|c
-operator|<=
-literal|'9'
-operator|)
+argument_list|)
 condition|)
 block|{
 operator|*
@@ -2381,60 +2180,17 @@ expr_stmt|;
 break|break;
 block|}
 name|code
-operator|*=
+operator|=
+operator|(
+name|code
+operator|*
 literal|16
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|>=
-literal|'a'
-operator|&&
-name|c
-operator|<=
-literal|'f'
-condition|)
-name|code
-operator|+=
-name|c
-operator|-
-literal|'a'
+operator|)
 operator|+
-literal|10
-expr_stmt|;
-if|if
-condition|(
+name|hex_value
+argument_list|(
 name|c
-operator|>=
-literal|'A'
-operator|&&
-name|c
-operator|<=
-literal|'F'
-condition|)
-name|code
-operator|+=
-name|c
-operator|-
-literal|'A'
-operator|+
-literal|10
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|>=
-literal|'0'
-operator|&&
-name|c
-operator|<=
-literal|'9'
-condition|)
-name|code
-operator|+=
-name|c
-operator|-
-literal|'0'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2783,7 +2539,7 @@ name|pedantic
 condition|)
 name|pedwarn
 argument_list|(
-literal|"non-ANSI escape sequence `\\%c'"
+literal|"non-ISO escape sequence `\\%c'"
 argument_list|,
 name|c
 argument_list|)
@@ -2823,22 +2579,9 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* A miniature version of the C front-end lexer.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
 
 begin_function
 specifier|static
@@ -3176,9 +2919,9 @@ case|:
 case|case
 literal|'\n'
 case|:
-name|fatal
+name|error
 argument_list|(
-literal|"Badly formed directive -- no closing quote"
+literal|"badly formed directive -- no closing quote"
 argument_list|)
 expr_stmt|;
 name|done
@@ -3333,24 +3076,12 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
-
 begin_function
 specifier|static
 name|void
 name|ffelex_file_pop_
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|input_filename
@@ -3384,29 +3115,18 @@ expr_stmt|;
 name|input_file_stack_tick
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DWARF_DEBUGGING_INFO
-if|if
-condition|(
-name|debug_info_level
-operator|==
-name|DINFO_LEVEL_VERBOSE
-operator|&&
-name|write_symbols
-operator|==
-name|DWARF_DEBUG
-condition|)
-name|dwarfout_resume_previous_source_file
+call|(
+modifier|*
+name|debug_hooks
+operator|->
+name|end_source_file
+call|)
 argument_list|(
 name|input_file_stack
 operator|->
 name|line
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DWARF_DEBUGGING_INFO */
 block|}
 else|else
 name|error
@@ -3428,19 +3148,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
-
 begin_function
 specifier|static
 name|void
@@ -3449,6 +3156,7 @@ parameter_list|(
 name|int
 name|old_lineno
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|input_filename
@@ -3498,27 +3206,18 @@ expr_stmt|;
 name|input_file_stack_tick
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DWARF_DEBUGGING_INFO
-if|if
-condition|(
-name|debug_info_level
-operator|==
-name|DINFO_LEVEL_VERBOSE
-operator|&&
-name|write_symbols
-operator|==
-name|DWARF_DEBUG
-condition|)
-name|dwarfout_start_new_source_file
+call|(
+modifier|*
+name|debug_hooks
+operator|->
+name|start_source_file
+call|)
 argument_list|(
+literal|0
+argument_list|,
 name|input_filename
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DWARF_DEBUGGING_INFO */
 comment|/* Now that we've pushed or popped the input stack,      update the name in the top element.  */
 if|if
 condition|(
@@ -3532,11 +3231,6 @@ name|input_filename
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Prepare to finish a statement-in-progress by sending the current    token, if any, then setting up EOS as the current token with the    appropriate current pointer.  The caller can then move the current    pointer before actually sending EOS, if desired, as it is in    typical fixed-form cases.  */
@@ -3837,14 +3531,6 @@ begin_comment
 comment|/* Copied from gcc/c-common.c get_directive_line.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -4039,9 +3725,9 @@ name|looking_for
 operator|!=
 literal|0
 condition|)
-name|fatal
+name|error
 argument_list|(
-literal|"Bad directive -- missing close-quote"
+literal|"bad directive -- missing close-quote"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4127,22 +3813,9 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Handle # directives that make it through (or are generated by) the    preprocessor.  As much as reasonably possible, emulate the behavior    of the gcc compiler phase cc1, though interactions between #include    and INCLUDE might possibly produce bizarre results in terms of    error reporting and the generation of debugging info vis-a-vis the    locations of some things.     Returns the next character unhandled, which is always newline or EOF.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
 
 begin_if
 if|#
@@ -4247,25 +3920,10 @@ expr_stmt|;
 comment|/* If a letter follows, then if the word here is `line', skip      it and ignore it; otherwise, ignore the line, with an error      if the word isn't `pragma', `ident', `define', or `undef'.  */
 if|if
 condition|(
-operator|(
+name|ISALPHA
+argument_list|(
 name|c
-operator|>=
-literal|'a'
-operator|&&
-name|c
-operator|<=
-literal|'z'
-operator|)
-operator|||
-operator|(
-name|c
-operator|>=
-literal|'A'
-operator|&&
-name|c
-operator|<=
-literal|'Z'
-operator|)
+argument_list|)
 condition|)
 block|{
 if|if
@@ -4343,8 +4001,8 @@ directive|if
 literal|0
 comment|/* g77 doesn't handle pragmas, so ignores them FOR NOW. */
 block|static char buffer [128]; 	      char * buff = buffer;
-comment|/* Read the pragma name into a buffer.  */
-block|while (isspace (c = getc (finput))) 		continue; 	       	      do 		{ 		  * buff ++ = c; 		  c = getc (finput); 		} 	      while (c != EOF&& ! isspace (c)&& c != '\n'&& buff< buffer + 128);  	      pragma_ungetc (c); 		 	      * -- buff = 0;
+comment|/* Read the pragma name into a buffer. 		 ISSPACE() may evaluate its argument more than once!  */
+block|while (((c = getc (finput)), ISSPACE(c))) 		continue;  	      do 		{ 		  * buff ++ = c; 		  c = getc (finput); 		} 	      while (c != EOF&& ! ISSPACE (c)&& c != '\n'&& buff< buffer + 128);  	      pragma_ungetc (c);  	      * -- buff = 0;
 ifdef|#
 directive|ifdef
 name|HANDLE_PRAGMA
@@ -4454,33 +4112,24 @@ argument_list|,
 name|finput
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DWARF_DEBUGGING_INFO
 if|if
 condition|(
-operator|(
 name|debug_info_level
 operator|==
 name|DINFO_LEVEL_VERBOSE
-operator|)
-operator|&&
-operator|(
-name|write_symbols
-operator|==
-name|DWARF_DEBUG
-operator|)
 condition|)
-name|dwarfout_define
+call|(
+modifier|*
+name|debug_hooks
+operator|->
+name|define
+call|)
 argument_list|(
 name|lineno
 argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DWARF_DEBUGGING_INFO */
 goto|goto
 name|skipline
 goto|;
@@ -4564,33 +4213,24 @@ argument_list|,
 name|finput
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DWARF_DEBUGGING_INFO
 if|if
 condition|(
-operator|(
 name|debug_info_level
 operator|==
 name|DINFO_LEVEL_VERBOSE
-operator|)
-operator|&&
-operator|(
-name|write_symbols
-operator|==
-name|DWARF_DEBUG
-operator|)
 condition|)
-name|dwarfout_undef
+call|(
+modifier|*
+name|debug_hooks
+operator|->
+name|undef
+call|)
 argument_list|(
 name|lineno
 argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DWARF_DEBUGGING_INFO */
 goto|goto
 name|skipline
 goto|;
@@ -4704,7 +4344,7 @@ literal|'\t'
 operator|)
 condition|)
 block|{
-comment|/* #ident.  The pedantic warning is now in cccp.c.  */
+comment|/* #ident.  The pedantic warning is now in cpp.  */
 comment|/* Here we have just seen `#ident '. 		 A string constant should follow.  */
 while|while
 condition|(
@@ -4883,6 +4523,7 @@ name|old_lineno
 init|=
 name|lineno
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|old_input_filename
@@ -5025,9 +4666,12 @@ name|ffelex_kludge_flag_
 condition|)
 name|input_filename
 operator|=
+name|ggc_strdup
+argument_list|(
 name|ffelex_token_text
 argument_list|(
 name|token
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5202,9 +4846,9 @@ name|input_filename
 operator|=
 name|old_input_filename
 expr_stmt|;
-name|fatal
+name|error
 argument_list|(
-literal|"Use `#line ...' instead of `# ...' in first line"
+literal|"use `#line ...' instead of `# ...' in first line"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5352,11 +4996,40 @@ name|input_filename
 operator|=
 name|old_input_filename
 expr_stmt|;
-name|fatal
+name|error
 argument_list|(
-literal|"Use `#line ...' instead of `# ...' in first line"
+literal|"use `#line ...' instead of `# ...' in first line"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+operator|||
+name|c
+operator|==
+name|EOF
+condition|)
+block|{
+if|if
+condition|(
+name|token
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|ffelex_kludge_flag_
+condition|)
+name|ffelex_token_kill
+argument_list|(
+name|token
+argument_list|)
+expr_stmt|;
+return|return
+name|c
+return|;
 block|}
 block|}
 else|else
@@ -5407,15 +5080,6 @@ name|c
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FFECOM_targetCURRENT == FFECOM_targetGCC */
-end_comment
 
 begin_comment
 comment|/* "Image" a character onto the card image, return incremented column number.     Normally invoking this function as in      column = ffelex_image_char_ (c, column);    is the same as doing:      ffelex_card_image_[column++] = c;     However, tabs and carriage returns are handled specially, to preserve    the visual "image" of the input line (in most editors) in the card    image.     Carriage returns are ignored, as they are assumed to be followed    by newlines.     A tab is handled by first doing:      ffelex_card_image_[column++] = ' ';    That is, it translates to at least one space.  Then, as many spaces    are imaged as necessary to bring the column number to the next tab    position, where tab positions start in the ninth column and each    eighth column afterwards.  ALSO, a static var named ffelex_saw_tab_    is set to TRUE to notify the lexer that a tab was seen.     Columns are numbered and tab stops set as illustrated below:     012345670123456701234567...    x	   y	   z    xx	   yy	   zz    ...    xxxxxxx yyyyyyy zzzzzzz    xxxxxxxx	   yyyyyyyy...  */
@@ -5736,24 +5400,18 @@ argument_list|(
 name|current_wl
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|int
 name|old_lineno
 init|=
 name|lineno
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|old_input_filename
 init|=
 name|input_filename
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|card_length
@@ -5804,11 +5462,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|ffelex_file_push_
 argument_list|(
 name|old_lineno
@@ -5819,9 +5472,6 @@ name|include_wherefile
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* FFECOM_targetCURRENT == FFECOM_targetGCC */
 if|if
 condition|(
 name|ffelex_include_free_form_
@@ -5841,11 +5491,6 @@ argument_list|,
 name|include_file
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|ffelex_file_pop_
 argument_list|(
 name|ffewhere_file_name
@@ -5854,9 +5499,6 @@ name|current_wf
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* FFECOM_targetCURRENT == FFECOM_targetGCC */
 name|ffewhere_file_set
 argument_list|(
 name|current_wf
@@ -5912,11 +5554,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|input_filename
 operator|=
 name|old_input_filename
@@ -5925,8 +5562,6 @@ name|lineno
 operator|=
 name|old_lineno
 expr_stmt|;
-endif|#
-directive|endif
 name|ffelex_linecount_current_
 operator|=
 name|linecount_current
@@ -6072,16 +5707,9 @@ expr_stmt|;
 operator|++
 name|ffelex_linecount_next_
 expr_stmt|;
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 operator|++
 name|lineno
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -6413,6 +6041,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|types
 index|[]
 init|=
@@ -6717,11 +6346,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|lineno
 operator|=
 literal|0
@@ -6733,8 +6357,6 @@ argument_list|(
 name|wf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ffelex_current_wf_
 operator|=
 name|wf
@@ -6775,64 +6397,6 @@ name|latest_char_in_file
 operator|=
 literal|'\n'
 expr_stmt|;
-if|if
-condition|(
-name|ffe_is_null_version
-argument_list|()
-condition|)
-block|{
-comment|/* Just substitute a "program" directly here.  */
-name|char
-name|line
-index|[]
-init|=
-literal|"      call g77__fvers;call g77__ivers;call g77__uvers;end"
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|column
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-operator|&
-name|line
-index|[
-literal|0
-index|]
-init|;
-operator|*
-name|p
-operator|!=
-literal|'\0'
-condition|;
-operator|++
-name|p
-control|)
-name|column
-operator|=
-name|ffelex_image_char_
-argument_list|(
-operator|*
-name|p
-argument_list|,
-name|column
-argument_list|)
-expr_stmt|;
-name|c
-operator|=
-name|EOF
-expr_stmt|;
-goto|goto
-name|have_line
-goto|;
-comment|/* :::::::::::::::::::: */
-block|}
 goto|goto
 name|first_line
 goto|;
@@ -7038,11 +6602,6 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 elseif|else
 if|if
 condition|(
@@ -7057,8 +6616,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 elseif|else
 if|if
 condition|(
@@ -7309,9 +6866,6 @@ operator|=
 name|ffelex_final_nontab_column_
 expr_stmt|;
 block|}
-name|have_line
-label|:
-comment|/* :::::::::::::::::::: */
 name|ffelex_card_image_
 index|[
 name|column
@@ -10555,11 +10109,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|lineno
 operator|=
 literal|0
@@ -10571,8 +10120,6 @@ argument_list|(
 name|wf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ffelex_current_wf_
 operator|=
 name|wf
@@ -10694,12 +10241,6 @@ name|c
 operator|==
 literal|'#'
 condition|)
-block|{
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|c
 operator|=
 name|ffelex_hash_
@@ -10707,13 +10248,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* Don't skip over # line after all.  */
-break|break;
-endif|#
-directive|endif
-block|}
 name|comment_line
 label|:
 comment|/* :::::::::::::::::::: */
@@ -13449,14 +12983,6 @@ begin_comment
 comment|/* See the code in com.c that calls this to understand why.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
-
 begin_function
 name|void
 name|ffelex_hash_kludge
@@ -13468,6 +12994,7 @@ parameter_list|)
 block|{
 comment|/* If you change this constant string, you have to change whatever      code might thus be affected by it in terms of having to use      ffelex_getc_() instead of getc() in the lexers and _hash_.  */
 specifier|static
+specifier|const
 name|char
 name|match
 index|[]
@@ -13489,6 +13016,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -13609,11 +13137,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void

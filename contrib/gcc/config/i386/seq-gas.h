@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Sequent Intel 386 using GAS.    Copyright (C) 1992 Free Software Foundation, Inc.  /* Mostly it's like a Sequent 386 without GAS. */
+comment|/* Definitions for Sequent Intel 386 using GAS.    Copyright (C) 1992 Free Software Foundation, Inc.  /* Mostly it's like a Sequent 386 without GAS.  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ value|{									\   if ((PTR)[0] == 'r'							\&& (PTR)[1] == 'e'						\&& (PTR)
 end_define
 
 begin_comment
-comment|/* Define macro used to output shift-double opcodes when the shift    count is in %cl.  Some assemblers require %cl as an argument;    some don't.     GAS requires the %cl argument, so override i386/unix.h. */
+comment|/* Define macro used to output shift-double opcodes when the shift    count is in %cl.  Some assemblers require %cl as an argument;    some don't.     GAS requires the %cl argument, so override i386/unix.h.  */
 end_comment
 
 begin_undef
@@ -50,7 +50,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Print opcodes the way that GAS expects them. */
+comment|/* Print opcodes the way that GAS expects them.  */
 end_comment
 
 begin_define

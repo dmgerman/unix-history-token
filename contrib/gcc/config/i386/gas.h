@@ -4,7 +4,7 @@ comment|/* Definitions for Intel 386 using GAS.    Copyright (C) 1988, 1993, 199
 end_comment
 
 begin_comment
-comment|/* Note that i386/seq-gas.h is a GAS configuration that does not use this    file. */
+comment|/* Note that i386/seq-gas.h is a GAS configuration that does not use this    file.  */
 end_comment
 
 begin_include
@@ -213,7 +213,7 @@ value|{									\   if ((PTR)[0] == 'r'							\&& (PTR)[1] == 'e'						\&& (PTR)
 end_define
 
 begin_comment
-comment|/* Define macro used to output shift-double opcodes when the shift    count is in %cl.  Some assemblers require %cl as an argument;    some don't.     GAS requires the %cl argument, so override i386/unix.h. */
+comment|/* Define macro used to output shift-double opcodes when the shift    count is in %cl.  Some assemblers require %cl as an argument;    some don't.     GAS requires the %cl argument, so override i386/unix.h.  */
 end_comment
 
 begin_undef
@@ -230,7 +230,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Print opcodes the way that GAS expects them. */
+comment|/* Print opcodes the way that GAS expects them.  */
 end_comment
 
 begin_define
@@ -272,7 +272,7 @@ parameter_list|,
 name|NUMBER
 parameter_list|)
 define|\
-value|sprintf ((BUF), ".%s%d", (PREFIX), (NUMBER))
+value|sprintf ((BUF), ".%s%ld", (PREFIX), (long)(NUMBER))
 end_define
 
 begin_comment
@@ -308,6 +308,31 @@ end_endif
 begin_comment
 comment|/* NO_UNDERSCORES */
 end_comment
+
+begin_comment
+comment|/* Output at beginning of assembler file.  */
+end_comment
+
+begin_comment
+comment|/* The .file command should always begin the output.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_FILE_START
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_FILE_START
+parameter_list|(
+name|FILE
+parameter_list|)
+define|\
+value|do {									\ 	if (ix86_asm_dialect == ASM_INTEL)				\ 	  fputs ("\t.intel_syntax\n", FILE);				\         output_file_directive (FILE, main_input_filename);		\   } while (0)
+end_define
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output xcoff-format symbol table information from GNU compiler.    Copyright (C) 1992, 1994, 1995, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output xcoff-format symbol table information from GNU compiler.    Copyright (C) 1992, 1994, 1995, 1997, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -49,6 +49,12 @@ directive|include
 file|"output.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ggc.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -62,7 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dbxstclass.h>
+file|"dbxstclass.h"
 end_include
 
 begin_include
@@ -77,64 +83,11 @@ directive|include
 file|"dbxout.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USG
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|HAVE_STAB_H
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|"gstab.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<stab.h>
-end_include
-
-begin_comment
-comment|/* This is a GNU extension we need to reference in this file.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|N_CATCH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|N_CATCH
-value|0x54
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Line number of beginning of current function, minus one.    Negative means not in a function or not using xcoff.  */
@@ -164,6 +117,7 @@ comment|/* Name of the current include file.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|xcoff_current_include_file
@@ -176,6 +130,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|xcoff_current_function_file
@@ -212,6 +167,7 @@ comment|/* Last source file name mentioned in a NOTE insn.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|xcoff_lastfile
@@ -250,7 +206,7 @@ parameter_list|,
 name|LINENUM
 parameter_list|)
 define|\
-value|do {						\     if (xcoff_begin_function_line>= 0)		\       fprintf (FILE, "\t.line\t%d\n", ABS_OR_RELATIVE_LINENO (LINENUM)); \   } while (0)
+value|do									   \     {									   \       if (xcoff_begin_function_line>= 0)				   \ 	fprintf (FILE, "\t.line\t%d\n", ABS_OR_RELATIVE_LINENO (LINENUM)); \     }									   \   while (0)
 end_define
 
 begin_define
@@ -276,7 +232,7 @@ parameter_list|,
 name|LINENUM
 parameter_list|)
 define|\
-value|do {						\     fprintf (FILE, "\t.ef\t%d\n", (LINENUM));	\     xcoff_begin_function_line = -1;		\   } while (0)
+value|do						\     {						\       fprintf (FILE, "\t.ef\t%d\n", (LINENUM));	\       xcoff_begin_function_line = -1;		\     }						\   while (0)
 end_define
 
 begin_define
@@ -313,11 +269,12 @@ begin_decl_stmt
 specifier|static
 name|void
 name|assign_type_number
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -331,7 +288,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|xcoffout_block
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -339,6 +296,26 @@ operator|,
 name|int
 operator|,
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|xcoffout_source_file
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -369,6 +346,7 @@ parameter_list|)
 name|tree
 name|syms
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -647,7 +625,7 @@ parameter_list|(
 name|STR
 parameter_list|)
 define|\
-value|do { \      error ("Unknown stab %s: : 0x%x\n", STR, stab);	\      fflush (stderr);	\    } while (0)
+value|internal_error ("no sclass for %s stab (0x%x)\n", STR, stab)
 end_define
 
 begin_comment
@@ -683,9 +661,6 @@ argument_list|(
 literal|"N_FNAME"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
 case|case
 name|N_FUN
 case|:
@@ -701,9 +676,6 @@ case|:
 return|return
 name|C_STSYM
 return|;
-ifdef|#
-directive|ifdef
-name|N_MAIN
 case|case
 name|N_MAIN
 case|:
@@ -712,11 +684,6 @@ argument_list|(
 literal|"N_MAIN"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 case|case
 name|N_RSYM
 case|:
@@ -730,9 +697,6 @@ name|UNKNOWN_STAB
 argument_list|(
 literal|"N_SSYM"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 case|case
 name|N_RPSYM
@@ -772,9 +736,6 @@ argument_list|(
 literal|"N_SO"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
 case|case
 name|N_SOL
 case|:
@@ -782,9 +743,6 @@ name|UNKNOWN_STAB
 argument_list|(
 literal|"N_SOL"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 case|case
 name|N_SLINE
@@ -794,12 +752,6 @@ argument_list|(
 literal|"N_SLINE"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|N_DSLINE
 case|case
 name|N_DSLINE
 case|:
@@ -808,14 +760,6 @@ argument_list|(
 literal|"N_DSLINE"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|N_BSLINE
 case|case
 name|N_BSLINE
 case|:
@@ -824,21 +768,6 @@ argument_list|(
 literal|"N_BSLINE"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* This has the same value as N_BSLINE.  */
-block|case N_BROWS:       UNKNOWN_STAB ("N_BROWS");        abort ();
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|N_BINCL
 case|case
 name|N_BINCL
 case|:
@@ -847,14 +776,6 @@ argument_list|(
 literal|"N_BINCL"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|N_EINCL
 case|case
 name|N_EINCL
 case|:
@@ -863,14 +784,6 @@ argument_list|(
 literal|"N_EINCL"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|N_EXCL
 case|case
 name|N_EXCL
 case|:
@@ -879,11 +792,6 @@ argument_list|(
 literal|"N_EXCL"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 case|case
 name|N_LBRAC
 case|:
@@ -892,9 +800,6 @@ argument_list|(
 literal|"N_LBRAC"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
 case|case
 name|N_RBRAC
 case|:
@@ -902,9 +807,6 @@ name|UNKNOWN_STAB
 argument_list|(
 literal|"N_RBRAC"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 case|case
 name|N_BCOMM
@@ -932,9 +834,6 @@ argument_list|(
 literal|"N_LENG"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
 case|case
 name|N_PC
 case|:
@@ -943,12 +842,6 @@ argument_list|(
 literal|"N_PC"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|N_M2C
 case|case
 name|N_M2C
 case|:
@@ -957,14 +850,6 @@ argument_list|(
 literal|"N_M2C"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|N_SCOPE
 case|case
 name|N_SCOPE
 case|:
@@ -973,11 +858,6 @@ argument_list|(
 literal|"N_SCOPE"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 case|case
 name|N_CATCH
 case|:
@@ -986,17 +866,19 @@ argument_list|(
 literal|"N_CATCH"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
+case|case
+name|N_OPT
+case|:
+name|UNKNOWN_STAB
+argument_list|(
+literal|"N_OPT"
+argument_list|)
 expr_stmt|;
 default|default:
 name|UNKNOWN_STAB
 argument_list|(
-literal|"default"
+literal|"?"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -1010,6 +892,7 @@ comment|/* Output debugging info to FILE to switch to sourcefile FILENAME.    IN
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|xcoffout_source_file
 parameter_list|(
@@ -1023,6 +906,7 @@ name|FILE
 modifier|*
 name|file
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1145,51 +1029,62 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a line number symbol entry into output stream FILE,    for source file FILENAME and line number NOTE.  */
+comment|/* Output a line number symbol entry for location (FILENAME, LINE).  */
 end_comment
 
 begin_function
 name|void
 name|xcoffout_source_line
 parameter_list|(
-name|file
+name|line
 parameter_list|,
 name|filename
-parameter_list|,
-name|note
 parameter_list|)
-name|FILE
-modifier|*
-name|file
+name|unsigned
+name|int
+name|line
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|rtx
-name|note
-decl_stmt|;
 block|{
+name|bool
+name|inline_p
+init|=
+operator|(
+name|strcmp
+argument_list|(
+name|xcoff_current_function_file
+argument_list|,
+name|filename
+argument_list|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|int
+operator|)
+name|line
+operator|<
+name|xcoff_begin_function_line
+operator|)
+decl_stmt|;
 name|xcoffout_source_file
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
 name|filename
 argument_list|,
-name|RTX_INTEGRATED_P
-argument_list|(
-name|note
-argument_list|)
+name|inline_p
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_SOURCE_LINE
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
-name|NOTE_LINE_NUMBER
-argument_list|(
-name|note
-argument_list|)
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -1199,7 +1094,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Output the symbols defined in block number DO_BLOCK.    Set NEXT_BLOCK_NUMBER to 0 before calling.     This function works by walking the tree structure of blocks,    counting blocks until it finds the desired block.  */
+comment|/* Output the symbols defined in block number DO_BLOCK.     This function works by walking the tree structure of blocks,    counting blocks until it finds the desired block.  */
 end_comment
 
 begin_decl_stmt
@@ -1208,13 +1103,6 @@ name|int
 name|do_block
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|next_block_number
 decl_stmt|;
 end_decl_stmt
 
@@ -1229,7 +1117,6 @@ name|depth
 parameter_list|,
 name|args
 parameter_list|)
-specifier|register
 name|tree
 name|block
 decl_stmt|;
@@ -1257,7 +1144,10 @@ block|{
 comment|/* When we reach the specified block, output its symbols.  */
 if|if
 condition|(
-name|next_block_number
+name|BLOCK_NUMBER
+argument_list|(
+name|block
+argument_list|)
 operator|==
 name|do_block
 condition|)
@@ -1297,14 +1187,14 @@ comment|/* If we are past the specified block, stop the scan.  */
 elseif|else
 if|if
 condition|(
-name|next_block_number
+name|BLOCK_NUMBER
+argument_list|(
+name|block
+argument_list|)
 operator|>=
 name|do_block
 condition|)
 return|return;
-name|next_block_number
-operator|++
-expr_stmt|;
 comment|/* Output the subblocks.  */
 name|xcoffout_block
 argument_list|(
@@ -1340,19 +1230,15 @@ begin_function
 name|void
 name|xcoffout_begin_block
 parameter_list|(
-name|file
-parameter_list|,
 name|line
 parameter_list|,
 name|n
 parameter_list|)
-name|FILE
-modifier|*
-name|file
-decl_stmt|;
+name|unsigned
 name|int
 name|line
 decl_stmt|;
+name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -1371,7 +1257,7 @@ literal|1
 condition|)
 name|ASM_OUTPUT_LBB
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
 name|line
 argument_list|,
@@ -1381,10 +1267,6 @@ expr_stmt|;
 name|do_block
 operator|=
 name|n
-expr_stmt|;
-name|next_block_number
-operator|=
-literal|0
 expr_stmt|;
 name|xcoffout_block
 argument_list|(
@@ -1412,19 +1294,15 @@ begin_function
 name|void
 name|xcoffout_end_block
 parameter_list|(
-name|file
-parameter_list|,
 name|line
 parameter_list|,
 name|n
 parameter_list|)
-name|FILE
-modifier|*
-name|file
-decl_stmt|;
+name|unsigned
 name|int
 name|line
 decl_stmt|;
+name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -1437,7 +1315,7 @@ literal|1
 condition|)
 name|ASM_OUTPUT_LBE
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
 name|line
 argument_list|,
@@ -1468,28 +1346,23 @@ decl_stmt|;
 name|tree
 name|decl
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|n
-init|=
-name|name
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 if|if
 condition|(
 operator|*
-name|n
+name|name
 operator|==
 literal|'*'
 condition|)
-name|n
+name|name
 operator|++
 expr_stmt|;
 else|else
@@ -1518,8 +1391,10 @@ operator|==
 literal|'['
 condition|)
 block|{
+name|char
+modifier|*
 name|n
-operator|=
+init|=
 operator|(
 name|char
 operator|*
@@ -1530,7 +1405,7 @@ name|i
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|strncpy
 argument_list|(
 name|n
@@ -1546,6 +1421,10 @@ name|i
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|name
+operator|=
+name|n
 expr_stmt|;
 break|break;
 block|}
@@ -1570,49 +1449,53 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* .function NAME, TOP, MAPPING, TYPE, SIZE      16 and 044 are placeholders for backwards compatibility */
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
 literal|"\t.function .%s,.%s,16,044,FE..%s-.%s\n"
 argument_list|,
-name|n
+name|name
 argument_list|,
-name|n
+name|name
 argument_list|,
-name|n
+name|name
 argument_list|,
-name|n
+name|name
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Called at beginning of function body (after prologue).    Record the function's starting line number, so we can output    relative line numbers for the other lines.    Record the file name that this function is contained in.  */
+comment|/* Called at beginning of function body (at start of prologue).    Record the function's starting line number, so we can output    relative line numbers for the other lines.    Record the file name that this function is contained in.  */
 end_comment
 
 begin_function
 name|void
-name|xcoffout_begin_function
+name|xcoffout_begin_prologue
 parameter_list|(
-name|file
+name|line
 parameter_list|,
-name|last_linenum
+name|file
 parameter_list|)
-name|FILE
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|file
-decl_stmt|;
-name|int
-name|last_linenum
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|ASM_OUTPUT_LFB
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
-name|last_linenum
+name|line
 argument_list|)
 expr_stmt|;
 name|dbxout_parms
@@ -1626,11 +1509,13 @@ expr_stmt|;
 comment|/* Emit the symbols for the outermost BLOCK's variables.  sdbout.c does this      in sdbout_begin_block, but there is no guarantee that there will be any      inner block 1, so we must do it here.  This gives a result similar to      dbxout, so it does make some sense.  */
 name|do_block
 operator|=
-literal|0
-expr_stmt|;
-name|next_block_number
-operator|=
-literal|0
+name|BLOCK_NUMBER
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|current_function_decl
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|xcoffout_block
 argument_list|(
@@ -1649,9 +1534,9 @@ argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_SOURCE_LINE
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
-name|last_linenum
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -1665,21 +1550,16 @@ begin_function
 name|void
 name|xcoffout_end_function
 parameter_list|(
-name|file
-parameter_list|,
 name|last_linenum
 parameter_list|)
-name|FILE
-modifier|*
-name|file
-decl_stmt|;
+name|unsigned
 name|int
 name|last_linenum
 decl_stmt|;
 block|{
 name|ASM_OUTPUT_LFE
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
 name|last_linenum
 argument_list|)
@@ -1694,15 +1574,10 @@ end_comment
 begin_function
 name|void
 name|xcoffout_end_epilogue
-parameter_list|(
-name|file
-parameter_list|)
-name|FILE
-modifier|*
-name|file
-decl_stmt|;
+parameter_list|()
 block|{
 comment|/* We need to pass the correct function size to .function, otherwise,      the xas assembler can't figure out the correct size for the function      aux entry.  So, we emit a label after the last instruction which can      be used by the .function pseudo op to calculate the function size.  */
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1734,14 +1609,14 @@ name|fname
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
 literal|"FE.."
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
 argument_list|(
-name|file
+name|asm_out_file
 argument_list|,
 name|fname
 argument_list|)

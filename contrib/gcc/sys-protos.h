@@ -223,18 +223,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|__eprintf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|__evcntl
 parameter_list|(
@@ -5903,8 +5891,8 @@ name|getgroups
 parameter_list|(
 name|int
 parameter_list|,
-name|gid_t
-modifier|*
+name|TARGET_GETGROUPS_T
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl

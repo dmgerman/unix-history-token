@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Communication between reload.c and reload1.c.    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1997, 1998, 2000    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Communication between reload.c and reload1.c.    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|memory_move_secondary_cost
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|enum
@@ -157,10 +157,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* See reload.c and reload1.c for comments on these variables.  */
-end_comment
-
-begin_comment
 comment|/* Maximum number of reloads we can need.  */
 end_comment
 
@@ -170,199 +166,6 @@ directive|define
 name|MAX_RELOADS
 value|(2 * MAX_RECOG_OPERANDS * (MAX_REGS_PER_ADDRESS + 1))
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|reload_in
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|reload_out
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|reload_in_reg
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|reload_out_reg
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|reg_class
-name|reload_reg_class
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|machine_mode
-name|reload_inmode
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|machine_mode
-name|reload_outmode
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|reload_optional
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|reload_nongroup
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|reload_inc
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|reload_opnum
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|reload_secondary_p
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|reload_secondary_in_reload
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|reload_secondary_out_reload
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAX_INSN_CODE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|insn_code
-name|reload_secondary_in_icode
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|insn_code
-name|reload_secondary_out_icode
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|n_reloads
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-name|reload_reg_rtx
-index|[
-name|MAX_RELOADS
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Encode the usage of a reload.  The following codes are supported:     RELOAD_FOR_INPUT		reload of an input operand    RELOAD_FOR_OUTPUT		likewise, for output    RELOAD_FOR_INSN		a reload that must not conflict with anything 				used in the insn, but may conflict with 				something used before or after the insn    RELOAD_FOR_INPUT_ADDRESS	reload for parts of the address of an object 				that is an input reload    RELOAD_FOR_INPADDR_ADDRESS	reload needed for RELOAD_FOR_INPUT_ADDRESS    RELOAD_FOR_OUTPUT_ADDRESS	like RELOAD_FOR INPUT_ADDRESS, for output    RELOAD_FOR_OUTADDR_ADDRESS	reload needed for RELOAD_FOR_OUTPUT_ADDRESS    RELOAD_FOR_OPERAND_ADDRESS	reload for the address of a non-reloaded 				operand; these don't conflict with 				any other addresses.    RELOAD_FOR_OPADDR_ADDR	reload needed for RELOAD_FOR_OPERAND_ADDRESS                                 reloads; usually secondary reloads    RELOAD_OTHER			none of the above, usually multiple uses    RELOAD_FOR_OTHER_ADDRESS     reload for part of the address of an input    				that is marked RELOAD_OTHER.     This used to be "enum reload_when_needed" but some debuggers have trouble    with an enum tag and variable of the same name.  */
@@ -397,16 +200,153 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
-specifier|extern
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GCC_INSN_CODES_H
+end_ifdef
+
+begin_comment
+comment|/* Each reload is recorded with a structure like this.  */
+end_comment
+
+begin_struct
+struct|struct
+name|reload
+block|{
+comment|/* The value to reload from */
+name|rtx
+name|in
+decl_stmt|;
+comment|/* Where to store reload-reg afterward if nec (often the same as      reload_in)  */
+name|rtx
+name|out
+decl_stmt|;
+comment|/* The class of registers to reload into.  */
+name|enum
+name|reg_class
+name|class
+decl_stmt|;
+comment|/* The mode this operand should have when reloaded, on input.  */
+name|enum
+name|machine_mode
+name|inmode
+decl_stmt|;
+comment|/* The mode this operand should have when reloaded, on output.  */
+name|enum
+name|machine_mode
+name|outmode
+decl_stmt|;
+comment|/* The mode of the reload register.  */
+name|enum
+name|machine_mode
+name|mode
+decl_stmt|;
+comment|/* the largest number of registers this reload will require.  */
+name|unsigned
+name|int
+name|nregs
+decl_stmt|;
+comment|/* Positive amount to increment or decrement by if      reload_in is a PRE_DEC, PRE_INC, POST_DEC, POST_INC.      Ignored otherwise (don't assume it is zero).  */
+name|int
+name|inc
+decl_stmt|;
+comment|/* A reg for which reload_in is the equivalent.      If reload_in is a symbol_ref which came from      reg_equiv_constant, then this is the pseudo      which has that symbol_ref as equivalent.  */
+name|rtx
+name|in_reg
+decl_stmt|;
+name|rtx
+name|out_reg
+decl_stmt|;
+comment|/* Used in find_reload_regs to record the allocated register.  */
+name|int
+name|regno
+decl_stmt|;
+comment|/* This is the register to reload into.  If it is zero when `find_reloads'      returns, you must find a suitable register in the class specified by      reload_reg_class, and store here an rtx for that register with mode from      reload_inmode or reload_outmode.  */
+name|rtx
+name|reg_rtx
+decl_stmt|;
+comment|/* The operand number being reloaded.  This is used to group related reloads      and need not always be equal to the actual operand number in the insn,      though it current will be; for in-out operands, it is one of the two      operand numbers.  */
+name|int
+name|opnum
+decl_stmt|;
+comment|/* Gives the reload number of a secondary input reload, when needed;      otherwise -1.  */
+name|int
+name|secondary_in_reload
+decl_stmt|;
+comment|/* Gives the reload number of a secondary output reload, when needed;      otherwise -1.  */
+name|int
+name|secondary_out_reload
+decl_stmt|;
+comment|/* If a secondary input reload is required, gives the INSN_CODE that uses the      secondary reload as a scratch register, or CODE_FOR_nothing if the      secondary reload register is to be an intermediate register.  */
+name|enum
+name|insn_code
+name|secondary_in_icode
+decl_stmt|;
+comment|/* Likewise, for a secondary output reload.  */
+name|enum
+name|insn_code
+name|secondary_out_icode
+decl_stmt|;
+comment|/* Classifies reload as needed either for addressing an input reload,      addressing an output, for addressing a non-reloaded mem ref, or for      unspecified purposes (i.e., more than one of the above).  */
 name|enum
 name|reload_type
-name|reload_when_needed
+name|when_needed
+decl_stmt|;
+comment|/* Nonzero for an optional reload.  Optional reloads are ignored unless the      value is already sitting in a register.  */
+name|unsigned
+name|int
+name|optional
+range|:
+literal|1
+decl_stmt|;
+comment|/* nonzero if this reload shouldn't be combined with another reload.  */
+name|unsigned
+name|int
+name|nocombine
+range|:
+literal|1
+decl_stmt|;
+comment|/* Nonzero if this is a secondary register for one or more reloads.  */
+name|unsigned
+name|int
+name|secondary_p
+range|:
+literal|1
+decl_stmt|;
+comment|/* Nonzero if this reload must use a register not already allocated to a      group.  */
+name|unsigned
+name|int
+name|nongroup
+range|:
+literal|1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|reload
+name|rld
 index|[
 name|MAX_RELOADS
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|n_reloads
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -484,7 +424,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero if indirect addressing is supported when the innermost MEM is    of the form (MEM (SYMBOL_REF sym)).  It is assumed that the level to    which these are valid is the same as spill_indirect_levels, above.   */
+comment|/* Nonzero if indirect addressing is supported when the innermost MEM is    of the form (MEM (SYMBOL_REF sym)).  It is assumed that the level to    which these are valid is the same as spill_indirect_levels, above.  */
 end_comment
 
 begin_decl_stmt
@@ -511,39 +451,6 @@ name|int
 name|num_not_at_initial_offset
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAX_INSN_CODE
-end_ifdef
-
-begin_comment
-comment|/* These arrays record the insn_code of insns that may be needed to    perform input and output reloads of special objects.  They provide a    place to pass a scratch register.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|insn_code
-name|reload_in_optab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|insn_code
-name|reload_out_optab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -610,35 +517,21 @@ comment|/* The rtx of the insn.  */
 name|rtx
 name|insn
 decl_stmt|;
-comment|/* Register life information: record all live hard registers, and all      live pseudos that have a hard register.      This information is recorded for the point immediately before the insn      (in live_before), and for the point within the insn at which all      outputs have just been written to (in live_after).  */
-name|regset
-name|live_before
+comment|/* Register life information: record all live hard registers, and all      live pseudos that have a hard register.  */
+name|regset_head
+name|live_throughout
 decl_stmt|;
-name|regset
-name|live_after
+name|regset_head
+name|dead_or_set
 decl_stmt|;
-comment|/* For each class, size of group of consecutive regs      that is needed for the reloads of this class.  */
-name|char
-name|group_size
-index|[
-name|N_REG_CLASSES
-index|]
+comment|/* Copies of the global variables computed by find_reloads.  */
+name|struct
+name|reload
+modifier|*
+name|rld
 decl_stmt|;
-comment|/* For each class, the machine mode which requires consecutive      groups of regs of that class.      If two different modes ever require groups of one class,      they must be the same size and equally restrictive for that class,      otherwise we can't handle the complexity.  */
-name|enum
-name|machine_mode
-name|group_mode
-index|[
-name|N_REG_CLASSES
-index|]
-decl_stmt|;
-comment|/* Indicates if a register was counted against the need for      groups.  0 means it can count against max_nongroup instead.  */
-name|HARD_REG_SET
-name|counted_for_groups
-decl_stmt|;
-comment|/* Indicates if a register was counted against the need for      non-groups.  0 means it can become part of a new group.      During choose_reload_regs, 1 here means don't use this reg      as part of a group, even if it seems to be otherwise ok.  */
-name|HARD_REG_SET
-name|counted_for_nongroups
+name|int
+name|n_reloads
 decl_stmt|;
 comment|/* Indicates which registers have already been used for spills.  */
 name|HARD_REG_SET
@@ -704,7 +597,7 @@ name|struct
 name|insn_chain
 modifier|*
 name|new_insn_chain
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -717,7 +610,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|compute_use_by_pseudos
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|HARD_REG_SET
@@ -746,7 +639,7 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|get_secondary_mem
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -771,7 +664,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|clear_secondary_mem
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -788,7 +681,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|transfer_replacements
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -807,7 +700,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|remove_address_replacements
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -825,7 +718,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|operands_match_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -837,14 +730,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return 1 if altering OP will not modify the value of CLOBBER. */
+comment|/* Return 1 if altering OP will not modify the value of CLOBBER.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|safe_from_earlyclobber
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -863,7 +756,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|find_reloads
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -889,7 +782,7 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|form_sum
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -908,10 +801,10 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|subst_reloads
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -925,7 +818,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|copy_replacements
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -944,7 +837,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|move_replacements
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -967,7 +860,7 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|find_replacement
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -985,11 +878,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|refers_to_regno_for_reload_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+name|unsigned
 name|int
 operator|,
+name|unsigned
 name|int
 operator|,
 name|rtx
@@ -1009,7 +904,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|reg_overlap_mentioned_for_reload_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1028,7 +923,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|refers_to_mem_for_reload_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1045,7 +940,7 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|find_equiv_reg
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1077,9 +972,10 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|regno_clobbered_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+name|unsigned
 name|int
 operator|,
 name|rtx
@@ -1094,33 +990,92 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Functions in reload1.c:  */
+comment|/* Return 1 if X is an operand of an insn that is being earlyclobbered.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|reloads_conflict
-name|PROTO
+name|earlyclobber_operand_p
+name|PARAMS
 argument_list|(
 operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Record one reload that needs to be performed.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|push_reload
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|*
+operator|,
+name|rtx
+operator|*
+operator|,
+expr|enum
+name|reg_class
+operator|,
+expr|enum
+name|machine_mode
+operator|,
+expr|enum
+name|machine_mode
+operator|,
 name|int
 operator|,
 name|int
+operator|,
+name|int
+operator|,
+expr|enum
+name|reload_type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Functions in reload1.c:  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|reload_cse_regs
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|count_occurrences
-name|PROTO
+name|reloads_conflict
+name|PARAMS
 argument_list|(
 operator|(
-name|rtx
+name|int
 operator|,
-name|rtx
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1134,7 +1089,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|init_reload
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1151,15 +1106,12 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|reload
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
 operator|,
 name|int
-operator|,
-name|FILE
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1173,7 +1125,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|mark_home_live
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -1190,7 +1142,7 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|eliminate_regs
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1212,7 +1164,7 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|gen_reload
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1236,7 +1188,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|deallocate_reload_reg
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -1258,7 +1210,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|init_caller_save
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1275,7 +1227,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|init_save_areas
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1292,7 +1244,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|setup_save_areas
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1309,7 +1261,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|save_call_clobbered_regs
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1326,7 +1278,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|cleanup_subreg_operands
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1335,14 +1287,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Debugging support.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
-name|int
-name|earlyclobber_operand_p
-name|PROTO
+name|void
+name|debug_reload_to_stream
+name|PARAMS
 argument_list|(
 operator|(
-name|rtx
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|debug_reload
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

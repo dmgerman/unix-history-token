@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for Intel 80x86 running DG/ux    Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Currently maintained by gcc@dg-rtp.dg.com.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GNU compiler for Intel 80x86 running DG/ux    Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.    Currently maintained by gcc@dg-rtp.dg.com.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* for now, we are just like the sysv4 version with a    few hacks */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"i386/sysv4.h"
-end_include
 
 begin_ifndef
 ifndef|#
@@ -23,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|VERSION_INFO2
-value|"$Revision: 1.6 $"
+value|"$Revision: 1.16 $"
 end_define
 
 begin_endif
@@ -188,7 +182,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "standard",			 MASK_STANDARD, "Retain standard MXDB information" },          \     { "legend",				-MASK_NOLEGEND, "Retain legend information" },          \     { "no-legend",			 MASK_NOLEGEND, "" },          \     { "external-legend",		 MASK_EXTERNAL_LEGEND, "Generate external legend information" },   \     { "identify-revision", 		 MASK_IDENTIFY_REVISION, "Emit identifying info in .s file" }, \     { "warn-passed-structs", 		 MASK_WARN_PASS_STRUCT, "Warn when a function arg is a structure" },
+value|{ "standard",		MASK_STANDARD,			\       N_("Retain standard MXDB information") },			\     { "legend",			-MASK_NOLEGEND,			\       N_("Retain legend information") },          		\     { "no-legend",		MASK_NOLEGEND, "" },		\     { "external-legend",	MASK_EXTERNAL_LEGEND,		\       N_("Generate external legend information") },		\     { "identify-revision", 	MASK_IDENTIFY_REVISION,		\       N_("Emit identifying info in .s file") },			\     { "warn-passed-structs", 	MASK_WARN_PASS_STRUCT,		\       N_("Warn when a function arg is a structure") },
 end_define
 
 begin_undef
@@ -219,6 +213,12 @@ directive|define
 name|DBX_DEBUGGING_INFO
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -227,7 +227,7 @@ value|DWARF_DEBUG
 end_define
 
 begin_comment
-comment|/* Override svr[34].h.  */
+comment|/* Override svr[34].h.  Switch to the data section so that the coffsem    symbol isn't in the text section.  */
 end_comment
 
 begin_undef
@@ -244,7 +244,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|output_file_start (FILE, f_options, sizeof f_options / sizeof f_options[0], \ 		     W_options, sizeof W_options / sizeof W_options[0])
+value|do { \     output_file_directive (FILE, main_input_filename); \     fprintf (FILE, "\t.version\t\"01.01\"\n"); \     data_section (); \   } while (0)
 end_define
 
 begin_comment
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Di386 -D__ix86 -Dunix -DDGUX -D__CLASSIFY_TYPE__=2\    -Asystem(unix) -Asystem(svr4) -Acpu(i386) -Amachine(i386)"
+value|"-D__ix86 -Dunix -DDGUX -D__CLASSIFY_TYPE__=2\    -Asystem=unix -Asystem=svr4"
 end_define
 
 begin_comment
@@ -373,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{!ansi:%{!traditional:-D__OPEN_NAMESPACE__}}"
+value|"%(cpp_cpu) %{!ansi:%{!traditional:-D__OPEN_NAMESPACE__}}"
 end_define
 
 begin_comment
@@ -479,7 +479,7 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"%{!shared:%{!symbolic:%{pg:gcrt1.o%s} 		\ 			                      %{!pg:%{p:/lib/mcrt1.o%s}	\ 					      %{!p:/lib/crt1.o%s}}} 	\ 			%{pg:gcrti.o%s}%{!pg:/lib/crti.o%s}} 		\ 			crtbegin.o%s 					\ 			%{ansi:/lib/values-Xc.o%s} 			\ 			%{!ansi:%{traditional:/lib/values-Xt.o%s} 	\ 			        %{!traditional:/lib/values-Xa.o%s}}"
+value|"%{!shared:%{!symbolic:%{pg:gcrt1.o%s} 		\ 			                      %{!pg:%{p:/lib/mcrt1.o%s}	\ 					     %{!p:/lib/crt1.o%s}}}}    \ 		       %{pg:gcrti.o%s}%{!pg:/lib/crti.o%s}	     \ 			crtbegin.o%s 					\ 			%{ansi:/lib/values-Xc.o%s} 			\ 			%{!ansi:%{traditional:/lib/values-Xt.o%s} 	\ 			        %{!traditional:/lib/values-Xa.o%s}}"
 end_define
 
 begin_undef
@@ -539,9 +539,11 @@ parameter_list|(
 name|MODE
 parameter_list|,
 name|RTX
+parameter_list|,
+name|ALIGN
 parameter_list|)
 define|\
-value|{                                               \   if (flag_pic&& symbolic_operand (RTX))       \     data_section ();                            \   else                                          \     const_section ();                           \ }
+value|{                                               \   if (flag_pic&& symbolic_operand (RTX, VOIDmode)) \     data_section ();                            \   else                                          \     const_section ();                           \ }
 end_define
 
 begin_comment
@@ -585,7 +587,7 @@ begin_define
 define|#
 directive|define
 name|CONST_SECTION_ASM_OP
-value|".section\t.rodata\n\t.align 1"
+value|"\t.section\t.rodata\n\t.align 1"
 end_define
 
 end_unit

@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of floating-point access for GNU compiler.    Copyright (C) 1989, 91, 94, 96-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of floating-point access for GNU compiler.    Copyright (C) 1989, 1991, 1994, 1996, 1997, 1998,    1999, 2000, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|REAL_H_INCLUDED
+name|GCC_REAL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|REAL_H_INCLUDED
+name|GCC_REAL_H
 end_define
 
 begin_comment
@@ -87,6 +87,24 @@ define|#
 directive|define
 name|HOST_FLOAT_FORMAT
 value|IEEE_FLOAT_FORMAT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INTEL_EXTENDED_IEEE_FORMAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INTEL_EXTENDED_IEEE_FORMAT
+value|0
 end_define
 
 begin_endif
@@ -206,17 +224,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* MAX_LONG_DOUBLE_TYPE_SIZE is a constant tested by #if.    LONG_DOUBLE_TYPE_SIZE can vary at compiler run time.    So long as macros like REAL_VALUE_TO_TARGET_LONG_DOUBLE cannot    vary too, however, then XFmode and TFmode long double    cannot both be supported at the same time.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX_LONG_DOUBLE_TYPE_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX_LONG_DOUBLE_TYPE_SIZE
+value|LONG_DOUBLE_TYPE_SIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
 operator|(
-name|LONG_DOUBLE_TYPE_SIZE
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 operator|==
 literal|96
 operator|)
 operator|||
 operator|(
-name|LONG_DOUBLE_TYPE_SIZE
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 operator|==
 literal|128
 operator|)
@@ -255,14 +295,14 @@ comment|/* **** Start of software floating point emulator interface macros **** 
 end_comment
 
 begin_comment
-comment|/* Support 80-bit extended real XFmode if LONG_DOUBLE_TYPE_SIZE    has been defined to be 96 in the tm.h machine file. */
+comment|/* Support 80-bit extended real XFmode if LONG_DOUBLE_TYPE_SIZE    has been defined to be 96 in the tm.h machine file.  */
 end_comment
 
 begin_if
 if|#
 directive|if
 operator|(
-name|LONG_DOUBLE_TYPE_SIZE
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 operator|==
 literal|96
 operator|)
@@ -329,7 +369,7 @@ begin_if
 if|#
 directive|if
 operator|(
-name|LONG_DOUBLE_TYPE_SIZE
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 operator|==
 literal|128
 operator|)
@@ -401,7 +441,7 @@ name|TARGET_FLOAT_FORMAT
 end_if
 
 begin_comment
-comment|/* If no XFmode support, then a REAL_VALUE_TYPE is 64 bits wide    but it is not necessarily a host machine double. */
+comment|/* If no XFmode support, then a REAL_VALUE_TYPE is 64 bits wide    but it is not necessarily a host machine double.  */
 end_comment
 
 begin_define
@@ -452,7 +492,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* If host and target formats are compatible, then a REAL_VALUE_TYPE    is actually a host machine double. */
+comment|/* If host and target formats are compatible, then a REAL_VALUE_TYPE    is actually a host machine double.  */
 end_comment
 
 begin_define
@@ -487,9 +527,10 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|int
 name|significand_size
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|enum
@@ -533,14 +574,14 @@ value|earith (&(value), (code),&(d1),&(d2))
 end_define
 
 begin_comment
-comment|/* Declare functions in real.c. */
+comment|/* Declare functions in real.c.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|void
 name|earith
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -562,7 +603,7 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|etrunci
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -575,28 +616,10 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|etruncui
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|REAL_VALUE_TYPE
-name|ereal_atof
-name|PROTO
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-expr|enum
-name|machine_mode
 operator|)
 argument_list|)
 decl_stmt|;
@@ -606,7 +629,7 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|ereal_negate
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -619,7 +642,7 @@ begin_decl_stmt
 specifier|extern
 name|HOST_WIDE_INT
 name|efixi
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -633,7 +656,7 @@ specifier|extern
 name|unsigned
 name|HOST_WIDE_INT
 name|efixui
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -646,7 +669,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|ereal_from_int
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -667,7 +690,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|ereal_from_uint
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -690,7 +713,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|ereal_to_int
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|HOST_WIDE_INT
@@ -709,7 +732,7 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|ereal_ldexp
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -724,7 +747,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|etartdouble
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -740,7 +763,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|etarldouble
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -756,7 +779,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|etardouble
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -772,7 +795,7 @@ begin_decl_stmt
 specifier|extern
 name|long
 name|etarsingle
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -785,7 +808,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|ereal_to_decimal
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -801,7 +824,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|ereal_cmp
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -816,7 +839,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|ereal_isneg
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -829,7 +852,7 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|ereal_unto_float
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|long
@@ -842,7 +865,7 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|ereal_unto_double
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|long
@@ -856,7 +879,7 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|ereal_from_float
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|HOST_WIDE_INT
@@ -869,7 +892,7 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|ereal_from_double
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|HOST_WIDE_INT
@@ -943,22 +966,6 @@ parameter_list|)
 value|(etruncui (x))
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|REAL_VALUE_TYPE
-name|real_value_truncate
-name|PROTO
-argument_list|(
-operator|(
-expr|enum
-name|machine_mode
-operator|,
-name|REAL_VALUE_TYPE
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -990,7 +997,7 @@ value|(efixi (x))
 end_define
 
 begin_comment
-comment|/* Convert a floating-point value to unsigned integer, rounding    toward zero. */
+comment|/* Convert a floating-point value to unsigned integer, rounding    toward zero.  */
 end_comment
 
 begin_define
@@ -1011,14 +1018,24 @@ begin_define
 define|#
 directive|define
 name|REAL_VALUE_ATOF
-value|ereal_atof
+parameter_list|(
+name|s
+parameter_list|,
+name|m
+parameter_list|)
+value|ereal_atof(s,m)
 end_define
 
 begin_define
 define|#
 directive|define
 name|REAL_VALUE_HTOF
-value|ereal_atof
+parameter_list|(
+name|s
+parameter_list|,
+name|m
+parameter_list|)
+value|ereal_atof(s,m)
 end_define
 
 begin_define
@@ -1085,17 +1102,9 @@ value|ereal_from_uint (&d, lo, hi, mode)
 end_define
 
 begin_comment
-comment|/* IN is a REAL_VALUE_TYPE.  OUT is an array of longs. */
+comment|/* IN is a REAL_VALUE_TYPE.  OUT is an array of longs.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|LONG_DOUBLE_TYPE_SIZE
-operator|==
-literal|96
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1105,30 +1114,9 @@ name|IN
 parameter_list|,
 name|OUT
 parameter_list|)
-value|(etarldouble ((IN), (OUT)))
+define|\
+value|(LONG_DOUBLE_TYPE_SIZE == 64 ? etardouble ((IN), (OUT))	\     : LONG_DOUBLE_TYPE_SIZE == 96 ? etarldouble ((IN), (OUT))	\     : LONG_DOUBLE_TYPE_SIZE == 128 ? etartdouble ((IN), (OUT))  \     : abort ())
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|REAL_VALUE_TO_TARGET_LONG_DOUBLE
-parameter_list|(
-name|IN
-parameter_list|,
-name|OUT
-parameter_list|)
-value|(etartdouble ((IN), (OUT)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1143,7 +1131,7 @@ value|(etardouble ((IN), (OUT)))
 end_define
 
 begin_comment
-comment|/* IN is a REAL_VALUE_TYPE.  OUT is a long. */
+comment|/* IN is a REAL_VALUE_TYPE.  OUT is a long.  */
 end_comment
 
 begin_define
@@ -1159,7 +1147,7 @@ value|((OUT) = etarsingle ((IN)))
 end_define
 
 begin_comment
-comment|/* Inverse of REAL_VALUE_TO_TARGET_DOUBLE. */
+comment|/* Inverse of REAL_VALUE_TO_TARGET_DOUBLE.  */
 end_comment
 
 begin_define
@@ -1173,7 +1161,7 @@ value|(ereal_unto_double (d))
 end_define
 
 begin_comment
-comment|/* Inverse of REAL_VALUE_TO_TARGET_SINGLE. */
+comment|/* Inverse of REAL_VALUE_TO_TARGET_SINGLE.  */
 end_comment
 
 begin_define
@@ -1187,7 +1175,7 @@ value|(ereal_unto_float (f))
 end_define
 
 begin_comment
-comment|/* d is an array of HOST_WIDE_INT that holds a double precision    value in the target computer's floating point format. */
+comment|/* d is an array of HOST_WIDE_INT that holds a double precision    value in the target computer's floating point format.  */
 end_comment
 
 begin_define
@@ -1201,7 +1189,7 @@ value|(ereal_from_double (d))
 end_define
 
 begin_comment
-comment|/* f is a HOST_WIDE_INT containing a single precision target float value. */
+comment|/* f is a HOST_WIDE_INT containing a single precision target float value.  */
 end_comment
 
 begin_define
@@ -1419,7 +1407,7 @@ parameter_list|,
 name|OUT
 parameter_list|)
 define|\
-value|do {							\   union {						\     float f;						\     HOST_WIDE_INT l;					\   } u;							\   if (sizeof(HOST_WIDE_INT)< sizeof(float))		\     abort();						\   u.l = 0;						\   u.f = (IN);						\   (OUT) = u.l;						\ } while (0)
+value|do {							\   union {						\     float f;						\     HOST_WIDE_INT l;					\   } u;							\   if (sizeof(HOST_WIDE_INT)< sizeof(float))		\     abort ();						\   u.l = 0;						\   u.f = (IN);						\   (OUT) = u.l;						\ } while (0)
 end_define
 
 begin_endif
@@ -1447,7 +1435,7 @@ parameter_list|,
 name|OUT
 parameter_list|)
 define|\
-value|do {									\   union {								\     REAL_VALUE_TYPE f;							\     HOST_WIDE_INT l[2];							\   } u;									\   if (sizeof(HOST_WIDE_INT) * 2< sizeof(REAL_VALUE_TYPE))		\     abort();								\   u.l[0] = u.l[1] = 0;							\   u.f = (IN);								\   if (HOST_FLOAT_WORDS_BIG_ENDIAN == FLOAT_WORDS_BIG_ENDIAN)		\     (OUT)[0] = u.l[0], (OUT)[1] = u.l[1];				\   else									\     (OUT)[1] = u.l[0], (OUT)[0] = u.l[1];				\ } while (0)
+value|do {									\   union {								\     REAL_VALUE_TYPE f;							\     HOST_WIDE_INT l[2];							\   } u;									\   if (sizeof(HOST_WIDE_INT) * 2< sizeof(REAL_VALUE_TYPE))		\     abort ();								\   u.l[0] = u.l[1] = 0;							\   u.f = (IN);								\   if (HOST_FLOAT_WORDS_BIG_ENDIAN == FLOAT_WORDS_BIG_ENDIAN)		\     (OUT)[0] = u.l[0], (OUT)[1] = u.l[1];				\   else									\     (OUT)[1] = u.l[0], (OUT)[0] = u.l[1];				\ } while (0)
 end_define
 
 begin_endif
@@ -1465,7 +1453,7 @@ comment|/* HOST_FLOAT_FORMAT == TARGET_FLOAT_FORMAT */
 end_comment
 
 begin_comment
-comment|/* In this configuration, double and long double are the same. */
+comment|/* In this configuration, double and long double are the same.  */
 end_comment
 
 begin_ifndef
@@ -1505,7 +1493,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|(!bcmp ((char *)&(x), (char *)&(y), sizeof (REAL_VALUE_TYPE)))
+value|(!memcmp ((char *)&(x), (char *)&(y), sizeof (REAL_VALUE_TYPE)))
 end_define
 
 begin_comment
@@ -1638,7 +1626,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Convert a floating-point value to unsigned integer, rounding    toward zero. */
+comment|/* Convert a floating-point value to unsigned integer, rounding    toward zero.  */
 end_comment
 
 begin_ifndef
@@ -1684,13 +1672,20 @@ parameter_list|)
 value|ldexp (x, y)
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|double
 name|ldexp
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|double
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -1714,15 +1709,8 @@ literal|1
 end_if
 
 begin_comment
-comment|/* Use real.c to convert decimal numbers to binary, ... */
+comment|/* Use real.c to convert decimal numbers to binary, ...  */
 end_comment
-
-begin_function_decl
-name|REAL_VALUE_TYPE
-name|ereal_atof
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -1835,9 +1823,10 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|real_hex_to_f
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1902,7 +1891,7 @@ begin_decl_stmt
 specifier|extern
 name|REAL_VALUE_TYPE
 name|real_value_truncate
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|enum
@@ -1939,7 +1928,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Determine whether a floating-point value X is infinite. */
+comment|/* Determine whether a floating-point value X is infinite.  */
 end_comment
 
 begin_ifndef
@@ -1964,7 +1953,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Determine whether a floating-point value X is a NaN. */
+comment|/* Determine whether a floating-point value X is a NaN.  */
 end_comment
 
 begin_ifndef
@@ -1989,7 +1978,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Determine whether a floating-point value X is negative. */
+comment|/* Determine whether a floating-point value X is negative.  */
 end_comment
 
 begin_ifndef
@@ -2013,47 +2002,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|target_isnan
-name|PROTO
-argument_list|(
-operator|(
-name|REAL_VALUE_TYPE
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|target_isinf
-name|PROTO
-argument_list|(
-operator|(
-name|REAL_VALUE_TYPE
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|target_negative
-name|PROTO
-argument_list|(
-operator|(
-name|REAL_VALUE_TYPE
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Determine whether a floating-point value X is minus 0. */
+comment|/* Determine whether a floating-point value X is minus 0.  */
 end_comment
 
 begin_ifndef
@@ -2142,58 +2092,6 @@ union|;
 end_union
 
 begin_comment
-comment|/* For a CONST_DOUBLE:    The usual two ints that hold the value.    For a DImode, that is all there are;     and CONST_DOUBLE_LOW is the low-order word and ..._HIGH the high-order.    For a float, the number of ints varies,     and CONST_DOUBLE_LOW is the one that should come first *in memory*.     So use&CONST_DOUBLE_LOW(r) as the address of an array of ints.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_DOUBLE_LOW
-parameter_list|(
-name|r
-parameter_list|)
-value|XWINT (r, 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONST_DOUBLE_HIGH
-parameter_list|(
-name|r
-parameter_list|)
-value|XWINT (r, 3)
-end_define
-
-begin_comment
-comment|/* Link for chain of all CONST_DOUBLEs in use in current function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_DOUBLE_CHAIN
-parameter_list|(
-name|r
-parameter_list|)
-value|XEXP (r, 1)
-end_define
-
-begin_comment
-comment|/* The MEM which represents this CONST_DOUBLE's value in memory,    or const0_rtx if no MEM has been made for it yet,    or cc0_rtx if it is not on the chain.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_DOUBLE_MEM
-parameter_list|(
-name|r
-parameter_list|)
-value|XEXP (r, 0)
-end_define
-
-begin_comment
 comment|/* Given a CONST_DOUBLE in FROM, store into TO the value it represents.  */
 end_comment
 
@@ -2210,7 +2108,7 @@ end_union_decl
 begin_decl_stmt
 name|REAL_VALUE_TYPE
 name|real_value_from_int_cst
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|union
@@ -2235,7 +2133,7 @@ parameter_list|,
 name|from
 parameter_list|)
 define|\
-value|do { union real_extract u;				\      bcopy ((char *)&CONST_DOUBLE_LOW ((from)), (char *)&u, sizeof u); \      to = u.d; } while (0)
+value|do { union real_extract u;				\      memcpy (&u,&CONST_DOUBLE_LOW ((from)), sizeof u); \      to = u.d; } while (0)
 end_define
 
 begin_comment
@@ -2260,7 +2158,7 @@ name|struct
 name|rtx_def
 modifier|*
 name|immed_real_const_1
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -2309,7 +2207,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|exact_real_inverse
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|enum
@@ -2324,9 +2222,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|debug_real
-name|PROTO
+name|int
+name|target_isnan
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
@@ -2335,18 +2233,55 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* In varasm.c */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_isinf
+name|PARAMS
+argument_list|(
+operator|(
+name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_negative
+name|PARAMS
+argument_list|(
+operator|(
+name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|void
-name|assemble_real
-name|PROTO
+name|debug_real
+name|PARAMS
 argument_list|(
 operator|(
 name|REAL_VALUE_TYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|REAL_VALUE_TYPE
+name|ereal_atof
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
 operator|,
 expr|enum
 name|machine_mode
@@ -2361,7 +2296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Not REAL_H_INCLUDED */
+comment|/* ! GCC_REAL_H */
 end_comment
 
 end_unit

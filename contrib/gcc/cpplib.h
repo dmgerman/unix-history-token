@@ -1,24 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for CPP library.    Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.    Written by Per Bothner, 1994-95.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
+comment|/* Definitions for CPP library.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Per Bothner, 1994-95.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GCC_CPPLIB__
+name|GCC_CPPLIB_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GCC_CPPLIB__
+name|GCC_CPPLIB_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hashtable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"line-map.h"
 end_include
 
 begin_ifdef
@@ -33,193 +45,984 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-typedef|typedef
-name|unsigned
-name|char
-name|U_CHAR
-typedef|;
+comment|/* For complex reasons, cpp_reader is also typedefed in c-pragma.h.  */
+ifndef|#
+directive|ifndef
+name|GCC_C_PRAGMA_H
 typedef|typedef
 name|struct
 name|cpp_reader
 name|cpp_reader
 typedef|;
-typedef|typedef
-name|struct
-name|cpp_buffer
-name|cpp_buffer
-typedef|;
-typedef|typedef
-name|struct
-name|cpp_options
-name|cpp_options
-typedef|;
-typedef|typedef
-name|struct
-name|hashnode
-name|cpp_hashnode
-typedef|;
-enum|enum
-name|cpp_token
-block|{
-name|CPP_EOF
-init|=
-operator|-
-literal|1
-block|,
-name|CPP_OTHER
-init|=
-literal|0
-block|,
-name|CPP_COMMENT
-init|=
-literal|1
-block|,
-name|CPP_HSPACE
-block|,
-name|CPP_VSPACE
-block|,
-comment|/* newlines and #line directives */
-name|CPP_NAME
-block|,
-name|CPP_NUMBER
-block|,
-name|CPP_CHAR
-block|,
-name|CPP_STRING
-block|,
-name|CPP_DIRECTIVE
-block|,
-name|CPP_LPAREN
-block|,
-comment|/* "(" */
-name|CPP_RPAREN
-block|,
-comment|/* ")" */
-name|CPP_LBRACE
-block|,
-comment|/* "{" */
-name|CPP_RBRACE
-block|,
-comment|/* "}" */
-name|CPP_COMMA
-block|,
-comment|/* "," */
-name|CPP_SEMICOLON
-block|,
-comment|/* ";" */
-name|CPP_3DOTS
-block|,
-comment|/* "..." */
-if|#
-directive|if
-literal|0
-block|CPP_ANDAND,
-comment|/* "&&" */
-block|CPP_OROR,
-comment|/* "||" */
-block|CPP_LSH,
-comment|/* "<<" */
-block|CPP_RSH,
-comment|/* ">>" */
-block|CPP_EQL,
-comment|/* "==" */
-block|CPP_NEQ,
-comment|/* "!=" */
-block|CPP_LEQ,
-comment|/* "<=" */
-block|CPP_GEQ,
-comment|/* ">=" */
-block|CPP_PLPL,
-comment|/* "++" */
-block|CPP_MINMIN,
-comment|/* "--" */
 endif|#
 directive|endif
-comment|/* POP_TOKEN is returned when we've popped a cpp_buffer. */
-name|CPP_POP
-block|}
-enum|;
 typedef|typedef
-name|enum
-name|cpp_token
-argument_list|(
-operator|*
-name|parse_underflow_t
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
+name|struct
+name|cpp_buffer
+name|cpp_buffer
 typedef|;
 typedef|typedef
+name|struct
+name|cpp_options
+name|cpp_options
+typedef|;
+typedef|typedef
+name|struct
+name|cpp_token
+name|cpp_token
+typedef|;
+typedef|typedef
+name|struct
+name|cpp_string
+name|cpp_string
+typedef|;
+typedef|typedef
+name|struct
+name|cpp_hashnode
+name|cpp_hashnode
+typedef|;
+typedef|typedef
+name|struct
+name|cpp_macro
+name|cpp_macro
+typedef|;
+typedef|typedef
+name|struct
+name|cpp_callbacks
+name|cpp_callbacks
+typedef|;
+struct_decl|struct
+name|answer
+struct_decl|;
+struct_decl|struct
+name|file_name_map_list
+struct_decl|;
+comment|/* The first two groups, apart from '=', can appear in preprocessor    expressions.  This allows a lookup table to be implemented in    _cpp_parse_expr.     The first group, to CPP_LAST_EQ, can be immediately followed by an    '='.  The lexer needs operators ending in '=', like ">>=", to be in    the same order as their counterparts without the '=', like ">>".  */
+comment|/* Positions in the table.  */
+define|#
+directive|define
+name|CPP_LAST_EQ
+value|CPP_MAX
+define|#
+directive|define
+name|CPP_FIRST_DIGRAPH
+value|CPP_HASH
+define|#
+directive|define
+name|CPP_LAST_PUNCTUATOR
+value|CPP_DOT_STAR
+define|#
+directive|define
+name|TTYPE_TABLE
+define|\
+value|OP(CPP_EQ = 0,	"=")			\   OP(CPP_NOT,		"!")			\   OP(CPP_GREATER,	">")
+comment|/* compare */
+value|\   OP(CPP_LESS,		"<")			\   OP(CPP_PLUS,		"+")
+comment|/* math */
+value|\   OP(CPP_MINUS,		"-")			\   OP(CPP_MULT,		"*")			\   OP(CPP_DIV,		"/")			\   OP(CPP_MOD,		"%")			\   OP(CPP_AND,		"&")
+comment|/* bit ops */
+value|\   OP(CPP_OR,		"|")			\   OP(CPP_XOR,		"^")			\   OP(CPP_RSHIFT,	">>")			\   OP(CPP_LSHIFT,	"<<")			\   OP(CPP_MIN,		"<?")
+comment|/* extension */
+value|\   OP(CPP_MAX,		">?")			\ \   OP(CPP_COMPL,		"~")			\   OP(CPP_AND_AND,	"&&")
+comment|/* logical */
+value|\   OP(CPP_OR_OR,		"||")			\   OP(CPP_QUERY,		"?")			\   OP(CPP_COLON,		":")			\   OP(CPP_COMMA,		",")
+comment|/* grouping */
+value|\   OP(CPP_OPEN_PAREN,	"(")			\   OP(CPP_CLOSE_PAREN,	")")			\   OP(CPP_EQ_EQ,		"==")
+comment|/* compare */
+value|\   OP(CPP_NOT_EQ,	"!=")			\   OP(CPP_GREATER_EQ,	">=")			\   OP(CPP_LESS_EQ,	"<=")			\ \   OP(CPP_PLUS_EQ,	"+=")
+comment|/* math */
+value|\   OP(CPP_MINUS_EQ,	"-=")			\   OP(CPP_MULT_EQ,	"*=")			\   OP(CPP_DIV_EQ,	"/=")			\   OP(CPP_MOD_EQ,	"%=")			\   OP(CPP_AND_EQ,	"&=")
+comment|/* bit ops */
+value|\   OP(CPP_OR_EQ,		"|=")			\   OP(CPP_XOR_EQ,	"^=")			\   OP(CPP_RSHIFT_EQ,	">>=")			\   OP(CPP_LSHIFT_EQ,	"<<=")			\   OP(CPP_MIN_EQ,	"<?=")
+comment|/* extension */
+value|\   OP(CPP_MAX_EQ,	">?=")			\
+comment|/* Digraphs together, beginning with CPP_FIRST_DIGRAPH.  */
+value|\   OP(CPP_HASH,		"#")
+comment|/* digraphs */
+value|\   OP(CPP_PASTE,		"##")			\   OP(CPP_OPEN_SQUARE,	"[")			\   OP(CPP_CLOSE_SQUARE,	"]")			\   OP(CPP_OPEN_BRACE,	"{")			\   OP(CPP_CLOSE_BRACE,	"}")			\
+comment|/* The remainder of the punctuation.  Order is not significant.  */
+value|\   OP(CPP_SEMICOLON,	";")
+comment|/* structure */
+value|\   OP(CPP_ELLIPSIS,	"...")			\   OP(CPP_PLUS_PLUS,	"++")
+comment|/* increment */
+value|\   OP(CPP_MINUS_MINUS,	"--")			\   OP(CPP_DEREF,		"->")
+comment|/* accessors */
+value|\   OP(CPP_DOT,		".")			\   OP(CPP_SCOPE,		"::")			\   OP(CPP_DEREF_STAR,	"->*")			\   OP(CPP_DOT_STAR,	".*")			\   OP(CPP_ATSIGN,	"@")
+comment|/* used in Objective C */
+value|\ \   TK(CPP_NAME,		SPELL_IDENT)
+comment|/* word */
+value|\   TK(CPP_NUMBER,	SPELL_NUMBER)
+comment|/* 34_be+ta  */
+value|\ \   TK(CPP_CHAR,		SPELL_STRING)
+comment|/* 'char' */
+value|\   TK(CPP_WCHAR,		SPELL_STRING)
+comment|/* L'char' */
+value|\   TK(CPP_OTHER,		SPELL_CHAR)
+comment|/* stray punctuation */
+value|\ \   TK(CPP_STRING,	SPELL_STRING)
+comment|/* "string" */
+value|\   TK(CPP_WSTRING,	SPELL_STRING)
+comment|/* L"string" */
+value|\   TK(CPP_HEADER_NAME,	SPELL_STRING)
+comment|/*<stdio.h> in #include */
+value|\ \   TK(CPP_COMMENT,	SPELL_NUMBER)
+comment|/* Only if output comments.  */
+value|\
+comment|/* SPELL_NUMBER happens to DTRT.  */
+value|\   TK(CPP_MACRO_ARG,	SPELL_NONE)
+comment|/* Macro argument.  */
+value|\   TK(CPP_PADDING,	SPELL_NONE)
+comment|/* Whitespace for cpp0.  */
+value|\   TK(CPP_EOF,		SPELL_NONE)
+comment|/* End of line or file.  */
+define|#
+directive|define
+name|OP
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|)
+value|e,
+define|#
+directive|define
+name|TK
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|)
+value|e,
+enum|enum
+name|cpp_ttype
+block|{
+name|TTYPE_TABLE
+name|N_TTYPES
+block|}
+enum|;
+undef|#
+directive|undef
+name|OP
+undef|#
+directive|undef
+name|TK
+comment|/* C language kind, used when calling cpp_reader_init.  */
+enum|enum
+name|c_lang
+block|{
+name|CLK_GNUC89
+init|=
+literal|0
+block|,
+name|CLK_GNUC99
+block|,
+name|CLK_STDC89
+block|,
+name|CLK_STDC94
+block|,
+name|CLK_STDC99
+block|,
+name|CLK_GNUCXX
+block|,
+name|CLK_CXX98
+block|,
+name|CLK_OBJC
+block|,
+name|CLK_OBJCXX
+block|,
+name|CLK_ASM
+block|}
+enum|;
+comment|/* Payload of a NUMBER, STRING, CHAR or COMMENT token.  */
+struct|struct
+name|cpp_string
+block|{
+name|unsigned
 name|int
+name|len
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|text
+decl_stmt|;
+block|}
+struct|;
+comment|/* Flags for the cpp_token structure.  */
+define|#
+directive|define
+name|PREV_WHITE
+value|(1<< 0)
+comment|/* If whitespace before this token.  */
+define|#
+directive|define
+name|DIGRAPH
+value|(1<< 1)
+comment|/* If it was a digraph.  */
+define|#
+directive|define
+name|STRINGIFY_ARG
+value|(1<< 2)
+comment|/* If macro argument to be stringified.  */
+define|#
+directive|define
+name|PASTE_LEFT
+value|(1<< 3)
+comment|/* If on LHS of a ## operator.  */
+define|#
+directive|define
+name|NAMED_OP
+value|(1<< 4)
+comment|/* C++ named operators.  */
+define|#
+directive|define
+name|NO_EXPAND
+value|(1<< 5)
+comment|/* Do not macro-expand this token.  */
+define|#
+directive|define
+name|BOL
+value|(1<< 6)
+comment|/* Token at beginning of line.  */
+comment|/* A preprocessing token.  This has been carefully packed and should    occupy 16 bytes on 32-bit hosts and 24 bytes on 64-bit hosts.  */
+struct|struct
+name|cpp_token
+block|{
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+comment|/* Logical line of first char of token.  */
+name|unsigned
+name|short
+name|col
+decl_stmt|;
+comment|/* Column of first char of token.  */
+name|ENUM_BITFIELD
 argument_list|(
-argument|*parse_cleanup_t
+argument|cpp_ttype
+argument_list|)
+name|type
+label|:
+name|CHAR_BIT
+expr_stmt|;
+comment|/* token type */
+name|unsigned
+name|char
+name|flags
+decl_stmt|;
+comment|/* flags - see above */
+union|union
+block|{
+name|cpp_hashnode
+modifier|*
+name|node
+decl_stmt|;
+comment|/* An identifier.  */
+specifier|const
+name|cpp_token
+modifier|*
+name|source
+decl_stmt|;
+comment|/* Inherit padding from this token.  */
+name|struct
+name|cpp_string
+name|str
+decl_stmt|;
+comment|/* A string, or number.  */
+name|unsigned
+name|int
+name|arg_no
+decl_stmt|;
+comment|/* Argument no. for a CPP_MACRO_ARG.  */
+name|unsigned
+name|char
+name|c
+decl_stmt|;
+comment|/* Character represented by CPP_OTHER.  */
+block|}
+name|val
+union|;
+block|}
+struct|;
+comment|/* A standalone character.  We may want to make it unsigned for the    same reason we use unsigned char - to avoid signedness issues.  */
+typedef|typedef
+name|int
+name|cppchar_t
+typedef|;
+comment|/* Values for opts.dump_macros.   dump_only means inhibit output of the preprocessed text              and instead output the definitions of all user-defined              macros in a form suitable for use as input to cpp.    dump_names means pass #define and the macro name through to output.    dump_definitions means pass the whole definition (plus #define) through */
+enum|enum
+block|{
+name|dump_none
+init|=
+literal|0
+block|,
+name|dump_only
+block|,
+name|dump_names
+block|,
+name|dump_definitions
+block|}
+enum|;
+comment|/* This structure is nested inside struct cpp_reader, and    carries all the options visible to the command line.  */
+struct|struct
+name|cpp_options
+block|{
+comment|/* Name of input and output files.  */
+specifier|const
+name|char
+modifier|*
+name|in_fname
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|out_fname
+decl_stmt|;
+comment|/* Characters between tab stops.  */
+name|unsigned
+name|int
+name|tabstop
+decl_stmt|;
+comment|/* Pending options - -D, -U, -A, -I, -ixxx.  */
+name|struct
+name|cpp_pending
+modifier|*
+name|pending
+decl_stmt|;
+comment|/* File name which deps are being written to.  This is 0 if deps are      being written to stdout.  */
+specifier|const
+name|char
+modifier|*
+name|deps_file
+decl_stmt|;
+comment|/* Search paths for include files.  */
+name|struct
+name|search_path
+modifier|*
+name|quote_include
+decl_stmt|;
+comment|/* "" */
+name|struct
+name|search_path
+modifier|*
+name|bracket_include
+decl_stmt|;
+comment|/*<> */
+comment|/* Map between header names and file names, used only on DOS where      file names are limited in length.  */
+name|struct
+name|file_name_map_list
+modifier|*
+name|map_list
+decl_stmt|;
+comment|/* Directory prefix that should replace `/usr/lib/gcc-lib/TARGET/VERSION'      in the standard include file directories.  */
+specifier|const
+name|char
+modifier|*
+name|include_prefix
+decl_stmt|;
+name|unsigned
+name|int
+name|include_prefix_len
+decl_stmt|;
+comment|/* -fleading_underscore sets this to "_".  */
+specifier|const
+name|char
+modifier|*
+name|user_label_prefix
+decl_stmt|;
+comment|/* The language we're preprocessing.  */
+name|enum
+name|c_lang
+name|lang
+decl_stmt|;
+comment|/* Non-0 means -v, so print the full set of include dirs.  */
+name|unsigned
+name|char
+name|verbose
+decl_stmt|;
+comment|/* Nonzero means use extra default include directories for C++.  */
+name|unsigned
+name|char
+name|cplusplus
+decl_stmt|;
+comment|/* Nonzero means handle cplusplus style comments */
+name|unsigned
+name|char
+name|cplusplus_comments
+decl_stmt|;
+comment|/* Nonzero means handle #import, for objective C.  */
+name|unsigned
+name|char
+name|objc
+decl_stmt|;
+comment|/* Nonzero means don't copy comments into the output file.  */
+name|unsigned
+name|char
+name|discard_comments
+decl_stmt|;
+comment|/* Nonzero means process the ISO trigraph sequences.  */
+name|unsigned
+name|char
+name|trigraphs
+decl_stmt|;
+comment|/* Nonzero means process the ISO digraph sequences.  */
+name|unsigned
+name|char
+name|digraphs
+decl_stmt|;
+comment|/* Nonzero means to allow hexadecimal floats and LL suffixes.  */
+name|unsigned
+name|char
+name|extended_numbers
+decl_stmt|;
+comment|/* Nonzero means print the names of included files rather than the      preprocessed output.  1 means just the #include "...", 2 means      #include<...> as well.  */
+name|unsigned
+name|char
+name|print_deps
+decl_stmt|;
+comment|/* Nonzero if phony targets are created for each header.  */
+name|unsigned
+name|char
+name|deps_phony_targets
+decl_stmt|;
+comment|/* Nonzero if missing .h files in -M output are assumed to be      generated files and not errors.  */
+name|unsigned
+name|char
+name|print_deps_missing_files
+decl_stmt|;
+comment|/* If true, fopen (deps_file, "a") else fopen (deps_file, "w").  */
+name|unsigned
+name|char
+name|print_deps_append
+decl_stmt|;
+comment|/* Nonzero means print names of header files (-H).  */
+name|unsigned
+name|char
+name|print_include_names
+decl_stmt|;
+comment|/* Nonzero means cpp_pedwarn causes a hard error.  */
+name|unsigned
+name|char
+name|pedantic_errors
+decl_stmt|;
+comment|/* Nonzero means don't print warning messages.  */
+name|unsigned
+name|char
+name|inhibit_warnings
+decl_stmt|;
+comment|/* Nonzero means don't suppress warnings from system headers.  */
+name|unsigned
+name|char
+name|warn_system_headers
+decl_stmt|;
+comment|/* Nonzero means don't print error messages.  Has no option to      select it, but can be set by a user of cpplib (e.g. fix-header).  */
+name|unsigned
+name|char
+name|inhibit_errors
+decl_stmt|;
+comment|/* Nonzero means warn if slash-star appears in a comment.  */
+name|unsigned
+name|char
+name|warn_comments
+decl_stmt|;
+comment|/* Nonzero means warn if there are any trigraphs.  */
+name|unsigned
+name|char
+name|warn_trigraphs
+decl_stmt|;
+comment|/* Nonzero means warn if #import is used.  */
+name|unsigned
+name|char
+name|warn_import
+decl_stmt|;
+comment|/* Nonzero means warn about various incompatibilities with      traditional C.  */
+name|unsigned
+name|char
+name|warn_traditional
+decl_stmt|;
+comment|/* Nonzero means turn warnings into errors.  */
+name|unsigned
+name|char
+name|warnings_are_errors
+decl_stmt|;
+comment|/* Nonzero causes output not to be done, but directives such as      #define that have side effects are still obeyed.  */
+name|unsigned
+name|char
+name|no_output
+decl_stmt|;
+comment|/* Nonzero means we should look for header.gcc files that remap file      names.  */
+name|unsigned
+name|char
+name|remap
+decl_stmt|;
+comment|/* Nonzero means don't output line number information.  */
+name|unsigned
+name|char
+name|no_line_commands
+decl_stmt|;
+comment|/* Nonzero means -I- has been seen, so don't look for #include "foo"      the source-file directory.  */
+name|unsigned
+name|char
+name|ignore_srcdir
+decl_stmt|;
+comment|/* Zero means dollar signs are punctuation.  */
+name|unsigned
+name|char
+name|dollars_in_ident
+decl_stmt|;
+comment|/* Nonzero means warn if undefined identifiers are evaluated in an #if.  */
+name|unsigned
+name|char
+name|warn_undef
+decl_stmt|;
+comment|/* Nonzero for the 1999 C Standard, including corrigenda and amendments.  */
+name|unsigned
+name|char
+name|c99
+decl_stmt|;
+comment|/* Nonzero means give all the error messages the ANSI standard requires.  */
+name|unsigned
+name|char
+name|pedantic
+decl_stmt|;
+comment|/* Nonzero means we're looking at already preprocessed code, so don't      bother trying to do macro expansion and whatnot.  */
+name|unsigned
+name|char
+name|preprocessed
+decl_stmt|;
+comment|/* Nonzero disables all the standard directories for headers.  */
+name|unsigned
+name|char
+name|no_standard_includes
+decl_stmt|;
+comment|/* Nonzero disables the C++-specific standard directories for headers.  */
+name|unsigned
+name|char
+name|no_standard_cplusplus_includes
+decl_stmt|;
+comment|/* Nonzero means dump macros in some fashion - see above.  */
+name|unsigned
+name|char
+name|dump_macros
+decl_stmt|;
+comment|/* Nonzero means pass #include lines through to the output.  */
+name|unsigned
+name|char
+name|dump_includes
+decl_stmt|;
+comment|/* Print column number in error messages.  */
+name|unsigned
+name|char
+name|show_column
+decl_stmt|;
+comment|/* Nonzero means handle C++ alternate operator names.  */
+name|unsigned
+name|char
+name|operator_names
+decl_stmt|;
+comment|/* True if --help, --version or --target-help appeared in the      options.  Stand-alone CPP should then bail out after option      parsing; drivers might want to continue printing help.  */
+name|unsigned
+name|char
+name|help_only
+decl_stmt|;
+block|}
+struct|;
+comment|/* Call backs.  */
+struct|struct
+name|cpp_callbacks
+block|{
+comment|/* Called when a new line of preprocessed output is started.  */
+name|void
+argument_list|(
+argument|*line_change
 argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
-name|cpp_buffer
+name|cpp_reader
 operator|*
 operator|,
+specifier|const
+name|cpp_token
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*file_change
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
 name|cpp_reader
+operator|*
+operator|,
+specifier|const
+expr|struct
+name|line_map
 operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-specifier|extern
 name|void
-name|parse_set_mark
-name|PARAMS
 argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
+argument|*include
 argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|parse_clear_mark
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|parse_goto_mark
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|cpp_handle_option
 name|PARAMS
 argument_list|(
 operator|(
 name|cpp_reader
 operator|*
 operator|,
+name|unsigned
 name|int
 operator|,
+specifier|const
+name|unsigned
 name|char
 operator|*
+operator|,
+specifier|const
+name|cpp_token
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*define
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|,
+name|cpp_hashnode
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*undef
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|,
+name|cpp_hashnode
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*ident
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|,
+specifier|const
+name|cpp_string
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*def_pragma
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+define|#
+directive|define
+name|CPP_FATAL_LIMIT
+value|1000
+comment|/* True if we have seen a "fatal" error.  */
+define|#
+directive|define
+name|CPP_FATAL_ERRORS
+parameter_list|(
+name|PFILE
+parameter_list|)
+value|(cpp_errors (PFILE)>= CPP_FATAL_LIMIT)
+comment|/* Name under which this program was invoked.  */
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+comment|/* The structure of a node in the hash table.  The hash table has    entries for all identifiers: either macros defined by #define    commands (type NT_MACRO), assertions created with #assert    (NT_ASSERTION), or neither of the above (NT_VOID).  Builtin macros    like __LINE__ are flagged NODE_BUILTIN.  Poisioned identifiers are    flagged NODE_POISONED.  NODE_OPERATOR (C++ only) indicates an    identifier that behaves like an operator such as "xor".    NODE_DIAGNOSTIC is for speed in lex_token: it indicates a    diagnostic may be required for this node.  Currently this only    applies to __VA_ARGS__ and poisoned identifiers.  */
+comment|/* Hash node flags.  */
+define|#
+directive|define
+name|NODE_OPERATOR
+value|(1<< 0)
+comment|/* C++ named operator.  */
+define|#
+directive|define
+name|NODE_POISONED
+value|(1<< 1)
+comment|/* Poisoned identifier.  */
+define|#
+directive|define
+name|NODE_BUILTIN
+value|(1<< 2)
+comment|/* Builtin macro.  */
+define|#
+directive|define
+name|NODE_DIAGNOSTIC
+value|(1<< 3)
+comment|/* Possible diagnostic when lexed.  */
+define|#
+directive|define
+name|NODE_WARN
+value|(1<< 4)
+comment|/* Warn if redefined or undefined.  */
+define|#
+directive|define
+name|NODE_DISABLED
+value|(1<< 5)
+comment|/* A disabled macro.  */
+comment|/* Different flavors of hash node.  */
+enum|enum
+name|node_type
+block|{
+name|NT_VOID
+init|=
+literal|0
+block|,
+comment|/* No definition yet.  */
+name|NT_MACRO
+block|,
+comment|/* A macro of some form.  */
+name|NT_ASSERTION
+comment|/* Predicate for #assert.  */
+block|}
+enum|;
+comment|/* Different flavors of builtin macro.  _Pragma is an operator, but we    handle it with the builtin code for efficiency reasons.  */
+enum|enum
+name|builtin_type
+block|{
+name|BT_SPECLINE
+init|=
+literal|0
+block|,
+comment|/* `__LINE__' */
+name|BT_DATE
+block|,
+comment|/* `__DATE__' */
+name|BT_FILE
+block|,
+comment|/* `__FILE__' */
+name|BT_BASE_FILE
+block|,
+comment|/* `__BASE_FILE__' */
+name|BT_INCLUDE_LEVEL
+block|,
+comment|/* `__INCLUDE_LEVEL__' */
+name|BT_TIME
+block|,
+comment|/* `__TIME__' */
+name|BT_STDC
+block|,
+comment|/* `__STDC__' */
+name|BT_PRAGMA
+comment|/* `_Pragma' operator */
+block|}
+enum|;
+define|#
+directive|define
+name|CPP_HASHNODE
+parameter_list|(
+name|HNODE
+parameter_list|)
+value|((cpp_hashnode *) (HNODE))
+define|#
+directive|define
+name|HT_NODE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((ht_identifier *) (NODE))
+define|#
+directive|define
+name|NODE_LEN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|HT_LEN (&(NODE)->ident)
+define|#
+directive|define
+name|NODE_NAME
+parameter_list|(
+name|NODE
+parameter_list|)
+value|HT_STR (&(NODE)->ident)
+comment|/* The common part of an identifier node shared amongst all 3 C front    ends.  Also used to store CPP identifiers, which are a superset of    identifiers in the grammatical sense.  */
+struct|struct
+name|cpp_hashnode
+block|{
+name|struct
+name|ht_identifier
+name|ident
+decl_stmt|;
+name|unsigned
+name|short
+name|arg_index
+decl_stmt|;
+comment|/* Macro argument index.  */
+name|unsigned
+name|char
+name|directive_index
+decl_stmt|;
+comment|/* Index into directive table.  */
+name|unsigned
+name|char
+name|rid_code
+decl_stmt|;
+comment|/* Rid code - for front ends.  */
+name|ENUM_BITFIELD
+argument_list|(
+argument|node_type
+argument_list|)
+name|type
+label|:
+literal|8
+expr_stmt|;
+comment|/* CPP node type.  */
+name|unsigned
+name|char
+name|flags
+decl_stmt|;
+comment|/* CPP flags.  */
+union|union
+block|{
+name|cpp_macro
+modifier|*
+name|macro
+decl_stmt|;
+comment|/* If a macro.  */
+name|struct
+name|answer
+modifier|*
+name|answers
+decl_stmt|;
+comment|/* Answers to an assertion.  */
+name|enum
+name|cpp_ttype
+name|operator
+decl_stmt|;
+comment|/* Code for a named operator.  */
+name|enum
+name|builtin_type
+name|builtin
+decl_stmt|;
+comment|/* Code for a builtin macro.  */
+block|}
+name|value
+union|;
+block|}
+struct|;
+comment|/* Call this first to get a handle to pass to other functions.  */
+specifier|extern
+name|cpp_reader
+modifier|*
+name|cpp_create_reader
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|c_lang
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Call these to get pointers to the options and callback structures    for a given reader.  These pointers are good until you call    cpp_finish on that reader.  You can either edit the callbacks    through the pointer returned from cpp_get_callbacks, or set them    with cpp_set_callbacks.  */
+specifier|extern
+name|cpp_options
+modifier|*
+name|cpp_get_options
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+specifier|const
+name|struct
+name|line_maps
+modifier|*
+name|cpp_get_line_maps
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|cpp_callbacks
+modifier|*
+name|cpp_get_callbacks
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_set_callbacks
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_callbacks
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Now call cpp_handle_option[s] to handle 1[or more] switches.  The    return value is the number of arguments used.  If    cpp_handle_options returns without using all arguments, it couldn't    understand the next switch.  When there are no switches left, you    must call cpp_post_options before calling cpp_read_main_file.  Only    after cpp_post_options are the contents of the cpp_options    structure reliable.  Options processing is not completed until you    call cpp_finish_options.  */
 specifier|extern
 name|int
 name|cpp_handle_options
@@ -238,1290 +1041,137 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|enum
+name|int
+name|cpp_handle_option
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_post_options
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* This function reads the file, but does not start preprocessing.  It    returns the name of the original file; this is the same as the    input file, except for preprocessed input.  This will generate at    least one file change callback, and possibly a line change callback    too.  If there was an error opening the file, it returns NULL.     If you want cpplib to manage its own hashtable, pass in a NULL    pointer.  Otherise you should pass in an initialised hash table    that cpplib will share; this technique is used by the C front    ends.  */
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|cpp_read_main_file
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+expr|struct
+name|ht
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Deferred handling of command line options that can generate debug    callbacks, such as -D and -imacros.  Call this after    cpp_read_main_file.  The front ends need this separation so they    can initialize debug output with the original file name, returned    from cpp_read_main_file, before they get debug callbacks.  */
+specifier|extern
+name|void
+name|cpp_finish_options
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Call this to release the handle at the end of preprocessing.  Any    use of the handle after this function returns is invalid.  Returns    cpp_errors (pfile).  */
+specifier|extern
+name|int
+name|cpp_destroy
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Error count.  */
+specifier|extern
+name|unsigned
+name|int
+name|cpp_errors
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|unsigned
+name|int
+name|cpp_token_len
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
 name|cpp_token
-name|cpp_get_token
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
-name|cpp_skip_hspace
+name|unsigned
+name|char
+modifier|*
+name|cpp_token_as_text
 name|PARAMS
 argument_list|(
 operator|(
 name|cpp_reader
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|enum
+operator|,
+specifier|const
 name|cpp_token
-name|cpp_get_non_space_token
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* This frees resources used by PFILE. */
 specifier|extern
-name|void
-name|cpp_cleanup
+name|unsigned
+name|char
+modifier|*
+name|cpp_spell_token
 name|PARAMS
 argument_list|(
 operator|(
 name|cpp_reader
-operator|*
-name|PFILE
-operator|)
-argument_list|)
-decl_stmt|;
-struct|struct
-name|cpp_buffer
-block|{
-name|unsigned
-name|char
-modifier|*
-name|cur
-decl_stmt|;
-comment|/* current position */
-name|unsigned
-name|char
-modifier|*
-name|rlimit
-decl_stmt|;
-comment|/* end of valid data */
-name|unsigned
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-comment|/* entire buffer */
-name|unsigned
-name|char
-modifier|*
-name|alimit
-decl_stmt|;
-comment|/* end of allocated buffer */
-name|unsigned
-name|char
-modifier|*
-name|line_base
-decl_stmt|;
-comment|/* start of current line */
-name|struct
-name|cpp_buffer
-modifier|*
-name|prev
-decl_stmt|;
-comment|/* Real filename.  (Alias to ->ihash->fname, obsolete). */
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-comment|/* Filename specified with #line command.  */
-name|char
-modifier|*
-name|nominal_fname
-decl_stmt|;
-comment|/* Last filename specified with #line command.  */
-name|char
-modifier|*
-name|last_nominal_fname
-decl_stmt|;
-comment|/* Actual directory of this file, used only for "" includes */
-name|struct
-name|file_name_list
-modifier|*
-name|actual_dir
-decl_stmt|;
-comment|/* Pointer into the include hash table.  Used for include_next and      to record control macros. */
-name|struct
-name|include_hash
-modifier|*
-name|ihash
-decl_stmt|;
-name|long
-name|lineno
-decl_stmt|;
-comment|/* Line number at CPP_LINE_BASE. */
-name|long
-name|colno
-decl_stmt|;
-comment|/* Column number at CPP_LINE_BASE. */
-name|long
-name|mark
-decl_stmt|;
-comment|/* Saved position for lengthy backtrack. */
-name|parse_underflow_t
-name|underflow
-decl_stmt|;
-name|parse_cleanup_t
-name|cleanup
-decl_stmt|;
-name|void
-modifier|*
-name|data
-decl_stmt|;
-comment|/* Value of if_stack at start of this file.      Used to prohibit unmatched #endif (etc) in an include file.  */
-name|struct
-name|if_stack
-modifier|*
-name|if_stack
-decl_stmt|;
-comment|/* True if this is a header file included using<FILENAME>.  */
-name|char
-name|system_header_p
-decl_stmt|;
-name|char
-name|seen_eof
-decl_stmt|;
-comment|/* True if buffer contains escape sequences.      Currently there are two kinds:      "\r-" means following identifier should not be macro-expanded.      "\r " means a token-separator.  This turns into " " in final output           if not stringizing and needed to separate tokens; otherwise nothing.      Any other two-character sequence beginning with \r is an error.       If this is NOT set, then \r is a one-character escape meaning backslash      newline.  This is guaranteed not to occur in the middle of a token.      The two interpretations of \r do not conflict, because the two-character      escapes are used only in macro buffers, and backslash-newline is removed      from macro expansion text in collect_expansion and/or macarg.  */
-name|char
-name|has_escapes
-decl_stmt|;
-block|}
-struct|;
-struct_decl|struct
-name|file_name_map_list
-struct_decl|;
-comment|/* Maximum nesting of cpp_buffers.  We use a static limit, partly for    efficiency, and partly to limit runaway recursion.  */
-define|#
-directive|define
-name|CPP_STACK_MAX
-value|200
-comment|/* A cpp_reader encapsulates the "state" of a pre-processor run.    Applying cpp_get_token repeatedly yields a stream of pre-processor    tokens.  Usually, there is only one cpp_reader object active. */
-struct|struct
-name|cpp_reader
-block|{
-name|parse_underflow_t
-name|get_token
-decl_stmt|;
-name|cpp_buffer
-modifier|*
-name|buffer
-decl_stmt|;
-name|cpp_options
-modifier|*
-name|opts
-decl_stmt|;
-comment|/* A buffer used for both for cpp_get_token's output, and also internally. */
-name|unsigned
-name|char
-modifier|*
-name|token_buffer
-decl_stmt|;
-comment|/* Allocated size of token_buffer.  CPP_RESERVE allocates space.  */
-name|unsigned
-name|int
-name|token_buffer_size
-decl_stmt|;
-comment|/* End of the written part of token_buffer. */
-name|unsigned
-name|char
-modifier|*
-name|limit
-decl_stmt|;
-comment|/* Error counter for exit code */
-name|int
-name|errors
-decl_stmt|;
-comment|/* Line where a newline was first seen in a string constant.  */
-name|int
-name|multiline_string_line
-decl_stmt|;
-comment|/* Current depth in #include directives that use<...>.  */
-name|int
-name|system_include_depth
-decl_stmt|;
-comment|/* Current depth of buffer stack. */
-name|int
-name|buffer_stack_depth
-decl_stmt|;
-comment|/* Hash table of macros and assertions.  See cpphash.c */
-define|#
-directive|define
-name|HASHSIZE
-value|1403
-name|struct
-name|hashnode
-modifier|*
-modifier|*
-name|hashtab
-decl_stmt|;
-comment|/* Hash table of other included files.  See cppfiles.c */
-define|#
-directive|define
-name|ALL_INCLUDE_HASHSIZE
-value|71
-name|struct
-name|include_hash
-modifier|*
-name|all_include_files
-index|[
-name|ALL_INCLUDE_HASHSIZE
-index|]
-decl_stmt|;
-comment|/* Chain of `actual directory' file_name_list entries,      for "" inclusion. */
-name|struct
-name|file_name_list
-modifier|*
-name|actual_dirs
-decl_stmt|;
-comment|/* Current maximum length of directory names in the search path      for include files.  (Altered as we get more of them.)  */
-name|unsigned
-name|int
-name|max_include_len
-decl_stmt|;
-name|struct
-name|if_stack
-modifier|*
-name|if_stack
-decl_stmt|;
-comment|/* Nonzero means we are inside an IF during a -pcp run.  In this mode      macro expansion is done, and preconditions are output for all macro      uses requiring them. */
-name|char
-name|pcp_inside_if
-decl_stmt|;
-comment|/* Nonzero means we have printed (while error reporting) a list of      containing files that matches the current status. */
-name|char
-name|input_stack_listing_current
-decl_stmt|;
-comment|/* If non-zero, macros are not expanded. */
-name|char
-name|no_macro_expand
-decl_stmt|;
-comment|/* Print column number in error messages. */
-name|char
-name|show_column
-decl_stmt|;
-comment|/* We're printed a warning recommending against using #import. */
-name|char
-name|import_warning
-decl_stmt|;
-comment|/* If true, character between '<' and '>' are a single (string) token. */
-name|char
-name|parsing_include_directive
-decl_stmt|;
-comment|/* True if escape sequences (as described for has_escapes in      parse_buffer) should be emitted. */
-name|char
-name|output_escapes
-decl_stmt|;
-comment|/* 0: Have seen non-white-space on this line.      1: Only seen white space so far on this line.      2: Only seen white space so far in this file. */
-name|char
-name|only_seen_white
-decl_stmt|;
-comment|/* Nonzero means this file was included with a -imacros or -include      command line and should not be recorded as an include file.  */
-name|int
-name|no_record_file
-decl_stmt|;
-name|long
-name|lineno
-decl_stmt|;
-name|struct
-name|tm
-modifier|*
-name|timebuf
-decl_stmt|;
-comment|/* Buffer of -M output.  */
-name|char
-modifier|*
-name|deps_buffer
-decl_stmt|;
-comment|/* Number of bytes allocated in above.  */
-name|int
-name|deps_allocated_size
-decl_stmt|;
-comment|/* Number of bytes used.  */
-name|int
-name|deps_size
-decl_stmt|;
-comment|/* Number of bytes since the last newline.  */
-name|int
-name|deps_column
-decl_stmt|;
-comment|/* A buffer and a table, used only by read_and_prescan (in cppfiles.c)      which are allocated once per cpp_reader object to keep them off the      stack and avoid setup costs.  */
-name|U_CHAR
-modifier|*
-name|input_buffer
-decl_stmt|;
-name|U_CHAR
-modifier|*
-name|input_speccase
-decl_stmt|;
-name|size_t
-name|input_buffer_len
-decl_stmt|;
-block|}
-struct|;
-define|#
-directive|define
-name|CPP_FATAL_LIMIT
-value|1000
-comment|/* True if we have seen a "fatal" error. */
-define|#
-directive|define
-name|CPP_FATAL_ERRORS
-parameter_list|(
-name|READER
-parameter_list|)
-value|((READER)->errors>= CPP_FATAL_LIMIT)
-define|#
-directive|define
-name|CPP_BUF_PEEK
-parameter_list|(
-name|BUFFER
-parameter_list|)
-define|\
-value|((BUFFER)->cur< (BUFFER)->rlimit ? *(BUFFER)->cur : EOF)
-define|#
-directive|define
-name|CPP_BUF_GET
-parameter_list|(
-name|BUFFER
-parameter_list|)
-define|\
-value|((BUFFER)->cur< (BUFFER)->rlimit ? *(BUFFER)->cur++ : EOF)
-define|#
-directive|define
-name|CPP_FORWARD
-parameter_list|(
-name|BUFFER
-parameter_list|,
-name|N
-parameter_list|)
-value|((BUFFER)->cur += (N))
-comment|/* Macros for manipulating the token_buffer. */
-define|#
-directive|define
-name|CPP_OUT_BUFFER
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|((PFILE)->token_buffer)
-comment|/* Number of characters currently in PFILE's output buffer. */
-define|#
-directive|define
-name|CPP_WRITTEN
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|((size_t)((PFILE)->limit - (PFILE)->token_buffer))
-define|#
-directive|define
-name|CPP_PWRITTEN
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|((PFILE)->limit)
-comment|/* Make sure PFILE->token_buffer has space for at least N more characters. */
-define|#
-directive|define
-name|CPP_RESERVE
-parameter_list|(
-name|PFILE
-parameter_list|,
-name|N
-parameter_list|)
-define|\
-value|(CPP_WRITTEN (PFILE) + (size_t)(N)> (PFILE)->token_buffer_size \&& (cpp_grow_buffer (PFILE, N), 0))
-comment|/* Append string STR (of length N) to PFILE's output buffer.    Assume there is enough space. */
-define|#
-directive|define
-name|CPP_PUTS_Q
-parameter_list|(
-name|PFILE
-parameter_list|,
-name|STR
-parameter_list|,
-name|N
-parameter_list|)
-define|\
-value|(memcpy ((PFILE)->limit, STR, (N)), (PFILE)->limit += (N))
-comment|/* Append string STR (of length N) to PFILE's output buffer.  Make space. */
-define|#
-directive|define
-name|CPP_PUTS
-parameter_list|(
-name|PFILE
-parameter_list|,
-name|STR
-parameter_list|,
-name|N
-parameter_list|)
-value|CPP_RESERVE(PFILE, N), CPP_PUTS_Q(PFILE, STR,N)
-comment|/* Append character CH to PFILE's output buffer.  Assume sufficient space. */
-define|#
-directive|define
-name|CPP_PUTC_Q
-parameter_list|(
-name|PFILE
-parameter_list|,
-name|CH
-parameter_list|)
-value|(*(PFILE)->limit++ = (CH))
-comment|/* Append character CH to PFILE's output buffer.  Make space if need be. */
-define|#
-directive|define
-name|CPP_PUTC
-parameter_list|(
-name|PFILE
-parameter_list|,
-name|CH
-parameter_list|)
-value|(CPP_RESERVE (PFILE, 1), CPP_PUTC_Q (PFILE, CH))
-comment|/* Make sure PFILE->limit is followed by '\0'. */
-define|#
-directive|define
-name|CPP_NUL_TERMINATE_Q
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|(*(PFILE)->limit = 0)
-define|#
-directive|define
-name|CPP_NUL_TERMINATE
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|(CPP_RESERVE(PFILE, 1), *(PFILE)->limit = 0)
-define|#
-directive|define
-name|CPP_ADJUST_WRITTEN
-parameter_list|(
-name|PFILE
-parameter_list|,
-name|DELTA
-parameter_list|)
-value|((PFILE)->limit += (DELTA))
-define|#
-directive|define
-name|CPP_SET_WRITTEN
-parameter_list|(
-name|PFILE
-parameter_list|,
-name|N
-parameter_list|)
-value|((PFILE)->limit = (PFILE)->token_buffer + (N))
-comment|/* Advance the current line by one. */
-define|#
-directive|define
-name|CPP_BUMP_BUFFER_LINE
-parameter_list|(
-name|PBUF
-parameter_list|)
-value|((PBUF)->lineno++,\ 				    (PBUF)->line_base = (PBUF)->cur)
-define|#
-directive|define
-name|CPP_BUMP_LINE
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|CPP_BUMP_BUFFER_LINE(CPP_BUFFER(PFILE))
-define|#
-directive|define
-name|CPP_OPTIONS
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|((PFILE)->opts)
-define|#
-directive|define
-name|CPP_BUFFER
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|((PFILE)->buffer)
-define|#
-directive|define
-name|CPP_PREV_BUFFER
-parameter_list|(
-name|BUFFER
-parameter_list|)
-value|((BUFFER)->prev)
-comment|/* The bottom of the buffer stack. */
-define|#
-directive|define
-name|CPP_NULL_BUFFER
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|NULL
-comment|/* The `pending' structure accumulates all the options that are not    actually processed until we hit cpp_start_read.  It consists of    several lists, one for each type of option.  We keep both head and    tail pointers for quick insertion. */
-struct|struct
-name|cpp_pending
-block|{
-name|struct
-name|pending_option
-modifier|*
-name|define_head
-decl_stmt|,
-modifier|*
-name|define_tail
-decl_stmt|;
-name|struct
-name|pending_option
-modifier|*
-name|assert_head
-decl_stmt|,
-modifier|*
-name|assert_tail
-decl_stmt|;
-name|struct
-name|file_name_list
-modifier|*
-name|quote_head
-decl_stmt|,
-modifier|*
-name|quote_tail
-decl_stmt|;
-name|struct
-name|file_name_list
-modifier|*
-name|brack_head
-decl_stmt|,
-modifier|*
-name|brack_tail
-decl_stmt|;
-name|struct
-name|file_name_list
-modifier|*
-name|systm_head
-decl_stmt|,
-modifier|*
-name|systm_tail
-decl_stmt|;
-name|struct
-name|file_name_list
-modifier|*
-name|after_head
-decl_stmt|,
-modifier|*
-name|after_tail
-decl_stmt|;
-name|struct
-name|pending_option
-modifier|*
-name|imacros_head
-decl_stmt|,
-modifier|*
-name|imacros_tail
-decl_stmt|;
-name|struct
-name|pending_option
-modifier|*
-name|include_head
-decl_stmt|,
-modifier|*
-name|include_tail
-decl_stmt|;
-block|}
-struct|;
-comment|/* Pointed to by cpp_reader.opts. */
-struct|struct
-name|cpp_options
-block|{
-name|char
-modifier|*
-name|in_fname
-decl_stmt|;
-comment|/* Name of output file, for error messages.  */
-name|char
-modifier|*
-name|out_fname
-decl_stmt|;
-name|struct
-name|file_name_map_list
-modifier|*
-name|map_list
-decl_stmt|;
-comment|/* Non-0 means -v, so print the full set of include dirs.  */
-name|char
-name|verbose
-decl_stmt|;
-comment|/* Nonzero means use extra default include directories for C++.  */
-name|char
-name|cplusplus
-decl_stmt|;
-comment|/* Nonzero means handle cplusplus style comments */
-name|char
-name|cplusplus_comments
-decl_stmt|;
-comment|/* Nonzero means handle #import, for objective C.  */
-name|char
-name|objc
-decl_stmt|;
-comment|/* Nonzero means this is an assembly file, and allow      unknown directives, which could be comments.  */
-name|int
-name|lang_asm
-decl_stmt|;
-comment|/* Nonzero means turn NOTREACHED into #pragma NOTREACHED etc */
-name|char
-name|for_lint
-decl_stmt|;
-comment|/* Nonzero means handle CHILL comment syntax      and output CHILL string delimiter for __DATE___ etc. */
-name|char
-name|chill
-decl_stmt|;
-comment|/* Nonzero means copy comments into the output file.  */
-name|char
-name|put_out_comments
-decl_stmt|;
-comment|/* Nonzero means process the ANSI trigraph sequences.  */
-name|char
-name|trigraphs
-decl_stmt|;
-comment|/* Nonzero means print the names of included files rather than      the preprocessed output.  1 means just the #include "...",      2 means #include<...> as well.  */
-name|char
-name|print_deps
-decl_stmt|;
-comment|/* Nonzero if missing .h files in -M output are assumed to be generated      files and not errors.  */
-name|char
-name|print_deps_missing_files
-decl_stmt|;
-comment|/* If true, fopen (deps_file, "a") else fopen (deps_file, "w"). */
-name|char
-name|print_deps_append
-decl_stmt|;
-comment|/* Nonzero means print names of header files (-H).  */
-name|char
-name|print_include_names
-decl_stmt|;
-comment|/* Nonzero means try to make failure to fit ANSI C an error.  */
-name|char
-name|pedantic_errors
-decl_stmt|;
-comment|/* Nonzero means don't print warning messages.  -w.  */
-name|char
-name|inhibit_warnings
-decl_stmt|;
-comment|/* Nonzero means warn if slash-star appears in a comment.  */
-name|char
-name|warn_comments
-decl_stmt|;
-comment|/* Nonzero means warn if there are any trigraphs.  */
-name|char
-name|warn_trigraphs
-decl_stmt|;
-comment|/* Nonzero means warn if #import is used.  */
-name|char
-name|warn_import
-decl_stmt|;
-comment|/* Nonzero means warn if a macro argument is (or would be)      stringified with -traditional.  */
-name|char
-name|warn_stringify
-decl_stmt|;
-comment|/* Nonzero means turn warnings into errors.  */
-name|char
-name|warnings_are_errors
-decl_stmt|;
-comment|/* Nonzero causes output not to be done,      but directives such as #define that have side effects      are still obeyed.  */
-name|char
-name|no_output
-decl_stmt|;
-comment|/* Nonzero means we should look for header.gcc files that remap file      names.  */
-name|char
-name|remap
-decl_stmt|;
-comment|/* Nonzero means don't output line number information.  */
-name|char
-name|no_line_commands
-decl_stmt|;
-comment|/* Nonzero means output the text in failing conditionals,    inside #failed ... #endfailed.  */
-name|char
-name|output_conditionals
-decl_stmt|;
-comment|/* Nonzero means -I- has been seen,      so don't look for #include "foo" the source-file directory.  */
-name|char
-name|ignore_srcdir
-decl_stmt|;
-comment|/* Zero means dollar signs are punctuation.      This used to be needed for conformance to the C Standard,      before the C Standard was corrected.  */
-name|char
-name|dollars_in_ident
-decl_stmt|;
-comment|/* Nonzero means try to imitate old fashioned non-ANSI preprocessor.  */
-name|char
-name|traditional
-decl_stmt|;
-comment|/* Nonzero means warn if undefined identifiers are evaluated in an #if.  */
-name|char
-name|warn_undef
-decl_stmt|;
-comment|/* Nonzero for the 1989 C Standard, including corrigenda and amendments.  */
-name|char
-name|c89
-decl_stmt|;
-comment|/* Nonzero for the 199x C Standard, including corrigenda and amendments.  */
-name|char
-name|c9x
-decl_stmt|;
-comment|/* Nonzero means give all the error messages the ANSI standard requires.  */
-name|char
-name|pedantic
-decl_stmt|;
-name|char
-name|done_initializing
-decl_stmt|;
-comment|/* Search paths for include files.  */
-name|struct
-name|file_name_list
-modifier|*
-name|quote_include
-decl_stmt|;
-comment|/* First dir to search for "file" */
-name|struct
-name|file_name_list
-modifier|*
-name|bracket_include
-decl_stmt|;
-comment|/* First dir to search for<file> */
-comment|/* Directory prefix that should replace `/usr/lib/gcc-lib/TARGET/VERSION'      in the standard include file directories.  */
-name|char
-modifier|*
-name|include_prefix
-decl_stmt|;
-name|int
-name|include_prefix_len
-decl_stmt|;
-name|char
-name|no_standard_includes
-decl_stmt|;
-name|char
-name|no_standard_cplusplus_includes
-decl_stmt|;
-comment|/* dump_only means inhibit output of the preprocessed text              and instead output the definitions of all user-defined              macros in a form suitable for use as input to cccp.    dump_names means pass #define and the macro name through to output.    dump_definitions means pass the whole definition (plus #define) through */
-enum|enum
-block|{
-name|dump_none
-init|=
-literal|0
-block|,
-name|dump_only
-block|,
-name|dump_names
-block|,
-name|dump_definitions
-block|}
-name|dump_macros
-enum|;
-comment|/* Nonzero means pass all #define and #undef directives which we actually    process through to the output stream.  This feature is used primarily    to allow cc1 to record the #defines and #undefs for the sake of    debuggers which understand about preprocessor macros, but it may    also be useful with -E to figure out how symbols are defined, and    where they are defined.  */
-name|int
-name|debug_output
-decl_stmt|;
-comment|/* Nonzero means pass #include lines through to the output,      even if they are ifdefed out.  */
-name|int
-name|dump_includes
-decl_stmt|;
-comment|/* Pending options - -D, -U, -A, -I, -ixxx. */
-name|struct
-name|cpp_pending
-modifier|*
-name|pending
-decl_stmt|;
-comment|/* File name which deps are being written to.      This is 0 if deps are being written to stdout.  */
-name|char
-modifier|*
-name|deps_file
-decl_stmt|;
-comment|/* Target-name to write with the dependency information.  */
-name|char
-modifier|*
-name|deps_target
-decl_stmt|;
-block|}
-struct|;
-define|#
-directive|define
-name|CPP_TRADITIONAL
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|(CPP_OPTIONS(PFILE)-> traditional)
-define|#
-directive|define
-name|CPP_WARN_UNDEF
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|(CPP_OPTIONS(PFILE)->warn_undef)
-define|#
-directive|define
-name|CPP_C89
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|(CPP_OPTIONS(PFILE)->c89)
-define|#
-directive|define
-name|CPP_PEDANTIC
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|(CPP_OPTIONS (PFILE)->pedantic)
-define|#
-directive|define
-name|CPP_PRINT_DEPS
-parameter_list|(
-name|PFILE
-parameter_list|)
-value|(CPP_OPTIONS (PFILE)->print_deps)
-comment|/* List of directories to look for include files in. */
-struct|struct
-name|file_name_list
-block|{
-name|struct
-name|file_name_list
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|file_name_list
-modifier|*
-name|alloc
-decl_stmt|;
-comment|/* for the cache of 				   current directory entries */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|unsigned
-name|int
-name|nlen
-decl_stmt|;
-comment|/* We use these to tell if the directory mentioned here is a duplicate      of an earlier directory on the search path. */
-name|ino_t
-name|ino
-decl_stmt|;
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* If the following is nonzero, it is a C-language system include      directory.  */
-name|int
-name|sysp
-decl_stmt|;
-comment|/* Mapping of file names for this directory.      Only used on MS-DOS and related platforms. */
-name|struct
-name|file_name_map
-modifier|*
-name|name_map
-decl_stmt|;
-block|}
-struct|;
-define|#
-directive|define
-name|ABSOLUTE_PATH
-value|((struct file_name_list *)-1)
-comment|/* This structure is used for the table of all includes.  It is    indexed by the `short name' (the name as it appeared in the    #include statement) which is stored in *nshort.  */
-struct|struct
-name|include_hash
-block|{
-name|struct
-name|include_hash
-modifier|*
-name|next
-decl_stmt|;
-comment|/* Next file with the same short name but a      different (partial) pathname). */
-name|struct
-name|include_hash
-modifier|*
-name|next_this_file
-decl_stmt|;
-comment|/* Location of the file in the include search path.      Used for include_next */
-name|struct
-name|file_name_list
-modifier|*
-name|foundhere
-decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* (partial) pathname of file */
-name|char
-modifier|*
-name|nshort
-decl_stmt|;
-comment|/* name of file as referenced in #include */
-name|char
-modifier|*
-name|control_macro
-decl_stmt|;
-comment|/* macro, if any, preventing reinclusion - see 			   redundant_include_p */
-name|char
-modifier|*
-name|buf
-decl_stmt|,
-modifier|*
-name|limit
-decl_stmt|;
-comment|/* for file content cache, not yet implemented */
-block|}
-struct|;
-comment|/* Name under which this program was invoked.  */
-specifier|extern
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-comment|/* The structure of a node in the hash table.  The hash table    has entries for all tokens defined by #define commands (type T_MACRO),    plus some special tokens like __LINE__ (these each have their own    type, and the appropriate code is run when that type of node is seen.    It does not contain control words like "#define", which are recognized    by a separate piece of code. */
-comment|/* different flavors of hash nodes --- also used in keyword table */
-enum|enum
-name|node_type
-block|{
-name|T_DEFINE
-init|=
-literal|1
-block|,
-comment|/* the `#define' keyword */
-name|T_INCLUDE
-block|,
-comment|/* the `#include' keyword */
-name|T_INCLUDE_NEXT
-block|,
-comment|/* the `#include_next' keyword */
-name|T_IMPORT
-block|,
-comment|/* the `#import' keyword */
-name|T_IFDEF
-block|,
-comment|/* the `#ifdef' keyword */
-name|T_IFNDEF
-block|,
-comment|/* the `#ifndef' keyword */
-name|T_IF
-block|,
-comment|/* the `#if' keyword */
-name|T_ELSE
-block|,
-comment|/* `#else' */
-name|T_PRAGMA
-block|,
-comment|/* `#pragma' */
-name|T_ELIF
-block|,
-comment|/* `#elif' */
-name|T_UNDEF
-block|,
-comment|/* `#undef' */
-name|T_LINE
-block|,
-comment|/* `#line' */
-name|T_ERROR
-block|,
-comment|/* `#error' */
-name|T_WARNING
-block|,
-comment|/* `#warning' */
-name|T_ENDIF
-block|,
-comment|/* `#endif' */
-name|T_SCCS
-block|,
-comment|/* `#sccs', used on system V.  */
-name|T_IDENT
-block|,
-comment|/* `#ident', used on system V.  */
-name|T_ASSERT
-block|,
-comment|/* `#assert', taken from system V.  */
-name|T_UNASSERT
-block|,
-comment|/* `#unassert', taken from system V.  */
-name|T_SPECLINE
-block|,
-comment|/* special symbol `__LINE__' */
-name|T_DATE
-block|,
-comment|/* `__DATE__' */
-name|T_FILE
-block|,
-comment|/* `__FILE__' */
-name|T_BASE_FILE
-block|,
-comment|/* `__BASE_FILE__' */
-name|T_INCLUDE_LEVEL
-block|,
-comment|/* `__INCLUDE_LEVEL__' */
-name|T_VERSION
-block|,
-comment|/* `__VERSION__' */
-name|T_TIME
-block|,
-comment|/* `__TIME__' */
-name|T_STDC
-block|,
-comment|/* `__STDC__' */
-name|T_CONST
-block|,
-comment|/* Constant string, used by `__SIZE_TYPE__' etc */
-name|T_MACRO
-block|,
-comment|/* macro defined by `#define' */
-name|T_DISABLED
-block|,
-comment|/* macro temporarily turned off for rescan */
-name|T_PCSTRING
-block|,
-comment|/* precompiled string (hashval is KEYDEF *) */
-name|T_UNUSED
-comment|/* Used for something not defined.  */
-block|}
-enum|;
-comment|/* Structure returned by create_definition */
-typedef|typedef
-name|struct
-name|macrodef
-name|MACRODEF
-typedef|;
-struct|struct
-name|macrodef
-block|{
-name|struct
-name|definition
-modifier|*
-name|defn
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|symnam
-decl_stmt|;
-name|int
-name|symlen
-decl_stmt|;
-block|}
-struct|;
-comment|/* Structure allocated for every #define.  For a simple replacement    such as    	#define foo bar ,    nargs = -1, the `pattern' list is null, and the expansion is just    the replacement text.  Nargs = 0 means a functionlike macro with no args,    e.g.,        #define getchar() getc (stdin) .    When there are args, the expansion is the replacement text with the    args squashed out, and the reflist is a list describing how to    build the output from the input: e.g., "3 chars, then the 1st arg,    then 9 chars, then the 3rd arg, then 0 chars, then the 2nd arg".    The chars here come from the expansion.  Whatever is left of the    expansion after the last arg-occurrence is copied after that arg.    Note that the reflist can be arbitrarily long---    its length depends on the number of times the arguments appear in    the replacement text, not how many args there are.  Example:    #define f(x) x+x+x+x+x+x+x would have replacement text "++++++" and    pattern list      { (0, 1), (1, 1), (1, 1), ..., (1, 1), NULL }    where (x, y) means (nchars, argno). */
-typedef|typedef
-name|struct
-name|definition
-name|DEFINITION
-typedef|;
-struct|struct
-name|definition
-block|{
-name|int
-name|nargs
-decl_stmt|;
-name|int
-name|length
-decl_stmt|;
-comment|/* length of expansion string */
-name|int
-name|predefined
-decl_stmt|;
-comment|/* True if the macro was builtin or */
-comment|/* came from the command line */
-name|unsigned
-name|char
-modifier|*
-name|expansion
-decl_stmt|;
-name|int
-name|line
-decl_stmt|;
-comment|/* Line number of definition */
-name|char
-modifier|*
-name|file
-decl_stmt|;
-comment|/* File of definition */
-name|char
-name|rest_args
-decl_stmt|;
-comment|/* Nonzero if last arg. absorbs the rest */
-struct|struct
-name|reflist
-block|{
-name|struct
-name|reflist
-modifier|*
-name|next
-decl_stmt|;
-name|char
-name|stringify
-decl_stmt|;
-comment|/* nonzero if this arg was preceded by a 				   # operator. */
-name|char
-name|raw_before
-decl_stmt|;
-comment|/* Nonzero if a ## operator before arg. */
-name|char
-name|raw_after
-decl_stmt|;
-comment|/* Nonzero if a ## operator after arg. */
-name|char
-name|rest_args
-decl_stmt|;
-comment|/* Nonzero if this arg. absorbs the rest */
-name|int
-name|nchars
-decl_stmt|;
-comment|/* Number of literal chars to copy before 				   this arg occurrence.  */
-name|int
-name|argno
-decl_stmt|;
-comment|/* Number of arg to substitute (origin-0) */
-block|}
-modifier|*
-name|pattern
-struct|;
-union|union
-block|{
-comment|/* Names of macro args, concatenated in reverse order        with comma-space between them.        The only use of this is that we warn on redefinition        if this differs between the old and new definitions.  */
-name|unsigned
-name|char
-modifier|*
-name|argnames
-decl_stmt|;
-block|}
-name|args
-union|;
-block|}
-struct|;
-comment|/* These tables are not really `const', but they are only modified at    initialization time, in a separate translation unit from the rest    of the library.  We let the rest of the library think they are `const'    to get better code and some additional sanity checks.  */
-ifndef|#
-directive|ifndef
-name|FAKE_CONST
-define|#
-directive|define
-name|FAKE_CONST
-value|const
-endif|#
-directive|endif
-specifier|extern
-name|FAKE_CONST
-name|unsigned
-name|char
-name|is_idstart
-index|[
-literal|256
-index|]
-decl_stmt|;
-specifier|extern
-name|FAKE_CONST
-name|unsigned
-name|char
-name|is_idchar
-index|[
-literal|256
-index|]
-decl_stmt|;
-specifier|extern
-name|FAKE_CONST
-name|unsigned
-name|char
-name|is_hor_space
-index|[
-literal|256
-index|]
-decl_stmt|;
-specifier|extern
-name|FAKE_CONST
-name|unsigned
-name|char
-name|is_space
-index|[
-literal|256
-index|]
-decl_stmt|;
-specifier|extern
-name|FAKE_CONST
-name|unsigned
-name|char
-name|trigraph_table
-index|[
-literal|256
-index|]
-decl_stmt|;
-undef|#
-directive|undef
-name|FAKE_CONST
-comment|/* Stack of conditionals currently in progress    (including both successful and failing conditionals).  */
-struct|struct
-name|if_stack
-block|{
-name|struct
-name|if_stack
-modifier|*
-name|next
-decl_stmt|;
-comment|/* for chaining to the next stack frame */
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-comment|/* copied from input when frame is made */
-name|int
-name|lineno
-decl_stmt|;
-comment|/* similarly */
-name|int
-name|if_succeeded
-decl_stmt|;
-comment|/* true if a leg of this if-group 				    has been passed through rescan */
-name|unsigned
-name|char
-modifier|*
-name|control_macro
-decl_stmt|;
-comment|/* For #ifndef at start of file, 				   this is the macro name tested.  */
-name|enum
-name|node_type
-name|type
-decl_stmt|;
-comment|/* type of last directive seen in this group */
-block|}
-struct|;
-typedef|typedef
-name|struct
-name|if_stack
-name|IF_STACK_FRAME
-typedef|;
-specifier|extern
-name|void
-name|cpp_buf_line_and_col
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_buffer
 operator|*
 operator|,
-name|long
-operator|*
-operator|,
-name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|cpp_buffer
-modifier|*
-name|cpp_file_buffer
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_define
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
+specifier|const
+name|cpp_token
 operator|*
 operator|,
 name|unsigned
@@ -1532,53 +1182,8 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|cpp_assert
+name|cpp_register_pragma
 name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_undef
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_unassert
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_error
-name|PVPROTO
 argument_list|(
 operator|(
 name|cpp_reader
@@ -1588,254 +1193,14 @@ specifier|const
 name|char
 operator|*
 operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_warning
-name|PVPROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
 specifier|const
 name|char
 operator|*
 operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
-specifier|extern
 name|void
-name|cpp_pedwarn
-name|PVPROTO
 argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
+argument|*
 argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_error_with_line
-name|PVPROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_4
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_warning_with_line
-name|PVPROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_4
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_pedwarn_with_line
-name|PVPROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_4
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_pedwarn_with_file_and_line
-name|PVPROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_4
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_message_from_errno
-name|PROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_error_from_errno
-name|PROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_perror_with_name
-name|PROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|v_cpp_message
-name|PROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_grow_buffer
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|HOST_WIDEST_INT
-name|cpp_parse_escape
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|HOST_WIDEST_INT
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|cpp_buffer
-modifier|*
-name|cpp_push_buffer
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|,
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|cpp_buffer
-modifier|*
-name|cpp_pop_buffer
 name|PARAMS
 argument_list|(
 operator|(
@@ -1843,100 +1208,6 @@ name|cpp_reader
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-specifier|extern
-name|cpp_hashnode
-modifier|*
-name|cpp_lookup
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_reader_init
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_options_init
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_options
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|cpp_start_read
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|cpp_read_check_assertion
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|scan_decls
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|skip_rest_of_line
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1952,8 +1223,96 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
+name|int
+name|cpp_avoid_paste
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|cpp_token
+operator|*
+operator|,
+specifier|const
+name|cpp_token
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+specifier|const
+name|cpp_token
+modifier|*
+name|cpp_get_token
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|cpp_macro_definition
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|cpp_hashnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
 name|void
-name|quote_string
+name|_cpp_backup_tokens
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Evaluate a CPP_CHAR or CPP_WCHAR token.  */
+specifier|extern
+name|HOST_WIDE_INT
+name|cpp_interpret_charconst
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|cpp_token
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|unsigned
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_define
 name|PARAMS
 argument_list|(
 operator|(
@@ -1968,115 +1327,8 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|cpp_expand_to_buffer
+name|cpp_assert
 name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|U_CHAR
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_scan_buffer
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|check_macro_name
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|U_CHAR
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-comment|/* Last arg to output_line_command.  */
-enum|enum
-name|file_change_code
-block|{
-name|same_file
-block|,
-name|enter_file
-block|,
-name|leave_file
-block|}
-enum|;
-specifier|extern
-name|void
-name|output_line_command
-name|PARAMS
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-expr|enum
-name|file_change_code
-operator|)
-argument_list|)
-decl_stmt|;
-comment|/* From cpperror.c */
-specifier|extern
-name|void
-name|cpp_fatal
-name|PVPROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_2
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_message
-name|PVPROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_3
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_pfatal_with_name
-name|PROTO
 argument_list|(
 operator|(
 name|cpp_reader
@@ -2090,39 +1342,85 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|cpp_file_line_for_message
-name|PROTO
+name|cpp_undef
+name|PARAMS
 argument_list|(
 operator|(
 name|cpp_reader
 operator|*
 operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_unassert
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|cpp_buffer
+modifier|*
+name|cpp_push_buffer
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|cpp_defined
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|unsigned
 name|char
 operator|*
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* N.B. The error-message-printer prototypes have not been nicely    formatted because exgettext needs to see 'msgid' on the same line    as the name of the function in order to work properly.  Only the    string argument gets a name in an effort to keep the lines from    getting ridiculously oversized.  */
 specifier|extern
 name|void
-name|cpp_print_containing_files
-name|PROTO
+name|cpp_ice
+name|PARAMS
 argument_list|(
 operator|(
 name|cpp_reader
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|cpp_notice
-name|PVPROTO
-argument_list|(
-operator|(
+operator|,
 specifier|const
 name|char
 operator|*
@@ -2131,15 +1429,380 @@ operator|,
 operator|...
 operator|)
 argument_list|)
-name|ATTRIBUTE_PRINTF_1
+name|ATTRIBUTE_PRINTF_2
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_fatal
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_2
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_error
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_2
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_warning
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_2
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_pedwarn
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_2
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_notice
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_2
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_error_with_line
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_4
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_warning_with_line
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_4
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_pedwarn_with_line
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+name|msgid
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_4
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_error_from_errno
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_notice_from_errno
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* In cpplex.c */
+specifier|extern
+name|int
+name|cpp_ideq
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|cpp_token
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_output_line
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|cpp_output_token
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|cpp_token
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|cpp_type2name
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|cpp_ttype
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|unsigned
+name|int
+name|cpp_parse_escape
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* In cpphash.c */
+comment|/* Lookup an identifier in the hashtable.  Puts the identifier in the    table if it is not already there.  */
+specifier|extern
+name|cpp_hashnode
+modifier|*
+name|cpp_lookup
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+typedef|typedef
+name|int
+argument_list|(
+argument|*cpp_cb
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_hashnode
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+specifier|extern
+name|void
+name|cpp_forall_identifiers
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|,
+name|cpp_cb
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* In cppmacro.c */
+specifier|extern
+name|void
+name|cpp_scan_nooutput
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|cpp_sys_macro_p
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 comment|/* In cppfiles.c */
 specifier|extern
-name|void
-name|simplify_pathname
-name|PROTO
+name|int
+name|cpp_included
+name|PARAMS
 argument_list|(
 operator|(
+name|cpp_reader
+operator|*
+operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2147,46 +1810,8 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|merge_include_chains
-name|PROTO
-argument_list|(
-operator|(
-expr|struct
-name|cpp_options
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|find_include_file
-name|PROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-expr|struct
-name|file_name_list
-operator|*
-operator|,
-expr|struct
-name|include_hash
-operator|*
-operator|*
-operator|,
-name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|finclude
-name|PROTO
+name|cpp_make_system_header
+name|PARAMS
 argument_list|(
 operator|(
 name|cpp_reader
@@ -2194,55 +1819,10 @@ operator|*
 operator|,
 name|int
 operator|,
-expr|struct
-name|include_hash
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|deps_output
-name|PROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
 name|int
 operator|)
 argument_list|)
 decl_stmt|;
-specifier|extern
-name|struct
-name|include_hash
-modifier|*
-name|include_hash
-name|PROTO
-argument_list|(
-operator|(
-name|cpp_reader
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|INCLUDE_LEN_FUDGE
-define|#
-directive|define
-name|INCLUDE_LEN_FUDGE
-value|0
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus
@@ -2260,7 +1840,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GCC_CPPLIB__ */
+comment|/* ! GCC_CPPLIB_H */
 end_comment
 
 end_unit

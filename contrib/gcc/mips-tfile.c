@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 93-95, 97, 98, 1999 Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).     This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -23,6 +23,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"version.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"intl.h"
 end_include
 
 begin_ifndef
@@ -60,31 +72,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|__proto
-parameter_list|(
-name|x
-parameter_list|)
-value|PARAMS(x)
-end_define
-
-begin_typedef
-typedef|typedef
-name|PTR
-name|PTR_T
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-specifier|const
-name|PTR_T
-name|CPTR_T
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Due to size_t being defined in sys/types.h and different    in stddef.h, we have to do this by hand.....  Note, these    types are correct for MIPS based systems, and may not be    correct for other systems.  Ultrix 4.0 and Silicon Graphics    have this fixed, but since the following is correct, and    the fact that including stddef.h gets you GCC's version    instead of the standard one it's not worth it to fix it.  */
@@ -148,7 +135,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|pfatal_with_name
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -156,6 +143,7 @@ name|char
 operator|*
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
@@ -163,19 +151,20 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|fancy_abort
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|void
 name|botch
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -183,19 +172,7 @@ name|char
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|xfree
-name|__proto
-argument_list|(
-operator|(
-name|PTR
-operator|)
-argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
@@ -203,7 +180,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|fatal
-name|PVPROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -215,6 +192,7 @@ operator|...
 operator|)
 argument_list|)
 name|ATTRIBUTE_PRINTF_1
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
@@ -222,7 +200,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|error
-name|PVPROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -325,14 +303,8 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The local and global symbols have a field index, so undo any defines    of index -> strchr and rindex -> strrchr.  */
+comment|/* The local and global symbols have a field index, so undo any defines    of index -> strchr.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|rindex
-end_undef
 
 begin_undef
 undef|#
@@ -378,66 +350,11 @@ begin_comment
 comment|/* CROSS_COMPILE */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USG
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|HAVE_STAB_H
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|"gstab.h"
 end_include
-
-begin_comment
-comment|/* If doing DBX on sysV, use our own stab.h.  */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<stab.h>
-end_include
-
-begin_comment
-comment|/* On BSD, use the system's stab.h.  */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not USG */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"machmode.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNU_STAB__
-end_ifdef
 
 begin_define
 define|#
@@ -445,23 +362,6 @@ directive|define
 name|STAB_CODE_TYPE
 value|enum __stab_debug_code
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STAB_CODE_TYPE
-value|int
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -499,7 +399,7 @@ parameter_list|(
 name|ch
 parameter_list|)
 define|\
-value|(ISALNUM (ch) || (ch) == '_' || (ch) == '.' || (ch) == '$')
+value|(ISIDNUM (ch) || (ch) == '.' || (ch) == '$')
 end_define
 
 begin_escape
@@ -1387,7 +1287,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_USIZE
-value|((Size_t)PAGE_SIZE)
+value|((Size_t) PAGE_SIZE)
 end_define
 
 begin_ifndef
@@ -2028,6 +1928,96 @@ init|=
 block|{
 block|{
 comment|/* FDR structure */
+ifdef|#
+directive|ifdef
+name|__alpha
+literal|0
+block|,
+comment|/* adr:		memory address of beginning of file */
+literal|0
+block|,
+comment|/* cbLineOffset: byte offset from header for this file ln's */
+literal|0
+block|,
+comment|/* cbLine:	size of lines for this file */
+literal|0
+block|,
+comment|/* cbSs:	number of bytes in the ss */
+literal|0
+block|,
+comment|/* rss:		file name (of source, if known) */
+literal|0
+block|,
+comment|/* issBase:	file's string space */
+literal|0
+block|,
+comment|/* isymBase:	beginning of symbols */
+literal|0
+block|,
+comment|/* csym:	count file's of symbols */
+literal|0
+block|,
+comment|/* ilineBase:	file's line symbols */
+literal|0
+block|,
+comment|/* cline:	count of file's line symbols */
+literal|0
+block|,
+comment|/* ioptBase:	file's optimization entries */
+literal|0
+block|,
+comment|/* copt:	count of file's optimization entries */
+literal|0
+block|,
+comment|/* ipdFirst:	start of procedures for this file */
+literal|0
+block|,
+comment|/* cpd:		count of procedures for this file */
+literal|0
+block|,
+comment|/* iauxBase:	file's auxiliary entries */
+literal|0
+block|,
+comment|/* caux:	count of file's auxiliary entries */
+literal|0
+block|,
+comment|/* rfdBase:	index into the file indirect table */
+literal|0
+block|,
+comment|/* crfd:	count file indirect entries */
+name|langC
+block|,
+comment|/* lang:	language for this file */
+literal|1
+block|,
+comment|/* fMerge:	whether this file can be merged */
+literal|0
+block|,
+comment|/* fReadin:	true if read in (not just created) */
+ifdef|#
+directive|ifdef
+name|HOST_WORDS_BIG_ENDIAN
+literal|1
+block|,
+comment|/* fBigendian:	if 1, compiled on big endian machine */
+else|#
+directive|else
+literal|0
+block|,
+comment|/* fBigendian:	if 1, compiled on big endian machine */
+endif|#
+directive|endif
+literal|0
+block|,
+comment|/* fTrim:	whether the symbol table was trimmed */
+name|GLEVEL_2
+block|,
+comment|/* glevel:	level this file was compiled with */
+literal|0
+block|,
+comment|/* reserved:	reserved for future use */
+else|#
+directive|else
 literal|0
 block|,
 comment|/* adr:		memory address of beginning of file */
@@ -2110,6 +2100,8 @@ comment|/* cbLineOffset: byte offset from header for this file ln's */
 literal|0
 block|,
 comment|/* cbLine:	size of lines for this file */
+endif|#
+directive|endif
 block|}
 block|,
 operator|(
@@ -2750,6 +2742,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|bt_t
 name|map_coff_types
 index|[
@@ -2817,6 +2810,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|sc_t
 name|map_coff_storage
 index|[
@@ -3158,6 +3152,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|st_t
 name|map_coff_sym_type
 index|[
@@ -3499,6 +3494,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|tq_t
 name|map_coff_derived_type
 index|[
@@ -3720,7 +3716,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|(((unsigned long)num> (unsigned long)max) ? out_of_bounds (num, max, str, __LINE__) : 0)
+value|(((unsigned long) num> (unsigned long) max) ? out_of_bounds (num, max, str, __LINE__) : 0)
 end_define
 
 begin_define
@@ -4264,6 +4260,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|stabs_symbol
 index|[]
@@ -4301,7 +4298,7 @@ begin_decl_stmt
 name|STATIC
 name|int
 name|out_of_bounds
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|symint_t
@@ -4323,7 +4320,7 @@ name|STATIC
 name|shash_t
 modifier|*
 name|hash_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4347,7 +4344,7 @@ begin_decl_stmt
 name|STATIC
 name|symint_t
 name|add_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|varray_t
@@ -4377,7 +4374,7 @@ begin_decl_stmt
 name|STATIC
 name|symint_t
 name|add_local_symbol
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4404,24 +4401,11 @@ begin_decl_stmt
 name|STATIC
 name|symint_t
 name|add_ext_symbol
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
-specifier|const
-name|char
+name|EXTR
 operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|st_t
-operator|,
-name|sc_t
-operator|,
-name|long
-operator|,
-name|symint_t
 operator|,
 name|int
 operator|)
@@ -4433,7 +4417,7 @@ begin_decl_stmt
 name|STATIC
 name|symint_t
 name|add_aux_sym_symint
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|symint_t
@@ -4446,7 +4430,7 @@ begin_decl_stmt
 name|STATIC
 name|symint_t
 name|add_aux_sym_rndx
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -4461,7 +4445,7 @@ begin_decl_stmt
 name|STATIC
 name|symint_t
 name|add_aux_sym_tir
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|type_info_t
@@ -4482,7 +4466,7 @@ name|STATIC
 name|tag_t
 modifier|*
 name|get_tag
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4505,7 +4489,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|add_unknown_tag
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|tag_t
@@ -4519,7 +4503,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|add_procedure
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4538,7 +4522,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|add_file
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4557,7 +4541,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|add_bytes
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|varray_t
@@ -4576,7 +4560,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|add_varray_page
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|varray_t
@@ -4590,7 +4574,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|update_headers
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -4603,7 +4587,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|write_varray
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|varray_t
@@ -4623,7 +4607,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|write_object
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -4638,7 +4622,7 @@ specifier|const
 name|char
 modifier|*
 name|st_to_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|st_t
@@ -4653,7 +4637,7 @@ specifier|const
 name|char
 modifier|*
 name|sc_to_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|sc_t
@@ -4667,7 +4651,7 @@ name|STATIC
 name|char
 modifier|*
 name|read_line
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -4680,7 +4664,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_input
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -4693,7 +4677,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|mark_stabs
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4708,7 +4692,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_begin
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4723,7 +4707,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_bend
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4738,7 +4722,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_def
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4753,7 +4737,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_end
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4768,7 +4752,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_ent
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4783,7 +4767,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_file
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4798,7 +4782,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_stabs_common
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4821,7 +4805,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_stabs
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4836,7 +4820,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|parse_stabn
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -4852,7 +4836,7 @@ name|STATIC
 name|page_t
 modifier|*
 name|read_seek
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|Size_t
@@ -4871,7 +4855,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|copy_object
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -4884,12 +4868,13 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|catch_signal
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|int
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
@@ -4898,7 +4883,7 @@ name|STATIC
 name|page_t
 modifier|*
 name|allocate_page
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -4912,7 +4897,7 @@ name|STATIC
 name|page_t
 modifier|*
 name|allocate_multiple_pages
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|Size_t
@@ -4925,7 +4910,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|free_multiple_pages
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|page_t
@@ -4948,7 +4933,7 @@ name|STATIC
 name|page_t
 modifier|*
 name|allocate_cluster
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|Size_t
@@ -4967,7 +4952,7 @@ name|STATIC
 name|forward_t
 modifier|*
 name|allocate_forward
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -4981,7 +4966,7 @@ name|STATIC
 name|scope_t
 modifier|*
 name|allocate_scope
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -4995,7 +4980,7 @@ name|STATIC
 name|shash_t
 modifier|*
 name|allocate_shash
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -5009,7 +4994,7 @@ name|STATIC
 name|tag_t
 modifier|*
 name|allocate_tag
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -5023,7 +5008,7 @@ name|STATIC
 name|thash_t
 modifier|*
 name|allocate_thash
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -5037,7 +5022,7 @@ name|STATIC
 name|thead_t
 modifier|*
 name|allocate_thead
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -5051,7 +5036,7 @@ name|STATIC
 name|vlinks_t
 modifier|*
 name|allocate_vlinks
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -5064,7 +5049,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|free_forward
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|forward_t
@@ -5078,7 +5063,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|free_scope
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|scope_t
@@ -5092,7 +5077,7 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|free_tag
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|tag_t
@@ -5106,98 +5091,11 @@ begin_decl_stmt
 name|STATIC
 name|void
 name|free_thead
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|thead_t
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|STATIC
-name|char
-modifier|*
-name|local_index
-name|__proto
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|STATIC
-name|char
-modifier|*
-name|local_rindex
-name|__proto
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|STATIC
-specifier|const
-name|char
-modifier|*
-name|my_strsignal
-name|__proto
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|mktemp
-name|__proto
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|strtol
-name|__proto
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5225,14 +5123,6 @@ name|opterr
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|version_string
-decl_stmt|;
-end_decl_stmt
-
 begin_escape
 end_escape
 
@@ -5248,18 +5138,20 @@ block|{
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|name
 decl_stmt|;
 comment|/* pseudo-op in ascii */
+specifier|const
 name|int
 name|len
 decl_stmt|;
 comment|/* length of name to compare */
 name|void
 argument_list|(
-argument|*func
+argument|*const func
 argument_list|)
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -5276,6 +5168,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|pseudo_ops_t
 name|pseudo_ops
 index|[]
@@ -5630,21 +5523,17 @@ name|ret_hash_index
 decl_stmt|;
 comment|/* ptr to store hash index */
 block|{
-specifier|register
 name|unsigned
 name|long
 name|hi
 decl_stmt|;
-specifier|register
 name|Ptrdiff_t
 name|i
 decl_stmt|;
-specifier|register
 name|shash_t
 modifier|*
 name|ptr
 decl_stmt|;
-specifier|register
 name|int
 name|first_ch
 init|=
@@ -5763,14 +5652,8 @@ index|]
 operator|&&
 name|memcmp
 argument_list|(
-operator|(
-name|CPTR_T
-operator|)
 name|text
 argument_list|,
-operator|(
-name|CPTR_T
-operator|)
 name|ptr
 operator|->
 name|string
@@ -5839,7 +5722,6 @@ name|ret_hash
 decl_stmt|;
 comment|/* return hash pointer */
 block|{
-specifier|register
 name|Ptrdiff_t
 name|len
 init|=
@@ -5847,7 +5729,6 @@ name|end_p1
 operator|-
 name|start
 decl_stmt|;
-specifier|register
 name|shash_t
 modifier|*
 name|hash_ptr
@@ -5866,7 +5747,7 @@ name|PAGE_USIZE
 condition|)
 name|fatal
 argument_list|(
-literal|"String too big (%ld bytes)"
+literal|"string too big (%ld bytes)"
 argument_list|,
 operator|(
 name|long
@@ -5899,7 +5780,6 @@ operator|)
 literal|0
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -6113,36 +5993,29 @@ name|indx
 decl_stmt|;
 comment|/* index to local/aux. syms */
 block|{
-specifier|register
 name|symint_t
 name|ret
 decl_stmt|;
-specifier|register
 name|SYMR
 modifier|*
 name|psym
 decl_stmt|;
-specifier|register
 name|scope_t
 modifier|*
 name|pscope
 decl_stmt|;
-specifier|register
 name|thead_t
 modifier|*
 name|ptag_head
 decl_stmt|;
-specifier|register
 name|tag_t
 modifier|*
 name|ptag
 decl_stmt|;
-specifier|register
 name|tag_t
 modifier|*
 name|ptag_next
 decl_stmt|;
-specifier|register
 name|varray_t
 modifier|*
 name|vp
@@ -6152,7 +6025,6 @@ name|cur_file_ptr
 operator|->
 name|symbols
 decl_stmt|;
-specifier|register
 name|int
 name|scope_delta
 init|=
@@ -6855,20 +6727,20 @@ name|STATIC
 name|symint_t
 name|add_ext_symbol
 parameter_list|(
-name|str_start
-parameter_list|,
-name|str_end_p1
-parameter_list|,
-name|type
-parameter_list|,
-name|storage
-parameter_list|,
-name|value
-parameter_list|,
-name|indx
+name|esym
 parameter_list|,
 name|ifd
 parameter_list|)
+name|EXTR
+modifier|*
+name|esym
+decl_stmt|;
+comment|/* symbol pointer */
+name|int
+name|ifd
+decl_stmt|;
+comment|/* file index */
+block|{
 specifier|const
 name|char
 modifier|*
@@ -6881,33 +6753,10 @@ modifier|*
 name|str_end_p1
 decl_stmt|;
 comment|/* first byte after string */
-name|st_t
-name|type
-decl_stmt|;
-comment|/* symbol type */
-name|sc_t
-name|storage
-decl_stmt|;
-comment|/* storage class */
-name|long
-name|value
-decl_stmt|;
-comment|/* value of symbol */
-name|symint_t
-name|indx
-decl_stmt|;
-comment|/* index to local/aux. syms */
-name|int
-name|ifd
-decl_stmt|;
-comment|/* file index */
-block|{
-specifier|register
 name|EXTR
 modifier|*
 name|psym
 decl_stmt|;
-specifier|register
 name|varray_t
 modifier|*
 name|vp
@@ -6925,6 +6774,26 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
+name|str_start
+operator|=
+name|ORIG_ESTRS
+argument_list|(
+name|esym
+operator|->
+name|asym
+operator|.
+name|iss
+argument_list|)
+expr_stmt|;
+name|str_end_p1
+operator|=
+name|str_start
+operator|+
+name|strlen
+argument_list|(
+name|str_start
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|debug
@@ -6932,6 +6801,15 @@ operator|>
 literal|1
 condition|)
 block|{
+name|long
+name|value
+init|=
+name|esym
+operator|->
+name|asym
+operator|.
+name|value
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -6939,7 +6817,11 @@ name|sc_str
 init|=
 name|sc_to_string
 argument_list|(
-name|storage
+name|esym
+operator|->
+name|asym
+operator|.
+name|sc
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -6949,7 +6831,11 @@ name|st_str
 init|=
 name|st_to_string
 argument_list|(
-name|type
+name|esym
+operator|->
+name|asym
+operator|.
+name|st
 argument_list|)
 decl_stmt|;
 name|fprintf
@@ -7038,41 +6924,17 @@ name|objects_last_page
 operator|++
 index|]
 expr_stmt|;
+operator|*
+name|psym
+operator|=
+operator|*
+name|esym
+expr_stmt|;
 name|psym
 operator|->
 name|ifd
 operator|=
 name|ifd
-expr_stmt|;
-name|psym
-operator|->
-name|asym
-operator|.
-name|value
-operator|=
-name|value
-expr_stmt|;
-name|psym
-operator|->
-name|asym
-operator|.
-name|st
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|type
-expr_stmt|;
-name|psym
-operator|->
-name|asym
-operator|.
-name|sc
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|storage
 expr_stmt|;
 name|psym
 operator|->
@@ -7080,7 +6942,7 @@ name|asym
 operator|.
 name|index
 operator|=
-name|indx
+name|indexNil
 expr_stmt|;
 name|psym
 operator|->
@@ -7154,19 +7016,16 @@ name|aux_word
 decl_stmt|;
 comment|/* auxiliary information word */
 block|{
-specifier|register
 name|AUXU
 modifier|*
 name|aux_ptr
 decl_stmt|;
-specifier|register
 name|efdr_t
 modifier|*
 name|file_ptr
 init|=
 name|cur_file_ptr
 decl_stmt|;
-specifier|register
 name|varray_t
 modifier|*
 name|vp
@@ -7243,19 +7102,16 @@ name|symint_t
 name|sym_index
 decl_stmt|;
 block|{
-specifier|register
 name|AUXU
 modifier|*
 name|aux_ptr
 decl_stmt|;
-specifier|register
 name|efdr_t
 modifier|*
 name|file_ptr
 init|=
 name|cur_file_ptr
 decl_stmt|;
-specifier|register
 name|varray_t
 modifier|*
 name|vp
@@ -7356,19 +7212,16 @@ name|hash_tbl
 decl_stmt|;
 comment|/* pointer to hash table to use */
 block|{
-specifier|register
 name|AUXU
 modifier|*
 name|aux_ptr
 decl_stmt|;
-specifier|register
 name|efdr_t
 modifier|*
 name|file_ptr
 init|=
 name|cur_file_ptr
 decl_stmt|;
-specifier|register
 name|varray_t
 modifier|*
 name|vp
@@ -7625,12 +7478,10 @@ operator|!=
 name|hash_no
 condition|)
 block|{
-specifier|register
 name|thash_t
 modifier|*
 name|hash_ptr
 decl_stmt|;
-specifier|register
 name|symint_t
 name|hi
 decl_stmt|;
@@ -7853,7 +7704,6 @@ operator|==
 name|bt_Enum
 condition|)
 block|{
-specifier|register
 name|symint_t
 name|file_index
 init|=
@@ -7863,7 +7713,6 @@ name|tag_ptr
 operator|->
 name|ifd
 decl_stmt|;
-specifier|register
 name|symint_t
 name|sym_index
 init|=
@@ -7932,7 +7781,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|forward_t
 modifier|*
 name|forward_ref
@@ -8342,14 +8190,17 @@ operator|(
 name|indx
 operator|==
 name|indexNil
-operator|)
 condition|?
+operator|(
+name|symint_t
+operator|)
 operator|-
 literal|1
 else|:
 name|cur_file_ptr
 operator|->
 name|file_index
+operator|)
 expr_stmt|;
 name|tag_ptr
 operator|->
@@ -8637,19 +8488,16 @@ name|func_end_p1
 decl_stmt|;
 comment|/* 1st byte after func name */
 block|{
-specifier|register
 name|PDR
 modifier|*
 name|new_proc_ptr
 decl_stmt|;
-specifier|register
 name|efdr_t
 modifier|*
 name|file_ptr
 init|=
 name|cur_file_ptr
 decl_stmt|;
-specifier|register
 name|varray_t
 modifier|*
 name|vp
@@ -8659,19 +8507,16 @@ name|file_ptr
 operator|->
 name|procs
 decl_stmt|;
-specifier|register
 name|symint_t
 name|value
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|st_t
 name|proc_type
 init|=
 name|st_Proc
 decl_stmt|;
-specifier|register
 name|shash_t
 modifier|*
 name|shash_ptr
@@ -8767,7 +8612,6 @@ operator|)
 literal|0
 condition|)
 block|{
-specifier|register
 name|PDR
 modifier|*
 name|old_proc_ptr
@@ -8776,7 +8620,6 @@ name|shash_ptr
 operator|->
 name|proc_ptr
 decl_stmt|;
-specifier|register
 name|SYMR
 modifier|*
 name|sym_ptr
@@ -8874,7 +8717,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Did not find a PDR block for %.*s"
+literal|"did not find a PDR block for %.*s"
 argument_list|,
 call|(
 name|int
@@ -8966,7 +8809,6 @@ block|,
 literal|'\0'
 block|}
 decl_stmt|;
-specifier|register
 name|Ptrdiff_t
 name|len
 init|=
@@ -8974,14 +8816,12 @@ name|file_end_p1
 operator|-
 name|file_start
 decl_stmt|;
-specifier|register
 name|int
 name|first_ch
 init|=
 operator|*
 name|file_start
 decl_stmt|;
-specifier|register
 name|efdr_t
 modifier|*
 name|file_ptr
@@ -9048,14 +8888,8 @@ literal|'\0'
 operator|&&
 name|memcmp
 argument_list|(
-operator|(
-name|CPTR_T
-operator|)
 name|file_start
 argument_list|,
-operator|(
-name|CPTR_T
-operator|)
 name|file_ptr
 operator|->
 name|name
@@ -9198,7 +9032,7 @@ literal|2
 condition|)
 name|fatal
 argument_list|(
-literal|"Filename goes over one page boundary."
+literal|"filename goes over one page boundary"
 argument_list|)
 expr_stmt|;
 comment|/* Push the start of the filename. We assume that the filename          will be stored at string offset 1.  */
@@ -9351,15 +9185,12 @@ name|nitems
 decl_stmt|;
 comment|/* # items to move */
 block|{
-specifier|register
 name|Size_t
 name|move_items
 decl_stmt|;
-specifier|register
 name|Size_t
 name|move_bytes
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|ptr
@@ -9450,14 +9281,8 @@ name|void
 operator|)
 name|memcpy
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
 name|ptr
 argument_list|,
-operator|(
-name|CPTR_T
-operator|)
 name|input_ptr
 argument_list|,
 name|move_bytes
@@ -9831,17 +9656,12 @@ begin_comment
 comment|/* Read a line from standard input, and return the start of the buffer    (which is grows if the line is too big).  We split lines at the    semi-colon, and return each logical line independently.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|char
 modifier|*
 name|read_line
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
 specifier|static
 name|int
@@ -9849,23 +9669,19 @@ name|line_split_p
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|string_p
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|comment_p
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|ptr
@@ -9944,7 +9760,6 @@ operator|-
 literal|1
 condition|)
 block|{
-specifier|register
 name|int
 name|num_pages
 init|=
@@ -9952,7 +9767,6 @@ name|cur_line_alloc
 operator|/
 name|PAGE_SIZE
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|old_buffer
@@ -10031,7 +9845,7 @@ literal|'\0'
 condition|)
 name|error
 argument_list|(
-literal|"Null character found in input"
+literal|"null character found in input"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10126,7 +9940,7 @@ operator|)
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -10260,7 +10074,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Label %.*s not found for #.begin"
+literal|"label %.*s not found for #.begin"
 argument_list|,
 call|(
 name|int
@@ -10289,7 +10103,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Procedure table %.*s not found for #.begin"
+literal|"procedure table %.*s not found for #.begin"
 argument_list|,
 call|(
 name|int
@@ -10482,7 +10296,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Label %.*s not found for #.bend"
+literal|"label %.*s not found for #.bend"
 argument_list|,
 call|(
 name|int
@@ -10511,7 +10325,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Procedure table %.*s not found for #.bend"
+literal|"procedure table %.*s not found for #.bend"
 argument_list|,
 call|(
 name|int
@@ -10628,11 +10442,6 @@ name|char
 modifier|*
 name|tag_start
 init|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 literal|0
 decl_stmt|;
 comment|/* start of tag name */
@@ -10641,11 +10450,6 @@ name|char
 modifier|*
 name|tag_end_p1
 init|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 literal|0
 decl_stmt|;
 comment|/* end+1 of tag name */
@@ -10906,11 +10710,6 @@ literal|0
 expr_stmt|;
 name|arg_end_p1
 operator|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 literal|0
 expr_stmt|;
 name|arg_start
@@ -12233,24 +12032,12 @@ for|for
 control|(
 name|j
 operator|=
-operator|(
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|t
 operator|.
 name|sizes
 argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|t
-operator|.
-name|sizes
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
 operator|-
 literal|1
 init|;
@@ -12428,7 +12215,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"No tag specified for %.*s"
+literal|"no tag specified for %.*s"
 argument_list|,
 call|(
 name|int
@@ -12615,11 +12402,6 @@ name|name_start
 operator|=
 name|name_end_p1
 operator|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 literal|0
 expr_stmt|;
 name|value
@@ -12848,7 +12630,6 @@ name|start
 decl_stmt|;
 comment|/* start of directive */
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -12857,15 +12638,12 @@ decl_stmt|,
 modifier|*
 name|end_func_p1
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
-specifier|register
 name|symint_t
 name|value
 decl_stmt|;
-specifier|register
 name|FDR
 modifier|*
 name|orig_fdr
@@ -13004,7 +12782,7 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"Cannot find .end block for %.*s"
+literal|"cannot find .end block for %.*s"
 argument_list|,
 call|(
 name|int
@@ -13073,7 +12851,6 @@ name|start
 decl_stmt|;
 comment|/* start of directive */
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -13082,7 +12859,6 @@ decl_stmt|,
 modifier|*
 name|end_func_p1
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
@@ -13219,7 +12995,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|start_name
@@ -13249,7 +13024,7 @@ operator|||
 operator|(
 name|start_name
 operator|=
-name|local_index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -13266,7 +13041,7 @@ operator|||
 operator|(
 name|end_name_p1
 operator|=
-name|local_rindex
+name|strrchr
 argument_list|(
 operator|++
 name|start_name
@@ -13284,7 +13059,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .file directive"
+literal|"invalid .file directive"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13302,7 +13077,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"No way to handle .file within .ent/.end section"
+literal|"no way to handle .file within .ent/.end section"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13467,7 +13242,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .stabs/.stabn directive, code is non-numeric"
+literal|"invalid .stabs/.stabn directive, code is non-numeric"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13541,7 +13316,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid line number .stabs/.stabn directive"
+literal|"invalid line number .stabs/.stabn directive"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13590,7 +13365,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid line number .stabs/.stabn directive"
+literal|"invalid line number .stabs/.stabn directive"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13612,7 +13387,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Line number (%lu) for .stabs/.stabn directive cannot fit in index field (20 bits)"
+literal|"line number (%lu) for .stabs/.stabn directive cannot fit in index field (20 bits)"
 argument_list|,
 name|code
 argument_list|)
@@ -13672,7 +13447,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .stabs/.stabn directive, value not found"
+literal|"invalid .stabs/.stabn directive, value not found"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13691,7 +13466,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid line number .stabs/.stabn directive"
+literal|"invalid line number .stabs/.stabn directive"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13800,7 +13575,7 @@ name|failure
 label|:
 name|error
 argument_list|(
-literal|"Invalid .stabs/.stabn directive, bad character"
+literal|"invalid .stabs/.stabn directive, bad character"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13847,7 +13622,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .stabs/.stabn directive, stuff after numeric value"
+literal|"invalid .stabs/.stabn directive, stuff after numeric value"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13865,7 +13640,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .stabs/.stabn directive, bad character"
+literal|"invalid .stabs/.stabn directive, bad character"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14037,7 +13812,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .stabs/.stabn directive, value not found"
+literal|"invalid .stabs/.stabn directive, value not found"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14159,7 +13934,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .stabs/.stabn directive, badly formed value"
+literal|"invalid .stabs/.stabn directive, badly formed value"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14211,7 +13986,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .stabs/.stabn directive, stuff after numeric value"
+literal|"invalid .stabs/.stabn directive, stuff after numeric value"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14271,7 +14046,7 @@ name|char
 modifier|*
 name|end
 init|=
-name|local_index
+name|strchr
 argument_list|(
 name|start
 operator|+
@@ -14306,7 +14081,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid .stabs directive, no string"
+literal|"invalid .stabs directive, no string"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14370,37 +14145,27 @@ begin_comment
 comment|/* Parse the input file, and write the lines to the output file    if needed.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|void
 name|parse_input
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|Size_t
 name|i
 decl_stmt|;
-specifier|register
 name|thead_t
 modifier|*
 name|ptag_head
 decl_stmt|;
-specifier|register
 name|tag_t
 modifier|*
 name|ptag
 decl_stmt|;
-specifier|register
 name|tag_t
 modifier|*
 name|ptag_next
@@ -14479,17 +14244,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|pseudo_ops
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|pseudo_ops
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i
@@ -14656,7 +14413,7 @@ name|ptag_head
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -14665,22 +14422,15 @@ begin_comment
 comment|/* Update the global headers with the final offsets in preparation    to write out the .T file.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|void
 name|update_headers
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|symint_t
 name|i
 decl_stmt|;
-specifier|register
 name|efdr_t
 modifier|*
 name|file_ptr
@@ -14800,22 +14550,18 @@ operator|->
 name|next_file
 control|)
 block|{
-specifier|register
 name|SYMR
 modifier|*
 name|sym_start
 decl_stmt|;
-specifier|register
 name|SYMR
 modifier|*
 name|sym
 decl_stmt|;
-specifier|register
 name|SYMR
 modifier|*
 name|sym_end_p1
 decl_stmt|;
-specifier|register
 name|FDR
 modifier|*
 name|fd_ptr
@@ -14872,7 +14618,6 @@ operator|==
 name|st_Static
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|str
@@ -14888,7 +14633,6 @@ operator|->
 name|iss
 argument_list|)
 decl_stmt|;
-specifier|register
 name|Size_t
 name|len
 init|=
@@ -14897,7 +14641,6 @@ argument_list|(
 name|str
 argument_list|)
 decl_stmt|;
-specifier|register
 name|shash_t
 modifier|*
 name|hash_ptr
@@ -15587,7 +15330,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -15659,6 +15402,9 @@ name|stderr
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|PTR
+operator|)
 name|vp
 argument_list|)
 expr_stmt|;
@@ -15769,7 +15515,7 @@ operator|=
 name|fwrite
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|ptr
 operator|->
@@ -15802,7 +15548,7 @@ name|num_write
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %d bytes to %s, system returned %d"
+literal|"wrote %d bytes to %s, system returned %d"
 argument_list|,
 name|num_write
 argument_list|,
@@ -15826,16 +15572,11 @@ begin_comment
 comment|/* Write out the symbol table in the object file.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|void
 name|write_object
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
 name|int
 name|sys_write
@@ -15866,8 +15607,7 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|PTR_T
-operator|*
+name|PTR
 operator|)
 operator|&
 name|symbolic_header
@@ -15899,7 +15639,7 @@ operator|=
 name|fwrite
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 operator|&
 name|symbolic_header
@@ -15937,7 +15677,7 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %d bytes to %s, system returned %d"
+literal|"wrote %d bytes to %s, system returned %d"
 argument_list|,
 operator|(
 name|int
@@ -16021,8 +15761,7 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|PTR_T
-operator|*
+name|PTR
 operator|)
 operator|&
 name|orig_linenum
@@ -16057,7 +15796,7 @@ operator|=
 name|fwrite
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|orig_linenum
 argument_list|,
@@ -16092,7 +15831,7 @@ name|cbLine
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %ld bytes to %s, system returned %ld"
+literal|"wrote %ld bytes to %s, system returned %ld"
 argument_list|,
 operator|(
 name|long
@@ -16187,8 +15926,7 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|PTR_T
-operator|*
+name|PTR
 operator|)
 operator|&
 name|orig_opt_syms
@@ -16218,7 +15956,7 @@ operator|=
 name|fwrite
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|orig_opt_syms
 argument_list|,
@@ -16249,7 +15987,7 @@ name|num_write
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %ld bytes to %s, system returned %ld"
+literal|"wrote %ld bytes to %s, system returned %ld"
 argument_list|,
 name|num_write
 argument_list|,
@@ -16617,8 +16355,7 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|PTR_T
-operator|*
+name|PTR
 operator|)
 operator|&
 name|file_ptr
@@ -16689,7 +16426,7 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %d bytes to %s, system returned %d"
+literal|"wrote %d bytes to %s, system returned %d"
 argument_list|,
 operator|(
 name|int
@@ -16785,8 +16522,7 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|PTR_T
-operator|*
+name|PTR
 operator|)
 operator|&
 name|orig_rfds
@@ -16847,7 +16583,7 @@ name|num_write
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %lu bytes to %s, system returned %ld"
+literal|"wrote %lu bytes to %s, system returned %ld"
 argument_list|,
 name|num_write
 argument_list|,
@@ -16904,7 +16640,7 @@ name|object_name
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -17088,7 +16824,7 @@ name|difference
 condition|)
 name|fatal
 argument_list|(
-literal|"Wanted to read %lu bytes from %s, system returned %ld"
+literal|"wanted to read %lu bytes from %s, system returned %ld"
 argument_list|,
 operator|(
 name|unsigned
@@ -17127,7 +16863,7 @@ operator|=
 name|fread
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|ptr
 argument_list|,
@@ -17160,7 +16896,7 @@ name|size
 condition|)
 name|fatal
 argument_list|(
-literal|"Wanted to read %lu bytes from %s, system returned %ld"
+literal|"wanted to read %lu bytes from %s, system returned %ld"
 argument_list|,
 operator|(
 name|unsigned
@@ -17202,16 +16938,11 @@ begin_comment
 comment|/* Read the existing object file (and copy to the output object file    if it is different from the input object file), and remove the old    symbol table.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|void
 name|copy_object
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
 name|char
 name|buffer
@@ -17219,35 +16950,28 @@ index|[
 name|PAGE_SIZE
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|sys_read
 decl_stmt|;
-specifier|register
 name|int
 name|remaining
 decl_stmt|;
-specifier|register
 name|int
 name|num_write
 decl_stmt|;
-specifier|register
 name|int
 name|sys_write
 decl_stmt|;
-specifier|register
 name|int
 name|fd
 decl_stmt|,
 name|es
 decl_stmt|;
-specifier|register
 name|int
 name|delete_ifd
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|remap_file_number
@@ -17303,7 +17027,7 @@ operator|=
 name|fread
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 operator|&
 name|orig_file_header
@@ -17360,7 +17084,7 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"Wanted to read %d bytes from %s, system returned %d"
+literal|"wanted to read %d bytes from %s, system returned %d"
 argument_list|,
 operator|(
 name|int
@@ -17389,16 +17113,19 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"%s symbolic header wrong size (%d bytes, should be %d)"
+literal|"%s symbolic header wrong size (%ld bytes, should be %ld)"
 argument_list|,
 name|input_name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|orig_file_header
 operator|.
 name|f_nsyms
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 sizeof|sizeof
 argument_list|(
@@ -17435,7 +17162,7 @@ operator|=
 name|fread
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 operator|&
 name|orig_sym_hdr
@@ -17477,7 +17204,7 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"Wanted to read %d bytes from %s, system returned %d"
+literal|"wanted to read %d bytes from %s, system returned %d"
 argument_list|,
 operator|(
 name|int
@@ -17919,10 +17646,13 @@ name|st_size
 condition|)
 name|fatal
 argument_list|(
-literal|"Symbol table is not last (symbol table ends at %ld, .o ends at %ld"
+literal|"symbol table is not last (symbol table ends at %ld, .o ends at %ld"
 argument_list|,
 name|max_file_offset
 argument_list|,
+operator|(
+name|long
+operator|)
 name|stat_buf
 operator|.
 name|st_size
@@ -17970,7 +17700,7 @@ name|char
 modifier|*
 name|suffix
 init|=
-name|local_rindex
+name|strrchr
 argument_list|(
 name|filename
 argument_list|,
@@ -18036,7 +17766,6 @@ name|fd
 operator|++
 control|)
 block|{
-specifier|register
 name|FDR
 modifier|*
 name|fd_ptr
@@ -18046,7 +17775,6 @@ argument_list|(
 name|fd
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|filename
@@ -18130,7 +17858,6 @@ name|es
 operator|++
 control|)
 block|{
-specifier|register
 name|EXTR
 modifier|*
 name|eptr
@@ -18139,21 +17866,6 @@ name|orig_ext_syms
 operator|+
 name|es
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|ename
-init|=
-name|ORIG_ESTRS
-argument_list|(
-name|eptr
-operator|->
-name|asym
-operator|.
-name|iss
-argument_list|)
-decl_stmt|;
-specifier|register
 name|unsigned
 name|ifd
 init|=
@@ -18166,57 +17878,7 @@ name|void
 operator|)
 name|add_ext_symbol
 argument_list|(
-name|ename
-argument_list|,
-name|ename
-operator|+
-name|strlen
-argument_list|(
-name|ename
-argument_list|)
-argument_list|,
-operator|(
-name|st_t
-operator|)
 name|eptr
-operator|->
-name|asym
-operator|.
-name|st
-argument_list|,
-operator|(
-name|sc_t
-operator|)
-name|eptr
-operator|->
-name|asym
-operator|.
-name|sc
-argument_list|,
-name|eptr
-operator|->
-name|asym
-operator|.
-name|value
-argument_list|,
-call|(
-name|symint_t
-call|)
-argument_list|(
-operator|(
-name|eptr
-operator|->
-name|asym
-operator|.
-name|index
-operator|==
-name|indexNil
-operator|)
-condition|?
-name|indexNil
-else|:
-literal|0
-argument_list|)
 argument_list|,
 operator|(
 operator|(
@@ -18255,7 +17917,6 @@ name|fd
 operator|++
 control|)
 block|{
-specifier|register
 name|FDR
 modifier|*
 name|fd_ptr
@@ -18265,7 +17926,6 @@ argument_list|(
 name|fd
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|filename
@@ -18281,32 +17941,26 @@ operator|->
 name|rss
 argument_list|)
 decl_stmt|;
-specifier|register
 name|SYMR
 modifier|*
 name|sym_start
 decl_stmt|;
-specifier|register
 name|SYMR
 modifier|*
 name|sym
 decl_stmt|;
-specifier|register
 name|SYMR
 modifier|*
 name|sym_end_p1
 decl_stmt|;
-specifier|register
 name|PDR
 modifier|*
 name|proc_start
 decl_stmt|;
-specifier|register
 name|PDR
 modifier|*
 name|proc
 decl_stmt|;
-specifier|register
 name|PDR
 modifier|*
 name|proc_end_p1
@@ -18508,7 +18162,6 @@ specifier|auto
 name|symint_t
 name|hash_index
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|str
@@ -18524,7 +18177,6 @@ operator|->
 name|iss
 argument_list|)
 decl_stmt|;
-specifier|register
 name|Size_t
 name|len
 init|=
@@ -18533,7 +18185,6 @@ argument_list|(
 name|str
 argument_list|)
 decl_stmt|;
-specifier|register
 name|shash_t
 modifier|*
 name|shash_ptr
@@ -18639,7 +18290,6 @@ operator|==
 name|sc_Text
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|str
@@ -18663,7 +18313,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-specifier|register
 name|Size_t
 name|len
 init|=
@@ -18672,7 +18321,6 @@ argument_list|(
 name|str
 argument_list|)
 decl_stmt|;
-specifier|register
 name|shash_t
 modifier|*
 name|shash_ptr
@@ -18776,7 +18424,6 @@ name|proc
 operator|++
 control|)
 block|{
-specifier|register
 name|SYMR
 modifier|*
 name|proc_sym
@@ -18792,7 +18439,6 @@ operator|->
 name|isym
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|str
@@ -18808,7 +18454,6 @@ operator|->
 name|iss
 argument_list|)
 decl_stmt|;
-specifier|register
 name|Size_t
 name|len
 init|=
@@ -18817,7 +18462,6 @@ argument_list|(
 name|str
 argument_list|)
 decl_stmt|;
-specifier|register
 name|shash_t
 modifier|*
 name|shash_ptr
@@ -18963,6 +18607,9 @@ operator|)
 condition|?
 name|remaining
 else|:
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buffer
@@ -18973,7 +18620,7 @@ operator|=
 name|fread
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|buffer
 argument_list|,
@@ -19004,7 +18651,7 @@ name|num_write
 condition|)
 name|fatal
 argument_list|(
-literal|"Wanted to read %d bytes from %s, system returned %d"
+literal|"wanted to read %d bytes from %s, system returned %d"
 argument_list|,
 name|num_write
 argument_list|,
@@ -19046,7 +18693,7 @@ name|num_write
 condition|)
 name|fatal
 argument_list|(
-literal|"Wrote %d bytes to %s, system returned %d"
+literal|"wrote %d bytes to %s, system returned %d"
 argument_list|,
 name|num_write
 argument_list|,
@@ -19057,7 +18704,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -19065,6 +18712,23 @@ end_escape
 begin_comment
 comment|/* Ye olde main program.  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -19079,8 +18743,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 name|int
@@ -19092,7 +18756,7 @@ name|char
 modifier|*
 name|p
 init|=
-name|local_rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -19183,7 +18847,7 @@ name|PAGE_USIZE
 condition|)
 name|fatal
 argument_list|(
-literal|"Efdr_t has a sizeof %d bytes, when it should be less than %d"
+literal|"efdr_t has a sizeof %d bytes, when it should be less than %d"
 argument_list|,
 operator|(
 name|int
@@ -19210,7 +18874,7 @@ name|PAGE_USIZE
 condition|)
 name|fatal
 argument_list|(
-literal|"Page_t has a sizeof %d bytes, when it should be %d"
+literal|"page_t has a sizeof %d bytes, when it should be %d"
 argument_list|,
 operator|(
 name|int
@@ -19569,28 +19233,40 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Calling Sequence:\n"
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"\tmips-tfile [-d<num>] [-v] [-i<o-in-file>] -o<o-out-file><s-file> (or)\n"
 argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\tmips-tfile [-d<num>] [-v] [-I<o-in-file>] -o<o-out-file><s-file> (or)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
+literal|"\tmips-tfile [-d<num>] [-v] [-I<o-in-file>] -o<o-out-file><s-file> (or)\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
 literal|"\tmips-tfile [-d<num>] [-v]<s-file><o-in-file><o-out-file>\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -19604,35 +19280,50 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Debug levels are:\n"
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"    1\tGeneral debug + trace functions/blocks.\n"
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"    2\tDebug level 1 + trace externals.\n"
 argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    3\tDebug level 2 + trace all symbols.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
+literal|"    3\tDebug level 2 + trace all symbols.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
 literal|"    4\tDebug level 3 + trace memory allocations.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -19648,7 +19339,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"mips-tfile version %s"
+argument_list|)
 argument_list|,
 name|version_string
 argument_list|)
@@ -20101,84 +19795,6 @@ end_function
 begin_escape
 end_escape
 
-begin_function
-name|STATIC
-specifier|const
-name|char
-modifier|*
-name|my_strsignal
-parameter_list|(
-name|s
-parameter_list|)
-name|int
-name|s
-decl_stmt|;
-block|{
-ifdef|#
-directive|ifdef
-name|HAVE_STRSIGNAL
-return|return
-name|strsignal
-argument_list|(
-name|s
-argument_list|)
-return|;
-else|#
-directive|else
-if|if
-condition|(
-name|s
-operator|>=
-literal|0
-operator|&&
-name|s
-operator|<
-name|NSIG
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|NO_SYS_SIGLIST
-specifier|static
-name|char
-name|buffer
-index|[
-literal|30
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|buffer
-argument_list|,
-literal|"Unknown signal %d"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|buffer
-return|;
-else|#
-directive|else
-return|return
-name|sys_siglist
-index|[
-name|s
-index|]
-return|;
-endif|#
-directive|endif
-block|}
-else|else
-return|return
-name|NULL
-return|;
-endif|#
-directive|endif
-comment|/* HAVE_STRSIGNAL */
-block|}
-end_function
-
 begin_comment
 comment|/* Catch a signal and exit without dumping core.  */
 end_comment
@@ -20207,7 +19823,9 @@ expr_stmt|;
 comment|/* just in case...  */
 name|fatal
 argument_list|(
-name|my_strsignal
+literal|"%s"
+argument_list|,
+name|strsignal
 argument_list|(
 name|signum
 argument_list|)
@@ -20413,7 +20031,6 @@ name|Size_t
 name|npages
 decl_stmt|;
 block|{
-specifier|register
 name|page_t
 modifier|*
 name|value
@@ -20422,24 +20039,13 @@ operator|(
 name|page_t
 operator|*
 operator|)
-name|calloc
+name|xcalloc
 argument_list|(
 name|npages
 argument_list|,
 name|PAGE_USIZE
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|value
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"Virtual memory exhausted."
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|debug
@@ -20484,7 +20090,6 @@ name|Size_t
 name|npages
 decl_stmt|;
 block|{
-specifier|register
 name|page_t
 modifier|*
 name|ptr
@@ -20614,6 +20219,9 @@ name|stderr
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|PTR
+operator|)
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -20846,17 +20454,12 @@ begin_comment
 comment|/* Allocate one page (which is initialized to 0).  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|page_t
 modifier|*
 name|allocate_page
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
 ifndef|#
 directive|ifndef
@@ -20906,7 +20509,7 @@ endif|#
 directive|endif
 comment|/* MALLOC_CHECK */
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -20915,19 +20518,13 @@ begin_comment
 comment|/* Allocate scoping information.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|scope_t
 modifier|*
 name|allocate_scope
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|scope_t
 modifier|*
 name|ptr
@@ -20981,7 +20578,6 @@ name|free
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|int
 name|unallocated
 init|=
@@ -20995,7 +20591,6 @@ index|]
 operator|.
 name|unallocated
 decl_stmt|;
-specifier|register
 name|page_t
 modifier|*
 name|cur_page
@@ -21115,7 +20710,7 @@ return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* Free scoping information.  */
@@ -21179,10 +20774,10 @@ name|ptr
 expr_stmt|;
 else|#
 directive|else
-name|xfree
+name|free
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|ptr
 argument_list|)
@@ -21199,19 +20794,13 @@ begin_comment
 comment|/* Allocate links for pages in a virtual array.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|vlinks_t
 modifier|*
 name|allocate_vlinks
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|vlinks_t
 modifier|*
 name|ptr
@@ -21223,7 +20812,6 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|MALLOC_CHECK
-specifier|register
 name|int
 name|unallocated
 init|=
@@ -21237,7 +20825,6 @@ index|]
 operator|.
 name|unallocated
 decl_stmt|;
-specifier|register
 name|page_t
 modifier|*
 name|cur_page
@@ -21356,7 +20943,7 @@ return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -21365,19 +20952,13 @@ begin_comment
 comment|/* Allocate string hash buckets.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|shash_t
 modifier|*
 name|allocate_shash
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|shash_t
 modifier|*
 name|ptr
@@ -21389,7 +20970,6 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|MALLOC_CHECK
-specifier|register
 name|int
 name|unallocated
 init|=
@@ -21403,7 +20983,6 @@ index|]
 operator|.
 name|unallocated
 decl_stmt|;
-specifier|register
 name|page_t
 modifier|*
 name|cur_page
@@ -21522,7 +21101,7 @@ return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -21531,19 +21110,13 @@ begin_comment
 comment|/* Allocate type hash buckets.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|thash_t
 modifier|*
 name|allocate_thash
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|thash_t
 modifier|*
 name|ptr
@@ -21555,7 +21128,6 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|MALLOC_CHECK
-specifier|register
 name|int
 name|unallocated
 init|=
@@ -21569,7 +21141,6 @@ index|]
 operator|.
 name|unallocated
 decl_stmt|;
-specifier|register
 name|page_t
 modifier|*
 name|cur_page
@@ -21688,7 +21259,7 @@ return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -21697,19 +21268,13 @@ begin_comment
 comment|/* Allocate structure, union, or enum tag information.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|tag_t
 modifier|*
 name|allocate_tag
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|tag_t
 modifier|*
 name|ptr
@@ -21763,7 +21328,6 @@ name|free
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|int
 name|unallocated
 init|=
@@ -21777,7 +21341,6 @@ index|]
 operator|.
 name|unallocated
 decl_stmt|;
-specifier|register
 name|page_t
 modifier|*
 name|cur_page
@@ -21897,7 +21460,7 @@ return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* Free scoping information.  */
@@ -21961,10 +21524,10 @@ name|ptr
 expr_stmt|;
 else|#
 directive|else
-name|xfree
+name|free
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|ptr
 argument_list|)
@@ -21981,19 +21544,13 @@ begin_comment
 comment|/* Allocate forward reference to a yet unknown tag.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|forward_t
 modifier|*
 name|allocate_forward
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|forward_t
 modifier|*
 name|ptr
@@ -22047,7 +21604,6 @@ name|free
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|int
 name|unallocated
 init|=
@@ -22061,7 +21617,6 @@ index|]
 operator|.
 name|unallocated
 decl_stmt|;
-specifier|register
 name|page_t
 modifier|*
 name|cur_page
@@ -22181,7 +21736,7 @@ return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* Free scoping information.  */
@@ -22245,10 +21800,10 @@ name|ptr
 expr_stmt|;
 else|#
 directive|else
-name|xfree
+name|free
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|ptr
 argument_list|)
@@ -22265,19 +21820,13 @@ begin_comment
 comment|/* Allocate head of type hash list.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|STATIC
 name|thead_t
 modifier|*
 name|allocate_thead
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
-specifier|register
 name|thead_t
 modifier|*
 name|ptr
@@ -22331,7 +21880,6 @@ name|free
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|int
 name|unallocated
 init|=
@@ -22345,7 +21893,6 @@ index|]
 operator|.
 name|unallocated
 decl_stmt|;
-specifier|register
 name|page_t
 modifier|*
 name|cur_page
@@ -22465,7 +22012,7 @@ return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* Free scoping information.  */
@@ -22533,10 +22080,10 @@ name|ptr
 expr_stmt|;
 else|#
 directive|else
-name|xfree
+name|free
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 name|ptr
 argument_list|)
@@ -22569,7 +22116,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|fatal
-name|VPROTO
+name|VPARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -22581,42 +22128,24 @@ operator|...
 operator|)
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-specifier|const
-name|char
-modifier|*
-name|format
-decl_stmt|;
-endif|#
-directive|endif
-name|va_list
-name|ap
-decl_stmt|;
-name|VA_START
+name|VA_OPEN
 argument_list|(
 name|ap
 argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|format
-operator|=
-name|va_arg
+name|VA_FIXEDARG
 argument_list|(
 name|ap
 argument_list|,
 specifier|const
 name|char
 operator|*
+argument_list|,
+name|format
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|line_number
@@ -22655,7 +22184,7 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|va_end
+name|VA_CLOSE
 argument_list|(
 name|ap
 argument_list|)
@@ -22700,7 +22229,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|error
-name|VPROTO
+name|VPARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -22712,40 +22241,23 @@ operator|...
 operator|)
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|char
-modifier|*
-name|format
-decl_stmt|;
-endif|#
-directive|endif
-name|va_list
-name|ap
-decl_stmt|;
-name|VA_START
+name|VA_OPEN
 argument_list|(
 name|ap
 argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|format
-operator|=
-name|va_arg
+name|VA_FIXEDARG
 argument_list|(
 name|ap
 argument_list|,
 name|char
 operator|*
+argument_list|,
+name|format
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|line_number
@@ -22809,7 +22321,7 @@ expr_stmt|;
 name|had_errors
 operator|++
 expr_stmt|;
-name|va_end
+name|VA_CLOSE
 argument_list|(
 name|ap
 argument_list|)
@@ -22831,7 +22343,7 @@ parameter_list|()
 block|{
 name|fatal
 argument_list|(
-literal|"Internal abort."
+literal|"internal abort"
 argument_list|)
 expr_stmt|;
 block|}
@@ -22858,493 +22370,11 @@ decl_stmt|;
 block|{
 name|fatal
 argument_list|(
+literal|"%s"
+argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Same as `malloc' but report error if no memory available.  */
-end_comment
-
-begin_function
-name|PTR
-name|xmalloc
-parameter_list|(
-name|size
-parameter_list|)
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|value
-init|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|value
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"Virtual memory exhausted."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|>
-literal|3
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\tmalloc\tptr = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|HOST_PTR_PRINTF
-argument_list|,
-name|value
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", size = %10lu\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|value
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Same as `calloc' but report error if no memory available.  */
-end_comment
-
-begin_function
-name|PTR
-name|xcalloc
-parameter_list|(
-name|size1
-parameter_list|,
-name|size2
-parameter_list|)
-name|size_t
-name|size1
-decl_stmt|,
-name|size2
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|value
-init|=
-operator|(
-name|PTR
-operator|)
-name|calloc
-argument_list|(
-name|size1
-argument_list|,
-name|size2
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|value
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"Virtual memory exhausted."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|>
-literal|3
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\tcalloc\tptr = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|HOST_PTR_PRINTF
-argument_list|,
-name|value
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", size1 = %10lu, size2 = %10lu [%lu]\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|size1
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|size2
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|size1
-operator|*
-name|size2
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|value
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Same as `realloc' but report error if no memory available.  */
-end_comment
-
-begin_function
-name|PTR
-name|xrealloc
-parameter_list|(
-name|ptr
-parameter_list|,
-name|size
-parameter_list|)
-name|PTR
-name|ptr
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|result
-decl_stmt|;
-if|if
-condition|(
-name|ptr
-condition|)
-name|result
-operator|=
-operator|(
-name|PTR
-operator|)
-name|realloc
-argument_list|(
-name|ptr
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-else|else
-name|result
-operator|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|result
-condition|)
-name|fatal
-argument_list|(
-literal|"Virtual memory exhausted."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|>
-literal|3
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\trealloc\tptr = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|HOST_PTR_PRINTF
-argument_list|,
-name|result
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", size = %10lu, orig = "
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|HOST_PTR_PRINTF
-argument_list|,
-name|ptr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|xfree
-parameter_list|(
-name|ptr
-parameter_list|)
-name|PTR
-name|ptr
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|debug
-operator|>
-literal|3
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\tfree\tptr = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|HOST_PTR_PRINTF
-argument_list|,
-name|ptr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-block|}
-name|free
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Define our own index/rindex, since the local and global symbol    structures as defined by MIPS has an 'index' field.  */
-end_comment
-
-begin_function
-name|STATIC
-name|char
-modifier|*
-name|local_index
-parameter_list|(
-name|str
-parameter_list|,
-name|sentinel
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|str
-decl_stmt|;
-name|int
-name|sentinel
-decl_stmt|;
-block|{
-name|int
-name|ch
-decl_stmt|;
-for|for
-control|(
-init|;
-operator|(
-name|ch
-operator|=
-operator|*
-name|str
-operator|)
-operator|!=
-name|sentinel
-condition|;
-name|str
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|ch
-operator|==
-literal|'\0'
-condition|)
-return|return
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-return|;
-block|}
-return|return
-operator|(
-name|char
-operator|*
-operator|)
-name|str
-return|;
-block|}
-end_function
-
-begin_function
-name|STATIC
-name|char
-modifier|*
-name|local_rindex
-parameter_list|(
-name|str
-parameter_list|,
-name|sentinel
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|str
-decl_stmt|;
-name|int
-name|sentinel
-decl_stmt|;
-block|{
-name|int
-name|ch
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|ret
-init|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-for|for
-control|(
-init|;
-operator|(
-name|ch
-operator|=
-operator|*
-name|str
-operator|)
-operator|!=
-literal|'\0'
-condition|;
-name|str
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|ch
-operator|==
-name|sentinel
-condition|)
-name|ret
-operator|=
-name|str
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|char
-operator|*
-operator|)
-name|ret
-return|;
 block|}
 end_function
 

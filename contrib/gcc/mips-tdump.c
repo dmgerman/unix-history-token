@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read and manage MIPS symbol tables from object modules.    Copyright (C) 1991, 1994, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.    Contributed by hartzell@boulder.colorado.edu,    Rewritten by meissner@osf.org.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Read and manage MIPS symbol tables from object modules.    Copyright (C) 1991, 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by hartzell@boulder.colorado.edu,    Rewritten by meissner@osf.org.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -25,12 +25,6 @@ begin_undef
 undef|#
 directive|undef
 name|index
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|rindex
 end_undef
 
 begin_endif
@@ -125,31 +119,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|__proto
-parameter_list|(
-name|x
-parameter_list|)
-value|PARAMS(x)
-end_define
-
-begin_typedef
-typedef|typedef
-name|PTR
-name|PTR_T
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-specifier|const
-name|PTR_T
-name|CPTR_T
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
 name|uchar
 value|unsigned char
 end_define
@@ -173,101 +142,6 @@ define|#
 directive|define
 name|ulong
 value|unsigned long
-end_define
-
-begin_function
-specifier|static
-name|void
-name|fatal
-parameter_list|(
-name|s
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Same as `malloc' but report error if no memory available.  */
-end_comment
-
-begin_comment
-comment|/* Do this before size_t is fiddled with so it matches the prototype    in libiberty.h . */
-end_comment
-
-begin_function
-name|PTR
-name|xmalloc
-parameter_list|(
-name|size
-parameter_list|)
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|value
-init|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|value
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"Virtual memory exhausted."
-argument_list|)
-expr_stmt|;
-return|return
-name|value
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Due to size_t being defined in sys/types.h and different    in stddef.h, we have to do this by hand.....  Note, these    types are correct for MIPS based systems, and may not be    correct for other systems.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|size_t
-value|uint
-end_define
-
-begin_define
-define|#
-directive|define
-name|ptrdiff_t
-value|int
 end_define
 
 begin_escape
@@ -1183,12 +1057,13 @@ comment|/* Forward reference for functions.  */
 end_comment
 
 begin_decl_stmt
-name|PTR_T
+specifier|static
+name|PTR
 name|read_seek
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|,
 name|size_t
 operator|,
@@ -1203,9 +1078,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|read_tfile
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1215,9 +1091,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|print_global_hdr
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1229,9 +1106,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|print_sym_hdr
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|HDRR
@@ -1242,9 +1120,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|print_file_desc
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|FDR
@@ -1257,9 +1136,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|print_symbol
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|SYMR
@@ -1267,6 +1147,7 @@ operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1283,9 +1164,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|print_aux
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|AUXU
@@ -1299,9 +1181,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|emit_aggregate
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|char
@@ -1323,11 +1206,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|st_to_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|st_t
@@ -1337,11 +1221,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|sc_to_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|sc_t
@@ -1351,11 +1236,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|glevel_to_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|glevel_t
@@ -1365,11 +1251,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|lang_to_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|lang_t
@@ -1379,11 +1266,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|type_to_string
-name|__proto
+name|PARAMS
 argument_list|(
 operator|(
 name|AUXU
@@ -1397,93 +1285,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_DECLARATION_MALLOC
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|PTR_T
-name|malloc
-name|__proto
-argument_list|(
-operator|(
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_DECLARATION_CALLOC
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|PTR_T
-name|calloc
-name|__proto
-argument_list|(
-operator|(
-name|size_t
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_DECLARATION_REALLOC
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|PTR_T
-name|realloc
-name|__proto
-argument_list|(
-operator|(
-name|PTR_T
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1526,11 +1327,14 @@ value|{(int)CODE, STRING},
 end_define
 
 begin_struct
+specifier|const
 struct|struct
 block|{
+specifier|const
 name|short
 name|code
 decl_stmt|;
+specifier|const
 name|char
 name|string
 index|[
@@ -1560,7 +1364,8 @@ comment|/* Read some bytes at a specified location, and return a pointer.  */
 end_comment
 
 begin_function
-name|PTR_T
+specifier|static
+name|PTR
 name|read_seek
 parameter_list|(
 name|ptr
@@ -1571,7 +1376,7 @@ name|offset
 parameter_list|,
 name|context
 parameter_list|)
-name|PTR_T
+name|PTR
 name|ptr
 decl_stmt|;
 comment|/* pointer to buffer or NULL */
@@ -1607,29 +1412,18 @@ name|ptr
 return|;
 if|if
 condition|(
-operator|(
+operator|!
 name|ptr
-operator|==
-operator|(
-name|PTR_T
-operator|)
-literal|0
-operator|&&
-operator|(
+condition|)
 name|ptr
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|size
 argument_list|)
-operator|)
-operator|==
-operator|(
-name|PTR_T
-operator|)
-literal|0
-operator|)
-operator|||
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|tfile_offset
 operator|!=
@@ -1679,6 +1473,9 @@ if|if
 condition|(
 name|read_size
 operator|!=
+operator|(
+name|long
+operator|)
 name|size
 condition|)
 block|{
@@ -1724,6 +1521,7 @@ comment|/* Convert language code to string format.  */
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1809,6 +1607,7 @@ comment|/* Convert storage class to string.  */
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1984,6 +1783,7 @@ comment|/* Convert symbol type to string.  */
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2170,6 +1970,7 @@ comment|/* Convert debug level to string.  */
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2225,6 +2026,7 @@ comment|/* Convert the type information to string format.  */
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -3515,6 +3317,7 @@ comment|/* Print out the global file header for object files.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_global_hdr
 parameter_list|(
@@ -3847,6 +3650,7 @@ comment|/* Print out the symbolic header.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_sym_hdr
 parameter_list|(
@@ -4323,6 +4127,7 @@ comment|/* Print out a symbol.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_symbol
 parameter_list|(
@@ -4345,6 +4150,7 @@ decl_stmt|;
 name|int
 name|number
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|strbase
@@ -4477,7 +4283,7 @@ operator|(
 name|scope_t
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -4713,7 +4519,7 @@ operator|(
 name|scope_t
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -5035,21 +4841,12 @@ name|sym_ptr
 argument_list|)
 condition|)
 block|{
-specifier|register
 name|int
 name|i
 init|=
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|stab_names
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|stab_names
-index|[
-literal|0
-index|]
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -5165,6 +4962,7 @@ comment|/* Print out a word from the aux. table in various formats.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_aux
 parameter_list|(
@@ -5289,6 +5087,7 @@ comment|/* Write aggregate information to a string.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|emit_aggregate
 parameter_list|(
@@ -5481,6 +5280,7 @@ comment|/* Print out information about a file descriptor, and the symbols,    pr
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_file_desc
 parameter_list|(
@@ -6793,15 +6593,11 @@ begin_comment
 comment|/* Read in the portions of the .T file that we will print out.  */
 end_comment
 
-begin_decl_stmt
+begin_function
+specifier|static
 name|void
 name|read_tfile
-name|__proto
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+parameter_list|()
 block|{
 name|short
 name|magic
@@ -6817,7 +6613,7 @@ operator|)
 name|read_seek
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 operator|&
 name|magic
@@ -6848,7 +6644,7 @@ operator|)
 name|read_seek
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 operator|&
 name|global_hdr
@@ -6905,7 +6701,7 @@ operator|)
 name|read_seek
 argument_list|(
 operator|(
-name|PTR_T
+name|PTR
 operator|)
 operator|&
 name|sym_hdr
@@ -6934,10 +6730,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -6958,10 +6751,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -6987,10 +6777,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7016,10 +6803,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7045,10 +6829,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7074,10 +6855,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7103,10 +6881,9 @@ name|iauxMax
 operator|>
 literal|0
 condition|)
-block|{
 name|aux_used
 operator|=
-name|calloc
+name|xcalloc
 argument_list|(
 name|sym_hdr
 operator|.
@@ -7115,29 +6892,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|aux_used
-operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"calloc"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|l_strings
 operator|=
 operator|(
@@ -7146,10 +6900,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7170,10 +6921,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7194,10 +6942,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7223,10 +6968,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7252,10 +6994,7 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|PTR_T
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|sym_hdr
 operator|.
@@ -7274,10 +7013,27 @@ literal|"External symbols"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
+
+begin_decl_stmt
+specifier|extern
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -7856,29 +7612,6 @@ block|}
 return|return
 literal|0
 return|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_function
-name|void
-name|fancy_abort
-parameter_list|()
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mips-tdump internal error"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OSF/rose half-pic support functions.    Copyright (C) 1992, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* OSF/rose half-pic support functions.    Copyright (C) 1992, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -40,7 +40,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"output.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"obstack.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"halfpic.h"
 end_include
 
 begin_define
@@ -56,30 +74,6 @@ directive|define
 name|obstack_chunk_free
 value|free
 end_define
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|eliminate_constant_term
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|assemble_name
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|output_addr_const
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|int
@@ -117,17 +111,24 @@ begin_comment
 comment|/* # half-pic references */
 end_comment
 
-begin_function_decl
+begin_macro
 name|int
-function_decl|(
-modifier|*
-name|ptr_half_pic_address_p
-function_decl|)
-parameter_list|()
-init|=
+argument_list|(
+argument|*ptr_half_pic_address_p
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+operator|=
 name|half_pic_address_p
-function_decl|;
-end_function_decl
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Obstack to hold generated pic names.  */
@@ -169,6 +170,7 @@ name|int
 name|pointer_p
 decl_stmt|;
 comment|/* pointer created.  */
+specifier|const
 name|char
 modifier|*
 name|ref_name
@@ -178,6 +180,7 @@ name|int
 name|ref_len
 decl_stmt|;
 comment|/* reference name length */
+specifier|const
 name|char
 modifier|*
 name|real_name
@@ -202,6 +205,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|half_pic_prefix
@@ -247,6 +251,27 @@ name|HASHBITS
 value|30
 end_define
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|all_refs
+modifier|*
+name|half_pic_hash
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|struct
@@ -260,6 +285,7 @@ name|len
 parameter_list|,
 name|create_p
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -288,6 +314,7 @@ name|struct
 name|all_refs
 name|zero_all_refs
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -329,6 +356,7 @@ comment|/* Compute hash code */
 name|uname
 operator|=
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -661,9 +689,11 @@ operator|->
 name|ref_name
 argument_list|)
 expr_stmt|;
-name|ASM_OUTPUT_INT
+name|assemble_aligned_integer
 argument_list|(
-name|stream
+name|POINTER_SIZE
+operator|/
+name|BITS_PER_UNIT
 argument_list|,
 name|gen_rtx_SYMBOL_REF
 argument_list|(
@@ -864,6 +894,7 @@ name|half_pic_declare
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -937,6 +968,7 @@ name|half_pic_external
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1014,6 +1046,7 @@ name|rtx
 name|addr
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1242,6 +1275,7 @@ name|rtx
 name|operand
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|name

@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for SPARC64, ELF.    Copyright (C) 1994, 1995, 1996, 1997, 1998  Free Software Foundation, Inc.    Contributed by Doug Evans, dje@cygnus.com.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for SPARC64, ELF.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.    Contributed by Doug Evans, dje@cygnus.com.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* ??? We're taking the scheme of including another file and then overriding    the values we don't like a bit too far here.  The alternative is to more or    less duplicate all of svr4.h, sparc/sysv4.h, and sparc/sol2.h here    (suitably cleaned up).  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sparc/sol2.h"
-end_include
 
 begin_undef
 undef|#
@@ -41,7 +35,7 @@ define|#
 directive|define
 name|TARGET_DEFAULT
 define|\
-value|(MASK_V9 + MASK_PTR64 + MASK_64BIT + MASK_HARD_QUAD \  + MASK_APP_REGS + MASK_EPILOGUE + MASK_FPU + MASK_STACK_BIAS)
+value|(MASK_V9 + MASK_PTR64 + MASK_64BIT + MASK_HARD_QUAD \  + MASK_APP_REGS + MASK_EPILOGUE + MASK_FPU + MASK_STACK_BIAS + MASK_LONG_DOUBLE_128)
 end_define
 
 begin_undef
@@ -67,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dsparc -D__ELF__ -Acpu(sparc) -Amachine(sparc)"
+value|"-Dsparc -D__ELF__ -Acpu=sparc -Amachine=sparc"
 end_define
 
 begin_comment
@@ -184,7 +178,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{"big-endian", -MASK_LITTLE_ENDIAN, "Generate code for big endian" }, \ {"little-endian", MASK_LITTLE_ENDIAN, "Generate code for little endian" },
+value|{"big-endian", -MASK_LITTLE_ENDIAN, N_("Generate code for big endian") }, \ {"little-endian", MASK_LITTLE_ENDIAN, N_("Generate code for little endian") },
 end_define
 
 begin_undef
@@ -284,18 +278,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DWARF_DEBUGGING_INFO
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWARF2_DEBUGGING_INFO
-end_define
-
-begin_define
-define|#
-directive|define
 name|DBX_DEBUGGING_INFO
 end_define
 
@@ -310,100 +292,6 @@ define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
 value|DWARF2_DEBUG
-end_define
-
-begin_comment
-comment|/* Stabs doesn't use this, and it confuses a simulator.  */
-end_comment
-
-begin_comment
-comment|/* ??? Need to see what DWARF needs, if anything.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_IDENTIFY_GCC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_GCC
-parameter_list|(
-name|FILE
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* Define the names of various pseudo-ops used by the Sparc/svr4 assembler.    ??? If ints are 64 bits then UNALIGNED_INT_ASM_OP (defined elsewhere) is    misnamed.  These should all refer to explicit sizes (half/word/xword?),    anything other than short/int/long/etc.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNALIGNED_LONGLONG_ASM_OP
-value|".uaxword"
-end_define
-
-begin_comment
-comment|/* DWARF stuff.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DWARF_ADDR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABEL
-parameter_list|)
-define|\
-value|do {								\   fprintf ((FILE), "\t%s\t", UNALIGNED_LONGLONG_ASM_OP);	\   assemble_name ((FILE), (LABEL));				\   fprintf ((FILE), "\n");					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DWARF_ADDR_CONST
-parameter_list|(
-name|FILE
-parameter_list|,
-name|RTX
-parameter_list|)
-define|\
-value|do {								\   fprintf ((FILE), "\t%s\t", UNALIGNED_LONGLONG_ASM_OP);	\   output_addr_const ((FILE), (RTX));				\   fputc ('\n', (FILE));						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DWARF2_ADDR_CONST
-parameter_list|(
-name|FILE
-parameter_list|,
-name|ADDR
-parameter_list|)
-define|\
-value|fprintf ((FILE), "\t%s\t%s", UNALIGNED_LONGLONG_ASM_OP, (ADDR))
-end_define
-
-begin_comment
-comment|/* ??? Not sure if this should be 4 or 8 bytes.  4 works for now.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DWARF_REF
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABEL
-parameter_list|)
-define|\
-value|do {								\   fprintf ((FILE), "\t%s\t", UNALIGNED_INT_ASM_OP);		\   assemble_name ((FILE), (LABEL));				\   fprintf ((FILE), "\n");					\ } while (0)
 end_define
 
 end_unit

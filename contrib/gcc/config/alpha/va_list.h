@@ -3,11 +3,29 @@ begin_comment
 comment|/* A replacement for Digital Unix's<va_list.h>.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<va-alpha.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC_VA_LIST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__GNUC_VA_LIST
+end_define
+
+begin_typedef
+typedef|typedef
+name|__builtin_va_list
+name|__gnuc_va_list
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

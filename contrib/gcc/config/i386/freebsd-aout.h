@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994, 1996, 1997 Free Software Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994, 1996, 1997, 1999, 2000, 2002 Free Software    Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ name|YES_UNDERSCORES
 end_define
 
 begin_comment
-comment|/* Don't assume anything about the header files. */
+comment|/* Don't assume anything about the header files.  */
 end_comment
 
 begin_define
@@ -30,32 +30,32 @@ file|"i386/gstabs.h"
 end_include
 
 begin_comment
-comment|/* Get perform_* macros to build libgcc.a.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"i386/perform.h"
-end_include
-
-begin_comment
 comment|/* This goes away when the math-emulator is fixed */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 define|\
 value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
 end_define
+
+begin_comment
+comment|/* The macro defined in i386.h doesn't work with the old gas of    FreeBSD 2.x.  The definition in sco.h and sol2.h appears to work,    but it turns out that, even though the assembler doesn't complain,    we get incorrect results.  Fortunately, the definition in    defaults.h works.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_PREFERRED_EH_DATA_FORMAT
+end_undef
 
 begin_undef
 undef|#
@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__FreeBSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -D__FreeBSD__\  -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
 end_define
 
 begin_comment
@@ -140,12 +140,6 @@ name|WCHAR_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
 
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-end_define
-
 begin_comment
 comment|/* Override the default comment-starter of "/".  */
 end_comment
@@ -204,52 +198,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The following macros are stolen from i386v4.h */
-end_comment
-
-begin_comment
-comment|/* These have to be defined to get PIC code correct */
-end_comment
-
-begin_comment
-comment|/* This is how to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|BODY
-parameter_list|,
-name|VALUE
-parameter_list|,
-name|REL
-parameter_list|)
-define|\
-value|fprintf (FILE, "\t.long _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", LPREFIX, VALUE)
-end_define
-
-begin_comment
-comment|/* Indicate that jump tables go in the text section.  This is    necessary when compiling PIC code.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JUMP_TABLES_IN_TEXT_SECTION
-value|1
-end_define
-
-begin_comment
 comment|/* Don't default to pcc-struct-return, because in FreeBSD we prefer the    superior nature of the older gcc way.  */
 end_comment
 
@@ -261,7 +209,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Ensure we the configuration knows our system correctly so we can link with    libraries compiled with the native cc. */
+comment|/* Ensure we the configuration knows our system correctly so we can link with    libraries compiled with the native cc.  */
 end_comment
 
 begin_undef
@@ -338,14 +286,14 @@ begin_define
 define|#
 directive|define
 name|TYPE_ASM_OP
-value|".type"
+value|"\t.type\t"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZE_ASM_OP
-value|".size"
+value|"\t.size\t"
 end_define
 
 begin_comment
@@ -405,7 +353,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "function");			\     putc ('\n', FILE);							\     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do {									\     fprintf (FILE, "%s", TYPE_ASM_OP);					\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "function");			\     putc ('\n', FILE);							\     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
 end_define
 
 begin_comment
@@ -424,7 +372,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\         size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do {									\     fprintf (FILE, "%s", TYPE_ASM_OP);					\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\         size_directive_output = 1;					\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
 end_define
 
 begin_comment
@@ -445,7 +393,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {                                                                    \      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);                  \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)	        \&& ! AT_END&& TOP_LEVEL                                       \&& DECL_INITIAL (DECL) == error_mark_node                      \&& !size_directive_output)                                     \        {                                                                \          fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);                        \ 	 assemble_name (FILE, name);                                    \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));\ 	}								\    } while (0)
+value|do {                                                                    \      const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);            \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)	        \&& ! AT_END&& TOP_LEVEL                                       \&& DECL_INITIAL (DECL) == error_mark_node                      \&& !size_directive_output)                                     \        {                                                                \          fprintf (FILE, "%s", SIZE_ASM_OP);                             \ 	 assemble_name (FILE, name);                                    \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));\ 	}								\    } while (0)
 end_define
 
 begin_comment
@@ -464,7 +412,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     if (!flag_inhibit_size_directive)					\       {									\         char label[256];						\ 	static int labelno;						\ 	labelno++;							\ 	ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",");						\ 	assemble_name (FILE, label);					\         fprintf (FILE, "-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
+value|do {									\     if (!flag_inhibit_size_directive)					\       {									\         char label[256];						\ 	static int labelno;						\ 	labelno++;							\ 	ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",");						\ 	assemble_name (FILE, label);					\         fprintf (FILE, "-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
 end_define
 
 begin_define
@@ -489,6 +437,26 @@ name|STARTFILE_SPEC
 define|\
 value|"%{shared:c++rt0.o%s} \    %{!shared:%{pg:gcrt0.o%s}%{!pg:%{static:scrt0.o%s}%{!static:crt0.o%s}}}"
 end_define
+
+begin_comment
+comment|/* Define this so we can compile MS code for use with WINE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_PRAGMA_PACK_PUSH_POP
+end_define
+
+begin_comment
+comment|/* FreeBSD 2.2.7's assembler does not support .quad properly.  Do not    use it.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_QUAD
+end_undef
 
 end_unit
 

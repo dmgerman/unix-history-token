@@ -3,12 +3,6 @@ begin_comment
 comment|/* Definitions of target machine for GNU compiler, for SPARC running Solaris 2    using the system linker.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"sparc/sol2.h"
-end_include
-
 begin_comment
 comment|/* At least up through Solaris 2.6,    the system linker does not work with DWARF or DWARF2,    since it does not have working support for relocations    to unaligned data.  */
 end_comment

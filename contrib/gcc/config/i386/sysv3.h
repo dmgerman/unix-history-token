@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running system V.    Copyright (C) 1988, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running system V.    Copyright (C) 1988, 1996, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Asystem(svr3)"
+value|"-Dunix -Asystem=svr3"
 end_define
 
 begin_define
@@ -151,13 +151,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|FRAME_POINTER_REQUIRED
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FRAME_POINTER_REQUIRED
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 define|\
 value|(current_function_calls_setjmp || current_function_calls_longjmp)
 end_define
@@ -193,7 +193,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Define a few machine-specific details of the implementation of    constructors.     The __CTORS_LIST__ goes in the .init section.  Define CTOR_LIST_BEGIN    and CTOR_LIST_END to contribute to the .init section an instruction to    push a word containing 0 (or some equivalent of that).     ASM_OUTPUT_CONSTRUCTOR should be defined to push the address of the    constructor.  */
+comment|/* Define a few machine-specific details of the implementation of    constructors.     The __CTORS_LIST__ goes in the .init section.  Define CTOR_LIST_BEGIN    and CTOR_LIST_END to contribute to the .init section an instruction to    push a word containing 0 (or some equivalent of that).  */
 end_comment
 
 begin_undef
@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|INIT_SECTION_ASM_OP
-value|".section .init,\"x\""
+value|"\t.section .init,\"x\""
 end_define
 
 begin_define
@@ -227,14 +227,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {						\     init_section ();				\     fprintf (FILE, "\tpushl $");		\     assemble_name (FILE, NAME);			\     fprintf (FILE, "\n");			\   } while (0)
+name|TARGET_ASM_CONSTRUCTOR
+value|ix86_svr3_asm_out_constructor
 end_define
 
 end_unit

@@ -11,9 +11,9 @@ begin_block
 block|{
 literal|".F"
 operator|,
-block|{
 literal|"@f77-cpp-input"
-block|}
+operator|,
+literal|0
 block|}
 end_block
 
@@ -25,9 +25,9 @@ begin_block
 block|{
 literal|".fpp"
 operator|,
-block|{
 literal|"@f77-cpp-input"
-block|}
+operator|,
+literal|0
 block|}
 end_block
 
@@ -39,9 +39,9 @@ begin_block
 block|{
 literal|".FPP"
 operator|,
-block|{
 literal|"@f77-cpp-input"
-block|}
+operator|,
+literal|0
 block|}
 end_block
 
@@ -53,12 +53,9 @@ begin_block
 block|{
 literal|"@f77-cpp-input"
 operator|,
-comment|/* For f77 we want -traditional to avoid errors with, for 	instance, mismatched '.  Also, we avoid unpleasant surprises 	with substitution of names not prefixed by `_' by using %P 	rather than %p (although this isn't consistent with SGI and 	Sun f77, at least) so you test `__unix' rather than `unix'. 	-D_LANGUAGE_FORTRAN is used by some compilers like SGI and 	might as well be in there. */
-block|{
-literal|"cpp0 -lang-c %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %{$} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\ 	%{!no-gcc:-D__GNUC__=%v1 -D__GNUC_MINOR__=%v2}\ 	%{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%P} -D_LANGUAGE_FORTRAN %{trigraphs} \ 	%c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}} -traditional\ 	%{ffast-math:-D__FAST_MATH__}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*} %Z\ 	%i %{!M:%{!MM:%{!E:%{!pipe:%g.i}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
-block|,
-literal|"%{!M:%{!MM:%{!E:f771 %{!pipe:%g.i} %(f771) \ 		   %{!Q:-quiet} -dumpbase %b.F %{d*} %{m*} %{a*}\ 		   %{g*} %{O*} %{W*} %{w} %{pedantic*} \ 		   %{v:-version -fversion} %{pg:-p} %{p} %{f*} %{I*}\ 		   %{aux-info*} %{Qn:-fno-ident}\ 		   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 		   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\ 	      %{!S:as %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}\ 		      %{!pipe:%g.s} %A\n }}}}"
-block|}
+literal|"tradcpp0 -lang-fortran %(cpp_options) %{!M:%{!MM:%{!E:%{!pipe:%g.f} |\n\     f771 %{!pipe:%g.f} %(cc1_options) %{I*} %{!fsyntax-only:%(invoke_as)}}}}"
+operator|,
+literal|0
 block|}
 end_block
 
@@ -70,9 +67,9 @@ begin_block
 block|{
 literal|".r"
 operator|,
-block|{
 literal|"@ratfor"
-block|}
+operator|,
+literal|0
 block|}
 end_block
 
@@ -84,11 +81,9 @@ begin_block
 block|{
 literal|"@ratfor"
 operator|,
-block|{
-literal|"ratfor %{C} %{v}\            %{C:%{!E:%eGNU C does not support -C without using -E}}\            %{!E:%{!pipe:-o %g.f}}%{E:%W{o*}} %i |\n"
-block|,
-literal|"%{!E:f771 %{!pipe:%g.f} %(f771) \ 	   %{!Q:-quiet} -dumpbase %b.r %{d*} %{m*} %{a*}\ 	   %{g*} %{O*} %{W*} %{w} %{pedantic*} \ 	   %{v:-version -fversion} %{pg:-p} %{p} %{f*} %{I*}\ 	   %{aux-info*} %{Qn:-fno-ident}\ 	   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 	   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\ 	   %{!S:as %a %Y\ 	   %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}\            %{!pipe:%g.s} %A\n }}"
-block|}
+literal|"%{C:%{!E:%eGNU C does not support -C without using -E}}\     ratfor %{C} %{v} %i %{E:%W{o*}} %{!E: %{!pipe:-o %g.f} |\n\     f771 %{!pipe:%g.f} %(cc1_options) %{I*} %{!fsyntax-only:%(invoke_as)}}"
+operator|,
+literal|0
 block|}
 end_block
 
@@ -100,9 +95,9 @@ begin_block
 block|{
 literal|".f"
 operator|,
-block|{
 literal|"@f77"
-block|}
+operator|,
+literal|0
 block|}
 end_block
 
@@ -114,9 +109,9 @@ begin_block
 block|{
 literal|".for"
 operator|,
-block|{
 literal|"@f77"
-block|}
+operator|,
+literal|0
 block|}
 end_block
 
@@ -128,9 +123,9 @@ begin_block
 block|{
 literal|".FOR"
 operator|,
-block|{
 literal|"@f77"
-block|}
+operator|,
+literal|0
 block|}
 end_block
 
@@ -142,23 +137,9 @@ begin_block
 block|{
 literal|"@f77"
 operator|,
-block|{
-literal|"%{!M:%{!MM:%{!E:f771 %i %(f771) \ 		   %{!Q:-quiet} -dumpbase %b.f %{d*} %{m*} %{a*}\ 		   %{g*} %{O*} %{W*} %{w} %{pedantic*}\ 		   %{v:-version -fversion} %{pg:-p} %{p} %{f*} %{I*}\ 		   %{aux-info*} %{Qn:-fno-ident}\ 		   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 		   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\ 	      %{!S:as %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}\ 		      %{!pipe:%g.s} %A\n }}}}"
-block|}
-block|}
-end_block
-
-begin_operator
+literal|"%{!M:%{!MM:%{!E:f771 %i %(cc1_options) %{I*}\ 	%{!fsyntax-only:%(invoke_as)}}}}"
 operator|,
-end_operator
-
-begin_block
-block|{
-literal|"@f77-version"
-operator|,
-block|{
-literal|"cpp0 -lang-c %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %{$} %I \       %{C:%{!E:%eGNU C does not support -C without using -E}} \       %{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG} \       %{!no-gcc:-D__GNUC__=%v1 -D__GNUC_MINOR__=%v2} \       %{ansi:-trigraphs -$ -D__STRICT_ANSI__} \       %{!undef:%P} -D_LANGUAGE_FORTRAN %{trigraphs} \       %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}} -traditional \       %{ffast-math:-D__FAST_MATH__}\       %{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*} %Z \       /dev/null /dev/null \n\      f771 -fnull-version %(f771) \       %{!Q:-quiet} -dumpbase g77-version.f %{d*} %{m*} %{a*} \       %{g*} %{O*} %{W*} %{w} %{pedantic*} \       -version -fversion %{f*} %{I*} -o %g.s /dev/null \n\      as %a %Y -o %g%O %g.s %A \n\      ld %l %X -o %g %g%O %{A} %{d} %{e*} %{m} %{N} %{n} \       %{r} %{s} %{t} %{u*} %{x} %{z} %{Z} \       %{!A:%{!nostdlib:%{!nostartfiles:%S}}} \       %{static:} %{L*} %D -lg2c -lm \       %{!nostdlib:%{!nodefaultlibs:%G %L %G}} \       %{!A:%{!nostdlib:%{!nostartfiles:%E}}} \       %{T*} \n\      %g \n"
-block|}
+literal|0
 block|}
 end_block
 

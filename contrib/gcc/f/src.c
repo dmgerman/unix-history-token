@@ -22,32 +22,6 @@ file|"top.h"
 end_include
 
 begin_comment
-comment|/* This array does a toupper (), but any valid char type is valid as an    index and returns identity if not a lower-case character.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|ffesrc_toupper_
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This array does a tolower (), but any valid char type is valid as an    index and returns identity if not an upper-case character.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|ffesrc_tolower_
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* This array is set up so that, given a source-mapped character, the result    of indexing into this array will match an upper-cased character depending    on the source-mapped character's case and the established ffe_case_match()    setting.  So the uppercase cells contain identies (e.g. ['A'] == 'A')    as long as uppercase matching is permitted (!FFE_caseLOWER) and the    lowercase cells contain uppercased identities (e.g. ['a'] == 'A') as long    as lowercase matching is permitted (!FFE_caseUPPER).	 Else the case    cells contain -1.  _init_ is for the first character of a keyword,    and _noninit_ is for other characters.  */
 end_comment
 
@@ -212,20 +186,6 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-name|ffesrc_toupper_
-index|[
-name|i
-index|]
-operator|=
-name|i
-expr_stmt|;
-name|ffesrc_tolower_
-index|[
-name|i
-index|]
-operator|=
-name|i
-expr_stmt|;
 name|ffesrc_bad_symbol_init_
 index|[
 name|i
@@ -241,52 +201,6 @@ operator|=
 name|FFEBAD
 expr_stmt|;
 block|}
-for|for
-control|(
-name|i
-operator|=
-literal|'A'
-init|;
-name|i
-operator|<=
-literal|'Z'
-condition|;
-operator|++
-name|i
-control|)
-name|ffesrc_tolower_
-index|[
-name|i
-index|]
-operator|=
-name|tolower
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|'a'
-init|;
-name|i
-operator|<=
-literal|'z'
-condition|;
-operator|++
-name|i
-control|)
-name|ffesrc_toupper_
-index|[
-name|i
-index|]
-operator|=
-name|toupper
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
 name|ffesrc_check_symbol_
 operator|=
 operator|(
@@ -398,7 +312,7 @@ index|[
 name|i
 index|]
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 name|i
 argument_list|)
@@ -471,7 +385,7 @@ index|[
 name|i
 index|]
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 name|i
 argument_list|)
@@ -522,7 +436,7 @@ index|[
 name|i
 index|]
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 name|i
 argument_list|)
@@ -553,7 +467,7 @@ index|[
 name|i
 index|]
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 name|i
 argument_list|)
@@ -583,7 +497,7 @@ index|[
 name|i
 index|]
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 name|i
 argument_list|)
@@ -786,7 +700,7 @@ expr_stmt|;
 comment|/* Transform source. */
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 name|c
 argument_list|)
@@ -794,7 +708,7 @@ expr_stmt|;
 comment|/* Upcase source. */
 name|d
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|str_ic
@@ -864,7 +778,7 @@ expr_stmt|;
 comment|/* Transform source. */
 name|d
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|str_ic
@@ -934,7 +848,7 @@ expr_stmt|;
 comment|/* Transform source. */
 name|d
 operator|=
-name|ffesrc_tolower
+name|TOLOWER
 argument_list|(
 operator|*
 name|str_ic
@@ -1017,14 +931,14 @@ condition|)
 block|{
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
 name|d
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 name|d
 argument_list|)
@@ -1062,7 +976,7 @@ literal|0
 condition|)
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|var
@@ -1070,7 +984,7 @@ argument_list|)
 expr_stmt|;
 name|d
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|str_ic
@@ -1195,7 +1109,7 @@ control|)
 block|{
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|var
@@ -1308,7 +1222,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|var
@@ -1339,7 +1253,7 @@ name|str_uc
 expr_stmt|;
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|var
@@ -1493,7 +1407,7 @@ control|)
 block|{
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|var
@@ -1592,7 +1506,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|var
@@ -1632,7 +1546,7 @@ literal|0
 condition|)
 name|c
 operator|=
-name|ffesrc_toupper
+name|TOUPPER
 argument_list|(
 operator|*
 name|var

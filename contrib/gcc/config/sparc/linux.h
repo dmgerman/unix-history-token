@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for SPARC running Linux-based GNU systems with ELF.    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Eddie C. Dost (ecd@skynet.be)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for SPARC running Linux-based GNU systems with ELF.    Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Eddie C. Dost (ecd@skynet.be)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -10,7 +10,7 @@ name|LINUX_DEFAULT_ELF
 end_define
 
 begin_comment
-comment|/* Don't assume anything about the header files. */
+comment|/* Don't assume anything about the header files.  */
 end_comment
 
 begin_define
@@ -19,20 +19,8 @@ directive|define
 name|NO_IMPLICIT_EXTERN_C
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|HAVE_ATEXIT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-end_define
-
 begin_comment
-comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later. */
+comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later.  */
 end_comment
 
 begin_if
@@ -59,47 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_GNULIBC_1
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|DEFAULT_VTABLE_THUNKS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_VTABLE_THUNKS
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Use stabs instead of DWARF debug format.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PREFERRED_DEBUGGING_TYPE
-value|DBX_DEBUG
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sparc/sysv4.h>
-end_include
-
 begin_undef
 undef|#
 directive|undef
@@ -113,32 +60,7 @@ name|MD_STARTFILE_PREFIX
 end_undef
 
 begin_comment
-comment|/* Output at beginning of assembler file.  */
-end_comment
-
-begin_comment
-comment|/* The .file command should always begin the output.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do {                                                                  \         output_file_directive (FILE, main_input_filename);              \         fprintf (FILE, "\t.version\t\"01.01\"\n");                      \   } while (0)
-end_define
-
-begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for GNU/Linux.  Here we add    the GNU/Linux magical crtbegin.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main'. */
+comment|/* Provide a STARTFILE_SPEC appropriate for GNU/Linux.  Here we add    the GNU/Linux magical crtbegin.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main'.  */
 end_comment
 
 begin_undef
@@ -146,6 +68,12 @@ undef|#
 directive|undef
 name|STARTFILE_SPEC
 end_undef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_GNULIBC_1
+end_ifdef
 
 begin_define
 define|#
@@ -154,6 +82,24 @@ name|STARTFILE_SPEC
 define|\
 value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Provide a ENDFILE_SPEC appropriate for GNU/Linux.  Here we tack on    the GNU/Linux magical crtend.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main', followed by a normal    GNU/Linux "finalizer" file, `crtn.o'.  */
@@ -174,7 +120,7 @@ value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 end_define
 
 begin_comment
-comment|/* This is for -profile to use -lc_p instead of -lc. */
+comment|/* This is for -profile to use -lc_p instead of -lc.  */
 end_comment
 
 begin_undef
@@ -190,6 +136,23 @@ name|CC1_SPEC
 value|"%{profile:-p} \ %{sun4:} %{target:} \ %{mcypress:-mcpu=cypress} \ %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} \ %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} \ "
 end_define
 
+begin_comment
+comment|/* The GNU C++ standard library requires that these macros be defined.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CPLUSPLUS_CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPLUSPLUS_CPP_SPEC
+value|"-D_GNU_SOURCE %(cpp)"
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -201,6 +164,20 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fprintf (stderr, " (sparc GNU/Linux with ELF)");
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_SWITCHES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_SWITCHES
+define|\
+value|{"long-double-64", -MASK_LONG_DOUBLE_128, N_("Use 64 bit long doubles") }, \ {"long-double-128", MASK_LONG_DOUBLE_128, N_("Use 128 bit long doubles") },
 end_define
 
 begin_undef
@@ -239,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE
-value|"long int"
+value|"int"
 end_define
 
 begin_undef
@@ -252,8 +229,14 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE_SIZE
-value|BITS_PER_WORD
+value|32
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|MAX_WCHAR_TYPE_SIZE
+end_undef
 
 begin_undef
 undef|#
@@ -265,7 +248,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -D__sparc__ -Dlinux -Asystem(unix) -Asystem(posix)"
+value|"-D__ELF__ -Dunix -D__sparc__ -Dlinux -Asystem=unix -Asystem=posix"
 end_define
 
 begin_undef
@@ -285,7 +268,7 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 define|\
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE}"
+value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} \ %{mlong-double-128:-D__LONG_DOUBLE_128__}"
 end_define
 
 begin_else
@@ -298,7 +281,7 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 define|\
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
+value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} \ %{pthread:-D_REENTRANT} %{mlong-double-128:-D__LONG_DOUBLE_128__}"
 end_define
 
 begin_endif
@@ -377,7 +360,7 @@ comment|/* Provide a LINK_SPEC appropriate for GNU/Linux.  Here we provide suppo
 end_comment
 
 begin_comment
-comment|/* If ELF is the default format, we should not use /lib/elf. */
+comment|/* If ELF is the default format, we should not use /lib/elf.  */
 end_comment
 
 begin_undef
@@ -431,7 +414,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \         %{static:-static}}}"
+value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!mno-relax:%{!r:-relax}} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \         %{static:-static}}}"
 end_define
 
 begin_endif
@@ -440,7 +423,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The sun bundled assembler doesn't accept -Yd, (and neither does gas).    It's safe to pass -s always, even if -g is not used. */
+comment|/* The sun bundled assembler doesn't accept -Yd, (and neither does gas).    It's safe to pass -s always, even if -g is not used.  */
 end_comment
 
 begin_undef
@@ -454,7 +437,7 @@ define|#
 directive|define
 name|ASM_SPEC
 define|\
-value|"%{V} %{v:%{!V:-V}} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Wa,*:%*} -s %{fpic:-K PIC} %{fPIC:-K PIC}"
+value|"%{V} %{v:%{!V:-V}} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Wa,*:%*} -s %{fpic:-K PIC} \    %{fPIC:-K PIC} %(asm_relax)"
 end_define
 
 begin_comment
@@ -475,23 +458,6 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 value|(REGNO)
-end_define
-
-begin_comment
-comment|/* We use stabs-in-elf for debugging, because that is what the native    toolchain uses.  XXX */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PREFERRED_DEBUGGING_TYPE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PREFERRED_DEBUGGING_TYPE
-value|DBX_DEBUG
 end_define
 
 begin_undef
@@ -527,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|COMMON_ASM_OP
-value|"\t.common"
+value|"\t.common\t"
 end_define
 
 begin_comment
@@ -602,27 +568,88 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|sprintf (LABEL, "*.L%s%d", PREFIX, NUM)
+value|sprintf (LABEL, "*.L%s%ld", PREFIX, (long)(NUM))
 end_define
 
 begin_escape
 end_escape
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/* Define for support of TFmode long double and REAL_ARITHMETIC.    Sparc ABI says that long double is 4 words. GNU/Linux does not support    long double yet.  */
+comment|/* Define for support of TFmode long double and REAL_ARITHMETIC.    Sparc ABI says that long double is 4 words.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LONG_DOUBLE_TYPE_SIZE
+value|(TARGET_LONG_DOUBLE_128 ? 128 : 64)
+end_define
+
+begin_comment
+comment|/* Constant which presents upper bound of the above value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 value|128
+end_define
+
+begin_comment
+comment|/* Define this to set long double type size to use in libgcc2.c, which can    not depend on target_flags.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LONG_DOUBLE_128__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LIBGCC2_LONG_DOUBLE_TYPE_SIZE
+value|128
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LIBGCC2_LONG_DOUBLE_TYPE_SIZE
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USE_GNULIBC_1
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LD_EH_FRAME_HDR
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LINK_EH_SPEC
+value|"%{!static:--eh-frame-hdr} "
 end_define
 
 begin_endif
@@ -632,46 +659,6 @@ end_endif
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* Override MACHINE_STATE_{SAVE,RESTORE} because we have special    traps available which can get and set the condition codes    reliably.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|MACHINE_STATE_SAVE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MACHINE_STATE_SAVE
-parameter_list|(
-name|ID
-parameter_list|)
-define|\
-value|unsigned long int ms_flags, ms_saveret;		\   asm volatile("ta	0x20\n\t"			\ 	       "mov	%%g1, %0\n\t"			\ 	       "mov	%%g2, %1\n\t"			\ 	       : "=r" (ms_flags), "=r" (ms_saveret));
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|MACHINE_STATE_RESTORE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MACHINE_STATE_RESTORE
-parameter_list|(
-name|ID
-parameter_list|)
-define|\
-value|asm volatile("mov	%0, %%g1\n\t"			\ 	       "mov	%1, %%g2\n\t"			\ 	       "ta	0x21\n\t"			\ 	       :
-comment|/* no outputs */
-value|\ 	       : "r" (ms_flags), "r" (ms_saveret));
-end_define
 
 end_unit
 

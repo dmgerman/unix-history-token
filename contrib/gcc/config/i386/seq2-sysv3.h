@@ -13,11 +13,11 @@ begin_comment
 comment|/* Use atexit for static destructors, instead of defining    our own exit function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-end_define
+begin_undef
+undef|#
+directive|undef
+name|NEED_ATEXIT
+end_undef
 
 end_unit
 

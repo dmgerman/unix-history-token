@@ -37,5 +37,22 @@ name|TARGET_AS_CAN_SUBTRACT_LABELS
 value|0
 end_define
 
+begin_comment
+comment|/* The frame unwind data requires the ability to subtract labels.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DWARF2_UNWIND_INFO
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
+value|0
+end_define
+
 end_unit
 

@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_symbol
+name|GCC_F_SYMBOL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_symbol
+name|GCC_F_SYMBOL_H
 end_define
 
 begin_comment
@@ -734,29 +734,6 @@ parameter_list|)
 value|((s)->dummy_args)
 end_define
 
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetFFE
-end_if
-
-begin_function_decl
-name|void
-name|ffesymbol_dump
-parameter_list|(
-name|ffesymbol
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|ffesymbol_error
@@ -1130,38 +1107,6 @@ name|explicit
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetFFE
-end_if
-
-begin_function_decl
-name|ffesymbol
-name|ffesymbol_report
-parameter_list|(
-name|ffesymbol
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ffesymbol_report_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -1841,6 +1786,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_SYMBOL_H */
+end_comment
 
 end_unit
 

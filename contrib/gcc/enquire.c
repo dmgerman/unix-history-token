@@ -2638,7 +2638,7 @@ name|SYS_FLOAT_H_WRAP
 condition|)
 name|printf
 argument_list|(
-literal|"#include_next<float.h>\n"
+literal|" #include_next<float.h>\n"
 argument_list|)
 expr_stmt|;
 block|}

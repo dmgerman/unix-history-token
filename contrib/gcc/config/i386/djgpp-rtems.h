@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -DGO32 -DDJGPP=2 -DMSDOS \   -Asystem(unix) -Asystem(msdos) -Acpu(i386) -Amachine(i386) \   -Asystem(rtems)"
+value|"-Dunix -DGO32 -DDJGPP=2 -DMSDOS \   -Asystem=unix -Asystem=msdos -Asystem=rtems"
 end_define
 
 begin_comment

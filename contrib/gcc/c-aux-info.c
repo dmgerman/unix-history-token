@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate information regarding function declarations and definitions based    on information stored in GCC's tree structure.  This code implements the    -aux-info option.    Copyright (C) 1989, 91, 94, 95, 97-98, 1999 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate information regarding function declarations and definitions based    on information stored in GCC's tree structure.  This code implements the    -aux-info option.    Copyright (C) 1989, 1991, 1994, 1995, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@segfault.us.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -74,7 +74,7 @@ specifier|static
 name|char
 modifier|*
 name|affix_data_type
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -82,6 +82,7 @@ name|char
 operator|*
 operator|)
 argument_list|)
+name|ATTRIBUTE_MALLOC
 decl_stmt|;
 end_decl_stmt
 
@@ -91,7 +92,7 @@ specifier|const
 name|char
 modifier|*
 name|gen_formal_list_for_type
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -106,7 +107,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|deserves_ellipsis
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -121,7 +122,7 @@ specifier|const
 name|char
 modifier|*
 name|gen_formal_list_for_func_def
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -138,7 +139,7 @@ specifier|const
 name|char
 modifier|*
 name|gen_type
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -159,7 +160,7 @@ specifier|const
 name|char
 modifier|*
 name|gen_decl
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -174,235 +175,6 @@ end_decl_stmt
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* Concatenate a sequence of strings, returning the result.     This function is based on the one in libiberty.  */
-end_comment
-
-begin_comment
-comment|/* This definition will conflict with the one from prefix.c in    libcpp.a when linking cc1 and cc1obj.  So only provide it if we are    not using libcpp.a */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_CPPLIB
-end_ifndef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|concat
-name|VPROTO
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|first
-operator|,
-operator|...
-operator|)
-argument_list|)
-block|{
-specifier|register
-name|int
-name|length
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|newstr
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|end
-decl_stmt|;
-specifier|register
-specifier|const
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-name|va_list
-name|args
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-specifier|const
-name|char
-modifier|*
-name|first
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* First compute the size of the result and get sufficient memory.  */
-name|VA_START
-argument_list|(
-name|args
-argument_list|,
-name|first
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|first
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|arg
-operator|=
-name|first
-expr_stmt|;
-name|length
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|arg
-operator|!=
-literal|0
-condition|)
-block|{
-name|length
-operator|+=
-name|strlen
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|arg
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-block|}
-name|newstr
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-name|length
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-comment|/* Now copy the individual pieces to the result string.  */
-name|VA_START
-argument_list|(
-name|args
-argument_list|,
-name|first
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|first
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|end
-operator|=
-name|newstr
-expr_stmt|;
-name|arg
-operator|=
-name|first
-expr_stmt|;
-while|while
-condition|(
-name|arg
-operator|!=
-literal|0
-condition|)
-block|{
-while|while
-condition|(
-operator|*
-name|arg
-condition|)
-operator|*
-name|end
-operator|++
-operator|=
-operator|*
-name|arg
-operator|++
-expr_stmt|;
-name|arg
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-block|}
-operator|*
-name|end
-operator|=
-literal|'\000'
-expr_stmt|;
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|newstr
-operator|)
-return|;
-block|}
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! USE_CPPLIB */
-end_comment
 
 begin_comment
 comment|/* Given a string representing an entire type or an entire declaration    which only lacks the actual "data-type" specifier (at its left end),    affix the data-type specifier to the left end of the given type    specification or object declaration.     Because of C language weirdness, the data-type specifier (which normally    goes in at the very left end) may have to be slipped in just to the    right of any leading "const" or "volatile" qualifiers (there may be more    than one).  Actually this may not be strictly necessary because it seems    that GCC (at least) accepts `<data-type> const foo;' and treats it the    same as `const<data-type> foo;' but people are accustomed to seeing    `const char *foo;' and *not* `char const *foo;' so we try to create types    that look as expected.  */
@@ -424,20 +196,12 @@ decl_stmt|;
 block|{
 name|char
 modifier|*
+specifier|const
 name|type_or_decl
 init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|strlen
+name|ASTRDUP
 argument_list|(
 name|param
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 decl_stmt|;
 name|char
@@ -453,13 +217,6 @@ decl_stmt|;
 name|char
 name|saved
 decl_stmt|;
-name|strcpy
-argument_list|(
-name|type_or_decl
-argument_list|,
-name|param
-argument_list|)
-expr_stmt|;
 comment|/* Skip as many leading const's or volatile's as there are.  */
 for|for
 control|(
@@ -523,7 +280,7 @@ literal|" "
 argument_list|,
 name|type_or_decl
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 return|;
 name|saved
@@ -544,7 +301,7 @@ name|type_or_decl
 argument_list|,
 name|data_type
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|*
@@ -553,15 +310,17 @@ operator|=
 name|saved
 expr_stmt|;
 return|return
-name|concat
+name|reconcat
 argument_list|(
+name|qualifiers_then_data_type
+argument_list|,
 name|qualifiers_then_data_type
 argument_list|,
 literal|" "
 argument_list|,
 name|p
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 return|;
 block|}
@@ -645,7 +404,7 @@ name|formal_list
 argument_list|,
 literal|", "
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|this_type
@@ -681,7 +440,7 @@ argument_list|(
 name|this_type
 argument_list|)
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 else|:
 name|concat
@@ -690,7 +449,7 @@ name|formal_list
 argument_list|,
 name|data_type
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 operator|)
 expr_stmt|;
@@ -744,7 +503,7 @@ name|formal_list
 argument_list|,
 literal|", ..."
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -757,7 +516,7 @@ name|formal_list
 argument_list|,
 literal|")"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 return|;
 block|}
@@ -897,7 +656,7 @@ name|formal_list
 argument_list|,
 literal|", "
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|this_formal
@@ -927,7 +686,7 @@ name|this_formal
 argument_list|,
 literal|"; "
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -939,7 +698,7 @@ name|formal_list
 argument_list|,
 name|this_formal
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|formal_decl
@@ -973,7 +732,7 @@ name|formal_list
 argument_list|,
 literal|"void"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -994,7 +753,7 @@ name|formal_list
 argument_list|,
 literal|", ..."
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1022,7 +781,7 @@ name|formal_list
 argument_list|,
 literal|")"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1122,7 +881,7 @@ literal|"const "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1140,7 +899,7 @@ literal|"volatile "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -1151,7 +910,7 @@ literal|"*"
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1186,7 +945,7 @@ name|ret_val
 argument_list|,
 literal|")"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -1211,12 +970,11 @@ name|ARRAY_TYPE
 case|:
 if|if
 condition|(
-name|TYPE_SIZE
+operator|!
+name|COMPLETE_TYPE_P
 argument_list|(
 name|t
 argument_list|)
-operator|==
-literal|0
 operator|||
 name|TREE_CODE
 argument_list|(
@@ -1238,7 +996,7 @@ name|ret_val
 argument_list|,
 literal|"[]"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 argument_list|,
 name|TREE_TYPE
@@ -1269,7 +1027,7 @@ name|ret_val
 argument_list|,
 literal|"[0]"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 argument_list|,
 name|TREE_TYPE
@@ -1325,7 +1083,7 @@ name|ret_val
 argument_list|,
 name|buff
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 argument_list|,
 name|TREE_TYPE
@@ -1356,7 +1114,7 @@ argument_list|,
 name|style
 argument_list|)
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 argument_list|,
 name|TREE_TYPE
@@ -1433,7 +1191,7 @@ argument_list|,
 name|ansi
 argument_list|)
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|chain_p
@@ -1451,7 +1209,7 @@ name|data_type
 argument_list|,
 literal|"; "
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1465,7 +1223,7 @@ name|data_type
 argument_list|,
 literal|"}"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1477,7 +1235,7 @@ literal|"struct "
 argument_list|,
 name|data_type
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1534,7 +1292,7 @@ argument_list|,
 name|ansi
 argument_list|)
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|chain_p
@@ -1552,7 +1310,7 @@ name|data_type
 argument_list|,
 literal|"; "
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1566,7 +1324,7 @@ name|data_type
 argument_list|,
 literal|"}"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1578,7 +1336,7 @@ literal|"union "
 argument_list|,
 name|data_type
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1634,7 +1392,7 @@ name|chain_p
 argument_list|)
 argument_list|)
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|chain_p
@@ -1656,7 +1414,7 @@ name|data_type
 argument_list|,
 literal|", "
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1670,7 +1428,7 @@ name|data_type
 argument_list|,
 literal|" }"
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1682,7 +1440,7 @@ literal|"enum "
 argument_list|,
 name|data_type
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1737,7 +1495,7 @@ literal|"unsigned "
 argument_list|,
 name|data_type
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1795,7 +1553,7 @@ literal|"const "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1813,7 +1571,7 @@ literal|"volatile "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1831,7 +1589,7 @@ literal|"restrict "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1920,7 +1678,7 @@ literal|"volatile "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1938,7 +1696,7 @@ literal|"const "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 name|data_type
@@ -1971,7 +1729,7 @@ argument_list|,
 name|ansi
 argument_list|)
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Since we have already added in the formals list stuff, here we don't          add the whole "type" of the function we are considering (which          would include its parameter-list info), rather, we only add in          the "type" of the "type" of the function, which is really just          the return-type of the function (and does not include the parameter          list info).  */
@@ -2037,7 +1795,7 @@ literal|"register "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2055,7 +1813,7 @@ literal|"extern "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2081,7 +1839,7 @@ literal|"static "
 argument_list|,
 name|ret_val
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* real.c - implementation of REAL_ARITHMETIC, REAL_VALUE_ATOF,    and support for XFmode IEEE extended real floating point arithmetic.    Copyright (C) 1993, 94-98, 1999 Free Software Foundation, Inc.    Contributed by Stephen L. Moshier (moshier@world.std.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* real.c - implementation of REAL_ARITHMETIC, REAL_VALUE_ATOF,    and support for XFmode IEEE extended real floating point arithmetic.    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Stephen L. Moshier (moshier@world.std.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -27,15 +27,21 @@ directive|include
 file|"toplev.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tm_p.h"
+end_include
+
 begin_comment
-comment|/* To enable support of XFmode extended real floating point, define LONG_DOUBLE_TYPE_SIZE 96 in the tm.h file (m68k.h or i386.h).  To support cross compilation between IEEE, VAX and IBM floating point formats, define REAL_ARITHMETIC in the tm.h file.  In either case the machine files (tm.h) must not contain any code that tries to use host floating point arithmetic to convert REAL_VALUE_TYPEs from `double' to `float', pass them to fprintf, etc.  In cross-compile situations a REAL_VALUE_TYPE may not be intelligible to the host computer's native arithmetic.  The emulator defaults to the host's floating point format so that its decimal conversion functions can be used if desired (see real.h).  The first part of this file interfaces gcc to a floating point arithmetic suite that was not written with gcc in mind.  Avoid changing the low-level arithmetic routines unless you have suitable test programs available.  A special version of the PARANOIA floating point arithmetic tester, modified for this purpose, can be found on usc.edu: /pub/C-numanal/ieeetest.zoo.  Other tests, and libraries of XFmode and TFmode transcendental functions, can be obtained by ftp from netlib.att.com: netlib/cephes.   */
+comment|/* To enable support of XFmode extended real floating point, define LONG_DOUBLE_TYPE_SIZE 96 in the tm.h file (m68k.h or i386.h).  To support cross compilation between IEEE, VAX and IBM floating point formats, define REAL_ARITHMETIC in the tm.h file.  In either case the machine files (tm.h) must not contain any code that tries to use host floating point arithmetic to convert REAL_VALUE_TYPEs from `double' to `float', pass them to fprintf, etc.  In cross-compile situations a REAL_VALUE_TYPE may not be intelligible to the host computer's native arithmetic.  The emulator defaults to the host's floating point format so that its decimal conversion functions can be used if desired (see real.h).  The first part of this file interfaces gcc to a floating point arithmetic suite that was not written with gcc in mind.  Avoid changing the low-level arithmetic routines unless you have suitable test programs available.  A special version of the PARANOIA floating point arithmetic tester, modified for this purpose, can be found on usc.edu: /pub/C-numanal/ieeetest.zoo.  Other tests, and libraries of XFmode and TFmode transcendental functions, can be obtained by ftp from netlib.att.com: netlib/cephes.  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Type of computer arithmetic.    Only one of DEC, IBM, IEEE, C4X, or UNK should get defined.     `IEEE', when REAL_WORDS_BIG_ENDIAN is non-zero, refers generically    to big-endian IEEE floating-point data structure.  This definition    should work in SFmode `float' type and DFmode `double' type on    virtually all big-endian IEEE machines.  If LONG_DOUBLE_TYPE_SIZE    has been defined to be 96, then IEEE also invokes the particular    XFmode (`long double' type) data structure used by the Motorola    680x0 series processors.     `IEEE', when REAL_WORDS_BIG_ENDIAN is zero, refers generally to    little-endian IEEE machines. In this case, if LONG_DOUBLE_TYPE_SIZE    has been defined to be 96, then IEEE also invokes the particular    XFmode `long double' data structure used by the Intel 80x86 series    processors.     `DEC' refers specifically to the Digital Equipment Corp PDP-11    and VAX floating point data structure.  This model currently    supports no type wider than DFmode.     `IBM' refers specifically to the IBM System/370 and compatible    floating point data structure.  This model currently supports    no type wider than DFmode.  The IBM conversions were contributed by    frank@atom.ansto.gov.au (Frank Crawford).     `C4X' refers specifically to the floating point format used on    Texas Instruments TMS320C3x and TMS320C4x digital signal    processors.  This supports QFmode (32-bit float, double) and HFmode    (40-bit long double) where BITS_PER_BYTE is 32. Unlike IEEE    floats, C4x floats are not rounded to be even. The C4x conversions    were contributed by m.hayes@elec.canterbury.ac.nz (Michael Hayes) and    Haj.Ten.Brugge@net.HCC.nl (Herman ten Brugge).     If LONG_DOUBLE_TYPE_SIZE = 64 (the default, unless tm.h defines it)    then `long double' and `double' are both implemented, but they    both mean DFmode.  In this case, the software floating-point    support available here is activated by writing       #define REAL_ARITHMETIC    in tm.h.     The case LONG_DOUBLE_TYPE_SIZE = 128 activates TFmode support    and may deactivate XFmode since `long double' is used to refer    to both modes.     The macros FLOAT_WORDS_BIG_ENDIAN, HOST_FLOAT_WORDS_BIG_ENDIAN,    contributed by Richard Earnshaw<Richard.Earnshaw@cl.cam.ac.uk>,    separate the floating point unit's endian-ness from that of    the integer addressing.  This permits one to define a big-endian    FPU on a little-endian machine (e.g., ARM).  An extension to    BYTES_BIG_ENDIAN may be required for some machines in the future.    These optional macros may be defined in tm.h.  In real.h, they    default to WORDS_BIG_ENDIAN, etc., so there is no need to define    them for any normal host or target machine on which the floats    and the integers have the same endian-ness.   */
+comment|/* Type of computer arithmetic.    Only one of DEC, IBM, IEEE, C4X, or UNK should get defined.     `IEEE', when REAL_WORDS_BIG_ENDIAN is non-zero, refers generically    to big-endian IEEE floating-point data structure.  This definition    should work in SFmode `float' type and DFmode `double' type on    virtually all big-endian IEEE machines.  If LONG_DOUBLE_TYPE_SIZE    has been defined to be 96, then IEEE also invokes the particular    XFmode (`long double' type) data structure used by the Motorola    680x0 series processors.     `IEEE', when REAL_WORDS_BIG_ENDIAN is zero, refers generally to    little-endian IEEE machines. In this case, if LONG_DOUBLE_TYPE_SIZE    has been defined to be 96, then IEEE also invokes the particular    XFmode `long double' data structure used by the Intel 80x86 series    processors.     `DEC' refers specifically to the Digital Equipment Corp PDP-11    and VAX floating point data structure.  This model currently    supports no type wider than DFmode.     `IBM' refers specifically to the IBM System/370 and compatible    floating point data structure.  This model currently supports    no type wider than DFmode.  The IBM conversions were contributed by    frank@atom.ansto.gov.au (Frank Crawford).     `C4X' refers specifically to the floating point format used on    Texas Instruments TMS320C3x and TMS320C4x digital signal    processors.  This supports QFmode (32-bit float, double) and HFmode    (40-bit long double) where BITS_PER_BYTE is 32. Unlike IEEE    floats, C4x floats are not rounded to be even. The C4x conversions    were contributed by m.hayes@elec.canterbury.ac.nz (Michael Hayes) and    Haj.Ten.Brugge@net.HCC.nl (Herman ten Brugge).     If LONG_DOUBLE_TYPE_SIZE = 64 (the default, unless tm.h defines it)    then `long double' and `double' are both implemented, but they    both mean DFmode.  In this case, the software floating-point    support available here is activated by writing       #define REAL_ARITHMETIC    in tm.h.     The case LONG_DOUBLE_TYPE_SIZE = 128 activates TFmode support    and may deactivate XFmode since `long double' is used to refer    to both modes.  Defining INTEL_EXTENDED_IEEE_FORMAT to non-zero    at the same time enables 80387-style 80-bit floats in a 128-bit    padded image, as seen on IA-64.     The macros FLOAT_WORDS_BIG_ENDIAN, HOST_FLOAT_WORDS_BIG_ENDIAN,    contributed by Richard Earnshaw<Richard.Earnshaw@cl.cam.ac.uk>,    separate the floating point unit's endian-ness from that of    the integer addressing.  This permits one to define a big-endian    FPU on a little-endian machine (e.g., ARM).  An extension to    BYTES_BIG_ENDIAN may be required for some machines in the future.    These optional macros may be defined in tm.h.  In real.h, they    default to WORDS_BIG_ENDIAN, etc., so there is no need to define    them for any normal host or target machine on which the floats    and the integers have the same endian-ness.  */
 end_comment
 
 begin_comment
@@ -163,7 +169,7 @@ begin_comment
 comment|/* UNKnown arithmetic.  We don't support this and can't go on.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 name|unknown
 name|arithmetic
 name|type
@@ -229,27 +235,63 @@ comment|/* it's not IEEE either */
 name|unknown
 name|arithmetic
 name|type
+end_expr_stmt
+
+begin_define
 define|#
 directive|define
 name|UNK
 value|1
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* not IEEE */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* not IBM */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* not VAX */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|REAL_WORDS_BIG_ENDIAN
 value|HOST_FLOAT_WORDS_BIG_ENDIAN
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* REAL_ARITHMETIC not defined */
+end_comment
+
+begin_comment
 comment|/* Define INFINITY for support of infinity.    Define NANS for support of Not-a-Number's (NaN's).  */
+end_comment
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -269,207 +311,529 @@ name|defined
 argument_list|(
 name|C4X
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|INFINITY
+end_define
+
+begin_define
 define|#
 directive|define
 name|NANS
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Support of NaNs requires support of infinity.  */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|NANS
+end_ifdef
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|INFINITY
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|INFINITY
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* Find a host integer type that is at least 16 bits wide,    and another type at least twice whatever that size is.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|HOST_BITS_PER_CHAR
 operator|>=
 literal|16
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMUSHORT
 value|char
+end_define
+
+begin_define
 define|#
 directive|define
 name|EMUSHORT_SIZE
 value|HOST_BITS_PER_CHAR
+end_define
+
+begin_define
 define|#
 directive|define
 name|EMULONG_SIZE
 value|(2 * HOST_BITS_PER_CHAR)
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|#
 directive|if
 name|HOST_BITS_PER_SHORT
 operator|>=
 literal|16
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMUSHORT
 value|short
+end_define
+
+begin_define
 define|#
 directive|define
 name|EMUSHORT_SIZE
 value|HOST_BITS_PER_SHORT
+end_define
+
+begin_define
 define|#
 directive|define
 name|EMULONG_SIZE
 value|(2 * HOST_BITS_PER_SHORT)
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|#
 directive|if
 name|HOST_BITS_PER_INT
 operator|>=
 literal|16
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMUSHORT
 value|int
+end_define
+
+begin_define
 define|#
 directive|define
 name|EMUSHORT_SIZE
 value|HOST_BITS_PER_INT
+end_define
+
+begin_define
 define|#
 directive|define
 name|EMULONG_SIZE
 value|(2 * HOST_BITS_PER_INT)
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|#
 directive|if
 name|HOST_BITS_PER_LONG
 operator|>=
 literal|16
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMUSHORT
 value|long
+end_define
+
+begin_define
 define|#
 directive|define
 name|EMUSHORT_SIZE
 value|HOST_BITS_PER_LONG
+end_define
+
+begin_define
 define|#
 directive|define
 name|EMULONG_SIZE
 value|(2 * HOST_BITS_PER_LONG)
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/*  You will have to modify this program to have a smaller unit size.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|EMU_NON_COMPILE
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
+comment|/* If no 16-bit type has been found and the compiler is GCC, try HImode.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|EMUSHORT_SIZE
+operator|!=
+literal|16
+end_if
+
+begin_typedef
+typedef|typedef
+name|int
+name|HItype
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|HI
+typedef|)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|UHItype
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|HI
+typedef|)));
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|EMUSHORT
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|EMUSHORT_SIZE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|EMULONG_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|EMUSHORT
+value|HItype
+end_define
+
+begin_define
+define|#
+directive|define
+name|UEMUSHORT
+value|UHItype
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMUSHORT_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMULONG_SIZE
+value|32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UEMUSHORT
+value|unsigned EMUSHORT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|HOST_BITS_PER_SHORT
 operator|>=
 name|EMULONG_SIZE
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMULONG
 value|short
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|#
 directive|if
 name|HOST_BITS_PER_INT
 operator|>=
 name|EMULONG_SIZE
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMULONG
 value|int
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|#
 directive|if
 name|HOST_BITS_PER_LONG
 operator|>=
 name|EMULONG_SIZE
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMULONG
 value|long
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|#
 directive|if
 name|HOST_BITS_PER_LONGLONG
 operator|>=
 name|EMULONG_SIZE
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMULONG
 value|long long int
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/*  You will have to modify this program to have a smaller unit size.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|EMU_NON_COMPILE
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* The host interface doesn't work if no 16-bit size exists.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|EMUSHORT_SIZE
 operator|!=
 literal|16
+end_if
+
+begin_define
 define|#
 directive|define
 name|EMU_NON_COMPILE
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* OK to continue compilation.  */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|EMU_NON_COMPILE
+end_ifndef
+
+begin_comment
 comment|/* Construct macros to translate between REAL_VALUE_TYPE and e type.    In GET_REAL and PUT_REAL, r and e are pointers.    A REAL_VALUE_TYPE is guaranteed to occupy contiguous locations    in memory, with no holes.  */
+end_comment
+
+begin_if
 if|#
 directive|if
-name|LONG_DOUBLE_TYPE_SIZE
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 operator|==
 literal|96
+operator|||
+expr|\
+operator|(
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|!=
+literal|0
+operator|)
+operator|&&
+name|MAX_LONG_DOUBLE_TYPE_SIZE
+operator|==
+literal|128
+operator|)
+end_if
+
+begin_comment
 comment|/* Number of 16 bit words in external e type format */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|NE
 value|6
+end_define
+
+begin_define
 define|#
 directive|define
 name|MAXDECEXP
 value|4932
+end_define
+
+begin_define
 define|#
 directive|define
 name|MINDECEXP
 value|-4956
+end_define
+
+begin_define
 define|#
 directive|define
 name|GET_REAL
@@ -478,7 +842,10 @@ name|r
 parameter_list|,
 name|e
 parameter_list|)
-value|bcopy ((char *) r, (char *) e, 2*NE)
+value|memcpy ((e), (r), 2*NE)
+end_define
+
+begin_define
 define|#
 directive|define
 name|PUT_REAL
@@ -488,27 +855,48 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|do {						\   if (2*NE< sizeof(*r))			\     bzero((char *)r, sizeof(*r));		\   bcopy ((char *) e, (char *) r, 2*NE);		\ } while (0)
+value|do {							\ 	  memcpy ((r), (e), 2*NE);				\ 	  if (2*NE< sizeof (*r))				\ 	    memset ((char *) (r) + 2*NE, 0, sizeof (*r) - 2*NE);	\ 	} while (0)
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* no XFmode */
+end_comment
+
+begin_if
 if|#
 directive|if
-name|LONG_DOUBLE_TYPE_SIZE
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 operator|==
 literal|128
+end_if
+
+begin_define
 define|#
 directive|define
 name|NE
 value|10
+end_define
+
+begin_define
 define|#
 directive|define
 name|MAXDECEXP
 value|4932
+end_define
+
+begin_define
 define|#
 directive|define
 name|MINDECEXP
 value|-4977
+end_define
+
+begin_define
 define|#
 directive|define
 name|GET_REAL
@@ -517,7 +905,10 @@ name|r
 parameter_list|,
 name|e
 parameter_list|)
-value|bcopy ((char *) r, (char *) e, 2*NE)
+value|memcpy ((e), (r), 2*NE)
+end_define
+
+begin_define
 define|#
 directive|define
 name|PUT_REAL
@@ -526,25 +917,47 @@ name|e
 parameter_list|,
 name|r
 parameter_list|)
-value|bcopy ((char *) e, (char *) r, 2*NE)
+define|\
+value|do {							\ 	  memcpy ((r), (e), 2*NE);				\ 	  if (2*NE< sizeof (*r))				\ 	    memset ((char *) (r) + 2*NE, 0, sizeof (*r) - 2*NE);	\ 	} while (0)
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_define
 define|#
 directive|define
 name|NE
 value|6
+end_define
+
+begin_define
 define|#
 directive|define
 name|MAXDECEXP
 value|4932
+end_define
+
+begin_define
 define|#
 directive|define
 name|MINDECEXP
 value|-4956
+end_define
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|REAL_ARITHMETIC
+end_ifdef
+
+begin_comment
 comment|/* Emulator uses target format internally    but host stores it in host endian-ness.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|GET_REAL
@@ -554,7 +967,10 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|do {									\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == REAL_WORDS_BIG_ENDIAN)		\        e53toe ((unsigned EMUSHORT *) (r), (e));				\      else								\        {								\ 	 unsigned EMUSHORT w[4];					\          bcopy (((EMUSHORT *) r),&w[3], sizeof (EMUSHORT));		\          bcopy (((EMUSHORT *) r) + 1,&w[2], sizeof (EMUSHORT));	\ 	 bcopy (((EMUSHORT *) r) + 2,&w[1], sizeof (EMUSHORT));	\ 	 bcopy (((EMUSHORT *) r) + 3,&w[0], sizeof (EMUSHORT));	\ 	 e53toe (w, (e));						\        }								\    } while (0)
+value|do {									\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == REAL_WORDS_BIG_ENDIAN)		\        e53toe ((const UEMUSHORT *) (r), (e));				\      else								\        {								\ 	 UEMUSHORT w[4];					\          memcpy (&w[3], ((const EMUSHORT *) r), sizeof (EMUSHORT));	\          memcpy (&w[2], ((const EMUSHORT *) r) + 1, sizeof (EMUSHORT));	\          memcpy (&w[1], ((const EMUSHORT *) r) + 2, sizeof (EMUSHORT));	\          memcpy (&w[0], ((const EMUSHORT *) r) + 3, sizeof (EMUSHORT));	\ 	 e53toe (w, (e));						\        }								\    } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|PUT_REAL
@@ -564,11 +980,23 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|do {									\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == REAL_WORDS_BIG_ENDIAN)		\        etoe53 ((e), (unsigned EMUSHORT *) (r));				\      else								\        {								\ 	 unsigned EMUSHORT w[4];					\ 	 etoe53 ((e), w);						\          bcopy (&w[3], ((EMUSHORT *) r), sizeof (EMUSHORT));		\          bcopy (&w[2], ((EMUSHORT *) r) + 1, sizeof (EMUSHORT));	\          bcopy (&w[1], ((EMUSHORT *) r) + 2, sizeof (EMUSHORT));	\          bcopy (&w[0], ((EMUSHORT *) r) + 3, sizeof (EMUSHORT));	\        }								\    } while (0)
+value|do {									\      if (HOST_FLOAT_WORDS_BIG_ENDIAN == REAL_WORDS_BIG_ENDIAN)		\        etoe53 ((e), (UEMUSHORT *) (r));				\      else								\        {								\ 	 UEMUSHORT w[4];					\ 	 etoe53 ((e), w);						\          memcpy (((EMUSHORT *) r),&w[3], sizeof (EMUSHORT));		\          memcpy (((EMUSHORT *) r) + 1,&w[2], sizeof (EMUSHORT));	\          memcpy (((EMUSHORT *) r) + 2,&w[1], sizeof (EMUSHORT));	\          memcpy (((EMUSHORT *) r) + 3,&w[0], sizeof (EMUSHORT));	\        }								\    } while (0)
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* not REAL_ARITHMETIC */
+end_comment
+
+begin_comment
 comment|/* emulator uses host format */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|GET_REAL
@@ -577,7 +1005,10 @@ name|r
 parameter_list|,
 name|e
 parameter_list|)
-value|e53toe ((unsigned EMUSHORT *) (r), (e))
+value|e53toe ((const UEMUSHORT *) (r), (e))
+end_define
+
+begin_define
 define|#
 directive|define
 name|PUT_REAL
@@ -586,46 +1017,140 @@ name|e
 parameter_list|,
 name|r
 parameter_list|)
-value|etoe53 ((e), (unsigned EMUSHORT *) (r))
+value|etoe53 ((e), (UEMUSHORT *) (r))
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* not REAL_ARITHMETIC */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* not TFmode */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* not XFmode */
+end_comment
+
+begin_comment
 comment|/* Number of 16 bit words in internal format */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|NI
 value|(NE+3)
+end_define
+
+begin_comment
 comment|/* Array offset to exponent */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|E
 value|1
+end_define
+
+begin_comment
 comment|/* Array offset to high guard word */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|M
 value|2
+end_define
+
+begin_comment
 comment|/* Number of bits of precision */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|NBITS
 value|((NI-4)*16)
+end_define
+
+begin_comment
 comment|/* Maximum number of decimal digits in ASCII conversion  * = NBITS*log10(2)  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|NDEC
 value|(NBITS*8/27)
+end_define
+
+begin_comment
 comment|/* The exponent of 1.0 */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|EXONE
 value|(0x3fff)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HOST_EBCDIC
+argument_list|)
+end_if
+
+begin_comment
+comment|/* bit 8 is significant in EBCDIC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHARMASK
+value|0xff
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHARMASK
+value|0x7f
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|extra_warnings
@@ -634,31 +1159,43 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|ezero
-index|[]
+index|[
+name|NE
+index|]
 decl_stmt|,
 name|ehalf
-index|[]
+index|[
+name|NE
+index|]
 decl_stmt|,
 name|eone
-index|[]
+index|[
+name|NE
+index|]
 decl_stmt|,
 name|etwo
-index|[]
+index|[
+name|NE
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|elog2
-index|[]
+index|[
+name|NE
+index|]
 decl_stmt|,
 name|esqrt2
-index|[]
+index|[
+name|NE
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -666,11 +1203,11 @@ begin_decl_stmt
 specifier|static
 name|void
 name|endian
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
 name|long
@@ -687,11 +1224,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eclear
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -702,15 +1238,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|emov
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -724,7 +1259,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void eabs	PROTO((unsigned EMUSHORT *));
+unit|static void eabs	PARAMS ((UEMUSHORT *));
 endif|#
 directive|endif
 end_endif
@@ -733,11 +1268,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eneg
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -748,11 +1282,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|eisneg
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -763,11 +1297,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|eisinf
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -778,11 +1312,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|eisnan
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -793,26 +1327,30 @@ begin_decl_stmt
 specifier|static
 name|void
 name|einfin
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NANS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
 name|enan
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 name|int
@@ -824,99 +1362,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|emovi
-name|PROTO
-argument_list|(
-operator|(
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|,
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|emovo
-name|PROTO
-argument_list|(
-operator|(
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|,
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ecleaz
-name|PROTO
-argument_list|(
-operator|(
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ecleazs
-name|PROTO
-argument_list|(
-operator|(
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|emovz
-name|PROTO
-argument_list|(
-operator|(
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|,
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|einan
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -927,11 +1377,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|eiisnan
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -942,11 +1392,117 @@ begin_decl_stmt
 specifier|static
 name|int
 name|eiisneg
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|make_nan
+name|PARAMS
+argument_list|(
+operator|(
+name|UEMUSHORT
+operator|*
+operator|,
+name|int
+operator|,
+expr|enum
+name|machine_mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|void
+name|emovi
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|UEMUSHORT
+operator|*
+operator|,
+name|UEMUSHORT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|emovo
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|UEMUSHORT
+operator|*
+operator|,
+name|UEMUSHORT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ecleaz
+name|PARAMS
+argument_list|(
+operator|(
+name|UEMUSHORT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ecleazs
+name|PARAMS
+argument_list|(
+operator|(
+name|UEMUSHORT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|emovz
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|UEMUSHORT
+operator|*
+operator|,
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -960,7 +1516,33 @@ literal|0
 end_if
 
 begin_endif
-unit|static void eiinfin	PROTO((unsigned EMUSHORT *));
+unit|static void eiinfin	PARAMS ((UEMUSHORT *));
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INFINITY
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|eiisinf
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|UEMUSHORT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
 end_endif
@@ -968,31 +1550,16 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|int
-name|eiisinf
-name|PROTO
-argument_list|(
-operator|(
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|ecmpm
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1003,11 +1570,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eshdn1
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1018,11 +1584,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eshup1
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1033,11 +1598,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eshdn8
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1048,11 +1612,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eshup8
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1063,11 +1626,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eshup6
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1078,11 +1640,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eshdn6
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1093,15 +1654,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eaddm
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1115,15 +1675,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|esubm
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1134,18 +1693,17 @@ begin_decl_stmt
 specifier|static
 name|void
 name|m16m
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|unsigned
 name|int
 operator|,
-name|unsigned
-name|short
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|short
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1156,15 +1714,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|edivm
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|short
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|short
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1175,15 +1732,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|emulm
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|short
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|short
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1194,11 +1750,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|emdnorm
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 name|int
@@ -1217,19 +1772,18 @@ begin_decl_stmt
 specifier|static
 name|void
 name|esub
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1240,19 +1794,18 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eadd
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1263,19 +1816,18 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eadd1
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1286,19 +1838,18 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ediv
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1309,19 +1860,18 @@ begin_decl_stmt
 specifier|static
 name|void
 name|emul
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1332,15 +1882,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|e53toe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1351,72 +1900,93 @@ begin_decl_stmt
 specifier|static
 name|void
 name|e64toe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
+end_if
 
 begin_decl_stmt
 specifier|static
 name|void
 name|e113toe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
 name|void
 name|e24toe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|void
 name|etoe113
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1427,34 +1997,36 @@ begin_decl_stmt
 specifier|static
 name|void
 name|toe113
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|void
 name|etoe64
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1465,15 +2037,13 @@ begin_decl_stmt
 specifier|static
 name|void
 name|toe64
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1484,15 +2054,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|etoe53
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1503,15 +2072,13 @@ begin_decl_stmt
 specifier|static
 name|void
 name|toe53
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1522,15 +2089,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|etoe24
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1541,15 +2107,13 @@ begin_decl_stmt
 specifier|static
 name|void
 name|toe24
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1560,15 +2124,15 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ecmp
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1582,7 +2146,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void eround	PROTO((unsigned EMUSHORT *, unsigned EMUSHORT *));
+unit|static void eround	PARAMS ((const UEMUSHORT *, UEMUSHORT *));
 endif|#
 directive|endif
 end_endif
@@ -1591,14 +2155,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ltoe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|HOST_WIDE_INT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1609,15 +2173,15 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ultoe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|unsigned
 name|HOST_WIDE_INT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1628,18 +2192,17 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eifrac
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
 name|HOST_WIDE_INT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1650,19 +2213,18 @@ begin_decl_stmt
 specifier|static
 name|void
 name|euifrac
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
 name|unsigned
 name|HOST_WIDE_INT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1673,11 +2235,10 @@ begin_decl_stmt
 specifier|static
 name|int
 name|eshift
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 name|int
@@ -1690,11 +2251,10 @@ begin_decl_stmt
 specifier|static
 name|int
 name|enormlz
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1708,7 +2268,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void e24toasc	PROTO((unsigned EMUSHORT *, char *, int)); static void e53toasc	PROTO((unsigned EMUSHORT *, char *, int)); static void e64toasc	PROTO((unsigned EMUSHORT *, char *, int)); static void e113toasc	PROTO((unsigned EMUSHORT *, char *, int));
+unit|static void e24toasc	PARAMS ((const UEMUSHORT *, char *, int)); static void e53toasc	PARAMS ((const UEMUSHORT *, char *, int)); static void e64toasc	PARAMS ((const UEMUSHORT *, char *, int)); static void e113toasc	PARAMS ((const UEMUSHORT *, char *, int));
 endif|#
 directive|endif
 end_endif
@@ -1721,11 +2281,11 @@ begin_decl_stmt
 specifier|static
 name|void
 name|etoasc
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
 name|char
@@ -1741,15 +2301,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|asctoe24
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
 name|char
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1760,15 +2319,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|asctoe53
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
 name|char
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1779,53 +2337,65 @@ begin_decl_stmt
 specifier|static
 name|void
 name|asctoe64
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
 name|char
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
+end_if
 
 begin_decl_stmt
 specifier|static
 name|void
 name|asctoe113
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
 name|char
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|void
 name|asctoe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
 name|char
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1836,15 +2406,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|asctoeg
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
 name|char
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 name|int
@@ -1857,15 +2426,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|efloor
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1879,7 +2447,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void efrexp	PROTO((unsigned EMUSHORT *, int *, 			       unsigned EMUSHORT *));
+unit|static void efrexp	PARAMS ((const UEMUSHORT *, int *, 				 UEMUSHORT *));
 endif|#
 directive|endif
 end_endif
@@ -1888,17 +2456,16 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eldexp
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
 name|int
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1912,7 +2479,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void eremain	PROTO((unsigned EMUSHORT *, unsigned EMUSHORT *, 			       unsigned EMUSHORT *));
+unit|static void eremain	PARAMS ((const UEMUSHORT *, const UEMUSHORT *, 				 UEMUSHORT *));
 endif|#
 directive|endif
 end_endif
@@ -1921,15 +2488,13 @@ begin_decl_stmt
 specifier|static
 name|void
 name|eiremain
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1940,7 +2505,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|mtherr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -1963,15 +2528,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|dectoe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -1982,15 +2546,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|etodec
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -2001,15 +2564,13 @@ begin_decl_stmt
 specifier|static
 name|void
 name|todec
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|)
 argument_list|)
@@ -2031,15 +2592,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ibmtoe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 expr|enum
@@ -2053,15 +2613,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|etoibm
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 expr|enum
@@ -2075,15 +2634,13 @@ begin_decl_stmt
 specifier|static
 name|void
 name|toibm
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 expr|enum
@@ -2108,15 +2665,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|c4xtoe
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 expr|enum
@@ -2130,15 +2686,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|etoc4x
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 expr|enum
@@ -2152,15 +2707,13 @@ begin_decl_stmt
 specifier|static
 name|void
 name|toc4x
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|*
 operator|,
 expr|enum
@@ -2174,26 +2727,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-name|void
-name|make_nan
-name|PROTO
-argument_list|(
-operator|(
-name|unsigned
-name|EMUSHORT
-operator|*
-operator|,
-name|int
-operator|,
-expr|enum
-name|machine_mode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_if
 if|#
@@ -2202,7 +2735,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void uditoe	PROTO((unsigned EMUSHORT *, unsigned EMUSHORT *)); static void ditoe	PROTO((unsigned EMUSHORT *, unsigned EMUSHORT *)); static void etoudi	PROTO((unsigned EMUSHORT *, unsigned EMUSHORT *)); static void etodi	PROTO((unsigned EMUSHORT *, unsigned EMUSHORT *)); static void esqrt	PROTO((unsigned EMUSHORT *, unsigned EMUSHORT *));
+unit|static void uditoe	PARAMS ((const UEMUSHORT *, UEMUSHORT *)); static void ditoe	PARAMS ((const UEMUSHORT *, UEMUSHORT *)); static void etoudi	PARAMS ((const UEMUSHORT *, UEMUSHORT *)); static void etodi	PARAMS ((const UEMUSHORT *, UEMUSHORT *)); static void esqrt	PARAMS ((const UEMUSHORT *, UEMUSHORT *));
 endif|#
 directive|endif
 end_endif
@@ -2211,7 +2744,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Copy 32-bit numbers obtained from array containing 16-bit numbers,    swapping ends if required, into output array of longs.  The    result is normally passed to fprintf by the ASM_OUTPUT_ macros.   */
+comment|/* Copy 32-bit numbers obtained from array containing 16-bit numbers,    swapping ends if required, into output array of longs.  The    result is normally passed to fprintf by the ASM_OUTPUT_ macros.  */
 end_comment
 
 begin_function
@@ -2225,8 +2758,8 @@ name|x
 parameter_list|,
 name|mode
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|e
 index|[]
 decl_stmt|;
@@ -2258,6 +2791,13 @@ block|{
 case|case
 name|TFmode
 case|:
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 comment|/* Swap halfwords in the fourth long.  */
 name|th
 operator|=
@@ -2301,6 +2841,18 @@ name|long
 operator|)
 name|t
 expr_stmt|;
+else|#
+directive|else
+name|x
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FALLTHRU */
 case|case
 name|XFmode
 case|:
@@ -2347,7 +2899,7 @@ name|long
 operator|)
 name|t
 expr_stmt|;
-comment|/* fall into the double case */
+comment|/* FALLTHRU */
 case|case
 name|DFmode
 case|:
@@ -2394,7 +2946,7 @@ name|long
 operator|)
 name|t
 expr_stmt|;
-comment|/* fall into the float case */
+comment|/* FALLTHRU */
 case|case
 name|SFmode
 case|:
@@ -2462,6 +3014,13 @@ block|{
 case|case
 name|TFmode
 case|:
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 comment|/* Pack the fourth long.  */
 name|th
 operator|=
@@ -2505,6 +3064,18 @@ name|long
 operator|)
 name|t
 expr_stmt|;
+else|#
+directive|else
+name|x
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FALLTHRU */
 case|case
 name|XFmode
 case|:
@@ -2551,7 +3122,7 @@ name|long
 operator|)
 name|t
 expr_stmt|;
-comment|/* fall into the double case */
+comment|/* FALLTHRU */
 case|case
 name|DFmode
 case|:
@@ -2598,7 +3169,7 @@ name|long
 operator|)
 name|t
 expr_stmt|;
-comment|/* fall into the float case */
+comment|/* FALLTHRU */
 case|case
 name|SFmode
 case|:
@@ -2690,8 +3261,7 @@ modifier|*
 name|r2
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|d1
 index|[
 name|NE
@@ -2972,8 +3542,7 @@ name|REAL_VALUE_TYPE
 name|x
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|f
 index|[
 name|NE
@@ -3063,8 +3632,7 @@ name|REAL_VALUE_TYPE
 name|x
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|f
 index|[
 name|NE
@@ -3163,8 +3731,7 @@ name|machine_mode
 name|t
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|tem
 index|[
 name|NE
@@ -3251,6 +3818,34 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|TFmode
+case|:
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
+name|asctoe113
+argument_list|(
+name|s
+argument_list|,
+name|tem
+argument_list|)
+expr_stmt|;
+name|e113toe
+argument_list|(
+name|tem
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* FALLTHRU */
+case|case
 name|XFmode
 case|:
 name|asctoe64
@@ -3261,24 +3856,6 @@ name|tem
 argument_list|)
 expr_stmt|;
 name|e64toe
-argument_list|(
-name|tem
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|TFmode
-case|:
-name|asctoe113
-argument_list|(
-name|s
-argument_list|,
-name|tem
-argument_list|)
-expr_stmt|;
-name|e113toe
 argument_list|(
 name|tem
 argument_list|,
@@ -3325,8 +3902,7 @@ name|REAL_VALUE_TYPE
 name|x
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -3378,8 +3954,7 @@ name|REAL_VALUE_TYPE
 name|x
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|f
 index|[
 name|NE
@@ -3457,8 +4032,7 @@ name|REAL_VALUE_TYPE
 name|x
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|f
 index|[
 name|NE
@@ -3552,8 +4126,7 @@ name|machine_mode
 name|mode
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|df
 index|[
 name|NE
@@ -3756,6 +4329,13 @@ break|break;
 case|case
 literal|128
 case|:
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 name|etoe113
 argument_list|(
 name|dg
@@ -3770,6 +4350,24 @@ argument_list|,
 name|dg
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|etoe64
+argument_list|(
+name|dg
+argument_list|,
+name|df
+argument_list|)
+expr_stmt|;
+name|e64toe
+argument_list|(
+name|df
+argument_list|,
+name|dg
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|abort
@@ -3787,7 +4385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* REAL_VALUE_FROM_UNSIGNED_INT macro.   */
+comment|/* REAL_VALUE_FROM_UNSIGNED_INT macro.  */
 end_comment
 
 begin_function
@@ -3817,8 +4415,7 @@ name|machine_mode
 name|mode
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|df
 index|[
 name|NE
@@ -3964,6 +4561,13 @@ break|break;
 case|case
 literal|128
 case|:
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 name|etoe113
 argument_list|(
 name|dg
@@ -3978,6 +4582,24 @@ argument_list|,
 name|dg
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|etoe64
+argument_list|(
+name|dg
+argument_list|,
+name|df
+argument_list|)
+expr_stmt|;
+name|e64toe
+argument_list|(
+name|df
+argument_list|,
+name|dg
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|abort
@@ -4025,8 +4647,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|d
 index|[
 name|NE
@@ -4228,8 +4849,7 @@ name|int
 name|n
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -4315,18 +4935,18 @@ name|x
 parameter_list|)
 name|REAL_VALUE_TYPE
 name|x
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+ifdef|#
+directive|ifdef
+name|INFINITY
+name|UEMUSHORT
 name|e
 index|[
 name|NE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INFINITY
 name|GET_REAL
 argument_list|(
 operator|&
@@ -4365,18 +4985,18 @@ name|x
 parameter_list|)
 name|REAL_VALUE_TYPE
 name|x
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+ifdef|#
+directive|ifdef
+name|NANS
+name|UEMUSHORT
 name|e
 index|[
 name|NE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NANS
 name|GET_REAL
 argument_list|(
 operator|&
@@ -4448,8 +5068,7 @@ name|REAL_VALUE_TYPE
 name|arg
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -4501,6 +5120,13 @@ block|{
 case|case
 name|TFmode
 case|:
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 name|etoe113
 argument_list|(
 name|e
@@ -4516,6 +5142,9 @@ name|t
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* FALLTHRU */
 case|case
 name|XFmode
 case|:
@@ -4664,8 +5293,7 @@ modifier|*
 name|r
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -4981,8 +5609,7 @@ name|l
 index|[]
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -4996,6 +5623,11 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
 name|etoe113
 argument_list|(
 name|e
@@ -5003,6 +5635,17 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|etoe64
+argument_list|(
+name|e
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|endian
 argument_list|(
 name|e
@@ -5035,8 +5678,7 @@ name|l
 index|[]
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -5089,8 +5731,7 @@ name|l
 index|[]
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -5137,8 +5778,7 @@ name|REAL_VALUE_TYPE
 name|r
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -5203,8 +5843,7 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -5231,7 +5870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compare X and Y.  Return 1 if X> Y, 0 if X == Y, -1 if X< Y,    or -2 if either is a NaN.   */
+comment|/* Compare X and Y.  Return 1 if X> Y, 0 if X == Y, -1 if X< Y,    or -2 if either is a NaN.  */
 end_comment
 
 begin_function
@@ -5248,8 +5887,7 @@ decl_stmt|,
 name|y
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|ex
 index|[
 name|NE
@@ -5303,8 +5941,7 @@ name|REAL_VALUE_TYPE
 name|x
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|ex
 index|[
 name|NE
@@ -5432,9 +6069,15 @@ end_comment
 begin_if
 if|#
 directive|if
-name|LONG_DOUBLE_TYPE_SIZE
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 operator|==
 literal|128
+operator|&&
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 end_if
 
 begin_comment
@@ -5442,8 +6085,8 @@ comment|/* 0.0 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|ezero
 index|[
 name|NE
@@ -5473,22 +6116,13 @@ block|,}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|EMUSHORT
-name|ezero
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* 5.0E-1 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|ehalf
 index|[
 name|NE
@@ -5518,22 +6152,13 @@ block|,}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|EMUSHORT
-name|ehalf
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* 1.0E0 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|eone
 index|[
 name|NE
@@ -5563,22 +6188,13 @@ block|,}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|EMUSHORT
-name|eone
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* 2.0E0 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|etwo
 index|[
 name|NE
@@ -5608,22 +6224,13 @@ block|,}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|EMUSHORT
-name|etwo
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* 3.2E1 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|e32
 index|[
 name|NE
@@ -5653,22 +6260,13 @@ block|,}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|EMUSHORT
-name|e32
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* 6.93147180559945309417232121458176568075500134360255E-1 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|elog2
 index|[
 name|NE
@@ -5698,22 +6296,13 @@ block|,}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|EMUSHORT
-name|elog2
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* 1.41421356237309504880168872420969807856967187537695E0 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|esqrt2
 index|[
 name|NE
@@ -5743,22 +6332,13 @@ block|,}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|EMUSHORT
-name|esqrt2
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* 3.14159265358979323846264338327950288419716939937511E0 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|epi
 index|[
 name|NE
@@ -5788,15 +6368,6 @@ block|,}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|EMUSHORT
-name|epi
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_else
 else|#
 directive|else
@@ -5807,8 +6378,8 @@ comment|/* LONG_DOUBLE_TYPE_SIZE is other than 128 */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|ezero
 index|[
 name|NE
@@ -5831,8 +6402,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|ehalf
 index|[
 name|NE
@@ -5855,8 +6426,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|eone
 index|[
 name|NE
@@ -5879,8 +6450,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|etwo
 index|[
 name|NE
@@ -5903,8 +6474,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|e32
 index|[
 name|NE
@@ -5927,8 +6498,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|elog2
 index|[
 name|NE
@@ -5951,8 +6522,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|esqrt2
 index|[
 name|NE
@@ -5975,8 +6546,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|epi
 index|[
 name|NE
@@ -6033,14 +6604,11 @@ name|eclear
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6079,20 +6647,16 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|b
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6118,7 +6682,7 @@ name|a
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_if
 if|#
@@ -6131,7 +6695,7 @@ comment|/* Absolute value of e-type X.  */
 end_comment
 
 begin_comment
-unit|static void eabs (x)      unsigned EMUSHORT x[]; {
+unit|static void eabs (x)      UEMUSHORT x[]; {
 comment|/* sign is top bit of last word of external format */
 end_comment
 
@@ -6156,8 +6720,7 @@ name|eneg
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
@@ -6186,8 +6749,8 @@ name|eisneg
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
@@ -6228,8 +6791,8 @@ name|eisinf
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
@@ -6291,10 +6854,11 @@ name|eisnan
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -6376,14 +6940,11 @@ name|einfin
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6551,6 +7112,12 @@ begin_comment
 comment|/* Output an e-type NaN.    This generates Intel's quiet NaN pattern for extended real.    The exponent is 7fff, the leading mantissa word is c000.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NANS
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -6560,9 +7127,7 @@ name|x
 parameter_list|,
 name|sign
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
@@ -6570,7 +7135,6 @@ name|int
 name|sign
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6615,6 +7179,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NANS */
+end_comment
+
 begin_comment
 comment|/* Move in an e-type number A, converting it to exploded e-type B.  */
 end_comment
@@ -6628,24 +7201,22 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|b
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 modifier|*
 name|q
 decl_stmt|;
@@ -6825,7 +7396,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Move out exploded e-type number A, converting it to e type B.  */
@@ -6840,29 +7411,26 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|b
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 modifier|*
 name|q
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|i
 decl_stmt|;
 name|int
@@ -6991,7 +7559,7 @@ name|p
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Clear out exploded e-type number XI.  */
@@ -7004,14 +7572,11 @@ name|ecleaz
 parameter_list|(
 name|xi
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|xi
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -7048,14 +7613,11 @@ name|ecleazs
 parameter_list|(
 name|xi
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|xi
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -7099,20 +7661,16 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|b
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -7146,11 +7704,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Generate exploded e-type NaN.    The explicit pattern for this is maximum exponent and    top two significant bits set.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NANS
+end_ifdef
 
 begin_function
 specifier|static
@@ -7159,8 +7723,7 @@ name|einan
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
@@ -7189,9 +7752,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NANS */
+end_comment
+
 begin_comment
 comment|/* Return nonzero if exploded e-type X is a NaN.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NANS
+end_ifdef
 
 begin_function
 specifier|static
@@ -7200,8 +7778,8 @@ name|eiisnan
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
@@ -7263,9 +7841,24 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NANS */
+end_comment
+
 begin_comment
 comment|/* Return nonzero if sign of exploded e-type X is nonzero.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NANS
+end_ifdef
 
 begin_function
 specifier|static
@@ -7274,8 +7867,8 @@ name|eiisneg
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
@@ -7291,6 +7884,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NANS */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -7302,7 +7904,7 @@ comment|/* Fill exploded e-type X with infinity pattern.    This has maximum exp
 end_comment
 
 begin_endif
-unit|static void eiinfin (x)      unsigned EMUSHORT x[]; {    ecleaz (x);   x[E] = 0x7fff; }
+unit|static void eiinfin (x)      UEMUSHORT x[]; {    ecleaz (x);   x[E] = 0x7fff; }
 endif|#
 directive|endif
 end_endif
@@ -7315,6 +7917,12 @@ begin_comment
 comment|/* Return nonzero if exploded e-type X is infinite.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INFINITY
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -7322,8 +7930,8 @@ name|eiisinf
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
@@ -7371,6 +7979,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INFINITY */
+end_comment
+
 begin_comment
 comment|/* Compare significands of numbers in internal exploded e-type format.    Guard words are included in the comparison.     Returns	+1 if a> b 		 0 if a == b 		-1 if a< b   */
 end_comment
@@ -7384,9 +8001,8 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
@@ -7484,16 +8100,12 @@ name|eshdn1
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|bits
 decl_stmt|;
 name|int
@@ -7571,16 +8183,12 @@ name|eshup1
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|bits
 decl_stmt|;
 name|int
@@ -7659,16 +8267,12 @@ name|eshdn8
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|newbyt
 decl_stmt|,
 name|oldbyt
@@ -7737,9 +8341,7 @@ name|eshup8
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
@@ -7747,9 +8349,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|newbyt
 decl_stmt|,
 name|oldbyt
@@ -7817,9 +8417,7 @@ name|eshup6
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
@@ -7827,9 +8425,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -7887,9 +8483,7 @@ name|eshdn6
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
@@ -7897,9 +8491,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -7966,19 +8558,16 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|y
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-specifier|register
 name|unsigned
 name|EMULONG
 name|a
@@ -8061,8 +8650,7 @@ operator|*
 name|y
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|a
 expr_stmt|;
@@ -8074,7 +8662,7 @@ name|y
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Subtract significands of exploded e-type X and Y.  Y - X replaces Y.  */
@@ -8089,17 +8677,15 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|y
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|unsigned
 name|EMULONG
@@ -8183,8 +8769,7 @@ operator|*
 name|y
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|a
 expr_stmt|;
@@ -8196,12 +8781,11 @@ name|y
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|equot
 index|[
 name|NI
@@ -8224,7 +8808,7 @@ comment|/* Divide significands */
 end_comment
 
 begin_comment
-unit|int edivm (den, num)      unsigned EMUSHORT den[], num[]; {   int i;   register unsigned EMUSHORT *p, *q;   unsigned EMUSHORT j;    p =&equot[0];   *p++ = num[0];   *p++ = num[1];    for (i = M; i< NI; i++)     {       *p++ = 0;     }
+unit|int edivm (den, num)      UEMUSHORT den[], num[]; {   int i;   UEMUSHORT *p, *q;   UEMUSHORT j;    p =&equot[0];   *p++ = num[0];   *p++ = num[1];    for (i = M; i< NI; i++)     {       *p++ = 0;     }
 comment|/* Use faster compare and subtraction if denominator has only 15 bits of      significance.  */
 end_comment
 
@@ -8249,7 +8833,7 @@ comment|/* Multiply significands */
 end_comment
 
 begin_comment
-unit|int emulm (a, b)      unsigned EMUSHORT a[], b[]; {   unsigned EMUSHORT *p, *q;   int i, j, k;    equot[0] = b[0];   equot[1] = b[1];   for (i = M; i< NI; i++)     equot[i] = 0;    p =&a[NI - 2];   k = NBITS;   while (*p == 0)
+unit|int emulm (a, b)      UEMUSHORT a[], b[]; {   UEMUSHORT *p, *q;   int i, j, k;    equot[0] = b[0];   equot[1] = b[1];   for (i = M; i< NI; i++)     equot[i] = 0;    p =&a[NI - 2];   k = NBITS;   while (*p == 0)
 comment|/* significand is not supposed to be zero */
 end_comment
 
@@ -8277,54 +8861,45 @@ begin_comment
 comment|/* Multiply significand of e-type number B    by 16-bit quantity A, return e-type result to C.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|m16m
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|b
-argument_list|,
+parameter_list|,
 name|c
-argument_list|)
+parameter_list|)
 name|unsigned
 name|int
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|b
 index|[]
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 name|c
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|pp
 decl_stmt|;
-specifier|register
 name|unsigned
 name|EMULONG
 name|carry
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|ps
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|p
 index|[
 name|NI
@@ -8444,8 +9019,7 @@ name|pp
 operator|--
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|carry
 expr_stmt|;
@@ -8470,8 +9044,7 @@ operator|*
 name|pp
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|carry
 expr_stmt|;
@@ -8512,39 +9085,35 @@ name|i
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Divide significands of exploded e-types NUM / DEN.  Neither the    numerator NUM nor the denominator DEN is permitted to have its high guard    word nonzero.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|edivm
-argument_list|(
+parameter_list|(
 name|den
-argument_list|,
+parameter_list|,
 name|num
-argument_list|)
-name|unsigned
-name|EMUSHORT
+parameter_list|)
+specifier|const
+name|UEMUSHORT
 name|den
 index|[]
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 name|num
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -8552,16 +9121,14 @@ name|unsigned
 name|EMULONG
 name|tnum
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|j
 decl_stmt|,
 name|tdenm
 decl_stmt|,
 name|tquot
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|tprod
 index|[
 name|NI
@@ -8852,50 +9419,47 @@ name|j
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Multiply significands of exploded e-type A and B, result in B.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|emulm
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|b
-argument_list|)
-name|unsigned
-name|EMUSHORT
+parameter_list|)
+specifier|const
+name|UEMUSHORT
 name|a
 index|[]
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 name|b
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 modifier|*
 name|q
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|pprod
 index|[
 name|NI
 index|]
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|j
 decl_stmt|;
 name|int
@@ -9062,7 +9626,7 @@ name|j
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -9070,7 +9634,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Normalize and round off.    The internal format number to be rounded is S.   Input LOST is 0 if the value is exact.  This is the so-called sticky bit.    Input SUBFLG indicates whether the number was obtained   by a subtraction operation.  In that case if LOST is nonzero   then the number is slightly smaller than indicated.    Input EXP is the biased exponent, which may be negative.   the exponent field of S is ignored but is replaced by   EXP as adjusted by normalization and rounding.    Input RCNTRL is the rounding control.  If it is nonzero, the   returned value will be rounded to RNDPRC bits.    For future reference:  In order for emdnorm to round off denormal    significands at the right point, the input exponent must be    adjusted to be the actual value it would have after conversion to    the final floating point type.  This adjustment has been    implemented for all type conversions (etoe53, etc.) and decimal    conversions, but not for the arithmetic functions (eadd, etc.).    Data types having standard 15-bit exponents are not affected by    this, but SFmode and DFmode are affected. For example, ediv with    rndprc = 24 will not round correctly to 24-bit precision if the    result is denormal.   */
+comment|/* Normalize and round off.    The internal format number to be rounded is S.   Input LOST is 0 if the value is exact.  This is the so-called sticky bit.    Input SUBFLG indicates whether the number was obtained   by a subtraction operation.  In that case if LOST is nonzero   then the number is slightly smaller than indicated.    Input EXP is the biased exponent, which may be negative.   the exponent field of S is ignored but is replaced by   EXP as adjusted by normalization and rounding.    Input RCNTRL is the rounding control.  If it is nonzero, the   returned value will be rounded to RNDPRC bits.    For future reference:  In order for emdnorm to round off denormal    significands at the right point, the input exponent must be    adjusted to be the actual value it would have after conversion to    the final floating point type.  This adjustment has been    implemented for all type conversions (etoe53, etc.) and decimal    conversions, but not for the arithmetic functions (eadd, etc.).    Data types having standard 15-bit exponents are not affected by    this, but SFmode and DFmode are affected. For example, ediv with    rndprc = 24 will not round correctly to 24-bit precision if the    result is denormal.  */
 end_comment
 
 begin_decl_stmt
@@ -9094,8 +9658,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|rmsk
 init|=
 literal|0
@@ -9104,8 +9667,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|rmbit
 init|=
 literal|0
@@ -9114,8 +9676,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|rebit
 init|=
 literal|0
@@ -9133,8 +9694,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|rbit
 index|[
 name|NI
@@ -9157,8 +9717,7 @@ name|exp
 parameter_list|,
 name|rcntrl
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|s
 index|[]
 decl_stmt|;
@@ -9180,8 +9739,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|r
 decl_stmt|;
 comment|/* Normalize */
@@ -9963,8 +10521,7 @@ literal|1
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|exp
 expr_stmt|;
@@ -9995,18 +10552,22 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
 decl|*
 name|b
-decl_stmt|,
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|UEMUSHORT
 modifier|*
 name|c
 decl_stmt|;
-end_function
+end_decl_stmt
 
 begin_block
 block|{
@@ -10126,18 +10687,22 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
 decl|*
 name|b
-decl_stmt|,
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|UEMUSHORT
 modifier|*
 name|c
 decl_stmt|;
-end_function
+end_decl_stmt
 
 begin_block
 block|{
@@ -10258,23 +10823,26 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
 decl|*
 name|b
-decl_stmt|,
-modifier|*
-name|c
 decl_stmt|;
 end_function
 
+begin_decl_stmt
+name|UEMUSHORT
+modifier|*
+name|c
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|ai
 index|[
 name|NI
@@ -10643,8 +11211,7 @@ name|E
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|ltb
 expr_stmt|;
@@ -10762,23 +11329,26 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
 decl|*
 name|b
-decl_stmt|,
-modifier|*
-name|c
 decl_stmt|;
 end_function
 
+begin_decl_stmt
+name|UEMUSHORT
+modifier|*
+name|c
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|ai
 index|[
 name|NI
@@ -11199,7 +11769,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Multiply e-types A and B, return e-type product C.   */
+comment|/* Multiply e-types A and B, return e-type product C.  */
 end_comment
 
 begin_function
@@ -11213,23 +11783,26 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
 decl|*
 name|b
-decl_stmt|,
-modifier|*
-name|c
 decl_stmt|;
 end_function
 
+begin_decl_stmt
+name|UEMUSHORT
+modifier|*
+name|c
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|ai
 index|[
 name|NI
@@ -11646,17 +12219,15 @@ name|pe
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|pe
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|y
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -11698,22 +12269,19 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|r
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|e
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|yy
 index|[
 name|NI
@@ -12117,8 +12685,7 @@ name|E
 index|]
 operator|-=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|k
@@ -12144,7 +12711,7 @@ endif|#
 directive|endif
 comment|/* not DEC */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert double extended precision float PE to e type Y.  */
@@ -12159,30 +12726,28 @@ name|pe
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|pe
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|y
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|yy
 index|[
 name|NI
 index|]
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|e
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|,
@@ -12359,8 +12924,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|temp
 index|[
 name|NI
@@ -12743,7 +13307,17 @@ name|p
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
+end_if
 
 begin_comment
 comment|/* Convert 128-bit long double precision float PE to e type Y.  */
@@ -12758,33 +13332,29 @@ name|pe
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|pe
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|y
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|r
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|e
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|yy
 index|[
 name|NI
@@ -13103,7 +13673,12 @@ name|y
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Convert single precision float PE to e type Y.  */
@@ -13118,17 +13693,15 @@ name|pe
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|pe
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|y
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -13158,22 +13731,19 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|r
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|e
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|yy
 index|[
 name|NI
@@ -13531,8 +14101,7 @@ name|E
 index|]
 operator|-=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|k
@@ -13555,7 +14124,17 @@ endif|#
 directive|endif
 comment|/* not IBM */
 block|}
-end_block
+end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
+end_if
 
 begin_comment
 comment|/* Convert e-type X to IEEE 128-bit long double format E.  */
@@ -13570,20 +14149,17 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -13680,8 +14256,13 @@ name|rndprc
 operator|=
 name|rndsav
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INFINITY
 name|nonorm
 label|:
+endif|#
+directive|endif
 name|toe113
 argument_list|(
 name|xi
@@ -13690,7 +14271,7 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    113-bit precision, to IEEE 128-bit long double format Y.  */
@@ -13705,8 +14286,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
@@ -13717,17 +14297,14 @@ end_function
 
 begin_block
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|i
 decl_stmt|;
 ifdef|#
@@ -13915,6 +14492,11 @@ block|}
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Convert e-type X to IEEE double extended format E.  */
 end_comment
@@ -13928,20 +14510,17 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -14039,8 +14618,13 @@ name|rndprc
 operator|=
 name|rndsav
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INFINITY
 name|nonorm
 label|:
+endif|#
+directive|endif
 name|toe64
 argument_list|(
 name|xi
@@ -14049,7 +14633,7 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    64-bit precision, to IEEE double extended format Y.  */
@@ -14064,8 +14648,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
@@ -14076,17 +14659,14 @@ end_function
 
 begin_block
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|i
 decl_stmt|;
 ifdef|#
@@ -14180,12 +14760,7 @@ operator|+
 literal|4
 expr_stmt|;
 comment|/* point to output exponent */
-if|#
-directive|if
-name|LONG_DOUBLE_TYPE_SIZE
-operator|==
-literal|96
-comment|/* Clear the last two bytes of 12-byte Intel format */
+comment|/* Clear the last two bytes of 12-byte Intel format.  q is pointing 	 into an array of size 6 (e.g. x[NE]), so the last two bytes are 	 always there, and there are never more bytes, even when we are using 	 INTEL_EXTENDED_IEEE_FORMAT.  */
 operator|*
 operator|(
 name|q
@@ -14195,8 +14770,6 @@ operator|)
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 endif|#
 directive|endif
@@ -14539,17 +15112,15 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|etodec
 argument_list|(
@@ -14560,7 +15131,7 @@ argument_list|)
 expr_stmt|;
 comment|/* see etodec.c */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    56-bit double precision, to DEC double Y.  */
@@ -14575,8 +15146,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -14621,17 +15191,15 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|etoibm
 argument_list|(
@@ -14643,7 +15211,7 @@ name|DFmode
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    56-bit precision, to IBM 370 double Y.  */
@@ -14658,8 +15226,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -14710,17 +15277,15 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|etoc4x
 argument_list|(
@@ -14732,7 +15297,7 @@ name|HFmode
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    56-bit precision, to IBM 370 double Y.  */
@@ -14747,8 +15312,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -14793,20 +15357,17 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -14910,8 +15471,13 @@ name|rndprc
 operator|=
 name|rndsav
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INFINITY
 name|nonorm
 label|:
+endif|#
+directive|endif
 name|toe53
 argument_list|(
 name|xi
@@ -14920,7 +15486,7 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    53-bit precision, to IEEE double Y.  */
@@ -14935,8 +15501,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -14947,12 +15512,10 @@ end_function
 
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|i
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -15110,8 +15673,7 @@ operator|*
 name|y
 operator||=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 literal|0x7fef
 expr_stmt|;
@@ -15210,8 +15772,7 @@ name|p
 operator|++
 operator|&
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 literal|0x0f
 expr_stmt|;
@@ -15220,8 +15781,7 @@ operator|*
 name|y
 operator||=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|i
 expr_stmt|;
@@ -15345,17 +15905,15 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|etoibm
 argument_list|(
@@ -15367,7 +15925,7 @@ name|SFmode
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    float precision, to IBM 370 float Y.  */
@@ -15382,8 +15940,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -15430,17 +15987,15 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|etoc4x
 argument_list|(
@@ -15452,7 +16007,7 @@ name|QFmode
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    float precision, to IBM 370 float Y.  */
@@ -15467,8 +16022,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -15509,23 +16063,20 @@ name|x
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|e
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|EMULONG
 name|exp
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -15626,8 +16177,13 @@ name|rndprc
 operator|=
 name|rndsav
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INFINITY
 name|nonorm
 label|:
+endif|#
+directive|endif
 name|toe24
 argument_list|(
 name|xi
@@ -15636,7 +16192,7 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    float precision, to IEEE float Y.  */
@@ -15651,8 +16207,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -15663,12 +16218,10 @@ end_function
 
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|i
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -15769,8 +16322,7 @@ operator|*
 name|y
 operator||=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 literal|0x7f80
 expr_stmt|;
@@ -15823,8 +16375,7 @@ operator|*
 name|y
 operator||=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 literal|0x7f7f
 expr_stmt|;
@@ -15920,8 +16471,7 @@ name|p
 operator|++
 operator|&
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 literal|0x7f
 expr_stmt|;
@@ -16011,8 +16561,8 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|a
 decl_stmt|,
@@ -16023,8 +16573,7 @@ end_function
 
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|ai
 index|[
 name|NI
@@ -16035,16 +16584,13 @@ index|[
 name|NI
 index|]
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -16275,7 +16821,7 @@ comment|/* Find e-type nearest integer to X, as floor (X + 0.5).  */
 end_comment
 
 begin_endif
-unit|static void eround (x, y)      unsigned EMUSHORT *x, *y; {   eadd (ehalf, x, y);   efloor (y, y); }
+unit|static void eround (x, y)      const UEMUSHORT *x;      UEMUSHORT *y; {   eadd (ehalf, x, y);   efloor (y, y); }
 endif|#
 directive|endif
 end_endif
@@ -16297,18 +16843,17 @@ name|lp
 parameter_list|,
 name|y
 parameter_list|)
+specifier|const
 name|HOST_WIDE_INT
 modifier|*
 name|lp
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|y
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|yi
 index|[
 name|NI
@@ -16384,8 +16929,7 @@ name|M
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|ll
@@ -16401,8 +16945,7 @@ literal|1
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|ll
@@ -16418,8 +16961,7 @@ literal|2
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|ll
@@ -16435,8 +16977,7 @@ literal|3
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|ll
 expr_stmt|;
@@ -16458,8 +16999,7 @@ name|M
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|ll
@@ -16475,8 +17015,7 @@ literal|1
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|ll
 expr_stmt|;
@@ -16519,8 +17058,7 @@ name|E
 index|]
 operator|-=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|k
 expr_stmt|;
@@ -16549,19 +17087,18 @@ name|lp
 parameter_list|,
 name|y
 parameter_list|)
+specifier|const
 name|unsigned
 name|HOST_WIDE_INT
 modifier|*
 name|lp
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|y
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|yi
 index|[
 name|NI
@@ -16596,8 +17133,7 @@ name|M
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|ll
@@ -16613,8 +17149,7 @@ literal|1
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|ll
@@ -16630,8 +17165,7 @@ literal|2
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|ll
@@ -16647,8 +17181,7 @@ literal|3
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|ll
 expr_stmt|;
@@ -16670,8 +17203,7 @@ name|M
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|ll
@@ -16687,8 +17219,7 @@ literal|1
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|ll
 expr_stmt|;
@@ -16731,8 +17262,7 @@ name|E
 index|]
 operator|-=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|k
 expr_stmt|;
@@ -16763,8 +17293,8 @@ name|i
 parameter_list|,
 name|frac
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
@@ -16772,14 +17302,12 @@ name|HOST_WIDE_INT
 modifier|*
 name|i
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|frac
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -17127,8 +17655,7 @@ name|E
 index|]
 operator|-=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|k
 expr_stmt|;
@@ -17157,8 +17684,8 @@ name|i
 parameter_list|,
 name|frac
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
@@ -17167,8 +17694,7 @@ name|HOST_WIDE_INT
 modifier|*
 name|i
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|frac
 decl_stmt|;
@@ -17177,8 +17703,7 @@ name|unsigned
 name|HOST_WIDE_INT
 name|ll
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -17241,7 +17766,7 @@ operator|>
 name|HOST_BITS_PER_WIDE_INT
 condition|)
 block|{
-comment|/* Long integer overflow: output large integer 	 and correct fraction. 	 Note, the BSD microvax compiler says that ~(0UL) 	 is a syntax error.  */
+comment|/* Long integer overflow: output large integer 	 and correct fraction. 	 Note, the BSD MicroVAX compiler says that ~(0UL) 	 is a syntax error.  */
 operator|*
 name|i
 operator|=
@@ -17431,8 +17956,7 @@ name|E
 index|]
 operator|-=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|k
 expr_stmt|;
@@ -17459,8 +17983,7 @@ name|x
 parameter_list|,
 name|sc
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|;
@@ -17468,12 +17991,10 @@ name|int
 name|sc
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|lost
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -17668,15 +18189,12 @@ name|enormlz
 parameter_list|(
 name|x
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -17911,15 +18429,21 @@ end_define
 begin_if
 if|#
 directive|if
-name|LONG_DOUBLE_TYPE_SIZE
+name|MAX_LONG_DOUBLE_TYPE_SIZE
 operator|==
 literal|128
+operator|&&
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 end_if
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|etens
 index|[
 name|NTEN
@@ -18226,8 +18750,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|emtens
 index|[
 name|NTEN
@@ -18543,8 +19067,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|etens
 index|[
 name|NTEN
@@ -18747,8 +19271,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|emtens
 index|[
 name|NTEN
@@ -18965,22 +19489,22 @@ comment|/* Convert float value X to ASCII string STRING with NDIG digits after  
 end_comment
 
 begin_comment
-unit|static void e24toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e24toe (x, w);   etoasc (w, string, ndigs); }
+unit|static void e24toasc (x, string, ndigs)      const UEMUSHORT x[];      char *string;      int ndigs; {   UEMUSHORT w[NI];    e24toe (x, w);   etoasc (w, string, ndigs); }
 comment|/* Convert double value X to ASCII string STRING with NDIG digits after    the decimal point.  */
 end_comment
 
 begin_comment
-unit|static void e53toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e53toe (x, w);   etoasc (w, string, ndigs); }
+unit|static void e53toasc (x, string, ndigs)      const UEMUSHORT x[];      char *string;      int ndigs; {   UEMUSHORT w[NI];    e53toe (x, w);   etoasc (w, string, ndigs); }
 comment|/* Convert double extended value X to ASCII string STRING with NDIG digits    after the decimal point.  */
 end_comment
 
 begin_comment
-unit|static void e64toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e64toe (x, w);   etoasc (w, string, ndigs); }
+unit|static void e64toasc (x, string, ndigs)      const UEMUSHORT x[];      char *string;      int ndigs; {   UEMUSHORT w[NI];    e64toe (x, w);   etoasc (w, string, ndigs); }
 comment|/* Convert 128-bit long double value X to ASCII string STRING with NDIG digits    after the decimal point.  */
 end_comment
 
 begin_endif
-unit|static void e113toasc (x, string, ndigs)      unsigned EMUSHORT x[];      char *string;      int ndigs; {   unsigned EMUSHORT w[NI];    e113toe (x, w);   etoasc (w, string, ndigs); }
+unit|static void e113toasc (x, string, ndigs)      const UEMUSHORT x[];      char *string;      int ndigs; {   UEMUSHORT w[NI];    e113toe (x, w);   etoasc (w, string, ndigs); }
 endif|#
 directive|endif
 end_endif
@@ -19018,8 +19542,8 @@ name|string
 parameter_list|,
 name|ndigs
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
@@ -19034,8 +19558,7 @@ block|{
 name|EMUSHORT
 name|digit
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|y
 index|[
 name|NI
@@ -19056,8 +19579,8 @@ index|[
 name|NI
 index|]
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|,
@@ -19067,8 +19590,7 @@ decl_stmt|,
 modifier|*
 name|ten
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|sign
 decl_stmt|;
 name|int
@@ -19089,8 +19611,7 @@ decl_stmt|,
 modifier|*
 name|ss
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|m
 decl_stmt|;
 name|rndsav
@@ -20311,7 +20832,7 @@ operator|=
 operator|*
 name|s
 operator|&
-literal|0x7f
+name|CHARMASK
 expr_stmt|;
 comment|/* Carry out to most significant digit? */
 if|if
@@ -20471,8 +20992,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|y
 decl_stmt|;
@@ -20507,8 +21027,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|y
 decl_stmt|;
@@ -20586,8 +21105,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|y
 decl_stmt|;
@@ -20603,6 +21121,16 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
+end_if
 
 begin_comment
 comment|/* Convert ASCII string S to 128-bit long double Y.  */
@@ -20622,8 +21150,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|y
 decl_stmt|;
@@ -20639,6 +21166,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Convert ASCII string S to e type Y.  */
@@ -20658,8 +21190,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|y
 decl_stmt|;
@@ -20677,7 +21208,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert ASCII string SS to e type Y, with a specified rounding precision    of OPREC bits.  BASE is 16 for C9X hexadecimal floating constants.  */
+comment|/* Convert ASCII string SS to e type Y, with a specified rounding precision    of OPREC bits.  BASE is 16 for C99 hexadecimal floating constants.  */
 end_comment
 
 begin_function
@@ -20696,8 +21227,7 @@ name|char
 modifier|*
 name|ss
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|y
 decl_stmt|;
@@ -20705,8 +21235,7 @@ name|int
 name|oprec
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|yy
 index|[
 name|NI
@@ -20738,6 +21267,8 @@ decl_stmt|,
 name|lost
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|k
 decl_stmt|,
 name|trail
@@ -20749,12 +21280,8 @@ decl_stmt|;
 name|EMULONG
 name|lexp
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|nsign
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 name|char
 modifier|*
@@ -20905,51 +21432,13 @@ literal|0
 expr_stmt|;
 name|nxtcom
 label|:
-if|if
-condition|(
-operator|*
-name|s
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|s
-operator|<=
-literal|'9'
-condition|)
 name|k
 operator|=
+name|hex_value
+argument_list|(
 operator|*
 name|s
-operator|-
-literal|'0'
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|*
-name|s
-operator|>=
-literal|'a'
-condition|)
-name|k
-operator|=
-literal|10
-operator|+
-operator|*
-name|s
-operator|-
-literal|'a'
-expr_stmt|;
-else|else
-name|k
-operator|=
-literal|10
-operator|+
-operator|*
-name|s
-operator|-
-literal|'A'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -21012,48 +21501,22 @@ name|s
 expr_stmt|;
 while|while
 condition|(
-operator|(
+name|ISDIGIT
+argument_list|(
 operator|*
 name|sp
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|sp
-operator|<=
-literal|'9'
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|base
 operator|==
 literal|16
 operator|&&
-operator|(
-operator|(
+name|ISXDIGIT
+argument_list|(
 operator|*
 name|sp
-operator|>=
-literal|'a'
-operator|&&
-operator|*
-name|sp
-operator|<=
-literal|'f'
-operator|)
-operator|||
-operator|(
-operator|*
-name|sp
-operator|>=
-literal|'A'
-operator|&&
-operator|*
-name|sp
-operator|<=
-literal|'F'
-operator|)
-operator|)
+argument_list|)
 operator|)
 condition|)
 operator|++
@@ -21065,7 +21528,7 @@ operator|=
 operator|*
 name|sp
 operator|&
-literal|0x7f
+name|CHARMASK
 expr_stmt|;
 if|if
 condition|(
@@ -21140,7 +21603,7 @@ literal|','
 operator|)
 condition|)
 goto|goto
-name|error
+name|unexpected_char_error
 goto|;
 operator|--
 name|sp
@@ -21278,8 +21741,7 @@ literal|2
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|k
 expr_stmt|;
@@ -21365,7 +21827,7 @@ condition|(
 name|decflg
 condition|)
 goto|goto
-name|error
+name|unexpected_char_error
 goto|;
 operator|++
 name|decflg
@@ -21383,7 +21845,7 @@ condition|(
 name|sgnflg
 condition|)
 goto|goto
-name|error
+name|unexpected_char_error
 goto|;
 operator|++
 name|sgnflg
@@ -21397,7 +21859,7 @@ condition|(
 name|sgnflg
 condition|)
 goto|goto
-name|error
+name|unexpected_char_error
 goto|;
 operator|++
 name|sgnflg
@@ -21431,7 +21893,7 @@ goto|goto
 name|infinite
 goto|;
 default|default:
-name|error
+name|unexpected_char_error
 label|:
 ifdef|#
 directive|ifdef
@@ -21472,7 +21934,7 @@ goto|;
 comment|/* Exponent interpretation */
 name|expnt
 label|:
-comment|/* 0.0eXXX is zero, regardless of XXX.  Check for the 0.0. */
+comment|/* 0.0eXXX is zero, regardless of XXX.  Check for the 0.0.  */
 for|for
 control|(
 name|k
@@ -21546,19 +22008,11 @@ name|s
 expr_stmt|;
 while|while
 condition|(
-operator|(
+name|ISDIGIT
+argument_list|(
 operator|*
 name|s
-operator|>=
-literal|'0'
-operator|)
-operator|&&
-operator|(
-operator|*
-name|s
-operator|<=
-literal|'9'
-operator|)
+argument_list|)
 condition|)
 block|{
 name|exp
@@ -21952,17 +22406,6 @@ literal|4096
 expr_stmt|;
 block|}
 block|}
-name|p
-operator|=
-operator|&
-name|etens
-index|[
-name|NTEN
-index|]
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|emov
 argument_list|(
 name|eone
@@ -21974,6 +22417,10 @@ name|exp
 operator|=
 literal|1
 expr_stmt|;
+name|i
+operator|=
+name|NTEN
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -21984,16 +22431,18 @@ name|nexp
 condition|)
 name|emul
 argument_list|(
-name|p
+name|etens
+index|[
+name|i
+index|]
 argument_list|,
 name|xt
 argument_list|,
 name|xt
 argument_list|)
 expr_stmt|;
-name|p
-operator|-=
-name|NE
+name|i
+operator|--
 expr_stmt|;
 name|exp
 operator|=
@@ -22296,6 +22745,13 @@ name|y
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 case|case
 literal|113
 case|:
@@ -22307,6 +22763,8 @@ name|y
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|NBITS
 case|:
@@ -22328,8 +22786,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|bmask
 index|[]
 init|=
@@ -22371,30 +22829,26 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|efloor
-argument_list|(
+parameter_list|(
 name|x
-argument_list|,
+parameter_list|,
 name|y
-argument_list|)
-name|unsigned
-name|EMUSHORT
+parameter_list|)
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
-decl_stmt|,
+decl_stmt|;
+name|UEMUSHORT
 name|y
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -22405,8 +22859,7 @@ name|expon
 decl_stmt|,
 name|i
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|f
 index|[
 name|NE
@@ -22524,14 +22977,12 @@ label|:
 if|if
 condition|(
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|expon
 operator|&
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 literal|0x8000
 condition|)
@@ -22579,7 +23030,7 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_if
 if|#
@@ -22592,7 +23043,7 @@ comment|/* Return S and EXP such that  S * 2^EXP = X and .5<= S< 1.    For examp
 end_comment
 
 begin_comment
-unit|static void efrexp (x, exp, s)      unsigned EMUSHORT x[];      int *exp;      unsigned EMUSHORT s[]; {   unsigned EMUSHORT xi[NI];   EMULONG li;    emovi (x, xi);
+unit|static void efrexp (x, exp, s)      const UEMUSHORT x[];      int *exp;      UEMUSHORT s[]; {   UEMUSHORT xi[NI];   EMULONG li;    emovi (x, xi);
 comment|/*  Handle denormalized numbers properly using long integer exponent.  */
 end_comment
 
@@ -22617,22 +23068,20 @@ name|pwr2
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 name|x
 index|[]
 decl_stmt|;
 name|int
 name|pwr2
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|y
 index|[]
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -22700,7 +23149,7 @@ comment|/* C = remainder after dividing B by A, all e type values.    Least sign
 end_comment
 
 begin_ifdef
-unit|static void eremain (a, b, c)      unsigned EMUSHORT a[], b[], c[]; {   unsigned EMUSHORT den[NI], num[NI];
+unit|static void eremain (a, b, c)      const UEMUSHORT a[], b[];      UEMUSHORT c[]; {   UEMUSHORT den[NI], num[NI];
 ifdef|#
 directive|ifdef
 name|NANS
@@ -22736,8 +23185,7 @@ name|den
 argument_list|,
 name|num
 argument_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|den
 index|[]
 decl_stmt|,
@@ -22753,8 +23201,7 @@ name|ld
 decl_stmt|,
 name|ln
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|j
 decl_stmt|;
 name|ld
@@ -23153,27 +23600,23 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|d
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|e
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|y
 index|[
 name|NI
 index|]
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|r
 decl_stmt|,
 modifier|*
@@ -23330,20 +23773,17 @@ name|x
 parameter_list|,
 name|d
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|d
 decl_stmt|;
-end_function
-
-begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -23413,7 +23853,7 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Convert exploded e-type X, that has already been rounded to    56-bit precision, to DEC format double Y.  */
@@ -23428,8 +23868,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -23440,12 +23879,10 @@ end_function
 
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|i
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -23649,13 +24086,12 @@ name|e
 parameter_list|,
 name|mode
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|d
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|e
 decl_stmt|;
@@ -23664,23 +24100,17 @@ name|machine_mode
 name|mode
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|y
 index|[
 name|NI
 index|]
 decl_stmt|;
-specifier|register
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|r
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|;
-name|int
-name|rndsav
 decl_stmt|;
 name|ecleaz
 argument_list|(
@@ -23882,27 +24312,21 @@ name|d
 parameter_list|,
 name|mode
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|d
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|enum
 name|machine_mode
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -23978,7 +24402,7 @@ name|mode
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -23991,8 +24415,7 @@ name|y
 parameter_list|,
 name|mode
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -24010,12 +24433,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|i
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -24254,13 +24675,12 @@ name|e
 parameter_list|,
 name|mode
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|d
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|e
 decl_stmt|;
@@ -24269,11 +24689,16 @@ name|machine_mode
 name|mode
 decl_stmt|;
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|y
 index|[
 name|NI
+index|]
+decl_stmt|;
+name|UEMUSHORT
+name|dn
+index|[
+literal|4
 index|]
 decl_stmt|;
 name|int
@@ -24291,11 +24716,58 @@ decl_stmt|;
 name|int
 name|carry
 decl_stmt|;
-comment|/* Short-circuit the zero case. */
+name|dn
+index|[
+literal|0
+index|]
+operator|=
+name|d
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|dn
+index|[
+literal|1
+index|]
+operator|=
+name|d
+index|[
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|!=
+name|QFmode
+condition|)
+block|{
+name|dn
+index|[
+literal|2
+index|]
+operator|=
+name|d
+index|[
+literal|3
+index|]
+operator|<<
+literal|8
+expr_stmt|;
+name|dn
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* Short-circuit the zero case.  */
 if|if
 condition|(
 operator|(
-name|d
+name|dn
 index|[
 literal|0
 index|]
@@ -24304,7 +24776,7 @@ literal|0x8000
 operator|)
 operator|&&
 operator|(
-name|d
+name|dn
 index|[
 literal|1
 index|]
@@ -24321,7 +24793,7 @@ operator|)
 operator|||
 operator|(
 operator|(
-name|d
+name|dn
 index|[
 literal|2
 index|]
@@ -24330,7 +24802,7 @@ literal|0x0000
 operator|)
 operator|&&
 operator|(
-name|d
+name|dn
 index|[
 literal|3
 index|]
@@ -24393,7 +24865,7 @@ expr_stmt|;
 comment|/* start with a zero */
 name|r
 operator|=
-name|d
+name|dn
 index|[
 literal|0
 index|]
@@ -24424,12 +24896,10 @@ name|TRUE
 expr_stmt|;
 block|}
 else|else
-block|{
 name|isnegative
 operator|=
 name|FALSE
 expr_stmt|;
-block|}
 name|r
 operator|>>=
 literal|8
@@ -24441,8 +24911,7 @@ name|r
 operator|&
 literal|0x80
 condition|)
-comment|/* Make the exponent negative if it is. */
-block|{
+comment|/* Make the exponent negative if it is.  */
 name|r
 operator|=
 name|r
@@ -24455,19 +24924,18 @@ operator|~
 literal|0xff
 operator|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|isnegative
 condition|)
 block|{
-comment|/* Now do the high order mantissa.  We don't "or" on the high bit 	because it is 2 (not 1) and is handled a little differently 	below.  */
+comment|/* Now do the high order mantissa.  We don't "or" on the high bit 	 because it is 2 (not 1) and is handled a little differently 	 below.  */
 name|y
 index|[
 name|M
 index|]
 operator|=
-name|d
+name|dn
 index|[
 literal|0
 index|]
@@ -24481,7 +24949,7 @@ operator|+
 literal|1
 index|]
 operator|=
-name|d
+name|dn
 index|[
 literal|1
 index|]
@@ -24501,7 +24969,7 @@ operator|+
 literal|2
 index|]
 operator|=
-name|d
+name|dn
 index|[
 literal|2
 index|]
@@ -24514,7 +24982,7 @@ operator|+
 literal|3
 index|]
 operator|=
-name|d
+name|dn
 index|[
 literal|3
 index|]
@@ -24525,12 +24993,10 @@ literal|4
 expr_stmt|;
 block|}
 else|else
-block|{
 name|size
 operator|=
 literal|2
 expr_stmt|;
-block|}
 name|eshift
 argument_list|(
 name|y
@@ -24544,7 +25010,7 @@ name|carry
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Initially add 1 for the two's complement. */
+comment|/* Initially add 1 for the two's complement.  */
 for|for
 control|(
 name|i
@@ -24574,7 +25040,6 @@ operator|==
 literal|0x0000
 operator|)
 condition|)
-block|{
 comment|/* We overflowed into the next word, carry is the same.  */
 name|y
 index|[
@@ -24587,7 +25052,6 @@ literal|0x0000
 else|:
 literal|0xffff
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* No overflow, just invert and add carry.  */
@@ -24673,7 +25137,7 @@ name|M
 index|]
 operator|=
 operator|(
-name|d
+name|dn
 index|[
 literal|0
 index|]
@@ -24690,7 +25154,7 @@ operator|+
 literal|1
 index|]
 operator|=
-name|d
+name|dn
 index|[
 literal|1
 index|]
@@ -24710,7 +25174,7 @@ operator|+
 literal|2
 index|]
 operator|=
-name|d
+name|dn
 index|[
 literal|2
 index|]
@@ -24723,7 +25187,7 @@ operator|+
 literal|3
 index|]
 operator|=
-name|d
+name|dn
 index|[
 literal|3
 index|]
@@ -24763,27 +25227,21 @@ name|d
 parameter_list|,
 name|mode
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|UEMUSHORT
+modifier|*
 name|d
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|enum
 name|machine_mode
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|xi
 index|[
 name|NI
@@ -24802,7 +25260,7 @@ argument_list|,
 name|xi
 argument_list|)
 expr_stmt|;
-comment|/* Adjust exponent for offsets. */
+comment|/* Adjust exponent for offsets.  */
 name|exp
 operator|=
 operator|(
@@ -24819,7 +25277,7 @@ operator|-
 literal|0x7f
 operator|)
 expr_stmt|;
-comment|/* Round off to nearest or even. */
+comment|/* Round off to nearest or even.  */
 name|rndsav
 operator|=
 name|rndprc
@@ -24861,7 +25319,7 @@ name|mode
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -24874,8 +25332,7 @@ name|y
 parameter_list|,
 name|mode
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|x
 decl_stmt|,
@@ -24979,7 +25436,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* We have a zero.  Put it into the output and return. */
+comment|/* We have a zero.  Put it into the output and return.  */
 operator|*
 name|y
 operator|++
@@ -25019,7 +25476,7 @@ name|y
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Negative number require a two's complement conversion of the      mantissa. */
+comment|/* Negative number require a two's complement conversion of the      mantissa.  */
 if|if
 condition|(
 name|x
@@ -25047,7 +25504,7 @@ operator|)
 operator|-
 literal|0x7f
 expr_stmt|;
-comment|/* Now add 1 to the inverted data to do the two's complement. */
+comment|/* Now add 1 to the inverted data to do the two's complement.  */
 if|if
 condition|(
 name|mode
@@ -25087,7 +25544,6 @@ index|]
 operator|==
 literal|0x0000
 condition|)
-block|{
 name|x
 index|[
 name|v
@@ -25099,7 +25555,6 @@ literal|0x0000
 else|:
 literal|0xffff
 expr_stmt|;
-block|}
 else|else
 block|{
 name|x
@@ -25130,7 +25585,7 @@ name|v
 operator|--
 expr_stmt|;
 block|}
-comment|/* The following is a special case.  The C4X negative float requires 	 a zero in the high bit (because the format is (2 - x) x 2^m), so 	 if a one is in that bit, we have to shift left one to get rid 	 of it.  This only occurs if the number is -1 x 2^m. */
+comment|/* The following is a special case.  The C4X negative float requires 	 a zero in the high bit (because the format is (2 - x) x 2^m), so 	 if a one is in that bit, we have to shift left one to get rid 	 of it.  This only occurs if the number is -1 x 2^m.  */
 if|if
 condition|(
 name|x
@@ -25143,7 +25598,7 @@ operator|&
 literal|0x8000
 condition|)
 block|{
-comment|/* This is the case of -1 x 2^m, we have to rid ourselves of the 	     high sign bit and shift the exponent. */
+comment|/* This is the case of -1 x 2^m, we have to rid ourselves of the 	     high sign bit and shift the exponent.  */
 name|eshift
 argument_list|(
 name|x
@@ -25157,7 +25612,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|i
 operator|=
 operator|(
@@ -25172,7 +25626,6 @@ operator|)
 operator|-
 literal|0x7f
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -25223,6 +25676,60 @@ literal|3
 index|]
 operator|=
 literal|0xffff
+expr_stmt|;
+name|y
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|y
+index|[
+literal|1
+index|]
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+operator|(
+name|y
+index|[
+literal|2
+index|]
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+expr_stmt|;
+name|y
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|y
+index|[
+literal|0
+index|]
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+operator|(
+name|y
+index|[
+literal|1
+index|]
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -25313,6 +25820,60 @@ operator|+
 literal|3
 index|]
 expr_stmt|;
+name|y
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|y
+index|[
+literal|1
+index|]
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+operator|(
+name|y
+index|[
+literal|2
+index|]
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+expr_stmt|;
+name|y
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|y
+index|[
+literal|0
+index|]
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+operator|(
+name|y
+index|[
+literal|1
+index|]
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+expr_stmt|;
 block|}
 block|}
 end_block
@@ -25357,8 +25918,9 @@ name|IEEE
 end_ifdef
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|static
+specifier|const
+name|UEMUSHORT
 name|TFbignan
 index|[
 literal|8
@@ -25385,8 +25947,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|static
+specifier|const
+name|UEMUSHORT
 name|TFlittlenan
 index|[
 literal|8
@@ -25445,8 +26008,9 @@ name|IEEE
 end_ifdef
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|static
+specifier|const
+name|UEMUSHORT
 name|XFbignan
 index|[
 literal|6
@@ -25469,8 +26033,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|static
+specifier|const
+name|UEMUSHORT
 name|XFlittlenan
 index|[
 literal|6
@@ -25525,8 +26090,9 @@ name|IEEE
 end_ifdef
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|static
+specifier|const
+name|UEMUSHORT
 name|DFbignan
 index|[
 literal|4
@@ -25545,8 +26111,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|static
+specifier|const
+name|UEMUSHORT
 name|DFlittlenan
 index|[
 literal|4
@@ -25597,8 +26164,9 @@ name|IEEE
 end_ifdef
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|static
+specifier|const
+name|UEMUSHORT
 name|SFbignan
 index|[
 literal|2
@@ -25613,8 +26181,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|EMUSHORT
+specifier|static
+specifier|const
+name|UEMUSHORT
 name|SFlittlenan
 index|[
 literal|2
@@ -25638,6 +26207,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NANS
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -25649,8 +26224,7 @@ name|sign
 parameter_list|,
 name|mode
 parameter_list|)
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 modifier|*
 name|nan
 decl_stmt|;
@@ -25665,8 +26239,8 @@ block|{
 name|int
 name|n
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+specifier|const
+name|UEMUSHORT
 modifier|*
 name|p
 decl_stmt|;
@@ -25698,6 +26272,13 @@ argument_list|)
 case|case
 name|TFmode
 case|:
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 name|n
 operator|=
 literal|8
@@ -25716,6 +26297,9 @@ operator|=
 name|TFlittlenan
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* FALLTHRU */
 case|case
 name|XFmode
 case|:
@@ -25850,6 +26434,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NANS */
+end_comment
+
 begin_comment
 comment|/* This is the inverse of the function `etarsingle' invoked by    REAL_VALUE_TO_TARGET_SINGLE.  */
 end_comment
@@ -25867,15 +26460,13 @@ block|{
 name|REAL_VALUE_TYPE
 name|r
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|s
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -25893,8 +26484,7 @@ literal|0
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|f
@@ -25908,8 +26498,7 @@ literal|1
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|f
 expr_stmt|;
@@ -25922,8 +26511,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|f
 expr_stmt|;
@@ -25933,8 +26521,7 @@ literal|1
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|f
@@ -25943,7 +26530,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Convert and promote the target float to E-type. */
+comment|/* Convert and promote the target float to E-type.  */
 name|e24toe
 argument_list|(
 name|s
@@ -25951,7 +26538,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* Output E-type to REAL_VALUE_TYPE. */
+comment|/* Output E-type to REAL_VALUE_TYPE.  */
 name|PUT_REAL
 argument_list|(
 name|e
@@ -25984,15 +26571,13 @@ block|{
 name|REAL_VALUE_TYPE
 name|r
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|s
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -26010,8 +26595,7 @@ literal|0
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26028,8 +26612,7 @@ literal|1
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26042,8 +26625,7 @@ literal|2
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26060,8 +26642,7 @@ literal|3
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26078,8 +26659,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26092,8 +26672,7 @@ literal|1
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26110,8 +26689,7 @@ literal|2
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26124,8 +26702,7 @@ literal|3
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26137,7 +26714,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Convert target double to E-type. */
+comment|/* Convert target double to E-type.  */
 name|e53toe
 argument_list|(
 name|s
@@ -26145,7 +26722,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* Output E-type to REAL_VALUE_TYPE. */
+comment|/* Output E-type to REAL_VALUE_TYPE.  */
 name|PUT_REAL
 argument_list|(
 name|e
@@ -26177,15 +26754,13 @@ block|{
 name|REAL_VALUE_TYPE
 name|r
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|s
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -26203,8 +26778,7 @@ literal|0
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|f
@@ -26218,8 +26792,7 @@ literal|1
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|f
 expr_stmt|;
@@ -26232,8 +26805,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|f
 expr_stmt|;
@@ -26243,8 +26815,7 @@ literal|1
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|f
@@ -26294,15 +26865,13 @@ block|{
 name|REAL_VALUE_TYPE
 name|r
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|s
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 name|e
 index|[
 name|NE
@@ -26325,8 +26894,7 @@ literal|0
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26343,8 +26911,7 @@ literal|1
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26357,8 +26924,7 @@ literal|2
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26375,8 +26941,7 @@ literal|3
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26392,8 +26957,7 @@ literal|0
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26410,8 +26974,7 @@ literal|1
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26428,8 +26991,7 @@ literal|2
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26446,8 +27008,7 @@ literal|3
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26466,8 +27027,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26480,8 +27040,7 @@ literal|1
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26503,8 +27062,7 @@ literal|2
 index|]
 operator|=
 operator|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 operator|)
 name|d
 index|[
@@ -26517,8 +27075,7 @@ literal|3
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26537,8 +27094,7 @@ literal|2
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26555,8 +27111,7 @@ literal|3
 index|]
 operator|=
 call|(
-name|unsigned
-name|EMUSHORT
+name|UEMUSHORT
 call|)
 argument_list|(
 name|d
@@ -26604,12 +27159,12 @@ comment|/* Convert target computer unsigned 64-bit integer to e-type.    The end
 end_comment
 
 begin_comment
-unit|static void uditoe (di, e)      unsigned EMUSHORT *di;
+unit|static void uditoe (di, e)      const UEMUSHORT *di;
 comment|/* Address of the 64-bit int.  */
 end_comment
 
 begin_comment
-unit|unsigned EMUSHORT *e; {   unsigned EMUSHORT yi[NI];   int k;    ecleaz (yi);   if (WORDS_BIG_ENDIAN)     {       for (k = M; k< M + 4; k++) 	yi[k] = *di++;     }   else     {       for (k = M + 3; k>= M; k--) 	yi[k] = *di++;     }   yi[E] = EXONE + 47;
+unit|UEMUSHORT *e; {   UEMUSHORT yi[NI];   int k;    ecleaz (yi);   if (WORDS_BIG_ENDIAN)     {       for (k = M; k< M + 4; k++) 	yi[k] = *di++;     }   else     {       for (k = M + 3; k>= M; k--) 	yi[k] = *di++;     }   yi[E] = EXONE + 47;
 comment|/* exponent if normalize shift count were 0 */
 end_comment
 
@@ -26624,7 +27179,7 @@ comment|/* it was zero */
 end_comment
 
 begin_comment
-unit|else     yi[E] -= (unsigned EMUSHORT) k;
+unit|else     yi[E] -= (UEMUSHORT) k;
 comment|/* subtract shift count from exponent */
 end_comment
 
@@ -26634,12 +27189,12 @@ comment|/* Convert target computer signed 64-bit integer to e-type.  */
 end_comment
 
 begin_comment
-unit|static void ditoe (di, e)      unsigned EMUSHORT *di;
+unit|static void ditoe (di, e)      const UEMUSHORT *di;
 comment|/* Address of the 64-bit int.  */
 end_comment
 
 begin_comment
-unit|unsigned EMUSHORT *e; {   unsigned EMULONG acc;   unsigned EMUSHORT yi[NI];   unsigned EMUSHORT carry;   int k, sign;    ecleaz (yi);   if (WORDS_BIG_ENDIAN)     {       for (k = M; k< M + 4; k++) 	yi[k] = *di++;     }   else     {       for (k = M + 3; k>= M; k--) 	yi[k] = *di++;     }
+unit|UEMUSHORT *e; {   unsigned EMULONG acc;   UEMUSHORT yi[NI];   UEMUSHORT carry;   int k, sign;    ecleaz (yi);   if (WORDS_BIG_ENDIAN)     {       for (k = M; k< M + 4; k++) 	yi[k] = *di++;     }   else     {       for (k = M + 3; k>= M; k--) 	yi[k] = *di++;     }
 comment|/* Take absolute value */
 end_comment
 
@@ -26659,7 +27214,7 @@ comment|/* it was zero */
 end_comment
 
 begin_comment
-unit|else     yi[E] -= (unsigned EMUSHORT) k;
+unit|else     yi[E] -= (UEMUSHORT) k;
 comment|/* subtract shift count from exponent */
 end_comment
 
@@ -26669,7 +27224,7 @@ comment|/* Convert e-type to unsigned 64-bit int.  */
 end_comment
 
 begin_comment
-unit|static void etoudi (x, i)      unsigned EMUSHORT *x;      unsigned EMUSHORT *i; {   unsigned EMUSHORT xi[NI];   int j, k;    emovi (x, xi);   if (xi[0])     {       xi[M] = 0;       goto noshift;     }   k = (int) xi[E] - (EXONE - 1);   if (k<= 0)     {       for (j = 0; j< 4; j++) 	*i++ = 0;       return;     }   if (k> 64)     {       for (j = 0; j< 4; j++) 	*i++ = 0xffff;       if (extra_warnings) 	warning ("overflow on truncation to integer");       return;     }   if (k> 16)     {
+unit|static void etoudi (x, i)      const UEMUSHORT *x;      UEMUSHORT *i; {   UEMUSHORT xi[NI];   int j, k;    emovi (x, xi);   if (xi[0])     {       xi[M] = 0;       goto noshift;     }   k = (int) xi[E] - (EXONE - 1);   if (k<= 0)     {       for (j = 0; j< 4; j++) 	*i++ = 0;       return;     }   if (k> 64)     {       for (j = 0; j< 4; j++) 	*i++ = 0xffff;       if (extra_warnings) 	warning ("overflow on truncation to integer");       return;     }   if (k> 16)     {
 comment|/* Shift more than 16 bits: first shift up k-16 mod 16, 	 then shift up by 16's.  */
 end_comment
 
@@ -26684,7 +27239,7 @@ comment|/* Convert e-type to signed 64-bit int.  */
 end_comment
 
 begin_comment
-unit|static void etodi (x, i)      unsigned EMUSHORT *x;      unsigned EMUSHORT *i; {   unsigned EMULONG acc;   unsigned EMUSHORT xi[NI];   unsigned EMUSHORT carry;   unsigned EMUSHORT *isave;   int j, k;    emovi (x, xi);   k = (int) xi[E] - (EXONE - 1);   if (k<= 0)     {       for (j = 0; j< 4; j++) 	*i++ = 0;       return;     }   if (k> 64)     {       for (j = 0; j< 4; j++) 	*i++ = 0xffff;       if (extra_warnings) 	warning ("overflow on truncation to integer");       return;     }   isave = i;   if (k> 16)     {
+unit|static void etodi (x, i)      const UEMUSHORT *x;      UEMUSHORT *i; {   unsigned EMULONG acc;   UEMUSHORT xi[NI];   UEMUSHORT carry;   UEMUSHORT *isave;   int j, k;    emovi (x, xi);   k = (int) xi[E] - (EXONE - 1);   if (k<= 0)     {       for (j = 0; j< 4; j++) 	*i++ = 0;       return;     }   if (k> 64)     {       for (j = 0; j< 4; j++) 	*i++ = 0xffff;       if (extra_warnings) 	warning ("overflow on truncation to integer");       return;     }   isave = i;   if (k> 16)     {
 comment|/* Shift more than 16 bits: first shift up k-16 mod 16, 	 then shift up by 16's.  */
 end_comment
 
@@ -26704,7 +27259,7 @@ comment|/* Longhand square root routine.  */
 end_comment
 
 begin_comment
-unit|static int esqinited = 0; static unsigned short sqrndbit[NI];  static void esqrt (x, y)      unsigned EMUSHORT *x, *y; {   unsigned EMUSHORT temp[NI], num[NI], sq[NI], xx[NI];   EMULONG m, exp;   int i, j, k, n, nlups;    if (esqinited == 0)     {       ecleaz (sqrndbit);       sqrndbit[NI - 2] = 1;       esqinited = 1;     }
+unit|static int esqinited = 0; static unsigned short sqrndbit[NI];  static void esqrt (x, y)      const UEMUSHORT *x;      UEMUSHORT *y; {   UEMUSHORT temp[NI], num[NI], sq[NI], xx[NI];   EMULONG m, exp;   int i, j, k, n, nlups;    if (esqinited == 0)     {       ecleaz (sqrndbit);       sqrndbit[NI - 2] = 1;       esqinited = 1;     }
 comment|/* Check for arg<= 0 */
 end_comment
 
@@ -26813,6 +27368,7 @@ comment|/* Return the binary precision of the significand for a given    floatin
 end_comment
 
 begin_function
+name|unsigned
 name|int
 name|significand_size
 parameter_list|(
@@ -26911,9 +27467,23 @@ return|;
 case|case
 literal|128
 case|:
+if|#
+directive|if
+operator|(
+name|INTEL_EXTENDED_IEEE_FORMAT
+operator|==
+literal|0
+operator|)
 return|return
 literal|113
 return|;
+else|#
+directive|else
+return|return
+literal|64
+return|;
+endif|#
+directive|endif
 default|default:
 name|abort
 argument_list|()

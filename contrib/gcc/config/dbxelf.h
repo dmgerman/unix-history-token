@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__DBX_ELF_H
+name|GCC_DBX_ELF_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__DBX_ELF_H
+name|GCC_DBX_ELF_H
 end_define
 
 begin_comment
@@ -107,32 +107,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* When using stabs, gcc2_compiled must be a stabs entry, not an    ordinary symbol, or gdb won't see it.  Furthermore, since gdb reads    the input piecemeal, starting with each N_SO, it's a lot easier if    the gcc2 flag symbol is *after* the N_SO rather than before it.  So    we emit an N_OPT stab there.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_GCC
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do									\   {									\     if (write_symbols != DBX_DEBUG)					\       fputs ("gcc2_compiled.:\n", FILE);				\   }									\ while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_GCC_AFTER_SOURCE
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do									\   {									\     if (write_symbols == DBX_DEBUG)					\       fputs ("\t.stabs\t\"gcc2_compiled.\", 0x3c, 0, 0, 0\n", FILE);	\   }									\ while (0)
-end_define
-
-begin_comment
 comment|/* Like block addresses, stabs line numbers are relative to the    current function.  */
 end_comment
 
@@ -152,7 +126,7 @@ parameter_list|,
 name|LINE
 parameter_list|)
 define|\
-value|do									\   {									\     static int sym_lineno = 1;						\     char temp[256];							\     ASM_GENERATE_INTERNAL_LABEL (temp, "LM", sym_lineno);		\     fprintf (FILE, ".stabn 68,0,%d,", LINE);				\     assemble_name (FILE, temp);						\     putc ('-', FILE);							\     assemble_name (FILE,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     putc ('\n', FILE);							\     ASM_OUTPUT_INTERNAL_LABEL (FILE, "LM", sym_lineno);			\     sym_lineno += 1;							\   }									\ while (0)
+value|do									\   {									\     static int sym_lineno = 1;						\     char temp[256];							\     ASM_GENERATE_INTERNAL_LABEL (temp, "LM", sym_lineno);		\     fprintf (FILE, "\t.stabn 68,0,%d,", LINE);				\     assemble_name (FILE, temp);						\     putc ('-', FILE);							\     assemble_name (FILE,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     putc ('\n', FILE);							\     ASM_OUTPUT_INTERNAL_LABEL (FILE, "LM", sym_lineno);			\     sym_lineno += 1;							\   }									\ while (0)
 end_define
 
 begin_comment
@@ -184,7 +158,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __DBX_ELF_H */
+comment|/* ! GCC_DBX_ELF_H */
 end_comment
 
 end_unit

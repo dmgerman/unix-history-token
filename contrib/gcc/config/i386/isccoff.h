@@ -4,7 +4,7 @@ comment|/* Definitions for Intel 386 running Interactive Unix System V.    Speci
 end_comment
 
 begin_comment
-comment|/* Mostly it's like AT&T Unix System V. */
+comment|/* Mostly it's like AT&T Unix System V.  */
 end_comment
 
 begin_include

@@ -2,17 +2,13 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GNU_STAB__
+name|GCC_GSTAB_H
 end_ifndef
-
-begin_comment
-comment|/* Indicate the GNU stab.h is in use.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|__GNU_STAB__
+name|GCC_GSTAB_H
 end_define
 
 begin_define
@@ -53,7 +49,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNU_STAB_ */
+comment|/* ! GCC_GSTAB_H */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Header file for generic hash table support.    Copyright (C) 1993, 1994, 1997, 1998 Free Software Foundation, Inc.    Written by Steve Chamberlain<sac@cygnus.com>  This file was lifted from BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Header file for generic hash table support.    Copyright (C) 1993, 1994, 1997, 1998, 2001 Free Software Foundation, Inc.    Written by Steve Chamberlain<sac@cygnus.com>  This file was lifted from BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -29,18 +29,6 @@ include|#
 directive|include
 file|"obstack.h"
 end_include
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|false
-block|,
-name|true
-block|}
-name|boolean
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -138,7 +126,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 comment|/* A function to compare two keys.  */
-name|boolean
+name|bool
 argument_list|(
 argument|*comp
 argument_list|)
@@ -166,7 +154,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|void
 name|hash_table_init
 name|PARAMS
 argument_list|(
@@ -203,7 +191,7 @@ argument_list|(
 name|hash_table_key
 argument_list|)
 operator|,
-name|boolean
+name|bool
 argument_list|(
 operator|*
 name|comp
@@ -224,7 +212,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|void
 name|hash_table_init_n
 name|PARAMS
 argument_list|(
@@ -261,7 +249,7 @@ argument_list|(
 name|hash_table_key
 argument_list|)
 operator|,
-name|boolean
+name|bool
 argument_list|(
 operator|*
 name|comp
@@ -319,7 +307,7 @@ operator|,
 name|hash_table_key
 name|key
 operator|,
-name|boolean
+name|int
 name|create
 operator|,
 name|hash_table_key
@@ -404,7 +392,7 @@ expr|struct
 name|hash_table
 operator|*
 operator|,
-name|boolean
+name|bool
 argument_list|(
 operator|*
 argument_list|)
@@ -448,7 +436,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bool
 name|string_compare
 name|PARAMS
 argument_list|(
