@@ -6730,6 +6730,9 @@ if|if
 condition|(
 name|BASESYNTAX
 index|[
+operator|(
+name|int
+operator|)
 name|c
 index|]
 operator|==
