@@ -5948,6 +5948,12 @@ argument_list|,
 name|m_head
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_OACTIVE
+expr_stmt|;
 name|cur_tx
 operator|=
 name|NULL
