@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.25 1996/10/24 00:15:44 adam Exp $ */
+comment|/* $Id: main.c,v 1.26 1996/10/31 14:24:35 phk Exp $ */
 end_comment
 
 begin_include
@@ -653,6 +653,10 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -841,12 +845,33 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|parse
+name|s
+operator|=
+name|strdup
 argument_list|(
 name|argv
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|s
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* optomistic, I know.. malloc just failed. */
+name|parse
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
