@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_pcb.c 4.4 81/11/20 */
+comment|/* in_pcb.c 4.5 81/11/20 */
 end_comment
 
 begin_include
@@ -415,6 +415,40 @@ operator|(
 name|caddr_t
 operator|)
 name|inp
+expr_stmt|;
+name|sin
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|so
+operator|->
+name|so_addr
+expr_stmt|;
+name|sin
+operator|->
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|sin
+operator|->
+name|sin_addr
+operator|=
+name|inp
+operator|->
+name|inp_laddr
+expr_stmt|;
+name|sin
+operator|->
+name|sin_port
+operator|=
+name|inp
+operator|->
+name|inp_lport
 expr_stmt|;
 return|return
 operator|(
