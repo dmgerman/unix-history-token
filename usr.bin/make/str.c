@@ -208,6 +208,12 @@ decl_stmt|;
 comment|/* get the length of both strings */
 name|len1
 operator|=
+name|s1
+operator|==
+name|NULL
+condition|?
+literal|0
+else|:
 name|strlen
 argument_list|(
 name|s1
@@ -215,6 +221,12 @@ argument_list|)
 expr_stmt|;
 name|len2
 operator|=
+name|s2
+operator|==
+name|NULL
+condition|?
+literal|0
+else|:
 name|strlen
 argument_list|(
 name|s2
@@ -238,6 +250,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* copy first string into place */
+if|if
+condition|(
+name|len1
+condition|)
 name|memcpy
 argument_list|(
 name|result
@@ -250,22 +266,25 @@ expr_stmt|;
 comment|/* add separator character */
 if|if
 condition|(
+name|len1
+operator|&&
+name|len2
+condition|)
+block|{
+if|if
+condition|(
 name|flags
 operator|&
 name|STR_ADDSPACE
 condition|)
-block|{
 name|result
 index|[
 name|len1
+operator|++
 index|]
 operator|=
 literal|' '
 expr_stmt|;
-operator|++
-name|len1
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -273,19 +292,20 @@ name|flags
 operator|&
 name|STR_ADDSLASH
 condition|)
-block|{
 name|result
 index|[
 name|len1
+operator|++
 index|]
 operator|=
 literal|'/'
 expr_stmt|;
-operator|++
-name|len1
-expr_stmt|;
 block|}
 comment|/* copy second string plus EOS into place */
+if|if
+condition|(
+name|len2
+condition|)
 name|memcpy
 argument_list|(
 name|result
@@ -310,7 +330,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|free
+name|efree
 argument_list|(
 name|__DECONST
 argument_list|(
@@ -324,7 +344,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|free
+name|efree
 argument_list|(
 name|__DECONST
 argument_list|(
