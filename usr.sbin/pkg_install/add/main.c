@@ -860,13 +860,13 @@ if|if
 condition|(
 name|reldate
 operator|==
-literal|400017
+literal|410000
 condition|)
 name|strcat
 argument_list|(
 name|sitepath
 argument_list|,
-literal|"/packages-4.0-release/Latest/"
+literal|"/packages-4.1-release/Latest/"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -874,7 +874,7 @@ if|if
 condition|(
 name|reldate
 operator|>=
-literal|400018
+literal|410000
 condition|)
 name|strcat
 argument_list|(
