@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: atkbdreg.h,v 1.1 1999/01/09 02:44:50 yokota Exp $  */
+comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: atkbdreg.h,v 1.2 1999/03/10 10:36:52 yokota Exp $  */
 end_comment
 
 begin_ifndef
@@ -20,26 +20,6 @@ define|#
 directive|define
 name|ATKBD_DRIVER_NAME
 value|"atkbd"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATKBD_UNIT
-parameter_list|(
-name|dev
-parameter_list|)
-value|minor(dev)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATKBD_MKMINOR
-parameter_list|(
-name|unit
-parameter_list|)
-value|(unit)
 end_define
 
 begin_comment
@@ -85,57 +65,6 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|atkbd_softc
-block|{
-name|short
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|ATKBD_ATTACHED
-value|(1<< 0)
-name|keyboard_t
-modifier|*
-name|kbd
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KBD_INSTALL_CDEV
-name|genkbd_softc_t
-name|gensc
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-name|atkbd_softc_t
-typedef|;
-end_typedef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_function_decl
-name|atkbd_softc_t
-modifier|*
-name|atkbd_get_softc
-parameter_list|(
-name|int
-name|unit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|int
 name|atkbd_probe_unit
@@ -162,9 +91,10 @@ parameter_list|(
 name|int
 name|unit
 parameter_list|,
-name|atkbd_softc_t
+name|keyboard_t
 modifier|*
-name|sc
+modifier|*
+name|kbd
 parameter_list|,
 name|int
 name|port
