@@ -1114,7 +1114,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_INTERNAL
+name|UMA_ZFLAG_INTERNAL
 argument_list|)
 expr_stmt|;
 for|for
@@ -1519,7 +1519,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_HASH
+name|UMA_ZONE_HASH
 operator|&&
 name|zone
 operator|->
@@ -2066,7 +2066,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 condition|)
 name|mzone
 operator|=
@@ -2457,7 +2457,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_NOFREE
+name|UMA_ZONE_NOFREE
 operator|||
 name|zone
 operator|->
@@ -2636,7 +2636,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_HASH
+name|UMA_ZONE_HASH
 condition|)
 name|UMA_HASH_REMOVE
 argument_list|(
@@ -2764,7 +2764,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_OFFPAGE
+name|UMA_ZONE_OFFPAGE
 condition|)
 name|uma_zfree_internal
 argument_list|(
@@ -2783,7 +2783,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 condition|)
 block|{
 name|vm_object_t
@@ -2954,7 +2954,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_OFFPAGE
+name|UMA_ZONE_OFFPAGE
 condition|)
 block|{
 name|slab
@@ -2993,7 +2993,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 operator|)
 operator|==
 literal|0
@@ -3084,7 +3084,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 condition|)
 name|panic
 argument_list|(
@@ -3142,7 +3142,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_OFFPAGE
+name|UMA_ZONE_OFFPAGE
 operator|)
 condition|)
 name|slab
@@ -3164,7 +3164,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 condition|)
 for|for
 control|(
@@ -3315,7 +3315,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_HASH
+name|UMA_ZONE_HASH
 condition|)
 name|UMA_HASH_INSERT
 argument_list|(
@@ -3912,7 +3912,7 @@ name|zone
 operator|->
 name|uz_flags
 operator||=
-name|UMA_ZFLAG_OFFPAGE
+name|UMA_ZONE_OFFPAGE
 expr_stmt|;
 if|if
 condition|(
@@ -3921,7 +3921,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 operator|)
 operator|==
 literal|0
@@ -3930,7 +3930,7 @@ name|zone
 operator|->
 name|uz_flags
 operator||=
-name|UMA_ZFLAG_HASH
+name|UMA_ZONE_HASH
 expr_stmt|;
 name|zone
 operator|->
@@ -4016,7 +4016,7 @@ name|zone
 operator|->
 name|uz_flags
 operator||=
-name|UMA_ZFLAG_OFFPAGE
+name|UMA_ZONE_OFFPAGE
 expr_stmt|;
 if|if
 condition|(
@@ -4025,7 +4025,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 operator|)
 operator|==
 literal|0
@@ -4034,7 +4034,7 @@ name|zone
 operator|->
 name|uz_flags
 operator||=
-name|UMA_ZFLAG_HASH
+name|UMA_ZONE_HASH
 expr_stmt|;
 name|zone
 operator|->
@@ -4162,7 +4162,9 @@ name|zone
 operator|->
 name|uz_flags
 operator|=
-literal|0
+name|arg
+operator|->
+name|flags
 expr_stmt|;
 name|zone
 operator|->
@@ -4189,48 +4191,6 @@ operator|->
 name|uz_init
 operator|=
 name|zero_init
-expr_stmt|;
-if|if
-condition|(
-name|arg
-operator|->
-name|flags
-operator|&
-name|UMA_ZONE_INTERNAL
-condition|)
-name|zone
-operator|->
-name|uz_flags
-operator||=
-name|UMA_ZFLAG_INTERNAL
-expr_stmt|;
-if|if
-condition|(
-name|arg
-operator|->
-name|flags
-operator|&
-name|UMA_ZONE_MALLOC
-condition|)
-name|zone
-operator|->
-name|uz_flags
-operator||=
-name|UMA_ZFLAG_MALLOC
-expr_stmt|;
-if|if
-condition|(
-name|arg
-operator|->
-name|flags
-operator|&
-name|UMA_ZONE_NOFREE
-condition|)
-name|zone
-operator|->
-name|uz_flags
-operator||=
-name|UMA_ZFLAG_NOFREE
 expr_stmt|;
 if|if
 condition|(
@@ -4332,7 +4292,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_OFFPAGE
+name|UMA_ZONE_OFFPAGE
 operator|)
 condition|)
 block|{
@@ -4489,7 +4449,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_HASH
+name|UMA_ZONE_HASH
 condition|)
 name|hash_alloc
 argument_list|(
@@ -4690,15 +4650,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_OFFPAGE
-operator|)
-operator|!=
-literal|0
+name|UMA_ZONE_HASH
 condition|)
 name|hash_free
 argument_list|(
@@ -4923,7 +4879,7 @@ name|args
 operator|.
 name|flags
 operator|=
-name|UMA_ZONE_INTERNAL
+name|UMA_ZFLAG_INTERNAL
 expr_stmt|;
 comment|/* The initial zone has no Per cpu queues so it's smaller */
 name|zone_ctor
@@ -5088,7 +5044,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_INTERNAL
+name|UMA_ZFLAG_INTERNAL
 argument_list|)
 expr_stmt|;
 name|hashzone
@@ -5116,7 +5072,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_INTERNAL
+name|UMA_ZFLAG_INTERNAL
 argument_list|)
 expr_stmt|;
 name|bucket_init
@@ -6863,7 +6819,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 condition|)
 name|uma_dbg_free
 argument_list|(
@@ -7163,7 +7119,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 condition|)
 name|uma_dbg_free
 argument_list|(
@@ -7276,7 +7232,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 operator|)
 condition|)
 block|{
@@ -7305,7 +7261,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_HASH
+name|UMA_ZONE_HASH
 condition|)
 name|slab
 operator|=
@@ -7817,7 +7773,7 @@ name|zone
 operator|->
 name|uz_flags
 operator||=
-name|UMA_ZFLAG_NOFREE
+name|UMA_ZONE_NOFREE
 operator||
 name|UMA_ZFLAG_PRIVALLOC
 expr_stmt|;

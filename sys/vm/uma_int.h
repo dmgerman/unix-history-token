@@ -548,107 +548,52 @@ begin_comment
 comment|/* How much will we move data */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UMA_ZFLAG_OFFPAGE
-value|0x0001
-end_define
-
 begin_comment
-comment|/* Struct slab/freelist off page */
+comment|/*  * These flags must not overlap with the UMA_ZONE flags specified in uma.h.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_PRIVALLOC
-value|0x0002
+value|0x1000
 end_define
 
 begin_comment
-comment|/* Zone has supplied it's own alloc */
+comment|/* Use uz_allocf. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_INTERNAL
-value|0x0004
+value|0x2000
 end_define
 
 begin_comment
-comment|/* Internal zone, no offpage no PCPU */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_ZFLAG_MALLOC
-value|0x0008
-end_define
-
-begin_comment
-comment|/* Zone created by malloc */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_ZFLAG_NOFREE
-value|0x0010
-end_define
-
-begin_comment
-comment|/* Don't free data from this zone */
+comment|/* No offpage no PCPU. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_FULL
-value|0x0020
+value|0x4000
 end_define
 
 begin_comment
-comment|/* This zone reached uz_maxpages */
+comment|/* Reached uz_maxpages */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_CACHEONLY
-value|0x0040
+value|0x8000
 end_define
 
 begin_comment
-comment|/* Don't go to VM to allocate internal objs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_ZFLAG_HASH
-value|0x0080
-end_define
-
-begin_comment
-comment|/* Look up slab via hash */
-end_comment
-
-begin_comment
-comment|/* This lives in uflags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_ZONE_INTERNAL
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Internal zone for uflags */
+comment|/* Don't ask VM for buckets. */
 end_comment
 
 begin_comment

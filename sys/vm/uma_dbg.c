@@ -640,7 +640,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_MALLOC
+name|UMA_ZONE_MALLOC
 condition|)
 block|{
 name|slab
@@ -661,7 +661,7 @@ name|zone
 operator|->
 name|uz_flags
 operator|&
-name|UMA_ZFLAG_HASH
+name|UMA_ZONE_HASH
 condition|)
 block|{
 name|slab
