@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1400,7 +1400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ssize_t
 name|recv
 name|__P
 argument_list|(
@@ -1410,7 +1410,7 @@ operator|,
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|)
@@ -1419,7 +1419,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ssize_t
 name|recvfrom
 name|__P
 argument_list|(
@@ -1429,7 +1429,7 @@ operator|,
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|,
@@ -1445,7 +1445,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ssize_t
 name|recvmsg
 name|__P
 argument_list|(
@@ -1463,7 +1463,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ssize_t
 name|send
 name|__P
 argument_list|(
@@ -1474,7 +1474,7 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|)
@@ -1483,7 +1483,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ssize_t
 name|sendto
 name|__P
 argument_list|(
@@ -1494,7 +1494,7 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|,
@@ -1510,7 +1510,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ssize_t
 name|sendmsg
 name|__P
 argument_list|(
