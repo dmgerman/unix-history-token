@@ -601,6 +601,10 @@ directive|ifdef
 name|YP
 if|if
 condition|(
+name|pw
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|pw
 operator|->
