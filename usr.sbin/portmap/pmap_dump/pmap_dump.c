@@ -103,10 +103,13 @@ end_include
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|protoname
-parameter_list|()
+parameter_list|(
+name|u_long
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -114,18 +117,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_in
@@ -253,15 +252,14 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|protoname
 parameter_list|(
-name|proto
-parameter_list|)
 name|u_long
 name|proto
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char

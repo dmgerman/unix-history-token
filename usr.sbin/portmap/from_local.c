@@ -97,7 +97,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -128,6 +146,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pmap_check.h"
 end_include
 
 begin_ifndef
@@ -190,9 +214,12 @@ comment|/* find_local - find all IP addresses for this host */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|find_local
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -475,6 +502,24 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|ifm
+operator|->
+name|ifm_index
+operator|!=
+name|dl
+operator|->
+name|sdl_index
+operator|||
+name|dl
+operator|->
+name|sdl_nlen
+operator|==
+literal|0
+condition|)
+comment|/* We only want to see each interface once */
+continue|continue;
 name|n
 operator|=
 name|dl
@@ -495,13 +540,6 @@ name|dl
 operator|->
 name|sdl_nlen
 expr_stmt|;
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-condition|)
-continue|continue;
 name|strncpy
 argument_list|(
 name|ifr
@@ -548,9 +586,22 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|fprintf
 argument_list|(
-literal|"SIOCGIFFLAGS"
+name|stderr
+argument_list|,
+literal|"%.*s: SIOCGIFFLAGS: %s\n"
+argument_list|,
+name|n
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -562,6 +613,7 @@ name|ifr_flags
 operator|&
 name|IFF_UP
 condition|)
+block|{
 comment|/* active interface */
 if|if
 condition|(
@@ -577,9 +629,22 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|fprintf
 argument_list|(
-literal|"SIOCGIFADDR"
+name|stderr
+argument_list|,
+literal|"%.*s: SIOCGIFADDR: %s\n"
+argument_list|,
+name|n
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -681,6 +746,7 @@ name|sin_addr
 expr_stmt|;
 block|}
 block|}
+block|}
 name|free
 argument_list|(
 name|buf
@@ -705,13 +771,11 @@ begin_function
 name|int
 name|from_local
 parameter_list|(
-name|addr
-parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -806,8 +870,17 @@ name|TEST
 end_ifdef
 
 begin_function
+name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -846,6 +919,9 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
