@@ -1371,12 +1371,13 @@ modifier|*
 name|vfc_opts
 decl_stmt|;
 comment|/* mount options */
-name|struct
-name|vfsconf
-modifier|*
-name|vfc_next
-decl_stmt|;
-comment|/* next in list */
+name|TAILQ_ENTRY
+argument_list|(
+argument|vfsconf
+argument_list|)
+name|vfc_list
+expr_stmt|;
+comment|/* list of vfscons */
 block|}
 struct|;
 end_struct
@@ -1914,18 +1915,23 @@ begin_comment
 comment|/* vfc_typenum for nfs, or -1 */
 end_comment
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|vfsconfhead
+argument_list|,
+name|vfsconf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vfsconf
-modifier|*
+name|vfsconfhead
 name|vfsconf
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* head of list of filesystem types */
-end_comment
 
 begin_comment
 comment|/*  * Operations supported on mounted filesystem.  */
@@ -2629,7 +2635,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static struct vfsconf fsname ## _vfsconf = {		\&vfsops,					\ 		#fsname,					\ 		-1,						\ 		0,						\ 		flags,						\ 		NULL,						\ 		NULL						\ 	};							\ 	static moduledata_t fsname ## _mod = {			\ 		#fsname,					\ 		vfs_modevent,					\& fsname ## _vfsconf				\ 	};							\ 	DECLARE_MODULE(fsname, fsname ## _mod, SI_SUB_VFS, SI_ORDER_MIDDLE)
+value|static struct vfsconf fsname ## _vfsconf = {		\ 		.vfc_vfsops =&vfsops,				\ 		.vfc_name = #fsname,				\ 		.vfc_typenum = -1,				\ 		.vfc_flags = flags,				\ 	};							\ 	static moduledata_t fsname ## _mod = {			\ 		#fsname,					\ 		vfs_modevent,					\& fsname ## _vfsconf				\ 	};							\ 	DECLARE_MODULE(fsname, fsname ## _mod, SI_SUB_VFS, SI_ORDER_MIDDLE)
 end_define
 
 begin_decl_stmt
@@ -2684,6 +2690,19 @@ name|int
 name|flags
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vfsconf
+modifier|*
+name|vfs_byname
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2762,23 +2781,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vfs_nmount
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|uio
 modifier|*
 parameter_list|)
 function_decl|;
