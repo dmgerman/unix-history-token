@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,15 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"From: @(#)rsh.c	8.3 (Berkeley) 4/6/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "From: @(#)rsh.c	8.3 (Berkeley) 4/6/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -50,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.10 1997/02/22 19:56:46 peter Exp $"
+literal|"$Id: rsh.c,v 1.11 1997/03/29 04:31:59 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,17 +304,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|warning
-name|__P
-argument_list|(
-operator|(
 operator|)
 argument_list|)
 decl_stmt|;
@@ -811,9 +803,9 @@ name|use_kerberos
 operator|=
 literal|0
 expr_stmt|;
-name|warning
+name|warnx
 argument_list|(
-literal|"can't get entry for %s/tcp service"
+literal|"warning, using standard rsh: can't get entry for %s/tcp service"
 argument_list|,
 name|doencrypt
 condition|?
@@ -1031,9 +1023,9 @@ name|errno
 operator|==
 name|ECONNREFUSED
 condition|)
-name|warning
+name|warnx
 argument_list|(
-literal|"remote host doesn't support Kerberos"
+literal|"warning, using standard rsh: remote host doesn't support Kerberos"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1042,9 +1034,9 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
-name|warning
+name|warnx
 argument_list|(
-literal|"can't provide Kerberos auth data"
+literal|"warning, using standard rsh: can't provide Kerberos auth data"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2048,88 +2040,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERBEROS
-end_ifdef
-
-begin_comment
-comment|/* VARARGS */
-end_comment
-
-begin_function
-name|void
-name|warning
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rsh: warning, using standard rsh: "
-argument_list|)
-expr_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|fmt
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|".\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|char
