@@ -863,7 +863,7 @@ name|CTR5
 argument_list|(
 name|KTR_INTR
 argument_list|,
-literal|"ithd_loop pid %d ih=%p: %p(%p) flg=%x"
+literal|"sithd_loop pid %d ih=%p: %p(%p) flg=%x"
 argument_list|,
 name|p
 operator|->
