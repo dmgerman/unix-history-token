@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)disklabel.h	7.2 (Berkeley) %G%  */
+comment|/*  *	@(#)disklabel.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -210,10 +210,6 @@ decl_stmt|;
 comment|/* xor of data incl. partitions */
 comment|/* filesystem and partition information: */
 name|u_long
-name|d_npartitions
-decl_stmt|;
-comment|/* number of partitions in following */
-name|u_long
 name|d_bbsize
 decl_stmt|;
 comment|/* size of boot area at sn0, bytes */
@@ -225,6 +221,17 @@ define|#
 directive|define
 name|d_swablast
 value|d_sbsize
+name|u_char
+name|d_unused
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* padding */
+name|u_char
+name|d_npartitions
+decl_stmt|;
+comment|/* number of partitions in following */
 struct|struct
 name|partition
 block|{
