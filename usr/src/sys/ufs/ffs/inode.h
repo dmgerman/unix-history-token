@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	4.7	81/10/17	*/
+comment|/*	inode.h	4.8	81/11/08	*/
 end_comment
 
 begin_comment
-comment|/*  * The I node is the focus of all  * file activity in unix. There is a unique  * inode allocated for each active file,  * each current directory, each mounted-on  * file, text file, and the root. An inode is 'named'  * by its dev/inumber pair. (iget/iget.c)  * Data, from mode on, is read in  * from permanent inode on volume.  */
+comment|/*  * The I node is the focus of all file activity in UNIX.  * There is a unique inode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  * An inode is 'named' by its dev/inumber pair. (iget/iget.c)  * Data, from mode on, is read in from permanent inode on volume.  */
 end_comment
 
 begin_define
@@ -33,8 +33,8 @@ name|ino_t
 name|i_number
 decl_stmt|;
 comment|/* i number, 1-to-1 with device address */
-name|unsigned
-name|short
+comment|/* begin read from disk */
+name|u_short
 name|i_mode
 decl_stmt|;
 name|short
@@ -67,7 +67,7 @@ comment|/* if normal file/directory */
 name|daddr_t
 name|I_lastr
 decl_stmt|;
-comment|/* last read (for read-ahead) */
+comment|/* last read (read-ahead) */
 block|}
 name|i_f
 struct|;
@@ -92,34 +92,15 @@ define|#
 directive|define
 name|i_rdev
 value|i_d.I_rdev
-struct|struct
-block|{
-name|daddr_t
-name|I_port0
-decl_stmt|;
-comment|/* low 16 bits of portid */
-name|daddr_t
-name|I_port1
-decl_stmt|;
-comment|/* high 16 bits of portid */
-block|}
-name|i_p
-struct|;
-define|#
-directive|define
-name|i_port0
-value|i_p.I_port0
-define|#
-directive|define
-name|i_port1
-value|i_p.I_port1
 block|}
 name|i_un
 union|;
+comment|/* end read from disk */
 name|short
-name|i_vfdcnt
+name|i_XXXXXX
 decl_stmt|;
-comment|/* number of fd's vreading this inode */
+comment|/* ### */
+comment|/* SHOULD USE POINTERS, NOT INDICES, FOR HAS CHAIN */
 name|short
 name|i_hlink
 decl_stmt|;
@@ -161,18 +142,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* pointer to inode of root directory */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|inode
-modifier|*
-name|mpxip
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mpx virtual inode */
 end_comment
 
 begin_function_decl
@@ -315,17 +284,6 @@ begin_comment
 comment|/* inode has been changed */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPIPE
-value|0200
-end_define
-
-begin_comment
-comment|/* inode is a pipe */
-end_comment
-
 begin_comment
 comment|/* modes */
 end_comment
@@ -383,17 +341,6 @@ end_define
 
 begin_comment
 comment|/* regular */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFPORT
-value|0010000
-end_define
-
-begin_comment
-comment|/* named port */
 end_comment
 
 begin_define
