@@ -2981,6 +2981,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|BlockNumber
 argument_list|,
 name|GpeNumber
