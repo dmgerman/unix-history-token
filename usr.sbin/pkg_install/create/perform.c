@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.17 1995/04/22 00:03:09 jkh Exp $"
+literal|"$Id: perform.c,v 1.18 1995/04/22 00:59:33 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,9 @@ expr_stmt|;
 if|if
 condition|(
 name|Verbose
+operator|&&
+operator|!
+name|PlistOnly
 condition|)
 name|printf
 argument_list|(
