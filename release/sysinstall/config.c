@@ -2404,8 +2404,8 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Extreme security settings have been selected.\n\n"
-literal|"Sendmail and sshd have been enabled, securelevels are\n"
-literal|"disabled, and NFS server settings have been left intact.\n\n"
+literal|"Sendmail, sshd, and NFS services have been disabled, and\n"
+literal|"securelevels have been enabled.\n"
 literal|"PLEASE NOTE that this still does not save you from having\n"
 literal|"to properly secure your system in other ways or exercise\n"
 literal|"due diligence in your administration, this simply picks\n"
@@ -2483,8 +2483,8 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Moderate security settings have been selected.\n\n"
-literal|"Sendmail, sshd, and NFS services have been disabled, and\n"
-literal|"securelevels have been enabled.\n\n"
+literal|"Sendmail and sshd have been enabled, securelevels are\n"
+literal|"disabled, and NFS server settings have been left intact.\n"
 literal|"PLEASE NOTE that this still does not save you from having\n"
 literal|"to properly secure your system in other ways or exercise\n"
 literal|"due diligence in your administration, this simply picks\n"
