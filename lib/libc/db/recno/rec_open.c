@@ -605,6 +605,8 @@ name|bt_msize
 argument_list|,
 name|PROT_READ
 argument_list|,
+name|MAP_FILE
+operator||
 name|MAP_PRIVATE
 argument_list|,
 name|rfd
