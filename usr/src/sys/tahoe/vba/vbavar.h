@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vbavar.h	1.4	86/12/15	*/
+comment|/*	vbavar.h	1.5	87/03/10	*/
 end_comment
 
 begin_comment
@@ -251,6 +251,183 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Common state for Versabus driver I/O resources,  * including memory for intermediate buffer and page map,  * allocated by vbainit.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vb_buf
+block|{
+comment|/* these fields set up once by vbainit */
+name|int
+name|vb_flags
+decl_stmt|;
+comment|/* device parameters */
+name|struct
+name|pte
+modifier|*
+name|vb_map
+decl_stmt|;
+comment|/* private page entries */
+name|caddr_t
+name|vb_utl
+decl_stmt|;
+comment|/* virtual addresses mapped by vb_map */
+name|caddr_t
+name|vb_rawbuf
+decl_stmt|;
+comment|/* intermediate buffer */
+name|u_long
+name|vb_physbuf
+decl_stmt|;
+comment|/* phys addr of intermediate buffer */
+name|u_long
+name|vb_maxphys
+decl_stmt|;
+comment|/* physical address limit */
+comment|/* remaining fields apply to current transfer: */
+name|int
+name|vb_copy
+decl_stmt|;
+comment|/* copy to/from intermediate buffer */
+name|int
+name|vb_iskernel
+decl_stmt|;
+comment|/* is to/from kernel address space */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * flags to vbainit  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VB_32BIT
+value|0x00
+end_define
+
+begin_comment
+comment|/* device uses 32-bit addressing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VB_24BIT
+value|0x01
+end_define
+
+begin_comment
+comment|/* device uses 24-bit addressing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VB_20BIT
+value|0x02
+end_define
+
+begin_comment
+comment|/* device uses 20-bit addressing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VB_SCATTER
+value|0x04
+end_define
+
+begin_comment
+comment|/* device does scatter-gather */
+end_comment
+
+begin_comment
+comment|/*  * hardware addressing limits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VB_MAXADDR20
+value|0x000fffff
+end_define
+
+begin_comment
+comment|/* highest addr for 20-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VB_MAXADDR24
+value|0x007fffff
+end_define
+
+begin_comment
+comment|/* highest addr for 23/24-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VB_MAXADDR32
+value|0x3effffff
+end_define
+
+begin_comment
+comment|/* highest addr for 32-bit */
+end_comment
+
+begin_comment
+comment|/*  * Statistics on vba operations.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vbastat
+block|{
+name|u_long
+name|kw_raw
+decl_stmt|;
+comment|/* wrote from kernel DMA buffer */
+name|u_long
+name|uw_raw
+decl_stmt|;
+comment|/* wrote from user DMA buffer */
+name|u_long
+name|kw_copy
+decl_stmt|;
+comment|/* write copied from kernel */
+name|u_long
+name|uw_copy
+decl_stmt|;
+comment|/* write copied from user */
+name|u_long
+name|kr_raw
+decl_stmt|;
+comment|/* read, purged kernel DMA buffer */
+name|u_long
+name|ur_raw
+decl_stmt|;
+comment|/* invalidated key on user DMA buffer */
+name|u_long
+name|kr_copy
+decl_stmt|;
+comment|/* read copied to kernel */
+name|u_long
+name|ur_copy
+decl_stmt|;
+comment|/* read copied to user& inval'd key */
+block|}
+struct|;
+end_struct
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -282,6 +459,13 @@ name|struct
 name|vba_hd
 name|vba_hd
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vbastat
+name|vbastat
 decl_stmt|;
 end_decl_stmt
 
@@ -334,6 +518,13 @@ end_decl_stmt
 begin_comment
 comment|/* vba device addr space */
 end_comment
+
+begin_function_decl
+name|u_long
+name|vbasetup
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.8	87/02/18	*/
+comment|/*	vdreg.h	1.9	87/03/10	*/
 end_comment
 
 begin_comment
@@ -829,8 +829,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
-modifier|*
+name|u_long
 name|memadr
 decl_stmt|;
 comment|/* memory address */
@@ -851,6 +850,13 @@ begin_comment
 comment|/* scatter/gather trailer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VDMAXPAGES
+value|32
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -860,8 +866,7 @@ name|start_addr
 decl_stmt|;
 struct|struct
 block|{
-name|char
-modifier|*
+name|u_long
 name|nxt_addr
 decl_stmt|;
 name|u_long
@@ -870,7 +875,9 @@ decl_stmt|;
 block|}
 name|addr_chain
 index|[
-literal|126
+name|VDMAXPAGES
+operator|+
+literal|1
 index|]
 struct|;
 block|}
@@ -1029,15 +1036,10 @@ name|trseek
 name|sktrail
 decl_stmt|;
 comment|/* seek command trailer */
-ifdef|#
-directive|ifdef
-name|notdef
 name|trsg
 name|sgtrail
 decl_stmt|;
 comment|/* scatter/gather trailer */
-endif|#
-directive|endif
 name|trrw
 name|rwtrail
 decl_stmt|;
@@ -1666,7 +1668,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VDERR_SOFT
+name|VDERR_RETRY
 define|\
 value|(VDERR_DRIVE|VDERR_CTLR|DCBS_DCE|DCBS_DPE|DCBS_HCRC|DCBS_HCE)
 end_define
@@ -1679,7 +1681,7 @@ begin_define
 define|#
 directive|define
 name|VDERR_HARD
-value|(VDERR_SOFT|DCBS_WPT|DCBS_UDE)
+value|(VDERR_RETRY|DCBS_WPT|DCBS_UDE)
 end_define
 
 begin_comment
