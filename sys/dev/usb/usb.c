@@ -160,9 +160,27 @@ end_include
 begin_define
 define|#
 directive|define
+name|USBUNIT
+parameter_list|(
+name|d
+parameter_list|)
+value|(minor(d))
+end_define
+
+begin_comment
+comment|/* usb_discover device nodes, kthread */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_DEV_MINOR
 value|255
 end_define
+
+begin_comment
+comment|/* event queue device */
+end_comment
 
 begin_if
 if|#
@@ -483,7 +501,7 @@ comment|/* close */
 name|usbclose
 block|,
 comment|/* read */
-name|noread
+name|usbread
 block|,
 comment|/* write */
 name|nowrite
@@ -542,6 +560,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -569,6 +601,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -791,6 +828,12 @@ name|dev
 decl_stmt|;
 name|usbd_status
 name|err
+decl_stmt|;
+specifier|static
+name|int
+name|global_init_done
+init|=
+literal|0
 decl_stmt|;
 if|#
 directive|if
@@ -1033,6 +1076,33 @@ name|self
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|global_init_done
+condition|)
+block|{
+name|make_dev
+argument_list|(
+operator|&
+name|usb_cdevsw
+argument_list|,
+name|USB_DEV_MINOR
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_OPERATOR
+argument_list|,
+literal|0644
+argument_list|,
+literal|"usb"
+argument_list|)
+expr_stmt|;
+name|global_init_done
+operator|=
+literal|1
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|USB_ATTACH_SUCCESS_RETURN
@@ -1297,7 +1367,7 @@ block|{
 name|int
 name|unit
 init|=
-name|minor
+name|USBUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1337,6 +1407,8 @@ literal|0
 operator|)
 return|;
 block|}
+else|else
+block|{
 name|USB_GET_SC_OPEN
 argument_list|(
 name|usb
@@ -1362,6 +1434,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -1392,6 +1465,14 @@ name|usb_event
 name|ue
 decl_stmt|;
 name|int
+name|unit
+init|=
+name|USBUNIT
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|int
 name|s
 decl_stmt|,
 name|error
@@ -1400,16 +1481,13 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+name|unit
 operator|!=
 name|USB_DEV_MINOR
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|ENODEV
 operator|)
 return|;
 if|if
@@ -1559,7 +1637,7 @@ block|{
 name|int
 name|unit
 init|=
-name|minor
+name|USBUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1628,7 +1706,7 @@ decl_stmt|;
 name|int
 name|unit
 init|=
-name|minor
+name|USBUNIT
 argument_list|(
 name|devt
 argument_list|)
@@ -2257,12 +2335,17 @@ name|mask
 decl_stmt|,
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|minor
+name|int
+name|unit
+init|=
+name|USBUNIT
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|unit
 operator|==
 name|USB_DEV_MINOR
 condition|)
@@ -2340,14 +2423,6 @@ name|struct
 name|usb_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|USB_GET_SC
 argument_list|(
