@@ -39,6 +39,32 @@ begin_comment
 comment|/* !defined lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/* ** This code has been made independent of the rest of the time ** conversion package to increase confidence in the verification it provides. ** You can use this code to help in verifying other implementations. */
 end_comment
@@ -46,17 +72,33 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* for stdout, stderr, perror */
+comment|/* for stdout, stderr */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"string.h"
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|/* for exit, malloc, atoi */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -66,7 +108,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/types.h>
 end_include
 
 begin_comment
@@ -76,7 +118,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<time.h>
 end_include
 
 begin_comment
@@ -86,12 +128,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"stdlib.h"
+file|<unistd.h>
 end_include
-
-begin_comment
-comment|/* for exit, malloc, atoi */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -647,37 +685,6 @@ name|environ
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|int
-name|getopt
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -721,14 +728,6 @@ name|longest
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -736,6 +735,19 @@ name|show
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -851,13 +863,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_GETTEXT - 0 */
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|vflag
 operator|=
 literal|0
@@ -929,36 +934,8 @@ literal|0
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
-argument_list|)
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -1160,24 +1137,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|perror
-argument_list|(
-name|progname
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|exit
+name|errx
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+name|_
+argument_list|(
+literal|"malloc() failed"
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|to
 operator|=
 literal|0
@@ -1605,45 +1574,16 @@ argument_list|(
 name|stdout
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s: Error writing standard output "
-argument_list|)
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|perror
-argument_list|(
-name|_
-argument_list|(
-literal|"standard output"
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|exit
+name|errx
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+name|_
+argument_list|(
+literal|"error writing standard output"
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 name|EXIT_SUCCESS
@@ -1656,6 +1596,30 @@ init|;
 condition|;
 control|)
 continue|continue;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"usage: zdump [-v] [-c cutoff] zonename ...\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
