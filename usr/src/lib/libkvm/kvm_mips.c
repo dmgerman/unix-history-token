@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mips.c	1.1 (Berkeley) %G%"
+literal|"@(#)kvm_mips.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
