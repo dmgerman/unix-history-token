@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)utilities.c	3.4 (Berkeley) %G%"
+literal|"@(#)utilities.c	3.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,6 +793,15 @@ name|dfile
 argument_list|,
 operator|&
 name|inoblk
+argument_list|)
+expr_stmt|;
+name|flush
+argument_list|(
+operator|&
+name|dfile
+argument_list|,
+operator|&
+name|cgblk
 argument_list|)
 expr_stmt|;
 operator|(
