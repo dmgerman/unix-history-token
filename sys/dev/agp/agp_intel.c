@@ -197,6 +197,14 @@ operator|(
 literal|"Intel 82443GX host to AGP bridge"
 operator|)
 return|;
+case|case
+literal|0x11308086
+case|:
+return|return
+operator|(
+literal|"Intel 82815 (i815 GMCH) host to PCI bridge"
+operator|)
+return|;
 block|}
 empty_stmt|;
 if|if
