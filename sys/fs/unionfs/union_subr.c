@@ -4655,13 +4655,6 @@ modifier|*
 name|un
 decl_stmt|;
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
 if|if
 condition|(
 name|un
