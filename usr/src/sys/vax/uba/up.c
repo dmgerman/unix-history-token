@@ -1,4 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_define
+define|#
+directive|define
+name|UTRACE
+end_define
+
 begin_decl_stmt
 name|int
 name|asdel
@@ -15,14 +21,8 @@ literal|100
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|printsw
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*	%H%	3.4	%G%	*/
+comment|/*	%H%	3.5	%G%	*/
 end_comment
 
 begin_comment
@@ -979,6 +979,25 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|ttime
+argument_list|()
+expr_stmt|;
+name|trace
+argument_list|(
+literal|"upstrat bn %d unit %d\n"
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dp
@@ -1074,17 +1093,6 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|printsw
-operator|&
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"upustart\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|unit
 operator|>=
 name|NUP
@@ -1092,6 +1100,28 @@ condition|)
 goto|goto
 name|out
 goto|;
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|ttime
+argument_list|()
+expr_stmt|;
+name|trace
+argument_list|(
+literal|"upustart %d active %d"
+argument_list|,
+name|unit
+argument_list|,
+name|uputab
+index|[
+name|unit
+index|]
+operator|.
+name|b_active
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Whether or not it was before, this unit is no longer busy. 	 * Check to see if there is (still or now) a request in this 	 * drives queue, and if there is, select this unit. 	 */
 if|if
 condition|(
@@ -1183,6 +1213,16 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" not VV"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|upcs1
@@ -1349,6 +1389,32 @@ name|done
 goto|;
 name|search
 label|:
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" search %d@%d to %d@%d"
+argument_list|,
+name|upaddr
+operator|->
+name|updc
+argument_list|,
+operator|(
+name|upaddr
+operator|->
+name|upla
+operator|>>
+literal|6
+operator|)
+argument_list|,
+name|cn
+argument_list|,
+name|sn
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|updc
@@ -1406,6 +1472,16 @@ goto|;
 name|done
 label|:
 comment|/* 	 * This unit is ready to go.  Make active == 2 so 	 * we won't get called again (by upintr() because upas&(1<<unit)) 	 * and link us onto the chain of ready disks. 	 */
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" done"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|dp
 operator|->
 name|b_active
@@ -1449,6 +1525,16 @@ name|dp
 expr_stmt|;
 name|out
 label|:
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|didie
@@ -1500,19 +1586,21 @@ name|cn
 decl_stmt|,
 name|cmd
 decl_stmt|;
-if|if
-condition|(
-name|printsw
-operator|&
-literal|2
-condition|)
-name|printf
-argument_list|(
-literal|"upstart\n"
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|ttime
+argument_list|()
+expr_stmt|;
+name|trace
+argument_list|(
+literal|"upstart"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Pick a drive off the queue of ready drives, and 	 * perform the first transfer on its queue. 	 * 	 * Looping here is completely for the sake of drives which 	 * are not present and on-line, for which we completely clear the 	 * request queue. 	 */
 if|if
 condition|(
@@ -1526,11 +1614,23 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1632,6 +1732,18 @@ name|upaddr
 operator|=
 name|UPADDR
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" unit %d"
+argument_list|,
+name|dn
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1645,6 +1757,16 @@ operator|!=
 name|dn
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" select"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|upcs2
@@ -1696,6 +1818,16 @@ name|MOL
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" !(DPR&& MOL)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uptab
 operator|.
 name|b_active
@@ -1757,6 +1889,16 @@ operator|>=
 literal|16
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" offset"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|upof
@@ -1802,6 +1944,42 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Now set up the transfer, retrieving the high 	 * 2 bits of the UNIBUS address from the information 	 * returned by ubasetup() for the cs1 register bits 8 and 9. 	 */
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" %s %d.%d@%d cnt %d ba %x\n"
+argument_list|,
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+condition|?
+literal|"read"
+else|:
+literal|"write"
+argument_list|,
+name|cn
+argument_list|,
+name|tn
+argument_list|,
+name|sn
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|,
+name|up_ubinfo
+operator|&
+literal|0x3ffff
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|updc
@@ -2000,15 +2178,15 @@ name|needie
 init|=
 literal|1
 decl_stmt|;
-if|if
-condition|(
-name|printsw
-operator|&
-literal|4
-condition|)
-name|printf
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|ttime
+argument_list|()
+expr_stmt|;
+name|trace
 argument_list|(
-literal|"upintr as=%d act %d %d %d\n"
+literal|"upintr as %d act %d %d %d;"
 argument_list|,
 name|as
 argument_list|,
@@ -2031,6 +2209,8 @@ operator|.
 name|b_active
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|uptab
@@ -2052,6 +2232,16 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" !RDY"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"!RDY in upintr: cs1 %o\n"
@@ -2159,6 +2349,16 @@ operator|&
 name|TRE
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" TRE"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 			 * An error occurred, indeed.  Select this unit 			 * to get at the drive status (a SEARCH may have 			 * intervened to change the selected unit), and 			 * wait for the command which caused the interrupt 			 * to complete (DRY). 			 * 			 * WHY IS THE WAIT NECESSARY? 			 */
 if|if
 condition|(
@@ -2358,6 +2558,18 @@ operator|.
 name|b_active
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" unit %d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2371,6 +2583,16 @@ operator|!=
 name|unit
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" select"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|upcs2
@@ -2399,6 +2621,16 @@ operator|>=
 literal|16
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|" rtc"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|upcs1
@@ -2537,21 +2769,6 @@ else|else
 block|{
 if|if
 condition|(
-name|printsw
-operator|&
-literal|64
-condition|)
-name|printf
-argument_list|(
-literal|"cs1 %o\n"
-argument_list|,
-name|upaddr
-operator|->
-name|upcs1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|upaddr
 operator|->
 name|upcs1
@@ -2559,40 +2776,16 @@ operator|&
 name|TRE
 condition|)
 block|{
-name|printf
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
 argument_list|(
-literal|"TRE in upintr: cs1 %o\n"
-argument_list|,
-name|upaddr
-operator|->
-name|upcs1
+literal|" TRE"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"as=%d act %d %d %d\n"
-argument_list|,
-name|as
-argument_list|,
-name|uptab
-operator|.
-name|b_active
-argument_list|,
-name|uputab
-index|[
-literal|0
-index|]
-operator|.
-name|b_active
-argument_list|,
-name|uputab
-index|[
-literal|1
-index|]
-operator|.
-name|b_active
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|upcs1
@@ -2604,26 +2797,21 @@ argument_list|(
 name|idelay
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|printsw
-operator|&
-literal|64
-condition|)
-name|printf
-argument_list|(
-literal|"after TRE cs1 %o\n"
-argument_list|,
-name|upaddr
-operator|->
-name|upcs1
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 endif|#
 directive|endif
 comment|/* 	 * If we have a unit with an outstanding SEARCH, 	 * and the hardware indicates the unit requires attention, 	 * the bring the drive to the ready queue. 	 * Finally, if the controller is not transferring 	 * start it if any drives are now ready to transfer. 	 */
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|unit
@@ -2667,6 +2855,18 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|"as clear %d\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|asdel
@@ -2690,40 +2890,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"as in upintr: cs1 %o\n"
-argument_list|,
-name|upaddr
-operator|->
-name|upcs1
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"as=%d act %d %d %d\n"
-argument_list|,
-name|as
-argument_list|,
-name|uptab
-operator|.
-name|b_active
-argument_list|,
-name|uputab
-index|[
-literal|0
-index|]
-operator|.
-name|b_active
-argument_list|,
-name|uputab
-index|[
-literal|1
-index|]
-operator|.
-name|b_active
-argument_list|)
-expr_stmt|;
 name|upaddr
 operator|->
 name|upas
@@ -2732,6 +2898,18 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|"spurious as clear %d\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|DELAY
 argument_list|(
 literal|1000
@@ -2765,27 +2943,24 @@ if|if
 condition|(
 name|needie
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|UTRACE
+name|trace
+argument_list|(
+literal|"upintr set IE\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|upaddr
 operator|->
 name|upcs1
 operator|=
 name|IE
 expr_stmt|;
-if|if
-condition|(
-name|printsw
-operator|&
-literal|128
-condition|)
-name|printf
-argument_list|(
-literal|"exit cs1 %o\n"
-argument_list|,
-name|upaddr
-operator|->
-name|upcs1
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -2916,17 +3091,6 @@ name|tn
 decl_stmt|,
 name|sn
 decl_stmt|;
-if|if
-condition|(
-name|printsw
-operator|&
-literal|8
-condition|)
-name|printf
-argument_list|(
-literal|"upecc\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Npf is the number of sectors transferred before the sector 	 * containing the ECC error, and reg is the UBA register 	 * mapping (the first part of) the transfer. 	 * O is offset within a memory page of the first byte transferred. 	 */
 name|npf
 operator|=
