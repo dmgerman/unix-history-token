@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: rk_rpc.c,v 1.1 1993/12/10 19:36:09 dglo Exp gibbs $  * $Source: /usr/src/eBones/librkinit/RCS/rk_rpc.c,v $  * $Author: dglo $  *  * This file contains functions that are used for network communication.  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
+comment|/*   * $Id$  * $Source$  * $Author$  *  * This file contains functions that are used for network communication.  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rk_rpc.c,v 1.1 1993/12/10 19:36:09 dglo Exp gibbs $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -949,6 +949,8 @@ name|sp
 decl_stmt|;
 name|int
 name|port
+decl_stmt|,
+name|retval
 decl_stmt|;
 name|SBCLEAR
 argument_list|(
@@ -1096,6 +1098,48 @@ expr_stmt|;
 name|rkinit_errmsg
 argument_list|(
 name|errbuf
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|RKINIT_SOCKET
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|retval
+operator|=
+name|krb_bind_local_addr
+argument_list|(
+name|sock
+argument_list|)
+operator|)
+operator|!=
+name|KSUCCESS
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|errbuf
+argument_list|,
+literal|"krb_bind_local_addr: %s"
+argument_list|,
+name|krb_err_txt
+index|[
+name|retval
+index|]
+argument_list|)
+expr_stmt|;
+name|rkinit_errmsg
+argument_list|(
+name|errbuf
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|sock
 argument_list|)
 expr_stmt|;
 return|return

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kpasswd.c,v 1.1 1995/07/18 16:41:20 mark Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1081,6 +1081,10 @@ name|des_string_to_key
 argument_list|(
 name|pword
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|new_key
 argument_list|)
 expr_stmt|;

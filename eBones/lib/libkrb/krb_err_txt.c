@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: krb_err_txt.c,v 4.7 88/12/01 14:10:14 jtkohl Exp $  *	$Id: krb_err_txt.c,v 1.3 1995/07/18 16:39:02 mark Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: krb_err_txt.c,v 4.7 88/12/01 14:10:14 jtkohl Exp $  *	$Id$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: krb_err_txt.c,v 1.3 1995/07/18 16:39:02 mark Exp $";
+unit|static char rcsid[] = "$Id$";
 endif|#
 directive|endif
 endif|lint
@@ -286,14 +286,18 @@ comment|/* 080 */
 literal|"Bad Kerberos name format (kname_parse)"
 block|,
 comment|/* 081 */
-literal|"(reserved)"
+literal|"Can't open socket"
 block|,
-literal|"(reserved)"
+comment|/* 082 */
+literal|"Can't retrieve local interface list"
 block|,
-literal|"(reserved)"
+comment|/* 083 */
+literal|"No valid local interface found"
 block|,
-literal|"(reserved)"
+comment|/* 084 */
+literal|"Can't bind local address"
 block|,
+comment|/* 085 */
 literal|"(reserved)"
 block|,
 literal|"(reserved)"

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	8.4 (Berkeley) 5/30/95"
+literal|"@(#)sys_term.c	8.4+1 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -8400,16 +8400,6 @@ argument_list|,
 literal|"LD_LIBRARY_PATH="
 argument_list|,
 literal|16
-argument_list|)
-operator|&&
-name|strncmp
-argument_list|(
-operator|*
-name|cpp
-argument_list|,
-literal|"LD_NOSTD_PATH="
-argument_list|,
-literal|14
 argument_list|)
 operator|&&
 name|strncmp
