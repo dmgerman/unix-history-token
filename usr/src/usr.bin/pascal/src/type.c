@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.6 %G%"
+literal|"@(#)type.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1744,36 +1744,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PI1
-if|if
-condition|(
-name|p
-operator|->
-name|type
-operator|!=
-name|NIL
-operator|&&
-operator|(
-operator|(
-name|p
-operator|->
-name|type
-operator|)
-operator|->
-name|nl_flags
-operator|&
-name|NFILES
-operator|)
-condition|)
-name|error
-argument_list|(
-literal|"Files cannot be members of dynamic structures"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|PTREE
