@@ -68,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll chongo@toad.com, ...!{sun,tolsoft}!hoptoad!chongo  *  * chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	primes [start [stop]]  *  *	Print primes>= start and< stop.  If stop is omitted,  *	the value 4294967295 (2^32-1) is assumed.  If start is  *	omitted, start is read from standard input.  *  * validation check: there are 664579 primes between 0 and 10^7  */
+comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll chongo@toad.com, ...!{sun,tolsoft}!hoptoad!chongo  *  * chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	primes [-h] [start [stop]]  *  *	Print primes>= start and< stop.  If stop is omitted,  *	the value 4294967295 (2^32-1) is assumed.  If start is  *	omitted, start is read from standard input.  *  * validation check: there are 664579 primes between 0 and 10^7  */
 end_comment
 
 begin_include
@@ -147,53 +147,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Eratosthenes sieve of odd numbers */
-end_comment
-
-begin_comment
-comment|/*  * prime[i] is the (i-1)th prime.  *  * We are able to sieve 2^32-1 because this byte table yields all primes  * up to 65537 and 65537^2> 2^32-1.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|ubig
-name|prime
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ubig
-modifier|*
-name|pr_limit
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* largest prime in the prime array */
-end_comment
-
-begin_comment
-comment|/*  * To avoid excessive sieves for small factors, we use the table below to  * setup our sieve blocks.  Each element represents a odd number starting  * with 1.  All non-zero elements are factors of 3, 5, 7, 11 and 13.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|pattern
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|size_t
-name|pattern_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* length of pattern array */
 end_comment
 
 begin_decl_stmt
@@ -606,7 +559,7 @@ name|p
 decl_stmt|,
 name|buf
 index|[
-literal|100
+name|LINE_MAX
 index|]
 decl_stmt|;
 comment|/*> max number of digits. */
@@ -780,6 +733,7 @@ modifier|*
 name|tab_lim
 decl_stmt|;
 comment|/* the limit to sieve on the table */
+specifier|const
 name|ubig
 modifier|*
 name|p
@@ -789,6 +743,10 @@ name|ubig
 name|fact_lim
 decl_stmt|;
 comment|/* highest prime for current block */
+name|ubig
+name|mod
+decl_stmt|;
+comment|/* temp storage for mod */
 comment|/* 	 * A number of systems can not convert double values into unsigned 	 * longs when the values are larger than the largest signed value. 	 * We don't have this problem, so we can go all the way to BIG. 	 */
 if|if
 condition|(
@@ -1072,23 +1030,15 @@ expr_stmt|;
 comment|/* sieve it all */
 name|fact_lim
 operator|=
-operator|(
-name|int
-operator|)
 name|sqrt
 argument_list|(
-call|(
-name|double
-call|)
-argument_list|(
 name|start
-argument_list|)
-operator|+
-name|TABSIZE
-operator|+
-name|TABSIZE
 operator|+
 literal|1.0
+operator|+
+name|TABSIZE
+operator|+
+name|TABSIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1111,17 +1061,9 @@ expr_stmt|;
 comment|/* partial sieve */
 name|fact_lim
 operator|=
-operator|(
-name|int
-operator|)
 name|sqrt
 argument_list|(
-call|(
-name|double
-call|)
-argument_list|(
 name|stop
-argument_list|)
 operator|+
 literal|1.0
 argument_list|)
@@ -1145,25 +1087,15 @@ comment|/* 19 is next prime, pi(19)=7 */
 do|do
 block|{
 comment|/* determine the factor's initial sieve point */
-name|q
+name|mod
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 name|start
 operator|%
 name|factor
-operator|)
 expr_stmt|;
-comment|/* temp storage for mod */
 if|if
 condition|(
-operator|(
-name|long
-operator|)
-name|q
+name|mod
 operator|&
 literal|0x1
 condition|)
@@ -1176,10 +1108,7 @@ index|[
 operator|(
 name|factor
 operator|-
-operator|(
-name|long
-operator|)
-name|q
+name|mod
 operator|)
 operator|/
 literal|2
@@ -1193,15 +1122,12 @@ operator|=
 operator|&
 name|table
 index|[
-name|q
+name|mod
 condition|?
 name|factor
 operator|-
 operator|(
-operator|(
-name|long
-operator|)
-name|q
+name|mod
 operator|/
 literal|2
 operator|)
@@ -1230,23 +1156,16 @@ literal|'\0'
 expr_stmt|;
 comment|/* sieve out a spot */
 block|}
+name|factor
+operator|=
+operator|*
+name|p
+operator|++
+expr_stmt|;
 block|}
 do|while
 condition|(
-operator|(
 name|factor
-operator|=
-call|(
-name|ubig
-call|)
-argument_list|(
-operator|*
-operator|(
-name|p
-operator|++
-operator|)
-argument_list|)
-operator|)
 operator|<=
 name|fact_lim
 condition|)
@@ -1301,9 +1220,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr

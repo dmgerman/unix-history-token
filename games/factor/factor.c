@@ -68,19 +68,19 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * factor - factor a number into primes  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	factor [number] ...  *  * The form of the output is:  *  *	number: factor1 factor1 factor2 factor3 factor3 factor3 ...  *  * where factor1< factor2< factor3< ...  *  * If no args are given, the list of numbers are read from stdin.  */
+comment|/*  * factor - factor a number into primes  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	factor [-h] [number] ...  *  * The form of the output is:  *  *	number: factor1 factor1 factor2 factor3 factor3 factor3 ...  *  * where factor1< factor2< factor3< ...  *  * If no args are given, the list of numbers are read from stdin.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -119,37 +119,15 @@ directive|include
 file|"primes.h"
 end_include
 
-begin_comment
-comment|/*  * prime[i] is the (i-1)th prime.  *  * We are able to sieve 2^32-1 because this byte table yields all primes  * up to 65537 and 65537^2> 2^32-1.  */
-end_comment
-
 begin_decl_stmt
-specifier|extern
-name|ubig
-name|prime
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ubig
-modifier|*
-name|pr_limit
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* largest prime in the prime array */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|int
 name|hflag
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_fact
 parameter_list|(
@@ -163,6 +141,7 @@ comment|/* print factors of a value */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -175,18 +154,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|ubig
 name|val
@@ -200,7 +175,7 @@ name|p
 decl_stmt|,
 name|buf
 index|[
-literal|100
+name|LINE_MAX
 index|]
 decl_stmt|;
 comment|/*> max number of digits. */
@@ -496,20 +471,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pr_fact - print the factors of a number  *  * If the number is 0 or 1, then print the number and return.  * If the number is< 0, print -1, negate the number and continue  * processing.  *  * Print the factors of the number, from the lowest to the highest.  * A factor will be printed multiple times if it divides the value  * multiple times.  *  * Factors are printed with leading tabs.  */
+comment|/*  * pr_fact - print the factors of a number  *  * Print the factors of the number, from the lowest to the highest.  * A factor will be printed multiple times if it divides the value  * multiple times.  *  * Factors are printed with leading tabs.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_fact
 parameter_list|(
-name|val
-parameter_list|)
 name|ubig
 name|val
-decl_stmt|;
-comment|/* Factor this value. */
+parameter_list|)
 block|{
+specifier|const
 name|ubig
 modifier|*
 name|fact
@@ -535,9 +509,6 @@ operator|==
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"1: 1\n"
@@ -546,9 +517,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Factor value. */
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|hflag
@@ -585,9 +553,6 @@ if|if
 condition|(
 name|val
 operator|%
-operator|(
-name|long
-operator|)
 operator|*
 name|fact
 operator|==
@@ -611,9 +576,6 @@ operator|>
 name|pr_limit
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|hflag
@@ -630,9 +592,6 @@ block|}
 comment|/* Divide factor out until none are left. */
 do|do
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|hflag
@@ -664,18 +623,12 @@ literal|0
 condition|)
 do|;
 comment|/* Let the user know we're doing something. */
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -685,23 +638,23 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
-block|{
-operator|(
+parameter_list|(
 name|void
-operator|)
+parameter_list|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: factor -h [value ...]\n"
+literal|"usage: factor [-h] [value ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

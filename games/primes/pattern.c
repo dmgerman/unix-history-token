@@ -51,7 +51,14 @@ directive|include
 file|<stddef.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"primes.h"
+end_include
+
 begin_decl_stmt
+specifier|const
 name|char
 name|pattern
 index|[]
@@ -30091,6 +30098,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|size_t
 name|pattern_size
 init|=
