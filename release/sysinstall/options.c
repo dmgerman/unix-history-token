@@ -707,16 +707,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rcode
-operator|&
-operator|(
-name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
-operator|)
-condition|)
 name|status
 operator|=
 literal|1
