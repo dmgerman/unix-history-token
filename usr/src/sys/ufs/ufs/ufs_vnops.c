@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.96 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.97 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -187,45 +187,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_NOQUAD
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SETHIGH
-parameter_list|(
-name|q
-parameter_list|,
-name|h
-parameter_list|)
-value|(q).val[_QUAD_HIGHWORD] = (h)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SETLOW
-parameter_list|(
-name|q
-parameter_list|,
-name|l
-parameter_list|)
-value|(q).val[_QUAD_LOWWORD] = (l)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* QUAD */
-end_comment
-
 begin_union
 union|union
 name|_qcvt
@@ -266,15 +227,6 @@ name|l
 parameter_list|)
 value|{ \ 	union _qcvt tmp; \ 	tmp.qcvt = (q); \ 	tmp.val[_QUAD_LOWWORD] = (l); \ 	(q) = tmp.qcvt; \ }
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* QUAD */
-end_comment
 
 begin_comment
 comment|/*  * Create a regular file  */
@@ -960,37 +912,16 @@ name|ip
 operator|->
 name|i_rdev
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|tahoe
 name|vap
 operator|->
 name|va_size
 operator|=
 name|ip
 operator|->
-name|i_size
-expr_stmt|;
-name|vap
-operator|->
-name|va_size_rsv
-operator|=
-literal|0
-expr_stmt|;
-else|#
-directive|else
-name|vap
-operator|->
-name|va_qsize
-operator|=
-name|ip
-operator|->
 name|i_din
 operator|.
-name|di_qsize
+name|di_size
 expr_stmt|;
-endif|#
-directive|endif
 name|vap
 operator|->
 name|va_atime
@@ -1085,17 +1016,6 @@ operator|->
 name|i_blocks
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_NOQUAD
-name|vap
-operator|->
-name|va_bytes_rsv
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|vap
 operator|->
 name|va_type

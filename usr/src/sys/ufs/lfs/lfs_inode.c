@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.67 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.68 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -741,14 +741,12 @@ name|a_tm
 operator|->
 name|tv_sec
 expr_stmt|;
-name|INCRQUAD
-argument_list|(
 operator|(
 name|ip
 operator|)
 operator|->
 name|i_modrev
-argument_list|)
+operator|++
 expr_stmt|;
 block|}
 if|if
