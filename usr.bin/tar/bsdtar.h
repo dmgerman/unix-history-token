@@ -170,6 +170,43 @@ decl_stmt|,
 modifier|*
 name|archive_dir_tail
 decl_stmt|;
+comment|/* An arbitrary prime number. */
+define|#
+directive|define
+name|bsdtar_hash_size
+value|71
+comment|/* A simple hash of uid/uname for caching uname lookups. */
+struct|struct
+block|{
+name|uid_t
+name|uid
+decl_stmt|;
+name|char
+modifier|*
+name|uname
+decl_stmt|;
+block|}
+name|uname_lookup
+index|[
+name|bsdtar_hash_size
+index|]
+struct|;
+comment|/* A simple hash of gid/gname for caching gname lookups. */
+struct|struct
+block|{
+name|gid_t
+name|gid
+decl_stmt|;
+name|char
+modifier|*
+name|gname
+decl_stmt|;
+block|}
+name|gname_lookup
+index|[
+name|bsdtar_hash_size
+index|]
+struct|;
 block|}
 struct|;
 end_struct
