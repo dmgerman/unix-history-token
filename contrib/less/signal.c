@@ -4,6 +4,10 @@ comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute un
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Routines dealing with signals.  *  * A signal usually merely causes a bit to be set in the "signals" word.  * At some convenient time, the mainline code checks to see if any  * signals need processing by calling psignal().  * If we happen to be reading from a file [in iread()] at the time  * the signal is received, we call intread to interrupt the iread.  */
 end_comment
 
@@ -74,6 +78,13 @@ name|reading
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|more_mode
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Interrupt signal handler.  */
 end_comment
@@ -132,6 +143,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|more_mode
+condition|)
+name|quit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|reading

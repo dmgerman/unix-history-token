@@ -79,6 +79,10 @@ literal|"debug"
 block|,
 name|A_DEBUG
 block|,
+literal|"digit"
+block|,
+name|A_DIGIT
+block|,
 literal|"display-flag"
 block|,
 name|A_DISP_OPTION

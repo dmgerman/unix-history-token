@@ -30,6 +30,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|hshift
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|quit_if_one_screen
 decl_stmt|;
 end_decl_stmt
@@ -289,6 +296,10 @@ comment|/* 			 * The char won't fit in the line; the line 			 * is too long to p
 if|if
 condition|(
 name|chopline
+operator|||
+name|hshift
+operator|>
+literal|0
 condition|)
 block|{
 do|do
@@ -777,6 +788,10 @@ comment|/* 			 * Got a full printable line, but we haven't 			 * reached our cur
 if|if
 condition|(
 name|chopline
+operator|||
+name|hshift
+operator|>
+literal|0
 condition|)
 block|{
 name|endline

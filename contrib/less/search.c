@@ -255,6 +255,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|status_col
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|POSITION
 name|start_attnpos
 decl_stmt|;
@@ -2167,6 +2174,9 @@ name|hl
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|status_col
+operator|&&
 name|start_attnpos
 operator|!=
 name|NULL_POSITION

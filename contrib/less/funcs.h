@@ -599,14 +599,6 @@ end_function_decl
 begin_function_decl
 name|public
 name|int
-name|cmd_search
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|public
-name|int
 name|fcmd_decode
 parameter_list|()
 function_decl|;
