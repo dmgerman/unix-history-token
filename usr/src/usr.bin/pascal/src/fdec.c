@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.18 %G%"
+literal|"@(#)fdec.c 1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +462,12 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|q
+operator|->
+name|type
+operator|!=
+name|NIL
+operator|&&
 name|q
 operator|->
 name|ptr
