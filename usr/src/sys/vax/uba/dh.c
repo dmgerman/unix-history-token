@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	3.13	%G%	*/
+comment|/*	dh.c	3.14	%G%	*/
 end_comment
 
 begin_comment
@@ -536,6 +536,7 @@ block|{
 name|getcbase
 operator|++
 expr_stmt|;
+comment|/* 512+ is a kludge to try to get around a hardware problem */
 name|dh_ubinfo
 operator|=
 name|uballoc
@@ -545,6 +546,8 @@ name|caddr_t
 operator|)
 name|cfree
 argument_list|,
+literal|512
+operator|+
 name|NCLIST
 operator|*
 sizeof|sizeof
