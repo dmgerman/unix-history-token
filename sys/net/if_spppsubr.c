@@ -1132,12 +1132,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|ifp
-operator|->
-name|if_lastchange
-operator|=
-name|time
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -2346,12 +2340,6 @@ operator|.
 name|len
 operator|+
 literal|3
-expr_stmt|;
-name|ifp
-operator|->
-name|if_lastchange
-operator|=
-name|time
 expr_stmt|;
 name|splx
 argument_list|(

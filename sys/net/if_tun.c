@@ -1067,6 +1067,14 @@ name|IFF_UP
 operator||
 name|IFF_RUNNING
 expr_stmt|;
+name|microtime
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_lastchange
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ifa
