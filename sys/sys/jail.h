@@ -109,6 +109,9 @@ name|void
 modifier|*
 name|pr_linux
 decl_stmt|;
+name|int
+name|pr_securelevel
+decl_stmt|;
 block|}
 struct|;
 end_struct
