@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c 1.1 %G%"
+literal|"@(#)source.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * source file management  */
+comment|/*  * Source file management.  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ file|"source.h"
 end_include
 
 begin_comment
-comment|/*  * data structure for indexing source seek addresses by line number  *  * The constraints are:  *  *	we want an array so indexing is fast and easy  *	we don't want to waste space for small files  *	we don't want an upper bound on # of lines in a file  *	we don't know how many lines there are  *  * The solution is a "dirty" hash table.  We have NSLOTS pointers to  * arrays of NLINESPERSLOT addresses.  To find the source address of  * a particular line we find the slot, allocate space if necessary,  * and then find its location within the pointed to array.  */
+comment|/*  * Seektab is the data structure used for indexing source  * seek addresses by line number.  *  * The constraints are:  *  *  we want an array so indexing is fast and easy  *  we don't want to waste space for small files  *  we don't want an upper bound on # of lines in a file  *  we don't know how many lines there are  *  * The solution is a "dirty" hash table.  We have NSLOTS pointers to  * arrays of NLINESPERSLOT addresses.  To find the source address of  * a particular line we find the slot, allocate space if necessary,  * and then find its location within the pointed to array.  *  * As a result, there is a limit of NSLOTS*NLINESPERSLOT lines per file  * but this is plenty high and still fairly inexpensive.  *  * This implementation maintains only one source file at any given  * so as to avoid consuming too much memory.  In an environment where  * memory is less constrained and one expects to be changing between  * files often enough, it would be reasonable to have multiple seek tables.  */
 end_comment
 
 begin_typedef
@@ -335,6 +335,10 @@ condition|(
 name|file
 operator|==
 name|NIL
+operator|||
+name|file
+operator|==
+name|cursource
 condition|)
 block|{
 return|return;
