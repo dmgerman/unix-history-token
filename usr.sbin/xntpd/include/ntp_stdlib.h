@@ -950,12 +950,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|u_int32_t
 name|netof
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -969,7 +969,7 @@ name|numtoa
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -983,7 +983,7 @@ name|numtohost
 name|P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;

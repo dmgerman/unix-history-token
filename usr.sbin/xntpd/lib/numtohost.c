@@ -55,7 +55,7 @@ name|numtohost
 parameter_list|(
 name|netnum
 parameter_list|)
-name|u_long
+name|u_int32_t
 name|netnum
 decl_stmt|;
 block|{
