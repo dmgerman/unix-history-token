@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_qereg.h	1.1 (Berkeley) %G% */
+comment|/*	@(#)if_qereg.h	6.1 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -33,11 +33,11 @@ comment|/* Station address (actually 6 	*/
 name|u_short
 name|qe_rcvlist_lo
 decl_stmt|;
-comment|/* Recieve list lo address 	*/
+comment|/* Receive list lo address 	*/
 name|u_short
 name|qe_rcvlist_hi
 decl_stmt|;
-comment|/* Recieve list hi address 	*/
+comment|/* Receive list hi address 	*/
 name|u_short
 name|qe_xmtlist_lo
 decl_stmt|;
