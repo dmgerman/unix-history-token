@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.24 (Berkeley) %G%"
+literal|"@(#)main.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,23 +259,6 @@ end_endif
 
 begin_comment
 comment|/* SETPROCTITLE */
-end_comment
-
-begin_comment
-comment|/* **  The file in which to log raw recipient information. **	This is logged before aliasing, forwarding, and so forth so we **	can see how our addresses are being used.  For example, this **	would give us the names of aliases (instead of what they alias **	to), the pre-MX hostnames, and so forth. ** **	This is specified on the command line, not in the config file, **	and is therefore really only useful for logging SMTP RCPTs. */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|RcptLogFile
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file name */
 end_comment
 
 begin_function_decl
@@ -849,7 +832,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"b:C:cd:e:F:f:h:Iimno:p:q:R:r:sTtv"
+value|"b:C:cd:e:F:f:h:Iimno:p:q:r:sTtv"
 end_define
 
 begin_while
@@ -2134,18 +2117,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* DBM */
-case|case
-literal|'R'
-case|:
-comment|/* log raw recipient info */
-name|RcptLogFile
-operator|=
-name|newstr
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|ExitStat
 operator|=
