@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.14 1995/06/11 19:29:38 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.14.2.1 1995/07/21 11:22:38 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -463,12 +463,12 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|dl->d_secpercyl = new->real_cyl ? new->real_cyl : new->bios_cyl; 	dl->d_ntracks = new->real_hd ? new->real_hd : new->bios_hd; 	dl->d_nsectors = new->real_sect ? new->real_sect : new->bios_sect;
+block|dl->d_ncylinders = new->real_cyl ? new->real_cyl : new->bios_cyl; 	dl->d_ntracks = new->real_hd ? new->real_hd : new->bios_hd; 	dl->d_nsectors = new->real_sect ? new->real_sect : new->bios_sect;
 else|#
 directive|else
 name|dl
 operator|->
-name|d_secpercyl
+name|d_ncylinders
 operator|=
 name|new
 operator|->

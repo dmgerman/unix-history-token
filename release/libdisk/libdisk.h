@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.18.2.2 1995/06/05 02:24:32 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.19 1995/06/11 19:29:35 rgrimes Exp $  *  */
 end_comment
 
 begin_define
@@ -172,6 +172,11 @@ directive|define
 name|CHUNK_ACTIVE
 value|32
 comment|/* This is the active slice in the MBR */
+define|#
+directive|define
+name|CHUNK_FORCE_ALL
+value|64
+comment|/* Force a dedicated disk for FreeBSD, bypassing 			 * all BIOS geometry considerations 			 */
 name|void
 function_decl|(
 modifier|*
@@ -406,12 +411,15 @@ name|struct
 name|disk
 modifier|*
 name|d
+parameter_list|,
+name|int
+name|force_all
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Make one FreeBSD chunk covering the entire disk 	 */
+comment|/* Make one FreeBSD chunk covering the entire disk; 	 * if force_all is set, bypass all BIOS geometry 	 * considerations. 	 */
 end_comment
 
 begin_function_decl
