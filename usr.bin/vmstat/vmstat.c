@@ -4325,6 +4325,7 @@ name|dointr
 parameter_list|()
 block|{
 specifier|register
+name|unsigned
 name|long
 modifier|*
 name|intrcnt
@@ -4462,7 +4463,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"interrupt      total      rate\n"
+literal|"%-12s %10s %8s\n"
+argument_list|,
+literal|"interrupt"
+argument_list|,
+literal|"count"
+argument_list|,
+literal|"rate"
 argument_list|)
 expr_stmt|;
 name|inttotal
@@ -4494,7 +4501,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-12s %8ld %8ld\n"
+literal|"%-12s %10lu %8lu\n"
 argument_list|,
 name|intrname
 argument_list|,
@@ -4528,7 +4535,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Total        %8ld %8ld\n"
+literal|"%-12s %10lu %8lu\n"
+argument_list|,
+literal|"Total"
 argument_list|,
 name|inttotal
 argument_list|,
