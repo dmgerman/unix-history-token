@@ -12035,7 +12035,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index;  	sx_slock(&allproc_lock); 	LIST_FOREACH(p,&allproc, p_list) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for (i = 0; i< 1024; i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				unsigned base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for (j = 0; j< 1024; j++) { 						unsigned va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							sx_sunlock(&allproc_lock); 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE(pa); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	sx_sunlock(&allproc_lock); 	return npte; }
+unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index;  	sx_slock(&allproc_lock); 	LIST_FOREACH(p,&allproc, p_list) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for (i = 0; i< NPDEPG; i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				vm_offset_t base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for (j = 0; j< NPTEPG; j++) { 						vm_offset_t va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							sx_sunlock(&allproc_lock); 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE(pa); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	sx_sunlock(&allproc_lock); 	return npte; }
 endif|#
 directive|endif
 end_endif
@@ -12050,25 +12050,12 @@ argument_list|)
 end_if
 
 begin_comment
-unit|static void	pads __P((pmap_t pm)); static void	pmap_pvdump __P((vm_page_t m));
+unit|static void	pads __P((pmap_t pm)); void		pmap_pvdump __P((vm_offset_t pa));
 comment|/* print address space of pmap*/
 end_comment
 
-begin_ifdef
-unit|static void pads(pm) 	pmap_t pm; {         int i, j; 	vm_offset_t va; 	pt_entry_t *ptep;  	if (pm == kernel_pmap) 		return; 	for (i = 0; i< 1024; i++) 		if (pm->pm_pdir[i]) 			for (j = 0; j< 1024; j++) { 				va = (i<< PDRSHIFT) + (j<< PAGE_SHIFT); 				if (pm == kernel_pmap&& va< KERNBASE) 					continue; 				if (pm != kernel_pmap&& va> UPT_MAX_ADDRESS) 					continue; 				ptep = pmap_pte_quick(pm, va); 				if (pmap_pte_v(ptep)) 					printf("%x:%x ", va, *(int *) ptep); 			};  }  static void pmap_pvdump(pa) 	vm_offset_t pa; { 	pv_entry_t pv;  	printf("pa %x", pa); 	m = PHYS_TO_VM_PAGE(pa); 	for (pv = TAILQ_FIRST(&m->md.pv_list); 		pv; 		pv = TAILQ_NEXT(pv, pv_list)) {
-ifdef|#
-directive|ifdef
-name|used_to_be
-end_ifdef
-
 begin_endif
-unit|printf(" -> pmap %x, va %x, flags %x", 		    pv->pv_pmap, pv->pv_va, pv->pv_flags);
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|printf(" -> pmap %x, va %x", 		    pv->pv_pmap, pv->pv_va); 		pads(pv->pv_pmap); 	} 	printf(" "); }
+unit|static void pads(pm) 	pmap_t pm; { 	int i, j; 	vm_offset_t va; 	pt_entry_t *ptep;  	if (pm == kernel_pmap) 		return; 	for (i = 0; i< NPDEPG; i++) 		if (pm->pm_pdir[i]) 			for (j = 0; j< NPTEPG; j++) { 				va = (i<< PDRSHIFT) + (j<< PAGE_SHIFT); 				if (pm == kernel_pmap&& va< KERNBASE) 					continue; 				if (pm != kernel_pmap&& va> UPT_MAX_ADDRESS) 					continue; 				ptep = pmap_pte_quick(pm, va); 				if (pmap_pte_v(ptep)) 					printf("%x:%x ", va, *(int *) ptep); 			};  }  void pmap_pvdump(pa) 	vm_offset_t pa; { 	pv_entry_t pv; 	vm_page_t m;  	printf("pa %x", pa); 	m = PHYS_TO_VM_PAGE(pa); 	for (pv = TAILQ_FIRST(&m->md.pv_list); 		pv; 		pv = TAILQ_NEXT(pv, pv_list)) { 		printf(" -> pmap %p, va %x", (void *)pv->pv_pmap, pv->pv_va); 		pads(pv->pv_pmap); 	} 	printf(" "); }
 endif|#
 directive|endif
 end_endif
