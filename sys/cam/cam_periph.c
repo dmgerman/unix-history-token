@@ -4265,35 +4265,12 @@ name|status
 operator||=
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
-name|xpt_print_path
-argument_list|(
-name|saved_ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Recovered Sense\n"
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
-block|scsi_sense_print(&saved_ccb->csio);
+block|xpt_print_path(saved_ccb->ccb_h.path); 					printf("Recovered Sense\n"); 					scsi_sense_print(&saved_ccb->csio); 					cam_error_print(saved_ccb, CAM_ESF_ALL, 							CAM_EPF_ALL);
 endif|#
 directive|endif
-name|cam_error_print
-argument_list|(
-name|saved_ccb
-argument_list|,
-name|CAM_ESF_ALL
-argument_list|,
-name|CAM_EPF_ALL
-argument_list|)
-expr_stmt|;
 name|xpt_done_ccb
 operator|=
 name|TRUE
