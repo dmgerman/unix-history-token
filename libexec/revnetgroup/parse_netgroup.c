@@ -219,7 +219,11 @@ begin_function_decl
 specifier|static
 name|int
 name|parse_netgrp
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|group
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -229,24 +233,11 @@ name|struct
 name|linelist
 modifier|*
 name|read_for_group
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|void
-name|__setnetgrent
-argument_list|()
-decl_stmt|,
-name|__endnetgrent
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-name|__getnetgrent
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|group
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -268,12 +259,10 @@ begin_function
 name|void
 name|__setnetgrent
 parameter_list|(
-name|group
-parameter_list|)
 name|char
 modifier|*
 name|group
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Sanity check */
 if|if
@@ -373,28 +362,21 @@ begin_function
 name|int
 name|__getnetgrent
 parameter_list|(
-name|hostp
-parameter_list|,
-name|userp
-parameter_list|,
-name|domp
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|hostp
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 modifier|*
 name|userp
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 modifier|*
 name|domp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -449,7 +431,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * __endnetgrent() - cleanup  */
@@ -458,9 +440,10 @@ end_comment
 begin_function
 name|void
 name|__endnetgrent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|linelist
 modifier|*
@@ -469,7 +452,6 @@ decl_stmt|,
 modifier|*
 name|olp
 decl_stmt|;
-specifier|register
 name|struct
 name|netgrp
 modifier|*
@@ -666,14 +648,11 @@ specifier|static
 name|int
 name|parse_netgrp
 parameter_list|(
-name|group
-parameter_list|)
 name|char
 modifier|*
 name|group
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|spos
@@ -681,7 +660,6 @@ decl_stmt|,
 modifier|*
 name|epos
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|,
@@ -690,7 +668,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-specifier|register
 name|int
 name|fields
 decl_stmt|;
@@ -1215,14 +1192,11 @@ name|linelist
 modifier|*
 name|read_for_group
 parameter_list|(
-name|group
-parameter_list|)
 name|char
 modifier|*
 name|group
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|pos
@@ -1240,7 +1214,6 @@ name|olinep
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|,

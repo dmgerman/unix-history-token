@@ -173,7 +173,9 @@ end_comment
 begin_function
 name|int
 name|BpfOpen
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ifreq
@@ -768,13 +770,11 @@ name|char
 modifier|*
 name|BpfGetIntfName
 parameter_list|(
-name|errmsg
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|errmsg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifreq
@@ -1219,24 +1219,11 @@ begin_macro
 unit|int
 name|BpfRead
 argument_list|(
-argument|rconn
+argument|RMPCONN *rconn
 argument_list|,
-argument|doread
+argument|int doread
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|RMPCONN
-modifier|*
-name|rconn
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|doread
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1479,12 +1466,10 @@ begin_function
 name|int
 name|BpfWrite
 parameter_list|(
-name|rconn
-parameter_list|)
 name|RMPCONN
 modifier|*
 name|rconn
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1542,7 +1527,9 @@ end_comment
 begin_function
 name|void
 name|BpfClose
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ifreq

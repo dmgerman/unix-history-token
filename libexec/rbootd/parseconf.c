@@ -120,7 +120,9 @@ end_comment
 begin_function
 name|int
 name|ParseConfig
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -546,12 +548,10 @@ name|u_int8_t
 modifier|*
 name|ParseAddr
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|u_int8_t
@@ -764,7 +764,9 @@ end_comment
 begin_function
 name|int
 name|GetBootFiles
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|DIR
 modifier|*
