@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.20 (Berkeley) %G%"
+literal|"@(#)local2.c	1.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7493,6 +7493,21 @@ name|wconv
 decl_stmt|,
 name|wsrc
 decl_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|in
+operator|.
+name|left
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|FLD
+condition|)
+return|return;
 if|if
 condition|(
 name|anyfloat
