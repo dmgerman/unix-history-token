@@ -92,7 +92,7 @@ name|r
 decl_stmt|;
 name|rep
 operator|.
-name|size
+name|ucrd_size
 operator|=
 literal|0
 expr_stmt|;
@@ -125,7 +125,7 @@ name|r
 operator|+
 name|rep
 operator|.
-name|size
+name|ucrd_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -151,7 +151,7 @@ name|size
 operator|=
 name|rep
 operator|.
-name|size
+name|ucrd_size
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -161,7 +161,7 @@ name|data
 argument_list|,
 name|rep
 operator|.
-name|data
+name|ucrd_data
 argument_list|,
 operator|(
 name|unsigned
@@ -169,7 +169,7 @@ name|int
 operator|)
 name|rep
 operator|.
-name|size
+name|ucrd_size
 argument_list|)
 expr_stmt|;
 return|return

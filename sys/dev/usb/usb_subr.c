@@ -6092,7 +6092,7 @@ name|s
 decl_stmt|;
 name|di
 operator|->
-name|bus
+name|udi_bus
 operator|=
 name|USBDEVUNIT
 argument_list|(
@@ -6105,7 +6105,7 @@ argument_list|)
 expr_stmt|;
 name|di
 operator|->
-name|addr
+name|udi_addr
 operator|=
 name|dev
 operator|->
@@ -6143,7 +6143,7 @@ name|strncpy
 argument_list|(
 name|di
 operator|->
-name|devnames
+name|udi_devnames
 index|[
 name|i
 index|]
@@ -6163,7 +6163,7 @@ argument_list|)
 expr_stmt|;
 name|di
 operator|->
-name|devnames
+name|udi_devnames
 index|[
 name|i
 index|]
@@ -6198,7 +6198,7 @@ operator|++
 control|)
 name|di
 operator|->
-name|devnames
+name|udi_devnames
 index|[
 name|i
 index|]
@@ -6215,18 +6215,18 @@ name|dev
 argument_list|,
 name|di
 operator|->
-name|vendor
+name|udi_vendor
 argument_list|,
 name|di
 operator|->
-name|product
+name|udi_product
 argument_list|)
 expr_stmt|;
 name|usbd_printBCD
 argument_list|(
 name|di
 operator|->
-name|release
+name|udi_release
 argument_list|,
 name|UGETW
 argument_list|(
@@ -6240,7 +6240,7 @@ argument_list|)
 expr_stmt|;
 name|di
 operator|->
-name|vendorNo
+name|udi_vendorNo
 operator|=
 name|UGETW
 argument_list|(
@@ -6253,7 +6253,7 @@ argument_list|)
 expr_stmt|;
 name|di
 operator|->
-name|productNo
+name|udi_productNo
 operator|=
 name|UGETW
 argument_list|(
@@ -6266,7 +6266,7 @@ argument_list|)
 expr_stmt|;
 name|di
 operator|->
-name|releaseNo
+name|udi_releaseNo
 operator|=
 name|UGETW
 argument_list|(
@@ -6279,7 +6279,7 @@ argument_list|)
 expr_stmt|;
 name|di
 operator|->
-name|class
+name|udi_class
 operator|=
 name|dev
 operator|->
@@ -6289,7 +6289,7 @@ name|bDeviceClass
 expr_stmt|;
 name|di
 operator|->
-name|subclass
+name|udi_subclass
 operator|=
 name|dev
 operator|->
@@ -6299,7 +6299,7 @@ name|bDeviceSubClass
 expr_stmt|;
 name|di
 operator|->
-name|protocol
+name|udi_protocol
 operator|=
 name|dev
 operator|->
@@ -6309,7 +6309,7 @@ name|bDeviceProtocol
 expr_stmt|;
 name|di
 operator|->
-name|config
+name|udi_config
 operator|=
 name|dev
 operator|->
@@ -6317,7 +6317,7 @@ name|config
 expr_stmt|;
 name|di
 operator|->
-name|power
+name|udi_power
 operator|=
 name|dev
 operator|->
@@ -6331,7 +6331,7 @@ name|power
 expr_stmt|;
 name|di
 operator|->
-name|lowspeed
+name|udi_lowspeed
 operator|=
 name|dev
 operator|->
@@ -6356,14 +6356,14 @@ sizeof|sizeof
 argument_list|(
 name|di
 operator|->
-name|ports
+name|udi_ports
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
 name|di
 operator|->
-name|ports
+name|udi_ports
 index|[
 literal|0
 index|]
@@ -6462,7 +6462,7 @@ expr_stmt|;
 block|}
 name|di
 operator|->
-name|ports
+name|udi_ports
 index|[
 name|i
 index|]
@@ -6472,7 +6472,7 @@ expr_stmt|;
 block|}
 name|di
 operator|->
-name|nports
+name|udi_nports
 operator|=
 name|dev
 operator|->
@@ -6486,7 +6486,7 @@ block|}
 else|else
 name|di
 operator|->
-name|nports
+name|udi_nports
 operator|=
 literal|0
 expr_stmt|;

@@ -2114,17 +2114,17 @@ struct|struct
 name|usb_ctl_request
 block|{
 name|int
-name|addr
+name|ucr_addr
 decl_stmt|;
 name|usb_device_request_t
-name|request
+name|ucr_request
 decl_stmt|;
 name|void
 modifier|*
-name|data
+name|ucr_data
 decl_stmt|;
 name|int
-name|flags
+name|ucr_flags
 decl_stmt|;
 define|#
 directive|define
@@ -2132,7 +2132,7 @@ name|USBD_SHORT_XFER_OK
 value|0x04
 comment|/* allow short reads */
 name|int
-name|actlen
+name|ucr_actlen
 decl_stmt|;
 comment|/* actual length transferred */
 block|}
@@ -2144,13 +2144,13 @@ struct|struct
 name|usb_alt_interface
 block|{
 name|int
-name|config_index
+name|uai_config_index
 decl_stmt|;
 name|int
-name|interface_index
+name|uai_interface_index
 decl_stmt|;
 name|int
-name|alt_no
+name|uai_alt_no
 decl_stmt|;
 block|}
 struct|;
@@ -2175,10 +2175,10 @@ struct|struct
 name|usb_config_desc
 block|{
 name|int
-name|config_index
+name|ucd_config_index
 decl_stmt|;
 name|usb_config_descriptor_t
-name|desc
+name|ucd_desc
 decl_stmt|;
 block|}
 struct|;
@@ -2189,16 +2189,16 @@ struct|struct
 name|usb_interface_desc
 block|{
 name|int
-name|config_index
+name|uid_config_index
 decl_stmt|;
 name|int
-name|interface_index
+name|uid_interface_index
 decl_stmt|;
 name|int
-name|alt_index
+name|uid_alt_index
 decl_stmt|;
 name|usb_interface_descriptor_t
-name|desc
+name|uid_desc
 decl_stmt|;
 block|}
 struct|;
@@ -2209,19 +2209,19 @@ struct|struct
 name|usb_endpoint_desc
 block|{
 name|int
-name|config_index
+name|ued_config_index
 decl_stmt|;
 name|int
-name|interface_index
+name|ued_interface_index
 decl_stmt|;
 name|int
-name|alt_index
+name|ued_alt_index
 decl_stmt|;
 name|int
-name|endpoint_index
+name|ued_endpoint_index
 decl_stmt|;
 name|usb_endpoint_descriptor_t
-name|desc
+name|ued_desc
 decl_stmt|;
 block|}
 struct|;
@@ -2232,14 +2232,14 @@ struct|struct
 name|usb_full_desc
 block|{
 name|int
-name|config_index
+name|ufd_config_index
 decl_stmt|;
 name|u_int
-name|size
+name|ufd_size
 decl_stmt|;
 name|u_char
 modifier|*
-name|data
+name|ufd_data
 decl_stmt|;
 block|}
 struct|;
@@ -2250,13 +2250,13 @@ struct|struct
 name|usb_string_desc
 block|{
 name|int
-name|string_index
+name|usd_string_index
 decl_stmt|;
 name|int
-name|language_id
+name|usd_language_id
 decl_stmt|;
 name|usb_string_descriptor_t
-name|desc
+name|usd_desc
 decl_stmt|;
 block|}
 struct|;
@@ -2267,10 +2267,10 @@ struct|struct
 name|usb_ctl_report_desc
 block|{
 name|int
-name|size
+name|ucrd_size
 decl_stmt|;
 name|u_char
-name|data
+name|ucrd_data
 index|[
 literal|1024
 index|]
@@ -2285,11 +2285,11 @@ struct|struct
 name|usb_device_info
 block|{
 name|u_int8_t
-name|bus
+name|udi_bus
 decl_stmt|;
 comment|/* bus number */
 name|u_int8_t
-name|addr
+name|udi_addr
 decl_stmt|;
 comment|/* device address */
 define|#
@@ -2303,7 +2303,7 @@ name|MAXDEVNAMES
 value|4
 comment|/* attached drivers */
 name|char
-name|devnames
+name|udi_devnames
 index|[
 name|MAXDEVNAMES
 index|]
@@ -2313,68 +2313,68 @@ index|]
 decl_stmt|;
 comment|/* device names */
 name|char
-name|product
+name|udi_product
 index|[
 name|USB_MAX_STRING_LEN
 index|]
 decl_stmt|;
 comment|/* iProduct */
 name|char
-name|vendor
+name|udi_vendor
 index|[
 name|USB_MAX_STRING_LEN
 index|]
 decl_stmt|;
 comment|/* iManufacturer */
 name|char
-name|release
+name|udi_release
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* string of releaseNo*/
 name|u_int16_t
-name|productNo
+name|udi_productNo
 decl_stmt|;
 comment|/* idProduct */
 name|u_int16_t
-name|vendorNo
+name|udi_vendorNo
 decl_stmt|;
 comment|/* idVendor */
 name|u_int16_t
-name|releaseNo
+name|udi_releaseNo
 decl_stmt|;
 comment|/* bcdDevice */
 name|u_int8_t
-name|class
+name|udi_class
 decl_stmt|;
 comment|/* bDeviceClass */
 name|u_int8_t
-name|subclass
+name|udi_subclass
 decl_stmt|;
 comment|/* bDeviceSubclass */
 name|u_int8_t
-name|protocol
+name|udi_protocol
 decl_stmt|;
 comment|/* bDeviceProtocol */
 name|u_int8_t
-name|config
+name|udi_config
 decl_stmt|;
 comment|/* config index */
 name|u_int8_t
-name|lowspeed
+name|udi_lowspeed
 decl_stmt|;
 comment|/* lowsped yes/no */
 name|int
-name|power
+name|udi_power
 decl_stmt|;
 comment|/* power consumption in mA, 0 if selfpowered */
 name|int
-name|nports
+name|udi_nports
 decl_stmt|;
 comment|/* 0 if not hub */
 name|u_int8_t
-name|ports
+name|udi_ports
 index|[
 literal|16
 index|]
@@ -2405,10 +2405,10 @@ struct|struct
 name|usb_ctl_report
 block|{
 name|int
-name|report
+name|ucr_report
 decl_stmt|;
 name|u_char
-name|data
+name|ucr_data
 index|[
 literal|1024
 index|]
@@ -2423,7 +2423,7 @@ struct|struct
 name|usb_device_stats
 block|{
 name|u_long
-name|requests
+name|uds_requests
 index|[
 literal|4
 index|]
