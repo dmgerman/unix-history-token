@@ -284,7 +284,13 @@ return|return
 operator|(
 name|cp
 operator|->
+name|found
+condition|?
+name|cp
+operator|->
 name|name
+else|:
+name|NULL
 operator|)
 return|;
 block|}
@@ -477,7 +483,13 @@ return|return
 operator|(
 name|cp
 operator|->
+name|found
+condition|?
+name|cp
+operator|->
 name|name
+else|:
+name|NULL
 operator|)
 return|;
 block|}
