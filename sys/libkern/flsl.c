@@ -62,6 +62,10 @@ condition|;
 name|bit
 operator|++
 control|)
+operator|(
+name|unsigned
+name|long
+operator|)
 name|mask
 operator|>>=
 literal|1
