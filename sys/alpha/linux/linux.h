@@ -1236,7 +1236,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -1246,7 +1246,7 @@ name|int
 name|linux_ioctl_function_t
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|struct

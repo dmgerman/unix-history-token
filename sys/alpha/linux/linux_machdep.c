@@ -138,9 +138,9 @@ name|int
 name|linux_execve
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_execve_args
@@ -162,7 +162,7 @@ argument_list|()
 expr_stmt|;
 name|CHECKALTEXIST
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sg
@@ -226,7 +226,7 @@ return|return
 operator|(
 name|execve
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -241,9 +241,9 @@ name|int
 name|linux_fork
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_fork_args
@@ -283,7 +283,7 @@ name|error
 operator|=
 name|fork
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -303,18 +303,18 @@ operator|)
 return|;
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|1
 index|]
 operator|==
 literal|1
 condition|)
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -334,9 +334,9 @@ name|int
 name|linux_vfork
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_vfork_args
@@ -376,7 +376,7 @@ name|error
 operator|=
 name|vfork
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -397,18 +397,18 @@ return|;
 comment|/* Are we the child? */
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|1
 index|]
 operator|==
 literal|1
 condition|)
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -463,9 +463,9 @@ name|int
 name|linux_clone
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_clone_args
@@ -640,7 +640,7 @@ name|error
 operator|=
 name|fork1
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|ff
 argument_list|,
@@ -674,10 +674,10 @@ argument_list|)
 expr_stmt|;
 name|p2
 operator|->
-name|p_addr
-operator|->
-name|u_pcb
+name|p_thread
 operator|.
+name|td_pcb
+operator|->
 name|pcb_hw
 operator|.
 name|apcb_usp
@@ -738,7 +738,10 @@ name|SRUN
 expr_stmt|;
 name|setrunqueue
 argument_list|(
+operator|&
 name|p2
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -747,9 +750,9 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -758,9 +761,9 @@ name|p2
 operator|->
 name|p_pid
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|1
 index|]
@@ -794,9 +797,9 @@ name|int
 name|linux_mmap
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_mmap_args
@@ -1118,18 +1121,18 @@ argument|if (bsd_args.addr ==
 literal|0
 argument|) 		bsd_args.addr = (caddr_t)
 literal|0x40000000UL
-argument|; 	error = mmap(p,&bsd_args);
+argument|; 	error = mmap(td,&bsd_args);
 ifdef|#
 directive|ifdef
 name|DEBUG
 argument|if (ldebug(mmap)) 		printf(LMSG(
 literal|"mmap returns %d, 0x%lx"
-argument|, error, p->p_retval[
+argument|, error, td->td_retval[
 literal|0
 argument|]);
 endif|#
 directive|endif
-argument|return (error); }  int linux_rt_sigsuspend(p, uap) 	struct proc *p; 	struct linux_rt_sigsuspend_args *uap; { 	int error; 	l_sigset_t lmask; 	sigset_t *bmask; 	struct sigsuspend_args bsd; 	caddr_t sg;  	sg = stackgap_init();
+argument|return (error); }  int linux_rt_sigsuspend(td, uap) 	struct thread *td; 	struct linux_rt_sigsuspend_args *uap; { 	int error; 	l_sigset_t lmask; 	sigset_t *bmask; 	struct sigsuspend_args bsd; 	caddr_t sg;  	sg = stackgap_init();
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1138,7 +1141,7 @@ literal|"%p, %d"
 argument|), 		    (void *)uap->newset, uap->sigsetsize);
 endif|#
 directive|endif
-argument|if (uap->sigsetsize != sizeof(l_sigset_t)) 		return (EINVAL);  	error = copyin(uap->newset,&lmask, sizeof(l_sigset_t)); 	if (error) 		return (error);  	bmask = stackgap_alloc(&sg, sizeof(sigset_t)); 	linux_to_bsd_sigset(&lmask, bmask); 	bsd.sigmask = bmask; 	return (sigsuspend(p,&bsd)); }  int linux_mprotect(p, uap) 	struct proc *p; 	struct linux_mprotect_args *uap; {
+argument|if (uap->sigsetsize != sizeof(l_sigset_t)) 		return (EINVAL);  	error = copyin(uap->newset,&lmask, sizeof(l_sigset_t)); 	if (error) 		return (error);  	bmask = stackgap_alloc(&sg, sizeof(sigset_t)); 	linux_to_bsd_sigset(&lmask, bmask); 	bsd.sigmask = bmask; 	return (sigsuspend(td,&bsd)); }  int linux_mprotect(td, uap) 	struct thread *td; 	struct linux_mprotect_args *uap; {
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1147,7 +1150,7 @@ literal|"%p, 0x%lx, 0x%x)"
 argument|, 		    (void *)uap->addr, uap->len, uap->prot);
 endif|#
 directive|endif
-argument|return (mprotect(p, (void *)uap)); }  int linux_munmap(p, uap) 	struct proc *p; 	struct linux_munmap_args *uap; {
+argument|return (mprotect(td, (void *)uap)); }  int linux_munmap(td, uap) 	struct thread *td; 	struct linux_munmap_args *uap; {
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1156,11 +1159,11 @@ literal|"%p, 0x%lx"
 argument|, 		    (void *)uap->addr, uap->len);
 endif|#
 directive|endif
-argument|return (munmap(p, (void *)uap)); }
+argument|return (munmap(td, (void *)uap)); }
 comment|/*  * linux/alpha has 2 mappings for this,  * This is here purely to shut the compiler up.  */
-argument|int linux_setpgid(p, uap) 	struct proc *p; 	struct linux_setpgid_args *uap; {  	return (setpgid(p, (void *)uap)); }   static unsigned int linux_to_bsd_resource[LINUX_RLIM_NLIMITS] = { 	RLIMIT_CPU, RLIMIT_FSIZE, RLIMIT_DATA, RLIMIT_STACK, 	RLIMIT_CORE, RLIMIT_RSS, RLIMIT_NOFILE, -
+argument|int linux_setpgid(td, uap) 	struct thread *td; 	struct linux_setpgid_args *uap; {  	return (setpgid(td, (void *)uap)); }   static unsigned int linux_to_bsd_resource[LINUX_RLIM_NLIMITS] = { 	RLIMIT_CPU, RLIMIT_FSIZE, RLIMIT_DATA, RLIMIT_STACK, 	RLIMIT_CORE, RLIMIT_RSS, RLIMIT_NOFILE, -
 literal|1
-argument|, 	RLIMIT_NPROC, RLIMIT_MEMLOCK };  int linux_setrlimit(p, uap) 	struct proc *p; 	struct linux_setrlimit_args *uap; { 	struct rlimit rlim; 	u_int which; 	int error;
+argument|, 	RLIMIT_NPROC, RLIMIT_MEMLOCK };  int linux_setrlimit(td, uap) 	struct thread *td; 	struct linux_setrlimit_args *uap; { 	struct rlimit rlim; 	u_int which; 	int error;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1171,7 +1174,7 @@ endif|#
 directive|endif
 argument|if (uap->resource>= LINUX_RLIM_NLIMITS) 		return EINVAL;  	which = linux_to_bsd_resource[uap->resource];  	if (which == -
 literal|1
-argument|) 		return EINVAL;  	if ((error = 	   copyin((caddr_t)uap->rlim, (caddr_t)&rlim, sizeof (struct rlimit)))) 		return (error); 	return dosetrlimit(p,  which,&rlim); }  int linux_getrlimit(p, uap) 	struct proc *p; 	struct linux_getrlimit_args *uap; { 	u_int which;
+argument|) 		return EINVAL;  	if ((error = 	   copyin((caddr_t)uap->rlim, (caddr_t)&rlim, sizeof (struct rlimit)))) 		return (error); 	return dosetrlimit(td,  which,&rlim); }  int linux_getrlimit(td, uap) 	struct thread *td; 	struct linux_getrlimit_args *uap; { 	u_int which;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1182,7 +1185,7 @@ endif|#
 directive|endif
 argument|if (uap->resource>= LINUX_RLIM_NLIMITS) 		return EINVAL;  	which = linux_to_bsd_resource[uap->resource];  	if (which == -
 literal|1
-argument|) 		return EINVAL;  	return (copyout((caddr_t)&p->p_rlimit[which], (caddr_t)uap->rlim, 	    sizeof (struct rlimit))); }
+argument|) 		return EINVAL;  	return (copyout((caddr_t)&td->td_proc->p_rlimit[which], 	    (caddr_t)uap->rlim, sizeof (struct rlimit))); }
 end_function
 
 end_unit

@@ -734,12 +734,16 @@ name|NULL
 decl_stmt|;
 name|linux_emul_find
 argument_list|(
+operator|&
 name|imgp
 operator|->
 name|proc
+operator|->
+name|p_thread
 argument_list|,
 name|NULL
 argument_list|,
+comment|/* XXXKSE */
 name|linux_emul_path
 argument_list|,
 name|imgp
