@@ -41,16 +41,34 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<sys/proc.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -97,12 +115,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -121,12 +133,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -134,12 +140,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
 end_include
 
 begin_include
