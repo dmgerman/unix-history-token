@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/vm/vm_glue.c,v 1.3 1993/06/30 22:30:55 nate Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/vm/vm_glue.c,v 1.4 1993/07/02 08:56:07 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,18 +72,6 @@ name|int
 name|avefree
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|maxdmap
-init|=
-name|MAXDSIZ
 decl_stmt|;
 end_decl_stmt
 
