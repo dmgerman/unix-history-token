@@ -476,6 +476,16 @@ comment|/* 	 * On the aic7890/91 Rev 0 chips, the autoflush 	 * feature does not
 name|AHC_AUTOFLUSH_BUG
 init|=
 literal|0x02
+block|,
+comment|/* 	 * On the aic7890/91 Rev 0 chips, cacheline 	 * streaming does not work. 	 */
+name|AHC_CACHETHEN_BUG
+init|=
+literal|0x04
+block|,
+comment|/* 	 * On the aic7896/97 chips, cacheline 	 * streaming must be enabled. 	 */
+name|AHC_CACHETHEN_DIS_BUG
+init|=
+literal|0x08
 block|}
 name|ahc_bug
 typedef|;
@@ -1547,7 +1557,7 @@ name|scb_data
 modifier|*
 name|scb_data
 decl_stmt|;
-comment|/* 	 * CCBs that have been send to the controller 	 */
+comment|/* 	 * CCBs that have been sent to the controller 	 */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
