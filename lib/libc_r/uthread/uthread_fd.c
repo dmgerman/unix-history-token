@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_fd.c,v 1.6 1998/04/29 09:58:46 jb Exp $  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_fd.c,v 1.7 1998/05/27 00:41:22 jb Exp $  *  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_ifdef
@@ -45,10 +51,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|long
+name|spinlock_t
 name|fd_table_lock
 init|=
-literal|0
+name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -69,13 +75,11 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-comment|/* Lock the file descriptor table: */
-name|_spinlock
-argument_list|(
-operator|&
-name|fd_table_lock
-argument_list|)
-expr_stmt|;
+name|struct
+name|fd_table_entry
+modifier|*
+name|entry
+decl_stmt|;
 comment|/* Check if the file descriptor is out of range: */
 if|if
 condition|(
@@ -112,16 +116,13 @@ name|NULL
 condition|)
 block|{
 comment|/* Memory has already been allocated. */
-block|}
 comment|/* Allocate memory for the file descriptor table entry: */
+block|}
 elseif|else
 if|if
 condition|(
 operator|(
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|=
 operator|(
 expr|struct
@@ -141,10 +142,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Return a bad file descriptor error: */
+comment|/* Return an insufficient memory error: */
 name|errno
 operator|=
-name|EBADF
+name|ENOMEM
 expr_stmt|;
 name|ret
 operator|=
@@ -154,91 +155,70 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Assume that the operation will succeed: */
-name|ret
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Initialise the file locks: */
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|memset
+argument_list|(
+operator|&
+name|entry
 operator|->
-name|access_lock
-operator|=
+name|lock
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|entry
+operator|->
+name|lock
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|r_owner
 operator|=
 name|NULL
 expr_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|w_owner
 operator|=
 name|NULL
 expr_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|r_fname
 operator|=
 name|NULL
 expr_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|w_fname
 operator|=
 name|NULL
 expr_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|r_lineno
 operator|=
 literal|0
 expr_stmt|;
 empty_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|w_lineno
 operator|=
 literal|0
 expr_stmt|;
 empty_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|r_lockcount
 operator|=
 literal|0
 expr_stmt|;
 empty_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|w_lockcount
 operator|=
@@ -249,10 +229,7 @@ comment|/* Initialise the read/write queues: */
 name|_thread_queue_init
 argument_list|(
 operator|&
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|r_queue
 argument_list|)
@@ -260,10 +237,7 @@ expr_stmt|;
 name|_thread_queue_init
 argument_list|(
 operator|&
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|w_queue
 argument_list|)
@@ -276,10 +250,7 @@ operator|>=
 literal|3
 operator|&&
 operator|(
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|flags
 operator|=
@@ -313,10 +284,7 @@ operator|<
 literal|3
 condition|)
 comment|/* 				 * Use the stdio flags read by 				 * _pthread_init() to avoid 				 * mistaking the non-blocking 				 * flag that, when set on one 				 * stdio fd, is set on all stdio 				 * fds. 				 */
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|flags
 operator|=
@@ -332,50 +300,66 @@ name|fd
 argument_list|,
 name|F_SETFL
 argument_list|,
-name|_thread_fd_table
-index|[
-name|fd
-index|]
+name|entry
 operator|->
 name|flags
 operator||
 name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Check if one of the fcntl calls failed: */
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* Free the file descriptor table entry: */
-name|free
-argument_list|(
-name|_thread_fd_table
-index|[
-name|fd
-index|]
-argument_list|)
-expr_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-block|}
-comment|/* Unlock the file descriptor table: */
-name|_atomic_unlock
+comment|/* Lock the file descriptor table: */
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|fd_table_lock
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Check if another thread allocated the 			 * file descriptor entry while this thread 			 * was doing the same thing. The table wasn't 			 * kept locked during this operation because 			 * it has the potential to recurse. 			 */
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* This thread wins: */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|=
+name|entry
+expr_stmt|;
+name|entry
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* Unlock the file descriptor table: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|fd_table_lock
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * Check if another thread initialised the table entry 		 * before this one could: 		 */
+if|if
+condition|(
+name|entry
+operator|!=
+name|NULL
+condition|)
+comment|/* 			 * Throw away the table entry that this thread 			 * prepared. The other thread wins. 			 */
+name|free
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -415,7 +399,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Lock the file descriptor table entry to prevent 		 * other threads for clashing with the current 		 * thread's accesses: 		 */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -423,7 +407,7 @@ index|[
 name|fd
 index|]
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Check if the running thread owns the read lock: */
@@ -617,7 +601,7 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Reset the number of write locks. 					 * This will be incremented by the 					 * new owner of the lock when it   					 * sees that it has the lock.                            					 */
+comment|/* 					 * Reset the number of write locks. 					 * This will be incremented by the 					 * new owner of the lock when it   					 * sees that it has the lock. 					 */
 name|_thread_fd_table
 index|[
 name|fd
@@ -631,7 +615,7 @@ block|}
 block|}
 block|}
 comment|/* Unlock the file descriptor table entry: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -639,7 +623,7 @@ index|[
 name|fd
 index|]
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -651,6 +635,624 @@ end_function
 begin_function
 name|int
 name|_thread_fd_lock
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|int
+name|lock_type
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|timeout
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+comment|/* 	 * Check that the file descriptor table is initialised for this 	 * entry:  	 */
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|_thread_fd_table_init
+argument_list|(
+name|fd
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * Lock the file descriptor table entry to prevent 		 * other threads for clashing with the current 		 * thread's accesses: 		 */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* Check the file descriptor and lock types: */
+if|if
+condition|(
+name|lock_type
+operator|==
+name|FD_READ
+operator|||
+name|lock_type
+operator|==
+name|FD_RDWR
+condition|)
+block|{
+comment|/* 			 * Enter a loop to wait for the file descriptor to be 			 * locked    for read for the current thread:  			 */
+while|while
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_owner
+operator|!=
+name|_thread_run
+condition|)
+block|{
+comment|/* 				 * Check if the file descriptor is locked by 				 * another thread:  				 */
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_owner
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 					 * Another thread has locked the file 					 * descriptor for read, so join the 					 * queue of threads waiting for a   					 * read lock on this file descriptor:  					 */
+name|_thread_queue_enq
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_queue
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Save the file descriptor details 					 * in the thread structure for the 					 * running thread:  					 */
+name|_thread_run
+operator|->
+name|data
+operator|.
+name|fd
+operator|.
+name|fd
+operator|=
+name|fd
+expr_stmt|;
+comment|/* Set the timeout: */
+name|_thread_kern_set_timeout
+argument_list|(
+name|timeout
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Unlock the file descriptor 					 * table entry: 					 */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Schedule this thread to wait on 					 * the read lock. It will only be 					 * woken when it becomes the next in 					 * the   queue and is granted access 					 * to the lock by the       thread 					 * that is unlocking the file 					 * descriptor.         					 */
+name|_thread_kern_sched_state
+argument_list|(
+name|PS_FDLR_WAIT
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Lock the file descriptor 					 * table entry again: 					 */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 					 * The running thread now owns the 					 * read lock on this file descriptor:  					 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_owner
+operator|=
+name|_thread_run
+expr_stmt|;
+comment|/* 					 * Reset the number of read locks for 					 * this file descriptor:  					 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_lockcount
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+comment|/* Increment the read lock count: */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_lockcount
+operator|++
+expr_stmt|;
+block|}
+comment|/* Check the file descriptor and lock types: */
+if|if
+condition|(
+name|lock_type
+operator|==
+name|FD_WRITE
+operator|||
+name|lock_type
+operator|==
+name|FD_RDWR
+condition|)
+block|{
+comment|/* 			 * Enter a loop to wait for the file descriptor to be 			 * locked for write for the current thread:  			 */
+while|while
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_owner
+operator|!=
+name|_thread_run
+condition|)
+block|{
+comment|/* 				 * Check if the file descriptor is locked by 				 * another thread:  				 */
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_owner
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 					 * Another thread has locked the file 					 * descriptor for write, so join the 					 * queue of threads waiting for a  					 * write lock on this file 					 * descriptor:  					 */
+name|_thread_queue_enq
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_queue
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Save the file descriptor details 					 * in the thread structure for the 					 * running thread:  					 */
+name|_thread_run
+operator|->
+name|data
+operator|.
+name|fd
+operator|.
+name|fd
+operator|=
+name|fd
+expr_stmt|;
+comment|/* Set the timeout: */
+name|_thread_kern_set_timeout
+argument_list|(
+name|timeout
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Unlock the file descriptor 					 * table entry: 					 */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Schedule this thread to wait on 					 * the write lock. It will only be 					 * woken when it becomes the next in 					 * the queue and is granted access to 					 * the lock by the thread that is 					 * unlocking the file descriptor.         					 */
+name|_thread_kern_sched_state
+argument_list|(
+name|PS_FDLW_WAIT
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Lock the file descriptor 					 * table entry again: 					 */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 					 * The running thread now owns the 					 * write lock on this   file 					 * descriptor:  					 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_owner
+operator|=
+name|_thread_run
+expr_stmt|;
+comment|/* 					 * Reset the number of write locks 					 * for this file descriptor:  					 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_lockcount
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+comment|/* Increment the write lock count: */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_lockcount
+operator|++
+expr_stmt|;
+block|}
+comment|/* Unlock the file descriptor table entry: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Return the completion status: */
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_thread_fd_unlock_debug
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|int
+name|lock_type
+parameter_list|,
+name|char
+modifier|*
+name|fname
+parameter_list|,
+name|int
+name|lineno
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+comment|/* 	 * Check that the file descriptor table is initialised for this 	 * entry:  	 */
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|_thread_fd_table_init
+argument_list|(
+name|fd
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * Lock the file descriptor table entry to prevent 		 * other threads for clashing with the current 		 * thread's accesses: 		 */
+name|_spinlock_debug
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|,
+name|fname
+argument_list|,
+name|lineno
+argument_list|)
+expr_stmt|;
+comment|/* Check if the running thread owns the read lock: */
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_owner
+operator|==
+name|_thread_run
+condition|)
+block|{
+comment|/* Check the file descriptor and lock types: */
+if|if
+condition|(
+name|lock_type
+operator|==
+name|FD_READ
+operator|||
+name|lock_type
+operator|==
+name|FD_RDWR
+condition|)
+block|{
+comment|/* 				 * Decrement the read lock count for the 				 * running thread:  				 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_lockcount
+operator|--
+expr_stmt|;
+comment|/* 				 * Check if the running thread still has read 				 * locks on this file descriptor:  				 */
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_lockcount
+operator|!=
+literal|0
+condition|)
+block|{ 				}
+comment|/* 				 * Get the next thread in the queue for a 				 * read lock on this file descriptor:  				 */
+elseif|else
+if|if
+condition|(
+operator|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_owner
+operator|=
+name|_thread_queue_deq
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_queue
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{ 				}
+else|else
+block|{
+comment|/* 					 * Set the state of the new owner of 					 * the thread to  running:  					 */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_owner
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Reset the number of read locks. 					 * This will be incremented by the 					 * new owner of the lock when it sees 					 * that it has the lock.                            					 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_lockcount
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+block|}
+comment|/* Check if the running thread owns the write lock: */
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_owner
+operator|==
+name|_thread_run
+condition|)
+block|{
+comment|/* Check the file descriptor and lock types: */
+if|if
+condition|(
+name|lock_type
+operator|==
+name|FD_WRITE
+operator|||
+name|lock_type
+operator|==
+name|FD_RDWR
+condition|)
+block|{
+comment|/* 				 * Decrement the write lock count for the 				 * running thread:  				 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_lockcount
+operator|--
+expr_stmt|;
+comment|/* 				 * Check if the running thread still has 				 * write locks on this file descriptor:  				 */
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_lockcount
+operator|!=
+literal|0
+condition|)
+block|{ 				}
+comment|/* 				 * Get the next thread in the queue for a 				 * write lock on this file descriptor:  				 */
+elseif|else
+if|if
+condition|(
+operator|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_owner
+operator|=
+name|_thread_queue_deq
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_queue
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{ 				}
+else|else
+block|{
+comment|/* 					 * Set the state of the new owner of 					 * the thread to running:  					 */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_owner
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Reset the number of write locks. 					 * This will be incremented by the 					 * new owner of the lock when it   					 * sees that it has the lock. 					 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_lockcount
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+block|}
+comment|/* Unlock the file descriptor table entry: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Nothing to return. */
+return|return;
+block|}
+end_function
+
+begin_function
+name|int
+name|_thread_fd_lock_debug
 parameter_list|(
 name|int
 name|fd
@@ -690,7 +1292,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Lock the file descriptor table entry to prevent 		 * other threads for clashing with the current 		 * thread's accesses: 		 */
-name|_spinlock
+name|_spinlock_debug
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -698,7 +1300,11 @@ index|[
 name|fd
 index|]
 operator|->
-name|access_lock
+name|lock
+argument_list|,
+name|fname
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 comment|/* Check the file descriptor and lock types: */
@@ -791,7 +1397,7 @@ name|timeout
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Unlock the file descriptor 					 * table entry: 					 */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -799,7 +1405,7 @@ index|[
 name|fd
 index|]
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Schedule this thread to wait on 					 * the read lock. It will only be 					 * woken when it becomes the next in 					 * the   queue and is granted access 					 * to the lock by the       thread 					 * that is unlocking the file 					 * descriptor.         					 */
@@ -813,7 +1419,7 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Lock the file descriptor 					 * table entry again: 					 */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -821,7 +1427,7 @@ index|[
 name|fd
 index|]
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -968,7 +1574,7 @@ name|timeout
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Unlock the file descriptor 					 * table entry: 					 */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -976,7 +1582,7 @@ index|[
 name|fd
 index|]
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Schedule this thread to wait on 					 * the write lock. It will only be 					 * woken when it becomes the next in 					 * the queue and is granted access to 					 * the lock by the thread that is 					 * unlocking the file descriptor.         					 */
@@ -990,7 +1596,7 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Lock the file descriptor 					 * table entry again: 					 */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -998,7 +1604,7 @@ index|[
 name|fd
 index|]
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1056,7 +1662,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* Unlock the file descriptor table entry: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -1064,7 +1670,7 @@ index|[
 name|fd
 index|]
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
