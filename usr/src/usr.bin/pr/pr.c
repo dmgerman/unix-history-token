@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr.c	8.1 (Berkeley) %G%"
+literal|"@(#)pr.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6709,30 +6709,6 @@ name|pgwd
 operator|=
 name|PGWD
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|clcnt
-operator|==
-literal|1
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"pr: -w requires multiple columns\n"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 if|if
 condition|(
