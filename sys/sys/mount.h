@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.21 (Berkeley) 5/20/95  *	$Id: mount.h,v 1.41 1997/03/03 11:55:47 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.21 (Berkeley) 5/20/95  *	$Id: mount.h,v 1.42 1997/04/06 11:14:13 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -716,6 +716,17 @@ begin_comment
 comment|/* exported with Kerberos uid mapping */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNT_EXPUBLIC
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* public export (WebNFS) */
+end_comment
+
 begin_comment
 comment|/*  * Flags set by internal operations.  */
 end_comment
@@ -1000,6 +1011,42 @@ name|int
 name|ex_masklen
 decl_stmt|;
 comment|/* and the smask length */
+name|char
+modifier|*
+name|ex_indexfile
+decl_stmt|;
+comment|/* index file for WebNFS URLs */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure holding information for a publicly exported filesystem  * (WebNFS). Currently the specs allow just for one such filesystem.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfs_public
+block|{
+name|int
+name|np_valid
+decl_stmt|;
+comment|/* Do we hold valid information */
+name|fhandle_t
+name|np_handle
+decl_stmt|;
+comment|/* Filehandle for pub fs (internal) */
+name|struct
+name|mount
+modifier|*
+name|np_mount
+decl_stmt|;
+comment|/* Mountpoint of exported fs */
+name|char
+modifier|*
+name|np_index
+decl_stmt|;
+comment|/* Index file */
 block|}
 struct|;
 end_struct
@@ -1829,6 +1876,29 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|vfs_setpublicfs
+comment|/* set publicly exported fs */
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|,
+expr|struct
+name|netexport
+operator|*
+operator|,
+expr|struct
+name|export_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|vfs_lock
 name|__P
 argument_list|(
@@ -2087,6 +2157,14 @@ specifier|extern
 name|struct
 name|simplelock
 name|mountlist_slock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|nfs_public
+name|nfs_pub
 decl_stmt|;
 end_decl_stmt
 
