@@ -1665,32 +1665,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Giant lock. */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|struct
-name|umtx
-name|_giant_mutex
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-name|UMTX_INITIALIZER
-endif|#
-directive|endif
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|SCLASS
-name|int
-name|_giant_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Garbage collector condition variable. */
 end_comment
 
@@ -1752,28 +1726,6 @@ endif|#
 directive|endif
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*   * And, should we climb the beanstalk,  * We'll meet his brother, Giant.  */
-end_comment
-
-begin_function_decl
-name|void
-name|GIANT_LOCK
-parameter_list|(
-name|pthread_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|GIANT_UNLOCK
-parameter_list|(
-name|pthread_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Undefine the storage class specifier: */
