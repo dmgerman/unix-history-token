@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|6
+value|7
 end_define
 
 begin_comment
@@ -282,6 +282,9 @@ decl_stmt|;
 name|lun_id_t
 name|lun
 decl_stmt|;
+name|int
+name|bus
+decl_stmt|;
 name|u_int32_t
 name|hold
 decl_stmt|;
@@ -289,10 +292,6 @@ block|}
 name|tstate_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * This should work very well for 100% of parallel SCSI cases, 100%  * of non-SCCLUN FC cases, and hopefully some larger fraction of the  * SCCLUN FC cases. Basically, we index by the low 5 bits of lun and  * then linear search. This has to be reasonably zippy, but not crucially  * so.  */
-end_comment
 
 begin_define
 define|#
@@ -306,9 +305,14 @@ define|#
 directive|define
 name|LUN_HASH_FUNC
 parameter_list|(
+name|isp
+parameter_list|,
+name|port
+parameter_list|,
 name|lun
 parameter_list|)
-value|((lun)& 0x1f)
+define|\
+value|((IS_DUALBUS(isp)) ?						\ 		(((lun)& ((LUN_HASH_SIZE>> 1) - 1))<< (port)) :	\ 		((lun)& (LUN_HASH_SIZE - 1)))
 end_define
 
 begin_endif
@@ -394,15 +398,15 @@ name|ISP_TARGET_MODE
 define|#
 directive|define
 name|TM_WANTED
-value|0x01
+value|0x80
 define|#
 directive|define
 name|TM_BUSY
-value|0x02
+value|0x40
 define|#
 directive|define
 name|TM_TMODE_ENABLED
-value|0x80
+value|0x03
 name|u_int8_t
 name|tmflags
 decl_stmt|;
@@ -414,7 +418,11 @@ name|rollinfo
 decl_stmt|;
 name|tstate_t
 name|tsdflt
+index|[
+literal|2
+index|]
 decl_stmt|;
+comment|/* two busses */
 name|tstate_t
 modifier|*
 name|lun_hash
