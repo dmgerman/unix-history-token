@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	8.5 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1260,9 +1260,8 @@ name|argc
 operator|!=
 literal|2
 condition|)
-name|error
-operator|=
-literal|1
+name|usage
+argument_list|()
 expr_stmt|;
 name|spec
 operator|=
