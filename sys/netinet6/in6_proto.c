@@ -1937,6 +1937,27 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_STRUCT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_STATS
+argument_list|,
+name|stats
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|ip6stat
+argument_list|,
+name|ip6stat
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ip6
