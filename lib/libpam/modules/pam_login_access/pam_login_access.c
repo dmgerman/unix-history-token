@@ -32,13 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<unistd.h>
 end_include
 
 begin_define
@@ -601,7 +601,7 @@ end_function
 begin_expr_stmt
 name|PAM_MODULE_ENTRY
 argument_list|(
-literal|"pam_self"
+literal|"pam_login_access"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
