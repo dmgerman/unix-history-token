@@ -276,6 +276,10 @@ literal|"ipv6"
 block|,
 literal|"IPv6 related software."
 block|,
+literal|"hebrew"
+block|,
+literal|"Ported software for Hebrew language."
+block|,
 literal|"irc"
 block|,
 literal|"Internet Relay Chat utilities."
