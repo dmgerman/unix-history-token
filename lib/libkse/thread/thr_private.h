@@ -1961,6 +1961,10 @@ decl_stmt|;
 name|int
 name|specific_data_count
 decl_stmt|;
+comment|/* Alternative stack for sigaltstack() */
+name|stack_t
+name|sigstk
+decl_stmt|;
 comment|/* 	 * Current locks bitmap for rtld. 	 */
 name|int
 name|rtld_bits
@@ -3942,6 +3946,17 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thr_sigonstack
+parameter_list|(
+name|void
+modifier|*
+name|sp
 parameter_list|)
 function_decl|;
 end_function_decl
