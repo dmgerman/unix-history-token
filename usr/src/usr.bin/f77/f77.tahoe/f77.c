@@ -1,5 +1,58 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1991 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)f77.c	5.5 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
 comment|/*  * f77.c  *  * Driver program for the 4.2 BSD f77 compiler.  *  * University of Utah CS Dept modification history:  *  * $Log:	f77.c,v $  * Revision 1.14  85/03/01  00:07:57  donn  * Portability fix from Ralph Campbell.  *   * Revision 1.13  85/02/12  19:31:47  donn  * Use CATNAME to get the name of a concatenation command instead of  * explicitly running 'cat' -- you can get the wrong 'cat' the old way!  *   * Revision 1.12  85/01/14  06:42:30  donn  * Changed to call the peephole optimizer with the '-f' flag, so that  * floating point moves are translated to integer moves.  *   * Revision 1.11  85/01/14  04:38:59  donn  * Jerry's change to pass -O to f1 so it knows whether the peephole optimizer  * will be run.  This is necessary in order to handle movf/movl translation.  *   * Revision 1.10  85/01/14  03:59:12  donn  * Added Jerry Berkman's fix for the '-q' flag.  *   * Revision 1.9  84/11/09  01:51:26  donn  * Cosmetic change to stupid() suggested by John McCarthy at Memorial  * University, St. Johns.  *   * Revision 1.8  84/09/14  16:02:34  donn  * Added changes to notice when people do 'f77 -c foo.f -o bar.o' and tell  * them why it doesn't do what they think it does.  *   * Revision 1.7  84/08/24  21:08:31  donn  * Added call to setrlimit() to prevent core dumps when not debugging.  * Reorganized the include file arrangment somewhat.  *   * Revision 1.6  84/08/24  20:20:24  donn  * Changed stupidity check on Jerry Berkman's suggestion -- now it balks if  * the load file exists and has a sensitive suffix.  *   * Revision 1.5  84/08/15  18:56:44  donn  * Added test for -O combined with -g, suggested by Raleigh Romine.  To keep  * things simple, if both are specified then the second in the list is thrown  * out and the user is warned.  *   * Revision 1.4  84/08/05  21:33:15  donn  * Added stupidity check -- f77 won't load on a file that it's asked to  * compile as well.  *   * Revision 1.3  84/08/04  22:58:24  donn  * Improved error reporting -- we now explain why we died and what we did.  * Only works on 4.2.  Added at the instigation of Jerry Berkman.  *   * Revision 1.2  84/07/28  13:11:24  donn  * Added Ralph Campbell's changes to reduce offsets to data.  *   */
 end_comment
 

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)machdefs.h	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/*  * machdefs.h  *  * Machine definitions for f77 compiler, pass 1.  VAX version.  *  * University of Utah CS Dept modification history:  *  * $Header: machdefs.h,v 2.2 85/01/14 03:41:13 donn Exp $  * $Log:	machdefs.h,v $  * Revision 2.2  85/01/14  03:41:13  donn  * Added changes to make the storage used for constants that are passed  * as arguments to functions come out read-only.  *   * Revision 2.1  84/07/19  12:55:11  donn  * Changed comment header to UofU.  *   * Revision 1.3  84/07/02  12:04:42  donn  * I goofed when I added the original changes for SZFLOAT and SZDOUBLE.  * Thanks to Raleigh Romine for pointing this out (sigh).  *   * Revision 1.2  84/02/28  20:46:16  donn  * Added definitions for SZFLOAT and SZDOUBLE, needed by Berkeley changes to  * produce shorter offsets to variables in machine code.  *   */
 end_comment
 
