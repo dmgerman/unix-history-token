@@ -16,7 +16,7 @@ comment|/*  * Copyright (c) 2003  *     Shingo WATANABE<nabe@nabechan.org>.  All
 end_comment
 
 begin_comment
-comment|/*  * DM9601(DAVICOM USB to Ethernet MAC Controller with Integrated 10/100 PHY)  * The spec can be found at the following url.  *   http://www.davicom.com.tw/big5/download/Data%20Sheet/DM9601-DS-F01-062202s.pdf  */
+comment|/*  * DM9601(DAVICOM USB to Ethernet MAC Controller with Integrated 10/100 PHY)  * The spec can be found at the following url.  *   http://www.davicom.com.tw/big5/download/Data%20Sheet/DM9601-DS-P01-930914.pdf  */
 end_comment
 
 begin_comment
