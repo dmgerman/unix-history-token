@@ -190,8 +190,6 @@ name|int
 name|fflag
 decl_stmt|,
 name|vflag
-decl_stmt|,
-name|count
 decl_stmt|;
 end_decl_stmt
 
@@ -425,8 +423,6 @@ name|sync
 argument_list|()
 expr_stmt|;
 name|all
-operator|=
-name|count
 operator|=
 name|errs
 operator|=
@@ -1128,6 +1124,8 @@ name|int
 name|so
 decl_stmt|,
 name|speclen
+decl_stmt|,
+name|do_rpc
 decl_stmt|;
 name|char
 modifier|*
@@ -1154,8 +1152,6 @@ decl_stmt|,
 name|realname
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|char
@@ -1829,17 +1825,15 @@ expr_stmt|;
 comment|/* 	 * Check if we have to start the rpc-call later. 	 * If there are still identical nfs-names mounted, 	 * we skip the rpc-call. Obviously this has to 	 * happen before unmount(2), but it should happen 	 * after the previous namecheck. 	 */
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|type
 argument_list|,
 literal|"nfs"
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|==
+literal|0
+operator|&&
 name|getmntname
 argument_list|(
 name|mntfromname
@@ -1853,19 +1847,18 @@ name|type
 argument_list|,
 name|COUNT
 argument_list|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|count
+name|do_rpc
 operator|=
 literal|1
 expr_stmt|;
 else|else
-name|count
+name|do_rpc
 operator|=
 literal|0
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1934,9 +1927,7 @@ operator|&
 name|MNT_FORCE
 operator|)
 operator|&&
-name|count
-operator|==
-literal|0
+name|do_rpc
 condition|)
 block|{
 name|memset
@@ -2671,6 +2662,7 @@ name|count
 operator|--
 expr_stmt|;
 else|else
+block|{
 name|mntcount
 index|[
 name|i
@@ -2678,6 +2670,8 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 if|if
@@ -3185,13 +3179,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|strncpy
+name|snprintf
 argument_list|(
 name|realname
 argument_list|,
-name|name
-argument_list|,
 name|MAXPATHLEN
+argument_list|,
+literal|"%s"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 else|else
