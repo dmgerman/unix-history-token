@@ -141,10 +141,6 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_comment
-comment|/* host machine name */
-end_comment
-
 begin_decl_stmt
 name|char
 name|host
@@ -153,6 +149,10 @@ name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* host machine name */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -165,6 +165,21 @@ end_decl_stmt
 
 begin_comment
 comment|/* client's machine name */
+end_comment
+
+begin_decl_stmt
+name|char
+name|from_ip
+index|[
+name|MAXIPSTRLEN
+index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* client machine's IP address */
 end_comment
 
 begin_decl_stmt

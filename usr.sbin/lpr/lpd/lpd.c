@@ -2829,6 +2829,32 @@ name|from
 operator|=
 name|fromb
 expr_stmt|;
+name|strncpy
+argument_list|(
+name|from_ip
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|f
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|MAXIPSTRLEN
+argument_list|)
+expr_stmt|;
+name|from_ip
+index|[
+sizeof|sizeof
+argument_list|(
+name|from_ip
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* Check for spoof, ala rlogind */
 name|hp
 operator|=
@@ -2848,12 +2874,7 @@ literal|0
 argument_list|,
 literal|"hostname for your address (%s) unknown"
 argument_list|,
-name|inet_ntoa
-argument_list|(
-name|f
-operator|->
-name|sin_addr
-argument_list|)
+name|from_ip
 argument_list|)
 expr_stmt|;
 for|for
@@ -2923,12 +2944,7 @@ literal|0
 argument_list|,
 literal|"address for your hostname (%s) not matched"
 argument_list|,
-name|inet_ntoa
-argument_list|(
-name|f
-operator|->
-name|sin_addr
-argument_list|)
+name|from_ip
 argument_list|)
 expr_stmt|;
 name|hostf

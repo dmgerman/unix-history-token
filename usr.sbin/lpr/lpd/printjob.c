@@ -312,6 +312,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|job_dfcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* count of datafiles in current user job */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|lfd
 decl_stmt|;
 end_decl_stmt
@@ -2214,6 +2225,11 @@ argument_list|,
 literal|"0"
 argument_list|)
 expr_stmt|;
+comment|/* initialize job-specific count of datafiles processed */
+name|job_dfcnt
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		S -- "stat info" for symbolic link protection 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *		R -- laser dpi "resolution" 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		n -- "file name" ditroff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 *              Z -- "locale" for pr 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
 comment|/* pass 1 */
 while|while
@@ -3174,6 +3190,11 @@ operator|(
 name|ACCESS
 operator|)
 return|;
+name|job_dfcnt
+operator|++
+expr_stmt|;
+comment|/* increment datafile counter for this job */
+comment|/* everything seems OK, start it up */
 if|if
 condition|(
 operator|!
@@ -4604,6 +4625,11 @@ operator|(
 name|OK
 operator|)
 return|;
+comment|/* initialize job-specific count of datafiles processed */
+name|job_dfcnt
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      commands of interest are: 	 * 	 *            a-z -- "file name" name of file to print 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 */
 comment|/* 	 * pass 1 	 */
 while|while
@@ -5194,6 +5220,11 @@ operator|(
 name|ACCESS
 operator|)
 return|;
+name|job_dfcnt
+operator|++
+expr_stmt|;
+comment|/* increment datafile counter for this job */
+comment|/* everything seems OK, start it up */
 name|sizerr
 operator|=
 literal|0
@@ -6005,6 +6036,21 @@ operator|->
 name|remote_host
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+literal|'\3'
+condition|)
+name|trstat_init
+argument_list|(
+name|pp
+argument_list|,
+name|file
+argument_list|,
+name|job_dfcnt
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6244,6 +6290,31 @@ condition|)
 name|openpr
 argument_list|(
 name|pp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+literal|'\3'
+condition|)
+name|trstat_write
+argument_list|(
+name|pp
+argument_list|,
+name|TR_SENDING
+argument_list|,
+name|stb
+operator|.
+name|st_size
+argument_list|,
+name|logname
+argument_list|,
+name|pp
+operator|->
+name|remote_host
+argument_list|,
+name|fromhost
 argument_list|)
 expr_stmt|;
 return|return
