@@ -771,6 +771,15 @@ block|,
 name|MOUSE_MODEL_EASYSCROLL
 block|}
 block|,
+comment|/* Logitech Cordless MouseMan Wheel */
+block|{
+literal|"LGI8033"
+block|,
+name|MOUSE_PROTO_INTELLI
+block|,
+name|MOUSE_MODEL_MOUSEMANPLUS
+block|}
+block|,
 comment|/* Logitech MouseMan (new 4 button model) */
 block|{
 literal|"LGI800C"
