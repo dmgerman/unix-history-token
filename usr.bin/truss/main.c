@@ -226,6 +226,14 @@ name|i386_syscall_exit
 block|}
 block|,
 block|{
+literal|"FreeBSD ELF32"
+block|,
+name|i386_syscall_entry
+block|,
+name|i386_syscall_exit
+block|}
+block|,
+block|{
 literal|"Linux ELF"
 block|,
 name|i386_linux_syscall_entry
