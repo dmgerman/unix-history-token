@@ -3220,7 +3220,7 @@ name|strcmp
 argument_list|(
 name|desk
 argument_list|,
-literal|"fvwm"
+literal|"fvwm2"
 argument_list|)
 condition|)
 block|{
