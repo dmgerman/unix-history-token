@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	8.2 (Berkeley) %G%"
+literal|"@(#)interactive.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2882,6 +2882,16 @@ literal|'#'
 expr_stmt|;
 break|break;
 case|case
+name|DT_WHT
+case|:
+name|fp
+operator|->
+name|postfix
+operator|=
+literal|'%'
+expr_stmt|;
+break|break;
+case|case
 name|DT_UNKNOWN
 case|:
 case|case
@@ -3368,11 +3378,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|vflag
+operator|&&
 name|dp
 operator|->
 name|d_ino
 operator|==
-literal|0
+name|WINO
 condition|)
 continue|continue;
 if|if
@@ -3500,6 +3513,17 @@ name|dumpmap
 argument_list|)
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+operator|!
+name|vflag
+operator|&&
+name|dp
+operator|->
+name|d_ino
+operator|==
+name|WINO
 operator|)
 condition|)
 return|return

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	8.1 (Berkeley) %G%"
+literal|"@(#)symtab.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,7 +200,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|ROOTINO
+name|WINO
 operator|||
 name|inum
 operator|>=
@@ -285,7 +285,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|ROOTINO
+name|WINO
 operator|||
 name|inum
 operator|>=
@@ -396,7 +396,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|ROOTINO
+name|WINO
 operator|||
 name|inum
 operator|>=
@@ -2051,10 +2051,10 @@ for|for
 control|(
 name|i
 operator|=
-name|ROOTINO
+name|WINO
 init|;
 name|i
-operator|<
+operator|<=
 name|maxino
 condition|;
 name|i
@@ -2131,10 +2131,10 @@ for|for
 control|(
 name|i
 operator|=
-name|ROOTINO
+name|WINO
 init|;
 name|i
-operator|<
+operator|<=
 name|maxino
 condition|;
 name|i

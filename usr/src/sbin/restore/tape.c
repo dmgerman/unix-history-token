@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.5 (Berkeley) %G%"
+literal|"@(#)tape.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1427,6 +1427,20 @@ argument_list|(
 name|xtrmap
 argument_list|,
 name|xtrmapskip
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If there may be whiteout entries on the tape, pretend that the 	 * whiteout inode exists, so that the whiteout entries can be 	 * extracted. 	 */
+if|if
+condition|(
+name|oldinofmt
+operator|==
+literal|0
+condition|)
+name|SETINO
+argument_list|(
+name|WINO
+argument_list|,
+name|dumpmap
 argument_list|)
 expr_stmt|;
 block|}
