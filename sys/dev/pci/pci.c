@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * Copyright (c) 2000, Michael Smith<msmith@freebsd.org>  * Copyright (c) 2000, BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * Copyright (c) 2000, Michael Smith<msmith@freebsd.org>  * Copyright (c) 2000, BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -936,10 +936,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"hw.pci.enable_io_modes"
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|pci_enable_io_modes
 argument_list|)
@@ -972,7 +968,7 @@ specifier|static
 name|int
 name|pci_do_powerstate
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -981,10 +977,6 @@ name|TUNABLE_INT
 argument_list|(
 literal|"hw.pci.do_powerstate"
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|pci_do_powerstate
 argument_list|)
@@ -1005,7 +997,7 @@ argument_list|,
 operator|&
 name|pci_do_powerstate
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|"Power down devices into D3 state when no driver attaches to them.\n\ Otherwise, leave the device in D0 state when no driver attaches."
 argument_list|)
@@ -9355,7 +9347,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some drivers apparently write to these registers w/o 	 * updating our cahced copy.  No harm happens if we update the 	 * copy, so do so here so we can restore them.  The COMMAND 	 * register is modified by the bus w/o updating the cache.  This 	 * should represent the normally writable portion of the 'defined' 	 * part of type 0 headers.  In theory we also need to save/restore 	 * the PCI capability structures we know about, but apart from power 	 * we don't know any that are writable. 	 */
+comment|/* 	 * Some drivers apparently write to these registers w/o updating our 	 * cached copy.  No harm happens if we update the copy, so do so here 	 * so we can restore them.  The COMMAND register is modified by the 	 * bus w/o updating the cache.  This should represent the normally 	 * writable portion of the 'defined' part of type 0 headers.  In 	 * theory we also need to save/restore the PCI capability structures 	 * we know about, but apart from power we don't know any that are 	 * writable. 	 */
 name|dinfo
 operator|->
 name|cfg
@@ -9581,7 +9573,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * don't set the state for display devices and for memory devices 	 * since bad things happen.  we should (a) have drivers that can easily 	 * detach and (b) use generic drivers for these devices so that some 	 * device actually attaches.  We need to make sure that when we 	 * implement (a) we don't power the device down on a reattach. 	 */
+comment|/* 	 * don't set the state for display devices, base peripherals and 	 * memory devices since bad things happen when they are powered down. 	 * We should (a) have drivers that can easily detach and (b) use 	 * generic drivers for these devices so that some device actually 	 * attaches.  We need to make sure that when we implement (a) we don't 	 * power the device down on a reattach. 	 */
 name|cls
 operator|=
 name|pci_get_class
@@ -9600,9 +9592,13 @@ operator|&&
 name|cls
 operator|!=
 name|PCIC_MEMORY
+operator|&&
+name|cls
+operator|!=
+name|PCIC_BASEPERIPH
 condition|)
 block|{
-comment|/* 		 * PCI spec is clear that we can only go into D3 state from 		 * D0 state.  Transition from D[12] into D0 before going 		 * to D3 state. 		 */
+comment|/* 		 * PCI spec says we can only go into D3 state from D0 state. 		 * Transition from D[12] into D0 before going to D3 state. 		 */
 name|ps
 operator|=
 name|pci_get_powerstate
