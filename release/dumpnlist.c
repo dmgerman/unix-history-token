@@ -82,6 +82,9 @@ block|{
 literal|"_device_list"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|DO_SCSI
 block|{
 literal|"_scbusses"
 block|}
@@ -98,6 +101,8 @@ block|{
 literal|"_scsi_tinit"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|""
 block|}
