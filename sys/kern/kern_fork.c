@@ -171,6 +171,12 @@ directive|include
 file|<sys/user.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/critical.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE

@@ -117,6 +117,12 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/critical.h>
+end_include
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(

@@ -51,6 +51,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/critical.h>
+end_include
+
 begin_comment
 comment|/*  * Global run queue.  */
 end_comment

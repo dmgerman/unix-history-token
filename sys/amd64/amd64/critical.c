@@ -63,6 +63,12 @@ directive|include
 file|<sys/ucontext.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/critical.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -127,7 +133,7 @@ end_endif
 
 begin_function_decl
 name|void
-name|unpend
+name|i386_unpend
 parameter_list|(
 name|void
 parameter_list|)
@@ -135,7 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* note: not static (called from assembly) */
+comment|/* NOTE: not static, called from assembly */
 end_comment
 
 begin_comment
@@ -172,52 +178,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *	cpu_critical_enter:  *  *	This routine is called from critical_enter() on the 0->1 transition  *	of td_critnest, prior to it being incremented to 1.  *  *	If old-style critical section handling (critical_mode == 0), we  *	disable interrupts.   *  *	If new-style critical section handling (criticla_mode != 0), we  *	do not have to do anything.  However, as a side effect any  *	interrupts occuring while td_critnest is non-zero will be  *	deferred.  */
+comment|/*  * cpu_unpend() -	called from critical_exit() inline after quick  *			interrupt-pending check.  */
 end_comment
 
 begin_function
 name|void
-name|cpu_critical_enter
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-if|if
-condition|(
-name|critical_mode
-operator|==
-literal|0
-condition|)
-block|{
-name|td
-operator|=
-name|curthread
-expr_stmt|;
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_savecrit
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  *	cpu_critical_exit:  *  *	This routine is called from critical_exit() on a 1->0 transition  *	of td_critnest, after it has been decremented to 0.  We are  *	exiting the last critical section.  *  *	If td_critnest is -1 this is the 'new' critical_enter()/exit()  *	code (the default critical_mode=1) and we do not have to do   *	anything unless PCPU_GET(int_pending) is non-zero.   *  *	Note that the td->critnest (1->0) transition interrupt race against  *	our int_pending/unpend() check below is handled by the interrupt  *	code for us, so we do not have to do anything fancy.  *  *	Otherwise td_critnest contains the saved hardware interrupt state  *	and will be restored.  Since interrupts were hard-disabled there  *	will be no pending interrupts to dispatch (the 'original' code).  */
-end_comment
-
-begin_function
-name|void
-name|cpu_critical_exit
+name|cpu_unpend
 parameter_list|(
 name|void
 parameter_list|)
@@ -234,54 +200,6 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_savecrit
-operator|!=
-operator|(
-name|register_t
-operator|)
-operator|-
-literal|1
-condition|)
-block|{
-name|intr_restore
-argument_list|(
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_savecrit
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_savecrit
-operator|=
-operator|(
-name|register_t
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * We may have to schedule pending interrupts.  Create 		 * conditions similar to an interrupt context and call 		 * unpend(). 		 * 		 * note: we do this even if we are in an interrupt 		 * nesting level.  Deep nesting is protected by 		 * critical_*() and if we conditionalized it then we 		 * would have to check int_pending again whenever 		 * we decrement td_intr_nesting_level to 0. 		 */
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|int_pending
-argument_list|)
-condition|)
-block|{
 name|eflags
 operator|=
 name|intr_disable
@@ -300,7 +218,7 @@ name|td
 operator|->
 name|td_intr_nesting_level
 expr_stmt|;
-name|unpend
+name|i386_unpend
 argument_list|()
 expr_stmt|;
 operator|--
@@ -314,8 +232,6 @@ argument_list|(
 name|eflags
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -358,22 +274,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from cpu_critical_exit() or called from the assembly vector code  * to process any interrupts which may have occured while we were in  * a critical section.  *  * 	- interrupts must be disabled  *	- td_critnest must be 0  *	- td_intr_nesting_level must be incremented by the caller  */
+comment|/*  * Called from cpu_unpend or called from the assembly vector code  * to process any interrupts which may have occured while we were in  * a critical section.  *  * 	- interrupts must be disabled  *	- td_critnest must be 0  *	- td_intr_nesting_level must be incremented by the caller  *  * NOT STATIC (called from assembly)  */
 end_comment
 
 begin_function
 name|void
-name|unpend
+name|i386_unpend
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|irq
-decl_stmt|;
-name|u_int32_t
-name|mask
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|curthread
@@ -415,6 +325,12 @@ init|;
 condition|;
 control|)
 block|{
+name|u_int32_t
+name|mask
+decl_stmt|;
+name|int
+name|irq
+decl_stmt|;
 comment|/* 		 * Fast interrupts have priority 		 */
 if|if
 condition|(
@@ -625,7 +541,7 @@ argument_list|,
 operator|(
 name|register_t
 operator|)
-name|unpend
+name|i386_unpend
 argument_list|,
 literal|0
 argument_list|)
