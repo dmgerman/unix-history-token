@@ -21,52 +21,11 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_comment
-comment|/*  * IA64 assembler doesn't like C style comments.  This also means we can't  * include other include files to get things like the roundup2() macro.  *  * NOTE:  Actual register storage must start on a 16 byte boundary.  Both  * setjmp and longjmp make that adjustment before referencing the contents  * of jmp_buf.  The macro JMPBUF_ADDR_OF() allows someone to get the address  * of an individual item saved in jmp_buf.  */
-end_comment
-
 begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
-
-begin_define
-define|#
-directive|define
-name|our_roundup
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x)+((y)-1))&(~((y)-1)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|_JMPBUF_ALIGNMENT
-value|0x10
-end_define
-
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
-begin_define
-define|#
-directive|define
-name|JMPBUF_ALIGNMENT
-value|_JMPBUF_ALIGNMENT
-end_define
 
 begin_define
 define|#
@@ -77,8 +36,7 @@ name|buf
 parameter_list|,
 name|item
 parameter_list|)
-define|\
-value|((size_t)((our_roundup((size_t)buf, JMPBUF_ALIGNMENT)) + item))
+value|((unsigned long)((char *)buf + item))
 end_define
 
 begin_define
@@ -384,30 +342,16 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_J_END
-value|0x1f0
-end_define
-
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
+begin_comment
+comment|/*  * We have 16 bytes left for future use, but it's a nice round,  * but above all large number. Size is in bytes.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|J_END
-value|_J_END
+name|_JMPBUFSZ
+value|0x200
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * XXX this check is wrong, since LOCORE is in the application namespace and  * applications shouldn't be able to affect the implementation.  One workaround  * would be to only check LOCORE if _KERNEL is defined, but unfortunately  * LOCORE is used outside of the kernel.  The best solution would be to rename  * LOCORE to _LOCORE, so that it can be used in userland to safely affect the  * implementation.  */
@@ -433,20 +377,28 @@ operator|||
 name|__XSI_VISIBLE
 end_if
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|_sigjmp_buf
 block|{
 name|char
 name|_Buffer
 index|[
-name|_J_END
-operator|+
-name|_JMPBUF_ALIGNMENT
+name|_JMPBUFSZ
 index|]
 decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+literal|16
+argument_list|)
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_sigjmp_buf
 name|sigjmp_buf
 index|[
 literal|1
@@ -459,20 +411,28 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|_jmp_buf
 block|{
 name|char
 name|_Buffer
 index|[
-name|_J_END
-operator|+
-name|_JMPBUF_ALIGNMENT
+name|_JMPBUFSZ
 index|]
 decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+literal|16
+argument_list|)
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_jmp_buf
 name|jmp_buf
 index|[
 literal|1
@@ -484,6 +444,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_endif
 endif|#
