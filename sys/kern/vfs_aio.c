@@ -4580,11 +4580,24 @@ goto|;
 block|}
 block|}
 comment|/* Bring buffer into kernel space. */
+if|if
+condition|(
 name|vmapbuf
 argument_list|(
 name|bp
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EFAULT
 expr_stmt|;
+goto|goto
+name|doerror
+goto|;
+block|}
 name|s
 operator|=
 name|splbio
