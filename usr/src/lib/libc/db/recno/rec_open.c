@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.10 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -381,6 +381,12 @@ else|else
 name|t
 operator|->
 name|bt_reof
+operator|=
+literal|0
+expr_stmt|;
+name|t
+operator|->
+name|bt_rcursor
 operator|=
 literal|0
 expr_stmt|;
