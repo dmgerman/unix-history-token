@@ -4096,6 +4096,9 @@ operator|->
 name|ksq_nicemin
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|ke
@@ -4109,6 +4112,19 @@ operator|>
 name|SCHED_SLICE_NTHRESH
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|ke
+operator|->
+name|ke_slice
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 name|runq_remove
 argument_list|(
 name|ke
@@ -4162,9 +4178,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|kseq_setup
@@ -4242,9 +4255,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|sched_setup
@@ -4703,13 +4713,7 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Scale the scheduling priority according to the "interactivity" of this  * process.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|sched_priority
@@ -4783,13 +4787,7 @@ name|pri
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Calculate a time slice based on the properties of the kseg and the runq  * that we're on.  This is only for PRI_TIMESHARE ksegrps.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|sched_slice
@@ -4960,13 +4958,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * This routine enforces a maximum limit on the amount of scheduling history  * kept.  It is called after either the slptime or runtime is adjusted.  * This routine will not operate correctly when slp or run times have been  * adjusted to more than double their maximum.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|sched_interact_update
@@ -5054,9 +5046,6 @@ operator|*
 literal|4
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|sched_interact_fork
@@ -5110,9 +5099,6 @@ name|ratio
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|sched_interact_score
@@ -5209,13 +5195,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Very early in the boot some setup of scheduler-specific  * parts of proc0 and of soem scheduler resources needs to be done.  * Called from:  *  proc0_init()  */
-end_comment
-
-begin_function
 name|void
 name|schedinit
 parameter_list|(
@@ -5278,13 +5258,7 @@ literal|0
 expr_stmt|;
 comment|/* we are already running */
 block|}
-end_function
-
-begin_comment
 comment|/*  * This is only somewhat accurate since given many processes of the same  * priority they will switch when their slices run out, which will be  * at most SCHED_SLICE_MAX.  */
-end_comment
-
-begin_function
 name|int
 name|sched_rr_interval
 parameter_list|(
@@ -5297,9 +5271,6 @@ name|SCHED_SLICE_MAX
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|sched_pctcpu_update
@@ -5380,9 +5351,6 @@ operator|-
 name|SCHED_CPU_TICKS
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_prio
 parameter_list|(
@@ -5520,9 +5488,6 @@ operator|=
 name|prio
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_switch
 parameter_list|(
@@ -5816,9 +5781,6 @@ name|cpuid
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_nice
 parameter_list|(
@@ -5965,9 +5927,6 @@ name|TDF_NEEDRESCHED
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_sleep
 parameter_list|(
@@ -6013,9 +5972,6 @@ name|td_slptime
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_wakeup
 parameter_list|(
@@ -6139,13 +6095,7 @@ name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Penalize the parent for creating a new child and initialize the child's  * priority.  */
-end_comment
-
-begin_function
 name|void
 name|sched_fork
 parameter_list|(
@@ -6185,9 +6135,6 @@ name|childtd
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_fork_ksegrp
 parameter_list|(
@@ -6297,9 +6244,6 @@ name|kg_runtime
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_fork_thread
 parameter_list|(
@@ -6388,9 +6332,6 @@ operator|->
 name|ke_ftick
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_class
 parameter_list|(
@@ -6612,13 +6553,7 @@ operator|=
 name|class
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Return some of the child's priority and interactivity to the parent.  * Avoid using sched_exit_thread to avoid having to decide which  * thread in the parent gets the honour since it isn't used.  */
-end_comment
-
-begin_function
 name|void
 name|sched_exit
 parameter_list|(
@@ -6668,9 +6603,6 @@ name|td_kse
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_exit_ksegrp
 parameter_list|(
@@ -6702,9 +6634,6 @@ name|kg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_exit_thread
 parameter_list|(
@@ -6736,9 +6665,6 @@ name|td_kse
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_clock
 parameter_list|(
@@ -7017,9 +6943,6 @@ operator||=
 name|TDF_NEEDRESCHED
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sched_runnable
 parameter_list|(
@@ -7124,9 +7047,6 @@ name|load
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_userret
 parameter_list|(
@@ -7180,9 +7100,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|struct
 name|kse
 modifier|*
@@ -7350,9 +7267,6 @@ name|NULL
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_add
 parameter_list|(
@@ -7390,9 +7304,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|sched_add_internal
@@ -7879,9 +7790,6 @@ name|ke
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_rem
 parameter_list|(
@@ -7984,9 +7892,6 @@ name|ke
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|fixpt_t
 name|sched_pctcpu
 parameter_list|(
@@ -8132,9 +8037,6 @@ name|pctcpu
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_bind
 parameter_list|(
@@ -8229,9 +8131,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_function
 name|void
 name|sched_unbind
 parameter_list|(
@@ -8259,9 +8158,6 @@ operator|~
 name|KEF_BOUND
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sched_load
 parameter_list|(
@@ -8321,9 +8217,6 @@ return|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_function
 name|int
 name|sched_sizeof_ksegrp
 parameter_list|(
@@ -8346,9 +8239,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sched_sizeof_proc
 parameter_list|(
@@ -8365,9 +8255,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|sched_sizeof_thread
 parameter_list|(
