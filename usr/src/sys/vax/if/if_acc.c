@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_acc.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_acc.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -469,11 +469,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"accattach"
-argument_list|)
-expr_stmt|;
+return|return;
 name|sc
 operator|->
 name|acc_if
@@ -761,6 +757,19 @@ operator|->
 name|ui_alive
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|acc_if
+operator|->
+name|if_flags
+operator|&=
+operator|~
+operator|(
+name|IFF_UP
+operator||
+name|IFF_RUNNING
+operator|)
 expr_stmt|;
 return|return
 operator|(
@@ -1651,7 +1660,7 @@ goto|goto
 name|setup
 goto|;
 block|}
-comment|/* 	 * The last parameter is always 0 since using 	 * trailers on the ARPAnet is insane. 	 */
+comment|/* 	 * The offset parameter is always 0 since using 	 * trailers on the ARPAnet is insane. 	 */
 name|m
 operator|=
 name|if_rubaget
@@ -1664,6 +1673,11 @@ argument_list|,
 name|len
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|acc_if
 argument_list|)
 expr_stmt|;
 if|if

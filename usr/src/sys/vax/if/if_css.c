@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_css.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_css.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|"css.h"
 end_include
 
 begin_comment
-comment|/*  * DEC/CSS IMP11-A ARPAnet IMP interface driver.  * Since "imp11a" is such a mouthful, it is called  * "css" after the LH/DH being called "acc".  *  * Configuration notes:  *  * As delivered from DEC/CSS, it  * is addressed and vectored as two DR11-B's.  This makes  * Autoconfig almost IMPOSSIBLE.  To make it work, the  * interrupt vectors must be restrapped to make the vectors  * consecutive.  The 020 hole between the CSR addresses is  * tolerated, althought that could be cleaned-up also.  *  * Additionally, the TRANSMIT side of the IMP11-A has the  * lower address of the two subunits, so the vector ordering  * in the CONFIG file is reversed from most other devices.  * It should be:  *  * device css0 ....  cssxint cssrint  *  * If you get it wrong, it will still autoconfig, but will just  * sit there with RECIEVE IDLE indicated on the front panel.  */
+comment|/*  * DEC/CSS IMP11-A ARPAnet IMP interface driver.  * Since "imp11a" is such a mouthful, it is called  * "css" after the LH/DH being called "acc".  *  * Configuration notes:  *  * As delivered from DEC/CSS, it  * is addressed and vectored as two DR11-B's.  This makes  * Autoconfig almost IMPOSSIBLE.  To make it work, the  * interrupt vectors must be restrapped to make the vectors  * consecutive.  The 020 hole between the CSR addresses is  * tolerated, althought that could be cleaned-up also.  *  * Additionally, the TRANSMIT side of the IMP11-A has the  * lower address of the two subunits, so the vector ordering  * in the CONFIG file is reversed from most other devices.  * It should be:  *  * device css0 ....  cssxint cssrint  *  * If you get it wrong, it will still autoconfig, but will just  * sit there with RECEIVE IDLE indicated on the front panel.  */
 end_comment
 
 begin_include
@@ -457,12 +457,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"cssattach"
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
+return|return;
 name|sc
 operator|->
 name|css_if
@@ -755,6 +750,19 @@ operator|->
 name|ui_alive
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|css_if
+operator|->
+name|if_flags
+operator|&=
+operator|~
+operator|(
+name|IFF_UP
+operator||
+name|IFF_RUNNING
+operator|)
 expr_stmt|;
 return|return
 operator|(
@@ -1583,7 +1591,7 @@ goto|goto
 name|setup
 goto|;
 block|}
-comment|/*          * The last parameter is always 0 since using          * trailers on the ARPAnet is insane.          */
+comment|/*          * The offset parameter is always 0 since using          * trailers on the ARPAnet is insane.          */
 name|m
 operator|=
 name|if_rubaget
@@ -1596,6 +1604,11 @@ argument_list|,
 name|len
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|css_if
 argument_list|)
 expr_stmt|;
 if|if
