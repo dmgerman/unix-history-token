@@ -819,6 +819,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|prot
 operator|=
 name|PROT_READ
@@ -883,6 +889,12 @@ argument_list|,
 operator|(
 literal|"dev_pager_getpage: map function returns error"
 operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Replace the passed in reqpage page with our own fake page and 	 * free up the all of the original pages. 	 */
