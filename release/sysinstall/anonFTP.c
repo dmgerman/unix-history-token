@@ -438,6 +438,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|createFtpUser
 parameter_list|(
@@ -1083,6 +1084,7 @@ parameter_list|(
 name|dialogMenuItem
 modifier|*
 name|self
+name|__unused
 parameter_list|)
 block|{
 name|int
