@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.13 (Berkeley) %G%"
+literal|"@(#)function.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -92,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -635,15 +641,11 @@ specifier|register
 name|int
 name|cnt
 decl_stmt|;
-name|union
-name|wait
-name|pstat
-decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|,
-name|waitpid
-argument_list|()
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 name|void
 name|brace_subst
@@ -734,19 +736,11 @@ case|case
 operator|-
 literal|1
 case|:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+literal|"fork"
 argument_list|,
-literal|"find: fork: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -772,15 +766,8 @@ operator|->
 name|e_argv
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: %s: %s.\n"
-argument_list|,
 name|plan
 operator|->
 name|e_argv
@@ -788,10 +775,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|strerror
-argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -808,7 +792,7 @@ argument_list|(
 name|pid
 argument_list|,
 operator|&
-name|pstat
+name|status
 argument_list|,
 literal|0
 argument_list|)
@@ -820,10 +804,16 @@ operator|!=
 operator|-
 literal|1
 operator|&&
+name|WIFEXITED
+argument_list|(
+name|status
+argument_list|)
+operator|&&
 operator|!
-name|pstat
-operator|.
-name|w_status
+name|WEXITSTATUS
+argument_list|(
+name|status
+argument_list|)
 operator|)
 return|;
 block|}
@@ -888,8 +878,6 @@ operator||=
 name|FTS_NOCHDIR
 expr_stmt|;
 name|isoutput
-operator|=
-name|isstopdnx
 operator|=
 literal|1
 expr_stmt|;
@@ -1379,23 +1367,13 @@ name|sb
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: %s: %s.\n"
-argument_list|,
 name|entry
 operator|->
 name|fts_accpath
 argument_list|,
-name|strerror
-argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2277,21 +2255,11 @@ name|sb
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: %s: %s.\n"
-argument_list|,
 name|filename
 argument_list|,
-name|strerror
-argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2607,10 +2575,6 @@ decl_stmt|;
 name|mode_t
 modifier|*
 name|set
-decl_stmt|,
-modifier|*
-name|setmode
-argument_list|()
 decl_stmt|;
 name|void
 name|bad_arg
@@ -2817,23 +2781,13 @@ name|FTS_SKIP
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: %s: %s.\n"
-argument_list|,
 name|entry
 operator|->
 name|fts_path
 argument_list|,
-name|strerror
-argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
