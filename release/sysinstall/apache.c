@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|APACHE_PACKAGE
-value|"apache-0.8.14"
+value|"apache-1.0.0"
 end_define
 
 begin_define
@@ -93,6 +93,34 @@ end_define
 begin_comment
 comment|/* These change if the package uses different defaults */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_USER
+value|"guest"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_GROUP
+value|"guest"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WELCOME_FILE
+value|"index.html"
+end_define
+
+begin_define
+define|#
+directive|define
+name|USER_HOMEDIR
+value|"public_html"
+end_define
 
 begin_define
 define|#
@@ -112,7 +140,28 @@ begin_define
 define|#
 directive|define
 name|CONFIG_SUBDIR
-value|"config"
+value|"server/conf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOGS_SUBDIR
+value|"/var/log"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACCESS_LOGNAME
+value|"httpd.access"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERROR_LOGNAME
+value|"httpd.error"
 end_define
 
 begin_comment
@@ -163,26 +212,40 @@ index|]
 decl_stmt|;
 comment|/* ServerName */
 name|char
-name|user
+name|logdir
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Where to put Logs */
+name|char
+name|accesslog
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* User */
+comment|/* access_log */
 name|char
-name|group
+name|errorlog
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* Group */
+comment|/* error_log */
 name|char
-name|maxcon
+name|defuser
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
-comment|/* Max Connections */
+comment|/* default user id */
+name|char
+name|defgroup
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* default group id */
 block|}
 name|ApacheConf
 typedef|;
@@ -233,22 +296,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|APACHE_USER_LEN
+name|APACHE_LOGDIR_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|APACHE_ACCESSLOG_LEN
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|APACHE_GROUP_LEN
+name|APACHE_ERRORLOG_LEN
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|APACHE_MAXCON_LEN
-value|8
+name|APACHE_DEFUSER_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|APACHE_DEFGROUP_LEN
+value|16
 end_define
 
 begin_decl_stmt
@@ -275,14 +352,14 @@ begin_define
 define|#
 directive|define
 name|APACHE_DIALOG_X
-value|8
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|APACHE_DIALOG_WIDTH
-value|COLS - 16
+value|COLS
 end_define
 
 begin_define
@@ -357,7 +434,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|24
+literal|30
 block|,
 name|HOSTNAME_FIELD_LEN
 operator|-
@@ -383,9 +460,9 @@ value|0
 block|{
 literal|1
 block|,
-literal|30
+literal|40
 block|,
-literal|30
+literal|32
 block|,
 name|APACHE_EMAIL_LEN
 operator|-
@@ -411,21 +488,21 @@ value|1
 block|{
 literal|5
 block|,
-literal|3
+literal|5
 block|,
-literal|15
+literal|20
 block|,
-name|APACHE_USER_LEN
+name|APACHE_WELCOME_LEN
 operator|-
 literal|1
 block|,
-literal|"Default User:"
+literal|"Default Document:"
 block|,
-literal|"Default username for access to web pages"
+literal|"The name of the default document found in each directory"
 block|,
 name|tconf
 operator|.
-name|user
+name|welcome
 block|,
 name|STRINGOBJ
 block|,
@@ -434,26 +511,26 @@ block|}
 block|,
 define|#
 directive|define
-name|LAYOUT_USER
+name|LAYOUT_WELCOME
 value|2
 block|{
 literal|5
 block|,
-literal|22
+literal|40
 block|,
-literal|15
+literal|14
 block|,
-name|APACHE_GROUP_LEN
+name|APACHE_DEFUSER_LEN
 operator|-
 literal|1
 block|,
-literal|"Default Group:"
+literal|"Default UserID:"
 block|,
-literal|"Default group name for access to web pages"
+literal|"Default UID for access to web pages"
 block|,
 name|tconf
 operator|.
-name|group
+name|defuser
 block|,
 name|STRINGOBJ
 block|,
@@ -462,26 +539,26 @@ block|}
 block|,
 define|#
 directive|define
-name|LAYOUT_GROUP
+name|LAYOUT_DEFUSER
 value|3
 block|{
 literal|5
 block|,
-literal|46
+literal|60
 block|,
-literal|13
+literal|14
 block|,
-name|APACHE_MAXCON_LEN
+name|APACHE_DEFGROUP_LEN
 operator|-
 literal|1
 block|,
-literal|"Max Connect:"
+literal|"Default Group ID:"
 block|,
-literal|"Maximum number of concurrent http connections"
+literal|"Default GID for access to web pages"
 block|,
 name|tconf
 operator|.
-name|maxcon
+name|defgroup
 block|,
 name|STRINGOBJ
 block|,
@@ -490,14 +567,14 @@ block|}
 block|,
 define|#
 directive|define
-name|LAYOUT_MAXCON
+name|LAYOUT_DEFGROUP
 value|4
 block|{
 literal|10
 block|,
-literal|10
+literal|4
 block|,
-literal|43
+literal|36
 block|,
 name|APACHE_DOCROOT_LEN
 operator|-
@@ -521,11 +598,11 @@ directive|define
 name|LAYOUT_DOCROOT
 value|5
 block|{
-literal|14
-block|,
 literal|10
 block|,
-literal|18
+literal|50
+block|,
+literal|14
 block|,
 name|APACHE_USERDIR_LEN
 operator|-
@@ -551,21 +628,21 @@ value|6
 block|{
 literal|14
 block|,
-literal|35
+literal|4
 block|,
-literal|18
+literal|28
 block|,
-name|APACHE_WELCOME_LEN
+name|APACHE_LOGDIR_LEN
 operator|-
 literal|1
 block|,
-literal|"Default Document:"
+literal|"Log Dir:"
 block|,
-literal|"The name of the default document found in each directory"
+literal|"Directory to put httpd log files"
 block|,
 name|tconf
 operator|.
-name|welcome
+name|logdir
 block|,
 name|STRINGOBJ
 block|,
@@ -574,8 +651,64 @@ block|}
 block|,
 define|#
 directive|define
-name|LAYOUT_WELCOME
+name|LAYOUT_LOGDIR
 value|7
+block|{
+literal|14
+block|,
+literal|38
+block|,
+literal|16
+block|,
+name|APACHE_ACCESSLOG_LEN
+operator|-
+literal|1
+block|,
+literal|"Access Log:"
+block|,
+literal|"Name of log file to report access"
+block|,
+name|tconf
+operator|.
+name|accesslog
+block|,
+name|STRINGOBJ
+block|,
+name|NULL
+block|}
+block|,
+define|#
+directive|define
+name|LAYOUT_ACCESSLOG
+value|8
+block|{
+literal|14
+block|,
+literal|60
+block|,
+literal|16
+block|,
+name|APACHE_ERRORLOG_LEN
+operator|-
+literal|1
+block|,
+literal|"Error Log:"
+block|,
+literal|"Name of log file to report errors"
+block|,
+name|tconf
+operator|.
+name|errorlog
+block|,
+name|STRINGOBJ
+block|,
+name|NULL
+block|}
+block|,
+define|#
+directive|define
+name|LAYOUT_ERRORLOG
+value|9
 block|{
 literal|19
 block|,
@@ -600,11 +733,11 @@ block|,
 define|#
 directive|define
 name|LAYOUT_OKBUTTON
-value|8
+value|10
 block|{
 literal|19
 block|,
-literal|35
+literal|45
 block|,
 literal|0
 block|,
@@ -625,7 +758,7 @@ block|,
 define|#
 directive|define
 name|LAYOUT_CANCELBUTTON
-value|9
+value|11
 block|{
 name|NULL
 block|}
@@ -885,7 +1018,7 @@ literal|9
 argument_list|,
 name|APACHE_DIALOG_X
 operator|+
-literal|8
+literal|1
 argument_list|,
 name|APACHE_DIALOG_HEIGHT
 operator|-
@@ -893,7 +1026,7 @@ literal|13
 argument_list|,
 name|APACHE_DIALOG_WIDTH
 operator|-
-literal|17
+literal|2
 argument_list|,
 name|dialog_attr
 argument_list|,
@@ -980,18 +1113,18 @@ name|strcpy
 argument_list|(
 name|tconf
 operator|.
-name|user
+name|defuser
 argument_list|,
-literal|"guest"
+name|DEFAULT_USER
 argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
 name|tconf
 operator|.
-name|group
+name|defgroup
 argument_list|,
-literal|"guest"
+name|DEFAULT_GROUP
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1000,7 +1133,7 @@ name|tconf
 operator|.
 name|userdir
 argument_list|,
-literal|"public_html"
+name|USER_HOMEDIR
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1009,16 +1142,34 @@ name|tconf
 operator|.
 name|welcome
 argument_list|,
-literal|"index.html"
+name|WELCOME_FILE
 argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
 name|tconf
 operator|.
-name|maxcon
+name|logdir
 argument_list|,
-literal|"150"
+name|LOGS_SUBDIR
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|tconf
+operator|.
+name|accesslog
+argument_list|,
+name|ACCESS_LOGNAME
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|tconf
+operator|.
+name|errorlog
+argument_list|,
+name|ERROR_LOGNAME
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -1573,8 +1724,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|maxcon
 decl_stmt|;
 name|char
 name|company
@@ -1668,31 +1817,12 @@ name|i
 return|;
 block|}
 comment|/*** Fix defaults for invalid value ***/
-name|maxcon
-operator|=
-name|atoi
-argument_list|(
-name|tconf
-operator|.
-name|maxcon
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|maxcon
-operator|<=
-literal|0
-condition|)
-name|maxcon
-operator|=
-literal|150
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|tconf
 operator|.
-name|group
+name|logdir
 index|[
 literal|0
 index|]
@@ -1701,9 +1831,9 @@ name|strcpy
 argument_list|(
 name|tconf
 operator|.
-name|group
+name|logdir
 argument_list|,
-literal|"guest"
+name|LOGS_SUBDIR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1711,7 +1841,7 @@ condition|(
 operator|!
 name|tconf
 operator|.
-name|user
+name|accesslog
 index|[
 literal|0
 index|]
@@ -1720,9 +1850,28 @@ name|strcpy
 argument_list|(
 name|tconf
 operator|.
-name|user
+name|accesslog
 argument_list|,
-literal|"nobody"
+name|ACCESS_LOGNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tconf
+operator|.
+name|errorlog
+index|[
+literal|0
+index|]
+condition|)
+name|strcpy
+argument_list|(
+name|tconf
+operator|.
+name|errorlog
+argument_list|,
+name|ERROR_LOGNAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -1741,7 +1890,7 @@ name|tconf
 operator|.
 name|welcome
 argument_list|,
-literal|"index.html"
+name|WELCOME_FILE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1760,7 +1909,45 @@ name|tconf
 operator|.
 name|userdir
 argument_list|,
-literal|"public_html"
+name|USER_HOMEDIR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tconf
+operator|.
+name|defuser
+index|[
+literal|0
+index|]
+condition|)
+name|strcpy
+argument_list|(
+name|tconf
+operator|.
+name|defuser
+argument_list|,
+name|DEFAULT_USER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tconf
+operator|.
+name|defgroup
+index|[
+literal|0
+index|]
+condition|)
+name|strcpy
+argument_list|(
+name|tconf
+operator|.
+name|defgroup
+argument_list|,
+name|DEFAULT_GROUP
 argument_list|)
 expr_stmt|;
 comment|/*** If the user did not specify a directory, use default ***/
@@ -1855,11 +2042,15 @@ name|sprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%s/index.html"
+literal|"%s/%s"
 argument_list|,
 name|tconf
 operator|.
 name|docroot
+argument_list|,
+name|tconf
+operator|.
+name|welcome
 argument_list|)
 expr_stmt|;
 if|if
@@ -1887,10 +2078,10 @@ if|if
 condition|(
 name|tptr
 operator|&&
-name|strlen
-argument_list|(
 name|tptr
-argument_list|)
+index|[
+literal|0
+index|]
 condition|)
 name|strcpy
 argument_list|(
@@ -2121,9 +2312,11 @@ name|void
 operator|)
 name|vsystem
 argument_list|(
-literal|"mkdir -p %s/config"
+literal|"mkdir -p %s/%s"
 argument_list|,
 name|APACHE_BASE
+argument_list|,
+name|CONFIG_SUBDIR
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -2180,7 +2373,21 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"Options Indexes FollowSymLinks\n</Directory>\n\n"
+literal|"Options Indexes FollowSymLinks\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"</Directory>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2198,14 +2405,28 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"Options Indexes FollowSymLinks\nAllowOverride All\n"
+literal|"Options Indexes FollowSymLinks\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"</Directory>\n\n"
+literal|"AllowOverride All\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"</Directory>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -2276,52 +2497,135 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"ServerType standalone\nPort 80\nTimeOut 400\n"
+literal|"ServerType standalone\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"ErrorLog logs/error_log\nTransferLog logs/access_log\n"
+literal|"Port 80\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"PidFile /var/run/httpd.pid\n\nStartServers 5\n"
+literal|"TimeOut 400\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"MinSpareServers 5\nMaxSpareServers 10\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"MaxRequestsPerChild 30\nMaxClients %d\n\n"
+literal|"ErrorLog %s/%s\n"
 argument_list|,
-name|maxcon
+name|LOGS_SUBDIR
+argument_list|,
+name|ERROR_LOGNAME
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"User %s\nGroup %s\n\n"
+literal|"TransferLog %s/%s\n"
+argument_list|,
+name|LOGS_SUBDIR
+argument_list|,
+name|ACCESS_LOGNAME
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"PidFile /var/run/httpd.pid\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"StartServers 5\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"MinSpareServers 5\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"MaxSpareServers 10\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"MaxRequestsPerChild 30\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"MaxClients 150\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"User %s\n"
 argument_list|,
 name|tconf
 operator|.
-name|user
+name|defuser
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"Group %s\n"
 argument_list|,
 name|tconf
 operator|.
-name|group
+name|defgroup
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2432,7 +2736,14 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"FancyIndexing on\nDefaultType text/plain\n"
+literal|"FancyIndexing on\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"DefaultType text/plain\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2446,28 +2757,56 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"HeaderName HEADER\nReadmeName README\n"
+literal|"HeaderName HEADER\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"AccessFileName .htaccess\n\n"
+literal|"ReadmeName README\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"AddEncoding x-compress Z\nAddEncoding x-gzip gz\n"
+literal|"AccessFileName .htaccess\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"DefaultIcon /icons/unknown.gif\n\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"AddEncoding x-compress Z\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"AddEncoding x-gzip gz\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"DefaultIcon /icons/unknown.gif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2502,7 +2841,14 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"AddIconByType (VID,/icons/movie.gif) video/*\n\n"
+literal|"AddIconByType (VID,/icons/movie.gif) video/*\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2572,7 +2918,14 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"AddIcon /icons/blank.gif ^^BLANKICON^^\n\n"
+literal|"AddIcon /icons/blank.gif ^^BLANKICON^^\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2608,15 +2961,29 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"UserDir %s\nDirectoryIndex %s\n\n"
+literal|"UserDir %s\n"
 argument_list|,
 name|tconf
 operator|.
 name|userdir
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"DirectoryIndex %s\n"
 argument_list|,
 name|tconf
 operator|.
 name|welcome
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fptr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fclose
