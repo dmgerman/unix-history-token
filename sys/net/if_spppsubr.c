@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.18 1997/05/11 10:04:24 joerg Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.19 1997/05/19 22:03:09 joerg Exp $  */
 end_comment
 
 begin_include
@@ -209,29 +209,29 @@ comment|/* max. alive packets */
 end_comment
 
 begin_comment
-comment|/*  * Interface flags that can be set in an ifconfig command.  *  * Setting link0 will cause the link to auto-dial only as packets  * arrive to be sent.  *  * Setting link1 will make the link passive, i.e. it will be marked  * as being administrative openable, but won't be opened to begin  * with.  Incoming calls will be answered, or subsequent calls with  * -link1 will cause the administrative open of the LCP layer.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFF_AUTO
-value|IFF_LINK0
-end_define
-
-begin_comment
-comment|/* auto-dial on output */
+comment|/*  * Interface flags that can be set in an ifconfig command.  *  * Setting link0 will make the link passive, i.e. it will be marked  * as being administrative openable, but won't be opened to begin  * with.  Incoming calls will be answered, or subsequent calls with  * -link1 will cause the administrative open of the LCP layer.  *  * Setting link1 will cause the link to auto-dial only as packets  * arrive to be sent.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IFF_PASSIVE
-value|IFF_LINK1
+value|IFF_LINK0
 end_define
 
 begin_comment
 comment|/* wait passively for connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_AUTO
+value|IFF_LINK1
+end_define
+
+begin_comment
+comment|/* auto-dial on output */
 end_comment
 
 begin_define
@@ -2855,6 +2855,10 @@ name|ifq
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|rv
+init|=
+literal|0
 decl_stmt|;
 name|s
 operator|=
@@ -3214,18 +3218,9 @@ argument_list|(
 name|ETHERTYPE_IP
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sp
-operator|->
-name|state
-index|[
-name|IDX_IPCP
-index|]
-operator|==
-name|STATE_OPENED
-condition|)
+else|else
+block|{
+comment|/* 			 * Don't choke with an ENETDOWN early.  It's 			 * possible that we just started dialing out, 			 * so don't drop the packet immediately.  If 			 * we notice that we run out of buffer space 			 * below, we will however remember that we are 			 * not ready to carry IP packets, and return 			 * ENETDOWN, as opposed to ENOBUFS. 			 */
 name|h
 operator|->
 name|protocol
@@ -3235,28 +3230,21 @@ argument_list|(
 name|PPP_IP
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-operator|++
-name|ifp
+if|if
+condition|(
+name|sp
 operator|->
-name|if_oerrors
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|state
+index|[
+name|IDX_IPCP
+index|]
+operator|!=
+name|STATE_OPENED
+condition|)
+name|rv
+operator|=
 name|ENETDOWN
-operator|)
-return|;
+expr_stmt|;
 block|}
 break|break;
 endif|#
@@ -3407,6 +3395,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|rv
+condition|?
+name|rv
+else|:
 name|ENOBUFS
 operator|)
 return|;
