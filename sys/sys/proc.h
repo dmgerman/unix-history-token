@@ -3057,7 +3057,7 @@ name|SESSRELE
 parameter_list|(
 name|s
 parameter_list|)
-value|{							\ 	if (--(s)->s_count == 0)					\ 		FREE(s, M_SESSION);					\ }
+value|sessrele(s)
 end_define
 
 begin_define
@@ -4152,6 +4152,17 @@ name|cr
 parameter_list|,
 name|int
 name|level
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sessrele
+parameter_list|(
+name|struct
+name|session
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
