@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.11 81/10/30 */
+comment|/* tcp.h 1.12 81/11/03 */
 end_comment
 
 begin_comment
@@ -413,34 +413,41 @@ begin_define
 define|#
 directive|define
 name|TINIT
-value|1
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|TREXMT
-value|2
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|TREXMTTL
-value|3
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|TPERSIST
-value|4
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|TFINACK
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TNTIMERS
 value|5
 end_define
 

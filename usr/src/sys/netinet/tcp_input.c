@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.17 81/11/01 */
+comment|/* tcp_input.c 1.18 81/11/03 */
 end_comment
 
 begin_include
@@ -1379,7 +1379,7 @@ name|j
 condition|?
 name|TIME_WAIT
 else|:
-name|CLOSING1
+name|CLOSING
 expr_stmt|;
 comment|/* 28:26 */
 break|break;
@@ -1490,7 +1490,7 @@ goto|goto
 name|input
 goto|;
 case|case
-name|CLOSING1
+name|CLOSING
 case|:
 name|j
 operator|=
@@ -1598,7 +1598,7 @@ goto|goto
 name|input
 goto|;
 case|case
-name|CLOSING2
+name|LAST_ACK
 case|:
 if|if
 condition|(
