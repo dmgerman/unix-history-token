@@ -181,14 +181,11 @@ name|STATUS_ERROR
 value|3
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_if
 if|#
@@ -203,9 +200,9 @@ define|#
 directive|define
 name|IS_KERNPROC
 parameter_list|(
-name|xPtr
+name|kp
 parameter_list|)
-value|(xPtr->ki_flag& P_KTHREAD)
+value|((kp)->ki_flag& P_KTHREAD)
 end_define
 
 begin_endif
@@ -218,24 +215,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IS_KERNPROC
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|IS_KERNPROC
 parameter_list|(
-name|xPtr
+name|kp
 parameter_list|)
-value|(xPtr->ki_flag& P_SYSTEM)
+value|((kp)->ki_flag& P_SYSTEM)
 end_define
 
 begin_endif
