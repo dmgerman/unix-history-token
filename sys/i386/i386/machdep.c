@@ -4625,11 +4625,6 @@ argument_list|)
 decl_stmt|,
 name|IDTVEC
 argument_list|(
-name|rsvd14
-argument_list|)
-decl_stmt|,
-name|IDTVEC
-argument_list|(
 name|syscall
 argument_list|)
 decl_stmt|;
