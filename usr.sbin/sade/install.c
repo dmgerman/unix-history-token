@@ -2067,18 +2067,45 @@ condition|)
 block|{
 name|Device
 modifier|*
-name|save
-init|=
-name|mediaDevice
+name|tmp
 decl_stmt|;
-comment|/* This will also set the media device, which we don't want */
+name|tmp
+operator|=
 name|tcpDeviceSelect
 argument_list|()
 expr_stmt|;
-comment|/* so we restore our saved value below */
-name|mediaDevice
-operator|=
-name|save
+if|if
+condition|(
+name|tmp
+operator|&&
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to bring the %s interface up right now?"
+argument_list|,
+name|tmp
+operator|->
+name|name
+argument_list|)
+condition|)
+if|if
+condition|(
+operator|!
+name|tmp
+operator|->
+name|init
+argument_list|(
+name|tmp
+argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Initialization of %s device failed."
+argument_list|,
+name|tmp
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()

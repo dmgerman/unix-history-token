@@ -5220,7 +5220,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|Boolean
+name|Device
+modifier|*
 name|tcpDeviceSelect
 parameter_list|(
 name|void
