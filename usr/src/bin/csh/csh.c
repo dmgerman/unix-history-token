@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.2 (Berkeley) %G%"
+literal|"@(#)csh.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,28 @@ name|bool
 name|enterhist
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|gid_t
+name|getegid
+argument_list|()
+decl_stmt|,
+name|getgid
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|geteuid
+argument_list|()
+decl_stmt|,
+name|getuid
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
