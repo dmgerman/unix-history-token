@@ -38,7 +38,7 @@ file|"util.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Arguments:  *	l	affected list  *	ln	node after which to append the datum  *	d	said datum  *  * Side Effects:  *	A new LstNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Lst_Append  *	Create a new node and add it to the given list after the given node.  *  * Arguments:  *	l	affected list  *	ln	node after which to append the datum  *	d	said datum  *  * Side Effects:  *	A new LstNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  */
 end_comment
 
 begin_function
@@ -168,7 +168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Concat --  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Arguments:  *	list1	The list to which list2 is to be appended  *	list2	The list to append to list1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  *-----------------------------------------------------------------------  */
+comment|/**  * Lst_Concat  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Arguments:  *	list1	The list to which list2 is to be appended  *	list2	The list to append to list1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  */
 end_comment
 
 begin_function
@@ -218,7 +218,7 @@ operator|==
 name|LST_CONCLINK
 condition|)
 block|{
-comment|/* 	 * Link the first element of the second list to the last element of the 	 * first list. If the first list isn't empty, we then link the 	 * last element of the list to the first element of the second list 	 * The last element of the second list, if it exists, then becomes 	 * the last element of the first list. 	 */
+comment|/* 		 * Link the first element of the second list to the last 		 * element of the first list. If the first list isn't empty, 		 * we then link the last element of the list to the first 		 * element of the second list. The last element of the second 		 * list, if it exists, then becomes the last element of the 		 * first list. 		 */
 name|list2
 operator|->
 name|firstPtr
@@ -272,7 +272,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * The loop simply goes through the entire 	 * second list creating new LstNodes and filling in the nextPtr, and 	 * prevPtr to fit into list1 and its datum field from the 	 * datum field of the corresponding element in list2. The 'last' node 	 * follows the last of the new nodes along until the entire list2 has 	 * been appended. Only then does the bookkeeping catch up with the 	 * changes. During the first iteration of the loop, if 'last' is NULL, 	 * the first list must have been empty so the newly-created node is 	 * made the first node of the list. 	 */
+comment|/* 		 * The loop simply goes through the entire second list creating 		 * new LstNodes and filling in the nextPtr, and prevPtr to fit 		 * into list1 and its datum field from the datum field of the 		 * corresponding element in list2. The 'last' node follows the 		 * last of the new nodes along until the entire list2 has been 		 * appended. Only then does the bookkeeping catch up with the 		 * changes. During the first iteration of the loop, if 'last' 		 * is NULL, the first list must have been empty so the 		 * newly-created node is made the first node of the list. 		 */
 for|for
 control|(
 name|last
@@ -351,7 +351,7 @@ operator|=
 name|nln
 expr_stmt|;
 block|}
-comment|/* 	 * Finish bookkeeping. The last new element becomes the last element 	 * of list one. 	 */
+comment|/* 		 * Finish bookkeeping. The last new element becomes the last 		 * element of list one. 		 */
 name|list1
 operator|->
 name|lastPtr
@@ -369,7 +369,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_DeQueue --  *	Remove and return the datum at the head of the given list.  *  * Results:  *	The datum in the node at the head or (ick) NULL if the list  *	is empty.  *  * Side Effects:  *	The head node is removed from the list.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Lst_DeQueue  *	Remove and return the datum at the head of the given list.  *  * Results:  *	The datum in the node at the head or (ick) NULL if the list  *	is empty.  *  * Side Effects:  *	The head node is removed from the list.  */
 end_comment
 
 begin_function
@@ -432,7 +432,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Destroy --  *	Destroy a list and free all its resources. If the freeProc is  *	given, it is called with the datum from each node in turn before  *	the node is freed.  *  * Results:  *	None.  *  * Side Effects:  *	The given list is freed in its entirety.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Lst_Destroy  *	Destroy a list and free all its resources. If the freeProc is  *	given, it is called with the datum from each node in turn before  *	the node is freed.  *  * Side Effects:  *	The given list is freed in its entirety.  */
 end_comment
 
 begin_function
@@ -546,7 +546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Duplicate --  *	Duplicate an entire list. If a function to copy a void * is  *	given, the individual client elements will be duplicated as well.  *  * Arguments:  *	dst	the destination list (initialized)  *	src	the list to duplicate  *	copyProc A function to duplicate each void  *  *-----------------------------------------------------------------------  */
+comment|/**  * Lst_Duplicate  *	Duplicate an entire list. If a function to copy a void * is  *	given, the individual client elements will be duplicated as well.  *  * Arguments:  *	dst	the destination list (initialized)  *	src	the list to duplicate  *	copyProc A function to duplicate each void  */
 end_comment
 
 begin_function
@@ -625,7 +625,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Insert --  *	Insert a new node with the given piece of data before the given  *	node in the given list.  *  * Parameters:  *	l	list to manipulate  *	ln	node before which to insert d  *	d	datum to be inserted  *  * Side Effects:  *	the firstPtr field will be changed if ln is the first node in the  *	list.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Lst_Insert  *	Insert a new node with the given piece of data before the given  *	node in the given list.  *  * Parameters:  *	l	list to manipulate  *	ln	node before which to insert d  *	d	datum to be inserted  *  * Side Effects:  *	the firstPtr field will be changed if ln is the first node in the  *	list.  */
 end_comment
 
 begin_function
@@ -838,7 +838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Remove --  *	Remove the given node from the given list.  *  * Results:  *	SUCCESS or FAILURE.  *  * Side Effects:  *	The list's firstPtr will be set to NULL if ln is the last  *	node on the list. firsPtr and lastPtr will be altered if ln is  *	either the first or last node, respectively, on the list.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Lst_Remove  *	Remove the given node from the given list.  *  * Results:  *	SUCCESS or FAILURE.  *  * Side Effects:  *	The list's firstPtr will be set to NULL if ln is the last  *	node on the list. firsPtr and lastPtr will be altered if ln is  *	either the first or last node, respectively, on the list.  */
 end_comment
 
 begin_function
@@ -854,7 +854,7 @@ modifier|*
 name|ln
 parameter_list|)
 block|{
-comment|/*      * unlink it from the list      */
+comment|/* 	 * unlink it from the list 	 */
 if|if
 condition|(
 name|ln
@@ -913,7 +913,7 @@ name|ln
 operator|->
 name|nextPtr
 expr_stmt|;
-comment|/*      * note that the datum is unmolested. The caller must free it as      * necessary and as expected.      */
+comment|/* 	 * note that the datum is unmolested. The caller must free it as 	 * necessary and as expected. 	 */
 name|free
 argument_list|(
 name|ln
