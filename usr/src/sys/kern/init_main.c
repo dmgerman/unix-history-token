@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.37	82/09/06	*/
+comment|/*	init_main.c	4.38	82/09/12	*/
 end_comment
 
 begin_include
@@ -343,6 +343,29 @@ literal|512
 operator|*
 literal|1024
 expr_stmt|;
+name|u
+operator|.
+name|u_rlimit
+index|[
+name|RLIMIT_STACK
+index|]
+operator|.
+name|rlim_max
+operator|=
+name|ctob
+argument_list|(
+name|MAXDSIZ
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_rlimit
+index|[
+name|RLIMIT_DATA
+index|]
+operator|.
+name|rlim_max
+operator|=
 name|u
 operator|.
 name|u_rlimit
