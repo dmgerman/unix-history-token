@@ -3929,20 +3929,6 @@ literal|"nat port proto localaddr:port[-port] aliasport[-aliasport]"
 block|}
 block|,
 block|{
-literal|"pptp"
-block|,
-name|NULL
-block|,
-name|nat_Pptp
-block|,
-name|LOCAL_AUTH
-block|,
-literal|"Set the PPTP address"
-block|,
-literal|"nat pptp IP"
-block|}
-block|,
-block|{
 literal|"proxy"
 block|,
 name|NULL
