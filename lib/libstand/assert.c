@@ -36,7 +36,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|function
+name|func
 parameter_list|,
 specifier|const
 name|char
@@ -52,13 +52,31 @@ modifier|*
 name|expression
 parameter_list|)
 block|{
+if|if
+condition|(
+name|func
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"assertion (%s) failed: file %s:%d\n"
+argument_list|,
+name|expression
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"assertion (%s) failed: function %s(), file %s:%d\n"
 argument_list|,
 name|expression
 argument_list|,
-name|function
+name|func
 argument_list|,
 name|file
 argument_list|,

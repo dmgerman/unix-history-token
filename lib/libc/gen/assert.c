@@ -75,7 +75,7 @@ begin_function
 name|void
 name|__assert
 parameter_list|(
-name|function
+name|func
 parameter_list|,
 name|file
 parameter_list|,
@@ -86,7 +86,7 @@ parameter_list|)
 specifier|const
 name|char
 modifier|*
-name|function
+name|func
 decl_stmt|,
 decl|*
 name|file
@@ -109,6 +109,29 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|func
+operator|==
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"assertion (%s) failed: file %s:%d\n"
+argument_list|,
+name|failedexpr
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
@@ -120,7 +143,7 @@ literal|"assertion (%s) failed: function %s(), file %s:%d\n"
 argument_list|,
 name|failedexpr
 argument_list|,
-name|function
+name|func
 argument_list|,
 name|file
 argument_list|,
