@@ -220,28 +220,36 @@ name|conn_t
 modifier|*
 name|conn
 decl_stmt|;
+comment|/* connection */
 name|char
 modifier|*
 name|buf
 decl_stmt|;
+comment|/* chunk buffer */
 name|size_t
 name|b_size
 decl_stmt|;
+comment|/* size of chunk buffer */
 name|ssize_t
 name|b_len
 decl_stmt|;
+comment|/* amount of data currently in buffer */
 name|int
 name|b_pos
 decl_stmt|;
+comment|/* current read offset in buffer */
 name|int
 name|eof
 decl_stmt|;
+comment|/* end-of-file flag */
 name|int
 name|error
 decl_stmt|;
+comment|/* error flag */
 name|size_t
 name|chunksize
 decl_stmt|;
+comment|/* remaining size of current chunk */
 ifndef|#
 directive|ifndef
 name|NDEBUG
