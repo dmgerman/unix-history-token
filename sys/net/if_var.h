@@ -1125,7 +1125,11 @@ name|m
 operator|->
 name|m_flags
 operator|&
+operator|(
+name|M_BCAST
+operator||
 name|M_MCAST
+operator|)
 condition|)
 name|ifp
 operator|->
