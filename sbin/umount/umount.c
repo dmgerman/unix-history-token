@@ -236,10 +236,6 @@ name|checkmntlist
 parameter_list|(
 name|char
 modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -274,10 +270,6 @@ name|char
 modifier|*
 parameter_list|,
 name|mntwhat
-parameter_list|,
-name|char
-modifier|*
-modifier|*
 parameter_list|,
 name|dowhat
 parameter_list|)
@@ -850,8 +842,6 @@ name|NULL
 argument_list|,
 name|NOTHING
 argument_list|,
-name|NULL
-argument_list|,
 name|FREE
 argument_list|)
 expr_stmt|;
@@ -1132,9 +1122,6 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|type
-decl_stmt|,
-modifier|*
 name|hostp
 decl_stmt|,
 modifier|*
@@ -1168,9 +1155,6 @@ operator|=
 name|checkmntlist
 argument_list|(
 name|name
-argument_list|,
-operator|&
-name|type
 argument_list|)
 expr_stmt|;
 comment|/* 	 * 2. Remove trailing slashes if there are any. After that 	 * we look up the name in the mounttable again. 	 */
@@ -1227,9 +1211,6 @@ operator|=
 name|checkmntlist
 argument_list|(
 name|name
-argument_list|,
-operator|&
-name|type
 argument_list|)
 expr_stmt|;
 name|resolved
@@ -1417,9 +1398,6 @@ operator|=
 name|checkmntlist
 argument_list|(
 name|name
-argument_list|,
-operator|&
-name|type
 argument_list|)
 expr_stmt|;
 name|resolved
@@ -1464,9 +1442,6 @@ operator|=
 name|checkmntlist
 argument_list|(
 name|realname
-argument_list|,
-operator|&
-name|type
 argument_list|)
 expr_stmt|;
 name|resolved
@@ -1558,7 +1533,9 @@ if|if
 condition|(
 name|checkvfsname
 argument_list|(
-name|type
+name|sfs
+operator|->
+name|f_fstypename
 argument_list|,
 name|typelist
 argument_list|)
@@ -1584,9 +1561,6 @@ name|f_mntonname
 argument_list|,
 name|NOTHING
 argument_list|,
-operator|&
-name|type
-argument_list|,
 name|MARK
 argument_list|)
 expr_stmt|;
@@ -1607,7 +1581,9 @@ name|sfs
 operator|->
 name|f_fsid
 argument_list|,
-name|type
+name|sfs
+operator|->
+name|f_fstypename
 argument_list|)
 operator|)
 return|;
@@ -1816,9 +1792,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NOTHING
-argument_list|,
-operator|&
-name|type
 argument_list|,
 name|COUNT
 argument_list|)
@@ -2177,11 +2150,6 @@ parameter_list|,
 name|mntwhat
 name|what
 parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|type
-parameter_list|,
 name|dowhat
 name|mark
 parameter_list|)
@@ -2362,21 +2330,6 @@ index|]
 operator|!=
 literal|1
 condition|)
-block|{
-if|if
-condition|(
-name|type
-condition|)
-operator|*
-name|type
-operator|=
-name|mntbuf
-index|[
-name|i
-index|]
-operator|.
-name|f_fstypename
-expr_stmt|;
 return|return
 operator|(
 operator|&
@@ -2386,7 +2339,6 @@ name|i
 index|]
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -2985,11 +2937,6 @@ parameter_list|(
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|type
 parameter_list|)
 block|{
 name|struct
@@ -3006,8 +2953,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MNTON
-argument_list|,
-name|type
 argument_list|,
 name|NAME
 argument_list|)
@@ -3027,8 +2972,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MNTFROM
-argument_list|,
-name|type
 argument_list|,
 name|NAME
 argument_list|)
