@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	4.5 (Berkeley, from Melbourne) %G%"
+literal|"@(#)edquota.c	4.6 (Berkeley, from Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1811,17 +1811,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|setfsent
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-name|fs
-operator|=
-name|getfsent
-argument_list|()
-condition|)
-block|{
 name|struct
 name|stat
 name|statb
@@ -1833,6 +1822,30 @@ decl_stmt|;
 name|dev_t
 name|fsdev
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+specifier|static
+name|int
+name|warned
+init|=
+literal|0
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+name|setfsent
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|fs
+operator|=
+name|getfsent
+argument_list|()
+condition|)
+block|{
 if|if
 condition|(
 name|stat
@@ -1903,7 +1916,34 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|register
+if|if
+condition|(
+name|errno
+operator|==
+name|EINVAL
+operator|&&
+operator|!
+name|warned
+condition|)
+block|{
+name|warned
+operator|++
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: %s\n"
+argument_list|,
+literal|"Quotas are not compiled into this kernel"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
 name|fd
 operator|=
 name|open
