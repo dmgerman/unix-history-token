@@ -207,6 +207,14 @@ modifier|*
 name|ws
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|st
+decl_stmt|;
 specifier|const
 name|wchar_t
 modifier|*
@@ -223,6 +231,10 @@ name|wcp
 operator|=
 name|ws
 expr_stmt|;
+name|st
+operator|=
+name|initial
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -237,7 +249,8 @@ name|wcp
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+operator|&
+name|st
 argument_list|)
 operator|)
 operator|==
@@ -272,6 +285,10 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|st
+operator|=
+name|initial
+expr_stmt|;
 name|wcsrtombs
 argument_list|(
 name|mbs
@@ -283,7 +300,8 @@ name|len
 operator|+
 literal|1
 argument_list|,
-name|NULL
+operator|&
+name|st
 argument_list|)
 expr_stmt|;
 return|return

@@ -56,6 +56,14 @@ name|__restrict
 name|endptr
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|mbs
+decl_stmt|;
 name|double
 name|val
 decl_stmt|;
@@ -85,10 +93,14 @@ condition|)
 name|nptr
 operator|++
 expr_stmt|;
-comment|/* 	 * Convert the supplied numeric wide char. string to multibyte. 	 * 	 * We could attempt to find the end of the numeric portion of the 	 * wide char. string to avoid converting unneeded characters but 	 * choose not to bother; optimising the uncommon case where 	 * the input string contains a lot of text after the number 	 * duplicates a lot of strtod()'s functionality and slows down the 	 * most common cases. 	 * 	 * We pass NULL as the state pointer to wcrtomb() because we don't 	 * support state-dependent encodings and don't want to waste time 	 * creating a zeroed mbstate_t that will not be used. 	 */
+comment|/* 	 * Convert the supplied numeric wide char. string to multibyte. 	 * 	 * We could attempt to find the end of the numeric portion of the 	 * wide char. string to avoid converting unneeded characters but 	 * choose not to bother; optimising the uncommon case where 	 * the input string contains a lot of text after the number 	 * duplicates a lot of strtod()'s functionality and slows down the 	 * most common cases. 	 */
 name|wcp
 operator|=
 name|nptr
+expr_stmt|;
+name|mbs
+operator|=
+name|initial
 expr_stmt|;
 if|if
 condition|(
@@ -104,7 +116,8 @@ name|wcp
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 operator|)
 operator|==
@@ -156,6 +169,10 @@ operator|(
 literal|0.0
 operator|)
 return|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 name|wcsrtombs
 argument_list|(
 name|buf
@@ -167,7 +184,8 @@ name|len
 operator|+
 literal|1
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 comment|/* Let strtod() do most of the work for us. */
