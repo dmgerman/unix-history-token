@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.h	4.5	81/03/03	*/
+comment|/*	trap.h	4.6	81/03/03	*/
 end_comment
 
 begin_comment
 comment|/*  * Trap type values  */
+end_comment
+
+begin_comment
+comment|/* The first three constant values are known to the real world<signal.h> */
 end_comment
 
 begin_define
@@ -38,6 +42,10 @@ end_define
 
 begin_comment
 comment|/* reserved operand fault */
+end_comment
+
+begin_comment
+comment|/* End of known constants */
 end_comment
 
 begin_define
