@@ -35,14 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.6 (Berkeley) 5/14/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.6 (Berkeley) 5/14/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -832,7 +844,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%ld frags, %ld blocks, %.1f%% fragmentation)\n"
+literal|"(%d frags, %d blocks, %.1f%% fragmentation)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -846,18 +858,13 @@ name|fs_cstotal
 operator|.
 name|cs_nbfree
 argument_list|,
-call|(
-name|float
-call|)
-argument_list|(
 name|sblock
 operator|.
 name|fs_cstotal
 operator|.
 name|cs_nffree
 operator|*
-literal|100
-argument_list|)
+literal|100.0
 operator|/
 name|sblock
 operator|.
@@ -1025,41 +1032,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%ld frags, %ld blocks, %ld.%ld%% fragmentation)\n"
+literal|"(%d frags, %d blocks, %.1f%% fragmentation)\n"
 argument_list|,
 name|n_ffree
 argument_list|,
 name|n_bfree
 argument_list|,
-operator|(
 name|n_ffree
 operator|*
-literal|100
-operator|)
+literal|100.0
 operator|/
 name|sblock
 operator|.
 name|fs_dsize
-argument_list|,
-operator|(
-operator|(
-name|n_ffree
-operator|*
-literal|1000
-operator|+
-name|sblock
-operator|.
-name|fs_dsize
-operator|/
-literal|2
-operator|)
-operator|/
-name|sblock
-operator|.
-name|fs_dsize
-operator|)
-operator|%
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -1082,7 +1067,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"%ld files missing\n"
+literal|"%d files missing\n"
 argument_list|,
 name|n_files
 argument_list|)
@@ -1165,7 +1150,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"%ld blocks missing\n"
+literal|"%d blocks missing\n"
 argument_list|,
 name|n_blks
 argument_list|)
@@ -1198,7 +1183,7 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %ld,"
+literal|" %d,"
 argument_list|,
 name|dp
 operator|->
@@ -1239,7 +1224,7 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %lu,"
+literal|" %u,"
 argument_list|,
 name|zlnp
 operator|->
