@@ -2912,13 +2912,9 @@ expr_stmt|;
 comment|/* 	 * Open consumer if it wasn't opened and remember to close it. 	 */
 if|if
 condition|(
-operator|(
-name|disk
+name|cp
 operator|->
-name|d_flags
-operator|&
-name|G_MIRROR_DISK_FLAG_DIRTY
-operator|)
+name|acw
 operator|==
 literal|0
 condition|)
