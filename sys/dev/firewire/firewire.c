@@ -9869,19 +9869,12 @@ break|break;
 case|case
 name|FWXF_START
 case|:
-if|if
-condition|(
-name|firewire_debug
-condition|)
-name|printf
-argument_list|(
-literal|"not sent yet tl=%x\n"
-argument_list|,
-name|xfer
-operator|->
-name|tl
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (firewire_debug) 				printf("not sent yet tl=%x\n", xfer->tl);
+endif|#
+directive|endif
 break|break;
 default|default:
 name|printf

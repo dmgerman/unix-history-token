@@ -6871,15 +6871,12 @@ operator|==
 name|FWXF_RCVD
 condition|)
 block|{
-if|if
-condition|(
-name|firewire_debug
-condition|)
-name|printf
-argument_list|(
-literal|"already rcvd\n"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (firewire_debug) 					printf("already rcvd\n");
+endif|#
+directive|endif
 name|fw_xfer_done
 argument_list|(
 name|xfer
