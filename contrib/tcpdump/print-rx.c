@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.20 2001/01/10 08:12:01 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.20.2.1 2001/07/09 01:40:59 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3219,7 +3219,7 @@ name|STROUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ int i; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			i = (int) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			TCHECK2(bp[0], i); \ 			strncpy(s, (char *) bp, min(MAX, i)); \ 			s[i] = '\0'; \ 			printf(" \"%s\"", s); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
+value|{ unsigned int i; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			if (i> MAX) \ 				goto trunc; \ 			bp += sizeof(int32_t); \ 			printf(" \""); \ 			if (fn_printn(bp, i, snapend)) \ 				goto trunc; \ 			printf("\""); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
 end_define
 
 begin_define
@@ -3283,7 +3283,7 @@ name|VECOUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ char *sp; \ 			int k; \ 			TCHECK2(bp[0], MAX * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< MAX; k++) { \ 				*sp++ = (char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[MAX] = '\0'; \ 			printf(" \"%s\"", s); \ 		}
+value|{ char *sp; \ 			int k; \ 			TCHECK2(bp[0], MAX * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< MAX; k++) { \ 				*sp++ = (char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[MAX] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
 end_define
 
 begin_function
@@ -4565,9 +4565,19 @@ name|n
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" +{%s "
-argument_list|,
+literal|" +{"
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|user
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 name|ACLOUT
@@ -4636,9 +4646,19 @@ name|n
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" -{%s "
-argument_list|,
+literal|" -{"
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|user
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 name|ACLOUT
