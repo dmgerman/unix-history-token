@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.11 1995/05/11 06:10:54 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.12 1995/05/11 06:47:46 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -27,7 +27,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuLanguage
+name|MenuOptions
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuOptionsLanguage
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuOptionsFtp
 decl_stmt|;
 end_decl_stmt
 
@@ -91,13 +105,6 @@ begin_decl_stmt
 specifier|extern
 name|DMenu
 name|MenuXF86
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuInstallFtpOptions
 decl_stmt|;
 end_decl_stmt
 
@@ -165,11 +172,11 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Lang"
+literal|"Options"
 block|,
-literal|"Select natural language options."
+literal|"Select options for this utility."
 block|,
-comment|/* L */
+comment|/* O */
 name|DMENU_SUBMENU
 block|,
 operator|(
@@ -177,7 +184,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|MenuLanguage
+name|MenuOptions
 block|,
 literal|0
 block|,
@@ -361,7 +368,7 @@ end_comment
 
 begin_decl_stmt
 name|DMenu
-name|MenuLanguage
+name|MenuOptionsLanguage
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
@@ -2765,7 +2772,7 @@ end_comment
 
 begin_decl_stmt
 name|DMenu
-name|MenuInstallOptions
+name|MenuOptions
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
@@ -2791,13 +2798,31 @@ name|void
 operator|*
 operator|)
 operator|&
-name|MenuInstallFtpOptions
+name|MenuOptionsFtp
 block|,
 literal|0
 block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"Language"
+block|,
+literal|"Select your preferred language"
+block|,
+name|DMENU_SUBMENU
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|MenuOptionsLanguage
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|{
 literal|"NFS Secure"
 block|,
@@ -2972,7 +2997,7 @@ block|,
 literal|"Choose Installation Options"
 block|,
 comment|/* title */
-literal|"Before installation can continue, you need to specify a few items\n\ of information regarding the type of distribution you wish to have\n\ and from where you wish to install it.  There are also a number\n\ of options you can specify in the Options menu which will determine\n\ how .  If you do not wish to install FreeBSD at this time, you may\n\ select Cancel to leave this menu."
+literal|"Before installation can continue, you need to specify a few items\n\ of information regarding the type of distribution you wish to have\n\ and from where you wish to install it.  There are also a number\n\ of options you can specify in the Options menu which will determine\n\ how.  You may choose  install FreeBSD at this time, you may\n\ select Cancel to leave this menu."
 block|,
 literal|"You may also wish to read the install guide - press F1 to do so"
 block|,
@@ -2980,27 +3005,7 @@ literal|"install.hlp"
 block|,
 block|{
 block|{
-literal|"Media"
-block|,
-literal|"Choose Installation media type"
-block|,
-comment|/* M */
-name|DMENU_SUBMENU
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|MenuMedia
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Type"
+literal|"Distributions"
 block|,
 literal|"Choose the type of installation you want"
 block|,
@@ -3020,11 +3025,11 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Options"
+literal|"Media"
 block|,
-literal|"Specify installation options"
+literal|"Choose the installation media type"
 block|,
-comment|/* O */
+comment|/* M */
 name|DMENU_SUBMENU
 block|,
 operator|(
@@ -3032,7 +3037,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|MenuInstallOptions
+name|MenuMedia
 block|,
 literal|0
 block|,
@@ -3040,9 +3045,47 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Proceed"
+literal|"Partition"
 block|,
-literal|"Proceed with installation"
+literal|"Go to the Disk Partition Editor"
+block|,
+comment|/* P */
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|diskPartitionEditor
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Label"
+block|,
+literal|"Label the contents of disk partitions"
+block|,
+comment|/* L */
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|diskLabelEditor
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"GO!"
+block|,
+literal|"Start the whole show and go out for coffee!"
 block|,
 comment|/* P */
 name|DMENU_CANCEL
@@ -3052,6 +3095,26 @@ name|void
 operator|*
 operator|)
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Options"
+block|,
+literal|"Set special installation options"
+block|,
+comment|/* O */
+name|DMENU_SUBMENU
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|MenuOptions
 block|,
 literal|0
 block|,
