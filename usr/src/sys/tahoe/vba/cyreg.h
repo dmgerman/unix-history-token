@@ -1,11 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cyreg.h	7.3	87/01/11	*/
+comment|/*	cyreg.h	7.4	87/04/01	*/
 end_comment
 
 begin_comment
 comment|/*  * Tapemaster controller definitions.  */
 end_comment
+
+begin_comment
+comment|/*  * With 20-bit addressing, the intermediate buffer  * must be allocated early in startup().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CYMAXIO
+value|(32*NBPG)
+end_define
+
+begin_comment
+comment|/* max i/o size */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|cybuf
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* for byte swapping Multibus values */
