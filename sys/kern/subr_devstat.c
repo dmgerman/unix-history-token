@@ -731,16 +731,6 @@ name|bp
 operator|->
 name|bio_resid
 argument_list|,
-operator|(
-name|bp
-operator|->
-name|bio_flags
-operator|&
-name|BIO_ORDERED
-operator|)
-condition|?
-name|DEVSTAT_TAG_ORDERED
-else|:
 name|DEVSTAT_TAG_SIMPLE
 argument_list|,
 name|flg

@@ -280,16 +280,6 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|||
-operator|(
-name|bp
-operator|->
-name|bio_flags
-operator|&
-name|BIO_ORDERED
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|bioq_insert_tail

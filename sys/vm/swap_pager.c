@@ -5808,11 +5808,7 @@ name|nbp
 operator|->
 name|b_ioflags
 operator|=
-name|bp
-operator|->
-name|bio_flags
-operator|&
-name|BIO_ORDERED
+literal|0
 expr_stmt|;
 name|nbp
 operator|->

@@ -4838,13 +4838,6 @@ operator||
 name|B_NOWDRAIN
 operator|)
 expr_stmt|;
-name|bp
-operator|->
-name|b_ioflags
-operator|&=
-operator|~
-name|BIO_ORDERED
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5142,13 +5135,6 @@ name|B_AGE
 operator||
 name|B_RELBUF
 operator|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_ioflags
-operator|&=
-operator|~
-name|BIO_ORDERED
 expr_stmt|;
 if|if
 condition|(
