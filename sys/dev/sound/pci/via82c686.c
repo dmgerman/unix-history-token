@@ -2426,6 +2426,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -2443,15 +2445,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-name|bzero
-argument_list|(
-name|via
-argument_list|,
-sizeof|sizeof
-expr|*
-name|via
-argument_list|)
-expr_stmt|;
 comment|/* Get resources */
 name|data
 operator|=

@@ -3387,6 +3387,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -3404,17 +3406,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-name|bzero
-argument_list|(
-name|au
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|au
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|au
 operator|->
 name|unit
