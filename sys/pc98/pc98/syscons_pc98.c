@@ -678,7 +678,7 @@ name|values
 operator|->
 name|cursor_start
 operator|=
-literal|0
+literal|15
 expr_stmt|;
 name|values
 operator|->
