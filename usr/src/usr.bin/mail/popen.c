@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.6 (Berkeley) %G%"
+literal|"@(#)popen.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,12 +178,8 @@ block|{
 if|if
 condition|(
 operator|!
-name|strcmp
-argument_list|(
+operator|*
 name|shell
-argument_list|,
-literal|"none"
-argument_list|)
 condition|)
 name|doshell
 operator|=
@@ -193,7 +189,7 @@ block|}
 else|else
 name|shell
 operator|=
-literal|"/bin/csh"
+name|SHELL
 expr_stmt|;
 if|if
 condition|(
