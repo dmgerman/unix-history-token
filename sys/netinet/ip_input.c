@@ -982,6 +982,8 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2296,6 +2298,8 @@ operator|&&
 name|ip_dooptions
 argument_list|(
 name|m
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -2784,6 +2788,44 @@ directive|endif
 return|return;
 name|ours
 label|:
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+comment|/* 	 * IPSTEALTH: Process non-routing options only 	 * if the packet is destined for us. 	 */
+if|if
+condition|(
+name|ipstealth
+operator|&&
+name|hlen
+operator|>
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|&&
+name|ip_dooptions
+argument_list|(
+name|m
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+name|ip_fw_fwd_addr
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/* IPSTEALTH */
 comment|/* Count the packet in the ip address stats */
 if|if
 condition|(
@@ -4815,7 +4857,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do option processing on a datagram,  * possibly discarding it if bad options are encountered,  * or forwarding it if source-routed.  * Returns 1 if packet has been forwarded/freed,  * 0 if the packet should be processed further.  */
+comment|/*  * Do option processing on a datagram,  * possibly discarding it if bad options are encountered,  * or forwarding it if source-routed.  * The pass argument is used when operating in the IPSTEALTH  * mode to tell what options to process:  * [LS]SRR (pass 0) or the others (pass 1).  * The reason for as many as two passes is that when doing IPSTEALTH,  * non-routing options should be processed only if the packet is for us.  * Returns 1 if packet has been forwarded/freed,  * 0 if the packet should be processed further.  */
 end_comment
 
 begin_function
@@ -4824,11 +4866,16 @@ name|int
 name|ip_dooptions
 parameter_list|(
 name|m
+parameter_list|,
+name|pass
 parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|;
+name|int
+name|pass
 decl_stmt|;
 block|{
 specifier|register
@@ -5053,6 +5100,20 @@ case|:
 case|case
 name|IPOPT_SSRR
 case|:
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+if|if
+condition|(
+name|ipstealth
+operator|&&
+name|pass
+operator|>
+literal|0
+condition|)
+break|break;
+endif|#
+directive|endif
 if|if
 condition|(
 name|optlen
@@ -5219,6 +5280,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+if|if
+condition|(
+name|ipstealth
+condition|)
+goto|goto
+name|dropit
+goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -5283,6 +5356,13 @@ block|}
 else|else
 block|{
 comment|/* 					 * Not acting as a router, so silently drop. 					 */
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+name|dropit
+label|:
+endif|#
+directive|endif
 name|ipstat
 operator|.
 name|ips_cantforward
@@ -5470,6 +5550,20 @@ break|break;
 case|case
 name|IPOPT_RR
 case|:
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+if|if
+condition|(
+name|ipstealth
+operator|&&
+name|pass
+operator|==
+literal|0
+condition|)
+break|break;
+endif|#
+directive|endif
 if|if
 condition|(
 name|optlen
@@ -5668,6 +5762,20 @@ break|break;
 case|case
 name|IPOPT_TS
 case|:
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+if|if
+condition|(
+name|ipstealth
+operator|&&
+name|pass
+operator|==
+literal|0
+condition|)
+break|break;
+endif|#
+directive|endif
 name|code
 operator|=
 name|cp
