@@ -1656,10 +1656,7 @@ expr_stmt|;
 if|if
 condition|(
 name|pflag
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 name|ttyfp
 operator|=
@@ -1711,7 +1708,6 @@ operator|!=
 literal|'y'
 condition|)
 return|return;
-block|}
 block|}
 else|else
 block|{
