@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.14 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -616,7 +616,7 @@ end_decl_stmt
 
 begin_function_decl
 name|u_long
-name|getw
+name|getword
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1100,7 +1100,7 @@ literal|0
 expr_stmt|;
 name|ninode
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -1135,7 +1135,7 @@ expr|struct
 name|inode
 operator|*
 operator|)
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -1576,7 +1576,7 @@ end_block
 
 begin_function
 name|u_long
-name|getw
+name|getword
 parameter_list|(
 name|loc
 parameter_list|)
@@ -1696,7 +1696,7 @@ literal|0
 expr_stmt|;
 name|ntext
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -1731,7 +1731,7 @@ expr|struct
 name|text
 operator|*
 operator|)
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -2130,7 +2130,7 @@ name|apte
 decl_stmt|;
 name|nproc
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -2165,7 +2165,7 @@ expr|struct
 name|proc
 operator|*
 operator|)
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -4767,7 +4767,7 @@ literal|0
 expr_stmt|;
 name|nfile
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -4802,7 +4802,7 @@ expr|struct
 name|file
 operator|*
 operator|)
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5242,7 +5242,7 @@ name|j
 decl_stmt|;
 name|nproc
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5254,7 +5254,7 @@ argument_list|)
 expr_stmt|;
 name|ntext
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5374,7 +5374,7 @@ expr_stmt|;
 block|}
 name|nswapmap
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5424,7 +5424,7 @@ expr_stmt|;
 block|}
 name|nswdev
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5516,7 +5516,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5554,7 +5554,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5592,7 +5592,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5644,7 +5644,7 @@ index|]
 expr_stmt|;
 name|dmmin
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -5656,7 +5656,7 @@ argument_list|)
 expr_stmt|;
 name|dmmax
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
@@ -6968,7 +6968,7 @@ name|NBPW
 expr_stmt|;
 name|addr
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nl
 index|[
