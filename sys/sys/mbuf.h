@@ -2119,6 +2119,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|m_append
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|c_caddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|m_cat
 parameter_list|(
