@@ -1762,6 +1762,7 @@ name|u_char
 name|kg_user_pri
 decl_stmt|;
 comment|/* (j) User pri from estcpu and nice. */
+name|signed
 name|char
 name|kg_nice
 decl_stmt|;

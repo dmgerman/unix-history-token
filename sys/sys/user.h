@@ -552,6 +552,7 @@ name|char
 name|ki_stat
 decl_stmt|;
 comment|/* S* process status */
+name|signed
 name|char
 name|ki_nice
 decl_stmt|;
