@@ -2386,6 +2386,11 @@ name|tbp
 argument_list|)
 expr_stmt|;
 block|}
+name|pbrelvp
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|relpbuf
 argument_list|(
 name|bp

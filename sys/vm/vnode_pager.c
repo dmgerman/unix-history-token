@@ -1848,6 +1848,11 @@ operator|=
 name|EIO
 expr_stmt|;
 comment|/* 			 * free the buffer header back to the swap buffer pool 			 */
+name|pbrelvp
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|relpbuf
 argument_list|(
 name|bp
@@ -3456,6 +3461,11 @@ name|count
 argument_list|)
 expr_stmt|;
 comment|/* 	 * free the buffer header back to the swap buffer pool 	 */
+name|pbrelvp
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|relpbuf
 argument_list|(
 name|bp
