@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.26	81/03/09	*/
+comment|/*	rk.c	4.27	81/03/09	*/
 end_comment
 
 begin_include
@@ -2178,12 +2178,6 @@ operator|&
 name|RKCS2_HARD
 condition|)
 block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
 name|harderr
 argument_list|(
 name|bp
@@ -2207,6 +2201,18 @@ name|er
 argument_list|,
 name|RKER_BITS
 argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|sc
+operator|->
+name|sc_recal
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
