@@ -3923,6 +3923,12 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|plex
+operator|->
+name|dev
+condition|)
 name|destroy_dev
 argument_list|(
 name|plex
@@ -4246,6 +4252,12 @@ index|[
 name|volno
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|vol
+operator|->
+name|dev
+condition|)
 name|destroy_dev
 argument_list|(
 name|vol
