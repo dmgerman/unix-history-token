@@ -135,6 +135,19 @@ directive|define
 name|IPV6CP_MYIFID_SEEN
 value|0x10
 comment|/* have seen his ifid already */
+define|#
+directive|define
+name|IPCP_VJ
+value|0x20
+comment|/* can use VJ compression */
+name|int
+name|max_state
+decl_stmt|;
+comment|/* VJ: Max-Slot-Id */
+name|int
+name|compress_cid
+decl_stmt|;
+comment|/* VJ: Comp-Slot-Id */
 block|}
 struct|;
 end_struct
@@ -335,6 +348,10 @@ name|IDX_COUNT
 index|]
 decl_stmt|;
 comment|/* negotiation failure counter */
+name|int
+name|enable_vj
+decl_stmt|;
+comment|/* VJ header compression enabled */
 name|struct
 name|callout_handle
 name|ch
@@ -373,6 +390,11 @@ name|sauth
 name|hisauth
 decl_stmt|;
 comment|/* auth params, i'm authenticator */
+name|struct
+name|slcompress
+name|pp_comp
+decl_stmt|;
+comment|/* for VJ compression */
 comment|/* 	 * These functions are filled in by sppp_attach(), and are 	 * expected to be used by the lower layer (hardware) drivers 	 * in order to communicate the (un)availability of the 	 * communication link.  Lower layer drivers that are always 	 * ready to communicate (like hardware HDLC) can shortcut 	 * pp_up from pp_tls, and pp_down from pp_tlf. 	 */
 name|void
 function_decl|(
