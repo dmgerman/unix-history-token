@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socketvar.h	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socketvar.h	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -436,24 +436,6 @@ name|struct
 name|socket
 modifier|*
 name|sonewconn
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|sbdrop
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|sbdroprecord
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -280,35 +280,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|max
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|unsigned
-name|min
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|memall
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|int
-name|uchar
-argument_list|()
-decl_stmt|,
-name|schar
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
