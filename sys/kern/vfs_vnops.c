@@ -4032,7 +4032,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Since we're just going to return, unlock interlock. 			 */
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4043,18 +4046,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|VI_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|error
-operator|=
-name|ENOENT
-expr_stmt|;
+operator|)
+return|;
 block|}
-else|else
-block|{
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS
@@ -4072,7 +4076,7 @@ name|line
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 			 * lockmgr drops interlock before it will return for 			 * any reason.  So force the code above to relock it. 			 */
+comment|/* 		 * lockmgr drops interlock before it will return for 		 * any reason.  So force the code above to relock it. 		 */
 name|error
 operator|=
 name|VOP_LOCK
@@ -4093,7 +4097,6 @@ operator|&=
 operator|~
 name|LK_INTERLOCK
 expr_stmt|;
-block|}
 block|}
 do|while
 condition|(
