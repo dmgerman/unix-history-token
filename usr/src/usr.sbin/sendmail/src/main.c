@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.126
+literal|3.127
 operator|%
 name|G
 operator|%
@@ -3079,7 +3079,7 @@ name|chmod
 argument_list|(
 name|p
 argument_list|,
-literal|0600
+name|FileMode
 argument_list|)
 expr_stmt|;
 block|}
@@ -4403,7 +4403,7 @@ name|creat
 argument_list|(
 name|xf
 argument_list|,
-literal|0600
+name|FileMode
 argument_list|)
 expr_stmt|;
 if|if

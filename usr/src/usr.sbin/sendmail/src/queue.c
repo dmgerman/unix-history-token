@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -185,7 +185,7 @@ name|chmod
 argument_list|(
 name|tf
 argument_list|,
-literal|0600
+name|FileMode
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -285,7 +285,7 @@ name|e
 operator|->
 name|e_df
 argument_list|,
-literal|0600
+name|FileMode
 argument_list|)
 expr_stmt|;
 call|(

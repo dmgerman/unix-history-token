@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.52
+literal|3.53
 operator|%
 name|G
 operator|%
@@ -138,7 +138,7 @@ name|CurEnv
 operator|->
 name|e_df
 argument_list|,
-literal|0600
+name|FileMode
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
