@@ -1457,6 +1457,21 @@ argument_list|)
 operator|<<
 literal|16
 operator|)
+operator||
+operator|(
+operator|(
+name|ATA_IDX_INB
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_DRIVE
+argument_list|)
+operator|&
+literal|0x0f
+operator|)
+operator|<<
+literal|24
+operator|)
 expr_stmt|;
 block|}
 comment|/* if we got an error we are done with the HW */
