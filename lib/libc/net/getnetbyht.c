@@ -32,6 +32,26 @@ literal|"@(#)getnetent.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|orig_rcsid
+index|[]
+init|=
+literal|"From: Id: getnetent.c,v 8.4 1997/06/01 20:34:37 vixie Exp"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|chat
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -259,7 +279,8 @@ name|fgets
 argument_list|(
 name|line
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+name|line
 argument_list|,
 name|netf
 argument_list|)

@@ -31,10 +31,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|orig_rcsid
+index|[]
+init|=
+literal|"From: Id: res_init.c,v 8.8 1997/06/01 20:34:37 vixie Exp"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: res_init.c,v 1.12 1997/02/22 15:00:32 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,7 +258,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXDNAME
 index|]
 decl_stmt|;
 name|int

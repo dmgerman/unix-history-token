@@ -34,7 +34,7 @@ name|char
 name|fromrcsid
 index|[]
 init|=
-literal|"From: Id: gethnamaddr.c,v 8.20 1996/09/28 06:51:07 vixie Exp"
+literal|"From: Id: gethnamaddr.c,v 8.21 1997/06/01 20:34:37 vixie Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbydns.c,v 1.20 1997/02/22 15:00:06 peter Exp $"
+literal|"$Id: gethostbydns.c,v 1.21 1997/03/12 11:02:00 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -720,6 +720,23 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* for the \0 */
+if|if
+condition|(
+name|n
+operator|>=
+name|MAXHOSTNAMELEN
+condition|)
+block|{
+name|h_errno
+operator|=
+name|NO_RECOVERY
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|host
 operator|.
 name|h_name
@@ -1010,6 +1027,18 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* for the \0 */
+if|if
+condition|(
+name|n
+operator|>=
+name|MAXHOSTNAMELEN
+condition|)
+block|{
+name|had_error
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 name|bp
 operator|+=
 name|n
@@ -1034,6 +1063,10 @@ condition|(
 name|n
 operator|>
 name|buflen
+operator|||
+name|n
+operator|>=
+name|MAXHOSTNAMELEN
 condition|)
 block|{
 name|had_error
@@ -1095,14 +1128,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|<
 literal|0
-operator|)
 operator|||
 operator|!
-name|res_hnok
+name|res_dnok
 argument_list|(
 name|tbuf
 argument_list|)
@@ -1133,6 +1164,10 @@ condition|(
 name|n
 operator|>
 name|buflen
+operator|||
+name|n
+operator|>=
+name|MAXHOSTNAMELEN
 condition|)
 block|{
 name|had_error
@@ -1339,6 +1374,18 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* for the \0 */
+if|if
+condition|(
+name|n
+operator|>=
+name|MAXHOSTNAMELEN
+condition|)
+block|{
+name|had_error
+operator|++
+expr_stmt|;
+break|break;
+block|}
 name|bp
 operator|+=
 name|n
@@ -1376,6 +1423,18 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* for the \0 */
+if|if
+condition|(
+name|n
+operator|>=
+name|MAXHOSTNAMELEN
+condition|)
+block|{
+name|had_error
+operator|++
+expr_stmt|;
+break|break;
+block|}
 name|bp
 operator|+=
 name|n
@@ -1701,9 +1760,13 @@ condition|(
 name|n
 operator|>
 name|buflen
+operator|||
+name|n
+operator|>=
+name|MAXHOSTNAMELEN
 condition|)
 goto|goto
-name|try_again
+name|no_recovery
 goto|;
 name|strcpy
 argument_list|(
@@ -1758,11 +1821,11 @@ name|host
 operator|)
 return|;
 block|}
-name|try_again
+name|no_recovery
 label|:
 name|h_errno
 operator|=
-name|TRY_AGAIN
+name|NO_RECOVERY
 expr_stmt|;
 return|return
 operator|(

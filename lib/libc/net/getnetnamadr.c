@@ -21,20 +21,10 @@ end_if
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)$Id$"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getnetnamadr.c,v 1.9 1997/02/22 15:00:12 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

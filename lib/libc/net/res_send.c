@@ -34,7 +34,7 @@ name|char
 name|orig_rcsid
 index|[]
 init|=
-literal|"From: Id: res_send.c,v 8.12 1996/10/08 04:51:06 vixie Exp"
+literal|"From: Id: res_send.c,v 8.13 1997/06/01 20:34:37 vixie Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.14 1997/03/10 19:32:46 guido Exp $"
+literal|"$Id: res_send.c,v 1.15 1997/03/12 11:10:54 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2414,26 +2414,15 @@ operator|>
 name|FD_SETSIZE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_DEBUG
-condition|)
-name|fprintf
+name|Perror
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_send: too many files\n"
+literal|"s+1> FD_SETSIZE"
+argument_list|,
+name|EMFILE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|res_close
 argument_list|()
 expr_stmt|;

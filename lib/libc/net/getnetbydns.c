@@ -38,7 +38,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getnetbydns.c,v 1.10 1997/02/22 15:00:10 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,9 +356,7 @@ index|]
 decl_stmt|,
 name|netbuf
 index|[
-name|BUFSIZ
-operator|+
-literal|1
+name|PACKETSZ
 index|]
 decl_stmt|;
 comment|/* 	 * find first satisfactory answer 	 * 	 *      answer --> +------------+  ( MESSAGE ) 	 *		   |   Header   | 	 *		   +------------+ 	 *		   |  Question  | the question for the name server 	 *		   +------------+ 	 *		   |   Answer   | RRs answering the question 	 *		   +------------+ 	 *		   | Authority  | RRs pointing toward an authority 	 *		   | Additional | RRs holding additional information 	 *		   +------------+ 	 */
