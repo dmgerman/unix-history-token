@@ -111,6 +111,8 @@ init|;
 name|i
 operator|<
 name|MAXTHR
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -135,6 +137,8 @@ expr_stmt|;
 name|ldt_entries
 index|[
 name|MAXTHR
+operator|-
+literal|1
 index|]
 operator|=
 name|NULL
