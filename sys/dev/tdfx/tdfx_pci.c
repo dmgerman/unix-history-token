@@ -3160,7 +3160,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"IOCTL'd by #%d, cmd: 0x%x, data: 0x%x\n"
+literal|"IOCTL'd by #%d, cmd: 0x%x, data: %p\n"
 argument_list|,
 name|td
 operator|->
@@ -3173,10 +3173,6 @@ name|u_int32_t
 operator|)
 name|cmd
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|piod
 argument_list|)
 expr_stmt|;
