@@ -11177,7 +11177,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"-mask requires -net"
+literal|"-mask requires -network"
 argument_list|)
 expr_stmt|;
 return|return
