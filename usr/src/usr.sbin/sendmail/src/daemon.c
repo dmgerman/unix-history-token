@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.4 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.5 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.4 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.5 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -628,6 +628,26 @@ argument_list|(
 name|host
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ETIMEDOUT
+condition|)
+block|{
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
+expr_stmt|;
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|hp
