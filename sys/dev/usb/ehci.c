@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ehci.c,v 1.46 2003/03/09 19:51:13 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.66 2004/06/30 03:11:56 mycroft Exp $  */
+comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.66 2004/06/30 03:11:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.67 2004/07/06 04:18:05 mycroft Exp $  *	$NetBSD: ehci.c,v 1.68 2004/07/09 05:07:06 mycroft Exp $  */
 end_comment
 
 begin_comment
@@ -2612,16 +2612,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|EOWRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|EHCI_USBSTS
-argument_list|,
-name|intrs
-argument_list|)
-expr_stmt|;
-comment|/* Acknowledge */
 name|eintrs
 operator|=
 name|intrs
@@ -2668,6 +2658,16 @@ operator|(
 literal|0
 operator|)
 return|;
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBSTS
+argument_list|,
+name|intrs
+argument_list|)
+expr_stmt|;
+comment|/* Acknowledge */
 name|sc
 operator|->
 name|sc_bus
@@ -10181,8 +10181,6 @@ endif|#
 directive|endif
 name|qtdstatus
 operator|=
-name|htole32
-argument_list|(
 name|EHCI_QTD_ACTIVE
 operator||
 name|EHCI_QTD_SET_PID
@@ -10200,7 +10198,6 @@ literal|3
 argument_list|)
 comment|/* IOC set below */
 comment|/* BYTES set below */
-argument_list|)
 expr_stmt|;
 name|mps
 operator|=
@@ -10615,10 +10612,10 @@ name|qtd
 operator|.
 name|qtd_status
 operator|=
-name|qtdstatus
-operator||
 name|htole32
 argument_list|(
+name|qtdstatus
+operator||
 name|EHCI_QTD_SET_BYTES
 argument_list|(
 name|curlen
