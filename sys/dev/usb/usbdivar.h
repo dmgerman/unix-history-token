@@ -559,7 +559,7 @@ name|__FreeBSD__
 argument_list|)
 name|struct
 name|callout_handle
-name|timo_handle
+name|timeout_handle
 decl_stmt|;
 endif|#
 directive|endif

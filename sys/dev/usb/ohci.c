@@ -4277,7 +4277,7 @@ name|reqh
 argument_list|,
 name|reqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -4687,7 +4687,7 @@ name|reqh
 argument_list|,
 name|reqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -5927,7 +5927,7 @@ argument_list|)
 argument_list|,
 name|reqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -10036,7 +10036,7 @@ argument_list|)
 argument_list|,
 name|reqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -10636,7 +10636,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (reqh->timeout&& !sc->sc_bus.use_polling) {                 usb_timeout(ohci_timeout, reqh, 			    MS_TO_TICKS(reqh->timeout), reqh->timo_handle); 	}
+block|if (reqh->timeout&& !sc->sc_bus.use_polling) {                 usb_timeout(ohci_timeout, reqh, 			    MS_TO_TICKS(reqh->timeout), reqh->timeout_handle); 	}
 endif|#
 directive|endif
 name|sed

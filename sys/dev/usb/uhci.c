@@ -285,7 +285,7 @@ modifier|*
 name|iinfo
 decl_stmt|;
 name|int
-name|newtoggle
+name|nexttoggle
 decl_stmt|;
 comment|/* Info needed for different pipe kinds. */
 union|union
@@ -2764,7 +2764,7 @@ name|sc_ival
 argument_list|,
 name|reqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -3926,7 +3926,7 @@ name|toggle
 operator|=
 name|upipe
 operator|->
-name|newtoggle
+name|nexttoggle
 expr_stmt|;
 name|uhci_ii_done
 argument_list|(
@@ -5667,7 +5667,7 @@ literal|1
 expr_stmt|;
 name|upipe
 operator|->
-name|newtoggle
+name|nexttoggle
 operator|=
 name|tog
 operator|^
@@ -5901,7 +5901,7 @@ name|toggle
 operator|,
 name|upipe
 operator|->
-name|newtoggle
+name|nexttoggle
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13253,7 +13253,7 @@ name|pipe
 operator|->
 name|intrreqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -13288,7 +13288,7 @@ name|reqh
 argument_list|,
 name|reqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -13515,7 +13515,7 @@ name|sc_ival
 argument_list|,
 name|reqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 return|return
@@ -13552,7 +13552,7 @@ name|pipe
 operator|->
 name|intrreqh
 operator|->
-name|timo_handle
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 name|DPRINTF

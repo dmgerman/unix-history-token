@@ -358,6 +358,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UCDC_CLEAR_COMM_FEATURE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|UCDC_ABSTRACT_STATE
 value|0x01
 end_define
@@ -367,13 +374,6 @@ define|#
 directive|define
 name|UCDC_COUNTRY_SETTING
 value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|UCDC_CLEAR_COMM_FEATURE
-value|0x04
 end_define
 
 begin_define

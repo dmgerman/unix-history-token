@@ -223,6 +223,10 @@ value|0x01
 end_define
 
 begin_comment
+comment|/* XXX broken, should not use the same value */
+end_comment
+
+begin_comment
 comment|/* Request flags */
 end_comment
 

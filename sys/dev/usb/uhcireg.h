@@ -605,9 +605,9 @@ define|#
 directive|define
 name|UHCI_TD_GET_DT
 parameter_list|(
-name|s
+name|t
 parameter_list|)
-value|(((s)>> 19)& 1)
+value|(((t)>> 19)& 1)
 define|#
 directive|define
 name|UHCI_TD_SET_MAXLEN
@@ -632,7 +632,7 @@ decl_stmt|;
 name|uhci_soft_td_qh_t
 name|link
 decl_stmt|;
-comment|/* soft version of the td_link field */
+comment|/* link to next TD (points to soft version of TD */
 comment|/* padding to 32 bytes */
 block|}
 name|uhci_td_t
