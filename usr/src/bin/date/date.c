@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.17 (Berkeley) %G%"
+literal|"@(#)date.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,12 @@ name|int
 name|uflag
 decl_stmt|,
 name|nflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|retval
 decl_stmt|;
 end_decl_stmt
 
@@ -376,8 +382,10 @@ operator|++
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 name|usage
 argument_list|)
 expr_stmt|;
@@ -401,8 +409,10 @@ operator|>
 literal|2
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 name|usage
 argument_list|)
 expr_stmt|;
@@ -429,10 +439,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"You are not superuser: date not set\n"
 argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|display
@@ -448,6 +464,11 @@ condition|(
 name|username
 operator|==
 name|NULL
+operator|||
+operator|*
+name|username
+operator|==
+literal|'\0'
 condition|)
 comment|/* single-user or no tty */
 name|username
@@ -478,10 +499,16 @@ name|gtime
 argument_list|()
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 name|usage
 argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|display
@@ -570,6 +597,10 @@ name|perror
 argument_list|(
 literal|"settimeofday"
 argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|display
@@ -761,6 +792,11 @@ argument_list|,
 name|ap
 operator|+
 literal|19
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|retval
 argument_list|)
 expr_stmt|;
 block|}
@@ -1298,7 +1334,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Set the date in the machines controlled by timedaemons  * by communicating the new date to the local timedaemon.   * If the timedaemon is in the master state, it performs the  * correction on all slaves.  If it is in the slave state, it  * notifies the master that a correction is needed.  */
+comment|/*  * Set the date in the machines controlled by timedaemons  * by communicating the new date to the local timedaemon.   * If the timedaemon is in the master state, it performs the  * correction on all slaves.  If it is in the slave state, it  * notifies the master that a correction is needed.  * Returns 1 on success, 0 on failure.  */
 end_comment
 
 begin_macro
@@ -1385,6 +1421,10 @@ name|stderr
 argument_list|,
 literal|"udp/timed: unknown service\n"
 argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|2
 expr_stmt|;
 return|return
 operator|(
@@ -2013,6 +2053,10 @@ name|close
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|2
 expr_stmt|;
 return|return
 operator|(
