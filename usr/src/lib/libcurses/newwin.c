@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	5.7 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,6 +262,13 @@ operator|&=
 operator|~
 name|__ISDIRTY
 expr_stmt|;
+name|lp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISPASTEOL
+expr_stmt|;
 for|for
 control|(
 name|sp
@@ -295,6 +302,8 @@ argument_list|(
 name|lp
 operator|->
 name|line
+argument_list|,
+name|nc
 argument_list|)
 expr_stmt|;
 block|}
