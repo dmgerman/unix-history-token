@@ -2010,7 +2010,7 @@ if|if
 condition|(
 name|id
 operator|==
-literal|0xffff
+literal|0xffffffff
 condition|)
 return|return
 operator|(
@@ -2083,7 +2083,7 @@ name|read_config
 argument_list|(
 name|bus
 argument_list|,
-literal|0
+literal|0x10
 argument_list|,
 name|func
 argument_list|,
@@ -2104,7 +2104,7 @@ name|read_config
 argument_list|(
 name|bus
 argument_list|,
-literal|0
+literal|0x10
 argument_list|,
 name|func
 argument_list|,
@@ -2127,7 +2127,7 @@ name|read_config
 argument_list|(
 name|bus
 argument_list|,
-literal|0
+literal|0x10
 argument_list|,
 name|func
 argument_list|,
@@ -2148,7 +2148,7 @@ name|read_config
 argument_list|(
 name|bus
 argument_list|,
-literal|0
+literal|0x10
 argument_list|,
 name|func
 argument_list|,
