@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mscp.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mscp.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1659,6 +1659,10 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+name|md
+operator|->
+name|md_lab
+condition|?
 operator|&
 name|md
 operator|->
@@ -1668,6 +1672,10 @@ name|ui
 operator|->
 name|ui_unit
 index|]
+else|:
+name|md
+operator|->
+name|md_lab
 argument_list|)
 expr_stmt|;
 name|mscp_printevent
