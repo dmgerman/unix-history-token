@@ -2619,6 +2619,11 @@ name|pgrp
 modifier|*
 name|pg
 decl_stmt|;
+name|SIGIO_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|sigio
 operator|=
 name|SLIST_FIRST
@@ -2696,9 +2701,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SIGIO_LOCK
-argument_list|()
-expr_stmt|;
 operator|*
 operator|(
 name|sigio
@@ -2707,9 +2709,6 @@ name|sio_myref
 operator|)
 operator|=
 name|NULL
-expr_stmt|;
-name|SIGIO_UNLOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2763,6 +2762,9 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
+name|SIGIO_UNLOCK
+argument_list|()
+expr_stmt|;
 name|crfree
 argument_list|(
 name|sigio
@@ -2788,6 +2790,9 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|SIGIO_LOCK
+argument_list|()
 expr_stmt|;
 name|PGRP_LOCK
 argument_list|(
@@ -2843,6 +2848,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|SIGIO_UNLOCK
+argument_list|()
+expr_stmt|;
 name|crfree
 argument_list|(
 name|sigio
@@ -2868,6 +2876,9 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|SIGIO_LOCK
+argument_list|()
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(

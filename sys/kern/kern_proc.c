@@ -1947,6 +1947,9 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+name|SIGIO_LOCK
+argument_list|()
+expr_stmt|;
 name|PGRP_LOCK
 argument_list|(
 name|pgrp
@@ -1960,6 +1963,9 @@ name|pgrp
 operator|->
 name|pg_sigiolst
 argument_list|)
+expr_stmt|;
+name|SIGIO_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
