@@ -1099,6 +1099,8 @@ condition|(
 name|status
 operator|<
 literal|0
+operator|&&
+name|debug
 condition|)
 block|{
 name|fprintf
@@ -1117,6 +1119,8 @@ condition|(
 name|status
 operator|==
 literal|0
+operator|&&
+name|debug
 condition|)
 block|{
 name|fprintf
