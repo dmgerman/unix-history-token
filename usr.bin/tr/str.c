@@ -820,7 +820,7 @@ block|,
 block|{
 literal|"print"
 block|,
-name|isupper
+name|isprint
 block|,  }
 block|,
 block|{
