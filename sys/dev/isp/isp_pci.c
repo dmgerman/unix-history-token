@@ -774,6 +774,17 @@ define|\
 value|((PCI_PRODUCT_QLOGIC_ISP2200<< 16) | PCI_VENDOR_QLOGIC)
 end_define
 
+begin_comment
+comment|/*  * Odd case for some AMI raid cards... We need to *not* attach to this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMI_RAID_SUBVENDOR_ID
+value|0x101e
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1040,6 +1051,22 @@ break|break;
 case|case
 name|PCI_QLOGIC_ISP12160
 case|:
+if|if
+condition|(
+name|pci_get_subvendor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|AMI_RAID_SUBVENDOR_ID
+condition|)
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|device_set_desc
 argument_list|(
 name|dev
