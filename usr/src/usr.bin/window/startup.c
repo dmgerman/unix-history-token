@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.4 83/08/25"
+literal|"@(#)startup.c	3.5 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,7 +190,7 @@ name|void
 operator|)
 name|wwputs
 argument_list|(
-literal|"Can't open default windows.  "
+literal|"\nCan't open default windows.  "
 argument_list|,
 name|cmdwin
 argument_list|)

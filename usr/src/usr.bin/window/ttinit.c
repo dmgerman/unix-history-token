@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttinit.c	3.5 83/08/15"
+literal|"@(#)ttinit.c	3.6 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,11 +207,18 @@ name|tt_name
 operator|==
 literal|0
 condition|)
+block|{
+name|wwerrno
+operator|=
+name|WWE_BADTERM
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
-return|return
+block|}
+if|if
+condition|(
 call|(
 modifier|*
 name|tp
@@ -219,6 +226,21 @@ operator|->
 name|tt_func
 call|)
 argument_list|()
+operator|<
+literal|0
+condition|)
+block|{
+name|wwerrno
+operator|=
+name|WWE_CANTDO
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|0
 return|;
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.5 83/08/25"
+literal|"@(#)lcmd1.c	3.6 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,12 +41,6 @@ name|pp
 init|=
 name|argv
 decl_stmt|;
-specifier|register
-name|struct
-name|ww
-modifier|*
-name|w
-decl_stmt|;
 name|int
 name|col
 decl_stmt|,
@@ -71,14 +65,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"Too many windows."
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|row
 operator|=
 operator|*
@@ -167,32 +154,12 @@ operator|*
 name|pp
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
+operator|(
+name|void
+operator|)
 name|openwin
 argument_list|(
 name|id
-argument_list|,
-name|row
-argument_list|,
-name|col
-argument_list|,
-name|nrow
-argument_list|,
-name|ncol
-argument_list|,
-name|nline
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|==
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"Can't open window: row %d col %d, %d rows %d cols %d lines."
 argument_list|,
 name|row
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.7 83/08/26"
+literal|"@(#)cmd.c	3.8 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -1236,9 +1236,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwlabel
 argument_list|(
 name|w
@@ -1304,9 +1301,6 @@ name|col
 operator|=
 literal|3
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwlabel
 argument_list|(
 name|w

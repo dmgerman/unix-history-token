@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.9 83/08/26"
+literal|"@(#)cmd2.c	3.10 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,15 +25,6 @@ include|#
 directive|include
 file|"defs.h"
 end_include
-
-begin_function_decl
-name|struct
-name|ww
-modifier|*
-name|openiwin
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_macro
 name|c_help
@@ -68,7 +59,10 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Can't open help window."
+literal|"Can't open help window: %s."
+argument_list|,
+name|wwerror
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return;
@@ -439,7 +433,10 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Can't open time window."
+literal|"Can't open time window: %s."
+argument_list|,
+name|wwerror
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return;
@@ -859,7 +856,10 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Can't open statistics window."
+literal|"Can't open statistics window: %s."
+argument_list|,
+name|wwerror
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return;
@@ -988,7 +988,10 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Can't open listing window."
+literal|"Can't open listing window: %s."
+argument_list|,
+name|wwerror
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return;

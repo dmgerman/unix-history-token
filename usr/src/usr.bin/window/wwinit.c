@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.8 83/08/19"
+literal|"@(#)wwinit.c	3.9 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,9 +221,15 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|wwerrno
+operator|=
+name|WWE_BADTERM
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 if|if
 condition|(
 name|tgetent
@@ -235,9 +241,15 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
+block|{
+name|wwerrno
+operator|=
+name|WWE_BADTERM
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|wwbaud
 operator|=
 name|wwbaudmap
@@ -527,9 +539,15 @@ name|wwtouched
 operator|==
 literal|0
 condition|)
+block|{
+name|wwerrno
+operator|=
+name|WWE_NOMEM
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 for|for
 control|(
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.10 83/08/19	  */
+comment|/*  *	@(#)ww.h	3.11 83/08/26	  */
 end_comment
 
 begin_include
@@ -530,6 +530,90 @@ name|WWX_NOBODY
 value|NWW
 end_define
 
+begin_define
+define|#
+directive|define
+name|WWE_NOERR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWE_SYS
+value|1
+end_define
+
+begin_comment
+comment|/* system error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWE_NOMEM
+value|2
+end_define
+
+begin_comment
+comment|/* out of memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWE_TOOMANY
+value|3
+end_define
+
+begin_comment
+comment|/* too many windows */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWE_NOPTY
+value|4
+end_define
+
+begin_comment
+comment|/* no more ptys */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWE_SIZE
+value|5
+end_define
+
+begin_comment
+comment|/* bad window size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWE_BADTERM
+value|6
+end_define
+
+begin_comment
+comment|/* bad terminal type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWE_CANTDO
+value|7
+end_define
+
+begin_comment
+comment|/* dumb terminal */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|ww
@@ -765,6 +849,16 @@ begin_comment
 comment|/* where we want the cursor to be */
 end_comment
 
+begin_decl_stmt
+name|int
+name|wwerrno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* error number */
+end_comment
+
 begin_comment
 comment|/* statistics */
 end_comment
@@ -932,6 +1026,14 @@ name|char
 modifier|*
 modifier|*
 name|wwalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|wwerror
 parameter_list|()
 function_decl|;
 end_function_decl

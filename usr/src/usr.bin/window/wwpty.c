@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwpty.c	3.2 83/08/11"
+literal|"@(#)wwpty.c	3.3 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,10 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|wwerrno
+operator|=
+name|WWE_NOPTY
+expr_stmt|;
 return|return
 operator|-
 literal|1

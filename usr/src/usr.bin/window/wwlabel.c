@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwlabel.c	3.5 83/08/19"
+literal|"@(#)wwlabel.c	3.6 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,10 +115,7 @@ name|ww_fmap
 operator|==
 literal|0
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 name|i
 operator|=
 name|w
@@ -141,10 +138,7 @@ name|i
 operator|<
 literal|0
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 name|j
 operator|=
 name|w
@@ -402,9 +396,6 @@ name|WWF_LABEL
 expr_stmt|;
 block|}
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_block
 

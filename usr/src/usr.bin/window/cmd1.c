@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.8 83/08/26"
+literal|"@(#)cmd1.c	3.9 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,14 +56,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"Too many windows."
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 if|if
 condition|(
 operator|!
@@ -364,8 +357,9 @@ argument_list|(
 name|cmdwin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|openwin
 argument_list|(
 name|id
@@ -387,13 +381,6 @@ operator|+
 literal|1
 argument_list|,
 name|nbufline
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"Can't open window."
 argument_list|)
 expr_stmt|;
 block|}
@@ -430,15 +417,25 @@ name|i
 operator|++
 control|)
 empty_stmt|;
-return|return
+if|if
+condition|(
 name|i
-operator|<
+operator|>=
 name|NWINDOW
-condition|?
-name|i
-else|:
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Too many windows."
+argument_list|)
+expr_stmt|;
+return|return
 operator|-
 literal|1
+return|;
+block|}
+return|return
+name|i
 return|;
 block|}
 end_block
@@ -763,15 +760,6 @@ name|w
 decl_stmt|;
 if|if
 condition|(
-name|row
-operator|<=
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
 name|id
 operator|<
 literal|0
@@ -788,6 +776,22 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|row
+operator|<=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Bad row number."
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -811,9 +815,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s."
+argument_list|,
+name|wwerror
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|w
 operator|->
 name|ww_id
@@ -876,6 +890,14 @@ case|:
 name|c_close
 argument_list|(
 name|w
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"%s."
+argument_list|,
+name|wwerror
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwalloc.c	3.3 83/08/19"
+literal|"@(#)wwalloc.c	3.4 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,9 +94,15 @@ name|pp
 operator|==
 literal|0
 condition|)
+block|{
+name|wwerrno
+operator|=
+name|WWE_NOMEM
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|p
 operator|=
 operator|(
