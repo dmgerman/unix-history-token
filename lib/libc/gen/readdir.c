@@ -82,8 +82,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|_THREAD_SAFE
 end_endif
+
+begin_comment
+comment|/* _THREAD_SAFE */
+end_comment
 
 begin_comment
 comment|/*  * get next entry in a directory.  */
