@@ -2933,6 +2933,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IFT_FDDI
+case|:
+name|printf
+argument_list|(
+literal|" [fddi]"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFT_ATM
+case|:
+name|printf
+argument_list|(
+literal|" [atm]"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|IFT_L2VLAN
 case|:
 name|printf
