@@ -16,7 +16,7 @@ name|_SYS_SERIAL_H_
 end_define
 
 begin_comment
-comment|/*  * Indentification of modem control signals.  These definitions match  * the TIOCMGET definitions in<sys/ttycom.h> shifted a bit down, and  * that identity is enforced with CTASSERT at the bottom of kern/tty.c  * Both the modem bits and delta bits must fit in 16 bit!  */
+comment|/*  * Indentification of modem control signals.  These definitions match  * the TIOCMGET definitions in<sys/ttycom.h> shifted a bit down, and  * that identity is enforced with CTASSERT at the bottom of kern/tty.c  * Both the modem bits and delta bits must fit in 16 bit.  */
 end_comment
 
 begin_define
@@ -114,57 +114,67 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SER_DELTA
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SER_DDTR
-value|(SER_DTR<< 8)
+value|SER_DELTA(SER_DTR)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SER_DRTS
-value|(SER_RTS<< 8)
+value|SER_DELTA(SER_RTS)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SER_DSTX
-value|(SER_STX<< 8)
+value|SER_DELTA(SER_STX)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SER_DSRX
-value|(SER_SRX<< 8)
+value|SER_DELTA(SER_SRX)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SER_DCTS
-value|(SER_CTS<< 8)
+value|SER_DELTA(SER_CTS)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SER_DDCD
-value|(SER_DCD<< 8)
+value|SER_DELTA(SER_DCD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SER_DRI
-value|(SER_RI<< 8)
+value|SER_DELTA(SER_RI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SER_DDSR
-value|(SER_DSR<< 8)
+value|SER_DELTA(SER_DSR)
 end_define
 
 begin_endif
