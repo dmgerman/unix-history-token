@@ -745,11 +745,11 @@ name|udev_t
 value|dev_t
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * minor() gives a cookie instead of an index since we don't want to  * change the meanings of bits 0-15 or waste time and space shifting  * bits 16-31 for devices that don't use them.  */
@@ -805,7 +805,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _POSIX_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_endif
@@ -887,6 +887,41 @@ undef|#
 directive|undef
 name|_BSD_FFLAGS_T_
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FSBLKCNT_T_DECLARED
+end_ifndef
+
+begin_comment
+comment|/* for statvfs() */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|_BSD_FSBLKCNT_T_
+name|fsblkcnt_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|_BSD_FSFILCNT_T_
+name|fsfilcnt_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_FSBLKCNT_T_DECLARED
+end_define
 
 begin_endif
 endif|#
@@ -989,11 +1024,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -1309,7 +1344,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_POSIX_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_endif
