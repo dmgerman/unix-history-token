@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	5.17 (Berkeley) %G%"
+literal|"@(#)umount.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ begin_decl_stmt
 name|int
 name|fflag
 init|=
-name|MNT_NOFORCE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
