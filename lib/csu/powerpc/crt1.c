@@ -454,31 +454,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * NOTE: Leave the RCS ID _after_ __start(), in case it gets placed in .text.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_asm
+asm|__asm__(".ident\t\"$FreeBSD$\"");
+end_asm
 
 end_unit
 
