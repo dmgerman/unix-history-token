@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996, 1997, 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahc_pci.c,v 1.6 1999/02/11 07:12:16 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996, 1997, 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahc_pci.c,v 1.7 1999/03/05 23:28:36 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -164,6 +164,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ADAPTEC_3950U2
+value|0x00509005ul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ADAPTEC_2944U
 value|0x84789004ul
 end_define
@@ -234,6 +241,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ADAPTEC_AIC7895C
+value|0x78939004ul
+end_define
+
+begin_comment
+comment|/* RAID Port */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ADAPTEC_AIC7895
 value|0x78959004ul
 end_define
@@ -285,6 +303,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_ADAPTEC_AIC7810
 value|0x10789004ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ADAPTEC_AIC7815
+value|0x15789004ul
 end_define
 
 begin_define
@@ -795,6 +820,15 @@ operator|)
 return|;
 break|break;
 case|case
+name|PCI_DEVICE_ID_ADAPTEC_3950U2
+case|:
+return|return
+operator|(
+literal|"Adaptec 3950 Ultra2 SCSI adapter"
+operator|)
+return|;
+break|break;
+case|case
 name|PCI_DEVICE_ID_ADAPTEC_2930U2
 case|:
 return|return
@@ -867,6 +901,15 @@ operator|)
 return|;
 break|break;
 case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7895C
+case|:
+return|return
+operator|(
+literal|"Adaptec aic7895 `Raid Port' Ultra SCSI adapter"
+operator|)
+return|;
+break|break;
+case|case
 name|PCI_DEVICE_ID_ADAPTEC_AIC7890
 case|:
 return|return
@@ -935,6 +978,15 @@ case|:
 return|return
 operator|(
 literal|"Adaptec aic7810 RAID memory controller"
+operator|)
+return|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7815
+case|:
+return|return
+operator|(
+literal|"Adaptec aic7815 RAID memory controller"
 operator|)
 return|;
 break|break;
@@ -1299,6 +1351,9 @@ block|}
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_AIC7896
 case|:
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_3950U2
+case|:
 block|{
 name|ahc_t
 operator|=
@@ -1364,6 +1419,9 @@ break|break;
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_AIC7895
 case|:
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7895C
+case|:
 block|{
 name|u_int32_t
 name|devconfig
@@ -1418,6 +1476,9 @@ expr_stmt|;
 break|break;
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_AIC7810
+case|:
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7815
 case|:
 name|printf
 argument_list|(
