@@ -1090,7 +1090,7 @@ name|DBX_REGISTER_NUMBER
 parameter_list|(
 name|n
 parameter_list|)
-value|((write_symbols == DWARF_DEBUG)		\ 				? DWARF_DBX_REGISTER_NUMBER(n)		\ 				: STABS_DBX_REGISTER_NUMBER(n))
+value|((write_symbols == DWARF2_DEBUG		\ 	    			  || write_symbols == DWARF_DEBUG)	\ 				? DWARF_DBX_REGISTER_NUMBER(n)		\ 				: STABS_DBX_REGISTER_NUMBER(n))
 end_define
 
 begin_comment
