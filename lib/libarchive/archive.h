@@ -266,6 +266,13 @@ name|ARCHIVE_COMPRESSION_BZIP2
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARCHIVE_COMPRESSION_COMPRESS
+value|3
+end_define
+
 begin_comment
 comment|/*  * Codes returned by archive_format.  *  * Top 16 bits identifies the format family (e.g., "tar"); lower  * 16 bits indicate the variant.  This is updated by read_next_header.  * Note that the lower 16 bits will often vary from entry to entry.  */
 end_comment
@@ -380,6 +387,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|archive_read_support_compression_bzip2
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|archive_read_support_compression_compress
 parameter_list|(
 name|struct
 name|archive
