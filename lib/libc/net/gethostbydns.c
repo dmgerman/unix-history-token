@@ -1292,6 +1292,12 @@ operator|!=
 name|qtype
 condition|)
 block|{
+if|if
+condition|(
+name|type
+operator|!=
+name|T_SIG
+condition|)
 name|syslog
 argument_list|(
 name|LOG_NOTICE
