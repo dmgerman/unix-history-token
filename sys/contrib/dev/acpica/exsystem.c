@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 75 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 76 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -194,20 +194,6 @@ comment|/* Since this thread will sleep, we must release the interpreter */
 name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
-name|AcpiOsStall
-argument_list|(
-name|HowLong
-argument_list|)
-expr_stmt|;
-comment|/* And now we must get the interpreter again */
-name|Status
-operator|=
-name|AcpiExEnterInterpreter
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
 name|AcpiOsSleep
 argument_list|(
 literal|0
@@ -219,6 +205,20 @@ literal|1000
 operator|)
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* And now we must get the interpreter again */
+name|Status
+operator|=
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsStall
+argument_list|(
+name|HowLong
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 129 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 139 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,15 +20,11 @@ name|_ACCONFIG_H
 end_define
 
 begin_comment
-comment|/******************************************************************************  *  * Compile-time options  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Configuration options  *  *****************************************************************************/
 end_comment
 
 begin_comment
 comment|/*  * ACPI_DEBUG_OUTPUT    - This switch enables all the debug facilities of the  *                        ACPI subsystem.  This includes the DEBUG_PRINT output  *                        statements.  When disabled, all DEBUG_PRINT  *                        statements are compiled out.  *  * ACPI_APPLICATION     - Use this switch if the subsystem is going to be run  *                        at the application level.  *  */
-end_comment
-
-begin_comment
-comment|/******************************************************************************  *  * Subsystem Constants  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,18 +35,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20030228
-end_define
-
-begin_comment
-comment|/* Version of ACPI supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_CA_SUPPORT_LEVEL
-value|2
+value|0x20030619
 end_define
 
 begin_comment
@@ -113,6 +98,32 @@ comment|/* Objects for parse tree walks */
 end_comment
 
 begin_comment
+comment|/*  * Should the subystem abort the loading of an ACPI table if the  * table checksum is incorrect?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CHECKSUM_ABORT
+value|FALSE
+end_define
+
+begin_comment
+comment|/******************************************************************************  *  * Subsystem Constants  *  *****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Version of ACPI supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CA_SUPPORT_LEVEL
+value|2
+end_define
+
+begin_comment
 comment|/* String size constants */
 end_comment
 
@@ -165,21 +176,6 @@ define|#
 directive|define
 name|ACPI_SYSMEM_REGION_WINDOW_SIZE
 value|4096
-end_define
-
-begin_comment
-comment|/******************************************************************************  *  * Configuration of subsystem behavior  *  *****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * Should the subystem abort the loading of an ACPI table if the  * table checksum is incorrect?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_CHECKSUM_ABORT
-value|FALSE
 end_define
 
 begin_comment
@@ -245,6 +241,24 @@ define|#
 directive|define
 name|ACPI_MAX_STRING_CONVERSION
 value|200
+end_define
+
+begin_comment
+comment|/* Length of _HID, _UID, and _CID values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEVICE_ID_LENGTH
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_CID_LENGTH
+value|48
 end_define
 
 begin_comment
