@@ -28,6 +28,8 @@ name|N_CTIME
 block|,
 name|N_DEPTH
 block|,
+name|N_EMPTY
+block|,
 name|N_EXEC
 block|,
 name|N_EXECDIR
