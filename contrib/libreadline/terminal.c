@@ -971,6 +971,33 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|rl_resize_terminal
+parameter_list|()
+block|{
+if|if
+condition|(
+name|readline_echoing_p
+condition|)
+block|{
+name|_rl_get_screen_size
+argument_list|(
+name|fileno
+argument_list|(
+name|rl_instream
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|_rl_redisplay_after_sigwinch
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_struct
 struct|struct
 name|_tc_string
@@ -1056,7 +1083,7 @@ operator|&
 name|term_kh
 block|,
 comment|/* home */
-literal|"kH"
+literal|"@7"
 block|,
 operator|&
 name|term_kH

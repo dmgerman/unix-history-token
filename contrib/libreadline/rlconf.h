@@ -47,11 +47,9 @@ begin_comment
 comment|/* If defined, readline shows opening parens and braces when closing    paren or brace entered. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PAREN_MATCHING
-end_define
+begin_comment
+comment|/* #define PAREN_MATCHING */
+end_comment
 
 begin_comment
 comment|/* This definition is needed by readline.c, rltty.c, and signals.c. */
@@ -121,26 +119,11 @@ begin_comment
 comment|/* Define this if you want code that allows readline to be used in an    X `callback' style. */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SHELL
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|READLINE_CALLBACKS
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

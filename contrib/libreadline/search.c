@@ -232,14 +232,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|_rl_restore_prompt
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|rl_extend_line_buffer
 parameter_list|()
 function_decl|;
@@ -652,7 +644,7 @@ expr_stmt|;
 define|#
 directive|define
 name|SEARCH_RETURN
-value|_rl_restore_prompt (); return
+value|rl_restore_prompt (); return
 comment|/* Read the search string. */
 while|while
 condition|(
@@ -835,7 +827,7 @@ name|rl_line_buffer
 argument_list|)
 expr_stmt|;
 block|}
-name|_rl_restore_prompt
+name|rl_restore_prompt
 argument_list|()
 expr_stmt|;
 name|noninc_dosearch

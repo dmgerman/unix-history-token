@@ -41,6 +41,16 @@ name|procenv_t
 value|sigjmp_buf
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__OPENNT
+argument_list|)
+end_if
+
 begin_undef
 undef|#
 directive|undef
@@ -74,6 +84,15 @@ name|n
 parameter_list|)
 value|siglongjmp((x), (n))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__OPENNT */
+end_comment
 
 begin_else
 else|#

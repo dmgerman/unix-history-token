@@ -313,6 +313,13 @@ name|BAD_MODIFIER
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|NO_PREV_SUBST
+value|4
+end_define
+
 begin_comment
 comment|/* Possible definitions for history starting point specification. */
 end_comment

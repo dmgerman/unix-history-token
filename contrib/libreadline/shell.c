@@ -33,6 +33,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -41,23 +47,6 @@ argument_list|(
 name|HAVE_UNISTD_H
 argument_list|)
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MINIX
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -144,18 +133,11 @@ begin_comment
 comment|/* !HAVE_STRING_H */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|xrealloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
 
 begin_if
 if|#
@@ -163,21 +145,19 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|SHELL
+name|HAVE_GETPW_DECLS
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|savestring
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|savestring
-end_undef
+begin_function_decl
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwuid
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -185,50 +165,21 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Backwards compatibility, now that savestring has been removed from    all `public' readline header files. */
+comment|/* !HAVE_GETPW_DECLS */
 end_comment
 
-begin_function
+begin_function_decl
+specifier|extern
 name|char
 modifier|*
-name|rl_savestring
-parameter_list|(
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|strcpy
-argument_list|(
 name|xmalloc
-argument_list|(
-literal|1
-operator|+
-operator|(
-name|int
-operator|)
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-argument_list|,
-operator|(
-name|s
-operator|)
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* All of these functions are resolved from bash if we are linking readline    as part of bash. */
+end_comment
 
 begin_comment
 comment|/* Does shell-like quoting using single quotes. */
@@ -528,53 +479,54 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SHELL */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|get_string_value
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|char
 modifier|*
-name|get_env_value
-parameter_list|(
-name|varname
-parameter_list|)
+name|get_home_dir
+parameter_list|()
+block|{
 name|char
 modifier|*
-name|varname
+name|home_dir
 decl_stmt|;
-block|{
-return|return
-name|get_string_value
+name|struct
+name|passwd
+modifier|*
+name|entry
+decl_stmt|;
+name|home_dir
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+name|entry
+operator|=
+name|getpwuid
 argument_list|(
-name|varname
+name|getuid
+argument_list|()
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|entry
+condition|)
+name|home_dir
+operator|=
+name|entry
+operator|->
+name|pw_dir
+expr_stmt|;
+return|return
+operator|(
+name|home_dir
+operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SHELL */
-end_comment
 
 end_unit
 

@@ -131,6 +131,25 @@ file|"history.h"
 end_include
 
 begin_comment
+comment|/* Variables exported to other files in the readline library. */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|char
+modifier|*
+name|_rl_isearch_terminators
+init|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Variables imported from other files in the readline library. */
 end_comment
 
@@ -172,22 +191,6 @@ modifier|*
 name|rl_line_buffer
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|void
-name|_rl_save_prompt
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|_rl_restore_prompt
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -583,6 +586,12 @@ comment|/* Non-zero if we are doing a reverse search. */
 name|int
 name|reverse
 decl_stmt|;
+comment|/* The list of characters which terminate the search, but are not      subsequently executed.  If the variable isearch-terminators has      been set, we use that value, otherwise we use ESC and C-J. */
+name|unsigned
+name|char
+modifier|*
+name|isearch_terminators
+decl_stmt|;
 name|orig_point
 operator|=
 name|rl_point
@@ -612,6 +621,19 @@ name|char
 operator|*
 operator|)
 name|NULL
+expr_stmt|;
+name|isearch_terminators
+operator|=
+name|_rl_isearch_terminators
+condition|?
+name|_rl_isearch_terminators
+else|:
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+literal|"\033\012"
 expr_stmt|;
 comment|/* Create an arrary of pointers to the lines that we want to search. */
 name|maybe_replace_line
@@ -747,7 +769,7 @@ name|i
 operator|=
 name|orig_line
 expr_stmt|;
-name|_rl_save_prompt
+name|rl_save_prompt
 argument_list|()
 expr_stmt|;
 comment|/* Initialize search parameters. */
@@ -901,17 +923,25 @@ operator|-
 literal|2
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
 comment|/* Let NEWLINE (^J) terminate the search for people who don't like 	 using ESC.  ^M can still be used to terminate the search and 	 immediately execute the command. */
+block|if (c == ESC || c == NEWLINE)
+else|#
+directive|else
+comment|/* The characters in isearch_terminators (set from the user-settable 	 variable isearch-terminators) are used to terminate the search but 	 not subsequently execute the character as a command.  The default 	 value is "\033\012" (ESC and C-J). */
 if|if
 condition|(
+name|strchr
+argument_list|(
+name|isearch_terminators
+argument_list|,
 name|c
-operator|==
-name|ESC
-operator|||
-name|c
-operator|==
-name|NEWLINE
+argument_list|)
 condition|)
+endif|#
+directive|endif
 block|{
 comment|/* ESC still terminates the search, but if there is pending 	     input or if input arrives within 0.1 seconds (on systems 	     with select(2)) it is used as a prefix character 	     with rl_execute_next.  WATCH OUT FOR THIS!  This is intended 	     to allow the arrow keys to be used like ^F and ^B are used 	     to terminate the search and execute the movement command. */
 if|if
@@ -1051,7 +1081,7 @@ argument_list|(
 name|rl_line_buffer
 argument_list|)
 expr_stmt|;
-name|_rl_restore_prompt
+name|rl_restore_prompt
 argument_list|()
 expr_stmt|;
 name|rl_clear_message
@@ -1387,7 +1417,7 @@ name|orig_line
 index|]
 argument_list|)
 expr_stmt|;
-name|_rl_restore_prompt
+name|rl_restore_prompt
 argument_list|()
 expr_stmt|;
 comment|/* Free the search string. */
@@ -1407,6 +1437,8 @@ argument_list|(
 name|orig_line
 operator|-
 name|last_found_line
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -1415,6 +1447,8 @@ argument_list|(
 name|last_found_line
 operator|-
 name|orig_line
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* If the string was not found, put point at the end of the line. */

@@ -609,6 +609,12 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (read (file, buffer, file_size) != file_size)
+else|#
+directive|else
 if|if
 condition|(
 name|read
@@ -619,9 +625,11 @@ name|buffer
 argument_list|,
 name|file_size
 argument_list|)
-operator|!=
-name|file_size
+operator|<
+literal|0
 condition|)
+endif|#
+directive|endif
 block|{
 name|error_and_exit
 label|:
@@ -826,7 +834,6 @@ name|char
 modifier|*
 name|fname
 decl_stmt|;
-specifier|register
 name|int
 name|lines
 decl_stmt|;
@@ -1078,6 +1085,24 @@ operator|-
 name|i
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BEOS__
+argument_list|)
+comment|/* BeOS ignores O_TRUNC. */
+name|ftruncate
+argument_list|(
+name|file
+argument_list|,
+name|file_size
+operator|-
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|file

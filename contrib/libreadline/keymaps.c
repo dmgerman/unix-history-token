@@ -485,20 +485,15 @@ begin_comment
 comment|/* Free the storage associated with MAP. */
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|rl_discard_keymap
 parameter_list|(
 name|map
 parameter_list|)
-function_decl|Keymap
-parameter_list|(
+name|Keymap
 name|map
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -575,7 +570,7 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

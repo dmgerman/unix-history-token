@@ -237,6 +237,14 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
+name|_rl_replace_text
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|_rl_pop_executing_macro
 parameter_list|()
 function_decl|;
@@ -465,7 +473,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|rl_refresh_line
-argument_list|()
+argument_list|(
+name|count
+argument_list|,
+name|key
+argument_list|)
 expr_stmt|;
 else|#
 directive|else

@@ -434,7 +434,7 @@ name|timer
 operator|.
 name|tv_usec
 operator|=
-literal|500
+literal|500000
 expr_stmt|;
 name|orig_point
 operator|=
