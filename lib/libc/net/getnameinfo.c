@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: getnameinfo.c,v 1.43 2000/06/12 04:27:03 itojun Exp $	*/
+comment|/*	$KAME: getnameinfo.c,v 1.45 2000/09/25 22:43:56 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Issues to be discussed:  * - Thread safe-ness must be checked  * - Return values.  There seems to be no standard for return value (RFC2553)  *   but INRIA implementation returns EAI_xxx defined for getaddrinfo().  * - RFC2553 says that we should raise error on short buffer.  X/Open says  *   we need to truncate the result.  We obey RFC2553 (and X/Open should be  *   modified).  * - What is "local" in NI_FQDN?  * - NI_NAMEREQD and NI_NUMERICHOST conflict with each other.  * - (KAME extension) NI_WITHSCOPEID when called with global address,  *   and sin6_scope_id filled  */
+comment|/*  * Issues to be discussed:  * - Thread safe-ness must be checked  * - RFC2553 says that we should raise error on short buffer.  X/Open says  *   we need to truncate the result.  We obey RFC2553 (and X/Open should be  *   modified).  ipngwg rough consensus seems to follow RFC2553.  * - What is "local" in NI_FQDN?  * - NI_NAMEREQD and NI_NUMERICHOST conflict with each other.  * - (KAME extension) NI_WITHSCOPEID when called with global address,  *   and sin6_scope_id filled  */
 end_comment
 
 begin_include
@@ -270,6 +270,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* 2553bis: use EAI_xx for getnameinfo */
+end_comment
 
 begin_define
 define|#
@@ -583,6 +587,8 @@ name|sp
 operator|->
 name|s_name
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|servlen
 condition|)
@@ -624,6 +630,8 @@ name|strlen
 argument_list|(
 name|numserv
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|servlen
 condition|)
@@ -982,6 +990,8 @@ name|hp
 operator|->
 name|h_name
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|hostlen
 condition|)
