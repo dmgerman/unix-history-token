@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.6 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -55,7 +55,7 @@ parameter_list|,
 name|wanted
 parameter_list|)
 define|\
-value|if (lock_wait_time> 0) {				\ 			int i;						\ 									\ 			atomic_unlock(&lkp->lk_interlock);		\ 			for (i = lock_wait_time; i> 0; i--)		\ 				if (!(wanted))				\ 					break;				\ 			atomic_lock(&lkp->lk_interlock);		\ 		}							\ 		if (!(wanted))						\ 			break;
+value|if (lock_wait_time> 0) {				\ 			int i;						\ 									\ 			simple_unlock(&lkp->lk_interlock);		\ 			for (i = lock_wait_time; i> 0; i--)		\ 				if (!(wanted))				\ 					break;				\ 			simple_lock(&lkp->lk_interlock);		\ 		}							\ 		if (!(wanted))						\ 			break;
 end_define
 
 begin_else
@@ -68,7 +68,7 @@ comment|/* NCPUS == 1 */
 end_comment
 
 begin_comment
-comment|/*  * It is an error to spin on a uniprocessor as nothing will ever cause  * the atomic lock to clear while we are executing.  */
+comment|/*  * It is an error to spin on a uniprocessor as nothing will ever cause  * the simple lock to clear while we are executing.  */
 end_comment
 
 begin_define
@@ -81,6 +81,30 @@ parameter_list|,
 name|wanted
 parameter_list|)
 end_define
+
+begin_comment
+comment|/*  * Panic messages for inline expanded simple locks.  * Put text here to avoid hundreds of copies.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|simple_lock_held
+init|=
+literal|"simple_lock: lock held"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|simple_lock_not_held
+init|=
+literal|"simple_lock: lock not held"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -109,7 +133,7 @@ parameter_list|,
 name|wanted
 parameter_list|)
 define|\
-value|PAUSE(lkp, wanted);						\ 	for (error = 0; wanted; ) {					\ 		(lkp)->lk_waitcount++;					\ 		atomic_unlock(&(lkp)->lk_interlock);			\ 		error = tsleep((void *)lkp, (lkp)->lk_prio,		\ 		    (lkp)->lk_wmesg, (lkp)->lk_timo);			\ 		atomic_lock(&(lkp)->lk_interlock);			\ 		(lkp)->lk_waitcount--;					\ 		if (error)						\ 			break;						\ 		if ((extflags)& LK_SLEEPFAIL) {			\ 			error = ENOLCK;					\ 			break;						\ 		}							\ 	}
+value|PAUSE(lkp, wanted);						\ 	for (error = 0; wanted; ) {					\ 		(lkp)->lk_waitcount++;					\ 		simple_unlock(&(lkp)->lk_interlock);			\ 		error = tsleep((void *)lkp, (lkp)->lk_prio,		\ 		    (lkp)->lk_wmesg, (lkp)->lk_timo);			\ 		simple_lock(&(lkp)->lk_interlock);			\ 		(lkp)->lk_waitcount--;					\ 		if (error)						\ 			break;						\ 		if ((extflags)& LK_SLEEPFAIL) {			\ 			error = ENOLCK;					\ 			break;						\ 		}							\ 	}
 end_define
 
 begin_comment
@@ -160,7 +184,7 @@ name|lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|atomic_lock_init
+name|simple_lock_init
 argument_list|(
 operator|&
 name|lkp
@@ -224,7 +248,7 @@ name|lock_type
 init|=
 literal|0
 decl_stmt|;
-name|atomic_lock
+name|simple_lock
 argument_list|(
 operator|&
 name|lkp
@@ -257,7 +281,7 @@ name|lock_type
 operator|=
 name|LK_SHARED
 expr_stmt|;
-name|atomic_unlock
+name|simple_unlock
 argument_list|(
 operator|&
 name|lkp
@@ -322,7 +346,7 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
-name|atomic_lock
+name|simple_lock
 argument_list|(
 operator|&
 name|lkp
@@ -1082,7 +1106,7 @@ name|lk_flags
 operator||=
 name|LK_WAITDRAIN
 expr_stmt|;
-name|atomic_unlock
+name|simple_unlock
 argument_list|(
 operator|&
 name|lkp
@@ -1136,7 +1160,7 @@ operator|(
 name|ENOLCK
 operator|)
 return|;
-name|atomic_lock
+name|simple_lock
 argument_list|(
 operator|&
 name|lkp
@@ -1153,7 +1177,7 @@ name|LK_DRAINED
 expr_stmt|;
 break|break;
 default|default:
-name|atomic_unlock
+name|simple_unlock
 argument_list|(
 operator|&
 name|lkp
@@ -1233,7 +1257,7 @@ name|lk_flags
 argument_list|)
 expr_stmt|;
 block|}
-name|atomic_unlock
+name|simple_unlock
 argument_list|(
 operator|&
 name|lkp
