@@ -824,7 +824,7 @@ argument_list|)
 expr_stmt|;
 name|SET_IRQ
 argument_list|(
-name|BASE
+name|sc
 argument_list|,
 name|irq
 argument_list|)
