@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	8.1 (Berkeley) %G%"
+literal|"@(#)inet.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -453,14 +453,13 @@ end_comment
 begin_macro
 name|inet_maskof
 argument_list|(
-argument|in
+argument|inaddr
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|in_addr
-name|in
+name|u_long
+name|inaddr
 decl_stmt|;
 end_decl_stmt
 
@@ -472,9 +471,7 @@ name|i
 init|=
 name|ntohl
 argument_list|(
-name|in
-operator|.
-name|s_addr
+name|inaddr
 argument_list|)
 decl_stmt|;
 specifier|register
