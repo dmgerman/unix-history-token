@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.3 (Berkeley) %G%"
+literal|"@(#)option.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,10 +517,6 @@ modifier|*
 name|argvp
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|deprecated
-decl_stmt|;
 specifier|register
 name|OPTION
 modifier|*
@@ -606,7 +602,7 @@ condition|(
 operator|!
 name|p
 operator|||
-name|deprecated
+name|isdeprecated
 operator|&&
 name|p
 operator|->
@@ -615,7 +611,7 @@ operator|&
 name|O_NEW
 operator|||
 operator|!
-name|deprecated
+name|isdeprecated
 operator|&&
 name|p
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,12 +58,6 @@ directive|include
 file|"find.h"
 end_include
 
-begin_decl_stmt
-name|int
-name|relative
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|newsyntax
@@ -83,15 +77,13 @@ name|argvp
 decl_stmt|;
 block|{
 specifier|extern
+name|int
+name|optind
+decl_stmt|;
+specifier|extern
 name|char
 modifier|*
 name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|depth
-decl_stmt|,
-name|optind
 decl_stmt|;
 name|int
 name|ch
@@ -137,7 +129,7 @@ block|{
 case|case
 literal|'d'
 case|:
-name|depth
+name|isdepth
 operator|=
 literal|1
 expr_stmt|;
@@ -155,7 +147,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-name|relative
+name|isrelative
 operator|=
 literal|1
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.3 (Berkeley) %G%"
+literal|"@(#)misc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -458,13 +464,9 @@ end_macro
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|deprecated
-decl_stmt|;
 if|if
 condition|(
-name|deprecated
+name|isdeprecated
 condition|)
 operator|(
 name|void
