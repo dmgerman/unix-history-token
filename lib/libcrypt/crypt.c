@@ -88,6 +88,9 @@ name|crypt_types
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|NONEXPORTABLE_CRYPT
 block|{
 literal|"des"
 block|,
@@ -96,6 +99,8 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"md5"
 block|,
