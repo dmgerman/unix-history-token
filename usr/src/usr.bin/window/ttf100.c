@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttf100.c	3.4 3.4"
+literal|"@(#)ttf100.c	3.5 3.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,10 +120,10 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|gen_GE
+name|gen_AE
 decl_stmt|,
 modifier|*
-name|gen_GS
+name|gen_AS
 decl_stmt|;
 end_decl_stmt
 
@@ -134,14 +134,17 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|tt_generic
 argument_list|()
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|tt
 operator|.
 name|tt_frame
@@ -154,16 +157,16 @@ name|tt_availmodes
 operator||=
 name|WWM_GRP
 expr_stmt|;
-name|gen_GS
+name|gen_AS
 operator|=
 literal|"\033$"
 expr_stmt|;
-name|gen_GE
+name|gen_AE
 operator|=
 literal|"\033%"
 expr_stmt|;
 return|return
-name|ret
+literal|0
 return|;
 block|}
 end_block
