@@ -1811,6 +1811,26 @@ begin_comment
 comment|/* to avoid redefinition of it to 1 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|>
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|SYSSELECTH
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
