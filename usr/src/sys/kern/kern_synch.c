@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_synch.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_synch.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -572,6 +572,12 @@ operator|*
 name|a
 argument_list|)
 comment|/* + p->p_nice */
+expr_stmt|;
+name|p
+operator|->
+name|p_slptime
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1233,12 +1239,6 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_slptime
-operator|=
-literal|0
-expr_stmt|;
-name|p
-operator|->
 name|p_stat
 operator|=
 name|SRUN
@@ -1306,12 +1306,6 @@ goto|goto
 name|restart
 goto|;
 block|}
-name|p
-operator|->
-name|p_slptime
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
 name|q
@@ -1457,19 +1451,6 @@ name|SIDL
 case|:
 break|break;
 block|}
-if|if
-condition|(
-name|p
-operator|->
-name|p_slptime
-operator|>
-literal|1
-condition|)
-name|updatepri
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_stat
@@ -1492,6 +1473,19 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_slptime
+operator|>
+literal|1
+condition|)
+name|updatepri
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
