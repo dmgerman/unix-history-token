@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -166,6 +166,11 @@ name|driver
 modifier|*
 name|drp
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|cpu_model
+decl_stmt|;
 name|readidrom
 argument_list|(
 operator|(
@@ -194,6 +199,7 @@ operator|.
 name|id_serial
 argument_list|)
 expr_stmt|;
+comment|/* strcpy(cpu_model, idrom.id_model); */
 comment|/* print what type of CPU and FPU we have */
 switch|switch
 condition|(
