@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.53 (Berkeley) %G%"
+literal|"@(#)conf.c	6.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1103,7 +1103,7 @@ name|strcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"*file*, P=/dev/null, F=lsDEu, A=FILE"
+literal|"*file*, P=/dev/null, F=lsDFMPEu, A=FILE"
 argument_list|)
 expr_stmt|;
 name|makemailer
