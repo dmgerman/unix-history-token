@@ -965,6 +965,30 @@ value|(pccard_chip_mem_unmap((pf)->sc->pct, (pf)->sc->pch, (window)))
 end_define
 
 begin_comment
+comment|/* compat layer */
+end_comment
+
+begin_function_decl
+name|int
+name|pccard_compat_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pccard_compat_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* ivar interface */
 end_comment
 

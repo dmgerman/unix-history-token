@@ -15,15 +15,11 @@ begin_comment
 comment|/*  * Multicast support by Kei TANAKA<kei@pal.xerox.com>  * Special thanks to itojun@itojun.org  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|SN_DEBUG
-end_undef
-
-begin_comment
-comment|/* (by hosokawa) */
-end_comment
+end_define
 
 begin_include
 include|#
@@ -1259,6 +1255,11 @@ decl_stmt|;
 name|int
 name|time_out
 decl_stmt|;
+name|int
+name|junk
+init|=
+literal|0
+decl_stmt|;
 name|s
 operator|=
 name|splimp
@@ -1512,6 +1513,10 @@ if|if
 condition|(
 operator|!
 name|time_out
+operator|||
+name|junk
+operator|>
+literal|10
 condition|)
 block|{
 comment|/* 		 * No memory now.  Oh well, wait until the chip finds memory 		 * later.   Remember how many pages we were asking for and 		 * enable the allocation completion interrupt. Also set a 		 * watchdog in case  we miss the interrupt. We mark the 		 * interface active since there is no point in attempting an 		 * snstart() until after the memory is available. 		 */
@@ -1591,6 +1596,13 @@ operator|&
 name|ARR_FAILED
 condition|)
 block|{
+if|if
+condition|(
+name|junk
+operator|++
+operator|>
+literal|10
+condition|)
 name|printf
 argument_list|(
 literal|"sn%d: Memory allocation failed\n"
@@ -3920,9 +3932,10 @@ operator|->
 name|port_res
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SN_DEBUG
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -3930,8 +3943,6 @@ argument_list|,
 literal|"Cannot allocate ioport\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|ENOMEM
 return|;
@@ -3975,9 +3986,10 @@ operator|->
 name|irq_res
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SN_DEBUG
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -3985,8 +3997,6 @@ argument_list|,
 literal|"Cannot allocate irq\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sn_deactivate
 argument_list|(
 name|dev
@@ -4216,6 +4226,20 @@ name|sc
 operator|->
 name|sn_io_addr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SN_DEBUG
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"ioaddr is 0x%x\n"
+argument_list|,
+name|ioaddr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * First, see if the high byte is 0x33 	 */
 name|bank
 operator|=
@@ -4338,7 +4362,6 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Well, the base address register didn't match.  Must not 		 * have been a SMC chip after all. 		 */
-comment|/* 		 * printf("sn: ioaddr %x doesn't match card configuration 		 * (%x)\n", ioaddr, base_address_register>> 3& 0x3E0 ); 		 */
 ifdef|#
 directive|ifdef
 name|SN_DEBUG
