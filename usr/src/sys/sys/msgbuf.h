@@ -1,14 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981, 1984 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)msgbuf.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981, 1984 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)msgbuf.h	7.5 (Berkeley) %G%  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MSG_MAGIC
-value|0x063061
-end_define
 
 begin_define
 define|#
@@ -21,21 +14,28 @@ begin_struct
 struct|struct
 name|msgbuf
 block|{
+define|#
+directive|define
+name|MSG_MAGIC
+value|0x063061
 name|long
 name|msg_magic
 decl_stmt|;
 name|long
 name|msg_bufx
 decl_stmt|;
+comment|/* write pointer */
 name|long
 name|msg_bufr
 decl_stmt|;
+comment|/* read pointer */
 name|char
 name|msg_bufc
 index|[
 name|MSG_BSIZE
 index|]
 decl_stmt|;
+comment|/* buffer */
 block|}
 struct|;
 end_struct
