@@ -202,7 +202,7 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-name|int
+name|ssize_t
 name|recv
 parameter_list|(
 name|int
@@ -215,7 +215,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|int
+name|ssize_t
 name|recvfrom
 name|_G_ARGS
 argument_list|(
@@ -238,7 +238,7 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|recvmsg
 parameter_list|(
 name|int
@@ -282,7 +282,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|ssize_t
 name|send
 name|_G_ARGS
 argument_list|(
@@ -299,7 +299,7 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|sendto
 name|_G_ARGS
 argument_list|(
@@ -323,7 +323,7 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|sendmsg
 name|_G_ARGS
 argument_list|(
