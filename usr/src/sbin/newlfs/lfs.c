@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.15 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,6 +413,9 @@ comment|/* lfs_fbshift */
 literal|0
 block|,
 comment|/* lfs_fsbtodb */
+literal|0
+block|,
+comment|/* lfs_sushift */
 literal|0
 block|,
 comment|/* lfs_sboffs */
@@ -1044,6 +1047,17 @@ argument_list|)
 expr_stmt|;
 name|lfsp
 operator|->
+name|lfs_sushift
+operator|=
+name|log2
+argument_list|(
+name|lfsp
+operator|->
+name|lfs_sepb
+argument_list|)
+expr_stmt|;
+name|lfsp
+operator|->
 name|lfs_size
 operator|=
 name|partp
@@ -1097,7 +1111,7 @@ name|lfsp
 operator|->
 name|lfs_bshift
 expr_stmt|;
-comment|/*  	 * The number of free blocks is set from the total data size (lfs_dsize) 	 * minus one block for each segment (for the segment summary).  Then  	 * we'll subtract off the room for the superblocks, ifile entries and 	 * segment usage table. 	 */
+comment|/*  	 * The number of free blocks is set from the total data size (lfs_dsize) 	 * minus one sector for each segment (for the segment summary).  Then  	 * we'll subtract off the room for the superblocks, ifile entries and 	 * segment usage table. 	 */
 name|lfsp
 operator|->
 name|lfs_bfree
@@ -1105,6 +1119,8 @@ operator|=
 name|lfsp
 operator|->
 name|lfs_dsize
+operator|*
+name|db_per_fb
 operator|-
 name|lfsp
 operator|->
@@ -1415,6 +1431,20 @@ name|lfs_tstamp
 expr_stmt|;
 name|segp
 operator|->
+name|su_nsums
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 1 summary blocks */
+name|segp
+operator|->
+name|su_ninos
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 1 inode block */
+name|segp
+operator|->
 name|su_flags
 operator|=
 name|SEGUSE_SUPERBLOCK
@@ -1425,6 +1455,9 @@ name|lfsp
 operator|->
 name|lfs_bfree
 operator|-=
+name|db_per_fb
+operator|*
+operator|(
 name|lfsp
 operator|->
 name|lfs_cleansz
@@ -1434,6 +1467,7 @@ operator|->
 name|lfs_segtabsz
 operator|+
 literal|4
+operator|)
 expr_stmt|;
 comment|/*  	 * Now figure out the address of the ifile inode. The inode block 	 * appears immediately after the segment summary. 	 */
 name|lfsp
@@ -1500,10 +1534,10 @@ name|lfs_bfree
 operator|-=
 operator|(
 name|LFS_SBPAD
-operator|>>
-name|lfsp
+operator|/
+name|lp
 operator|->
-name|lfs_bshift
+name|d_secsize
 operator|)
 expr_stmt|;
 block|}
@@ -1525,6 +1559,18 @@ operator|->
 name|su_nbytes
 operator|=
 literal|0
+expr_stmt|;
+name|segp
+operator|->
+name|su_ninos
+operator|=
+literal|0
+expr_stmt|;
+name|segp
+operator|->
+name|su_nsums
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Ready to start writing segments.  The first segment is different 	 * because it contains the segment usage table and the ifile inode 	 * as well as a superblock.  For the rest of the segments, set the  	 * time stamp to be 0 so that the first segment is the most recent. 	 * For each segment that is supposed to contain a copy of the super 	 * block, initialize its first few blocks and its segment summary  	 * to indicate this. 	 */
