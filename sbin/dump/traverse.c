@@ -861,7 +861,8 @@ name|dblksize
 argument_list|(
 name|sblock
 argument_list|,
-name|dp
+operator|&
+name|di
 argument_list|,
 name|i
 argument_list|)
@@ -964,7 +965,8 @@ name|tapesize
 operator|+=
 name|blockest
 argument_list|(
-name|dp
+operator|&
+name|di
 argument_list|)
 expr_stmt|;
 name|change
