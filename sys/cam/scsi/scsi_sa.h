@@ -473,6 +473,7 @@ comment|/* 0x0e */
 name|u_int8_t
 name|byte2
 decl_stmt|;
+comment|/* CAP, CAF, Active Format */
 name|u_int8_t
 name|active_partition
 decl_stmt|;
@@ -549,9 +550,25 @@ define|#
 directive|define
 name|SA_COMP_DEFAULT
 value|0x01
+comment|/* the following is 'reserved' in SCSI-2 but is defined in SSC-r22 */
 name|u_int8_t
-name|reserved
+name|extra_wp
 decl_stmt|;
+define|#
+directive|define
+name|SA_ASOC_WP
+value|0x04
+comment|/* Associated Write Protect */
+define|#
+directive|define
+name|SA_PERS_WP
+value|0x02
+comment|/* Persistent Write Protect */
+define|#
+directive|define
+name|SA_PERM_WP
+value|0x01
+comment|/* Permanent Write Protect */
 block|}
 struct|;
 end_struct
@@ -571,6 +588,10 @@ comment|/* 0x0f */
 name|u_int8_t
 name|page_length
 decl_stmt|;
+comment|/* 0x0e */
+name|u_int8_t
+name|dce_and_dcc
+decl_stmt|;
 define|#
 directive|define
 name|SA_DCP_DCE
@@ -582,7 +603,7 @@ name|SA_DCP_DCC
 value|0x40
 comment|/* Data compression capable */
 name|u_int8_t
-name|dce_and_dcc
+name|dde_and_red
 decl_stmt|;
 define|#
 directive|define
@@ -610,9 +631,6 @@ define|#
 directive|define
 name|SA_DCP_RED_2
 value|0x40
-name|u_int8_t
-name|dde_and_red
-decl_stmt|;
 name|u_int8_t
 name|comp_algorithm
 index|[
