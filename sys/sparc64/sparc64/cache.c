@@ -552,7 +552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Blast a I$ physical range using diagnostic accesses.  * NOTE: there is a race between checking the tag and invalidating it. It  * cannot be closed by disabling interrupts, since the fetch for the next  * instruction may be in that line, so we don't even bother.  * Since blasting a line does not discard data, this has no ill effect except  * a minor slowdown.  */
+comment|/*  * Invalidate a I$ physical range using diagnostic accesses.  * NOTE: there is a race between checking the tag and invalidating it. It  * cannot be closed by disabling interrupts, since the fetch for the next  * instruction may be in that line, so we don't even bother.  * Since blasting a line does not discard data, this has no ill effect except  * a minor slowdown.  */
 end_comment
 
 begin_function
@@ -789,7 +789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Blast a D$ range using diagnostic accesses.  * This has the same (harmless) races as icache_blast().  * Assumes a page in the kernel map.  */
+comment|/*  * Invalidate a D$ range using diagnostic accesses.  * This has the same (harmless) races as icache_blast().  */
 end_comment
 
 begin_function
@@ -949,6 +949,142 @@ argument_list|,
 name|dca
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Invalidate a physical D$ range using diagnostic accesses.  * This has the same (harmless) races as icache_blast().  */
+end_comment
+
+begin_function
+name|void
+name|dcache_inval_phys
+parameter_list|(
+name|vm_offset_t
+name|start
+parameter_list|,
+name|vm_offset_t
+name|end
+parameter_list|)
+block|{
+name|vm_offset_t
+name|pa
+decl_stmt|,
+name|dca
+decl_stmt|;
+name|u_long
+name|tag
+decl_stmt|,
+name|color
+decl_stmt|,
+name|ncolors
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cache
+operator|.
+name|c_enabled
+condition|)
+return|return;
+name|ncolors
+operator|=
+literal|1
+operator|<<
+operator|(
+name|cache
+operator|.
+name|dc_l2size
+operator|-
+name|PAGE_SHIFT_MIN
+operator|)
+expr_stmt|;
+for|for
+control|(
+name|pa
+operator|=
+name|start
+operator|&
+operator|~
+operator|(
+name|cache
+operator|.
+name|dc_linesize
+operator|-
+literal|1
+operator|)
+init|;
+name|pa
+operator|<=
+name|end
+condition|;
+name|pa
+operator|+=
+name|cache
+operator|.
+name|dc_linesize
+control|)
+block|{
+for|for
+control|(
+name|color
+operator|=
+literal|0
+init|;
+name|color
+operator|<
+name|ncolors
+condition|;
+name|color
+operator|++
+control|)
+block|{
+name|dca
+operator|=
+operator|(
+name|color
+operator|<<
+name|PAGE_SHIFT_MIN
+operator|)
+operator||
+operator|(
+name|pa
+operator|&
+name|PAGE_MASK_MIN
+operator|)
+expr_stmt|;
+name|CDIAG_RD
+argument_list|(
+name|ASI_DCACHE_TAG
+argument_list|,
+name|dca
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DCDT_TAG
+argument_list|(
+name|tag
+argument_list|)
+operator|==
+name|pa
+operator|>>
+name|PAGE_SHIFT_MIN
+condition|)
+block|{
+name|CDIAG_CLR
+argument_list|(
+name|ASI_DCACHE_TAG
+argument_list|,
+name|dca
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 block|}
@@ -1126,7 +1262,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Blast a E$ range using diagnostic accesses.  * This is disabled: it suffers from the same races as dcache_blast() and  * icache_blast_phys(), but they may be fatal here because blasting an E$ line  * can discard modified data.  * There is no really use for this anyway.  */
+comment|/*  * Invalidate a E$ range using diagnostic accesses.  * This is disabled: it suffers from the same races as dcache_blast() and  * icache_blast_phys(), but they may be fatal here because blasting an E$ line  * can discard modified data.  * There is no really use for this anyway.  */
 end_comment
 
 begin_comment
