@@ -577,11 +577,7 @@ comment|/* we copy between vm_startcopy and vm_endcopy on fork */
 define|#
 directive|define
 name|vm_startcopy
-value|vm_rssize
-name|segsz_t
-name|vm_rssize
-decl_stmt|;
-comment|/* current resident set size in pages */
+value|vm_swrss
 name|segsz_t
 name|vm_swrss
 decl_stmt|;
