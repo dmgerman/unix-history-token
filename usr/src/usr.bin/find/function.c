@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.4 (Berkeley) %G%"
+literal|"@(#)function.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,9 +1221,16 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
+specifier|static
 name|dev_t
 name|curdev
+decl_stmt|;
+comment|/* need a guaranteed illegal dev value */
+specifier|static
+name|int
+name|first
+init|=
+literal|1
 decl_stmt|;
 name|struct
 name|statfs
@@ -1236,6 +1243,8 @@ decl_stmt|;
 comment|/* only check when we cross mount point */
 if|if
 condition|(
+name|first
+operator|||
 name|curdev
 operator|!=
 name|entry
@@ -1283,6 +1292,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|first
+operator|=
+literal|0
+expr_stmt|;
 name|val
 operator|=
 name|plan
@@ -3132,7 +3145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * -xdev functions --  *  *	Always true, causes find not to decend past directories that have a  *	different device ID (st_dev, see stat() S5.6.2 [POSIX.1])  *  *	Note: this checking is done in find_execute().  */
+comment|/*  * -xdev functions --  *  *	Always true, causes find not to decend past directories that have a  *	different device ID (st_dev, see stat() S5.6.2 [POSIX.1])  */
 end_comment
 
 begin_function
@@ -3141,22 +3154,18 @@ modifier|*
 name|c_xdev
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|xdev
-decl_stmt|;
 name|PLAN
 modifier|*
 name|new
 decl_stmt|;
-name|xdev
-operator|=
-literal|1
-expr_stmt|;
 name|ftsoptions
 operator|&=
 operator|~
 name|FTS_NOSTAT
+expr_stmt|;
+name|ftsoptions
+operator||=
+name|FTS_XDEV
 expr_stmt|;
 name|NEW
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,8 +94,6 @@ name|int
 name|depth
 decl_stmt|,
 name|optind
-decl_stmt|,
-name|xdev
 decl_stmt|;
 name|int
 name|ch
@@ -172,14 +170,14 @@ break|break;
 case|case
 literal|'x'
 case|:
-name|xdev
-operator|=
-literal|1
-expr_stmt|;
 name|ftsoptions
 operator|&=
 operator|~
 name|FTS_NOSTAT
+expr_stmt|;
+name|ftsoptions
+operator||=
+name|FTS_XDEV
 expr_stmt|;
 break|break;
 case|case

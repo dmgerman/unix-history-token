@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.28 (Berkeley) %G%"
+literal|"@(#)find.c	4.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,22 +116,6 @@ comment|/* time find was run */
 end_comment
 
 begin_decl_stmt
-name|dev_t
-name|curdev
-init|=
-operator|(
-name|dev_t
-operator|)
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* device number of current tree */
-end_comment
-
-begin_decl_stmt
 name|int
 name|ftsoptions
 decl_stmt|;
@@ -169,16 +153,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* one of -print, -ok or -exec was specified */
-end_comment
-
-begin_decl_stmt
-name|int
-name|xdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set by -xdev option */
 end_comment
 
 begin_function
@@ -723,59 +697,6 @@ continue|continue;
 block|}
 break|break;
 block|}
-comment|/* always keep curdev up to date, -fstype uses it. */
-if|if
-condition|(
-name|xdev
-operator|&&
-name|curdev
-operator|!=
-name|entry
-operator|->
-name|fts_statb
-operator|.
-name|st_dev
-operator|&&
-name|curdev
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|ftsset
-argument_list|(
-name|tree
-argument_list|,
-name|entry
-argument_list|,
-name|FTS_SKIP
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"find: %s: %s.\n"
-argument_list|,
-name|entry
-operator|->
-name|fts_path
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 * call all the functions in the execution plan until one is 		 * false or all have been executed.  This is where we do all 		 * the work specified by the user on the command line. 		 */
 for|for
 control|(
@@ -803,14 +724,6 @@ operator|->
 name|next
 control|)
 empty_stmt|;
-name|curdev
-operator|=
-name|entry
-operator|->
-name|fts_statb
-operator|.
-name|st_dev
-expr_stmt|;
 block|}
 operator|(
 name|void
