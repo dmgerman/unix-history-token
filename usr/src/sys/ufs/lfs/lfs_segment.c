@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -255,7 +255,6 @@ value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) + \ 	    (fs)->lfs
 end_define
 
 begin_decl_stmt
-specifier|static
 name|int
 name|lfs_callback
 name|__P
@@ -269,7 +268,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|lfs_gather
 name|__P
@@ -306,7 +304,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|lfs_initseg
 name|__P
@@ -324,7 +321,91 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|void
+name|lfs_iset
+name|__P
+argument_list|(
+operator|(
+name|INODE
+operator|*
+operator|,
+name|daddr_t
+operator|,
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lfs_match_data
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lfs
+operator|*
+operator|,
+name|BUF
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lfs_match_dindir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lfs
+operator|*
+operator|,
+name|BUF
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lfs_match_indir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lfs
+operator|*
+operator|,
+name|BUF
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lfs_match_tindir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lfs
+operator|*
+operator|,
+name|BUF
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|BUF
 modifier|*
 name|lfs_newbuf
@@ -347,7 +428,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|lfs_newseg
 name|__P
@@ -362,7 +442,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|void
+name|lfs_shellsort
+name|__P
+argument_list|(
+operator|(
+name|BUF
+operator|*
+operator|*
+operator|,
+name|daddr_t
+operator|*
+operator|,
+specifier|register
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|lfs_updatemeta
 name|__P
@@ -392,7 +491,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|lfs_writefile
 name|__P
@@ -413,7 +511,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|lfs_writeinode
 name|__P
@@ -434,7 +531,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|lfs_writeseg
 name|__P
@@ -452,7 +548,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|lfs_writesuper
 name|__P
@@ -464,99 +559,6 @@ operator|*
 operator|,
 name|SEGMENT
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|match_data
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|lfs
-operator|*
-operator|,
-name|BUF
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|match_dindir
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|lfs
-operator|*
-operator|,
-name|BUF
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|match_indir
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|lfs
-operator|*
-operator|,
-name|BUF
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|match_tindir
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|lfs
-operator|*
-operator|,
-name|BUF
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|shellsort
-name|__P
-argument_list|(
-operator|(
-name|BUF
-operator|*
-operator|*
-operator|,
-name|daddr_t
-operator|*
-operator|,
-specifier|register
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -798,6 +800,7 @@ operator|==
 name|LFS_IFILE_INUM
 condition|)
 continue|continue;
+comment|/* 		 * XXX 		 * This is wrong, I think -- we should just wait until we 		 * get the vnode and go on.  Probably going to reschedule 		 * all of the writes we already scheduled... 		 */
 if|if
 condition|(
 name|vget
@@ -808,6 +811,14 @@ condition|)
 goto|goto
 name|loop
 goto|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_dirtyblkhd
+operator|!=
+name|NULL
+condition|)
 name|lfs_writefile
 argument_list|(
 name|fs
@@ -826,26 +837,69 @@ argument_list|,
 name|ip
 argument_list|)
 expr_stmt|;
+name|ip
+operator|->
+name|i_flags
+operator|&=
+operator|~
+operator|(
+name|IMOD
+operator||
+name|IACC
+operator||
+name|IUPD
+operator||
+name|ICHG
+operator|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * XXX 	 * Should we always do the dirty blocks of the ifile?  Why just 	 * for a checkpoint.  No seeks are involved. 	 */
 if|if
 condition|(
 name|do_ckp
 condition|)
 block|{
+name|vp
+operator|=
+name|fs
+operator|->
+name|lfs_ivnode
+expr_stmt|;
+while|while
+condition|(
+name|vget
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+empty_stmt|;
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_dirtyblkhd
+operator|!=
+name|NULL
+condition|)
 name|lfs_writefile
 argument_list|(
 name|fs
 argument_list|,
 name|sp
 argument_list|,
-name|fs
-operator|->
-name|lfs_ivnode
+name|vp
 argument_list|)
 expr_stmt|;
 name|lfs_writeinode
@@ -854,12 +908,27 @@ name|fs
 argument_list|,
 name|sp
 argument_list|,
-name|VTOI
-argument_list|(
-name|fs
-operator|->
-name|lfs_ivnode
+name|ip
 argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_flags
+operator|&=
+operator|~
+operator|(
+name|IMOD
+operator||
+name|IACC
+operator||
+name|IUPD
+operator||
+name|ICHG
+operator|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 block|}
@@ -975,7 +1044,6 @@ comment|/*  * Write the dirty blocks associated with a vnode.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|lfs_writefile
 parameter_list|(
@@ -1137,8 +1205,10 @@ name|ifp
 operator|->
 name|if_version
 expr_stmt|;
-name|brelse
+name|LFS_IRELEASE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -1158,7 +1228,7 @@ name|sp
 argument_list|,
 name|vp
 argument_list|,
-name|match_data
+name|lfs_match_data
 argument_list|)
 expr_stmt|;
 name|lfs_gather
@@ -1169,7 +1239,7 @@ name|sp
 argument_list|,
 name|vp
 argument_list|,
-name|match_indir
+name|lfs_match_indir
 argument_list|)
 expr_stmt|;
 name|lfs_gather
@@ -1180,7 +1250,7 @@ name|sp
 argument_list|,
 name|vp
 argument_list|,
-name|match_dindir
+name|lfs_match_dindir
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1194,7 +1264,7 @@ name|sp
 argument_list|,
 name|vp
 argument_list|,
-name|match_tindir
+name|lfs_match_tindir
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1282,7 +1352,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|lfs_writeinode
 parameter_list|(
@@ -1309,9 +1378,19 @@ block|{
 name|BUF
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ibp
+decl_stmt|;
+name|IFILE
+modifier|*
+name|ifp
 decl_stmt|;
 name|daddr_t
 name|next_addr
+decl_stmt|;
+name|ino_t
+name|ino
 decl_stmt|;
 name|int
 name|ndx
@@ -1469,7 +1548,18 @@ operator|=
 name|next_addr
 expr_stmt|;
 block|}
-comment|/* Copy the new inode onto the inode page. 	 * XXX 	 * Do struct assignment. 	 */
+comment|/* 	 * Update the inode times and copy the inode onto the inode page. 	 * 	 * XXX 	 * Do struct assignment. 	 */
+name|ITIMES
+argument_list|(
+name|ip
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|sp
@@ -1543,12 +1633,16 @@ name|ibp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * If updating the ifile, update the super-block; otherwise, update 	 * the ifile itself.  In either case, turn off inode update flags. 	 */
-if|if
-condition|(
+comment|/* 	 * If updating the ifile, update the super-block.  Update the disk 	 * address and access times for this inode in the ifile. 	 * 	 * XXX 	 * The access time in the ifile is currently unused. 	 */
+name|ino
+operator|=
 name|ip
 operator|->
 name|i_number
+expr_stmt|;
+if|if
+condition|(
+name|ino
 operator|==
 name|LFS_IFILE_INUM
 condition|)
@@ -1560,40 +1654,44 @@ name|bp
 operator|->
 name|b_blkno
 expr_stmt|;
-else|else
-name|lfs_iset
+name|LFS_IENTRY
 argument_list|(
-name|ip
+name|ifp
 argument_list|,
+name|fs
+argument_list|,
+name|ino
+argument_list|,
+name|ibp
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_daddr
+operator|=
 name|bp
 operator|->
 name|b_blkno
-argument_list|,
+expr_stmt|;
+name|ifp
+operator|->
+name|if_st_atime
+operator|=
 name|ip
 operator|->
 name|i_atime
-argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|i_flags
-operator|&=
-operator|~
-operator|(
-name|IMOD
-operator||
-name|IACC
-operator||
-name|IUPD
-operator||
-name|ICHG
-operator|)
+name|LFS_IWRITE
+argument_list|(
+name|fs
+argument_list|,
+name|ibp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function_decl
-specifier|static
 name|void
 name|lfs_gather
 parameter_list|(
@@ -1989,7 +2087,6 @@ comment|/*  * Update the metadata that points to the blocks listed in the FINFO 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|lfs_updatemeta
 parameter_list|(
@@ -2086,7 +2183,7 @@ literal|0
 condition|)
 return|return;
 comment|/* Sort the blocks. */
-name|shellsort
+name|lfs_shellsort
 argument_list|(
 name|bpp
 argument_list|,
@@ -2430,8 +2527,10 @@ name|fs
 operator|->
 name|lfs_bsize
 expr_stmt|;
-name|lfs_bwrite
+name|LFS_IWRITE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2445,7 +2544,6 @@ comment|/*  * Start a new segment.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|lfs_initseg
 parameter_list|(
@@ -2576,8 +2674,10 @@ operator|-=
 name|LFS_SBPAD
 expr_stmt|;
 block|}
-name|brelse
+name|LFS_IRELEASE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2773,7 +2873,6 @@ comment|/*  * Return the next segment to write.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|lfs_newseg
 parameter_list|(
@@ -2841,8 +2940,10 @@ operator|&=
 operator|~
 name|SEGUSE_ACTIVE
 expr_stmt|;
-name|lfs_bwrite
+name|LFS_IWRITE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2872,8 +2973,10 @@ name|SEGUSE_ACTIVE
 operator||
 name|SEGUSE_DIRTY
 expr_stmt|;
-name|lfs_bwrite
+name|LFS_IWRITE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2896,8 +2999,10 @@ name|cip
 operator|->
 name|dirty
 expr_stmt|;
-name|lfs_bwrite
+name|LFS_IWRITE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2977,8 +3082,10 @@ name|su_flags
 operator|&
 name|SEGUSE_DIRTY
 expr_stmt|;
-name|brelse
+name|LFS_IRELEASE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3004,7 +3111,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|lfs_writeseg
 parameter_list|(
@@ -3418,8 +3524,10 @@ name|time
 operator|.
 name|tv_sec
 expr_stmt|;
-name|lfs_bwrite
+name|LFS_IWRITE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3427,7 +3535,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|lfs_writesuper
 parameter_list|(
@@ -3645,9 +3752,8 @@ comment|/*  * Logical block number match routines used when traversing the dirty
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|match_data
+name|lfs_match_data
 parameter_list|(
 name|fs
 parameter_list|,
@@ -3676,9 +3782,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|match_indir
+name|lfs_match_indir
 parameter_list|(
 name|fs
 parameter_list|,
@@ -3728,9 +3833,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|match_dindir
+name|lfs_match_dindir
 parameter_list|(
 name|fs
 parameter_list|,
@@ -3780,9 +3884,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|match_tindir
+name|lfs_match_tindir
 parameter_list|(
 name|fs
 parameter_list|,
@@ -3836,7 +3939,6 @@ comment|/*  * Allocate a new buffer header.  */
 end_comment
 
 begin_function
-specifier|static
 name|BUF
 modifier|*
 name|lfs_newbuf
@@ -3960,12 +4062,7 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * The buffer cache callback routine.    */
-end_comment
-
 begin_function
-specifier|static
 name|int
 comment|/* XXX should be void */
 name|lfs_callback
@@ -4047,9 +4144,8 @@ comment|/*  * This is our own private copy of shellsort because we want to sort 
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|shellsort
+name|lfs_shellsort
 parameter_list|(
 name|bp_array
 parameter_list|,
