@@ -2294,7 +2294,9 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"nat_LayerPull: Dropped a packet....\n"
+literal|"nat_LayerPull: Dropped a packet (%d)....\n"
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 name|m_freem
