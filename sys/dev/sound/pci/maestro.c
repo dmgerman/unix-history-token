@@ -5132,8 +5132,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Maestro DMA base: %#x\n"
+literal|"Maestro DMA base: %#llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ess
 operator|->
 name|baseaddr
