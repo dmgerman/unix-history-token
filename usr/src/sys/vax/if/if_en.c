@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.65	82/06/13	*/
+comment|/*	if_en.c	4.66	82/06/14	*/
 end_comment
 
 begin_include
@@ -1350,25 +1350,6 @@ operator|.
 name|if_oerrors
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|es
-operator|->
-name|es_if
-operator|.
-name|if_oerrors
-operator|%
-literal|100
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"en%d: += 100 output errors\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|endocoll
 argument_list|(
 name|unit
@@ -1762,25 +1743,6 @@ name|es_if
 operator|.
 name|if_ierrors
 operator|++
-expr_stmt|;
-if|if
-condition|(
-name|es
-operator|->
-name|es_if
-operator|.
-name|if_ierrors
-operator|%
-literal|100
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"en%d: += 100 input errors\n"
-argument_list|,
-name|unit
-argument_list|)
 expr_stmt|;
 goto|goto
 name|setup
