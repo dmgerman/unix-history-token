@@ -2443,13 +2443,13 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* initialize required fields */
+name|sprintf
+argument_list|(
 name|cp
 operator|->
-name|cn_dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
+name|cn_name
+argument_list|,
+literal|"ttyv%r"
 argument_list|,
 literal|0
 argument_list|)
