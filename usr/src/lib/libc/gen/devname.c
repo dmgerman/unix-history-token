@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.14 (Berkeley) %G%"
+literal|"@(#)devname.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -120,13 +126,15 @@ operator|!
 operator|(
 name|db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|_PATH_DEVDB
 argument_list|,
 name|O_RDONLY
 argument_list|,
 literal|0
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
@@ -140,9 +148,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"warning: no device database %s\n"
+literal|"warning: %s: %s\n"
 argument_list|,
 name|_PATH_DEVDB
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|failure
