@@ -729,14 +729,13 @@ literal|4
 index|]
 operator|)
 condition|)
-comment|/* XXX: need to handle .tgz also */
 if|if
 condition|(
 name|strlcat
 argument_list|(
 name|remotepkg
 argument_list|,
-literal|".tbz"
+literal|".tgz"
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1197,7 +1197,7 @@ name|NULL
 condition|)
 name|ext
 operator|=
-literal|".tbz"
+literal|".tgz"
 expr_stmt|;
 name|snprintf
 argument_list|(
