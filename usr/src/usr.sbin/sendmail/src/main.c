@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.17	%G%"
+literal|"@(#)main.c	3.18	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,6 +484,11 @@ literal|30
 index|]
 decl_stmt|;
 comment|/* holds ctime(tbuf) */
+name|bool
+name|aliasinit
+init|=
+name|FALSE
+decl_stmt|;
 name|bool
 name|canrename
 decl_stmt|;
@@ -968,6 +973,21 @@ name|NoAlias
 operator|++
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DBM
+case|case
+literal|'I'
+case|:
+comment|/* initialize alias DBM file */
+name|aliasinit
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+endif|DBM
 case|case
 literal|'m'
 case|:
@@ -1224,8 +1244,25 @@ endif|V6
 name|initaliases
 argument_list|(
 name|aliasname
+argument_list|,
+name|aliasinit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DBM
+if|if
+condition|(
+name|aliasinit
+condition|)
+name|exit
+argument_list|(
+name|EX_OK
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DBM
 ifdef|#
 directive|ifdef
 name|DEBUG
