@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prim.c	5.2 (Berkeley) %G%"
+literal|"@(#)prim.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,6 +1078,9 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
@@ -1768,6 +1771,11 @@ name|last_pattern
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
 endif|#
 directive|endif
 endif|#
@@ -1956,6 +1964,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|lpbuf
