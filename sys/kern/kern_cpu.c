@@ -4257,6 +4257,26 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cf_dev
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"warning: cpufreq_unregister called with no cpufreq device active\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|cfcount
 operator|=
 literal|0
