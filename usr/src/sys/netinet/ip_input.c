@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -317,7 +317,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 end_ifdef
 
 begin_decl_stmt
@@ -332,6 +332,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|domain
+name|inetdomain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|protosw
+name|inetsw
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|u_char
@@ -2226,6 +2243,52 @@ operator|<<
 literal|2
 operator|)
 expr_stmt|;
+comment|/* some debugging cruft by sklower, below, will go away soon */
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+condition|)
+block|{
+comment|/* XXX this should be done elsewhere */
+specifier|register
+name|int
+name|plen
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|t
+operator|=
+name|m
+init|;
+name|m
+condition|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+control|)
+name|plen
+operator|+=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
+name|t
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|plen
+expr_stmt|;
+block|}
 return|return
 operator|(
 operator|(
@@ -3789,7 +3852,7 @@ index|]
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 if|if
 condition|(
 name|ipprintfs
@@ -3998,7 +4061,7 @@ name|OPTSIZ
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 if|if
 condition|(
 name|ipprintfs
@@ -4047,7 +4110,7 @@ operator|--
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 if|if
 condition|(
 name|ipprintfs
@@ -4080,7 +4143,6 @@ literal|" hops %X"
 argument_list|,
 name|ntohl
 argument_list|(
-operator|*
 name|mtod
 argument_list|(
 name|m
@@ -4089,6 +4151,8 @@ expr|struct
 name|in_addr
 operator|*
 argument_list|)
+operator|->
+name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4175,7 +4239,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 if|if
 condition|(
 name|ipprintfs
@@ -4186,8 +4250,9 @@ literal|" %X"
 argument_list|,
 name|ntohl
 argument_list|(
-operator|*
 name|q
+operator|->
+name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4245,7 +4310,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 end_ifdef
 
 begin_if
@@ -4259,8 +4324,9 @@ literal|" %X\n"
 argument_list|,
 name|ntohl
 argument_list|(
-operator|*
 name|q
+operator|->
+name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4578,7 +4644,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 if|if
 condition|(
 name|ipprintfs
@@ -5054,7 +5120,7 @@ name|ICMP_REDIRECT_NET
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 if|if
 condition|(
 name|ipprintfs
