@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: cpu.h,v 1.4 1998/10/06 08:40:17 dfr Exp $ */
+comment|/* $Id: cpu.h,v 1.5 1999/02/02 09:08:23 bde Exp $ */
 end_comment
 
 begin_comment
@@ -931,10 +931,12 @@ operator|*
 name|pc
 argument_list|)
 argument_list|(
+specifier|const
 name|void
 operator|*
 argument_list|)
 operator|,
+specifier|const
 name|void
 operator|*
 operator|)
