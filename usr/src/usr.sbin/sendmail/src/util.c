@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.70 (Berkeley) %G%"
+literal|"@(#)util.c	8.71 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4735,12 +4735,17 @@ operator|)
 return|;
 if|if
 condition|(
-operator|*
-operator|--
 name|p
+index|[
+operator|-
+literal|1
+index|]
 operator|==
 literal|'\n'
 condition|)
+name|p
+operator|--
+expr_stmt|;
 operator|*
 name|p
 operator|=
