@@ -1189,6 +1189,14 @@ name|AidByte
 operator|=
 literal|0
 expr_stmt|;
+name|OiaSystemLocked
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|TerminalIn
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|CMD_WRITE
@@ -2163,6 +2171,9 @@ name|OiaSystemLocked
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|TerminalIn
+argument_list|()
 expr_stmt|;
 block|}
 if|if
