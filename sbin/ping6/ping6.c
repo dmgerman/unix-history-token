@@ -8996,7 +8996,7 @@ decl_stmt|;
 name|u_int8_t
 name|type
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|extlen
 decl_stmt|,
 name|len
