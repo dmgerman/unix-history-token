@@ -26,26 +26,12 @@ begin_define
 define|#
 directive|define
 name|TLB_SLOT_TSB_KERNEL_MIN
-value|60
+value|62
 end_define
 
 begin_comment
 comment|/* XXX */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TLB_SLOT_TSB_USER_PRIMARY
-value|61
-end_define
-
-begin_define
-define|#
-directive|define
-name|TLB_SLOT_TSB_USER_SECONDARY
-value|62
-end_define
 
 begin_define
 define|#
@@ -74,11 +60,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|TAR_VPN_SHIFT
+value|(13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAR_CTX_MASK
+value|((1<< TAR_VPN_SHIFT) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TLB_TAR_VA
 parameter_list|(
 name|va
 parameter_list|)
-value|((va)& ~PAGE_MASK)
+value|((va)& ~TAR_CTX_MASK)
 end_define
 
 begin_define
@@ -88,7 +88,7 @@ name|TLB_TAR_CTX
 parameter_list|(
 name|ctx
 parameter_list|)
-value|((ctx)& PAGE_MASK)
+value|((ctx)& TAR_CTX_MASK)
 end_define
 
 begin_define
@@ -971,8 +971,8 @@ name|struct
 name|tte
 name|tte
 parameter_list|,
-name|vm_offset_t
-name|va
+name|u_int
+name|ctx
 parameter_list|)
 block|{
 name|tlb_page_demap
@@ -984,14 +984,14 @@ operator|.
 name|tte_data
 argument_list|)
 argument_list|,
-name|TT_GET_CTX
+name|ctx
+argument_list|,
+name|TV_GET_VA
 argument_list|(
 name|tte
 operator|.
-name|tte_tag
+name|tte_vpn
 argument_list|)
-argument_list|,
-name|va
 argument_list|)
 expr_stmt|;
 block|}

@@ -635,7 +635,9 @@ name|tp
 argument_list|,
 name|pv
 operator|->
-name|pv_va
+name|pv_pmap
+operator|->
+name|pm_context
 argument_list|)
 expr_stmt|;
 block|}
@@ -1175,12 +1177,14 @@ name|tp
 argument_list|,
 name|pv
 operator|->
-name|pv_va
+name|pv_pmap
+operator|->
+name|pm_context
 argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|tte_tag
+name|tte_vpn
 operator|=
 literal|0
 expr_stmt|;
