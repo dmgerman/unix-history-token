@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|_JBLEN
-value|10
+value|8
 end_define
 
 begin_endif
@@ -181,23 +181,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * jmp_buf and sigjmp_buf are encapsulated in different structs to force  * compile-time diagnostics for mismatches.  The structs are the same  * internally to avoid some run-time errors for mismatches.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_ANSI_SOURCE
 end_ifndef
 
-begin_comment
-comment|/*  * WARNING: sigsetjmp() isn't supported yet, this is a placeholder.  */
-end_comment
-
 begin_typedef
 typedef|typedef
+struct|struct
+block|{
 name|int
-name|sigjmp_buf
+name|_sjb
 index|[
 name|_JBLEN
 operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|sigjmp_buf
+index|[
 literal|1
 index|]
 typedef|;
@@ -214,10 +222,20 @@ end_comment
 
 begin_typedef
 typedef|typedef
+struct|struct
+block|{
 name|int
-name|jmp_buf
+name|_jb
 index|[
 name|_JBLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|jmp_buf
+index|[
+literal|1
 index|]
 typedef|;
 end_typedef
@@ -242,6 +260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__dead
 name|void
 name|longjmp
 name|__P
@@ -252,6 +271,7 @@ operator|,
 name|int
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -260,10 +280,6 @@ ifndef|#
 directive|ifndef
 name|_ANSI_SOURCE
 end_ifndef
-
-begin_comment
-comment|/*  * WARNING: sigsetjmp() isn't supported yet, this is a placeholder.  */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -280,6 +296,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__dead
 name|void
 name|siglongjmp
 name|__P
@@ -290,6 +307,7 @@ operator|,
 name|int
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -331,6 +349,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__dead
 name|void
 name|_longjmp
 name|__P
@@ -341,6 +360,7 @@ operator|,
 name|int
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
