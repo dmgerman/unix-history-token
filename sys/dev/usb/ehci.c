@@ -1581,6 +1581,9 @@ decl_stmt|;
 name|u_int
 name|ncomp
 decl_stmt|;
+name|int
+name|lev
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -2173,7 +2176,7 @@ name|sc_eintrs
 operator|=
 name|EHCI_NORMAL_INTRS
 expr_stmt|;
-comment|/* 	 * Allocate the interrupt dummy QHs. These are arranged to give 	 * poll intervals that are powers of 2 times 1ms. 	 * XXX this probably isn't the most sensible arrangement, and it 	 * would be better if we didn't leave all the QHs in the periodic 	 * schedule all the time. 	 */
+comment|/* 	 * Allocate the interrupt dummy QHs. These are arranged to give 	 * poll intervals that are powers of 2 times 1ms. 	 */
 for|for
 control|(
 name|i
@@ -2222,6 +2225,10 @@ operator|=
 name|sqh
 expr_stmt|;
 block|}
+name|lev
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2236,6 +2243,22 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|i
+operator|==
+name|EHCI_IQHIDX
+argument_list|(
+name|lev
+operator|+
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|lev
+operator|++
+expr_stmt|;
 name|sqh
 operator|=
 name|sc
@@ -2281,15 +2304,16 @@ name|sc
 operator|->
 name|sc_islots
 index|[
-operator|(
+name|EHCI_IQHIDX
+argument_list|(
+name|lev
+operator|-
+literal|1
+argument_list|,
 name|i
 operator|+
 literal|1
-operator|)
-operator|/
-literal|2
-operator|-
-literal|1
+argument_list|)
 index|]
 operator|.
 name|sqh
@@ -2330,9 +2354,15 @@ name|sqh
 operator|->
 name|qh
 operator|.
-name|qh_link
+name|qh_endphub
 operator|=
-name|EHCI_NULL
+name|htole32
+argument_list|(
+name|EHCI_QH_SET_MULT
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|sqh
 operator|->
@@ -2341,12 +2371,6 @@ operator|.
 name|qh_curqtd
 operator|=
 name|EHCI_NULL
-expr_stmt|;
-name|sqh
-operator|->
-name|next
-operator|=
-name|NULL
 expr_stmt|;
 name|sqh
 operator|->
@@ -3859,6 +3883,8 @@ literal|0
 decl_stmt|;
 name|int
 name|actlen
+decl_stmt|,
+name|cerr
 decl_stmt|;
 name|u_int
 name|pkts_left
@@ -4171,9 +4197,12 @@ name|pkts_left
 operator|%
 literal|2
 expr_stmt|;
+name|cerr
+operator|=
+name|EHCI_QTD_GET_CERR
+argument_list|(
 name|status
-operator|&=
-name|EHCI_QTD_STATERRS
+argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -4181,13 +4210,16 @@ comment|/*10*/
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_idone: len=%d, actlen=%d, status=0x%x\n"
+literal|"ehci_idone: len=%d, actlen=%d, cerr=%d, "
+literal|"status=0x%x\n"
 operator|,
 name|xfer
 operator|->
 name|length
 operator|,
 name|actlen
+operator|,
+name|cerr
 operator|,
 name|status
 operator|)
@@ -4201,7 +4233,11 @@ name|actlen
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|status
+operator|&
+name|EHCI_QTD_HALTED
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -4223,7 +4259,7 @@ operator|)
 name|status
 argument_list|,
 literal|"\20\7HALTED\6BUFERR\5BABBLE\4XACTERR"
-literal|"\3MISSED"
+literal|"\3MISSED\2SPLIT\1PING"
 argument_list|,
 name|sbuf
 argument_list|,
@@ -4235,15 +4271,7 @@ argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-operator|(
-name|status
-operator|==
-name|EHCI_QTD_HALTED
-operator|)
-condition|?
 literal|2
-else|:
-literal|0
 argument_list|,
 operator|(
 literal|"ehci_idone: error, addr=%d, endpt=0x%02x, "
@@ -4297,9 +4325,17 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|status
+operator|&
+name|EHCI_QTD_BABBLE
+operator|)
 operator|==
-name|EHCI_QTD_HALTED
+literal|0
+operator|&&
+name|cerr
+operator|>
+literal|0
 condition|)
 name|xfer
 operator|->
@@ -7026,6 +7062,10 @@ condition|(
 name|speed
 operator|!=
 name|EHCI_QH_SPEED_HIGH
+operator|&&
+name|xfertype
+operator|==
+name|UE_ISOCHRONOUS
 condition|)
 block|{
 name|printf
@@ -7056,12 +7096,6 @@ name|hshubport
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xfertype
-operator|!=
-name|UE_CONTROL
-condition|)
 return|return
 name|USBD_INVAL
 return|;
@@ -7173,10 +7207,9 @@ argument_list|)
 operator||
 name|EHCI_QH_SET_CMASK
 argument_list|(
-literal|0xf0
+literal|0x1c
 argument_list|)
 operator||
-comment|/* XXX */
 name|EHCI_QH_SET_SMASK
 argument_list|(
 name|xfertype
@@ -12451,14 +12484,14 @@ name|next
 operator|=
 name|snext
 condition|?
+name|htole32
+argument_list|(
 name|snext
 operator|->
 name|physaddr
-else|:
-name|htole32
-argument_list|(
-name|EHCI_NULL
 argument_list|)
+else|:
+name|EHCI_NULL
 expr_stmt|;
 comment|/* 	 * Now loop through any qTDs before us and keep track of the pointer 	 * that points to us for the end. 	 */
 name|psqtd
@@ -12683,10 +12716,7 @@ name|qh_qtd
 operator|.
 name|qtd_altnext
 operator|=
-name|htole32
-argument_list|(
 name|EHCI_NULL
-argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -12707,7 +12737,7 @@ argument_list|,
 name|psqh
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Step 4: Execute callback. 	 */
+comment|/* 	 * Step 5: Execute callback. 	 */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
