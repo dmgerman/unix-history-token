@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.7 (Berkeley) %G%"
+literal|"@(#)login.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1160,20 +1160,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Logging with home=/tmp\n"
+literal|"Logging with home=/\n"
 argument_list|)
 expr_stmt|;
 name|pwd
 operator|->
 name|pw_dir
 operator|=
-literal|"/tmp"
+literal|"/"
 expr_stmt|;
 if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"/tmp"
+literal|"/"
 argument_list|)
 operator|<
 literal|0
