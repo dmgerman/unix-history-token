@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_raydbg.h,v 1.1 2000/04/24 14:50:01 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_raydbg.h,v 1.3 2000/05/11 18:53:10 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Debugging odds and odds  */
 end_comment
 
 begin_comment
-comment|/*  * RAY_DEBUG settings  *  *	RECERR		Recoverable error's  *	SUBR		Subroutine entry  *	BOOTPARAM	Startup CM dump  *	STARTJOIN	State transitions for start/join  *	CCS		CCS info  *	IOCTL		IOCTL calls  *	MBUF		MBUFs dumped  *	RX		packet types reported  *	CM		common memory re-mapping  *	COM		new command sleep/wakeup  *	STOP		driver detaching  */
+comment|/*  * RAY_DEBUG settings  *  *	RECERR		Recoverable error's  *	SUBR		Subroutine entry  *	BOOTPARAM	Startup CM dump  *	STARTJOIN	State transitions for start/join  *	CCS		CCS info  *	IOCTL		IOCTL calls  *	MBUF		MBUFs dumped - needs one of TX, RX, MGT, or CTL  *	RX		packet types reported  *	CM		common memory re-mapping  *	COM		new command sleep/wakeup  *	STOP		driver detaching  *	CTL		CTL packets  *	MGT		MGT packets  */
 end_comment
 
 begin_define
@@ -88,6 +88,27 @@ name|RAY_DBG_STOP
 value|0x0800
 end_define
 
+begin_define
+define|#
+directive|define
+name|RAY_DBG_CTL
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_MGT
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_TX
+value|0x4000
+end_define
+
 begin_comment
 comment|/* Cut and paste this into a kernel configuration file */
 end_comment
@@ -124,6 +145,12 @@ value|\
 comment|/* RAY_DBG_COM		| */
 value|\
 comment|/* RAY_DBG_STOP		| */
+value|\
+comment|/* RAY_DBG_CTL		| */
+value|\
+comment|/* RAY_DBG_MGT		| */
+value|\
+comment|/* RAY_DBG_TX		| */
 value|\ 			0				\ 			)
 end_define
 
@@ -137,26 +164,6 @@ if|#
 directive|if
 name|RAY_DEBUG
 end_if
-
-begin_comment
-comment|/* This macro assumes that common memory is mapped into kernel space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAY_DHEX8
-parameter_list|(
-name|sc
-parameter_list|,
-name|mask
-parameter_list|,
-name|off
-parameter_list|,
-name|len
-parameter_list|)
-value|do { if (RAY_DEBUG& (mask)) {	\     int i, j;								\     for (i = (off); i< (off)+(len); i += 8) {				\ 	    printf("  0x%04x ",	i);					\ 	    for (j = 0; j< 8; j++)					\ 		    printf("%02x ", SRAM_READ_1((sc), i+j));		\ 	    printf("\n");						\ } } } while (0)
-end_define
 
 begin_define
 define|#
@@ -175,10 +182,9 @@ parameter_list|)
 value|do {if (RAY_DEBUG& (mask)) {\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\     	__FUNCTION__ , __LINE__ , ##args);				\ } } while (0)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* This macro assumes that common memory is mapped into kernel space */
+end_comment
 
 begin_define
 define|#
@@ -192,8 +198,16 @@ parameter_list|,
 name|off
 parameter_list|,
 name|len
+parameter_list|,
+name|s
 parameter_list|)
+value|do { if (RAY_DEBUG& (mask)) {	\     int i, j;								\     device_printf((sc)->dev, "%s(%d) %s\n",				\     	__FUNCTION__ , __LINE__ , (s));					\     for (i = (off); i< (off)+(len); i += 8) {				\ 	    printf("  0x%04x ",	i);					\ 	    for (j = 0; j< 8; j++)					\ 		    printf("%02x ", SRAM_READ_1((sc), i+j));		\ 	    printf("\n");						\     }									\ } } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -208,6 +222,23 @@ name|fmt
 parameter_list|,
 name|args
 modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DHEX8
+parameter_list|(
+name|sc
+parameter_list|,
+name|mask
+parameter_list|,
+name|off
+parameter_list|,
+name|len
+parameter_list|,
+name|s
 parameter_list|)
 end_define
 
@@ -295,11 +326,13 @@ name|RAY_MBUF_DUMP
 parameter_list|(
 name|sc
 parameter_list|,
+name|mask
+parameter_list|,
 name|m
 parameter_list|,
 name|s
 parameter_list|)
-value|ray_dump_mbuf((sc), (m), (s))
+value|do { if (RAY_DEBUG& (mask)) {	\ 	ray_dump_mbuf((sc), (m), (s));					\ } } while (0)
 end_define
 
 begin_endif
