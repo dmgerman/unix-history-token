@@ -83,6 +83,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_DEVICE_UPD72873
+value|(0x00e7<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_DEVICE_UPD72874
 value|(0x00f2<< 16)
 end_define
