@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.4 (Berkeley) %G%"
+literal|"@(#)mount.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2035,12 +2035,12 @@ name|strcmp
 argument_list|(
 name|fstype
 argument_list|,
-literal|"isofs"
+literal|"iso9660fs"
 argument_list|)
 condition|)
 return|return
 operator|(
-name|MOUNT_ISOFS
+name|MOUNT_CD9660
 operator|)
 return|;
 return|return

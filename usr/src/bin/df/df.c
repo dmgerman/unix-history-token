@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	8.4 (Berkeley) %G%"
+literal|"@(#)df.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +154,7 @@ define|#
 directive|define
 name|MT_LOCAL
 define|\
-value|(MT(MOUNT_UFS)|MT(MOUNT_MFS)|MT(MOUNT_LFS)|MT(MOUNT_MSDOS)|MT(MOUNT_ISOFS))
+value|(MT(MOUNT_UFS)|MT(MOUNT_MFS)|MT(MOUNT_LFS)|MT(MOUNT_MSDOS)|MT(MOUNT_CD9660))
 end_define
 
 begin_define
@@ -265,18 +265,18 @@ argument_list|(
 name|MOUNT_AFS
 argument_list|)
 block|,
-literal|"isofs"
+literal|"iso9660fs"
 block|,
 name|MT
 argument_list|(
-name|MOUNT_ISOFS
+name|MOUNT_CD9660
 argument_list|)
 block|,
 literal|"cdfs"
 block|,
 name|MT
 argument_list|(
-name|MOUNT_ISOFS
+name|MOUNT_CD9660
 argument_list|)
 block|,
 literal|"misc"
@@ -306,11 +306,7 @@ argument_list|(
 name|MOUNT_PROCFS
 argument_list|)
 block|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 block|,
 literal|0
 block|}
