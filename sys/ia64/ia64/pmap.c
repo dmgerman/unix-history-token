@@ -3572,7 +3572,7 @@ name|uma_zalloc
 argument_list|(
 name|pvzone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 return|;
 block|}
