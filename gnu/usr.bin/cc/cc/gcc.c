@@ -47,6 +47,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"config.h"
 end_include
 
@@ -370,24 +376,6 @@ name|getenv
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
