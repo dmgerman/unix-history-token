@@ -19,7 +19,7 @@ name|char
 name|ocopyright
 index|[]
 init|=
-literal|"$Id: dhclient.c,v 1.44.2.14 1999/02/09 04:59:50 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dhclient.c,v 1.44.2.24 1999/02/27 21:51:35 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,7 +256,7 @@ name|char
 name|message
 index|[]
 init|=
-literal|"Internet Software Consortium DHCP Client V2.0b1pl11"
+literal|"Internet Software Consortium DHCP Client V2.0b1pl17"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,6 +337,8 @@ name|seed
 decl_stmt|;
 name|int
 name|quiet
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1898,6 +1900,29 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+comment|/* A number that looks negative here is really just very large, 	   because the lease expiry offset is unsigned. */
+if|if
+condition|(
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|expiry
+operator|<
+literal|0
+condition|)
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|expiry
+operator|=
+name|TIME_MAX
+expr_stmt|;
 comment|/* Take the server-provided renewal time if there is one; 	   otherwise figure it out according to the spec. */
 if|if
 condition|(
@@ -2044,6 +2069,29 @@ name|expiry
 operator|+=
 name|cur_time
 expr_stmt|;
+comment|/* Lease lengths can never be negative. */
+if|if
+condition|(
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|expiry
+operator|<
+name|cur_time
+condition|)
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|expiry
+operator|=
+name|TIME_MAX
+expr_stmt|;
 name|ip
 operator|->
 name|client
@@ -2054,6 +2102,28 @@ name|renewal
 operator|+=
 name|cur_time
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|renewal
+operator|<
+name|cur_time
+condition|)
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|renewal
+operator|=
+name|TIME_MAX
+expr_stmt|;
 name|ip
 operator|->
 name|client
@@ -2063,6 +2133,28 @@ operator|->
 name|rebind
 operator|+=
 name|cur_time
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|rebind
+operator|<
+name|cur_time
+condition|)
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|rebind
+operator|=
+name|TIME_MAX
 expr_stmt|;
 name|bind_lease
 argument_list|(
@@ -4595,17 +4687,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|result
-operator|<
-literal|0
-condition|)
-name|warn
-argument_list|(
-literal|"send_packet: %m"
-argument_list|)
-expr_stmt|;
 name|add_timeout
 argument_list|(
 name|cur_time
@@ -5824,17 +5905,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|result
-operator|<
-literal|0
-condition|)
-name|warn
-argument_list|(
-literal|"send_packet: %m"
-argument_list|)
-expr_stmt|;
 name|add_timeout
 argument_list|(
 name|cur_time
@@ -5937,17 +6007,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|result
-operator|<
-literal|0
-condition|)
-name|warn
-argument_list|(
-literal|"send_packet: %m"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -6033,17 +6092,6 @@ name|hardware
 operator|*
 operator|)
 literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|<
-literal|0
-condition|)
-name|warn
-argument_list|(
-literal|"send_packet: %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8786,11 +8834,8 @@ name|packet
 operator|.
 name|xid
 operator|=
-name|ip
-operator|->
-name|client
-operator|->
-name|xid
+name|random
+argument_list|()
 expr_stmt|;
 name|ip
 operator|->
@@ -10971,6 +11016,22 @@ name|pid
 operator|=
 name|setsid
 argument_list|()
+expr_stmt|;
+comment|/* Close standard I/O descriptors. */
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 name|write_client_pid_file
 argument_list|()
