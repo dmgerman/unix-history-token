@@ -566,6 +566,12 @@ directive|include
 file|"netinet/ipl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/in_cksum.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
