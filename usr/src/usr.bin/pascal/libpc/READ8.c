@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READ8.c 1.8 %G%"
+literal|"@(#)READ8.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,15 +383,6 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"leading sign<%s>\n"
-argument_list|,
-name|sequence
-argument_list|)
-expr_stmt|;
 name|AT_LEAST_ONE
 argument_list|(
 name|read
@@ -403,49 +394,7 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"leading digits<%s>\n"
-argument_list|,
-name|sequence
-argument_list|)
-expr_stmt|;
 comment|/* 	 *	any of this is optional: 	 *	[ `.' digit {digit} ] [ `e' [ `+' | `-' ] digit {digits} ] 	 */
-operator|*
-name|sequencep
-operator|=
-name|getc
-argument_list|(
-name|filep
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"before [.e]		0x%x\n"
-argument_list|,
-operator|*
-name|sequencep
-argument_list|)
-expr_stmt|;
-name|ungetc
-argument_list|(
-operator|*
-name|sequencep
-argument_list|,
-name|filep
-argument_list|)
-expr_stmt|;
-operator|*
-name|sequencep
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* ANY_ONE_OF(read, filep, "%c", sequencep);*/
-comment|/* read = fscanf(filep, "%c", sequencep); 	 * *++sequencep = '\0'; 	 */
 name|NEXT_CHAR
 argument_list|(
 name|read
@@ -455,17 +404,6 @@ argument_list|,
 literal|"%c"
 argument_list|,
 name|sequencep
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[.e] (read %d)<%s>\n"
-argument_list|,
-name|read
-argument_list|,
-name|sequence
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -502,15 +440,6 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"trailing digits<%s>\n"
-argument_list|,
-name|sequence
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -528,7 +457,6 @@ goto|goto
 name|convert
 goto|;
 block|}
-comment|/* AT_MOST_ONE(read, filep, "%c", sequencep); */
 name|NEXT_CHAR
 argument_list|(
 name|read
@@ -538,15 +466,6 @@ argument_list|,
 literal|"%c"
 argument_list|,
 name|sequencep
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"optional e<%s>\n"
-argument_list|,
-name|sequence
 argument_list|)
 expr_stmt|;
 if|if
@@ -575,7 +494,6 @@ comment|/* fall through */
 case|case
 literal|'e'
 case|:
-comment|/* ANY_ONE_OF(read, filep, "%c", sequencep); */
 name|NEXT_CHAR
 argument_list|(
 name|read
@@ -585,15 +503,6 @@ argument_list|,
 literal|"%c"
 argument_list|,
 name|sequencep
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"exponent sign<%s>\n"
-argument_list|,
-name|sequence
 argument_list|)
 expr_stmt|;
 if|if
@@ -633,15 +542,6 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"signed exponent<%s>\n"
-argument_list|,
-name|sequence
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -669,15 +569,6 @@ argument_list|,
 name|sequencep
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unsigned exponent<%s>\n"
-argument_list|,
-name|sequence
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -703,15 +594,6 @@ block|}
 name|convert
 label|:
 comment|/* 	 * convert sequence to double 	 */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"convert<%s>\n"
-argument_list|,
-name|sequence
-argument_list|)
-expr_stmt|;
 operator|*
 name|doublep
 operator|=
