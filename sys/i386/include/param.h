@@ -368,6 +368,12 @@ begin_comment
 comment|/* pages of i/o permission bitmap */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UPAGES
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -378,6 +384,11 @@ end_define
 begin_comment
 comment|/* pages of u-area */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Ceiling on amount of swblock kva space.  */

@@ -69,6 +69,12 @@ directive|include
 file|"opt_perfmon.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_upages.h"
+end_include
+
 begin_comment
 comment|/* #include "opt_userconfig.h" */
 end_comment
@@ -369,6 +375,23 @@ begin_include
 include|#
 directive|include
 file|<machine/perfmon.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/privatespace.h>
 end_include
 
 begin_endif

@@ -157,65 +157,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_comment
-comment|/*  * This is the upper (0xff800000) address space layout that is per-cpu.  * It is setup in locore.s and pmap.c for the BSP and in mp_machdep.c for  * each AP.  genassym helps export this to the assembler code.  */
-end_comment
-
-begin_struct
-struct|struct
-name|privatespace
-block|{
-comment|/* page 0 - data page */
-name|struct
-name|globaldata
-name|globaldata
-decl_stmt|;
-name|char
-name|__filler0
-index|[
-name|PAGE_SIZE
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|globaldata
-argument_list|)
-index|]
-decl_stmt|;
-comment|/* page 1 - idle stack (UPAGES pages) */
-name|char
-name|idlestack
-index|[
-name|UPAGES
-operator|*
-name|PAGE_SIZE
-index|]
-decl_stmt|;
-comment|/* page 1+UPAGES... */
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|privatespace
-name|SMP_prvspace
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif

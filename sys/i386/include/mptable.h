@@ -9,6 +9,12 @@ directive|include
 file|"opt_cpu.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_upages.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -251,6 +257,12 @@ begin_include
 include|#
 directive|include
 file|<machine/globaldata.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/privatespace.h>
 end_include
 
 begin_if
