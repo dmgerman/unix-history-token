@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.9 1994/11/27 15:29:56 bde Exp $ */
+comment|/* $Id: if_ppp.c,v 1.10 1995/02/13 02:09:13 ache Exp $ */
 end_comment
 
 begin_comment
@@ -7994,11 +7994,11 @@ block|}
 end_function
 
 begin_expr_stmt
-name|TEXT_SET
+name|PSEUDO_SET
 argument_list|(
-name|pseudo_set
-argument_list|,
 name|pppattach
+argument_list|,
+name|if_ppp
 argument_list|)
 expr_stmt|;
 end_expr_stmt

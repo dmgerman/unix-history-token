@@ -426,7 +426,7 @@ name|tunattach
 name|__P
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -448,12 +448,7 @@ end_decl_stmt
 begin_function
 name|void
 name|tunattach
-parameter_list|(
-name|unused
-parameter_list|)
-name|int
-name|unused
-decl_stmt|;
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -622,6 +617,8 @@ begin_expr_stmt
 name|PSEUDO_SET
 argument_list|(
 name|tunattach
+argument_list|,
+name|if_tun
 argument_list|)
 expr_stmt|;
 end_expr_stmt
