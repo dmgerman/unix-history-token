@@ -2916,6 +2916,7 @@ name|rp
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/*  		 * XXX  		 * Last argument of getent here should be nbuf if we want true 		 * sequential access in the case of duplicates.   		 * With NULL, getent will return the first entry found 		 * rather than the duplicate entry record.  This is a  		 * matter of semantics that should be resolved. 		 */
 name|status
 operator|=
 name|getent
@@ -2934,7 +2935,7 @@ name|buf
 argument_list|,
 literal|0
 argument_list|,
-name|nbuf
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
