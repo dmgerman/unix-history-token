@@ -19,6 +19,118 @@ directive|define
 name|_SYS_IPC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__gid_t
+name|gid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_GID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KEY_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__key_t
+name|key_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_KEY_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MODE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__mode_t
+name|mode_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_MODE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__uid_t
+name|uid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * XXX almost all members have wrong types.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ipc_perm
@@ -54,6 +166,12 @@ comment|/* user specified msg/sem/shm key */
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/* common mode bits */
@@ -91,6 +209,11 @@ end_define
 begin_comment
 comment|/* permission to change control info */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* SVID required constants (same values as system 5) */
@@ -173,6 +296,12 @@ begin_comment
 comment|/* get options */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -183,6 +312,11 @@ end_define
 begin_comment
 comment|/* get info */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -297,16 +431,6 @@ end_else
 begin_comment
 comment|/* ! _KERNEL */
 end_comment
-
-begin_comment
-comment|/* XXX doesn't really belong here, but has been historical practice in SysV. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
