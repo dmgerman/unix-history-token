@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.17 1998/04/30 13:15:31 ache Exp $ */
+comment|/*	$Id: msgcat.c,v 1.18 1998/07/14 18:27:43 ache Exp $ */
 end_comment
 
 begin_comment
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -261,11 +267,17 @@ operator|!
 operator|*
 name|name
 condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
 name|NLERR
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|strchr
@@ -589,11 +601,17 @@ condition|(
 operator|!
 name|catpath
 condition|)
+block|{
+name|errno
+operator|=
+name|ENOENT
+expr_stmt|;
 return|return
 operator|(
 name|NLERR
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
@@ -1220,10 +1238,16 @@ name|catd
 operator|==
 name|NLERR
 condition|)
+block|{
+name|errno
+operator|=
+name|EBADF
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|cat
@@ -1329,7 +1353,7 @@ define|#
 directive|define
 name|CORRUPT
 parameter_list|()
-value|{fprintf(stderr, "%s: corrupt file.\n", ERRNAME); free(cat); return(NLERR);}
+value|{fprintf(stderr, "%s: corrupt file.\n", ERRNAME); free(cat); errno = EINVAL; return(NLERR);}
 end_define
 
 begin_define
@@ -1519,6 +1543,10 @@ argument_list|,
 name|MCMajorVer
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
 name|NLERR
@@ -1553,6 +1581,10 @@ name|header
 operator|.
 name|numSets
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
 expr_stmt|;
 return|return
 operator|(
