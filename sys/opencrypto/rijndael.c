@@ -39,12 +39,6 @@ directive|include
 file|<opencrypto/rijndael.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|FULL_UNROLL
-end_define
-
 begin_comment
 comment|/* Te0[x] = S [x].[02, 01, 01, 03]; Te1[x] = S [x].[03, 02, 01, 01]; Te2[x] = S [x].[01, 03, 02, 01]; Te3[x] = S [x].[01, 01, 03, 02]; Te4[x] = S [x].[01, 01, 01, 01];  Td0[x] = Si[x].[0e, 09, 0d, 0b]; Td1[x] = Si[x].[0b, 0e, 09, 0d]; Td2[x] = Si[x].[0d, 0b, 0e, 09]; Td3[x] = Si[x].[09, 0d, 0b, 0e]; Td4[x] = Si[x].[01, 01, 01, 01]; */
 end_comment
