@@ -11309,6 +11309,27 @@ operator|&
 name|OHCI_INT_PHY_BUS_R
 condition|)
 block|{
+if|if
+condition|(
+name|fc
+operator|->
+name|status
+operator|==
+name|FWBUSRESET
+condition|)
+goto|goto
+name|busresetout
+goto|;
+comment|/* Disable bus reset interrupt until sid recv. */
+name|OWRITE
+argument_list|(
+name|sc
+argument_list|,
+name|FWOHCI_INTMASKCLR
+argument_list|,
+name|OHCI_INT_PHY_BUS_R
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|fc
@@ -11435,6 +11456,8 @@ literal|0x10000
 argument_list|)
 expr_stmt|;
 block|}
+name|busresetout
+label|:
 if|if
 condition|(
 operator|(
@@ -11779,6 +11802,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Enable bus reset interrupt */
+name|OWRITE
+argument_list|(
+name|sc
+argument_list|,
+name|FWOHCI_INTMASK
+argument_list|,
+name|OHCI_INT_PHY_BUS_R
+argument_list|)
+expr_stmt|;
 comment|/* ** Checking whether the node is root or not. If root, turn on  ** cycle master. */
 name|device_printf
 argument_list|(
@@ -12246,6 +12279,10 @@ name|arg
 decl_stmt|;
 name|u_int32_t
 name|stat
+decl_stmt|,
+name|bus_reset
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -12312,6 +12349,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* We cannot clear bus reset event during bus reset phase */
+if|if
+condition|(
+operator|(
+name|stat
+operator|&
+operator|~
+name|bus_reset
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+name|bus_reset
+operator|=
+name|stat
+operator|&
+name|OHCI_INT_PHY_BUS_R
+expr_stmt|;
 name|fwohci_intr_body
 argument_list|(
 name|sc
