@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.74.1.1 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4990,7 +4990,7 @@ literal|'h'
 block|,
 name|FALSE
 block|,
-literal|"NameServerOptions"
+literal|"ResolverOptions"
 block|,
 literal|'I'
 block|,
@@ -5170,7 +5170,7 @@ literal|'y'
 block|,
 name|FALSE
 block|,
-literal|"ForkQueueRuns"
+literal|"ForkEachJob"
 block|,
 literal|'Y'
 block|,
@@ -5182,7 +5182,7 @@ literal|'z'
 block|,
 name|FALSE
 block|,
-literal|"TimeFactor"
+literal|"RetryFactor"
 block|,
 literal|'Z'
 block|,
@@ -5270,6 +5270,16 @@ value|0x89
 literal|"SafeFileEnvironment"
 block|,
 name|O_SAFEFILEENV
+block|,
+name|FALSE
+block|,
+define|#
+directive|define
+name|O_MAXMSGSIZE
+value|0x8a
+literal|"MaxMessageSize"
+block|,
+name|O_MAXMSGSIZE
 block|,
 name|FALSE
 block|,
@@ -7617,6 +7627,18 @@ operator|=
 name|newstr
 argument_list|(
 name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_MAXMSGSIZE
+case|:
+comment|/* maximum message size */
+name|MaxMessageSize
+operator|=
+name|atol
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
