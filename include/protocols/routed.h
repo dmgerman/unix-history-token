@@ -27,7 +27,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* #ident "$Revision: 1.13 $" */
 comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
 define|#
 directive|define
