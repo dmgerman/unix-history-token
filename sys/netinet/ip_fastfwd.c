@@ -541,7 +541,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipstat
@@ -549,9 +549,10 @@ operator|.
 name|ips_toosmall
 operator|++
 expr_stmt|;
-goto|goto
-name|drop
-goto|;
+return|return
+literal|1
+return|;
+comment|/* mbuf already free'd */
 block|}
 name|ip
 operator|=
