@@ -602,7 +602,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*    * The outb(0, 0x80) is just for slowdown. It's bit unsafe since  * this address could be used for something usefull.  */
+comment|/*    * outb(0x5f, 0) and outb(0x80, 0) are just for delay.  They are a bit  * unsafe since there might be a device at the magic address.  */
 end_comment
 
 begin_ifdef
@@ -616,11 +616,11 @@ define|#
 directive|define
 name|OUTB
 parameter_list|(
-name|addr
-parameter_list|,
 name|data
+parameter_list|,
+name|addr
 parameter_list|)
-value|{outb(data, addr);outb(0x5f, 0);}
+value|{ outb(addr, data); outb(0x5f, 0); }
 end_define
 
 begin_define
@@ -628,11 +628,11 @@ define|#
 directive|define
 name|OUTW
 parameter_list|(
-name|addr
-parameter_list|,
 name|data
+parameter_list|,
+name|addr
 parameter_list|)
-value|{outw(data, addr);outb(0x5f, 0);}
+value|{ outw(addr, data); outb(0x5f, 0); }
 end_define
 
 begin_else
@@ -649,11 +649,11 @@ define|#
 directive|define
 name|OUTB
 parameter_list|(
-name|addr
-parameter_list|,
 name|data
+parameter_list|,
+name|addr
 parameter_list|)
-value|{outb(data, addr);outb(0x80, 0);}
+value|{ outb(addr, data); outb(0x80, 0); }
 end_define
 
 begin_define
@@ -661,11 +661,11 @@ define|#
 directive|define
 name|OUTW
 parameter_list|(
-name|addr
-parameter_list|,
 name|data
+parameter_list|,
+name|addr
 parameter_list|)
-value|{outw(data, addr);outb(0x80, 0);}
+value|{ outw(addr, data); outb(0x80, 0); }
 end_define
 
 begin_endif
@@ -687,11 +687,11 @@ define|#
 directive|define
 name|OUTB
 parameter_list|(
-name|addr
-parameter_list|,
 name|data
+parameter_list|,
+name|addr
 parameter_list|)
-value|outb(data, addr)
+value|outb(addr, data)
 end_define
 
 begin_define
@@ -699,11 +699,11 @@ define|#
 directive|define
 name|OUTW
 parameter_list|(
-name|addr
-parameter_list|,
 name|data
+parameter_list|,
+name|addr
 parameter_list|)
-value|outw(data, addr)
+value|outw(addr, data)
 end_define
 
 begin_endif
