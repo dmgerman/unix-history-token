@@ -312,6 +312,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tlb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/tstate.h>
 end_include
 
@@ -1167,6 +1173,24 @@ operator|->
 name|pc_mid
 operator|=
 name|mid
+expr_stmt|;
+name|pc
+operator|->
+name|pc_tlb_ctx
+operator|=
+name|TLB_CTX_USER_MIN
+expr_stmt|;
+name|pc
+operator|->
+name|pc_tlb_ctx_min
+operator|=
+name|TLB_CTX_USER_MIN
+expr_stmt|;
+name|pc
+operator|->
+name|pc_tlb_ctx_max
+operator|=
+name|TLB_CTX_USER_MAX
 expr_stmt|;
 comment|/* 	 * Initialize global registers. 	 */
 name|cpu_setregs
