@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	5.2 (Berkeley) %G%"
+literal|"@(#)swap.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1611,6 +1611,37 @@ block|,
 literal|"rx"
 block|,
 literal|"rl"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|devnames
+index|[]
+init|=
+block|{
+literal|"ud"
+block|,
+literal|"vd"
+block|,
+literal|"xp"
+block|,
+literal|"cy"
+block|,
+literal|"sw"
 block|}
 decl_stmt|;
 end_decl_stmt

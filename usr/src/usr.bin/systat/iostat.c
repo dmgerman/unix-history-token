@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.2 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,7 +173,7 @@ name|vax
 define|#
 directive|define
 name|X_MBDINIT
-value|6
+value|(X_CP_TIME+1)
 block|{
 literal|"_mbdinit"
 block|}
@@ -181,9 +181,22 @@ block|,
 define|#
 directive|define
 name|X_UBDINIT
-value|7
+value|(X_CP_TIME+2)
 block|{
 literal|"_ubdinit"
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|tahoe
+define|#
+directive|define
+name|X_VBDINIT
+value|(X_CP_TIME+1)
+block|{
+literal|"_vbdinit"
 block|}
 block|,
 endif|#
