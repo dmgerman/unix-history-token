@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -1622,6 +1628,8 @@ argument_list|,
 name|r
 argument_list|,
 name|INTR_TYPE_MISC
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|npx_intr
 argument_list|,
@@ -2543,6 +2551,14 @@ name|intrframe
 modifier|*
 name|frame
 decl_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PCPU_GET
@@ -2751,6 +2767,14 @@ name|SIGFPE
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
