@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sendmail.h"
 end_include
 
@@ -53,7 +59,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.19	%G%"
+literal|"@(#)deliver.c	3.20	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1114,15 +1120,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_extern
-extern|extern pipesig(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
 specifier|extern
 name|FILE
@@ -1477,7 +1474,7 @@ name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
-name|pipesig
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2219,6 +2216,10 @@ name|ferror
 argument_list|(
 name|fp
 argument_list|)
+operator|&&
+name|errno
+operator|!=
+name|EPIPE
 condition|)
 block|{
 name|syserr
@@ -2232,37 +2233,9 @@ name|EX_IOERR
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  PIPESIG -- Handle broken pipe signals ** **	This just logs an error. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		logs an error message. */
-end_comment
-
-begin_macro
-name|pipesig
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|syserr
-argument_list|(
-literal|"Broken pipe"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|SIG_IGN
-argument_list|)
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_block
