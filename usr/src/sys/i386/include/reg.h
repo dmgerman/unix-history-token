@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)reg.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)reg.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -195,6 +195,34 @@ define|#
 directive|define
 name|sSS
 value|(12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SP
+value|sESP
+end_define
+
+begin_define
+define|#
+directive|define
+name|PS
+value|sEFLAGS
+end_define
+
+begin_define
+define|#
+directive|define
+name|R0
+value|sEDX
+end_define
+
+begin_define
+define|#
+directive|define
+name|R1
+value|sECX
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -287,8 +287,14 @@ name|pte
 expr_stmt|;
 endif|#
 directive|endif
-name|tlbflush
-argument_list|()
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -475,8 +481,14 @@ name|pte
 operator||=
 name|tprot
 expr_stmt|;
-name|tlbflush
-argument_list|()
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -552,8 +564,14 @@ operator||=
 name|tprot
 expr_stmt|;
 block|}
-name|tlbflush
-argument_list|()
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -713,8 +731,14 @@ name|change
 condition|)
 do|;
 comment|/* short cut newptes */
-name|tlbflush
-argument_list|()
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -806,8 +830,14 @@ name|pte
 operator|++
 expr_stmt|;
 block|}
-name|tlbflush
-argument_list|()
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -924,8 +954,14 @@ operator|-=
 name|NBPG
 expr_stmt|;
 block|}
-name|tlbflush
-argument_list|()
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -2530,8 +2566,14 @@ block|}
 end_while
 
 begin_expr_stmt
-name|tlbflush
-argument_list|()
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -2744,8 +2786,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|tlbflush
-argument_list|()
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ptd
+argument_list|)
 expr_stmt|;
 block|}
 end_block
