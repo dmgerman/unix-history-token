@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.19 (Berkeley) %G%"
+literal|"@(#)headers.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2901,6 +2901,10 @@ block|{
 comment|/* syntax error: unmatched ) */
 if|if
 condition|(
+name|copylev
+operator|>
+literal|0
+operator|&&
 operator|!
 name|skipping
 condition|)
