@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.6 (Berkeley)	%G%  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.7 (Berkeley)	%G%  */
 end_comment
 
 begin_comment
@@ -749,27 +749,6 @@ expr_stmt|;
 name|virtual_end
 operator|=
 name|VM_MAX_KERNEL_ADDRESS
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"avail [%x %x] virtual [%x %x]\n"
-argument_list|,
-name|avail_start
-argument_list|,
-name|avail_end
-argument_list|,
-name|virtual_avail
-argument_list|,
-name|virtual_end
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"cr3 %x"
-argument_list|,
-name|rcr3
-argument_list|()
-argument_list|)
 expr_stmt|;
 name|i386pagesperpage
 operator|=
@@ -4233,8 +4212,6 @@ decl_stmt|;
 name|int
 name|opmapdebug
 decl_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"pmap_collect(%x) "
@@ -4242,6 +4219,8 @@ argument_list|,
 name|pmap
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pmap
@@ -5439,6 +5418,32 @@ name|pv
 operator|->
 name|pv_va
 expr_stmt|;
+comment|/*                          * XXX don't write protect pager mappings                          */
+if|if
+condition|(
+name|bit
+operator|==
+name|PG_RO
+condition|)
+block|{
+specifier|extern
+name|vm_offset_t
+name|pager_sva
+decl_stmt|,
+name|pager_eva
+decl_stmt|;
+if|if
+condition|(
+name|va
+operator|>=
+name|pager_sva
+operator|&&
+name|va
+operator|<
+name|pager_eva
+condition|)
+continue|continue;
+block|}
 name|pte
 operator|=
 operator|(
