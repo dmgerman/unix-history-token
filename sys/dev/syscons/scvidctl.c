@@ -634,6 +634,8 @@ operator|->
 name|status
 operator||=
 name|UNKNOWN_MODE
+operator||
+name|MOUSE_HIDDEN
 expr_stmt|;
 name|scp
 operator|->
@@ -644,6 +646,8 @@ operator|(
 name|GRAPHICS_MODE
 operator||
 name|PIXEL_MODE
+operator||
+name|MOUSE_VISIBLE
 operator|)
 expr_stmt|;
 name|scp
@@ -1009,6 +1013,8 @@ operator|(
 name|UNKNOWN_MODE
 operator||
 name|GRAPHICS_MODE
+operator||
+name|MOUSE_HIDDEN
 operator|)
 expr_stmt|;
 name|scp
@@ -1016,7 +1022,11 @@ operator|->
 name|status
 operator|&=
 operator|~
+operator|(
 name|PIXEL_MODE
+operator||
+name|MOUSE_VISIBLE
+operator|)
 expr_stmt|;
 name|scp
 operator|->
@@ -1617,6 +1627,8 @@ operator|(
 name|UNKNOWN_MODE
 operator||
 name|PIXEL_MODE
+operator||
+name|MOUSE_HIDDEN
 operator|)
 expr_stmt|;
 name|scp
@@ -1624,7 +1636,11 @@ operator|->
 name|status
 operator|&=
 operator|~
+operator|(
 name|GRAPHICS_MODE
+operator||
+name|MOUSE_VISIBLE
+operator|)
 expr_stmt|;
 name|scp
 operator|->
@@ -3120,6 +3136,8 @@ operator|->
 name|status
 operator||=
 name|UNKNOWN_MODE
+operator||
+name|MOUSE_HIDDEN
 expr_stmt|;
 name|splx
 argument_list|(
@@ -3283,6 +3301,8 @@ operator|(
 name|UNKNOWN_MODE
 operator||
 name|PIXEL_MODE
+operator||
+name|MOUSE_HIDDEN
 operator|)
 expr_stmt|;
 name|splx
@@ -3376,6 +3396,8 @@ operator|->
 name|status
 operator||=
 name|UNKNOWN_MODE
+operator||
+name|MOUSE_HIDDEN
 expr_stmt|;
 name|splx
 argument_list|(
