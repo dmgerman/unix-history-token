@@ -5,12 +5,12 @@ name|char
 name|_ittyid
 index|[]
 init|=
-literal|"@(#)$Id: iitty.c,v 1.19 1995/12/17 21:17:47 phk Exp $"
+literal|"@(#)$Id: iitty.c,v 1.20 1996/03/28 14:27:52 scrappy Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.19 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.20 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_include
@@ -416,7 +416,7 @@ argument_list|,
 name|next_if
 argument_list|)
 expr_stmt|;
-name|devfs_token
+name|devfs_token_out
 index|[
 name|next_if
 index|]
