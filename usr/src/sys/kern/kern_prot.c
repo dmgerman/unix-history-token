@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2208,7 +2208,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Test if the current user is the super user.  */
+comment|/*  * Test whether the specified credentials imply "super-user"  * privilege; if so, and we have accounting info, set the flag  * indicating use of super-powers.  * Returns 0 or error.  */
 end_comment
 
 begin_macro
