@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)address.c 1.1 %G%"
+literal|"@(#)address.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,7 +268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The next three routines assume the procedure entry code is  *  *		f:	tra4	A  *			...  *		A:	beg  *		B:<code for first line>  *  * Pi gives f, we compute and store A with "findbeginning(f)",  * (retrieved by "codeloc(f)"), B is computed by "firstline(f)".  *  * The procedure "runtofirst" assumes you're at A and want to step to B.  * It should be changed to a nop if A is equal to B.  */
+comment|/*  * The next three routines assume the procedure entry code is  *  *      f:  tra4    A  *          ...  *      A:  beg  *      B:<code for first line>  *  * Pi gives f, we compute and store A with "findbeginning(f)",  * (retrieved by "codeloc(f)"), B is computed by "firstline(f)".  *  * The procedure "runtofirst" assumes you're at A and want to step to B.  * It should be changed to a nop if A is equal to B.  */
 end_comment
 
 begin_comment
@@ -350,6 +350,19 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|isendofproc
+argument_list|(
+name|addr
+argument_list|)
+condition|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|addr
 operator|=
 name|nextaddr
@@ -361,9 +374,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|addr
-operator|)
 return|;
 block|}
 end_function
