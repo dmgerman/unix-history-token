@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getusershell.c	5.2 (Berkeley) %G%"
+literal|"@(#)getusershell.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,6 +478,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 while|while
 condition|(
 operator|*
