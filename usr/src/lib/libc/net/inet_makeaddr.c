@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inet_makeaddr.c	4.2	82/10/07	*/
+comment|/*	inet_makeaddr.c	4.3	82/11/14	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<netinet/in.h>
 end_include
 
 begin_comment
@@ -48,7 +48,7 @@ operator|=
 operator|(
 name|net
 operator|<<
-literal|24
+name|IN_CLASSA_NSHIFT
 operator|)
 operator||
 name|host
@@ -65,7 +65,7 @@ operator|=
 operator|(
 name|net
 operator|<<
-literal|16
+name|IN_CLASSB_NSHIFT
 operator|)
 operator||
 name|host
@@ -76,7 +76,7 @@ operator|=
 operator|(
 name|net
 operator|<<
-literal|8
+name|IN_CLASSC_NSHIFT
 operator|)
 operator||
 name|host

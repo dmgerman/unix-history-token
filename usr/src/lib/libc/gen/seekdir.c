@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)seekdir.c 4.6 %G%"
+literal|"@(#)seekdir.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,36 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|dirp
+operator|->
+name|dd_loc
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|curloc
+operator|&
+operator|~
+operator|(
+name|DIRBLKSIZ
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+name|base
+condition|)
+block|{
+name|dirp
+operator|->
+name|dd_loc
+operator|=
+name|offset
+expr_stmt|;
+return|return;
+block|}
 name|lseek
 argument_list|(
 name|dirp

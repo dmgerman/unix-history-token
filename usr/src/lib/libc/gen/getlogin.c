@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)getlogin.c	4.1 (Berkeley) %G%	*/
+comment|/*	getlogin.c	4.2	82/11/14	*/
 end_comment
 
 begin_include
@@ -34,10 +34,11 @@ name|getlogin
 parameter_list|()
 block|{
 specifier|register
+name|int
 name|me
-operator|,
+decl_stmt|,
 name|uf
-expr_stmt|;
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -121,11 +122,18 @@ argument_list|(
 name|ubuf
 argument_list|)
 condition|)
+block|{
+name|close
+argument_list|(
+name|uf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|close
 argument_list|(
 name|uf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inet_addr.c	4.4	82/10/07	*/
+comment|/*	inet_addr.c	4.5	82/11/14	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<netinet/in.h>
 end_include
 
 begin_comment
