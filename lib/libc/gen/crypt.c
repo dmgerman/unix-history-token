@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/chroot/CVS/386BSD/src/lib/libc/gen/crypt.c,v 1.4 1993/07/21 18:32:28 nate Exp $"
+literal|"$Header: /a/cvs/386BSD/src/lib/libc/gen/crypt.c,v 1.5 1993/08/27 22:04:55 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +232,19 @@ name|unsigned
 name|long
 name|t
 decl_stmt|;
+comment|/* Ugly hack, but I'm too lazy to find the real problem - NW */
+name|bzero
+argument_list|(
+name|matrix
+argument_list|,
+literal|128
+operator|*
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|salt
