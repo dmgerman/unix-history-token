@@ -179,11 +179,23 @@ directive|include
 file|<machine/frame.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_KERNEL
+end_define
+
 begin_include
 include|#
 directive|include
 file|<machine/globaldata.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_KERNEL
+end_undef
 
 begin_decl_stmt
 specifier|static
