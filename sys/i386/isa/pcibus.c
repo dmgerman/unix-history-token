@@ -1064,17 +1064,13 @@ operator|=
 literal|"Intel 824?? host to PCI bridge"
 expr_stmt|;
 comment|/* XXX This is a guess */
+comment|/* *busnum = pci_cfgread(cfg, 0x41, 1); */
 operator|*
 name|busnum
 operator|=
-name|pci_cfgread
-argument_list|(
 name|cfg
-argument_list|,
-literal|0x41
-argument_list|,
-literal|1
-argument_list|)
+operator|->
+name|bus
 expr_stmt|;
 break|break;
 case|case
@@ -1534,6 +1530,11 @@ decl_stmt|;
 name|int
 name|pcifunchigh
 decl_stmt|;
+name|int
+name|found824xx
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|pci_cfgopen
@@ -1554,6 +1555,8 @@ name|bus
 operator|=
 literal|0
 expr_stmt|;
+name|retry
+label|:
 for|for
 control|(
 name|probe
@@ -1737,8 +1740,38 @@ name|found
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|id
+operator|==
+literal|0x12258086
+condition|)
+name|found824xx
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
+block|}
+if|if
+condition|(
+name|found824xx
+operator|&&
+name|probe
+operator|.
+name|bus
+operator|==
+literal|0
+condition|)
+block|{
+name|probe
+operator|.
+name|bus
+operator|++
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
 block|}
 comment|/* 	 * Make sure we add at least one bridge since some old 	 * hardware doesn't actually have a host-pci bridge device. 	 * Note that pci_cfgopen() thinks we have PCI devices.. 	 */
 if|if
