@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.25 1995/02/17 16:45:08 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.26 1995/02/22 18:04:56 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NCR_PATCHLEVEL
-value|"pl17 95/02/22"
+value|"pl18 95/02/23"
 end_define
 
 begin_define
@@ -843,7 +843,7 @@ value|(0xfc)
 end_define
 
 begin_comment
-comment|/*========================================================== ** **	Software Interupt Codes ** **========================================================== */
+comment|/*========================================================== ** **	Software Interrupt Codes ** **========================================================== */
 end_comment
 
 begin_define
@@ -1653,7 +1653,7 @@ name|struct
 name|link
 name|jump_lcb
 decl_stmt|;
-comment|/* 	**	pointer to interupted getcc ccb 	*/
+comment|/* 	**	pointer to interrupted getcc ccb 	*/
 name|ccb_p
 name|hold_cp
 decl_stmt|;
@@ -3267,7 +3267,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.25 1995/02/17 16:45:08 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.26 1995/02/22 18:04:56 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3811,7 +3811,7 @@ block|, }
 comment|/*-------------------------< START0>----------------------*/
 block|,
 block|{
-comment|/* 	**	Hook for interupted GetConditionCode. 	**	Will be patched to ... IFTRUE by 	**	the interupt handler. 	*/
+comment|/* 	**	Hook for interrupted GetConditionCode. 	**	Will be patched to ... IFTRUE by 	**	the interrupt handler. 	*/
 name|SCR_INT
 operator|^
 name|IFFALSE
@@ -3825,7 +3825,7 @@ block|}
 comment|/*-------------------------< START1>----------------------*/
 block|,
 block|{
-comment|/* 	**	Hook for stalled start queue. 	**	Will be patched to IFTRUE by the interupt handler. 	*/
+comment|/* 	**	Hook for stalled start queue. 	**	Will be patched to IFTRUE by the interrupt handler. 	*/
 name|SCR_INT
 operator|^
 name|IFFALSE
@@ -3995,7 +3995,7 @@ argument_list|(
 name|reselect
 argument_list|)
 block|,
-comment|/* 	**	Now there are 4 possibilities: 	** 	**	(1) The ncr looses arbitration. 	**	This is ok, because it will try again, 	**	when the bus becomes idle. 	**	(But beware of the timeout function!) 	** 	**	(2) The ncr is reselected. 	**	Then the script processor takes the jump 	**	to the RESELECT label. 	** 	**	(3) The ncr completes the selection. 	**	Then it will execute the next statement. 	** 	**	(4) There is a selection timeout. 	**	Then the ncr should interupt the host and stop. 	**	Unfortunately, it seems to continue execution 	**	of the script. But it will fail with an 	**	IID-interupt on the next WHEN. 	*/
+comment|/* 	**	Now there are 4 possibilities: 	** 	**	(1) The ncr looses arbitration. 	**	This is ok, because it will try again, 	**	when the bus becomes idle. 	**	(But beware of the timeout function!) 	** 	**	(2) The ncr is reselected. 	**	Then the script processor takes the jump 	**	to the RESELECT label. 	** 	**	(3) The ncr completes the selection. 	**	Then it will execute the next statement. 	** 	**	(4) There is a selection timeout. 	**	Then the ncr should interrupt the host and stop. 	**	Unfortunately, it seems to continue execution 	**	of the script. But it will fail with an 	**	IID-interrupt on the next WHEN. 	*/
 name|SCR_JUMPR
 operator|^
 name|IFTRUE
@@ -5356,7 +5356,7 @@ argument_list|(
 name|clrack
 argument_list|)
 block|,
-comment|/* 	**	Size is not 1 .. have to interupt. 	*/
+comment|/* 	**	Size is not 1 .. have to interrupt. 	*/
 comment|/*<<<*/
 name|SCR_JUMPR
 operator|^
@@ -7101,7 +7101,7 @@ block|, }
 comment|/*-------------------------< RESELECT2>-------------------*/
 block|,
 block|{
-comment|/* 	**	If it's not connected :( 	**	-> interupted by SIGP bit. 	**	Jump to start. 	*/
+comment|/* 	**	If it's not connected :( 	**	-> interrupted by SIGP bit. 	**	Jump to start. 	*/
 name|SCR_FROM_REG
 argument_list|(
 name|ctest2
@@ -9362,7 +9362,7 @@ empty_stmt|;
 ifndef|#
 directive|ifndef
 name|__NetBSD__
-comment|/* 	**	Install the interupt handler. 	*/
+comment|/* 	**	Install the interrupt handler. 	*/
 if|if
 condition|(
 operator|!
@@ -9380,12 +9380,12 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\tinteruptless mode: reduced performance.\n"
+literal|"\tinterruptless mode: reduced performance.\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	**	After SCSI devices have been opened, we cannot 	**	reset the bus safely, so we do it here. 	**	Interupt handler does the real work. 	*/
+comment|/* 	**	After SCSI devices have been opened, we cannot 	**	reset the bus safely, so we do it here. 	**	Interrupt handler does the real work. 	*/
 name|OUTB
 argument_list|(
 name|nc_scntl1
@@ -9398,7 +9398,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* 	**	process the reset exception, 	**	if interupts are not enabled yet. 	**	than enable disconnects. 	*/
+comment|/* 	**	process the reset exception, 	**	if interrupts are not enabled yet. 	**	than enable disconnects. 	*/
 name|ncr_exception
 argument_list|(
 name|np
@@ -9489,7 +9489,7 @@ literal|0
 argument|;
 comment|/* 	**  Done. 	*/
 argument|return; }
-comment|/*========================================================== ** ** **	Process pending device interupts. ** ** **========================================================== */
+comment|/*========================================================== ** ** **	Process pending device interrupts. ** ** **========================================================== */
 argument|int ncr_intr(np) 	ncb_p np; { 	int n =
 literal|0
 argument|; 	int oldspl = splbio();  	if (DEBUG_FLAGS& DEBUG_TINY) printf (
@@ -9539,7 +9539,7 @@ argument_list|,
 argument|idmsg; 	u_long  msglen
 argument_list|,
 argument|msglen2;
-comment|/*--------------------------------------------- 	** 	**   Reset SCSI bus 	** 	**	Interupt handler does the real work. 	** 	**--------------------------------------------- 	*/
+comment|/*--------------------------------------------- 	** 	**   Reset SCSI bus 	** 	**	Interrupt handler does the real work. 	** 	**--------------------------------------------- 	*/
 argument|if (flags& SCSI_RESET) { 		OUTB (nc_scntl1, CRST); 		return(COMPLETE); 	};
 comment|/*--------------------------------------------- 	** 	**      Some shortcuts ... 	** 	**--------------------------------------------- 	*/
 argument|if ((xp->TARGET == np->myaddr    ) || 		(xp->TARGET>= MAX_TARGET) || 		(xp->LUN>= MAX_LUN   ) || 		(flags& SCSI_DATA_UIO)) { 		xp->error = XS_DRIVER_STUFFUP; 		return(HAD_ERROR); 	};
@@ -9802,13 +9802,13 @@ literal|0
 argument|]- 			(vtophys(&np->script->tryloop))));
 comment|/* 	**	Script processor may be waiting for reconnect. 	**	Wake it up. 	*/
 argument|OUTB (nc_istat, SIGP);
-comment|/* 	**	and reenable interupts 	*/
+comment|/* 	**	and reenable interrupts 	*/
 argument|splx (oldspl);
-comment|/* 	**	If interupts are enabled, return now. 	**	Command is successfully queued. 	*/
+comment|/* 	**	If interrupts are enabled, return now. 	**	Command is successfully queued. 	*/
 argument|if (!(flags& SCSI_NOMASK)) { 		if (np->lasttime) { 			if(DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"Q"
 argument|); 			return(SUCCESSFULLY_QUEUED); 		}; 	};
-comment|/*---------------------------------------------------- 	** 	**	Interupts not yet enabled - have to poll. 	** 	**---------------------------------------------------- 	*/
+comment|/*---------------------------------------------------- 	** 	**	Interrupts not yet enabled - have to poll. 	** 	**---------------------------------------------------- 	*/
 argument|if (DEBUG_FLAGS& DEBUG_POLL) printf(
 literal|"P"
 argument|);  	for (i=xp->timeout; i&& !(xp->flags& ITSDONE);i--) { 		if ((DEBUG_FLAGS& DEBUG_POLL)&& (cp->host_status)) 			printf (
@@ -10258,11 +10258,11 @@ literal|1
 argument|)) continue; 			tp =&np->target[t]; 			tp->usrflag = np->user.data; 		}; 		break; 	} 	np->user.cmd=
 literal|0
 argument|; }
-comment|/*========================================================== ** ** **	ncr timeout handler. ** ** **========================================================== ** **	Misused to keep the driver running when **	interupts are not configured correctly. ** **---------------------------------------------------------- */
+comment|/*========================================================== ** ** **	ncr timeout handler. ** ** **========================================================== ** **	Misused to keep the driver running when **	interrupts are not configured correctly. ** **---------------------------------------------------------- */
 argument|static void ncr_timeout (ncb_p np) { 	u_long	thistime = time.tv_sec; 	u_long	step  = np->ticks; 	u_long	count =
 literal|0
 argument|; 	long signed   t; 	ccb_p cp;  	if (np->lasttime != thistime) {
-comment|/* 		**	block ncr interupts 		*/
+comment|/* 		**	block ncr interrupts 		*/
 argument|int oldspl = splbio(); 		np->lasttime = thistime;  		ncr_usercmd (np);
 comment|/*---------------------------------------------------- 		** 		**	handle ncr chip timeouts 		** 		**	Assumption: 		**	We have a chance to arbitrate for the 		**	SCSI bus at least every 10 seconds. 		** 		**---------------------------------------------------- 		*/
 argument|t = thistime - np->heartbeat;  		if (t<
@@ -10301,7 +10301,7 @@ argument|ncr_complete (np, cp); 		}; 		splx (oldspl); 	}
 argument|timeout (TIMEOUT ncr_timeout, (caddr_t) np, step ? step :
 literal|1
 argument|);  	if (INB(nc_istat)& (INTF|SIP|DIP)) {
-comment|/* 		**	Process pending interupts. 		*/
+comment|/* 		**	Process pending interrupts. 		*/
 argument|int	oldspl	= splbio (); 		if (DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"{"
 argument|); 		ncr_exception (np); 		if (DEBUG_FLAGS& DEBUG_TINY) printf (
@@ -10311,7 +10311,7 @@ comment|/*========================================================== ** ** **	nc
 argument|void ncr_exception (ncb_p np) { 	u_char  istat
 argument_list|,
 argument|dstat; 	u_short sist; 	u_long	dsp; 	int	i;
-comment|/* 	**	interupt on the fly ? 	*/
+comment|/* 	**	interrupt on the fly ? 	*/
 argument|while ((istat = INB (nc_istat))& INTF) { 		if (DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"F"
 argument|); 		OUTB (nc_istat, INTF); 		np->profile.num_fly++; 		ncr_wakeup (np,
@@ -10336,7 +10336,7 @@ literal|0xf8000000
 argument|) == SCR_MOVE_TBL)) {
 comment|/* 		**      Target wants more data than available. 		**	The "no_data" script will do it. 		*/
 argument|OUTL (nc_dsp, vtophys(&np->script->no_data)); 		return; 	};
-comment|/*------------------------------------------- 	**	Programmed interupt 	**------------------------------------------- 	*/
+comment|/*------------------------------------------- 	**	Programmed interrupt 	**------------------------------------------- 	*/
 argument|if ((dstat& SIR)&& 		!(sist& (STO|GEN|HTH|MA|SGE|UDC|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|IID))&& 		(INB(nc_dsps)<= SIR_MAX)) { 		ncr_int_sir (np); 		return; 	};
 comment|/*======================================== 	**	do the register dump 	**======================================== 	*/
 argument|if (time.tv_sec - np->regtime.tv_sec>
@@ -10392,7 +10392,7 @@ comment|/* 		**	return without restarting the NCR. 		**	timeout will do the real
 argument|return; 	};
 comment|/*---------------------------------------- 	**	single step 	**---------------------------------------- 	*/
 argument|if ((dstat& SSI)&& 		!(sist& (STO|GEN|HTH|MA|SGE|UDC|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|SIR|IID))) { 		OUTB (nc_dcntl, (STD|NOCOM)); 		return; 	};
-comment|/* **	@RECOVER@ HTH, SGE, ABRT. ** **	We should try to recover from these interupts. **	They may occur if there are problems with synch transfers, **	or if targets are powerswitched while the driver is running. */
+comment|/* **	@RECOVER@ HTH, SGE, ABRT. ** **	We should try to recover from these interrupts. **	They may occur if there are problems with synch transfers, **	or if targets are powerswitched while the driver is running. */
 argument|if (sist& SGE) { 		OUTB (nc_ctest3, CLF);
 comment|/* clear scsi offsets */
 argument|}
@@ -10434,11 +10434,20 @@ literal|"%s: halted!\n"
 argument|, ncr_name(np));
 comment|/* 		**	don't restart controller ... 		*/
 argument|OUTB (nc_istat,  SRST); 		return; 	};
+ifdef|#
+directive|ifdef
+name|NCR_FREEZE
+comment|/* 	**	Freeze system to be able to read the messages. 	*/
+argument|printf (
+literal|"ncr: fatal error: system halted - press reset to reboot ..."
+argument|); 	(void) splhigh(); 	for (;;);
+endif|#
+directive|endif
 comment|/* 	**	sorry, have to kill ALL jobs ... 	*/
 argument|ncr_init (np,
 literal|"fatal error"
 argument|, HS_FAIL); }
-comment|/*========================================================== ** **	ncr chip exception handler for selection timeout ** **========================================================== ** **	There seems to be a bug in the 53c810. **	Although a STO-Interupt is pending, **	it continues executing script commands. **	But it will fail and interupt (IID) on **	the next instruction where it's looking **	for a valid phase. ** **---------------------------------------------------------- */
+comment|/*========================================================== ** **	ncr chip exception handler for selection timeout ** **========================================================== ** **	There seems to be a bug in the 53c810. **	Although a STO-Interrupt is pending, **	it continues executing script commands. **	But it will fail and interrupt (IID) on **	the next instruction where it's looking **	for a valid phase. ** **---------------------------------------------------------- */
 argument|void ncr_int_sto (ncb_p np) { 	u_long dsa
 argument_list|,
 argument|scratcha
@@ -10489,7 +10498,7 @@ argument|OUTB (nc_stest3, TE|CSF);
 comment|/* clear scsi fifo */
 comment|/* 	**	verify cp 	*/
 argument|dsa = INL (nc_dsa); 	cp =&np->ccb; 	while (cp&& (vtophys(&cp->phys) != dsa)) 		cp = cp->link_ccb;  	assert (cp == np->header.cp); 	assert (cp); 	if (!cp) 		return;
-comment|/* 	**	find the interupted script command, 	**	and the address at where to continue. 	*/
+comment|/* 	**	find the interrupted script command, 	**	and the address at where to continue. 	*/
 argument|if (dsp == vtophys (&cp->patch[
 literal|2
 argument|])) { 		vdsp =&cp->patch[
@@ -10586,7 +10595,7 @@ literal|3
 argument|]); 	}
 comment|/* 	**	fake the return address (to the patch). 	**	and restart script processor at dispatcher. 	*/
 argument|np->profile.num_break++; 	OUTL (nc_temp, vtophys (newcmd)); 	OUTL (nc_dsp, vtophys (&np->script->dispatch)); }
-comment|/*========================================================== ** ** **      ncr chip exception handler for programmed interupts. ** ** **========================================================== */
+comment|/*========================================================== ** ** **      ncr chip exception handler for programmed interrupts. ** ** **========================================================== */
 argument|static int ncr_show_msg (u_char * msg) { 	u_char i; 	printf (
 literal|"%x"
 argument|,*msg); 	if (*msg==M_EXTENDED) { 		for (i=
@@ -10630,9 +10639,9 @@ literal|"I#%d"
 argument|, num);  	switch (num) { 	case SIR_SENSE_RESTART: 	case SIR_STALL_RESTART: 		break;  	default:
 comment|/* 		**	lookup the ccb 		*/
 argument|dsa = INL (nc_dsa); 		cp =&np->ccb; 		while (cp&& (vtophys(&cp->phys) != dsa)) 			cp = cp->link_ccb;  		assert (cp == np->header.cp); 		assert (cp); 		if (!cp) 			goto out; 	}  	switch (num) {
-comment|/*-------------------------------------------------------------------- ** **	Processing of interupted getcc selects ** **-------------------------------------------------------------------- */
+comment|/*-------------------------------------------------------------------- ** **	Processing of interrupted getcc selects ** **-------------------------------------------------------------------- */
 argument|case SIR_SENSE_RESTART:
-comment|/*------------------------------------------ 		**	Script processor is idle. 		**	Look for interupted "check cond" 		**------------------------------------------ 		*/
+comment|/*------------------------------------------ 		**	Script processor is idle. 		**	Look for interrupted "check cond" 		**------------------------------------------ 		*/
 argument|if (DEBUG_FLAGS& DEBUG_RESTART) 			printf (
 literal|"%s: int#%d"
 argument|,ncr_name (np),num); 		cp = (ccb_p)
@@ -10672,7 +10681,7 @@ comment|/* 		**	And patch code to restart it. 		*/
 argument|np->script->start0[
 literal|0
 argument|] =  SCR_INT; 		break;
-comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look to byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simpletag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and set to the standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set the values, and send this **	answer back to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and set the values to **	the default. ** **	When we set the values, we set in all ccbs belonging to this **	target, in the controllers register, and in the "phys" **	field of the controllers struct ncb. ** **	Possible cases:            hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin         NEG FAIL  noop   defa   -      dispatch ** **	Target tries to negotiate: **	-> incoming message        --- SYNC  sdtr   set    SDTR   - **	-> incoming message        --- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
+comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look to byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simpletag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and set to the standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set the values, and send this **	answer back to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and set the values to **	the default. ** **	When we set the values, we set in all ccbs belonging to this **	target, in the controllers register, and in the "phys" **	field of the controllers struct ncb. ** **	Possible cases:            hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin         NEG FAIL  noop   defa   -      dispatch ** **	Target tries to negotiate: **	-> incoming message        --- SYNC  sdtr   set    SDTR   - **	-> incoming message        --- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
 argument|case SIR_NEGO_FAILED:
 comment|/*------------------------------------------------------- 		** 		**	Negotiation failed. 		**	Target doesn't send an answer message, 		**	or target rejected our message. 		** 		**      Remove negotiation request. 		** 		**------------------------------------------------------- 		*/
 argument|OUTB (HS_PRT, HS_BUSY);
@@ -10877,7 +10886,7 @@ comment|/* 		**	if there is one, ... 		*/
 argument|if (cp) {
 comment|/* 			**	wait for reselection 			*/
 argument|OUTL (nc_dsp, vtophys (&np->script->reselect)); 			return; 		};
-comment|/* 		**	else remove the interupt. 		*/
+comment|/* 		**	else remove the interrupt. 		*/
 argument|printf (
 literal|"%s: queue empty.\n"
 argument|, ncr_name (np)); 		np->script->start1[
@@ -11001,7 +11010,7 @@ literal|0
 argument|; 	u_long	chunk = MAX_SIZE; 	int	free;  	bzero (&phys->data, sizeof (phys->data)); 	if (!datalen) return (
 literal|0
 argument|);  	paddr = vtophys (vaddr);
-comment|/* 	**	insert extra break points at a distance of chunk. 	**	We try to reduce the number of interupts due to 	**	unexpected phase changes due to disconnects. 	**	A typical harddisk may disconnect before ANY block. 	**	If we want to avoid unexpected phase changes at all 	**	we have to use a break point every 512 bytes. 	**	Of course the number of scatter/gather blocks is 	**	limited. 	*/
+comment|/* 	**	insert extra break points at a distance of chunk. 	**	We try to reduce the number of interrupts due to 	**	unexpected phase changes due to disconnects. 	**	A typical harddisk may disconnect before ANY block. 	**	If we want to avoid unexpected phase changes at all 	**	we have to use a break point every 512 bytes. 	**	Of course the number of scatter/gather blocks is 	**	limited. 	*/
 argument|free = MAX_SCATTER -
 literal|1
 argument|;  	if (vaddr& (NBPG-
@@ -11041,7 +11050,7 @@ literal|"ncr?: scatter/gather failed (residue=%d).\n"
 argument|, 			(unsigned) datalen); 		return (-
 literal|1
 argument|); 	};  	return (segment); }
-comment|/*========================================================== ** ** **	Test the pci bus snoop logic :-( ** **	Has to be called with disabled interupts. ** ** **========================================================== */
+comment|/*========================================================== ** ** **	Test the pci bus snoop logic :-( ** **	Has to be called with interrupts disabled. ** ** **========================================================== */
 ifndef|#
 directive|ifndef
 name|NCR_IOMAPPED
