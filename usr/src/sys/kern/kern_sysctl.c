@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -652,6 +652,16 @@ operator|->
 name|p_nxt
 control|)
 block|{
+comment|/* 		 * Skip embryonic processes. 		 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SIDL
+condition|)
+continue|continue;
 comment|/*  		 * TODO - make more efficient (see notes below). 		 * do by session.  		 */
 switch|switch
 condition|(
