@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.145 1996/12/12 23:12:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.15 1996/12/26 03:33:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -87,16 +87,20 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|void
 name|create_termcap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fixit_common
 parameter_list|(
 name|void
 parameter_list|)
@@ -983,6 +987,24 @@ end_function
 
 begin_function
 name|int
+name|installFixitHoloShell
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|systemCreateHoloshell
+argument_list|()
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|installFixitCDROM
 parameter_list|(
 name|dialogMenuItem
@@ -990,11 +1012,210 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+name|variable_set2
+argument_list|(
+name|SYSTEM_STATE
+argument_list|,
+literal|"fixit"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+literal|"/mnt2"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rmdir
+argument_list|(
+literal|"/mnt2"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
 name|msgConfirm
 argument_list|(
-literal|"Sorry, this feature is currently unimplemented but will,\n"
-literal|"at some point in the future, support the use of the live\n"
-literal|"filesystem CD (CD 2) in fixing your system."
+literal|"Please insert the second CD-ROM and press return"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|mediaSetCDROM
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+operator|!=
+name|DITEM_SUCCESS
+operator|||
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
+comment|/* If we can't initialize it, it's probably not a FreeBSD CDROM so punt on it */
+name|mediaDevice
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Unable to mount the CD-ROM - do you want to try again?"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|DITEM_FAILURE
+return|;
+block|}
+block|}
+comment|/* Since the fixit code expects everything to be in /mnt2, and the CDROM mounting stuff /cdrom, do      * a little kludge dance here..      */
+if|if
+condition|(
+name|symlink
+argument_list|(
+literal|"/cdrom"
+argument_list|,
+literal|"/mnt2"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to symlink /mnt2 to the CDROM mount point.  Please report this\n"
+literal|"unexpected failure to bugs@freebsd.org."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+return|;
+block|}
+comment|/*      * If /tmp points to /mnt2/tmp from a previous fixit floppy session, it's      * not very good for us if we point it to the CD-ROM now.  Rather make it      * a directory in the root MFS then.  Experienced admins will still be      * able to mount their disk's /tmp over this if they need.      */
+if|if
+condition|(
+name|lstat
+argument_list|(
+literal|"/tmp"
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|sb
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFLNK
+condition|)
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+literal|"/tmp"
+argument_list|)
+expr_stmt|;
+name|Mkdir
+argument_list|(
+literal|"/tmp"
+argument_list|)
+expr_stmt|;
+comment|/*      * Since setuid binaries ignore LD_LIBRARY_PATH, we indeed need the      * ld.so.hints file.  Fortunately, it's fairly small (~ 3 KB).      */
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/var/run/ld.so.hints"
+argument_list|)
+condition|)
+block|{
+name|Mkdir
+argument_list|(
+literal|"/var/run"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"/mnt2/sbin/ldconfig -s /mnt2/usr/lib"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Warning: ldconfig could not create the ld.so hints file.\n"
+literal|"Dynamic executables from the CD-ROM likely won't work."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Yet another iggly hardcoded pathname. */
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/usr/libexec/ld.so"
+argument_list|)
+condition|)
+block|{
+name|Mkdir
+argument_list|(
+literal|"/usr/libexec"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|symlink
+argument_list|(
+literal|"/mnt2/usr/libexec/ld.so"
+argument_list|,
+literal|"/usr/libexec/ld.so"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Warning: could not create the symlink for ld.so.\n"
+literal|"Dynamic executables from the CD-ROM likely won't work."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|fixit_common
+argument_list|()
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Please remove the CD-ROM now."
 argument_list|)
 expr_stmt|;
 return|return
@@ -1015,12 +1236,6 @@ block|{
 name|struct
 name|ufs_args
 name|args
-decl_stmt|;
-name|pid_t
-name|child
-decl_stmt|;
-name|int
-name|waitstatus
 decl_stmt|;
 name|variable_set2
 argument_list|(
@@ -1142,6 +1357,38 @@ argument_list|,
 literal|"/tmp"
 argument_list|)
 expr_stmt|;
+name|fixit_common
+argument_list|()
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Please remove the fixit floppy now."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The common code for both fixit variants.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|fixit_common
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|pid_t
+name|child
+decl_stmt|;
+name|int
+name|waitstatus
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1452,12 +1699,13 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/bin:/sbin:/usr/bin:/usr/sbin:/stand:/mnt2/stand"
+literal|"/bin:/sbin:/usr/bin:/usr/sbin:/stand:"
+literal|"/mnt2/stand:/mnt2/bin:/mnt2/sbin:/mnt2/usr/bin:/mnt2/usr/sbin"
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* use the .profile from the fixit floppy */
+comment|/* use the .profile from the fixit medium */
 name|setenv
 argument_list|(
 literal|"HOME"
@@ -1486,10 +1734,12 @@ argument_list|(
 literal|"fixit shell: Failed to execute shell!\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
+name|_exit
+argument_list|(
 literal|1
-return|;
+argument_list|)
+expr_stmt|;
+empty_stmt|;
 block|}
 else|else
 block|{
@@ -1524,14 +1774,6 @@ expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"Please remove the fixit floppy now."
-argument_list|)
-expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-return|;
 block|}
 end_function
 

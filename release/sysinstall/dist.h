@@ -109,8 +109,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_CATPAGES
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_ALL
-value|0x1FFF
+value|0x3FFF
 end_define
 
 begin_comment
