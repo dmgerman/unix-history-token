@@ -82,11 +82,17 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_define
 define|#
 directive|define
-name|_PATH_LOCKDIRNAME
-value|"/var/spool/lock/LCK..%s"
+name|LOCKFMT
+value|"LCK..%s"
 end_define
 
 begin_comment
@@ -140,11 +146,6 @@ decl_stmt|;
 name|char
 name|tbuf
 index|[
-sizeof|sizeof
-argument_list|(
-name|_PATH_LOCKDIRNAME
-argument_list|)
-operator|+
 name|MAXNAMLEN
 index|]
 decl_stmt|;
@@ -153,11 +154,11 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|tbuf
+argument|tbuf
 argument_list|,
-name|_PATH_LOCKDIRNAME
+argument|_PATH_LOCK LOCKFMT
 argument_list|,
-name|ttyname
+argument|ttyname
 argument_list|)
 expr_stmt|;
 name|fd
@@ -397,11 +398,6 @@ block|{
 name|char
 name|tbuf
 index|[
-sizeof|sizeof
-argument_list|(
-name|_PATH_LOCKDIRNAME
-argument_list|)
-operator|+
 name|MAXNAMLEN
 index|]
 decl_stmt|;
@@ -410,11 +406,11 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|tbuf
+argument|tbuf
 argument_list|,
-name|_PATH_LOCKDIRNAME
+argument|_PATH_LOCK LOCKFMT
 argument_list|,
-name|ttyname
+argument|ttyname
 argument_list|)
 expr_stmt|;
 return|return
