@@ -410,11 +410,6 @@ name|g_gpt_softc
 modifier|*
 name|gs
 decl_stmt|;
-name|struct
-name|g_slicer
-modifier|*
-name|gsp
-decl_stmt|;
 name|u_char
 modifier|*
 name|buf
@@ -434,8 +429,6 @@ name|hdr
 decl_stmt|;
 name|u_int
 name|i
-decl_stmt|,
-name|npart
 decl_stmt|,
 name|secsz
 decl_stmt|,
@@ -501,12 +494,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|gsp
-operator|=
-name|gp
-operator|->
-name|softc
-expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
@@ -518,10 +505,6 @@ name|g_gpt_dumpconf
 expr_stmt|;
 do|do
 block|{
-name|npart
-operator|=
-literal|0
-expr_stmt|;
 name|mbr
 operator|=
 name|NULL
@@ -856,9 +839,6 @@ argument_list|)
 expr_stmt|;
 name|g_topology_unlock
 argument_list|()
-expr_stmt|;
-name|npart
-operator|++
 expr_stmt|;
 block|}
 name|g_free
