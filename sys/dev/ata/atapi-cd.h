@@ -916,7 +916,18 @@ decl_stmt|;
 name|u_int8_t
 name|sub_hdr_byte3
 decl_stmt|;
-comment|/*     u_int8_t	vendor_specific_byte0;     u_int8_t	vendor_specific_byte1;     u_int8_t	vendor_specific_byte2;     u_int8_t	vendor_specific_byte3; */
+name|u_int8_t
+name|vendor_specific_byte0
+decl_stmt|;
+name|u_int8_t
+name|vendor_specific_byte1
+decl_stmt|;
+name|u_int8_t
+name|vendor_specific_byte2
+decl_stmt|;
+name|u_int8_t
+name|vendor_specific_byte3
+decl_stmt|;
 block|}
 name|__attribute__
 argument_list|(
