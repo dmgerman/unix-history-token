@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software developed by the Computer Systems  * Engineering group at Lawrence Berkeley Laboratory under DARPA  * contract BG 91-66 and contributed to Berkeley.  *  * %sccs.include.redist.c%  *  * from: $Header: fbio.h,v 1.3 91/12/13 22:16:32 torek Exp $ (LBL)  *  * from: sys/fbio.h		7.2 (Berkeley) 4/1/92  *  *	@(#)fbio.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software developed by the Computer Systems  * Engineering group at Lawrence Berkeley Laboratory under DARPA  * contract BG 91-66 and contributed to Berkeley.  *  * %sccs.include.redist.c%  *  * from: $Header: fbio.h,v 1.3 91/12/13 22:16:32 torek Exp $ (LBL)  *  * from: sys/fbio.h		7.2 (Berkeley) 4/1/92  *  *	@(#)fbio.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -63,20 +63,6 @@ define|#
 directive|define
 name|FBIOGTYPE
 value|_IOR('F', 0, struct fbtype)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FBIO_ON
-value|_IO('F', 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FBIO_OFF
-value|_IO('F', 2)
 end_define
 
 begin_comment
