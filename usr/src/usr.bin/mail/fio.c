@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.11 %G%"
+literal|"@(#)fio.c	2.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,9 +71,10 @@ specifier|register
 name|int
 name|count
 decl_stmt|,
-name|s
-decl_stmt|,
 name|l
+decl_stmt|;
+name|long
+name|s
 decl_stmt|;
 name|off_t
 name|offset
@@ -136,7 +137,7 @@ literal|0
 expr_stmt|;
 name|s
 operator|=
-literal|0
+literal|0L
 expr_stmt|;
 name|l
 operator|=
@@ -437,7 +438,7 @@ name|l
 expr_stmt|;
 name|s
 operator|=
-literal|0
+literal|0L
 expr_stmt|;
 name|l
 operator|=
@@ -578,6 +579,9 @@ name|count
 expr_stmt|;
 name|s
 operator|+=
+operator|(
+name|long
+operator|)
 name|count
 expr_stmt|;
 name|l
@@ -1236,7 +1240,7 @@ index|]
 operator|.
 name|m_size
 operator|=
-literal|0
+literal|0L
 expr_stmt|;
 name|message
 index|[

@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	2.8 %G%"
+literal|"@(#)cmd1.c	2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,7 +793,7 @@ name|sprintf
 argument_list|(
 name|wcount
 argument_list|,
-literal|" %d/%d"
+literal|" %d/%ld"
 argument_list|,
 name|mp
 operator|->

@@ -42,7 +42,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.5 %G%"
+literal|"@(#)send.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,8 +88,7 @@ specifier|register
 name|int
 name|t
 decl_stmt|;
-name|unsigned
-name|int
+name|long
 name|c
 decl_stmt|;
 name|FILE
@@ -138,10 +137,9 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|msize
-argument_list|(
 name|mp
-argument_list|)
+operator|->
+name|m_size
 expr_stmt|;
 name|ishead
 operator|=
@@ -167,7 +165,7 @@ while|while
 condition|(
 name|c
 operator|>
-literal|0
+literal|0L
 condition|)
 block|{
 name|fgets
@@ -181,6 +179,9 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|-=
+operator|(
+name|long
+operator|)
 name|strlen
 argument_list|(
 name|line

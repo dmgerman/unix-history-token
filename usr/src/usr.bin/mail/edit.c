@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)edit.c	2.3 %G%"
+literal|"@(#)edit.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,8 +194,7 @@ name|mesg
 decl_stmt|,
 name|lines
 decl_stmt|;
-name|unsigned
-name|int
+name|long
 name|ms
 decl_stmt|;
 name|int
@@ -749,7 +748,7 @@ argument_list|)
 expr_stmt|;
 name|ms
 operator|=
-literal|0
+literal|0L
 expr_stmt|;
 name|lines
 operator|=
