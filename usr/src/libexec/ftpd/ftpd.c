@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.4 (Berkeley) 83/01/15"
+literal|"@(#)ftpd.c	4.5 (Berkeley) 83/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,15 +523,6 @@ condition|;
 name|s
 operator|++
 control|)
-if|if
-condition|(
-name|s
-operator|!=
-literal|2
-operator|&&
-name|debug
-condition|)
-comment|/* don't screw stderr */
 operator|(
 name|void
 operator|)
@@ -1263,6 +1254,10 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* no remote command execution -- it's a security hole */
 if|if
 condition|(
 operator|*
@@ -1286,6 +1281,8 @@ operator|=
 name|pclose
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|fin
 operator|=
 name|fopen
@@ -1522,6 +1519,10 @@ name|dochown
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* no remote command execution -- it's a security hole */
 if|if
 condition|(
 name|name
@@ -1549,6 +1550,8 @@ operator|=
 name|pclose
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 block|{
 name|struct
 name|stat
