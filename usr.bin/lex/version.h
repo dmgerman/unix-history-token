@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|FLEX_VERSION
-value|"2.5.3"
+value|"2.5.4"
 end_define
 
 end_unit
