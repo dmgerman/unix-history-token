@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1562,7 +1562,6 @@ name|f_bsize
 operator|!=
 name|lbsize
 condition|)
-block|{
 name|sbp
 operator|->
 name|f_blocks
@@ -1577,35 +1576,7 @@ name|mstat
 operator|.
 name|f_bsize
 expr_stmt|;
-name|sbp
-operator|->
-name|f_bfree
-operator|=
-name|sbp
-operator|->
-name|f_bfree
-operator|*
-name|lbsize
-operator|/
-name|mstat
-operator|.
-name|f_bsize
-expr_stmt|;
-name|sbp
-operator|->
-name|f_bavail
-operator|=
-name|sbp
-operator|->
-name|f_bavail
-operator|*
-name|lbsize
-operator|/
-name|mstat
-operator|.
-name|f_bsize
-expr_stmt|;
-block|}
+comment|/* 	 * The "total" fields count total resources in all layers, 	 * the "free" fields count only those resources which are 	 * free in the upper layer (since only the upper layer 	 * is writeable). 	 */
 name|sbp
 operator|->
 name|f_blocks
@@ -1617,7 +1588,7 @@ expr_stmt|;
 name|sbp
 operator|->
 name|f_bfree
-operator|+=
+operator|=
 name|mstat
 operator|.
 name|f_bfree
@@ -1625,7 +1596,7 @@ expr_stmt|;
 name|sbp
 operator|->
 name|f_bavail
-operator|+=
+operator|=
 name|mstat
 operator|.
 name|f_bavail
@@ -1641,7 +1612,7 @@ expr_stmt|;
 name|sbp
 operator|->
 name|f_ffree
-operator|+=
+operator|=
 name|mstat
 operator|.
 name|f_ffree
