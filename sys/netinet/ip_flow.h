@@ -36,6 +36,11 @@ name|in_addr
 name|ipf_src
 decl_stmt|;
 comment|/* source address */
+comment|/* NB: this assumes the size of the list head hash table is<=256 */
+name|u_int8_t
+name|ipf_hash
+decl_stmt|;
+comment|/* index in list head table */
 name|u_int8_t
 name|ipf_tos
 decl_stmt|;
@@ -65,6 +70,26 @@ name|u_long
 name|ipf_last_uses
 decl_stmt|;
 comment|/* number of uses in last period */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ipflow_head
+block|{
+name|LIST_HEAD
+argument_list|(
+argument|ipflowhead
+argument_list|,
+argument|ipflow
+argument_list|)
+name|ipfh_head
+expr_stmt|;
+name|struct
+name|mtx
+name|ipfh_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
