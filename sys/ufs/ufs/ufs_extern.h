@@ -733,7 +733,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Flags to low-level allocation routines.  * The low 16-bits are reserved for IO_ flags from vnode.h.  */
+comment|/*  * Flags to low-level allocation routines.  The low 16-bits are reserved  * for IO_ flags from vnode.h.  *  * Note: The general vfs code typically limits the sequential heuristic  * count to 127.  See sequential_heuristic() in kern/vfs_vnops.c  */
 end_comment
 
 begin_define
@@ -744,7 +744,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* Request alloced buffer be cleared. */
+comment|/* Clear invalid areas of buffer. */
 end_comment
 
 begin_define
@@ -757,6 +757,31 @@ end_define
 begin_comment
 comment|/* Return indirect block buffer. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BA_SEQMASK
+value|0x7F000000
+end_define
+
+begin_comment
+comment|/* Bits holding seq heuristic. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BA_SEQSHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|BA_SEQMAX
+value|0x7F
+end_define
 
 begin_endif
 endif|#
