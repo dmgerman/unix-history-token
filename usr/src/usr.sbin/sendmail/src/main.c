@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.49	%G%"
+literal|"@(#)main.c	3.50	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,17 +254,6 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|finis
-argument_list|)
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 name|OldUmask
@@ -679,6 +668,13 @@ condition|)
 name|Debug
 operator|=
 literal|1
+expr_stmt|;
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1884,17 +1880,6 @@ expr_stmt|;
 name|Transcript
 operator|=
 name|XcriptFile
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
 expr_stmt|;
 block|}
 end_block
