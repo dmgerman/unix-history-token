@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$	*/
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	Id: miidevs,v 1.1 1999/08/21 17:40:43 wpaul Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	Id: miidevs,v 1.3 1999/08/29 15:42:04 wpaul Exp   */
 end_comment
 
 begin_comment
@@ -28,6 +28,17 @@ end_define
 
 begin_comment
 comment|/* Advanced Micro Devices */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_BROADCOM
+value|0x001018
+end_define
+
+begin_comment
+comment|/* Broadcom Corporation */
 end_comment
 
 begin_define
@@ -256,6 +267,24 @@ define|#
 directive|define
 name|MII_STR_AMD_79c973phy
 value|"Am79c973 internal PHY"
+end_define
+
+begin_comment
+comment|/* Broadcom Corp. PHYs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_BROADCOM_3c905Cphy
+value|0x0017
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_BROADCOM_3c905Cphy
+value|"3c905C 10/100 internal PHY"
 end_define
 
 begin_comment
