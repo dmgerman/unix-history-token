@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.40	82/10/17	*/
+comment|/*	init_main.c	4.41	82/10/31	*/
 end_comment
 
 begin_include
@@ -147,14 +147,47 @@ comment|/* have to declare it somewhere! */
 end_comment
 
 begin_comment
-comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 2 to page out  *	     - process 1 execute bootstrap  *  * loop at loc 13 (0xd) in user mode -- /etc/init  *	cannot be executed.  */
+comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 2 to page out  *	     - process 1 execute bootstrap  *  * loop at loc something in user mode -- /etc/init  *	cannot be executed.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_expr_stmt
+expr|main
+operator|(
+name|firstaddr
+operator|)
+name|int
+name|firstaddr
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
 
 begin_function
 name|main
 parameter_list|(
-name|firstaddr
+name|regs
 parameter_list|)
+name|struct
+name|regs
+name|regs
+decl_stmt|;
+endif|#
+directive|endif
 block|{
 specifier|register
 name|int
@@ -177,11 +210,24 @@ expr_stmt|;
 include|#
 directive|include
 file|"loop.h"
+ifdef|#
+directive|ifdef
+name|vax
 name|startup
 argument_list|(
 name|firstaddr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+name|startup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * set up system process 0 (swapper) 	 */
 name|p
 operator|=
@@ -255,6 +301,20 @@ name|u_procp
 operator|=
 name|p
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+name|u
+operator|.
+name|u_ar0
+operator|=
+operator|&
+name|regs
+operator|.
+name|r0
+expr_stmt|;
+endif|#
+directive|endif
 name|u
 operator|.
 name|u_cmask
@@ -443,12 +503,11 @@ directive|endif
 name|ifinit
 argument_list|()
 expr_stmt|;
-name|pfinit
-argument_list|()
-expr_stmt|;
-comment|/* must follow interfaces */
 endif|#
 directive|endif
+name|domaininit
+argument_list|()
+expr_stmt|;
 name|ihinit
 argument_list|()
 expr_stmt|;
@@ -666,9 +725,33 @@ name|CLSIZE
 operator|*
 name|KLMAX
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOPAGING
+for|for
+control|(
+init|;
+condition|;
+control|)
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|u
+argument_list|,
+name|PSLEP
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|pageout
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*NOTREACHED*/
 block|}
 comment|/* 	 * make init process and 	 * enter scheduling loop 	 */
 name|mpid
@@ -701,6 +784,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 name|expand
 argument_list|(
 name|clrnd
@@ -760,6 +846,31 @@ operator|)
 name|szicode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+name|icode
+argument_list|()
+expr_stmt|;
+name|usetup
+argument_list|()
+expr_stmt|;
+name|regs
+operator|.
+name|r_context
+operator|=
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_ctx
+operator|->
+name|ctx_context
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Return goes to loc. 0 of user init 		 * code just copied out. 		 */
 return|return;
 block|}
