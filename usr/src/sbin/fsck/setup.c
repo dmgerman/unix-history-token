@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.17 (Berkeley) %G%"
+literal|"@(#)setup.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,6 +791,11 @@ begin_if
 unit|} 	}
 if|if
 condition|(
+name|cvtflag
+condition|)
+block|{
+if|if
+condition|(
 name|sblock
 operator|.
 name|fs_postblformat
@@ -798,27 +803,30 @@ operator|==
 name|FS_42POSTBLFMT
 condition|)
 block|{
+comment|/* 			 * Requested to convert from old format to new format 			 */
+if|if
+condition|(
+name|preen
+condition|)
 name|pwarn
 argument_list|(
-literal|"OLD FILE SYSTEM FORMAT\n"
+literal|"CONVERTING TO NEW FILE SYSTEM FORMAT\n"
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
-name|preen
-operator|&&
 name|reply
 argument_list|(
 literal|"CONVERT TO NEW FILE SYSTEM FORMAT"
 argument_list|)
-operator|==
-literal|1
 condition|)
-block|{
-name|cvtflag
-operator|++
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sblock
 operator|.
 name|fs_postblformat
@@ -1017,14 +1025,17 @@ name|asblk
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 elseif|else
 if|if
 condition|(
-name|cvtflag
+name|sblock
+operator|.
+name|fs_postblformat
+operator|==
+name|FS_DYNAMICPOSTBLFMT
 condition|)
 block|{
-comment|/* 		 * Requested to convert from new format to old format 		 */
+comment|/* 			 * Requested to convert from new format to old format 			 */
 if|if
 condition|(
 name|sblock
@@ -1044,6 +1055,12 @@ operator|.
 name|fs_cpg
 operator|>
 literal|32
+operator|||
+name|sblock
+operator|.
+name|fs_cpc
+operator|>
+literal|16
 condition|)
 block|{
 name|printf
@@ -1057,11 +1074,29 @@ literal|"ALLOW CONVERSION TO OLD FILE SYSTEM FORMAT\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|preen
+condition|)
 name|pwarn
 argument_list|(
 literal|"CONVERTING TO OLD FILE SYSTEM FORMAT\n"
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|reply
+argument_list|(
+literal|"CONVERT TO OLD FILE SYSTEM FORMAT"
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sblock
 operator|.
 name|fs_postblformat
@@ -1077,6 +1112,15 @@ operator|&
 name|asblk
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|errexit
+argument_list|(
+literal|"UNKNOWN FILE SYSTEM FORMAT\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_if
 
