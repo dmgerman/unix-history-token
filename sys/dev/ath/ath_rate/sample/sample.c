@@ -2673,7 +2673,10 @@ expr|struct
 name|ar5212_desc
 operator|*
 operator|)
+operator|&
 name|ds
+operator|->
+name|ds_ctl0
 decl_stmt|;
 name|int
 name|final_rate
