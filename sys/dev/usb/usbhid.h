@@ -100,12 +100,26 @@ name|UR_SET_PROTOCOL
 value|0x0b
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|UPACKED
 value|__attribute__ ((packed))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

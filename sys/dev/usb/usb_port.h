@@ -1006,13 +1006,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|UPACKED
-value|__attribute__ ((packed))
-end_define
-
-begin_define
-define|#
-directive|define
 name|PWR_RESUME
 value|0
 end_define
