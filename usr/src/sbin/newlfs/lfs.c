@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	8.1 (Berkeley) %G%"
+literal|"@(#)lfs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,6 +450,9 @@ block|}
 block|,
 comment|/* lfs_cksum */
 literal|0
+block|,
+comment|/* lfs_maxsymlinklen */
+name|MAXSYMLINKLEN
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3195,51 +3198,6 @@ end_function
 
 begin_comment
 comment|/*  * Create the root directory for this file system and the lost+found  * directory.  */
-end_comment
-
-begin_decl_stmt
-name|u_long
-name|d_ino
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* inode number of entry */
-end_comment
-
-begin_decl_stmt
-name|u_short
-name|d_reclen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* length of this record */
-end_comment
-
-begin_decl_stmt
-name|u_short
-name|d_namlen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* length of string in d_name */
-end_comment
-
-begin_decl_stmt
-name|char
-name|d_name
-index|[
-name|MAXNAMLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name with length<= MAXNAMLEN */
 end_comment
 
 begin_function
