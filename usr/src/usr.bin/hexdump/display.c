@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.13 (Berkeley) %G%"
+literal|"@(#)display.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -415,6 +415,9 @@ name|pr
 operator|->
 name|fmt
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|eaddress
 argument_list|)
 expr_stmt|;
@@ -500,6 +503,9 @@ name|pr
 operator|->
 name|fmt
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|address
 argument_list|)
 expr_stmt|;
