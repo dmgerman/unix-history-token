@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.41 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.42 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.41 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.42 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -505,7 +505,7 @@ name|RealHostName
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"srvrsmtp %s"
+literal|"srvrsmtp %s startup"
 argument_list|,
 name|CurHostName
 argument_list|)
@@ -532,10 +532,6 @@ literal|"220 %s"
 argument_list|,
 name|inp
 argument_list|)
-expr_stmt|;
-name|SmtpPhase
-operator|=
-literal|"startup"
 expr_stmt|;
 name|protocol
 operator|=
@@ -628,6 +624,17 @@ name|stdout
 argument_list|)
 expr_stmt|;
 comment|/* read the input line */
+name|SmtpPhase
+operator|=
+literal|"srvrsmtp cmd read"
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"srvrsmtp %s cmd read"
+argument_list|,
+name|CurHostName
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|sfgets
@@ -718,6 +725,37 @@ operator|->
 name|e_xfp
 argument_list|,
 literal|"<<< %s\n"
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|)
+name|setproctitle
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|CurHostName
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+else|else
+name|setproctitle
+argument_list|(
+literal|"%s %s: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|CurHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -894,15 +932,6 @@ operator|=
 literal|"HELO"
 expr_stmt|;
 block|}
-name|setproctitle
-argument_list|(
-literal|"%s: %s"
-argument_list|,
-name|CurHostName
-argument_list|,
-name|inp
-argument_list|)
-expr_stmt|;
 name|sendinghost
 operator|=
 name|newstr
@@ -1483,19 +1512,6 @@ name|SmtpPhase
 operator|=
 literal|"RCPT"
 expr_stmt|;
-name|setproctitle
-argument_list|(
-literal|"%s %s: %s"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-name|CurHostName
-argument_list|,
-name|inp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -1697,19 +1713,6 @@ comment|/* collect the text of the message */
 name|SmtpPhase
 operator|=
 literal|"collect"
-expr_stmt|;
-name|setproctitle
-argument_list|(
-literal|"%s %s: %s"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-name|CurHostName
-argument_list|,
-name|inp
-argument_list|)
 expr_stmt|;
 name|collect
 argument_list|(
@@ -2068,15 +2071,6 @@ operator|>
 literal|0
 condition|)
 break|break;
-name|setproctitle
-argument_list|(
-literal|"%s: %s"
-argument_list|,
-name|CurHostName
-argument_list|,
-name|inp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -2899,6 +2893,13 @@ name|int
 name|st
 decl_stmt|;
 comment|/* parent -- wait for child to complete */
+name|setproctitle
+argument_list|(
+literal|"srvrsmtp %s child wait"
+argument_list|,
+name|CurHostName
+argument_list|)
+expr_stmt|;
 name|st
 operator|=
 name|waitfor

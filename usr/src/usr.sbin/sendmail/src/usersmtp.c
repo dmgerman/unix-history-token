@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.24 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.25 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.24 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.25 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,14 +348,6 @@ name|MCIS_OPENING
 case|:
 break|break;
 block|}
-name|SmtpPhase
-operator|=
-name|mci
-operator|->
-name|mci_phase
-operator|=
-literal|"user open"
-expr_stmt|;
 name|mci
 operator|->
 name|mci_state
