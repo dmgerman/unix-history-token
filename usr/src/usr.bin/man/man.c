@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.5 (Berkeley) %G%"
+literal|"@(#)man.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -454,7 +454,7 @@ index|[
 literal|2
 index|]
 condition|)
-name|manpath
+name|defpath
 operator|=
 operator|*
 name|argv
@@ -489,7 +489,7 @@ block|}
 operator|--
 name|argc
 expr_stmt|;
-name|manpath
+name|defpath
 operator|=
 operator|*
 operator|++
@@ -855,7 +855,7 @@ name|NO_SECTION
 expr_stmt|;
 name|manpath
 operator|=
-name|DEF_PATH
+name|defpath
 expr_stmt|;
 name|dirlist
 operator|=
