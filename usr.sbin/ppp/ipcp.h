@@ -227,6 +227,12 @@ decl_stmt|,
 name|udp
 decl_stmt|;
 comment|/* The range of urgent ports */
+name|unsigned
+name|tos
+range|:
+literal|1
+decl_stmt|;
+comment|/* Urgent IPTOS_LOWDELAY packets ? */
 block|}
 name|urgent
 struct|;
@@ -800,6 +806,26 @@ name|ipcp
 parameter_list|)
 define|\
 value|ipcp_ClearUrgentPorts(&(ipcp)->cfg.urgent.udp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_ClearUrgentTOS
+parameter_list|(
+name|ipcp
+parameter_list|)
+value|(ipcp)->cfg.urgent.tos = 0;
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_SetUrgentTOS
+parameter_list|(
+name|ipcp
+parameter_list|)
+value|(ipcp)->cfg.urgent.tos = 1;
 end_define
 
 end_unit

@@ -353,6 +353,10 @@ name|u_short
 name|mtu
 decl_stmt|;
 comment|/* Interface mtu */
+name|u_short
+name|ifqueue
+decl_stmt|;
+comment|/* Interface queue size */
 struct|struct
 block|{
 name|int

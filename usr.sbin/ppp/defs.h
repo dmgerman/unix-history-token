@@ -338,6 +338,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DEF_IFQUEUE
+value|30
+end_define
+
+begin_comment
+comment|/* Default interface queue size */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CONFFILE
 value|"ppp.conf"
 end_define
