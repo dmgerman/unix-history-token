@@ -3493,7 +3493,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", Firmware: %i.%i variant %i\n"
+literal|", Firmware: %d.%d variant %d\n"
 argument_list|,
 name|ver
 operator|.
