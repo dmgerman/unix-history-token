@@ -584,8 +584,8 @@ expr_stmt|;
 if|if
 condition|(
 name|irq
-operator|==
-literal|0xff
+operator|<
+literal|0
 condition|)
 continue|continue;
 comment|/* determine the bus type for this pin */
@@ -613,7 +613,6 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* the "ISA" type INTerrupts */
 if|if
 condition|(
 operator|(
@@ -657,14 +656,15 @@ literal|0x3
 operator|)
 condition|)
 block|{
+comment|/*  			 * A broken BIOS might describe some ISA  			 * interrupts as active-high level-triggered. 			 * Use default ISA flags for those interrupts. 			 */
 name|flags
 operator|=
 name|DEFAULT_ISA_FLAGS
 expr_stmt|;
 block|}
-comment|/* PCI or other bus */
 else|else
 block|{
+comment|/*  			 * Program polarity and trigger mode according to  			 * interrupt entry. 			 */
 name|flags
 operator|=
 name|DEFAULT_FLAGS
