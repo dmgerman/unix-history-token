@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: mcclock_isa.c,v 1.1 1998/07/15 19:21:31 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isa/isavar.h>
 end_include
 
 begin_include
@@ -209,6 +215,13 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|isa_set_portsize
+argument_list|(
+name|dev
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -256,16 +269,26 @@ name|u_int
 name|val
 parameter_list|)
 block|{
+name|u_int
+name|port
+init|=
+name|isa_get_port
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|outb
 argument_list|(
-literal|0x70
+name|port
 argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-literal|0x71
+name|port
+operator|+
+literal|1
 argument_list|,
 name|val
 argument_list|)
@@ -285,9 +308,17 @@ name|u_int
 name|reg
 parameter_list|)
 block|{
+name|u_int
+name|port
+init|=
+name|isa_get_port
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|outb
 argument_list|(
-literal|0x70
+name|port
 argument_list|,
 name|reg
 argument_list|)
@@ -295,22 +326,20 @@ expr_stmt|;
 return|return
 name|inb
 argument_list|(
-literal|0x71
+name|port
+operator|+
+literal|1
 argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* XXX put it on the root for now, later on isa */
-end_comment
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|mcclock_isa
 argument_list|,
-name|root
+name|isa
 argument_list|,
 name|mcclock_isa_driver
 argument_list|,
