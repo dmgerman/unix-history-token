@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stty.c	4.6 (Berkeley) %G%"
+literal|"@(#)stty.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -922,6 +922,26 @@ block|,
 literal|0
 block|,
 name|LDECCTQ
+block|,
+literal|"noflsh"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|LNOFLSH
+block|,
+literal|0
+block|,
+literal|"-noflsh"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|LNOFLSH
 block|,
 literal|0
 block|, }
@@ -2803,6 +2823,23 @@ argument_list|,
 literal|"-nohang "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|any
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|any
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|lpit
 argument_list|(
 name|LETXACK
@@ -2815,6 +2852,20 @@ argument_list|(
 name|LPENDIN
 argument_list|,
 literal|"-pendin "
+argument_list|)
+expr_stmt|;
+name|lpit
+argument_list|(
+name|LDECCTQ
+argument_list|,
+literal|"-decctlq "
+argument_list|)
+expr_stmt|;
+name|lpit
+argument_list|(
+name|LNOFLSH
+argument_list|,
+literal|"-noflsh "
 argument_list|)
 expr_stmt|;
 if|if
