@@ -168,6 +168,7 @@ file|<fs/ntfs/ntfsmount.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NTFSMNT
@@ -238,6 +239,23 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ntfs_calccfree
+parameter_list|(
+name|struct
+name|ntfsmount
+modifier|*
+name|ntmp
+parameter_list|,
+name|cn_t
+modifier|*
+name|cfreep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2502,6 +2520,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ntfs_calccfree
 parameter_list|(
