@@ -379,19 +379,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LK_NOOBJ
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* vget: don't create object */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LK_THISLAYER
-value|0x00080000
+value|0x00040000
 end_define
 
 begin_comment
