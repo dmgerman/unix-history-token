@@ -12,7 +12,11 @@ end_include
 begin_decl_stmt
 name|char
 name|_ctype_
-index|[]
+index|[
+literal|1
+operator|+
+literal|256
+index|]
 init|=
 block|{
 literal|0
