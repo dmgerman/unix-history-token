@@ -389,6 +389,7 @@ comment|/* disable resettodr() if != 0 */
 end_comment
 
 begin_decl_stmt
+specifier|volatile
 name|u_int
 name|idelayed
 decl_stmt|;
