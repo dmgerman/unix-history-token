@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calloc.c	5.6 (Berkeley) %G%"
+literal|"@(#)calloc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,28 +96,6 @@ operator|(
 name|p
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cfree
-parameter_list|(
-name|p
-parameter_list|)
-name|void
-modifier|*
-name|p
-decl_stmt|;
-block|{
-operator|(
-name|void
-operator|)
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
