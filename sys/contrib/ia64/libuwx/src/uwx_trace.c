@@ -461,7 +461,7 @@ if|if
 condition|(
 name|reg
 operator|==
-name|UWX_REG_PFS
+name|UWX_REG_AR_PFS
 condition|)
 name|printf
 argument_list|(
@@ -473,7 +473,7 @@ if|if
 condition|(
 name|reg
 operator|==
-name|UWX_REG_UNAT
+name|UWX_REG_AR_UNAT
 condition|)
 name|printf
 argument_list|(

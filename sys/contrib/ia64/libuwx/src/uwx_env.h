@@ -106,8 +106,12 @@ begin_define
 define|#
 directive|define
 name|NSPECIALREG
-value|14
+value|16
 end_define
+
+begin_comment
+comment|/* Must be even, so FRs are aligned */
+end_comment
 
 begin_define
 define|#
@@ -207,7 +211,18 @@ value|0x0f
 end_define
 
 begin_comment
-comment|/* IP, SP, BSP, PFS */
+comment|/* IP, SP, BSP, CFM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VALID_MARKERS
+value|0x70
+end_define
+
+begin_comment
+comment|/* RP, PSP, PFS */
 end_comment
 
 begin_struct

@@ -271,7 +271,7 @@ index|]
 operator|=
 name|UWX_DISP_REG
 argument_list|(
-name|UWX_REG_PFS
+name|UWX_REG_AR_PFS
 argument_list|)
 expr_stmt|;
 name|sb
@@ -283,7 +283,7 @@ index|]
 operator|=
 name|UWX_DISP_REG
 argument_list|(
-name|UWX_REG_UNAT
+name|UWX_REG_AR_UNAT
 argument_list|)
 expr_stmt|;
 name|sb
