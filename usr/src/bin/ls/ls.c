@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.65 (Berkeley) %G%"
+literal|"@(#)ls.c	5.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1401,16 +1401,7 @@ decl_stmt|;
 name|u_long
 name|btotal
 decl_stmt|,
-name|flen
-decl_stmt|,
-name|glen
-decl_stmt|,
-name|ulen
-decl_stmt|;
-name|u_long
 name|maxblock
-decl_stmt|,
-name|maxgroup
 decl_stmt|,
 name|maxinode
 decl_stmt|,
@@ -1418,13 +1409,21 @@ name|maxlen
 decl_stmt|,
 name|maxnlink
 decl_stmt|;
-name|u_long
-name|maxuser
+name|u_quad_t
+name|maxsize
+decl_stmt|;
+name|int
+name|flen
+decl_stmt|,
+name|glen
+decl_stmt|,
+name|ulen
 decl_stmt|,
 name|maxflags
-decl_stmt|;
-name|quad_t
-name|maxsize
+decl_stmt|,
+name|maxgroup
+decl_stmt|,
+name|maxuser
 decl_stmt|;
 name|int
 name|entries
@@ -1477,8 +1476,6 @@ name|maxlen
 operator|=
 name|maxnlink
 operator|=
-name|maxsize
-operator|=
 literal|0
 expr_stmt|;
 name|maxuser
@@ -1486,6 +1483,10 @@ operator|=
 name|maxgroup
 operator|=
 name|maxflags
+operator|=
+literal|0
+expr_stmt|;
+name|maxsize
 operator|=
 literal|0
 expr_stmt|;
@@ -1990,7 +1991,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%lu"
 argument_list|,
 name|maxblock
 argument_list|)
@@ -2020,7 +2021,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%lu"
 argument_list|,
 name|maxinode
 argument_list|)
@@ -2038,7 +2039,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%lu"
 argument_list|,
 name|maxnlink
 argument_list|)
@@ -2056,7 +2057,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%qu"
 argument_list|,
 name|maxsize
 argument_list|)
