@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_CPP
-value|"/usr/libexec/cpp"
+value|"/usr/bin/cpp"
 end_define
 
 begin_define
