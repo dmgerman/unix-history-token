@@ -831,9 +831,9 @@ literal|"README"
 block|}
 block|,
 block|{
-literal|" Doc, Early Adopter's"
+literal|" Doc, Migration Guide"
 block|,
-literal|"Early Adopter's Guide to FreeBSD 5.0."
+literal|"Migration Guide to FreeBSD 5.X."
 block|,
 name|NULL
 block|,
@@ -841,7 +841,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"EARLY"
+literal|"MIGRATE5"
 block|}
 block|,
 block|{
@@ -1820,9 +1820,9 @@ literal|"README"
 block|}
 block|,
 block|{
-literal|"2 Early Adopter's"
+literal|"2 Migration"
 block|,
-literal|"Early Adopter's Guide to FreeBSD 5.0."
+literal|"Migration Guide to FreeBSD 5.X."
 block|,
 name|NULL
 block|,
@@ -1830,7 +1830,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"EARLY"
+literal|"MIGRATE5"
 block|}
 block|,
 block|{
