@@ -10,12 +10,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
+file|<sys/types.h>
 end_include
-
-begin_comment
-comment|/* for inb/outb */
-end_comment
 
 begin_include
 include|#
@@ -25,6 +21,16 @@ end_include
 
 begin_comment
 comment|/* for RB_SERIAL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_comment
+comment|/* for inb/outb */
 end_comment
 
 begin_decl_stmt
