@@ -525,8 +525,6 @@ name|buf
 index|[
 name|MAXBSIZE
 index|]
-decl_stmt|,
-name|ch
 decl_stmt|;
 name|wchar_t
 name|wch
@@ -1025,7 +1023,7 @@ if|if
 condition|(
 name|isspace
 argument_list|(
-name|ch
+name|wch
 argument_list|)
 condition|)
 name|gotsp
