@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)syslog.c	4.2 (Berkeley) %G%"
+literal|"@(#)syslog.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,6 +712,15 @@ argument_list|,
 name|SOCK_DGRAM
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|fcntl
+argument_list|(
+name|LogFile
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
