@@ -12,6 +12,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|_PATH_FTPCHROOT
+value|"/etc/ftpchroot"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_FTPWELCOME
 value|"/etc/ftpwelcome"
 end_define
