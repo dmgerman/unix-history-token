@@ -122,10 +122,9 @@ name|cdevsw
 modifier|*
 name|cdevsw
 parameter_list|,
-name|struct
-name|cdevsw
+name|void
 modifier|*
-name|diskdevsw
+name|unused
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1327,10 +1327,9 @@ name|cdevsw
 modifier|*
 name|cdevsw
 parameter_list|,
-name|struct
-name|cdevsw
+name|void
 modifier|*
-name|proto
+name|unused
 parameter_list|)
 block|{
 name|dev_t
