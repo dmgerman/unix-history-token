@@ -1783,6 +1783,13 @@ operator|&
 name|VAR_FROM_ENV
 condition|)
 block|{
+name|free
+argument_list|(
+name|v
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|Buf_Destroy
 argument_list|(
 name|v

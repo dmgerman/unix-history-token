@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: str.c,v 1.3 1995/01/23 21:02:00 jkh Exp $"
+literal|"$Id: str.c,v 1.4 1995/05/30 06:32:05 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,18 @@ name|void
 name|str_end
 parameter_list|()
 block|{
+if|if
+condition|(
+name|argv
+condition|)
+block|{
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+condition|)
 name|free
 argument_list|(
 name|argv
@@ -137,6 +149,7 @@ operator|)
 name|argv
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|buffer
