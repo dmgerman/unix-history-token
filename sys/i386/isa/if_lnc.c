@@ -8045,6 +8045,8 @@ argument_list|(
 name|len
 argument_list|,
 name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
 argument_list|)
 expr_stmt|;
 name|desc
