@@ -3670,6 +3670,18 @@ case|:
 return|return
 literal|"bsd/os swap"
 return|;
+case|case
+literal|238
+case|:
+return|return
+literal|"EFI GPT"
+return|;
+case|case
+literal|239
+case|:
+return|return
+literal|"EFI Sys. Part."
+return|;
 default|default:
 return|return
 literal|"unknown"
