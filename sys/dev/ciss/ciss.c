@@ -3051,6 +3051,8 @@ operator|->
 name|ciss_irq_resource
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|ciss_intr
 argument_list|,
