@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id$  */
 end_comment
 
 begin_ifndef
@@ -131,14 +131,19 @@ name|control
 decl_stmt|;
 define|#
 directive|define
-name|SCB_REJ_MDP
+name|SCB_NEEDWDTR
 value|0x80
-comment|/* Reject MDP message */
+comment|/* Initiate Wide Negotiation */
 define|#
 directive|define
-name|SCB_DCE
+name|SCB_NEEDSDTR
 value|0x40
-comment|/* Disconnect enable */
+comment|/* Initiate Sync Negotiation */
+define|#
+directive|define
+name|SCB_NEEDDMA
+value|0x08
+comment|/* SCB needs to be DMA'd from 						 * from host memory 						 */
 define|#
 directive|define
 name|SCB_TE
@@ -227,7 +232,7 @@ decl_stmt|;
 define|#
 directive|define
 name|SCB_DOWN_SIZE
-value|26
+value|19
 comment|/* amount to actually download */
 comment|/*23*/
 name|physaddr
@@ -251,11 +256,21 @@ directive|define
 name|SCB_UP_SIZE
 value|26
 comment|/* amount to actually upload */
+comment|/*30*/
+name|physaddr
+name|host_scb
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+decl_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* 	 *  No real point in transferring this to the 	 *  SCB registers. 	*/
-block|unsigned char RESERVED[6];
+block|unsigned char RESERVED[2];
 endif|#
 directive|endif
 comment|/*-----------------end of hardware supported fields----------------*/
@@ -386,13 +401,21 @@ name|sc_link_b
 decl_stmt|;
 comment|/* Second bus for Twin channel cards */
 name|u_short
-name|needsdtr
+name|needsdtr_orig
 decl_stmt|;
 comment|/* Targets we initiate sync neg with */
 name|u_short
-name|needwdtr
+name|needwdtr_orig
 decl_stmt|;
 comment|/* Targets we initiate wide neg with */
+name|u_short
+name|needsdtr
+decl_stmt|;
+comment|/* Current list of negotiated targets */
+name|u_short
+name|needwdtr
+decl_stmt|;
+comment|/* Current list of negotiated targets */
 name|int
 name|numscbs
 decl_stmt|;
