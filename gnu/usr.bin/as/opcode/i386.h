@@ -5746,44 +5746,6 @@ block|}
 block|,
 comment|/* %st0<-- mem float */
 block|{
-literal|"fild"
-block|,
-literal|1
-block|,
-literal|0xdf
-block|,
-literal|0
-block|,
-name|Modrm
-block|,
-name|Mem
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* %st0<-- mem word (16) */
-block|{
-literal|"fildl"
-block|,
-literal|1
-block|,
-literal|0xdb
-block|,
-literal|0
-block|,
-name|Modrm
-block|,
-name|Mem
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* %st0<-- mem word */
-block|{
 literal|"fldl"
 block|,
 literal|1
@@ -5822,7 +5784,7 @@ block|}
 block|,
 comment|/* register */
 block|{
-literal|"filds"
+literal|"fild"
 block|,
 literal|1
 block|,
@@ -5839,15 +5801,15 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* %st0<-- mem dword */
+comment|/* %st0<-- mem word (16) */
 block|{
-literal|"fildll"
+literal|"fildl"
 block|,
 literal|1
 block|,
-literal|0xdf
+literal|0xdb
 block|,
-literal|5
+literal|0
 block|,
 name|Modrm
 block|,
@@ -5858,7 +5820,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* %st0<-- mem qword */
+comment|/* %st0<-- mem dword (32) */
 block|{
 literal|"fildq"
 block|,
@@ -5877,7 +5839,45 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* %st0<-- mem qword */
+comment|/* %st0<-- mem qword (64) */
+block|{
+literal|"fildll"
+block|,
+literal|1
+block|,
+literal|0xdf
+block|,
+literal|5
+block|,
+name|Modrm
+block|,
+name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* %st0<-- mem qword (64) */
+block|{
+literal|"filds"
+block|,
+literal|1
+block|,
+literal|0xdf
+block|,
+literal|0
+block|,
+name|Modrm
+block|,
+name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* %st0<-- mem dword */
 block|{
 literal|"fldt"
 block|,
