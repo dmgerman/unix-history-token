@@ -5013,6 +5013,11 @@ name|done
 label|:
 name|error
 label|:
+name|va_end
+argument_list|(
+name|orgap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|convbuf
