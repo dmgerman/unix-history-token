@@ -4,7 +4,7 @@ comment|/* dhclient.c     DHCP Client. */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995-2001 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This code is based on the original client state machine that was  * written by Elliot Poger.  The code has been extensively hacked on  * by Ted Lemon since then, so any mistakes you find are probably his  * fault and not Elliot's.  */
+comment|/*  * Copyright (c) 1995-2002 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This code is based on the original client state machine that was  * written by Elliot Poger.  The code has been extensively hacked on  * by Ted Lemon since then, so any mistakes you find are probably his  * fault and not Elliot's.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|ocopyright
 index|[]
 init|=
-literal|"$Id: dhclient.c,v 1.129.2.7 2001/08/08 14:46:14 mellon Exp $ Copyright (c) 1995-2001 Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dhclient.c,v 1.129.2.9 2002/02/20 07:16:31 mellon Exp $ Copyright (c) 1995-2001 Internet Software Consortium.  All rights reserved.\n"
 literal|"$FreeBSD$\n"
 decl_stmt|;
 end_decl_stmt
@@ -4004,13 +4004,37 @@ expr_stmt|;
 name|go_daemon
 argument_list|()
 expr_stmt|;
-name|client_dns_update
+if|if
+condition|(
+name|client
+operator|->
+name|config
+operator|->
+name|do_forward_update
+condition|)
+block|{
+name|client
+operator|->
+name|dns_update_timeout
+operator|=
+literal|1
+expr_stmt|;
+name|add_timeout
 argument_list|(
+name|cur_time
+operator|+
+literal|1
+argument_list|,
+name|client_dns_update_timeout
+argument_list|,
 name|client
 argument_list|,
-literal|1
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5343,6 +5367,17 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|data
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|data
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|client
@@ -5369,17 +5404,6 @@ operator|->
 name|options
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|data
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-name|data
 argument_list|)
 expr_stmt|;
 if|if
@@ -14621,9 +14645,19 @@ operator|>
 name|cur_time
 condition|)
 block|{
+if|if
+condition|(
+name|client
+operator|->
+name|config
+operator|->
+name|do_forward_update
+condition|)
 name|client_dns_update
 argument_list|(
 name|client
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -14684,11 +14718,95 @@ block|}
 end_function
 
 begin_comment
-comment|/* See if we should do a DNS update, and if so, do it. */
+comment|/* Called after a timeout if the DNS update failed on the previous try.    Retries the update, and if it times out, schedules a retry after    ten times as long of a wait. */
 end_comment
 
 begin_function
 name|void
+name|client_dns_update_timeout
+parameter_list|(
+name|void
+modifier|*
+name|cp
+parameter_list|)
+block|{
+name|struct
+name|client_state
+modifier|*
+name|client
+init|=
+name|cp
+decl_stmt|;
+name|isc_result_t
+name|status
+decl_stmt|;
+if|if
+condition|(
+name|client
+operator|->
+name|active
+condition|)
+block|{
+name|status
+operator|=
+name|client_dns_update
+argument_list|(
+name|client
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|client
+operator|->
+name|active
+operator|->
+name|renewal
+operator|-
+name|cur_time
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|ISC_R_TIMEDOUT
+condition|)
+block|{
+name|client
+operator|->
+name|dns_update_timeout
+operator|*=
+literal|10
+expr_stmt|;
+name|add_timeout
+argument_list|(
+name|cur_time
+operator|+
+name|client
+operator|->
+name|dns_update_timeout
+argument_list|,
+name|client_dns_update_timeout
+argument_list|,
+name|client
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* See if we should do a DNS update, and if so, do it. */
+end_comment
+
+begin_function
+name|isc_result_t
 name|client_dns_update
 parameter_list|(
 name|struct
@@ -14698,6 +14816,9 @@ name|client
 parameter_list|,
 name|int
 name|addp
+parameter_list|,
+name|int
+name|ttl
 parameter_list|)
 block|{
 name|struct
@@ -14732,7 +14853,9 @@ name|client
 operator|->
 name|sent_options
 condition|)
-return|return;
+return|return
+name|ISC_R_SUCCESS
+return|;
 comment|/* If we don't have a lease, we can't do an update. */
 if|if
 condition|(
@@ -14741,7 +14864,9 @@ name|client
 operator|->
 name|active
 condition|)
-return|return;
+return|return
+name|ISC_R_SUCCESS
+return|;
 comment|/* If we set the no client update flag, don't do the update. */
 if|if
 condition|(
@@ -14801,7 +14926,9 @@ argument_list|,
 name|MDL
 argument_list|)
 condition|)
-return|return;
+return|return
+name|ISC_R_SUCCESS
+return|;
 comment|/* If we set the "server, please update" flag, or didn't set it 	   to false, don't do the update. */
 if|if
 condition|(
@@ -14862,7 +14989,9 @@ argument_list|,
 name|MDL
 argument_list|)
 condition|)
-return|return;
+return|return
+name|ISC_R_SUCCESS
+return|;
 comment|/* If no FQDN option was supplied, don't do the update. */
 name|memset
 argument_list|(
@@ -14935,7 +15064,9 @@ argument_list|,
 name|MDL
 argument_list|)
 condition|)
-return|return;
+return|return
+name|ISC_R_SUCCESS
+return|;
 comment|/* Make a dhcid string out of either the client identifier, 	   if we are sending one, or the interface's MAC address, 	   otherwise. */
 name|memset
 argument_list|(
@@ -15086,7 +15217,9 @@ argument_list|,
 name|MDL
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|ISC_R_SUCCESS
+return|;
 block|}
 comment|/* Start the resolver, if necessary. */
 if|if
@@ -15150,7 +15283,7 @@ argument_list|,
 operator|&
 name|ddns_dhcid
 argument_list|,
-name|DEFAULT_DDNS_TTL
+name|ttl
 argument_list|,
 literal|1
 argument_list|)
@@ -15190,6 +15323,9 @@ argument_list|,
 name|MDL
 argument_list|)
 expr_stmt|;
+return|return
+name|rcode
+return|;
 block|}
 end_function
 
