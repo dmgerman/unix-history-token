@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.9 2/14/82  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.11 %G%  */
 end_comment
 
 begin_ifdef

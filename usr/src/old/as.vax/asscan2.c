@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan2.c 4.4 4/16/82"
+literal|"@(#)asscan2.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
