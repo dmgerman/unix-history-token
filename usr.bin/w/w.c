@@ -1736,6 +1736,20 @@ literal|60
 operator|)
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ep
+operator|->
+name|idle
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"     - "
+argument_list|)
+expr_stmt|;
 else|else
 name|prttime
 argument_list|(
@@ -1886,7 +1900,7 @@ elseif|else
 if|if
 condition|(
 name|tim
-operator|>
+operator|>=
 literal|0
 condition|)
 name|printf
@@ -1894,12 +1908,6 @@ argument_list|(
 literal|"    %2d"
 argument_list|,
 name|tim
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"      "
 argument_list|)
 expr_stmt|;
 name|printf
