@@ -549,7 +549,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logf
+name|chat_logf
 parameter_list|(
 specifier|const
 name|char
@@ -1643,7 +1643,7 @@ end_comment
 
 begin_function
 name|void
-name|logf
+name|chat_logf
 parameter_list|(
 specifier|const
 name|char
@@ -1873,7 +1873,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"alarm"
 argument_list|)
@@ -3259,7 +3259,7 @@ if|if
 condition|(
 name|fail_reason
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"Failed (%s)"
 argument_list|,
@@ -3267,7 +3267,7 @@ name|fail_reason
 argument_list|)
 expr_stmt|;
 else|else
-name|logf
+name|chat_logf
 argument_list|(
 literal|"Failed"
 argument_list|)
@@ -3570,7 +3570,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"abort on (%v)"
 argument_list|,
@@ -3703,7 +3703,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"clear abort on (%v)"
 argument_list|,
@@ -3808,7 +3808,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"report (%v)"
 argument_list|,
@@ -3939,7 +3939,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"clear report (%v)"
 argument_list|,
@@ -3996,7 +3996,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"timeout set to %d seconds"
 argument_list|,
@@ -4104,7 +4104,7 @@ literal|0x7F
 operator|)
 return|;
 default|default:
-name|logf
+name|chat_logf
 argument_list|(
 literal|"warning: read() on stdin returned %d"
 argument_list|,
@@ -4222,7 +4222,7 @@ literal|0
 operator|)
 return|;
 default|default:
-name|logf
+name|chat_logf
 argument_list|(
 literal|"warning: write() on stdout returned %d"
 argument_list|,
@@ -4336,13 +4336,13 @@ name|errno
 operator|==
 name|EWOULDBLOCK
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|" -- write timed out"
 argument_list|)
 expr_stmt|;
 else|else
-name|logf
+name|chat_logf
 argument_list|(
 literal|" -- write failed: %m"
 argument_list|)
@@ -4388,7 +4388,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"send (%v)"
 argument_list|,
@@ -4666,7 +4666,7 @@ operator|>
 name|STR_LEN
 condition|)
 block|{
-name|logf
+name|chat_logf
 argument_list|(
 literal|"expect string is too long"
 argument_list|)
@@ -4719,7 +4719,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"expect (%v)"
 argument_list|,
@@ -4737,7 +4737,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"got it"
 argument_list|)
@@ -4803,14 +4803,14 @@ name|s
 operator|==
 name|logged
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
 comment|/* blank line */
 else|else
-name|logf
+name|chat_logf
 argument_list|(
 literal|"%0.*v"
 argument_list|,
@@ -4845,7 +4845,7 @@ operator|+
 literal|80
 condition|)
 block|{
-name|logf
+name|chat_logf
 argument_list|(
 literal|"%0.*v"
 argument_list|,
@@ -5130,7 +5130,7 @@ name|s
 operator|>
 name|logged
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"%0.*v"
 argument_list|,
@@ -5141,7 +5141,7 @@ argument_list|,
 name|logged
 argument_list|)
 expr_stmt|;
-name|logf
+name|chat_logf
 argument_list|(
 literal|" -- got it\n"
 argument_list|)
@@ -5222,7 +5222,7 @@ name|s
 operator|>
 name|logged
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"%0.*v"
 argument_list|,
@@ -5233,7 +5233,7 @@ argument_list|,
 name|logged
 argument_list|)
 expr_stmt|;
-name|logf
+name|chat_logf
 argument_list|(
 literal|" -- failed"
 argument_list|)
@@ -5289,7 +5289,7 @@ operator|-
 name|minlen
 condition|)
 block|{
-name|logf
+name|chat_logf
 argument_list|(
 literal|"%0.*v"
 argument_list|,
@@ -5341,7 +5341,7 @@ name|alarmed
 operator|&&
 name|verbose
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|"warning: alarm synchronization problem"
 argument_list|)
@@ -5363,13 +5363,13 @@ if|if
 condition|(
 name|alarmed
 condition|)
-name|logf
+name|chat_logf
 argument_list|(
 literal|" -- read timed out"
 argument_list|)
 expr_stmt|;
 else|else
-name|logf
+name|chat_logf
 argument_list|(
 literal|" -- read failed: %m"
 argument_list|)
