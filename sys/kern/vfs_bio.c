@@ -8213,6 +8213,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|vn_finished_write
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|BUF_UNLOCK
 argument_list|(
 name|bp
