@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.21 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -700,20 +700,18 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|m_freem
-argument_list|(
+parameter_list|(
 name|m
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -746,7 +744,7 @@ name|n
 condition|)
 do|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Mbuffer utility routines.  */
@@ -1591,6 +1589,12 @@ name|mp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|req_len
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -2240,6 +2244,8 @@ name|m0
 decl_stmt|;
 name|int
 name|len0
+decl_stmt|,
+name|wait
 decl_stmt|;
 block|{
 specifier|register
