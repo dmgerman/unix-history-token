@@ -1,21 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	static	char sccsid[] = "@(#)pstab.h 1.1 %G%"; */
-end_comment
-
-begin_comment
-comment|/*      *	the new .stab type for pascal separate compilation type checking      */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_PC
-value|0x30
-end_define
-
-begin_comment
-comment|/* global pascal symbol: name,,0,subtype,line */
+comment|/*	static	char sccsid[] = "@(#)pstab.h 1.2 %G%"; */
 end_comment
 
 begin_comment
