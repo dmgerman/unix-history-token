@@ -450,24 +450,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|smbus
-argument_list|,
-name|nfpm
-argument_list|,
-name|smbus_driver
-argument_list|,
-name|smbus_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|smbus
