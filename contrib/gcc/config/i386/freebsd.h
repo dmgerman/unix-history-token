@@ -1052,7 +1052,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__FreeBSD__=3 -D__FreeBSD_cc_version=330001 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Di386 -D__FreeBSD__=3 -D__FreeBSD_cc_version=340000 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
 end_define
 
 begin_undef
