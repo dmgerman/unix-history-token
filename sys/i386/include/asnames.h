@@ -735,8 +735,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|_Xsyscall
-value|Xsyscall
+name|_Xlcall_syscall
+value|Xlcall_syscall
 end_define
 
 begin_define

@@ -436,7 +436,7 @@ specifier|extern
 name|inthand_t
 name|IDTVEC
 parameter_list|(
-name|syscall
+name|lcall_syscall
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2001,7 +2001,7 @@ name|int
 operator|)
 name|IDTVEC
 argument_list|(
-name|syscall
+name|lcall_syscall
 argument_list|)
 condition|)
 block|{
@@ -2021,7 +2021,7 @@ name|int
 operator|)
 name|IDTVEC
 argument_list|(
-name|syscall
+name|lcall_syscall
 argument_list|)
 operator|+
 literal|1
