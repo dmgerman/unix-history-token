@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chmod.c,v 1.11 1998/05/13 07:22:11 charnier Exp $"
+literal|"$Id: chmod.c,v 1.12 1998/12/16 04:42:00 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,7 +300,6 @@ break|break;
 case|case
 literal|'f'
 case|:
-comment|/* XXX: undocumented. */
 name|fflag
 operator|=
 literal|1
@@ -783,7 +782,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chmod [-R [-H | -L | -P]] mode file ...\n"
+literal|"usage: chmod [-f -R [-H | -L | -P]] mode file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
