@@ -719,7 +719,9 @@ operator|&
 name|sdl
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|sdl
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sdl
@@ -727,7 +729,9 @@ operator|.
 name|sdl_len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|sdl
+argument_list|)
 expr_stmt|;
 name|sdl
 operator|.
@@ -1113,7 +1117,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1185,9 +1191,6 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|int
-name|t
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1198,10 +1201,11 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|int
 name|t
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|/* Check for<etherif>.<vlan> style interface names. */
 name|IFNET_RLOCK
 argument_list|()
@@ -1322,7 +1326,9 @@ name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|ifp
+operator|)
 return|;
 block|}
 end_function
@@ -1522,13 +1528,11 @@ operator|&
 operator|~
 name|EVL_VLID_MASK
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -1726,9 +1730,11 @@ operator|->
 name|if_linkmiblen
 operator|=
 sizeof|sizeof
+argument_list|(
 name|ifv
 operator|->
 name|ifv_mib
+argument_list|)
 expr_stmt|;
 comment|/* NB: mtu is not set here */
 name|ifp
@@ -1954,6 +1960,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The ifp->if_init entry point for vlan(4) is a no-op.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1963,9 +1973,7 @@ name|void
 modifier|*
 name|foo
 parameter_list|)
-block|{
-return|return;
-block|}
+block|{  }
 end_function
 
 begin_function
@@ -2314,8 +2322,10 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|evl
+argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -2364,7 +2374,6 @@ operator|&=
 operator|~
 name|IFF_OACTIVE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2788,7 +2797,9 @@ operator|!=
 name|IFT_ETHER
 condition|)
 return|return
+operator|(
 name|EPROTONOSUPPORT
+operator|)
 return|;
 if|if
 condition|(
@@ -2797,7 +2808,9 @@ operator|->
 name|ifv_p
 condition|)
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 name|ifv
 operator|->
@@ -3093,7 +3106,9 @@ name|ifv_if
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3172,7 +3187,9 @@ operator|&
 name|sdl
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|sdl
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sdl
@@ -3180,7 +3197,9 @@ operator|.
 name|sdl_len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|sdl
+argument_list|)
 expr_stmt|;
 name|sdl
 operator|.
@@ -3430,7 +3449,9 @@ name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4008,7 +4029,9 @@ operator|&
 name|vlr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|vlr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4155,7 +4178,9 @@ operator|&
 name|vlr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|vlr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|VLAN_LOCK
@@ -4212,7 +4237,9 @@ operator|->
 name|ifr_data
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|vlr
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4257,7 +4284,9 @@ name|EINVAL
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
