@@ -476,11 +476,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|login_close
-argument_list|(
-name|lc
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -728,6 +723,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
 if|if
 condition|(
 name|login_setcryptfmt
@@ -750,6 +748,23 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|login_close
+argument_list|(
+name|lc
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|crypt_set_format
+argument_list|(
+literal|"md5"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Salt suitable for anything */
 name|to64
 argument_list|(
