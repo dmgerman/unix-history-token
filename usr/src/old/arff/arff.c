@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.7 (Berkeley) 81/07/08"
+literal|"@(#)arff.c	4.8 (Berkeley) 81/11/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,30 +50,24 @@ begin_struct
 struct|struct
 name|rt_dat
 block|{
-name|unsigned
-name|short
-name|int
+name|u_short
 name|rt_yr
 range|:
 literal|5
 decl_stmt|;
-comment|/* Year - 1972			 */
-name|unsigned
-name|short
-name|int
+comment|/* year-1972 */
+name|u_short
 name|rt_dy
 range|:
 literal|5
 decl_stmt|;
-comment|/* day				 */
-name|unsigned
-name|short
-name|int
+comment|/* day */
+name|u_short
 name|rt_mo
 range|:
 literal|5
 decl_stmt|;
-comment|/* month				 */
+comment|/* month */
 block|}
 struct|;
 end_struct
@@ -99,36 +93,35 @@ block|{
 name|char
 name|rt_pad
 decl_stmt|;
-comment|/* unusued		     */
+comment|/* unusued */
 name|char
 name|rt_stat
 decl_stmt|;
-comment|/* Type of entry, or end of seg */
-name|unsigned
-name|short
+comment|/* type of entry, or end of seg */
+name|u_short
 name|rt_name
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* Name, 3 words in rad50 form */
+comment|/* name, 3 words in rad50 form */
 name|short
 name|rt_len
 decl_stmt|;
-comment|/* Length of file	      */
+comment|/* length of file */
 name|char
 name|rt_chan
 decl_stmt|;
-comment|/* Only used in temporary files */
+comment|/* only used in temporary files */
 name|char
 name|rt_job
 decl_stmt|;
-comment|/* Only used in temporary files */
+comment|/* only used in temporary files */
 name|struct
 name|rt_dat
 name|rt_date
 decl_stmt|;
-comment|/* Creation Date			 */
+comment|/* creation date */
 block|}
 struct|;
 end_struct
@@ -168,6 +161,10 @@ name|RT_BLOCK
 value|512
 end_define
 
+begin_comment
+comment|/* block size */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -186,24 +183,23 @@ block|{
 name|short
 name|rt_numseg
 decl_stmt|;
-comment|/* number of segments available */
+comment|/* # of segments available */
 name|short
 name|rt_nxtseg
 decl_stmt|;
-comment|/* segment no of next log. seg */
+comment|/* # of next logical segment */
 name|short
 name|rt_lstseg
 decl_stmt|;
-comment|/* highest seg currenltly open */
-name|unsigned
-name|short
+comment|/* highest seg currently open */
+name|u_short
 name|rt_entpad
 decl_stmt|;
-comment|/* extra words/dir. entry      */
+comment|/* extra words/directory entry */
 name|short
 name|rt_stfile
 decl_stmt|;
-comment|/* block no where files begin  */
+comment|/* block # where files begin */
 block|}
 struct|;
 end_struct
@@ -326,7 +322,7 @@ name|flag
 parameter_list|(
 name|c
 parameter_list|)
-value|(flg[(c) - 'a'])
+value|(flg[('c') - 'a'])
 end_define
 
 begin_decl_stmt
@@ -334,9 +330,7 @@ name|char
 modifier|*
 name|man
 init|=
-block|{
 literal|"rxtd"
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -377,7 +371,6 @@ index|]
 init|=
 block|{
 block|{
-block|{
 literal|4
 block|,
 literal|0
@@ -389,6 +382,7 @@ block|,
 literal|14
 block|}
 block|,
+block|{
 block|{
 literal|0
 block|,
@@ -473,9 +467,7 @@ name|char
 modifier|*
 name|opt
 init|=
-block|{
 literal|"vf"
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -497,39 +489,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|extern
 name|long
 name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|rcmd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|dcmd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|xcmd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|tcmd
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -588,7 +569,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* register i; 	for(i=0; signum[i]; i++) 		if(signal(signum[i], SIG_IGN) != SIG_IGN) 			signal(signum[i], sigdone); */
 if|if
 condition|(
 name|argc
@@ -655,7 +635,7 @@ block|{
 define|#
 directive|define
 name|SURE
-value|"Are you sure you want to clobber the floppy?\n"
+value|"Last chance before clobbering floppy?"
 name|int
 name|tty
 decl_stmt|;
@@ -712,7 +692,7 @@ argument_list|)
 expr_stmt|;
 name|flag
 argument_list|(
-literal|'c'
+name|c
 argument_list|)
 operator|++
 expr_stmt|;
@@ -736,7 +716,7 @@ argument_list|)
 expr_stmt|;
 name|flag
 argument_list|(
-literal|'r'
+name|r
 argument_list|)
 operator|++
 expr_stmt|;
@@ -751,7 +731,7 @@ argument_list|)
 expr_stmt|;
 name|flag
 argument_list|(
-literal|'d'
+name|d
 argument_list|)
 operator|++
 expr_stmt|;
@@ -829,12 +809,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|flg
-index|[
-literal|'u'
-operator|-
-literal|'a'
-index|]
+name|flag
+argument_list|(
+name|u
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -956,8 +934,6 @@ specifier|register
 name|i
 operator|,
 name|n
-expr_stmt|;
-name|n
 operator|=
 literal|0
 expr_stmt|;
@@ -1007,25 +983,6 @@ block|}
 end_block
 
 begin_macro
-name|phserr
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arff: phase error on %s\n"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
 name|mesg
 argument_list|(
 argument|c
@@ -1036,12 +993,10 @@ begin_block
 block|{
 if|if
 condition|(
-name|flg
-index|[
-literal|'v'
-operator|-
-literal|'a'
-index|]
+name|flag
+argument_list|(
+name|v
+argument_list|)
 condition|)
 if|if
 condition|(
@@ -1049,12 +1004,10 @@ name|c
 operator|!=
 literal|'c'
 operator|||
-name|flg
-index|[
-literal|'v'
-operator|-
-literal|'a'
-index|]
+name|flag
+argument_list|(
+name|v
+argument_list|)
 operator|>
 literal|1
 condition|)
@@ -1081,12 +1034,7 @@ specifier|register
 name|char
 modifier|*
 name|de
-decl_stmt|;
-name|int
-name|segnum
-decl_stmt|;
-specifier|register
-name|char
+decl_stmt|,
 modifier|*
 name|last
 decl_stmt|;
@@ -1099,6 +1047,8 @@ modifier|*
 name|dope
 decl_stmt|;
 name|int
+name|segnum
+decl_stmt|,
 name|nleft
 decl_stmt|;
 specifier|register
@@ -1130,7 +1080,6 @@ operator|!=
 operator|-
 literal|1
 condition|;
-comment|/* for all dir. segments */
 name|segnum
 operator|=
 name|rt_dir
@@ -1181,7 +1130,6 @@ name|de
 operator|+=
 name|rt_entsiz
 control|)
-block|{
 if|if
 condition|(
 name|rtls
@@ -1203,16 +1151,15 @@ operator|)
 operator|/
 name|rt_entsiz
 expr_stmt|;
+define|#
+directive|define
+name|ENTRIES
+value|"\n%d entries remaining in directory segment %d.\n"
 name|printf
 argument_list|(
-literal|"\n%d entries remaining"
+name|ENTRIES
 argument_list|,
 name|nleft
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" in directory segment %d.\n"
 argument_list|,
 name|segnum
 operator|+
@@ -1220,7 +1167,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 else|else
@@ -1237,7 +1183,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|dope
@@ -1269,7 +1214,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
@@ -1307,15 +1251,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|flg
-index|[
-literal|'v'
-operator|-
-literal|'a'
-index|]
-condition|)
 switch|switch
 condition|(
 name|de
@@ -1326,14 +1261,49 @@ block|{
 case|case
 name|RT_TEMP
 case|:
+if|if
+condition|(
+name|flag
+argument_list|(
+name|v
+argument_list|)
+condition|)
 name|printf
 argument_list|(
 literal|"Tempfile:\n"
 argument_list|)
 expr_stmt|;
+comment|/* fall thru...*/
 case|case
 name|RT_FILE
 case|:
+if|if
+condition|(
+operator|!
+name|flag
+argument_list|(
+name|v
+argument_list|)
+condition|)
+block|{
+name|sunrad50
+argument_list|(
+name|name
+argument_list|,
+name|de
+operator|->
+name|rt_name
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|unrad50
 argument_list|(
 literal|2
@@ -1432,55 +1402,6 @@ literal|1
 operator|)
 return|;
 block|}
-else|else
-block|{
-switch|switch
-condition|(
-name|de
-operator|->
-name|rt_stat
-condition|)
-block|{
-case|case
-name|RT_TEMP
-case|:
-case|case
-name|RT_FILE
-case|:
-name|sunrad50
-argument_list|(
-name|name
-argument_list|,
-name|de
-operator|->
-name|rt_name
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|RT_ESEG
-case|:
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-case|case
-name|RT_NULL
-case|:
-empty_stmt|;
-block|}
-block|}
 return|return
 operator|(
 literal|0
@@ -1500,14 +1421,12 @@ specifier|register
 name|char
 modifier|*
 name|de
+decl_stmt|,
+modifier|*
+name|last
 decl_stmt|;
 name|int
 name|segnum
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|last
 decl_stmt|;
 name|char
 name|name
@@ -1539,7 +1458,6 @@ operator|!=
 operator|-
 literal|1
 condition|;
-comment|/* for all dir. segments */
 name|segnum
 operator|=
 name|rt_dir
@@ -1553,19 +1471,20 @@ name|rt_nxtseg
 operator|-
 literal|1
 control|)
-block|{
+for|for
+control|(
 name|last
 operator|=
 name|rt_last
 operator|+
+operator|(
 name|segnum
 operator|*
 literal|2
 operator|*
 name|RT_BLOCK
-expr_stmt|;
-for|for
-control|(
+operator|)
+operator|,
 name|de
 operator|=
 operator|(
@@ -1590,7 +1509,6 @@ name|de
 operator|+=
 name|rt_entsiz
 control|)
-block|{
 name|sunrad50
 argument_list|(
 name|name
@@ -1602,14 +1520,12 @@ argument_list|)
 operator|->
 name|rt_name
 argument_list|)
-expr_stmt|;
+operator|,
 name|rtx
 argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 else|else
 for|for
 control|(
@@ -1698,12 +1614,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|flg
-index|[
-literal|'v'
-operator|-
-literal|'a'
-index|]
+name|flag
+argument_list|(
+name|v
+argument_list|)
 condition|)
 name|rtls
 argument_list|(
@@ -1720,6 +1634,9 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|file
 operator|=
 name|creat
@@ -1728,10 +1645,7 @@ name|name
 argument_list|,
 literal|0666
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|file
+operator|)
 operator|<
 literal|0
 condition|)
@@ -1822,6 +1736,9 @@ specifier|register
 name|char
 modifier|*
 name|de
+decl_stmt|,
+modifier|*
+name|last
 decl_stmt|;
 specifier|register
 name|i
@@ -1832,11 +1749,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|mode
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|last
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1855,17 +1767,17 @@ if|if
 condition|(
 name|flag
 argument_list|(
-literal|'c'
+name|c
 argument_list|)
 operator|||
 name|flag
 argument_list|(
-literal|'d'
+name|d
 argument_list|)
 operator|||
 name|flag
 argument_list|(
-literal|'r'
+name|r
 argument_list|)
 condition|)
 name|mode
@@ -1914,12 +1826,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|flag
 argument_list|(
-literal|'c'
+name|c
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|lread
@@ -2116,7 +2027,6 @@ name|de
 operator|+=
 name|rt_entsiz
 control|)
-block|{
 if|if
 condition|(
 name|rt
@@ -2129,7 +2039,6 @@ operator|==
 name|RT_ESEG
 condition|)
 break|break;
-block|}
 name|rt_curend
 index|[
 name|i
@@ -2184,14 +2093,12 @@ specifier|register
 name|char
 modifier|*
 name|de
+decl_stmt|,
+modifier|*
+name|last
 decl_stmt|;
 name|int
 name|segnum
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|last
 decl_stmt|;
 specifier|register
 name|index
@@ -2218,7 +2125,6 @@ operator|!=
 operator|-
 literal|1
 condition|;
-comment|/* for all dir. segments */
 name|segnum
 operator|=
 name|rt_dir
@@ -2278,7 +2184,6 @@ name|de
 operator|+=
 name|rt_entsiz
 control|)
-block|{
 switch|switch
 condition|(
 name|rt
@@ -2309,35 +2214,7 @@ operator|->
 name|rt_name
 argument_list|)
 condition|)
-goto|goto
-name|found
-goto|;
-case|case
-name|RT_NULL
-case|:
-name|index
-operator|+=
-name|rt
-argument_list|(
-name|de
-argument_list|)
-operator|->
-name|rt_len
-expr_stmt|;
-block|}
-block|}
-block|}
-return|return
-operator|(
-operator|(
-name|FLDOPE
-operator|*
-operator|)
-literal|0
-operator|)
-return|;
-name|found
-label|:
+block|{
 name|result
 operator|.
 name|count
@@ -2388,6 +2265,30 @@ name|result
 operator|)
 return|;
 block|}
+case|case
+name|RT_NULL
+case|:
+name|index
+operator|+=
+name|rt
+argument_list|(
+name|de
+argument_list|)
+operator|->
+name|rt_len
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+operator|(
+name|FLDOPE
+operator|*
+operator|)
+literal|0
+operator|)
+return|;
+block|}
 end_function
 
 begin_expr_stmt
@@ -2398,17 +2299,12 @@ argument|a
 argument_list|,
 argument|b
 argument_list|)
-name|unsigned
-name|short
+name|u_short
 name|a
-index|[
-literal|3
-index|]
+index|[]
 operator|,
 name|b
-index|[
-literal|3
-index|]
+index|[]
 expr_stmt|;
 end_expr_stmt
 
@@ -2416,15 +2312,11 @@ begin_block
 block|{
 return|return
 operator|(
+operator|*
 name|a
-index|[
-literal|0
-index|]
 operator|==
+operator|*
 name|b
-index|[
-literal|0
-index|]
 operator|&&
 name|a
 index|[
@@ -2458,16 +2350,14 @@ argument_list|,
 name|out
 argument_list|)
 specifier|register
-name|unsigned
-name|char
+name|u_char
 operator|*
 name|cp
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|unsigned
-name|short
+name|u_short
 modifier|*
 name|out
 decl_stmt|;
@@ -2477,8 +2367,7 @@ begin_block
 block|{
 specifier|register
 name|index
-expr_stmt|;
-specifier|register
+operator|,
 name|temp
 expr_stmt|;
 for|for
@@ -2563,7 +2452,6 @@ name|p
 parameter_list|,
 name|q
 parameter_list|)
-define|\
 value|(x = v[p/q], p %= q);
 end_define
 
@@ -2579,8 +2467,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|unsigned
-name|short
+name|u_short
 modifier|*
 name|in
 decl_stmt|;
@@ -2602,14 +2489,12 @@ operator|,
 name|temp
 expr_stmt|;
 specifier|register
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|v
 init|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|val
@@ -2693,8 +2578,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|register
-name|unsigned
-name|short
+name|u_short
 modifier|*
 name|rname
 decl_stmt|;
@@ -2750,7 +2634,7 @@ empty_stmt|;
 name|cp
 operator|++
 expr_stmt|;
-comment|/*  	 * Change to rad50 	 * 	 */
+comment|/*  	 * Change to rad50 	 */
 for|for
 control|(
 name|index
@@ -2834,9 +2718,7 @@ name|index
 operator|>=
 literal|3
 condition|)
-block|{
 break|break;
-block|}
 block|}
 name|ext
 index|[
@@ -2850,15 +2732,11 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
-expr_stmt|;
 name|rname
 index|[
 literal|1
 index|]
 operator|=
-literal|0
-expr_stmt|;
 name|rname
 index|[
 literal|2
@@ -2869,8 +2747,7 @@ expr_stmt|;
 name|rad50
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|file
@@ -2881,8 +2758,7 @@ expr_stmt|;
 name|rad50
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|ext
@@ -2905,12 +2781,9 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|unsigned
-name|short
+name|u_short
 name|rname
-index|[
-literal|3
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -2958,7 +2831,7 @@ argument_list|,
 name|ext
 argument_list|)
 expr_stmt|;
-comment|/* Jam name and extension together with a dot 	   deleting white space */
+comment|/* 	 * Jam name and extension together with a dot 	 * deleting white space 	 */
 for|for
 control|(
 name|cp
@@ -3014,7 +2887,6 @@ operator|+
 literal|3
 condition|;
 control|)
-block|{
 operator|*
 name|cp
 operator|++
@@ -3023,7 +2895,6 @@ operator|*
 name|cp2
 operator|++
 expr_stmt|;
-block|}
 operator|*
 name|cp
 operator|=
@@ -3592,6 +3463,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Logical to physical adress translation  */
+end_comment
+
 begin_function
 name|long
 name|trans
@@ -3603,7 +3478,6 @@ name|int
 name|logical
 decl_stmt|;
 block|{
-comment|/*  Logical to physical adress translation */
 specifier|register
 name|int
 name|sector
@@ -3732,26 +3606,28 @@ name|trans
 parameter_list|()
 function_decl|;
 extern|extern floppydes;
+specifier|register
+name|int
+name|size
+init|=
+name|flag
+argument_list|(
+name|m
+argument_list|)
+condition|?
+literal|512
+else|:
+literal|128
+decl_stmt|;
 name|rt_init
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|flg
-index|[
-literal|'m'
-operator|-
-literal|'a'
-index|]
-operator|==
-literal|0
-condition|)
 while|while
 condition|(
 operator|(
 name|count
 operator|-=
-literal|128
+name|size
 operator|)
 operator|>=
 literal|0
@@ -3761,6 +3637,16 @@ name|lseek
 argument_list|(
 name|floppydes
 argument_list|,
+name|flag
+argument_list|(
+name|m
+argument_list|)
+condition|?
+operator|(
+name|long
+operator|)
+name|startad
+else|:
 name|trans
 argument_list|(
 name|startad
@@ -3777,10 +3663,10 @@ name|floppydes
 argument_list|,
 name|obuff
 argument_list|,
-literal|128
+name|size
 argument_list|)
 operator|!=
-literal|128
+name|size
 condition|)
 name|fprintf
 argument_list|(
@@ -3790,75 +3676,16 @@ literal|"arff: read error block %d\n"
 argument_list|,
 name|startad
 operator|/
-literal|128
+name|size
 argument_list|)
 expr_stmt|;
 name|obuff
 operator|+=
-literal|128
+name|size
 expr_stmt|;
 name|startad
 operator|+=
-literal|128
-expr_stmt|;
-block|}
-else|else
-while|while
-condition|(
-operator|(
-name|count
-operator|-=
-literal|512
-operator|)
-operator|>=
-literal|0
-condition|)
-block|{
-name|lseek
-argument_list|(
-name|floppydes
-argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
-name|startad
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|read
-argument_list|(
-name|floppydes
-argument_list|,
-name|obuff
-argument_list|,
-literal|512
-argument_list|)
-operator|!=
-literal|512
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arff: read error block %d\n"
-argument_list|,
-name|startad
-operator|/
-literal|512
-argument_list|)
-expr_stmt|;
-name|obuff
-operator|+=
-literal|512
-expr_stmt|;
-name|startad
-operator|+=
-literal|512
+name|size
 expr_stmt|;
 block|}
 block|}
@@ -3895,26 +3722,28 @@ name|trans
 parameter_list|()
 function_decl|;
 extern|extern floppydes;
+specifier|register
+name|int
+name|size
+init|=
+name|flag
+argument_list|(
+name|m
+argument_list|)
+condition|?
+literal|512
+else|:
+literal|128
+decl_stmt|;
 name|rt_init
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|flg
-index|[
-literal|'m'
-operator|-
-literal|'a'
-index|]
-operator|==
-literal|0
-condition|)
 while|while
 condition|(
 operator|(
 name|count
 operator|-=
-literal|128
+name|size
 operator|)
 operator|>=
 literal|0
@@ -3924,6 +3753,16 @@ name|lseek
 argument_list|(
 name|floppydes
 argument_list|,
+name|flag
+argument_list|(
+name|m
+argument_list|)
+condition|?
+operator|(
+name|long
+operator|)
+name|startad
+else|:
 name|trans
 argument_list|(
 name|startad
@@ -3940,10 +3779,10 @@ name|floppydes
 argument_list|,
 name|obuff
 argument_list|,
-literal|128
+name|size
 argument_list|)
 operator|!=
-literal|128
+name|size
 condition|)
 name|fprintf
 argument_list|(
@@ -3953,75 +3792,16 @@ literal|"arff: write error block %d\n"
 argument_list|,
 name|startad
 operator|/
-literal|128
+name|size
 argument_list|)
 expr_stmt|;
 name|obuff
 operator|+=
-literal|128
+name|size
 expr_stmt|;
 name|startad
 operator|+=
-literal|128
-expr_stmt|;
-block|}
-else|else
-while|while
-condition|(
-operator|(
-name|count
-operator|-=
-literal|512
-operator|)
-operator|>=
-literal|0
-condition|)
-block|{
-name|lseek
-argument_list|(
-name|floppydes
-argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
-name|startad
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|write
-argument_list|(
-name|floppydes
-argument_list|,
-name|obuff
-argument_list|,
-literal|512
-argument_list|)
-operator|!=
-literal|512
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arff: write error block %d\n"
-argument_list|,
-name|startad
-operator|/
-literal|512
-argument_list|)
-expr_stmt|;
-name|obuff
-operator|+=
-literal|512
-expr_stmt|;
-name|startad
-operator|+=
-literal|512
+name|size
 expr_stmt|;
 block|}
 block|}
@@ -4236,7 +4016,6 @@ operator|!=
 operator|-
 literal|1
 condition|;
-comment|/* for all dir. segments */
 name|segnum
 operator|=
 name|rt_dir
@@ -4284,19 +4063,17 @@ condition|;
 name|de
 operator|++
 control|)
-block|{
-switch|switch
+if|if
 condition|(
 operator|(
 name|de
 operator|)
 operator|->
 name|rt_stat
+operator|==
+name|RT_NULL
 condition|)
 block|{
-case|case
-name|RT_NULL
-case|:
 if|if
 condition|(
 name|bufp
@@ -4335,7 +4112,6 @@ name|found
 goto|;
 block|}
 continue|continue;
-block|}
 block|}
 block|}
 name|printf
@@ -4479,7 +4255,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* Make sure there is room */
+comment|/* make sure there is room */
 if|if
 condition|(
 name|de
@@ -4493,6 +4269,10 @@ name|overwrite
 goto|;
 if|if
 condition|(
+operator|(
+name|char
+operator|*
+operator|)
 name|rt_curend
 index|[
 name|segnum
@@ -4514,12 +4294,10 @@ block|{
 comment|/* no entries left on segment */
 if|if
 condition|(
-name|flg
-index|[
-literal|'o'
-operator|-
-literal|'a'
-index|]
+name|flag
+argument_list|(
+name|o
+argument_list|)
 condition|)
 goto|goto
 name|overwrite
@@ -5079,8 +4857,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|unsigned
-name|short
+name|u_short
 operator|*
 operator|)
 operator|&
@@ -5141,7 +4918,6 @@ operator|!=
 operator|-
 literal|1
 condition|;
-comment|/* for all dir. segments */
 name|segnum
 operator|=
 name|rt_dir
@@ -5181,7 +4957,6 @@ condition|;
 name|de
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|de
@@ -5252,7 +5027,6 @@ name|dirdirty
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
