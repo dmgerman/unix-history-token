@@ -12,8 +12,47 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.33 1996/08/06 21:14:11 phk Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.34 1996/12/13 21:28:24 wollman Exp $  */
 end_comment
+
+begin_comment
+comment|/* XXX - Don't mix different PCCARD support code */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"pcic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crd.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+operator|||
+name|NPCIC
+operator|>
+literal|0
+end_if
+
+begin_error
+error|#
+directive|error
+error|Dedicated PCMCIA drivers and generic PCMCIA support can't be mixed
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
