@@ -293,6 +293,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|REG_ILLSEQ
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
 name|REG_ATOI
 value|255
 end_define
