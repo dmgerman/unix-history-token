@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ihash.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ihash.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -195,7 +195,7 @@ end_comment
 
 begin_function
 name|struct
-name|inode
+name|vnode
 modifier|*
 name|ufs_ihashget
 parameter_list|(
@@ -222,6 +222,11 @@ name|struct
 name|inode
 modifier|*
 name|ip
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
 decl_stmt|;
 name|ih
 operator|=
@@ -313,14 +318,18 @@ goto|goto
 name|loop
 goto|;
 block|}
-if|if
-condition|(
-name|vget
-argument_list|(
+name|vp
+operator|=
 name|ITOV
 argument_list|(
 name|ip
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vget
+argument_list|(
+name|vp
 argument_list|)
 condition|)
 goto|goto
@@ -328,7 +337,7 @@ name|loop
 goto|;
 return|return
 operator|(
-name|ip
+name|vp
 operator|)
 return|;
 block|}
