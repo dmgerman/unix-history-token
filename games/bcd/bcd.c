@@ -80,7 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -92,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -618,6 +630,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|printcard
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * i'th bit of w.  */
 end_comment
@@ -638,18 +660,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|cardline
@@ -720,21 +738,14 @@ name|COLUMNS
 value|48
 end_define
 
-begin_macro
+begin_function
+name|void
 name|printcard
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|str
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -752,18 +763,13 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 comment|/* ruthlessly remove newlines and truncate at 48 characters. */
 if|if
 condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|str
 argument_list|,
@@ -886,6 +892,10 @@ if|if
 condition|(
 name|holes
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 index|]
@@ -970,6 +980,10 @@ name|bit
 argument_list|(
 name|holes
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 index|]
@@ -1055,7 +1069,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
