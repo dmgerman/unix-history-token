@@ -527,7 +527,7 @@ name|id
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|ACTUALLY_LKM_NOT_KERNEL
+name|QCAM_MODULE
 comment|/* there's a bug in dev_attach 					   when running from an LKM */
 name|dev_attach
 argument_list|(
