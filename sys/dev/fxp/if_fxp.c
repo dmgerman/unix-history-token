@@ -2355,7 +2355,7 @@ condition|(
 name|sc
 operator|->
 name|revision
-operator|==
+operator|<=
 name|FXP_REV_82557
 operator|&&
 operator|(
