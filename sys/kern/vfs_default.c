@@ -706,7 +706,7 @@ argument_list|)
 expr_stmt|;
 name|vprint
 argument_list|(
-literal|""
+literal|"vnode"
 argument_list|,
 name|ap
 operator|->
@@ -715,7 +715,7 @@ argument_list|)
 expr_stmt|;
 name|vprint
 argument_list|(
-literal|""
+literal|"device vnode"
 argument_list|,
 name|ap
 operator|->
@@ -782,7 +782,7 @@ condition|)
 block|{
 name|vprint
 argument_list|(
-literal|"\nVOP_SPECSTRATEGY on non-VCHR\n"
+literal|"VOP_SPECSTRATEGY on non-VCHR"
 argument_list|,
 name|ap
 operator|->
