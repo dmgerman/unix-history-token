@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.4	82/04/12	*/
+comment|/*	if_ec.c	4.5	82/04/14	*/
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"imp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loop.h"
 end_include
 
 begin_comment
@@ -260,6 +266,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ifnet
+name|loif
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Ethernet software status per interface.  *  * Each interface is referenced by a network interface structure,  * es_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  * We also have, for each interface, a UBA interface structure, which  * contains information about the UNIBUS resources held by the interface:  * map registers, buffered data paths, etc.  Information is cached in this  * structure for use by the if_uba.c routines in running the interface  * efficiently.  */
 end_comment
@@ -279,16 +293,16 @@ name|es_ifuba
 decl_stmt|;
 comment|/* UNIBUS resources */
 name|short
-name|es_delay
-decl_stmt|;
-comment|/* current output delay */
-name|short
 name|es_mask
 decl_stmt|;
 comment|/* mask for current output delay */
 ifdef|#
 directive|ifdef
 name|notdef
+name|short
+name|es_delay
+decl_stmt|;
+comment|/* current output delay */
 name|long
 name|es_lastx
 decl_stmt|;
@@ -1360,7 +1374,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Start or restart output on interface.  * If interface is already active, then this is a retransmit  * after a collision, and just restuff registers and delay.  * If interface is not already active, get another datagram  * to send off of the interface queue, and map it to the interface  * before starting the output.  */
+comment|/*  * Start or restart output on interface.  * If interface is already active, then this is a retransmit  * after a collision, and just restuff registers.  * If interface is not already active, get another datagram  * to send off of the interface queue, and map it to the interface  * before starting the output.  */
 end_comment
 
 begin_macro
@@ -1682,12 +1696,6 @@ literal|0
 expr_stmt|;
 name|es
 operator|->
-name|es_delay
-operator|=
-literal|0
-expr_stmt|;
-name|es
-operator|->
 name|es_mask
 operator|=
 operator|~
@@ -1799,7 +1807,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ec%d: eccollide\n"
+literal|"ec%d: collision\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1855,6 +1863,30 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+specifier|register
+name|struct
+name|ecdevice
+modifier|*
+name|addr
+init|=
+operator|(
+expr|struct
+name|ecdevice
+operator|*
+operator|)
+name|ecinfo
+index|[
+name|unit
+index|]
+operator|->
+name|ui_addr
+decl_stmt|;
+specifier|register
+name|i
+expr_stmt|;
+name|int
+name|delay
+decl_stmt|;
 comment|/* 	 * Es_mask is a 16 bit number with n low zero bits, with 	 * n the number of backoffs.  When es_mask is 0 we have 	 * backed off 16 times, and give up. 	 */
 if|if
 condition|(
@@ -1865,6 +1897,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_oerrors
+operator|++
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ec%d: send error\n"
@@ -1872,24 +1911,73 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 		 * this makes enxint wrong.  fix later. 		 */
-name|ecxint
+comment|/* 		 * Reset interface, then requeue rcv buffers. 		 * Some incoming packets may be lost, but that 		 * can't be helped. 		 */
+name|addr
+operator|->
+name|ec_xcr
+operator|=
+name|EC_UECLR
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|ECRHBF
+init|;
+name|i
+operator|>=
+name|ECRLBF
+condition|;
+name|i
+operator|--
+control|)
+name|addr
+operator|->
+name|ec_rcr
+operator|=
+name|EC_READ
+operator||
+name|i
+expr_stmt|;
+comment|/* 		 * Reset and transmit next packet (if any). 		 */
+name|es
+operator|->
+name|es_oactive
+operator|=
+literal|0
+expr_stmt|;
+name|es
+operator|->
+name|es_mask
+operator|=
+operator|~
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_snd
+operator|.
+name|ifq_head
+condition|)
+name|ecstart
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Another backoff.  Restart with delay based on n low bits 	 * of the interval timer. 	 */
+comment|/* 	 * Do exponential backoff.  Compute delay based on low bits 	 * of the interval timer.  Then delay for that number of 	 * slot times.  A slot time is 51.2 microseconds (rounded to 51). 	 * This does not take into account the time already used to 	 * process the interrupt. 	 */
 name|es
 operator|->
 name|es_mask
 operator|<<=
 literal|1
 expr_stmt|;
-name|es
-operator|->
-name|es_delay
+name|delay
 operator|=
 name|mfpr
 argument_list|(
@@ -1901,11 +1989,19 @@ name|es
 operator|->
 name|es_mask
 expr_stmt|;
-comment|/* 	 * This should do some sort of delay before calling ecstart. 	 * I'll figure this out later. 	 */
-name|ecstart
+name|DELAY
 argument_list|(
-name|unit
+name|delay
+operator|*
+literal|51
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Clear the controller's collision flag, thus enabling retransmit. 	 */
+name|addr
+operator|->
+name|ec_xcr
+operator|=
+name|EC_JCLR
 expr_stmt|;
 block|}
 end_block
@@ -2167,9 +2263,7 @@ name|ECRDOFF
 operator|||
 name|ecoff
 operator|>
-name|ECMTU
-operator|+
-name|ECRDOFF
+literal|2046
 condition|)
 block|{
 name|es
@@ -2566,7 +2660,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Ethernet output routine.  * Encapsulate a packet of type family for the local net.  * Use trailer local net encapsulation if enough data in first  * packet leaves a multiple of 512 bytes of data in remainder.  */
+comment|/*  * Ethernet output routine.  * Encapsulate a packet of type family for the local net.  * Use trailer local net encapsulation if enough data in first  * packet leaves a multiple of 512 bytes of data in remainder.  * If destination is this address or broadcast, send packet to  * loop device to kludge around the fact that 3com interfaces can't  * talk to themselves.  */
 end_comment
 
 begin_macro
@@ -2651,6 +2745,19 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mcopy
+init|=
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+comment|/* Null */
 name|COUNT
 argument_list|(
 name|ECOUTPUT
@@ -2684,6 +2791,60 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dest
+operator|&
+operator|~
+literal|0xff
+operator|)
+operator|==
+literal|0
+condition|)
+name|mcopy
+operator|=
+name|m_copy
+argument_list|(
+name|m
+argument_list|,
+literal|0
+argument_list|,
+name|M_COPYALL
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dest
+operator|==
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_addr
+operator|)
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+condition|)
+block|{
+name|mcopy
+operator|=
+name|m
+expr_stmt|;
+goto|goto
+name|gotlocal
+goto|;
+block|}
 name|off
 operator|=
 name|ntohs
@@ -3232,6 +3393,27 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|gotlocal
+label|:
+if|if
+condition|(
+name|mcopy
+condition|)
+comment|/* Kludge, but it works! */
+return|return
+operator|(
+name|looutput
+argument_list|(
+operator|&
+name|loif
+argument_list|,
+name|mcopy
+argument_list|,
+name|dst
+argument_list|)
+operator|)
+return|;
+else|else
 return|return
 operator|(
 literal|0
