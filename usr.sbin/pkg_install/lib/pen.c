@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.6 1994/10/14 05:42:24 jkh Exp $"
+literal|"$Id: pen.c,v 1.7 1994/10/14 05:56:15 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,7 @@ name|strcpy
 argument_list|(
 name|Pen
 argument_list|,
-literal|"/tmp/instmp.XXXXXX"
+literal|"/var/tmp/instmp.XXXXXX"
 argument_list|)
 expr_stmt|;
 block|}
