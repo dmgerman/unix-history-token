@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mac.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -165,6 +171,11 @@ name|callout
 name|bd_callout
 decl_stmt|;
 comment|/* for BPF timeouts with select */
+name|struct
+name|label
+name|bd_label
+decl_stmt|;
+comment|/* MAC label for descriptor */
 block|}
 struct|;
 end_struct
