@@ -931,7 +931,7 @@ name|diskerr
 argument_list|(
 name|bp
 argument_list|,
-literal|"error reading primary partition table"
+literal|"reading primary partition table: error"
 argument_list|,
 name|LOG_PRINTF
 argument_list|,
@@ -1808,7 +1808,7 @@ name|diskerr
 argument_list|(
 name|bp
 argument_list|,
-literal|"error reading extended partition table"
+literal|"reading extended partition table: error"
 argument_list|,
 name|LOG_PRINTF
 argument_list|,
