@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.6	(Berkeley) 83/10/07  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.7	(Berkeley) 83/10/12  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -486,9 +486,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|char
+modifier|*
 name|string
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -509,12 +510,65 @@ expr_stmt|;
 comment|/* save current vertical position. */
 name|printf
 argument_list|(
-literal|".ds g9 \"%s\n"
-argument_list|,
-name|string
+literal|".ds g9 \""
 argument_list|)
 expr_stmt|;
 comment|/* define string containing the text. */
+while|while
+condition|(
+operator|*
+name|string
+condition|)
+block|{
+comment|/* put out the string */
+if|if
+condition|(
+operator|*
+name|string
+operator|==
+literal|'\\'
+operator|&&
+operator|*
+operator|(
+name|string
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'\\'
+condition|)
+block|{
+comment|/* one character at a */
+name|printf
+argument_list|(
+literal|"\\\\\\"
+argument_list|)
+expr_stmt|;
+comment|/* time replacing //  */
+name|string
+operator|++
+expr_stmt|;
+comment|/* by //// to prevent */
+block|}
+comment|/* interpretation at  */
+name|printf
+argument_list|(
+literal|"%c"
+argument_list|,
+operator|*
+operator|(
+name|string
+operator|++
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* printout time */
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|tmove
 argument_list|(
 operator|&
@@ -579,7 +633,11 @@ name|TOPCENT
 case|:
 name|printf
 argument_list|(
-literal|"\\h'-\\w'\\*(g9'u/2u'"
+literal|"\\h
+literal|-\\w
+literal|\\*(g9
+literal|u/2u
+literal|"
 argument_list|)
 expr_stmt|;
 comment|/* back half */
@@ -595,14 +653,18 @@ name|TOPRIGHT
 case|:
 name|printf
 argument_list|(
-literal|"\\h'-\\w'\\*(g9'u'"
+literal|"\\h
+literal|-\\w
+literal|\\*(g9
+literal|u
+literal|"
 argument_list|)
 expr_stmt|;
 comment|/* back whole */
 block|}
 name|printf
 argument_list|(
-literal|"\\*(g9\n"
+literal|"\\&\\*(g9\n"
 argument_list|)
 expr_stmt|;
 comment|/* now print the text. */
