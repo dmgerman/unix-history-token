@@ -983,6 +983,11 @@ block|{
 name|caddr_t
 name|buf
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mbuf
+decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
 argument|fw_bulkxfer
@@ -997,6 +1002,9 @@ name|end
 decl_stmt|;
 name|u_int
 name|npacket
+decl_stmt|;
+name|int
+name|resp
 decl_stmt|;
 block|}
 struct|;
