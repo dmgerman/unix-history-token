@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: main.c,v 8.485.4.38 2000/12/19 02:50:33 gshapiro Exp $"
+literal|"@(#)$Id: main.c,v 8.485.4.44 2001/02/08 14:06:55 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4470,6 +4470,15 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|jbuf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|setclass
 argument_list|(
 literal|'m'
@@ -5116,8 +5125,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FullName
-operator|=
 name|full
 operator|=
 name|newstr
@@ -5131,6 +5138,10 @@ argument_list|,
 name|TRUE
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|FullName
+operator|=
+name|full
 expr_stmt|;
 block|}
 comment|/* check for characters that may have to be quoted */
@@ -5358,6 +5369,23 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|jbuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|MyHostName
+operator|=
+name|newstr
+argument_list|(
+literal|"localhost"
+argument_list|)
+expr_stmt|;
+else|else
 name|MyHostName
 operator|=
 name|jbuf
@@ -5366,7 +5394,7 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-name|jbuf
+name|MyHostName
 argument_list|,
 literal|'.'
 argument_list|)
@@ -5377,7 +5405,7 @@ name|message
 argument_list|(
 literal|"WARNING: local host name (%s) is not qualified; fix $j in config file"
 argument_list|,
-name|jbuf
+name|MyHostName
 argument_list|)
 expr_stmt|;
 comment|/* make certain that this name is part of the $=w class */
@@ -7731,7 +7759,7 @@ name|xtextify
 argument_list|(
 name|p
 argument_list|,
-name|NULL
+literal|"="
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7781,6 +7809,10 @@ operator||=
 name|EF_GLOBALERRS
 expr_stmt|;
 name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
+name|SuperSafe
 operator|=
 name|FALSE
 expr_stmt|;

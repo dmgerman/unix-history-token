@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.32 2000/12/15 19:20:53 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.37 2001/02/12 21:40:16 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -3081,6 +3081,32 @@ end_define
 
 begin_comment
 comment|/* use sa_sigaction field */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER
+end_if
+
+begin_define
+define|#
+directive|define
+name|BROKEN_PTHREAD_SLEEP
+value|1
+end_define
+
+begin_comment
+comment|/* sleep after pthread_create() fails */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MILTER */
 end_comment
 
 begin_ifndef
@@ -6880,6 +6906,54 @@ end_define
 begin_comment
 comment|/* has strlc{py,at}(3) functions */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|OpenBSD
+operator|>=
+literal|200006
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSRANDOMDEV
+value|1
+end_define
+
+begin_comment
+comment|/* has srandomdev(3) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|OpenBSD
+operator|>=
+literal|200012
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSETUSERCONTEXT
+value|1
+end_define
+
+begin_comment
+comment|/* BSDI-style login classes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -11278,6 +11352,40 @@ end_undef
 
 begin_comment
 comment|/* avoid stddefs.h, sys/sysmacros.h conflict */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SM_SET_H_ERRNO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_REENTRANT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_SET_H_ERRNO
+parameter_list|(
+name|err
+parameter_list|)
+value|set_h_errno((err))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SM_SET_H_ERRNO&& _REENTRANT */
 end_comment
 
 begin_endif
@@ -17016,6 +17124,35 @@ end_endif
 
 begin_comment
 comment|/* ! FORK */
+end_comment
+
+begin_comment
+comment|/* setting h_errno */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SM_SET_H_ERRNO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SM_SET_H_ERRNO
+parameter_list|(
+name|err
+parameter_list|)
+value|h_errno = (err)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SM_SET_H_ERRNO */
 end_comment
 
 begin_comment

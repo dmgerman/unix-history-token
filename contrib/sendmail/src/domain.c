@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: domain.c,v 8.114.6.1.2.6 2000/12/19 02:50:33 gshapiro Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.114.6.1.2.8 2001/02/12 21:40:19 gshapiro Exp $ (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: domain.c,v 8.114.6.1.2.6 2000/12/19 02:50:33 gshapiro Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.114.6.1.2.8 2001/02/12 21:40:19 gshapiro Exp $ (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1484,9 +1484,10 @@ condition|(
 name|TryNullMXList
 condition|)
 block|{
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 name|errno
 operator|=
@@ -1540,9 +1541,10 @@ block|}
 if|#
 directive|if
 name|NETINET6
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 name|errno
 operator|=
@@ -2946,9 +2948,10 @@ name|TRY_AGAIN
 condition|)
 block|{
 comment|/* 				**  the name server seems to be down or 				**  broken. 				*/
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 name|TRY_AGAIN
+argument_list|)
 expr_stmt|;
 operator|*
 name|statp
@@ -2959,7 +2962,12 @@ comment|/* 				**  If the ANY query is larger than the 				**  UDP packet size, 
 if|#
 directive|if
 name|_FFR_WORKAROUND_BROKEN_NAMESERVERS
-comment|/* 				**  Only return if not TRY_AGAIN as an 				**  attempt with a different qtype may 				**  succeed (res_querydomain() calls 				**  res_query() calls res_send() which 				**  sets errno to ETIMEDOUT if the 				**  nameservers could be contacted but 				**  didn't give an answer). 				*/
+if|if
+condition|(
+name|WorkAroundBrokenAAAA
+condition|)
+block|{
+comment|/* 					**  Only return if not TRY_AGAIN as an 					**  attempt with a different qtype may 					**  succeed (res_querydomain() calls 					**  res_query() calls res_send() which 					**  sets errno to ETIMEDOUT if the 					**  nameservers could be contacted but 					**  didn't give an answer). 					*/
 if|if
 condition|(
 name|qtype
@@ -2973,6 +2981,7 @@ condition|)
 return|return
 name|FALSE
 return|;
+block|}
 else|#
 directive|else
 comment|/* _FFR_WORKAROUND_BROKEN_NAMESERVERS */
@@ -3443,9 +3452,10 @@ name|ebuf
 argument_list|)
 expr_stmt|;
 block|}
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 name|NO_RECOVERY
+argument_list|)
 expr_stmt|;
 operator|*
 name|statp

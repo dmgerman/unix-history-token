@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-1999, 2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: udb.c,v 8.111 1999/11/16 02:04:04 gshapiro Exp $ (with USERDB)"
+literal|"@(#)$Id: udb.c,v 8.111.16.1 2001/01/04 18:18:37 gshapiro Exp $ (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: udb.c,v 8.111 1999/11/16 02:04:04 gshapiro Exp $ (without USERDB)"
+literal|"@(#)$Id: udb.c,v 8.111.16.1 2001/01/04 18:18:37 gshapiro Exp $ (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4613,6 +4613,22 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DB_OLD_VERSION
+if|if
+condition|(
+name|ret
+operator|==
+name|DB_OLD_VERSION
+condition|)
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DB_OLD_VERSION */
 operator|(
 name|void
 operator|)

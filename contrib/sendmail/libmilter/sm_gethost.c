@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: sm_gethost.c,v 8.7.8.4 2000/12/19 04:26:33 gshapiro Exp $"
+literal|"@(#)$Id: sm_gethost.c,v 8.7.8.6 2001/02/14 04:07:23 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,9 +200,10 @@ operator||=
 name|RES_USE_INET6
 expr_stmt|;
 block|}
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 name|h
 operator|=
@@ -437,9 +438,10 @@ operator|&
 name|err
 argument_list|)
 expr_stmt|;
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 name|err
+argument_list|)
 expr_stmt|;
 else|#
 directive|else

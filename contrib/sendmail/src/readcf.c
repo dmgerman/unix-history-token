@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: readcf.c,v 8.382.4.31 2000/12/18 18:00:43 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.382.4.38 2001/02/17 00:05:12 geir Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3218,7 +3218,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in labeled **			fields.  The fields are: **			   A -- the argv for this mailer **			   C -- the character set for MIME conversions **			   D -- the directory to run in **			   E -- the eol string **			   F -- the flags associated with the mailer **			   L -- the maximum line length **			   M -- the maximum message size **			   N -- the niceness at which to run **			   P -- the path to the mailer **			   R -- the recipient rewriting set **			   S -- the sender rewriting set **			   T -- the mailer type (for DSNs) **			   U -- the uid to run as **			   W -- the time to wait at the end **			The first word is the canonical name of the mailer. ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
+comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in labeled **			fields.  The fields are: **			   A -- the argv for this mailer **			   C -- the character set for MIME conversions **			   D -- the directory to run in **			   E -- the eol string **			   F -- the flags associated with the mailer **			   L -- the maximum line length **			   M -- the maximum message size **			   N -- the niceness at which to run **			   P -- the path to the mailer **			   R -- the recipient rewriting set **			   S -- the sender rewriting set **			   T -- the mailer type (for DSNs) **			   U -- the uid to run as **			   W -- the time to wait at the end **			   m -- maximum messages per connection **			   / -- new root directory **			The first word is the canonical name of the mailer. ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
 end_comment
 
 begin_function
@@ -8662,6 +8662,7 @@ operator|=
 literal|"helpfile"
 expr_stmt|;
 else|else
+block|{
 name|HelpFile
 operator|=
 name|newstr
@@ -8669,6 +8670,7 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'h'
@@ -8822,6 +8824,31 @@ name|clearmode
 expr_stmt|;
 continue|continue;
 block|}
+if|#
+directive|if
+name|_FFR_WORKAROUND_BROKEN_NAMESERVERS
+if|if
+condition|(
+name|sm_strcasecmp
+argument_list|(
+name|q
+argument_list|,
+literal|"WorkAroundBrokenAAAA"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|WorkAroundBrokenAAAA
+operator|=
+operator|!
+name|clearmode
+expr_stmt|;
+continue|continue;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_WORKAROUND_BROKEN_NAMESERVERS */
 for|for
 control|(
 name|rfp
@@ -9452,6 +9479,7 @@ operator|=
 literal|"statistics"
 expr_stmt|;
 else|else
+block|{
 name|StatFile
 operator|=
 name|newstr
@@ -9459,6 +9487,7 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'s'
@@ -10542,6 +10571,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
+block|{
 name|HostStatDir
 operator|=
 name|newstr
@@ -10549,6 +10579,7 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|O_SINGTHREAD

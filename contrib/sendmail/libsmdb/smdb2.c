@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: smdb2.c,v 8.53.2.1.2.5 2000/10/26 00:39:56 geir Exp $"
+literal|"@(#)$Id: smdb2.c,v 8.53.2.1.2.7 2001/02/14 04:07:24 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1148,6 +1148,9 @@ modifier|*
 name|cursor
 decl_stmt|;
 block|{
+name|int
+name|ret
+decl_stmt|;
 name|DBC
 modifier|*
 name|dbc
@@ -1160,7 +1163,8 @@ name|cursor
 operator|->
 name|smdbc_impl
 decl_stmt|;
-return|return
+name|ret
+operator|=
 name|db2_error_to_smdb
 argument_list|(
 name|dbc
@@ -1170,6 +1174,14 @@ argument_list|(
 name|dbc
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cursor
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function

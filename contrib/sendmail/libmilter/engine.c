@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: engine.c,v 8.67.4.15 2000/12/29 19:43:10 gshapiro Exp $"
+literal|"@(#)$Id: engine.c,v 8.67.4.17 2001/01/22 19:00:16 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -823,7 +823,7 @@ begin_define
 define|#
 directive|define
 name|NX_HELO
-value|(MASK(ST_MAIL))
+value|(MASK(ST_HELO) | MASK(ST_MAIL))
 end_define
 
 begin_define

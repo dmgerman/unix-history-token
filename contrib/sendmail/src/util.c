@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: util.c,v 8.225.2.1.2.15 2000/10/18 23:46:07 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.225.2.1.2.19 2001/02/22 18:56:24 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1386,9 +1386,14 @@ name|LOG_ERR
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"unable to write %s"
+literal|"unable to write %s: %s"
 argument_list|,
 name|pidpath
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6031,11 +6036,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SHORTEN_HOSTNAME -- strip local domain information off of hostname. ** **	Parameters: **		host -- the host to shorten (stripped in place). ** **	Returns: **		none. */
+comment|/* **  SHORTEN_HOSTNAME -- strip local domain information off of hostname. ** **	Parameters: **		host -- the host to shorten (stripped in place). ** **	Returns: **		place where string was trunacted, NULL if not truncated. */
 end_comment
 
 begin_function
-name|void
+name|char
+modifier|*
 name|shorten_hostname
 parameter_list|(
 name|host
@@ -6110,7 +6116,9 @@ name|p
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+name|NULL
+return|;
 comment|/* yes, we have a domain -- see if it looks like us */
 name|mydom
 operator|=
@@ -6179,12 +6187,20 @@ operator|==
 literal|'\0'
 operator|)
 condition|)
+block|{
 operator|*
 operator|--
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+return|return
+name|p
+return|;
+block|}
+return|return
+name|NULL
+return|;
 block|}
 end_function
 

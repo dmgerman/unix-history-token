@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: mailstats.c,v 8.53.16.11 2000/09/17 17:04:26 gshapiro Exp $"
+literal|"@(#)$Id: mailstats.c,v 8.53.16.12 2001/02/15 20:52:36 geir Exp $"
 decl_stmt|;
 end_decl_stmt
 

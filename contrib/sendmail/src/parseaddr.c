@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: parseaddr.c,v 8.234.4.9 2000/10/09 03:14:48 gshapiro Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.234.4.11 2001/02/14 04:07:27 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -11658,6 +11658,7 @@ if|if
 condition|(
 name|MapOpenErr
 condition|)
+block|{
 name|usrerrenh
 argument_list|(
 literal|"4.3.0"
@@ -11665,6 +11666,14 @@ argument_list|,
 literal|"451 Temporary failure"
 argument_list|)
 expr_stmt|;
+name|rstat
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+goto|goto
+name|finis
+goto|;
+block|}
 if|if
 condition|(
 name|pvp

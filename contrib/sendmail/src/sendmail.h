@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ name|char
 name|SmailId
 index|[]
 init|=
-literal|"@(#)$Id: sendmail.h,v 8.517.4.45 2000/12/28 23:46:44 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.517.4.50 2001/02/22 18:56:24 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -526,6 +526,17 @@ comment|/* size of a 32 bit integer in bytes */
 endif|#
 directive|endif
 comment|/* ! INT32SZ */
+ifndef|#
+directive|ifndef
+name|INADDR_LOOPBACK
+define|#
+directive|define
+name|INADDR_LOOPBACK
+value|0x7f000001
+comment|/* loopback address */
+endif|#
+directive|endif
+comment|/* ! INADDR_LOOPBACK */
 comment|/* **  Error return from inet_addr(3), in case not defined in /usr/include. */
 ifndef|#
 directive|ifndef
@@ -7888,6 +7899,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SMFS_CLOSABLE
+value|'Q'
+end_define
+
+begin_comment
+comment|/* done with current connection */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMFS_ERROR
 value|'E'
 end_define
@@ -9597,6 +9619,32 @@ end_decl_stmt
 
 begin_comment
 comment|/* if we are the best MX, try host directly */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_WORKAROUND_BROKEN_NAMESERVERS
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|WorkAroundBrokenAAAA
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* some nameservers return SERVFAIL on AAAA queries */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_WORKAROUND_BROKEN_NAMESERVERS */
 end_comment
 
 begin_decl_stmt
@@ -14415,7 +14463,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|char
+modifier|*
 name|shorten_hostname
 name|__P
 argument_list|(
