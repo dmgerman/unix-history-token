@@ -1115,7 +1115,7 @@ name|u_int32_t
 name|ps_argvstr
 decl_stmt|;
 comment|/* first of 0 or more argument strings */
-name|int
+name|u_int
 name|ps_nargvstr
 decl_stmt|;
 comment|/* the number of argument strings */
@@ -1123,7 +1123,7 @@ name|u_int32_t
 name|ps_envstr
 decl_stmt|;
 comment|/* first of 0 or more environment strings */
-name|int
+name|u_int
 name|ps_nenvstr
 decl_stmt|;
 comment|/* the number of environment strings */

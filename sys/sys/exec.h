@@ -29,6 +29,7 @@ modifier|*
 name|ps_argvstr
 decl_stmt|;
 comment|/* first of 0 or more argument strings */
+name|unsigned
 name|int
 name|ps_nargvstr
 decl_stmt|;
@@ -39,6 +40,7 @@ modifier|*
 name|ps_envstr
 decl_stmt|;
 comment|/* first of 0 or more environment strings */
+name|unsigned
 name|int
 name|ps_nenvstr
 decl_stmt|;
