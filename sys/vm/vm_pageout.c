@@ -3117,6 +3117,9 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Dirty pages need to be paged out, but flushing 			 * a page is extremely expensive verses freeing 			 * a clean page.  Rather then artificially limiting 			 * the number of pages we can flush, we instead give 			 * dirty pages extra priority on the inactive queue 			 * by forcing them to be cycled through the queue 			 * twice before being flushed, after which the 			 * (now clean) page will cycle through once more 			 * before being freed.  This significantly extends 			 * the thrash point for a heavily loaded machine. 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -3128,6 +3131,9 @@ name|vm_pageq_requeue
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 elseif|else
