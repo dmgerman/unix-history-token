@@ -268,6 +268,22 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * XXX: This routine converts from a `struct xucred' 	 * (argp->ex_anon) to a `struct ucred' (np->netc_anon).  This 	 * operation is questionable; for example, what should be done 	 * with fields like cr_uidinfo and cr_prison?  Currently, this 	 * routine does not touch them (leaves them as NULL). 	 */
+if|if
+condition|(
+name|argp
+operator|->
+name|ex_anon
+operator|.
+name|cr_version
+operator|!=
+name|XUCRED_VERSION
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|argp
