@@ -1258,7 +1258,7 @@ name|driver_t
 name|xl_driver
 init|=
 block|{
-literal|"if_xl"
+literal|"xl"
 block|,
 name|xl_methods
 block|,

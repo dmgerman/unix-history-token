@@ -1012,7 +1012,7 @@ name|driver_t
 name|dm_driver
 init|=
 block|{
-literal|"if_dm"
+literal|"dm"
 block|,
 name|dm_methods
 block|,

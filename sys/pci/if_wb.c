@@ -1041,7 +1041,7 @@ name|driver_t
 name|wb_driver
 init|=
 block|{
-literal|"if_wb"
+literal|"wb"
 block|,
 name|wb_methods
 block|,

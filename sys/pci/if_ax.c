@@ -1118,7 +1118,7 @@ name|driver_t
 name|ax_driver
 init|=
 block|{
-literal|"if_ax"
+literal|"ax"
 block|,
 name|ax_methods
 block|,

@@ -912,7 +912,7 @@ name|driver_t
 name|sf_driver
 init|=
 block|{
-literal|"if_sf"
+literal|"sf"
 block|,
 name|sf_methods
 block|,

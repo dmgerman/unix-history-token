@@ -1015,7 +1015,7 @@ name|driver_t
 name|sk_driver
 init|=
 block|{
-literal|"if_skc"
+literal|"skc"
 block|,
 name|sk_methods
 block|,

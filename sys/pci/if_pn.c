@@ -1044,7 +1044,7 @@ name|driver_t
 name|pn_driver
 init|=
 block|{
-literal|"if_pn"
+literal|"pn"
 block|,
 name|pn_methods
 block|,

@@ -907,7 +907,7 @@ name|driver_t
 name|sis_driver
 init|=
 block|{
-literal|"if_sis"
+literal|"sis"
 block|,
 name|sis_methods
 block|,

@@ -966,7 +966,7 @@ name|driver_t
 name|vr_driver
 init|=
 block|{
-literal|"if_vr"
+literal|"vr"
 block|,
 name|vr_methods
 block|,
