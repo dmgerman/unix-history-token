@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.18 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2642,12 +2642,6 @@ ifdef|#
 directive|ifdef
 name|vax
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/dkio.h>
-end_include
 
 begin_struct
 struct|struct
