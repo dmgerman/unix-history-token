@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_var.h	8.4 (Berkeley) 5/24/95  * 	$Id: tcp_var.h,v 1.30 1996/02/27 15:12:53 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_var.h	8.4 (Berkeley) 5/24/95  * 	$Id: tcp_var.h,v 1.31 1996/03/22 18:09:21 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -469,61 +469,6 @@ begin_comment
 comment|/*  * The smoothed round-trip time and estimated variance  * are stored as fixed point numbers scaled by the values below.  * For convenience, these scales are also used in smoothing the average  * (smoothed = (1/scale)sample + ((scale-1)/scale)smoothed).  * With these scales, srtt has 3 bits to the right of the binary point,  * and thus an "ALPHA" of 0.875.  rttvar has 2 bits to the right of the  * binary point, and is smoothed with an ALPHA of 0.75.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TCP_RTT_SCALE
-value|8
-end_define
-
-begin_comment
-comment|/* multiplier for srtt; 3 bits frac. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_RTT_SHIFT
-value|3
-end_define
-
-begin_comment
-comment|/* shift for srtt; 3 bits frac. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_RTTVAR_SCALE
-value|4
-end_define
-
-begin_comment
-comment|/* multiplier for rttvar; 2 bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_RTTVAR_SHIFT
-value|2
-end_define
-
-begin_comment
-comment|/* shift for rttvar; 2 bits */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -579,36 +524,9 @@ begin_comment
 comment|/* see tcp_input.c */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * The initial retransmission should happen at rtt + 4 * rttvar.  * Because of the way we do the smoothing, srtt and rttvar  * will each average +1/2 tick of bias.  When we compute  * the retransmit timer, we want 1/2 tick of rounding and  * 1 extra tick because of +-1/2 tick uncertainty in the  * firing of the timer.  The bias will give us exactly the  * 1.5 tick we need.  But, because the bias is  * statistical, we have to test that we don't drop below  * the minimum feasible timer (which is 2 ticks). #ifdef notdef  * This macro assumes that the value of TCP_RTTVAR_SCALE  * is the same as the multiplier for rttvar. #else  * This version of the macro adapted from a paper by Lawrence  * Brakmo and Larry Peterson which outlines a problem caused  * by insufficient precision in the original implementation,  * which results in inappropriately large RTO values for very  * fast networks. #endif  */
+comment|/*  * The initial retransmission should happen at rtt + 4 * rttvar.  * Because of the way we do the smoothing, srtt and rttvar  * will each average +1/2 tick of bias.  When we compute  * the retransmit timer, we want 1/2 tick of rounding and  * 1 extra tick because of +-1/2 tick uncertainty in the  * firing of the timer.  The bias will give us exactly the  * 1.5 tick we need.  But, because the bias is  * statistical, we have to test that we don't drop below  * the minimum feasible timer (which is 2 ticks).  * This version of the macro adapted from a paper by Lawrence  * Brakmo and Larry Peterson which outlines a problem caused  * by insufficient precision in the original implementation,  * which results in inappropriately large RTO values for very  * fast networks.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TCP_REXMTVAL
-parameter_list|(
-name|tp
-parameter_list|)
-define|\
-value|(((tp)->t_srtt>> TCP_RTT_SHIFT) + (tp)->t_rttvar)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -620,11 +538,6 @@ parameter_list|)
 define|\
 value|((((tp)->t_srtt>> (TCP_RTT_SHIFT - TCP_RTTVAR_SHIFT)) \ 	  + ((tp)->t_rttvar)>> TCP_RTTVAR_SHIFT))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* XXX  * We want to avoid doing m_pullup on incoming packets but that  * means avoiding dtom on the tcp reassembly code.  That in turn means  * keeping an mbuf pointer in the reassembly queue (since we might  * have a cluster).  As a quick hack, the source& destination  * port numbers (which are no longer needed once we've located the  * tcpcb) are overlayed with an mbuf pointer.  */
