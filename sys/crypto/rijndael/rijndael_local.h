@@ -4,6 +4,10 @@ comment|/*	$KAME: rijndael_local.h,v 1.3 2000/10/02 17:14:27 itojun Exp $	*/
 end_comment
 
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/* the file should not be used from outside */
 end_comment
 
@@ -47,6 +51,13 @@ define|#
 directive|define
 name|MAXROUNDS
 value|RIJNDAEL_MAXROUNDS
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINARY_KEY_MATERIAL
+value|1
 end_define
 
 end_unit
