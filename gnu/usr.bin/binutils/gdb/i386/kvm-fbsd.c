@@ -1768,20 +1768,54 @@ name|pcb
 modifier|*
 name|pcbaddr
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|mainthread
+decl_stmt|;
 comment|/* find the pcb for the current process */
 if|if
 condition|(
 name|cur_proc
 operator|==
 name|NULL
-operator|||
+condition|)
+name|error
+argument_list|(
+literal|"get_kcore_registers no proc"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|kvread
+argument_list|(
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|cur_proc
 operator|->
-name|p_thread
-operator|.
+name|p_threads
+argument_list|)
+argument_list|,
+operator|&
+name|mainthread
+argument_list|)
+condition|)
+comment|/* XXXKSE */
+name|error
+argument_list|(
+literal|"cannot read main thread for proc at %#x"
+argument_list|,
+name|cur_proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kvread
+argument_list|(
+operator|&
+name|mainthread
+operator|->
 name|td_pcb
 argument_list|,
 operator|&
@@ -1791,7 +1825,7 @@ condition|)
 comment|/* XXXKSE */
 name|error
 argument_list|(
-literal|"cannot read u area ptr for proc at %#x"
+literal|"cannot read pcb pointer for proc at %#x"
 argument_list|,
 name|cur_proc
 argument_list|)
