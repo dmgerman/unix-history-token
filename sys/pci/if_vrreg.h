@@ -2466,6 +2466,10 @@ name|u_int8_t
 name|vr_revid
 decl_stmt|;
 comment|/* Rhine chip revision */
+name|u_int8_t
+name|vr_flags
+decl_stmt|;
+comment|/* See VR_F_* below */
 name|struct
 name|vr_list_data
 modifier|*
@@ -2482,6 +2486,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|VR_F_RESTART
+value|0x01
+end_define
+
+begin_comment
+comment|/* Restart unit on next tick */
+end_comment
 
 begin_comment
 comment|/*  * register space access macros  */
@@ -2621,6 +2636,20 @@ name|VIA_DEVICEID_RHINE_II_2
 value|0x3065
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIA_DEVICEID_RHINE_III
+value|0x3106
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIA_DEVICEID_RHINE_III_M
+value|0x3053
+end_define
+
 begin_comment
 comment|/*  * Delta Electronics device ID.  */
 end_comment
@@ -2709,6 +2738,13 @@ define|#
 directive|define
 name|REV_ID_VT3065_C
 value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
+name|REV_ID_VT6102_APOLLO
+value|0x74
 end_define
 
 begin_define
@@ -2861,6 +2897,20 @@ define|#
 directive|define
 name|VR_PCI_EEPROM_DATA
 value|0x4C
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_PCI_MODE
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_MODE3_MIION
+value|0x04
 end_define
 
 begin_comment
