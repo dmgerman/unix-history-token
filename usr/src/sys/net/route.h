@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.h	6.4 (Berkeley) 6/8/85  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Kernel resident routing tables.  *   * The routing tables are initialized at boot time by  * making entries for all directly connected interfaces.  */
+comment|/*  * Kernel resident routing tables.  *   * The routing tables are initialized when interface addresses  * are set by making entries for all directly connected interfaces.  */
 end_comment
 
 begin_comment
@@ -24,15 +24,6 @@ name|struct
 name|sockaddr
 name|ro_dst
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|caddr_t
-name|ro_pcb
-decl_stmt|;
-comment|/* not used yet */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -77,12 +68,12 @@ modifier|*
 name|rt_ifp
 decl_stmt|;
 comment|/* the answer: interface to use */
+ifdef|#
+directive|ifdef
+name|BBNNET
 union|union
 block|{
 comment|/* domain specific info */
-ifdef|#
-directive|ifdef
-name|INET
 struct|struct
 block|{
 name|int
@@ -100,8 +91,6 @@ define|#
 directive|define
 name|irt_gdown
 value|rt_data.rt_in_data.in_rt_pc
-endif|#
-directive|endif
 name|char
 name|rt_dummy
 index|[
@@ -111,6 +100,8 @@ decl_stmt|;
 block|}
 name|rt_data
 union|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -157,6 +148,17 @@ end_define
 
 begin_comment
 comment|/* re-instate route after timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_DYNAMIC
+value|0x10
+end_define
+
+begin_comment
+comment|/* created dynamically (by redirect) */
 end_comment
 
 begin_comment
