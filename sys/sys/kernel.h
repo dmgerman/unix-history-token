@@ -306,9 +306,14 @@ init|=
 literal|0x2300000
 block|,
 comment|/* create the init process */
+name|SI_SUB_MBUF
+init|=
+literal|0x2700000
+block|,
+comment|/* mbuf subsystem */
 name|SI_SUB_DRIVERS
 init|=
-literal|0x2400000
+literal|0x3100000
 block|,
 comment|/* Let Drivers initialize */
 name|SI_SUB_CONFIGURE
@@ -326,11 +331,6 @@ init|=
 literal|0x4800000
 block|,
 comment|/* real time and stat clocks*/
-name|SI_SUB_MBUF
-init|=
-literal|0x5000000
-block|,
-comment|/* mbufs*/
 name|SI_SUB_CLIST
 init|=
 literal|0x5800000
