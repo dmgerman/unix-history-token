@@ -2623,5 +2623,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|atdma
+argument_list|,
+name|acpi
+argument_list|,
+name|atdma_driver
+argument_list|,
+name|atdma_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 
