@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tree.h,v 1.7 2004/01/24 21:59:47 dbj Exp $	*/
+comment|/*	$NetBSD: tree.h,v 1.8 2004/03/28 19:38:30 provos Exp $	*/
 end_comment
 
 begin_comment
@@ -616,7 +616,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|void name##_RB_INSERT_COLOR(struct name *, struct type *);	\ void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\ struct type *name##_RB_REMOVE(struct name *, struct type *);		\ struct type *name##_RB_INSERT(struct name *, struct type *);		\ struct type *name##_RB_FIND(struct name *, struct type *);		\ struct type *name##_RB_NEXT(struct name *, struct type *);		\ struct type *name##_RB_MINMAX(struct name *, int);
+value|void name##_RB_INSERT_COLOR(struct name *, struct type *);	\ void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\ struct type *name##_RB_REMOVE(struct name *, struct type *);		\ struct type *name##_RB_INSERT(struct name *, struct type *);		\ struct type *name##_RB_FIND(struct name *, struct type *);		\ struct type *name##_RB_NEXT(struct type *);				\ struct type *name##_RB_MINMAX(struct name *, int);
 end_define
 
 begin_comment
@@ -644,7 +644,7 @@ value|\ struct type *								\ name##_RB_INSERT(struct name *head, struct type *
 comment|/* Finds the node with the same key as elm */
 value|\ struct type *								\ name##_RB_FIND(struct name *head, struct type *elm)			\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	int comp;							\ 	while (tmp) {							\ 		comp = cmp(elm, tmp);					\ 		if (comp< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else if (comp> 0)					\ 			tmp = RB_RIGHT(tmp, field);			\ 		else							\ 			return (tmp);					\ 	}								\ 	return (NULL);							\ }									\ 									\
 comment|/* ARGSUSED */
-value|\ struct type *								\ name##_RB_NEXT(struct name *head, struct type *elm)			\ {									\ 	if (RB_RIGHT(elm, field)) {					\ 		elm = RB_RIGHT(elm, field);				\ 		while (RB_LEFT(elm, field))				\ 			elm = RB_LEFT(elm, field);			\ 	} else {							\ 		if (RB_PARENT(elm, field)&&				\ 		    (elm == RB_LEFT(RB_PARENT(elm, field), field)))	\ 			elm = RB_PARENT(elm, field);			\ 		else {							\ 			while (RB_PARENT(elm, field)&&			\ 			    (elm == RB_RIGHT(RB_PARENT(elm, field), field)))\ 				elm = RB_PARENT(elm, field);		\ 			elm = RB_PARENT(elm, field);			\ 		}							\ 	}								\ 	return (elm);							\ }									\ 									\ struct type *								\ name##_RB_MINMAX(struct name *head, int val)				\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	struct type *parent = NULL;					\ 	while (tmp) {							\ 		parent = tmp;						\ 		if (val< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else							\ 			tmp = RB_RIGHT(tmp, field);			\ 	}								\ 	return (parent);						\ }
+value|\ struct type *								\ name##_RB_NEXT(struct type *elm)					\ {									\ 	if (RB_RIGHT(elm, field)) {					\ 		elm = RB_RIGHT(elm, field);				\ 		while (RB_LEFT(elm, field))				\ 			elm = RB_LEFT(elm, field);			\ 	} else {							\ 		if (RB_PARENT(elm, field)&&				\ 		    (elm == RB_LEFT(RB_PARENT(elm, field), field)))	\ 			elm = RB_PARENT(elm, field);			\ 		else {							\ 			while (RB_PARENT(elm, field)&&			\ 			    (elm == RB_RIGHT(RB_PARENT(elm, field), field)))\ 				elm = RB_PARENT(elm, field);		\ 			elm = RB_PARENT(elm, field);			\ 		}							\ 	}								\ 	return (elm);							\ }									\ 									\ struct type *								\ name##_RB_MINMAX(struct name *head, int val)				\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	struct type *parent = NULL;					\ 	while (tmp) {							\ 		parent = tmp;						\ 		if (val< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else							\ 			tmp = RB_RIGHT(tmp, field);			\ 	}								\ 	return (parent);						\ }
 end_define
 
 begin_define
@@ -714,7 +714,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|name##_RB_NEXT(x, y)
+value|name##_RB_NEXT(y)
 end_define
 
 begin_define
@@ -753,7 +753,7 @@ parameter_list|,
 name|head
 parameter_list|)
 define|\
-value|for ((x) = RB_MIN(name, head);					\ 	     (x) != NULL;						\ 	     (x) = name##_RB_NEXT(head, x))
+value|for ((x) = RB_MIN(name, head);					\ 	     (x) != NULL;						\ 	     (x) = name##_RB_NEXT(x))
 end_define
 
 begin_endif
