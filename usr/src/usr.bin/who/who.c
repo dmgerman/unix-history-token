@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)who.c	4.2 (Berkeley) %G%"
+literal|"@(#)who.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,26 +315,9 @@ name|tp
 argument_list|)
 condition|)
 continue|continue;
-if|if
-condition|(
-name|islower
-argument_list|(
-operator|*
-name|myname
-argument_list|)
-condition|)
-operator|*
-name|myname
-operator|=
-name|toupper
-argument_list|(
-operator|*
-name|myname
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%s) "
+literal|"%s!"
 argument_list|,
 name|myname
 argument_list|)
