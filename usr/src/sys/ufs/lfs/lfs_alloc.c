@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -263,44 +263,6 @@ operator|->
 name|lfs_bsize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bp
-condition|)
-block|{
-name|uprintf
-argument_list|(
-literal|"\n%s: no inodes left\n"
-argument_list|,
-name|fs
-operator|->
-name|lfs_fsmnt
-argument_list|)
-expr_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"uid %d on %s: out of inodes\n"
-argument_list|,
-name|ap
-operator|->
-name|a_cred
-operator|->
-name|cr_uid
-argument_list|,
-name|fs
-operator|->
-name|lfs_fsmnt
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOSPC
-operator|)
-return|;
-block|}
 name|i
 operator|=
 operator|(
