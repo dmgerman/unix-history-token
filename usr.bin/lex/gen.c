@@ -973,6 +973,11 @@ argument_list|)
 expr_stmt|;
 name|outn
 argument_list|(
+literal|"goto find_rule; /* avoid `defined but not used' warning */"
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
 literal|"find_rule: /* we branch to this label when backing up */"
 argument_list|)
 expr_stmt|;
