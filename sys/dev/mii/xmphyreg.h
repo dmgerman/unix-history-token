@@ -65,6 +65,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|XMPHY_BMCR_ISO
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Isolate */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|XMPHY_BMCR_STARTNEG
 value|0x0200
 end_define
