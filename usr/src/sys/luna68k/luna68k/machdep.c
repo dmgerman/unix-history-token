@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * OMRON: $Id: machdep.c,v 1.3 92/06/14 06:17:12 moti Exp $  *  * from: hp300/hp300/machdep.c  7.29 (Berkeley) 7/8/92  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * OMRON: $Id: machdep.c,v 1.3 92/06/14 06:17:12 moti Exp $  *  * from: hp300/hp300/machdep.c  7.33 (Berkeley) 10/11/92  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2192,6 +2192,19 @@ begin_comment
 comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * psl to gain improper priviledges or to cause  * a machine fault.  */
 end_comment
 
+begin_struct
+struct|struct
+name|sigreturn_args
+block|{
+name|struct
+name|sigcontext
+modifier|*
+name|sigcntxp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2215,20 +2228,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
+begin_decl_stmt
 name|struct
-name|sigcontext
-modifier|*
-name|sigcntxp
-decl_stmt|;
-block|}
+name|sigreturn_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2947,13 +2953,6 @@ operator|&&
 name|waittime
 operator|<
 literal|0
-operator|&&
-name|bfreelist
-index|[
-literal|0
-index|]
-operator|.
-name|b_forw
 condition|)
 block|{
 specifier|register
