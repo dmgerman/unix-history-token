@@ -345,6 +345,17 @@ name|ICU_LEN
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|HWI_MASK
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* bits for h/w interrupts */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -359,6 +370,17 @@ end_define
 
 begin_comment
 comment|/* 32-47 are ISA interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HWI_MASK
+value|0xffff
+end_define
+
+begin_comment
+comment|/* bits for h/w interrupts */
 end_comment
 
 begin_endif
