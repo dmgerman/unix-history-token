@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.25 (Berkeley) %G%"
+literal|"@(#)main.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,13 +1066,27 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LOG
+name|LOG_MAIL
 end_ifdef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|openlog
+argument_list|(
+literal|"sendmail"
+argument_list|,
+name|LOG_PID
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LOG
 end_endif
 
 begin_expr_stmt
