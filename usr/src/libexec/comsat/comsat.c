@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.7 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
