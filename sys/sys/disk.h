@@ -33,6 +33,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|g_geom
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|disk
@@ -65,22 +71,7 @@ name|u_int
 name|d_fwheads
 decl_stmt|;
 name|struct
-name|diskslices
-modifier|*
-name|d_slice
-decl_stmt|;
-name|struct
-name|disklabel
-modifier|*
-name|d_label
-decl_stmt|;
-name|LIST_ENTRY
-argument_list|(
-argument|disk
-argument_list|)
-name|d_list
-expr_stmt|;
-name|void
+name|g_geom
 modifier|*
 name|d_softc
 decl_stmt|;
