@@ -40,13 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -130,12 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -173,12 +167,6 @@ begin_include
 include|#
 directive|include
 file|<fs/devfs/devfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpf.h>
 end_include
 
 begin_include
@@ -8789,9 +8777,12 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"pid %d: revoking %s perms from %#lx:%d "
+literal|"pid %ld: revoking %s perms from %#lx:%ld "
 literal|"(max %s/cur %s)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|td
 operator|->
 name|td_proc
@@ -8803,10 +8794,17 @@ argument_list|(
 name|revokeperms
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|vme
 operator|->
 name|start
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|vme
 operator|->
 name|end
@@ -8814,6 +8812,7 @@ operator|-
 name|vme
 operator|->
 name|start
+argument_list|)
 argument_list|,
 name|prot2str
 argument_list|(
