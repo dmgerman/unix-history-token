@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.13	%G%	*/
+comment|/*	kern_physio.c	4.14	%G%	*/
 end_comment
 
 begin_include
@@ -193,7 +193,7 @@ decl_stmt|;
 name|long
 name|bufcount
 index|[
-name|NBUF
+literal|64
 index|]
 decl_stmt|;
 block|}
@@ -213,19 +213,15 @@ end_comment
 begin_decl_stmt
 name|struct
 name|buf
+modifier|*
 name|swbuf
-index|[
-name|NSWBUF
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|short
+modifier|*
 name|swsize
-index|[
-name|NSWBUF
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -235,10 +231,8 @@ end_comment
 
 begin_decl_stmt
 name|int
+modifier|*
 name|swpf
-index|[
-name|NSWBUF
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1657,7 +1651,7 @@ if|if
 condition|(
 name|i
 operator|<
-name|NBUF
+literal|64
 condition|)
 name|io_info
 operator|.

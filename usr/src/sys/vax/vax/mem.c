@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.1	%G%	*/
+comment|/*	mem.c	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -269,15 +269,6 @@ literal|1
 case|:
 if|if
 condition|(
-name|u
-operator|.
-name|u_uid
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
 operator|(
 name|caddr_t
 operator|)
@@ -342,7 +333,6 @@ condition|)
 goto|goto
 name|fault
 goto|;
-block|}
 if|if
 condition|(
 operator|!

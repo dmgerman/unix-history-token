@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.25	81/02/26	*/
+comment|/*	dh.c	4.26	81/02/27	*/
 end_comment
 
 begin_include
@@ -1411,7 +1411,7 @@ name|cfree
 argument_list|,
 literal|512
 operator|+
-name|NCLIST
+name|nclist
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3312,7 +3312,7 @@ name|cfree
 argument_list|,
 literal|512
 operator|+
-name|NCLIST
+name|nclist
 operator|*
 sizeof|sizeof
 argument_list|(
