@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.6 (Berkeley) %G%"
+literal|"@(#)input.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -567,10 +567,6 @@ specifier|extern
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
-specifier|extern
-name|int
-name|is_interactive
 decl_stmt|;
 if|if
 condition|(
