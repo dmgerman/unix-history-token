@@ -640,30 +640,11 @@ index|[
 literal|3
 index|]
 condition|)
-for|for
-control|(
-name|s
-operator|-=
-literal|2
-operator|,
 name|e1
 operator|=
 literal|2
-init|;
-name|s
-index|[
-literal|0
-index|]
-operator|=
-name|s
-index|[
-literal|1
-index|]
-condition|;
-name|s
-operator|++
-control|)
-empty_stmt|;
+expr_stmt|;
+comment|/* for(s -= 2, e1 = 2; s[0] = s[1]; s++); */
 comment|/* Pedantic gives the behavior that Fortran 77 specifies,	*/
 comment|/* i.e., requires that E be specified for exponent fields	*/
 comment|/* of more than 3 digits.  With Pedantic undefined, we get	*/
