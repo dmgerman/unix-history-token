@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.30 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1840,46 +1840,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* map upper => lower case */
-for|for
-control|(
-name|p
-operator|=
-name|name
-init|;
-operator|*
-name|p
-operator|!=
-literal|'\0'
-condition|;
-name|p
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|isascii
-argument_list|(
-operator|*
-name|p
-argument_list|)
-operator|&&
-name|isupper
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
-operator|*
-name|p
-operator|=
-name|tolower
-argument_list|(
-operator|*
-name|p
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|fuzzyp
 operator|=
