@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	slcompress.h	7.4	90/06/28	*/
+comment|/*	slcompress.h	7.5	93/06/04	*/
 end_comment
 
 begin_comment
@@ -315,35 +315,65 @@ begin_comment
 comment|/* tossing rcvd frames because of input err */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|sl_compress_init
-parameter_list|(
-comment|/* struct slcompress * */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slcompress
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|u_char
+begin_decl_stmt
+name|u_int
 name|sl_compress_tcp
-parameter_list|(
-comment|/* struct mbuf *, struct ip *, 				struct slcompress *, int compress_cid_flag */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|ip
+operator|*
+operator|,
+expr|struct
+name|slcompress
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|int
 name|sl_uncompress_tcp
-parameter_list|(
-comment|/* u_char **, int,  u_char, struct slcompress * */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|u_int
+operator|,
+expr|struct
+name|slcompress
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
