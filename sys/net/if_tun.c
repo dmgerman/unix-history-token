@@ -537,6 +537,15 @@ argument_list|,
 name|u
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
+name|dev
+operator|)
+operator|->
+name|si_flags
+operator||=
+name|SI_CHEAPCLONE
+expr_stmt|;
 block|}
 end_function
 
