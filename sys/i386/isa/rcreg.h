@@ -50,7 +50,7 @@ value|((i)< 16&& \ 			 "\0\0\0\1\1\1\0\1\0\0\1\1\1\0\0\1"[(i)& 0xF])
 end_define
 
 begin_comment
-comment|/* Riscom/8 board I/O mapping */
+comment|/* Riscom/8 board ISA I/O mapping */
 end_comment
 
 begin_define
@@ -100,7 +100,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RC_RI
+name|RC_RIREG
 value|0x100
 end_define
 
@@ -111,7 +111,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RC_DTR
+name|RC_DTREG
 value|0x100
 end_define
 
@@ -207,23 +207,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RC_TXGRP
+name|RC_RXGRP
 value|0x02
 end_define
 
 begin_comment
-comment|/* Transmitter interrupt group          */
+comment|/* Receiver interrupt group             */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RC_RXGRP
+name|RC_TXGRP
 value|0x04
 end_define
 
 begin_comment
-comment|/* Receiver interrupt group             */
+comment|/* Transmitter interrupt group          */
 end_comment
 
 begin_comment
@@ -240,15 +240,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RC_PILR_TX
-value|(0x80 | RC_TXGRP   )
+name|RC_PILR_RX
+value|(0x80 | RC_RXGRP   )
 end_define
 
 begin_define
 define|#
 directive|define
-name|RC_PILR_RX
-value|(0x80 | RC_RXGRP   )
+name|RC_PILR_TX
+value|(0x80 | RC_TXGRP   )
 end_define
 
 end_unit

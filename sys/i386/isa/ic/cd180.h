@@ -522,7 +522,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RCSR_BREAK
+name|RCSR_Break
 value|0x08
 end_define
 
@@ -533,7 +533,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RCSR_TOUT
+name|RCSR_Timeout
 value|0x80
 end_define
 
@@ -544,7 +544,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RCSR_SCDET
+name|RCSR_SCMASK
 value|0x70
 end_define
 
@@ -603,7 +603,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_RESETCHAN
+name|CCR_ResetChan
 value|0x80
 end_define
 
@@ -658,7 +658,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_SSPC1
+name|CCR_SENDSPCH1
 value|0x21
 end_define
 
@@ -669,7 +669,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_SSPC2
+name|CCR_SENDSPCH2
 value|0x22
 end_define
 
@@ -680,7 +680,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_SSPC3
+name|CCR_SENDSPCH3
 value|0x23
 end_define
 
@@ -691,7 +691,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_SSPC4
+name|CCR_SENDSPCH4
 value|0x24
 end_define
 
@@ -702,18 +702,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_CHANCTL
-value|0x10
-end_define
-
-begin_comment
-comment|/* Channel Control Command                */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCR_RXDIS
+name|CCR_RCVRDIS
 value|0x11
 end_define
 
@@ -724,7 +713,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_RXEN
+name|CCR_RCVREN
 value|0x12
 end_define
 
@@ -735,7 +724,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_TXDIS
+name|CCR_XMTRDIS
 value|0x14
 end_define
 
@@ -746,7 +735,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCR_TXEN
+name|CCR_XMTREN
 value|0x18
 end_define
 
@@ -794,7 +783,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IER_RXD
+name|IER_RxData
 value|0x10
 end_define
 
@@ -805,7 +794,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IER_RXSC
+name|IER_RxSC
 value|0x08
 end_define
 
@@ -816,7 +805,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IER_TXRDY
+name|IER_TxRdy
 value|0x04
 end_define
 
@@ -827,7 +816,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IER_TXMPTY
+name|IER_TxMpty
 value|0x02
 end_define
 
@@ -864,7 +853,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR1_PARMASK
+name|COR1_ParMMASK
 value|0x60
 end_define
 
@@ -908,7 +897,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR1_IGNORE
+name|COR1_Ignore
 value|0x10
 end_define
 
@@ -919,7 +908,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR1_STOPMASK
+name|COR1_StopMASK
 value|0x0C
 end_define
 
@@ -1033,7 +1022,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR2_TXIBE
+name|COR2_TxIBE
 value|0x40
 end_define
 
@@ -1077,7 +1066,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR2_RTSAO
+name|COR2_RtsAO
 value|0x04
 end_define
 
@@ -1088,7 +1077,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR2_CTSAE
+name|COR2_CtsAE
 value|0x02
 end_define
 
@@ -1099,7 +1088,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR2_DSRAE
+name|COR2_DsrAE
 value|0x01
 end_define
 
@@ -1114,7 +1103,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR3_XONCH
+name|COR3_XonCH
 value|0x80
 end_define
 
@@ -1125,7 +1114,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR3_XOFFCH
+name|COR3_XoffCH
 value|0x40
 end_define
 
@@ -1158,7 +1147,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COR3_RXTHMASK
+name|COR3_RxTHMASK
 value|0x0F
 end_define
 
@@ -1173,7 +1162,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCSR_RXEN
+name|CCSR_RxEn
 value|0x80
 end_define
 
@@ -1184,7 +1173,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCSR_RXFLOFF
+name|CCSR_RxFloff
 value|0x40
 end_define
 
@@ -1195,7 +1184,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCSR_RXFLON
+name|CCSR_RxFlon
 value|0x20
 end_define
 
@@ -1206,7 +1195,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCSR_TXEN
+name|CCSR_TxEn
 value|0x08
 end_define
 
@@ -1217,7 +1206,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCSR_TXFLOFF
+name|CCSR_TxFloff
 value|0x04
 end_define
 
@@ -1228,7 +1217,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCSR_TXFLON
+name|CCSR_TxFlon
 value|0x02
 end_define
 
@@ -1243,7 +1232,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCOR1_DSRZD
+name|MCOR1_DSRzd
 value|0x80
 end_define
 
@@ -1254,7 +1243,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCOR1_CDZD
+name|MCOR1_CDzd
 value|0x40
 end_define
 
@@ -1265,7 +1254,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCOR1_CTSZD
+name|MCOR1_CTSzd
 value|0x20
 end_define
 
@@ -1276,12 +1265,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCOR1_DTRTH
+name|MCOR1_DTRthMASK
 value|0x0F
 end_define
 
 begin_comment
-comment|/* Automatic DTR FC Threshold (1-8)       */
+comment|/* Automatic DTR FC Threshold (1-8) chars */
 end_comment
 
 begin_comment
@@ -1291,7 +1280,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCOR2_DSROD
+name|MCOR2_DSRod
 value|0x80
 end_define
 
@@ -1302,7 +1291,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCOR2_CDOD
+name|MCOR2_CDod
 value|0x40
 end_define
 
@@ -1313,7 +1302,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCOR2_CTSOD
+name|MCOR2_CTSod
 value|0x20
 end_define
 
@@ -1328,7 +1317,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCR_DSRCHG
+name|MCR_DSRchg
 value|0x80
 end_define
 
@@ -1339,7 +1328,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCR_CDCHG
+name|MCR_CDchg
 value|0x40
 end_define
 
@@ -1350,7 +1339,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCR_CTSCHG
+name|MCR_CTSchg
 value|0x20
 end_define
 
