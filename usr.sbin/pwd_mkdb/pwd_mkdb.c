@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.25 1998/04/19 07:15:34 phk Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.26 1998/06/09 20:19:59 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,7 +259,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|Cflag
+name|is_comment
 decl_stmt|;
 end_decl_stmt
 
@@ -1391,7 +1391,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|Cflag
+name|is_comment
 operator|&&
 operator|(
 name|pwd
@@ -1427,7 +1427,7 @@ value|t = e; while ((*p++ = *t++));
 if|if
 condition|(
 operator|!
-name|Cflag
+name|is_comment
 operator|&&
 operator|(
 operator|!
@@ -2279,7 +2279,7 @@ block|}
 comment|/* Create original format password file entry */
 if|if
 condition|(
-name|Cflag
+name|is_comment
 operator|&&
 name|makeold
 condition|)
@@ -2891,7 +2891,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|Cflag
+name|is_comment
 operator|=
 literal|1
 expr_stmt|;
@@ -2902,7 +2902,7 @@ operator|)
 return|;
 block|}
 else|else
-name|Cflag
+name|is_comment
 operator|=
 literal|0
 expr_stmt|;
