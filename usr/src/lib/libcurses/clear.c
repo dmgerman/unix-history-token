@@ -31,46 +31,54 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  *	This routine clears the window.  *  */
+comment|/*  * wclear --  *	Clear the window.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|wclear
-argument_list|(
-argument|win
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+if|if
+condition|(
 name|werase
 argument_list|(
 name|win
 argument_list|)
-expr_stmt|;
+operator|==
+name|OK
+condition|)
+block|{
 name|win
 operator|->
 name|_clear
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 block|}
-end_block
+return|return
+operator|(
+name|ERR
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
