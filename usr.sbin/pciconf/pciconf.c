@@ -296,11 +296,11 @@ literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: pciconf -l [-v]"
 argument_list|,
-literal|"       pciconf -a sel"
+literal|"       pciconf -a selector"
 argument_list|,
-literal|"       pciconf -r [-b | -h] sel addr[:addr]"
+literal|"       pciconf -r [-b | -h] selector addr[:addr2]"
 argument_list|,
-literal|"       pciconf -w [-b | -h] sel addr [value]"
+literal|"       pciconf -w [-b | -h] selector addr value"
 argument_list|)
 expr_stmt|;
 name|exit
