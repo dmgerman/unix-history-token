@@ -26,7 +26,7 @@ comment|/*  * Local&& I/O APIC variable definitions.  */
 end_comment
 
 begin_comment
-comment|/*  * Layout of local APIC interrupt vectors:  *  *	0xff (255)  +-------------+  *                  |             | 15 (Spurious / IPIs / Local Interrupts)  *	0xf0 (240)  +-------------+  *                  |             | 14 (I/O Interrupts)  *	0xe0 (224)  +-------------+  *                  |             | 13 (I/O Interrupts)  *	0xd0 (208)  +-------------+  *                  |             | 12 (I/O Interrupts)  *	0xc0 (192)  +-------------+  *                  |             | 11 (I/O Interrupts)  *	0xb0 (176)  +-------------+  *                  |             | 10 (I/O Interrupts)  *	0xa0 (160)  +-------------+  *                  |             | 9 (I/O Interrupts)  *	0x90 (144)  +-------------+  *                  |             | 8 (I/O Interrupts / System Calls)  *	0x80 (128)  +-------------+  *                  |             | 7 (I/O Interrupts)  *	0x70 (112)  +-------------+  *                  |             | 6 (I/O Interrupts)  *	0x60 (96)   +-------------+  *                  |             | 5 (I/O Interrupts)  *	0x50 (80)   +-------------+  *                  |             | 4 (I/O Interrupts)  *	0x40 (64)   +-------------+  *                  |             | 3 (I/O Interrupts)  *	0x30 (48)   +-------------+  *                  |             | 2 (ATPIC Interrupts)  *	0x20 (32)   +-------------+  *                  |             | 1 (Exceptions, traps, faults, etc.)  *	0x10 (16)   +-------------+  *                  |             | 0 (Exceptions, traps, faults, etc.)  *	0x00 (0)    +-------------+  *  * Note: 0x80 needs to be handled specially and not allocated to an  * I/O device!  */
+comment|/*  * Layout of local APIC interrupt vectors:  *  *	0xff (255)  +-------------+  *                  |             | 15 (Spurious / IPIs / Local Interrupts)  *	0xf0 (240)  +-------------+  *                  |             | 14 (I/O Interrupts / Timer)  *	0xe0 (224)  +-------------+  *                  |             | 13 (I/O Interrupts)  *	0xd0 (208)  +-------------+  *                  |             | 12 (I/O Interrupts)  *	0xc0 (192)  +-------------+  *                  |             | 11 (I/O Interrupts)  *	0xb0 (176)  +-------------+  *                  |             | 10 (I/O Interrupts)  *	0xa0 (160)  +-------------+  *                  |             | 9 (I/O Interrupts)  *	0x90 (144)  +-------------+  *                  |             | 8 (I/O Interrupts / System Calls)  *	0x80 (128)  +-------------+  *                  |             | 7 (I/O Interrupts)  *	0x70 (112)  +-------------+  *                  |             | 6 (I/O Interrupts)  *	0x60 (96)   +-------------+  *                  |             | 5 (I/O Interrupts)  *	0x50 (80)   +-------------+  *                  |             | 4 (I/O Interrupts)  *	0x40 (64)   +-------------+  *                  |             | 3 (I/O Interrupts)  *	0x30 (48)   +-------------+  *                  |             | 2 (ATPIC Interrupts)  *	0x20 (32)   +-------------+  *                  |             | 1 (Exceptions, traps, faults, etc.)  *	0x10 (16)   +-------------+  *                  |             | 0 (Exceptions, traps, faults, etc.)  *	0x00 (0)    +-------------+  *  * Note: 0x80 needs to be handled specially and not allocated to an  * I/O device!  */
 end_comment
 
 begin_define
@@ -35,6 +35,10 @@ directive|define
 name|APIC_ID_ALL
 value|0xff
 end_define
+
+begin_comment
+comment|/* I/O Interrupts are used for external devices such as ISA, PCI, etc. */
+end_comment
 
 begin_define
 define|#
@@ -47,8 +51,27 @@ begin_define
 define|#
 directive|define
 name|APIC_NUM_IOINTS
-value|192
+value|191
 end_define
+
+begin_comment
+comment|/* The timer interrupt is used for clock handling and drives hardclock, etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_TIMER_INT
+value|(APIC_IO_INTS + APIC_NUM_IOINTS)
+end_define
+
+begin_comment
+comment|/*    ********************* !!! WARNING !!! ******************************  * Each local apic has an interrupt receive fifo that is two entries deep  * for each interrupt priority class (higher 4 bits of interrupt vector).  * Once the fifo is full the APIC can no longer receive interrupts for this  * class and sending IPIs from other CPUs will be blocked.  * To avoid deadlocks there should be no more than two IPI interrupts  * pending at the same time.  * Currently this is guaranteed by dividing the IPIs in two groups that have   * each at most one IPI interrupt pending. The first group is protected by the  * smp_ipi_mtx and waits for the completion of the IPI (Only one IPI user   * at a time) The second group uses a single interrupt and a bitmap to avoid  * redundant IPI interrupts.  *  * Right now IPI_STOP used by kdb shares the interrupt priority class with  * the two IPI groups mentioned above. As such IPI_STOP may cause a deadlock.  * Eventually IPI_STOP should use NMI IPIs - this would eliminate this and  * other deadlocks caused by IPI_STOP.  */
+end_comment
+
+begin_comment
+comment|/* Interrupts for local APIC LVT entries other than the timer. */
+end_comment
 
 begin_define
 define|#
@@ -60,40 +83,33 @@ end_define
 begin_define
 define|#
 directive|define
-name|APIC_TIMER_INT
+name|APIC_ERROR_INT
 value|APIC_LOCAL_INTS
 end_define
 
 begin_define
 define|#
 directive|define
-name|APIC_ERROR_INT
+name|APIC_THERMAL_INT
 value|(APIC_LOCAL_INTS + 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|APIC_THERMAL_INT
+name|APIC_IPI_INTS
 value|(APIC_LOCAL_INTS + 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|APIC_IPI_INTS
-value|(APIC_LOCAL_INTS + 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPI_AST
-value|APIC_IPI_INTS
+name|IPI_RENDEZVOUS
+value|(APIC_IPI_INTS)
 end_define
 
 begin_comment
-comment|/* Generate software trap. */
+comment|/* Inter-CPU rendezvous. */
 end_comment
 
 begin_define
@@ -121,11 +137,37 @@ name|IPI_INVLRNG
 value|(APIC_IPI_INTS + 3)
 end_define
 
+begin_comment
+comment|/* Vector to handle bitmap based IPIs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_BITMAP_VECTOR
+value|(APIC_IPI_INTS + 5)
+end_define
+
+begin_comment
+comment|/* IPIs handled by IPI_BITMAPED_VECTOR  (XXX ups is there a better place?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_AST
+value|0
+end_define
+
+begin_comment
+comment|/* Generate software trap. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IPI_HARDCLOCK
-value|(APIC_IPI_INTS + 8)
+value|1
 end_define
 
 begin_comment
@@ -136,29 +178,39 @@ begin_define
 define|#
 directive|define
 name|IPI_STATCLOCK
-value|(APIC_IPI_INTS + 9)
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPI_RENDEZVOUS
-value|(APIC_IPI_INTS + 10)
+name|IPI_BITMAP_LAST
+value|IPI_STATCLOCK
 end_define
 
-begin_comment
-comment|/* Inter-CPU rendezvous. */
-end_comment
+begin_define
+define|#
+directive|define
+name|IPI_IS_BITMAPED
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<= IPI_BITMAP_LAST)
+end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_STOP
-value|(APIC_IPI_INTS + 11)
+value|(APIC_IPI_INTS + 6)
 end_define
 
 begin_comment
 comment|/* Stop CPU until restarted. */
+end_comment
+
+begin_comment
+comment|/*  * The spurious interrupt can share the priority class with the IPIs since  * it is not a normal interrupt. (Does not use the APIC's interrupt fifo)  */
 end_comment
 
 begin_define
@@ -811,6 +863,16 @@ parameter_list|,
 name|enum
 name|intr_trigger
 name|trigger
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lapic_set_tpr
+parameter_list|(
+name|u_int
+name|vector
 parameter_list|)
 function_decl|;
 end_function_decl

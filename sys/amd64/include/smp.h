@@ -145,22 +145,10 @@ decl_stmt|,
 comment|/* TLB shootdowns - page range */
 name|IDTVEC
 argument_list|(
-name|hardclock
+name|ipi_intr_bitmap_handler
 argument_list|)
 decl_stmt|,
-comment|/* Forward hardclock() */
-name|IDTVEC
-argument_list|(
-name|statclock
-argument_list|)
-decl_stmt|,
-comment|/* Forward statclock() */
-name|IDTVEC
-argument_list|(
-name|cpuast
-argument_list|)
-decl_stmt|,
-comment|/* Additional software trap on other cpu */
+comment|/* Bitmap based IPIs */
 name|IDTVEC
 argument_list|(
 name|cpustop
@@ -258,17 +246,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|forwarded_statclock
-parameter_list|(
-name|struct
-name|clockframe
-name|frame
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|forward_hardclock
 parameter_list|(
 name|void
@@ -278,7 +255,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|forwarded_hardclock
+name|ipi_bitmap_handler
 parameter_list|(
 name|struct
 name|clockframe

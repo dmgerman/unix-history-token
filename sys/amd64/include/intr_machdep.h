@@ -261,6 +261,13 @@ name|icu_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|elcr_found
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* XXX: The elcr_* prototypes probably belong somewhere else. */
 end_comment
@@ -423,6 +430,23 @@ name|void
 name|intr_suspend
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|intrcnt_add
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|u_long
+modifier|*
+modifier|*
+name|countp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -138,8 +138,28 @@ argument_list|(
 name|APIC_IO_INTS
 operator|+
 name|APIC_NUM_IOINTS
-operator|<=
+operator|==
+name|APIC_TIMER_INT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|APIC_TIMER_INT
+operator|<
 name|APIC_LOCAL_INTS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|APIC_LOCAL_INTS
+operator|==
+literal|240
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -299,10 +319,10 @@ literal|1
 block|,
 name|APIC_LVT_DM_FIXED
 block|,
-literal|0
+name|APIC_TIMER_INT
 block|}
 block|,
-comment|/* Timer: needs a vector */
+comment|/* Timer */
 block|{
 literal|1
 block|,
@@ -314,10 +334,10 @@ literal|1
 block|,
 name|APIC_LVT_DM_FIXED
 block|,
-literal|0
+name|APIC_ERROR_INT
 block|}
 block|,
-comment|/* Error: needs a vector */
+comment|/* Error */
 block|{
 literal|1
 block|,
@@ -344,10 +364,10 @@ literal|1
 block|,
 name|APIC_LVT_DM_FIXED
 block|,
-literal|0
+name|APIC_THERMAL_INT
 block|}
 block|,
-comment|/* Thermal: needs a vector */
+comment|/* Thermal */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -416,6 +436,35 @@ modifier|*
 name|lapic
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|lapic_enable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|uint32_t
+name|lvt_mode
+parameter_list|(
+name|struct
+name|lapic
+modifier|*
+name|la
+parameter_list|,
+name|u_int
+name|pin
+parameter_list|,
+name|uint32_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -587,19 +636,12 @@ break|break;
 case|case
 name|APIC_LVT_DM_FIXED
 case|:
-if|#
-directive|if
-literal|0
-block|value |= lvt->lvt_vector;
-else|#
-directive|else
-name|panic
-argument_list|(
-literal|"Fixed LINT pins not supported"
-argument_list|)
+name|value
+operator||=
+name|lvt
+operator|->
+name|lvt_vector
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 default|default:
 name|panic
@@ -630,9 +672,6 @@ name|uintptr_t
 name|addr
 parameter_list|)
 block|{
-name|u_int32_t
-name|value
-decl_stmt|;
 comment|/* Map the local APIC and setup the spurious interrupt handler. */
 name|KASSERT
 argument_list|(
@@ -681,36 +720,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Perform basic initialization of the BSP's local APIC. */
-name|value
-operator|=
-name|lapic
-operator|->
-name|svr
-expr_stmt|;
-name|value
-operator|&=
-operator|~
-operator|(
-name|APIC_SVR_VECTOR
-operator||
-name|APIC_SVR_FOCUS
-operator|)
-expr_stmt|;
-name|value
-operator||=
-operator|(
-name|APIC_SVR_FEN
-operator||
-name|APIC_SVR_SWEN
-operator||
-name|APIC_SPURIOUS_INT
-operator|)
-expr_stmt|;
-name|lapic
-operator|->
-name|svr
-operator|=
-name|value
+name|lapic_enable
+argument_list|()
 expr_stmt|;
 comment|/* Set BSP's per-CPU local APIC ID. */
 name|PCPU_SET
@@ -931,6 +942,27 @@ operator|->
 name|svr
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x pcm: 0x%08x\n"
+argument_list|,
+name|lapic
+operator|->
+name|lvt_timer
+argument_list|,
+name|lapic
+operator|->
+name|lvt_thermal
+argument_list|,
+name|lapic
+operator|->
+name|lvt_error
+argument_list|,
+name|lapic
+operator|->
+name|lvt_pcint
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1059,55 +1091,11 @@ operator|)
 operator|>>
 name|MAXLVTSHIFT
 expr_stmt|;
-comment|/* Program LINT[01] LVT entries. */
-name|lapic
-operator|->
-name|lvt_lint0
-operator|=
-name|lvt_mode
+comment|/* Initialize the TPR to allow all interrupts. */
+name|lapic_set_tpr
 argument_list|(
-name|la
-argument_list|,
-name|LVT_LINT0
-argument_list|,
-name|lapic
-operator|->
-name|lvt_lint0
+literal|0
 argument_list|)
-expr_stmt|;
-name|lapic
-operator|->
-name|lvt_lint1
-operator|=
-name|lvt_mode
-argument_list|(
-name|la
-argument_list|,
-name|LVT_LINT1
-argument_list|,
-name|lapic
-operator|->
-name|lvt_lint1
-argument_list|)
-expr_stmt|;
-comment|/* XXX: more LVT entries */
-comment|/* Clear the TPR. */
-name|value
-operator|=
-name|lapic
-operator|->
-name|tpr
-expr_stmt|;
-name|value
-operator|&=
-operator|~
-name|APIC_TPR_PRIO
-expr_stmt|;
-name|lapic
-operator|->
-name|tpr
-operator|=
-name|value
 expr_stmt|;
 comment|/* Use the cluster model for logical IDs. */
 name|value
@@ -1168,37 +1156,41 @@ operator|=
 name|value
 expr_stmt|;
 comment|/* Setup spurious vector and enable the local APIC. */
-name|value
-operator|=
+name|lapic_enable
+argument_list|()
+expr_stmt|;
+comment|/* Program LINT[01] LVT entries. */
 name|lapic
 operator|->
-name|svr
-expr_stmt|;
-name|value
-operator|&=
-operator|~
-operator|(
-name|APIC_SVR_VECTOR
-operator||
-name|APIC_SVR_FOCUS
-operator|)
-expr_stmt|;
-name|value
-operator||=
-operator|(
-name|APIC_SVR_FEN
-operator||
-name|APIC_SVR_SWEN
-operator||
-name|APIC_SPURIOUS_INT
-operator|)
+name|lvt_lint0
+operator|=
+name|lvt_mode
+argument_list|(
+name|la
+argument_list|,
+name|LVT_LINT0
+argument_list|,
+name|lapic
+operator|->
+name|lvt_lint0
+argument_list|)
 expr_stmt|;
 name|lapic
 operator|->
-name|svr
+name|lvt_lint1
 operator|=
-name|value
+name|lvt_mode
+argument_list|(
+name|la
+argument_list|,
+name|LVT_LINT1
+argument_list|,
+name|lapic
+operator|->
+name|lvt_lint1
+argument_list|)
 expr_stmt|;
+comment|/* XXX: more LVT entries */
 name|intr_restore
 argument_list|(
 name|eflags
@@ -1228,6 +1220,52 @@ name|value
 operator|&=
 operator|~
 name|APIC_SVR_SWEN
+expr_stmt|;
+name|lapic
+operator|->
+name|svr
+operator|=
+name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|lapic_enable
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int32_t
+name|value
+decl_stmt|;
+comment|/* Program the spurious vector to enable the local APIC. */
+name|value
+operator|=
+name|lapic
+operator|->
+name|svr
+expr_stmt|;
+name|value
+operator|&=
+operator|~
+operator|(
+name|APIC_SVR_VECTOR
+operator||
+name|APIC_SVR_FOCUS
+operator|)
+expr_stmt|;
+name|value
+operator||=
+operator|(
+name|APIC_SVR_FEN
+operator||
+name|APIC_SVR_SWEN
+operator||
+name|APIC_SPURIOUS_INT
+operator|)
 expr_stmt|;
 name|lapic
 operator|->
@@ -1908,7 +1946,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|" LINT%u polarity: active-%s\n"
+literal|" LINT%u polarity: %s\n"
 argument_list|,
 name|pin
 argument_list|,
@@ -2077,6 +2115,56 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Adjust the TPR of the current CPU so that it blocks all interrupts below  * the passed in vector.  */
+end_comment
+
+begin_function
+name|void
+name|lapic_set_tpr
+parameter_list|(
+name|u_int
+name|vector
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|CHEAP_TPR
+name|lapic
+operator|->
+name|tpr
+operator|=
+name|vector
+expr_stmt|;
+else|#
+directive|else
+name|u_int32_t
+name|tpr
+decl_stmt|;
+name|tpr
+operator|=
+name|lapic
+operator|->
+name|tpr
+operator|&
+operator|~
+name|APIC_TPR_PRIO
+expr_stmt|;
+name|tpr
+operator||=
+name|vector
+expr_stmt|;
+name|lapic
+operator|->
+name|tpr
+operator|=
+name|tpr
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2683,7 +2771,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private the sys/i386 code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
+comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private to the sys/i386 code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
 end_comment
 
 begin_function
@@ -3078,7 +3166,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|needsattention
-comment|/* 		 * XXX FIXME: 		 * 		 * The above function waits for the message to actually be 		 * delivered.  It breaks out after an arbitrary timeout 		 * since the message should eventually be delivered (at 		 * least in theory) and that if it wasn't we would catch 		 * the failure with the check above when the next IPI is 		 * sent. 		 * 		 * We could skiip this wait entirely, EXCEPT it probably 		 * protects us from other routines that assume that the 		 * message was delivered and acted upon when this function 		 * returns. 		 */
+comment|/* 		 * XXX FIXME: 		 * 		 * The above function waits for the message to actually be 		 * delivered.  It breaks out after an arbitrary timeout 		 * since the message should eventually be delivered (at 		 * least in theory) and that if it wasn't we would catch 		 * the failure with the check above when the next IPI is 		 * sent. 		 * 		 * We could skip this wait entirely, EXCEPT it probably 		 * protects us from other routines that assume that the 		 * message was delivered and acted upon when this function 		 * returns. 		 */
 name|printf
 argument_list|(
 literal|"APIC: IPI might be stuck\n"

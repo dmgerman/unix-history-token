@@ -328,13 +328,6 @@ comment|/* XXX */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|int
-name|using_elcr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|inthand_t
 name|IDTVEC
 argument_list|(
@@ -1408,7 +1401,7 @@ index|[
 name|SLAVE
 index|]
 operator|&&
-name|using_elcr
+name|elcr_found
 condition|)
 name|elcr_resume
 argument_list|()
@@ -1591,7 +1584,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|using_elcr
+name|elcr_found
 condition|)
 block|{
 if|if
@@ -1964,16 +1957,9 @@ block|}
 comment|/* 	 * Look for an ELCR.  If we find one, update the trigger modes. 	 * If we don't find one, assume that IRQs 0, 1, 2, and 13 are 	 * edge triggered and that everything else is level triggered. 	 * We only use the trigger information to reprogram the ELCR if 	 * we have one and as an optimization to avoid masking edge 	 * triggered interrupts.  For the case that we don't have an ELCR, 	 * it doesn't hurt to mask an edge triggered interrupt, so we 	 * assume level trigger for any interrupt that we aren't sure is 	 * edge triggered. 	 */
 if|if
 condition|(
-name|elcr_probe
-argument_list|()
-operator|==
-literal|0
+name|elcr_found
 condition|)
 block|{
-name|using_elcr
-operator|=
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|i
