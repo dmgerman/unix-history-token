@@ -69,6 +69,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"prepend_args.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"port.h"
 end_include
 
@@ -1208,10 +1214,19 @@ literal|"unlink"
 block|,
 literal|0
 block|,
-operator|&
-name|f_unlink
+literal|0
 block|,
-literal|1
+literal|'U'
+block|}
+block|,
+block|{
+literal|"unlink-first"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'U'
 block|}
 block|,
 block|{
@@ -1656,6 +1671,20 @@ name|cur_ar_file
 operator|=
 literal|0
 expr_stmt|;
+name|prepend_default_options
+argument_list|(
+name|getenv
+argument_list|(
+literal|"TAR_OPTIONS"
+argument_list|)
+argument_list|,
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+expr_stmt|;
 comment|/* Parse options */
 while|while
 condition|(
@@ -1668,7 +1697,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-01234567Ab:BcC:df:F:g:GhiIjkK:lL:mMnN:oOpPrRsStT:uvV:wWxX:yzZ"
+literal|"-01234567Ab:BcC:df:F:g:GhiIjkK:lL:mMnN:oOpPrRsStT:uUvV:wWxX:yzZ"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2501,6 +2530,14 @@ name|CMD_UPDATE
 expr_stmt|;
 break|break;
 case|case
+literal|'U'
+case|:
+name|f_unlink
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 name|f_verbose
@@ -2764,7 +2801,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"\ --force-local		archive file is local even if it has a colon\n\ -F, --info-script F\n\     --new-volume-script F run script at end of each tape (implies -M)\n\ -G, --incremental	create/list/extract old GNU-format incremental backup\n\ -g, --listed-incremental F create/list/extract new GNU-format incremental backup\n\ -h, --dereference	don't dump symlinks; dump the files they point to\n\ -i, --ignore-zeros	ignore blocks of zeros in archive (normally mean EOF)\n\ --ignore-failed-read	don't exit with non-zero status on unreadable files\n\ -k, --keep-old-files	keep existing files; don't overwrite them from archive\n\ -K, --starting-file F	begin at file F in the archive\n\ -l, --one-file-system	stay in local file system when creating an archive\n\ -L, --tape-length N	change tapes after writing N*1024 bytes\n\ "
+literal|"\ --force-local		archive file is local even if it has a colon\n\ -F, --info-script F\n\     --new-volume-script F run script at end of each tape (implies -M)\n\ -G, --incremental	create/list/extract old GNU-format incremental backup\n\ -g, --listed-incremental F create/list/extract new GNU-format incremental backup\n\ -h, --dereference	don't dump symlinks; dump the files they point to\n\ -i, --ignore-zeros	ignore blocks of zeros in archive (normally mean EOF)\n\ --ignore-failed-read	don't exit with non-zero status on unreadable files\n\ -j, -y, --bzip,\n\     --bzip2, --bunzip2	filter the archive through bzip2\n\ -k, --keep-old-files	keep existing files; don't overwrite them from archive\n\ -K, --starting-file F	begin at file F in the archive\n\ -l, --one-file-system	stay in local file system when creating an archive\n\ -L, --tape-length N	change tapes after writing N*1024 bytes\n\ "
 argument_list|,
 name|stdout
 argument_list|)
@@ -2780,7 +2817,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -R, --record-number	show record number within archive with each message\n\ --remove-files		remove files after adding them to the archive\n\ -s, --same-order,\n\     --preserve-order	list of names to extract is sorted to match archive\n\ --same-owner		create extracted files with the same ownership \n\ --show-omitted-dirs	show omitted directories while processing the archive.\n\ -S, --sparse		handle sparse files efficiently\n\ -T, -I, --files-from F	get names to extract or create from file F\n\ --null			-T reads null-terminated names, disable -C\n\ --totals		print total bytes written with --create\n\ -v, --verbose		verbosely list files processed\n\ -V, --label NAME	create archive with volume name NAME\n\ --version		print tar program version number\n\ -w, --interactive,\n\     --confirmation	ask for confirmation for every action\n\ "
+literal|"\ -R, --record-number	show record number within archive with each message\n\ --remove-files		remove files after adding them to the archive\n\ -s, --same-order,\n\     --preserve-order	list of names to extract is sorted to match archive\n\ --same-owner		create extracted files with the same ownership \n\ --show-omitted-dirs	show omitted directories while processing the archive.\n\ -S, --sparse		handle sparse files efficiently\n\ -T, -I, --files-from F	get names to extract or create from file F\n\ --null			-T reads null-terminated names, disable -C\n\ --totals		print total bytes written with --create\n\ -v, --verbose		verbosely list files processed\n\ -U, --unlink,\n\     --unlink-first	unlink files before creating them\n\ -V, --label NAME	create archive with volume name NAME\n\ --version		print tar program version number\n\ -w, --interactive,\n\     --confirmation	ask for confirmation for every action\n\ "
 argument_list|,
 name|stdout
 argument_list|)
@@ -2788,7 +2825,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -W, --verify		attempt to verify the archive after writing it\n\ --exclude PATTERN	exclude files, given as a globbing PATTERN\n\ -X, --exclude-from FILE	exclude files listed in FILE\n\ -j, -y, --bzip, --bzip2, --bunzip2  filter the archive through bzip2\n\ -Z, --compress,\n\     --uncompress      	filter the archive through compress\n\ -z, --gzip,\n\     --ungzip		filter the archive through gzip\n\ --use-compress-program PROG\n\ 			filter the archive through PROG (which must accept -d)\n\ --block-compress	block the output of compression program for tapes\n\ -[0-7][lmh]		specify drive and density\n\ --unlink		unlink files before creating them\n\ --fast-read 		stop after desired names in archive have been found\n\ "
+literal|"\ -W, --verify		attempt to verify the archive after writing it\n\ --exclude PATTERN	exclude files, given as a globbing PATTERN\n\ -X, --exclude-from FILE	exclude files listed in FILE\n\ -Z, --compress,\n\     --uncompress      	filter the archive through compress\n\ -z, --gzip,\n\     --ungzip		filter the archive through gzip\n\ --use-compress-program PROG\n\ 			filter the archive through PROG (which must accept -d)\n\ --block-compress	block the output of compression program for tapes\n\ -[0-7][lmh]		specify drive and density\n\ --fast-read 		stop after desired names in archive have been found\n\ "
 argument_list|,
 name|stdout
 argument_list|)
