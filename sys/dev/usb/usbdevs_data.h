@@ -199,27 +199,63 @@ literal|"USB-HASP 0.06"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_ALCOR
+name|USB_VENDOR_ALCOR2
 block|,
-name|USB_PRODUCT_ALCOR_STRONGMAN
+name|USB_PRODUCT_ALCOR2_KBD_HUB
 block|,
 literal|0
 block|,
 literal|"Alcor Micro, Inc."
 block|,
-literal|"Strong Man Keyboard hub"
+literal|"Kbd Hub"
 block|, 	}
 block|,
 block|{
 name|USB_VENDOR_ALCOR
 block|,
-name|USB_PRODUCT_ALCOR_STRONGMAN_KBD
+name|USB_PRODUCT_ALCOR_MA_KBD_HUB
 block|,
 literal|0
 block|,
 literal|"Alcor Micro, Inc."
 block|,
-literal|"Strong Man Keyboard"
+literal|"MacAlly Kbd Hub"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ALCOR
+block|,
+name|USB_PRODUCT_ALCOR_AU9814
+block|,
+literal|0
+block|,
+literal|"Alcor Micro, Inc."
+block|,
+literal|"AU9814 Hub"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ALCOR
+block|,
+name|USB_PRODUCT_ALCOR_SM_KBD
+block|,
+literal|0
+block|,
+literal|"Alcor Micro, Inc."
+block|,
+literal|"MicroConnectors/StrongMan Keyboard"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ALCOR
+block|,
+name|USB_PRODUCT_ALCOR_NEC_KBD_HUB
+block|,
+literal|0
+block|,
+literal|"Alcor Micro, Inc."
+block|,
+literal|"NEC Kbd Hub"
 block|, 	}
 block|,
 block|{
@@ -487,6 +523,18 @@ literal|"KB-8933 keyboard"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_COMPAQ
+block|,
+name|USB_PRODUCT_COMPAQ_PJB100
+block|,
+literal|0
+block|,
+literal|"Compaq Computers"
+block|,
+literal|"Personal Jukebox PJB100"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_CONNECTIX
 block|,
 name|USB_PRODUCT_CONNECTIX_QUICKCAM
@@ -520,6 +568,18 @@ block|,
 literal|"Corega"
 block|,
 literal|"FEther USB-TX"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_CTX
+block|,
+name|USB_PRODUCT_CTX_EX1300
+block|,
+literal|0
+block|,
+literal|"Chuntex"
+block|,
+literal|"Ex1300 hub"
 block|, 	}
 block|,
 block|{
@@ -820,6 +880,30 @@ block|,
 literal|"Seiko Epson Corp."
 block|,
 literal|"ISD USB Smart Cable"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ETEK
+block|,
+name|USB_PRODUCT_ETEK_1COM
+block|,
+literal|0
+block|,
+literal|"e-TEK Labs"
+block|,
+literal|"Serial port"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_EXTENDED
+block|,
+name|USB_PRODUCT_EXTENDED_XTNDACCESS
+block|,
+literal|0
+block|,
+literal|"Extended Systems, Inc."
+block|,
+literal|"XTNDAccess IrDA"
 block|, 	}
 block|,
 block|{
@@ -1377,13 +1461,25 @@ block|,
 block|{
 name|USB_VENDOR_LOGITECH
 block|,
-name|USB_PRODUCT_LOGITECH_QUICKCAM
+name|USB_PRODUCT_LOGITECH_PAGESCAN
 block|,
 literal|0
 block|,
 literal|"Logitech, Inc."
 block|,
-literal|"QuickCam"
+literal|"PageScan"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_QUICKCAMWEB
+block|,
+literal|0
+block|,
+literal|"Logitech, Inc."
+block|,
+literal|"QuickCam Web"
 block|, 	}
 block|,
 block|{
@@ -1396,6 +1492,30 @@ block|,
 literal|"Logitech, Inc."
 block|,
 literal|"QuickCam Pro"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_QUICKCAMEXP
+block|,
+literal|0
+block|,
+literal|"Logitech, Inc."
+block|,
+literal|"QuickCam Express"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_QUICKCAM
+block|,
+literal|0
+block|,
+literal|"Logitech, Inc."
+block|,
+literal|"QuickCam"
 block|, 	}
 block|,
 block|{
@@ -1468,6 +1588,18 @@ block|,
 literal|"Logitech, Inc."
 block|,
 literal|"WingMan Force joystick"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_QUICKCAMPRO2
+block|,
+literal|0
+block|,
+literal|"Logitech, Inc."
+block|,
+literal|"QuickCam Pro"
 block|, 	}
 block|,
 block|{
@@ -1720,6 +1852,18 @@ block|,
 literal|"OmniVision"
 block|,
 literal|"OV511 Camera"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_OMNIVISION
+block|,
+name|USB_PRODUCT_OMNIVISION_OV511PLUS
+block|,
+literal|0
+block|,
+literal|"OmniVision"
+block|,
+literal|"OV511+ Camera"
 block|, 	}
 block|,
 block|{
@@ -2095,6 +2239,18 @@ literal|"Supra Express 56K modem"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_TEAC
+block|,
+name|USB_PRODUCT_TEAC_FD05PUB
+block|,
+literal|0
+block|,
+literal|"TEAC"
+block|,
+literal|"FD-05PUB floppy"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_TELEX
 block|,
 name|USB_PRODUCT_TELEX_MIC1
@@ -2151,7 +2307,7 @@ literal|0
 block|,
 literal|"VLSI Vision Ltd."
 block|,
-literal|"VC6452V002 Camera"
+literal|"CPiA Camera"
 block|, 	}
 block|,
 block|{
@@ -2623,6 +2779,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_COMPAQ
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Compaq Computers"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ACERP
 block|,
 literal|0
@@ -3002,6 +3170,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Peracom Networks, Inc."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ALCOR2
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Alcor Micro, Inc."
 block|,
 name|NULL
 block|, 	}
@@ -3439,6 +3619,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_TEAC
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"TEAC"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_LINKSYS
 block|,
 literal|0
@@ -3506,6 +3698,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Avance Logic, Inc."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_CTX
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Chuntex"
 block|,
 name|NULL
 block|, 	}
@@ -4135,6 +4339,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_EXTENDED
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Extended Systems, Inc."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_AUTHENTEC
 block|,
 literal|0
@@ -4382,6 +4598,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Broadcom Corp."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_GEOCAST
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Geocast Network Systems"
 block|,
 name|NULL
 block|, 	}

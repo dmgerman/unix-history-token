@@ -392,6 +392,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_COMPAQ
+value|0x049f
+end_define
+
+begin_comment
+comment|/* Compaq Computers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_ACERP
 value|0x04a5
 end_define
@@ -739,6 +750,17 @@ end_define
 
 begin_comment
 comment|/* Peracom Networks, Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_ALCOR2
+value|0x0566
+end_define
+
+begin_comment
+comment|/* Alcor Micro, Inc. */
 end_comment
 
 begin_define
@@ -1140,6 +1162,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_TEAC
+value|0x0644
+end_define
+
+begin_comment
+comment|/* TEAC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_LINKSYS
 value|0x066b
 end_define
@@ -1201,6 +1234,17 @@ end_define
 
 begin_comment
 comment|/* Avance Logic, Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_CTX
+value|0x0698
+end_define
+
+begin_comment
+comment|/* Chuntex */
 end_comment
 
 begin_define
@@ -1778,6 +1822,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_EXTENDED
+value|0x08e9
+end_define
+
+begin_comment
+comment|/* Extended Systems, Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_AUTHENTEC
 value|0x08ff
 end_define
@@ -2004,6 +2059,17 @@ end_define
 
 begin_comment
 comment|/* Broadcom Corp. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_GEOCAST
+value|0x0a79
+end_define
+
+begin_comment
+comment|/* Geocast Network Systems */
 end_comment
 
 begin_define
@@ -2292,29 +2358,62 @@ comment|/* USB-HASP 0.06 */
 end_comment
 
 begin_comment
-comment|/* ALCOR products */
+comment|/* Alcor Micro, Inc. products */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_ALCOR_STRONGMAN
+name|USB_PRODUCT_ALCOR2_KBD_HUB
+value|0x2802
+end_define
+
+begin_comment
+comment|/* Kbd Hub */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ALCOR_MA_KBD_HUB
 value|0x9213
 end_define
 
 begin_comment
-comment|/* Strong Man Keyboard hub */
+comment|/* MacAlly Kbd Hub */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_ALCOR_STRONGMAN_KBD
+name|USB_PRODUCT_ALCOR_AU9814
+value|0x9215
+end_define
+
+begin_comment
+comment|/* AU9814 Hub */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ALCOR_SM_KBD
 value|0x9410
 end_define
 
 begin_comment
-comment|/* Strong Man Keyboard */
+comment|/* MicroConnectors/StrongMan Keyboard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ALCOR_NEC_KBD_HUB
+value|0x9472
+end_define
+
+begin_comment
+comment|/* NEC Kbd Hub */
 end_comment
 
 begin_comment
@@ -2620,6 +2719,21 @@ comment|/* KB-8933 keyboard */
 end_comment
 
 begin_comment
+comment|/* Compaq products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_COMPAQ_PJB100
+value|0x504a
+end_define
+
+begin_comment
+comment|/* Personal Jukebox PJB100 */
+end_comment
+
+begin_comment
 comment|/* Connectix products */
 end_comment
 
@@ -2658,6 +2772,21 @@ end_define
 
 begin_comment
 comment|/* FEther USB-TX */
+end_comment
+
+begin_comment
+comment|/* CTX products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_CTX_EX1300
+value|0x9999
+end_define
+
+begin_comment
+comment|/* Ex1300 hub */
 end_comment
 
 begin_comment
@@ -2985,6 +3114,36 @@ end_define
 
 begin_comment
 comment|/* ISD USB Smart Cable */
+end_comment
+
+begin_comment
+comment|/* e-TEK Labs products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ETEK_1COM
+value|0x8007
+end_define
+
+begin_comment
+comment|/* Serial port */
+end_comment
+
+begin_comment
+comment|/* Extended Systems products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_EXTENDED_XTNDACCESS
+value|0x0100
+end_define
+
+begin_comment
+comment|/* XTNDAccess IrDA */
 end_comment
 
 begin_comment
@@ -3580,12 +3739,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_LOGITECH_QUICKCAM
+name|USB_PRODUCT_LOGITECH_PAGESCAN
+value|0x040f
+end_define
+
+begin_comment
+comment|/* PageScan */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LOGITECH_QUICKCAMWEB
 value|0x0801
 end_define
 
 begin_comment
-comment|/* QuickCam */
+comment|/* QuickCam Web */
 end_comment
 
 begin_define
@@ -3597,6 +3767,28 @@ end_define
 
 begin_comment
 comment|/* QuickCam Pro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LOGITECH_QUICKCAMEXP
+value|0x0840
+end_define
+
+begin_comment
+comment|/* QuickCam Express */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LOGITECH_QUICKCAM
+value|0x0850
+end_define
+
+begin_comment
+comment|/* QuickCam */
 end_comment
 
 begin_define
@@ -3663,6 +3855,17 @@ end_define
 
 begin_comment
 comment|/* WingMan Force joystick */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LOGITECH_QUICKCAMPRO2
+value|0xd001
+end_define
+
+begin_comment
+comment|/* QuickCam Pro */
 end_comment
 
 begin_comment
@@ -3946,6 +4149,17 @@ end_define
 
 begin_comment
 comment|/* OV511 Camera */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_OMNIVISION_OV511PLUS
+value|0xa511
+end_define
+
+begin_comment
+comment|/* OV511+ Camera */
 end_comment
 
 begin_comment
@@ -4374,6 +4588,21 @@ comment|/* Supra Express 56K modem */
 end_comment
 
 begin_comment
+comment|/* TEAC products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_TEAC_FD05PUB
+value|0x0000
+end_define
+
+begin_comment
+comment|/* FD-05PUB floppy */
+end_comment
+
+begin_comment
 comment|/* Telex Communications products */
 end_comment
 
@@ -4445,7 +4674,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* VC6452V002 Camera */
+comment|/* CPiA Camera */
 end_comment
 
 begin_comment
