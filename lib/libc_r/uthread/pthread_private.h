@@ -119,7 +119,7 @@ file|<pthread_np.h>
 end_include
 
 begin_comment
-comment|/*  * Define machine dependent macros to get and set the stack pointer  * from the supported contexts.  Also define a macro to set the return  * address in a jmp_buf context.  *  * XXX - These need to be moved into architecture dependent support files.  */
+comment|/*  * Define machine dependent macros to get and set the stack pointer  * from the supported contexts.  Also define a macro to set the return  * address in a jmp_buf context.  *  * XXX - These need to be moved into architecture dependent support files.  * XXX - These need to be documented so porters know what's required.  */
 end_comment
 
 begin_if
@@ -338,6 +338,143 @@ parameter_list|,
 name|ra
 parameter_list|)
 value|do {			\ 	(jb)[0]._jb[2] = (long)(ra);			\ 	(jb)[0]._jb[R_RA + 4] = (long)(ra);		\ 	(jb)[0]._jb[R_T12 + 4] = (long)(ra);		\ } while (0)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|CCFSZ
+value|sizeof (struct frame)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|)
+define|\
+value|((unsigned long)((jb)[0]._jb[_JB_SP]) + SPOFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_SJB
+parameter_list|(
+name|sjb
+parameter_list|)
+define|\
+value|((unsigned long)((sjb)[0]._sjb[_JB_SP]) + SPOFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+define|\
+value|((ucp)->uc_mcontext.mc_sp + SPOFF)
+end_define
+
+begin_comment
+comment|/*  * XXX: sparc64 _longjmp() expects a register window on the stack  * at the given position, so we must make sure that the space where  * it is expected is readable. Subtracting the frame size here works  * because the SET_STACK macros are only used to set up new stacks  * or signal stacks, but it is a bit dirty.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|stk
+parameter_list|)
+define|\
+value|(jb)[0]._jb[_JB_SP] = (long)(stk) - SPOFF - CCFSZ
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_SJB
+parameter_list|(
+name|sjb
+parameter_list|,
+name|stk
+parameter_list|)
+define|\
+value|(sjb)[0]._sjb[_JB_SP] = (long)(stk) - SPOFF - CCFSZ
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_UC
+parameter_list|(
+name|ucp
+parameter_list|,
+name|stk
+parameter_list|)
+define|\
+value|(ucp)->uc_mcontext.mc_sp = (unsigned long)(stk) - SPOFF - CCFSZ
+end_define
+
+begin_define
+define|#
+directive|define
+name|FP_SAVE_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FP_RESTORE_UC
+parameter_list|(
+name|ucp
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_RETURN_ADDR_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|ra
+parameter_list|)
+define|\
+value|(jb)[0]._jb[_JB_PC] = (long)(ra) - 8
 end_define
 
 begin_else
