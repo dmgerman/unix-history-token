@@ -2621,7 +2621,7 @@ name|timeout
 argument_list|(
 name|ncr53c9x_timeout
 argument_list|,
-name|sc
+name|ecb
 argument_list|,
 name|mstohz
 argument_list|(
@@ -5448,7 +5448,7 @@ name|untimeout
 argument_list|(
 name|ncr53c9x_timeout
 argument_list|,
-name|sc
+name|ecb
 argument_list|,
 name|ccb
 operator|->
@@ -10099,7 +10099,7 @@ name|untimeout
 argument_list|(
 name|ncr53c9x_timeout
 argument_list|,
-name|sc
+name|ecb
 argument_list|,
 name|ecb
 operator|->
@@ -10362,7 +10362,7 @@ name|untimeout
 argument_list|(
 name|ncr53c9x_timeout
 argument_list|,
-name|sc
+name|ecb
 argument_list|,
 name|ecb
 operator|->
@@ -12275,7 +12275,7 @@ name|timeout
 argument_list|(
 name|ncr53c9x_timeout
 argument_list|,
-name|sc
+name|ecb
 argument_list|,
 name|mstohz
 argument_list|(
