@@ -467,23 +467,6 @@ directive|include
 file|<cam/scsi/scsi_message.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAT_OLDPCI
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"The ncr device requires the old pci compatibility shims"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*========================================================== ** **	Debugging tags ** **========================================================== */
 end_comment
