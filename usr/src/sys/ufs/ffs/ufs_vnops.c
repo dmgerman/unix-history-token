@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.72 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.73 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -349,8 +349,6 @@ name|cnp
 parameter_list|,
 name|vap
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* was: ufs_create(ndp, vap, p) */
 name|struct
 name|vnode
 modifier|*
@@ -433,8 +431,6 @@ name|cnp
 parameter_list|,
 name|vap
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* was: ufs_mknod(ndp, vap, cred, p) */
 name|struct
 name|vnode
 modifier|*
@@ -2809,8 +2805,6 @@ name|vp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: ufs_remove(ndp, p) */
 name|struct
 name|vnode
 modifier|*
@@ -2931,8 +2925,6 @@ name|tdvp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: ufs_link(vp, ndp, p) */
 specifier|register
 name|struct
 name|vnode
@@ -3134,7 +3126,6 @@ name|vpp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN */
 name|struct
 name|vnode
 modifier|*
@@ -3276,7 +3267,9 @@ argument_list|)
 expr_stmt|;
 comment|/* dirloop: */
 comment|/* 	 * Search a new directory. 	 * 	 * The cn_hash value is for use by vfs_cache. 	 * The last component of the filename is left accessible via 	 * cnp->cn_nameptr for callers that need the name. Callers needing 	 * the name set the SAVENAME flag. When done, they assume 	 * responsibility for freeing the pathname buffer. 	 */
-comment|/* NEEDWORK: is hash computed needed */
+ifdef|#
+directive|ifdef
+name|NAMEI_DIAGNOSTIC
 name|newhash
 operator|=
 literal|0
@@ -3341,27 +3334,6 @@ argument_list|(
 literal|"relookup: bad len"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cnp
-operator|->
-name|cn_namelen
-operator|>=
-name|NAME_MAX
-condition|)
-block|{
-name|error
-operator|=
-name|ENAMETOOLONG
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-ifdef|#
-directive|ifdef
-name|NAMEI_DIAGNOSTIC
-comment|/* NEEDSWORK: should go */
 block|{
 name|char
 name|c
@@ -3389,18 +3361,6 @@ operator|=
 name|c
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|cnp->cn_pathlen -= cnp->cn_namelen; 	ndp->ni_next = cp;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|cnp->cn_flags |= MAKEENTRY; 	if (*cp == '\0'&& docache == 0) 		cnp->cn_flags&= ~MAKEENTRY; 	if (cnp->cn_namelen == 2&& 			cnp->ni_nameptr[1] == '.'&& cnp->cn_nameptr[0] == '.') 		cnp->cn_flags |= ISDOTDOT; 	else cnp->cn_flags&= ~ISDOTDOT;
 endif|#
 directive|endif
 comment|/* 	 * Check for degenerate name (e.g. / or "") 	 * which is a way of talking about a directory, 	 * e.g. like "/." or ".". 	 */
@@ -3492,15 +3452,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Handle "..": two special cases. 	 * 1. If at root directory (e.g. after chroot) 	 *    then ignore it so can't get out. 	 * 2. If this vnode is the root of a mounted 	 *    filesystem, then replace it with the 	 *    vnode which was mounted on so we take the 	 *    .. in the other file system. 	 */
-if|#
-directive|if
-literal|0
-comment|/* This shouldn't happen because rename throws out .. */
-comment|/* NEEDSWORK: what to do about this? */
-block|if (cnp->cn_flags& ISDOTDOT) { 		for (;;) { 			if (dp == ndp->ni_rootdir) { 				ndp->ni_dvp = dp; 				ndp->ni_vp = dp; 				VREF(dp); 				goto nextname; 			} 			if ((dp->v_flag& VROOT) == 0 || 			    (cnp->cn_flags& NOCROSSMOUNT)) 				break; 			tdp = dp; 			dp = dp->v_mount->mnt_vnodecovered; 			vput(tdp); 			VREF(dp); 			VOP_LOCK(dp); 		} 	}
-endif|#
-directive|endif
 if|if
 condition|(
 name|cnp
@@ -3607,10 +3558,6 @@ name|bad
 goto|;
 block|}
 comment|/* 		 * We return with ni_vp NULL to indicate that the entry 		 * doesn't currently exist, leaving a pointer to the 		 * (possibly locked) directory inode in ndp->ni_dvp. 		 */
-ifdef|#
-directive|ifdef
-name|JOHNH
-comment|/* 		 * no need because we don't need to do another lookup. 		 * NEEDSWORK: don't do release. 		 * but wait...let's try it a different way. 		 */
 if|if
 condition|(
 name|cnp
@@ -3620,23 +3567,13 @@ operator|&
 name|SAVESTART
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|ndp->ni_startdir = ndp->ni_dvp; 			VREF(ndp->ni_startdir);
-else|#
-directive|else
 comment|/* 			 * startdir == dvp, always 			 */
 name|VREF
 argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3658,13 +3595,10 @@ operator|=
 operator|*
 name|vpp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 comment|/* 	 * Check for symbolic link 	 */
-if|#
-directive|if
-literal|0
-block|if ((dp->v_type == VLNK)&& 	    ((cnp->cn_flags& FOLLOW) || *ndp->ni_next == '/')) { 		cnp->cn_flags |= ISSYMLINK; 		return (0); 	}
-endif|#
-directive|endif
 if|if
 condition|(
 name|dp
@@ -3682,42 +3616,10 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|/* 	 * Check to see if the vnode has been mounted on; 	 * if so find the root of the mounted file system. 	 */
-if|#
-directive|if
-literal|0
-comment|/* NEEDSWORK: mounts should not be crossed in cnlookup */
-comment|/* 	 * Checked for in rename (returns EXDEV). 	 */
-block|mntloop: 	while (dp->v_type == VDIR&& (mp = dp->v_mountedhere)&& 	       (cnp->cn_flags& NOCROSSMOUNT) == 0) { 		if (mp->mnt_flag& MNT_MLOCK) { 			mp->mnt_flag |= MNT_MWAIT; 			sleep((caddr_t)mp, PVFS); 			goto mntloop; 		} 		if (error = VFS_ROOT(dp->v_mountedhere,&tdp)) 			goto bad2; 		vput(dp); 		ndp->ni_vp = dp = tdp; 	}
 endif|#
 directive|endif
-if|if
-condition|(
-name|dp
-operator|->
-name|v_type
-operator|==
-name|VDIR
-operator|&&
-operator|(
-name|dp
-operator|->
-name|v_mountedhere
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"relookup: mount point encountered."
-argument_list|)
-expr_stmt|;
 name|nextname
 label|:
-comment|/* 	 * Not a symbolic link.  If more pathname, 	 * continue at next component, else return. 	 */
-if|#
-directive|if
-literal|0
-block|if (*ndp->ni_next == '/') { 		cnp->cn_nameptr = ndp->ni_next; 		while (*cnp->cn_nameptr == '/') { 			ndp->ni_nameptr++; 			ndp->ni_pathlen--; 		} 		vrele(ndp->ni_dvp); 		goto dirloop; 	}
-endif|#
-directive|endif
 comment|/* 	 * Check for read-only file systems. 	 */
 if|if
 condition|(
@@ -3782,12 +3684,6 @@ operator|&
 name|SAVESTART
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|ndp->ni_startdir = ndp->ni_dvp; 		VREF(ndp->ni_startdir);
-endif|#
-directive|endif
 comment|/* ASSERT(dvp==ndp->ni_startdir) */
 name|VREF
 argument_list|(
@@ -3897,8 +3793,6 @@ name|tvp
 parameter_list|,
 name|tcnp
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: ufs_rename(fndp, tndp, p) */
 name|struct
 name|vnode
 modifier|*
@@ -5327,8 +5221,6 @@ name|cnp
 parameter_list|,
 name|vap
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* was: ufs_mkdir(cnp, vap) */
 name|struct
 name|vnode
 modifier|*
@@ -5897,27 +5789,21 @@ name|vp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: ufs_rmdir(ndp, p) */
 name|struct
 name|vnode
 modifier|*
 name|dvp
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
 name|vp
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|struct
 name|componentname
 modifier|*
 name|cnp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -6096,7 +5982,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * symlink -- make a symbolic link  */
@@ -6116,8 +6002,6 @@ name|vap
 parameter_list|,
 name|target
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: ufs_symlink(ndp, vap, target, p) */
 name|struct
 name|vnode
 modifier|*
@@ -6450,7 +6334,6 @@ name|dvp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.   */
 name|struct
 name|vnode
 modifier|*
@@ -8046,8 +7929,6 @@ name|vpp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN */
-comment|/* OLD: ufs_makeinode(mode, ndp, vpp) */
 name|int
 name|mode
 decl_stmt|;
