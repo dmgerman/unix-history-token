@@ -2653,7 +2653,7 @@ operator|*
 operator|)
 name|catcher
 expr_stmt|;
-comment|/* Fill siginfo structure. */
+comment|/* Fill in POSIX parts */
 name|sf
 operator|.
 name|sf_si

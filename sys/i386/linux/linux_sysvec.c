@@ -1729,7 +1729,7 @@ name|fp
 operator|->
 name|sf_sc
 expr_stmt|;
-comment|/* Fill siginfo structure. */
+comment|/* Fill in POSIX parts */
 name|frame
 operator|.
 name|sf_si
