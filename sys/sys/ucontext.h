@@ -271,6 +271,9 @@ parameter_list|,
 name|mcontext_t
 modifier|*
 name|mcp
+parameter_list|,
+name|int
+name|clear_ret
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -4849,6 +4849,9 @@ parameter_list|,
 name|mcontext_t
 modifier|*
 name|mcp
+parameter_list|,
+name|int
+name|clear_ret
 parameter_list|)
 block|{
 return|return
