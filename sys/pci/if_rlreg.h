@@ -1947,6 +1947,14 @@ name|int
 name|suspended
 decl_stmt|;
 comment|/* 0 = normal  1 = suspended */
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|int
+name|rxcycles
+decl_stmt|;
+endif|#
+directive|endif
 name|u_int32_t
 name|saved_maps
 index|[
