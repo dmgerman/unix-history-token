@@ -2658,6 +2658,12 @@ name|kg_completed
 operator|)
 condition|)
 block|{
+name|ku
+operator|->
+name|ku_flags
+operator||=
+name|KUF_DOUPCALL
+expr_stmt|;
 name|abortsleep
 argument_list|(
 name|td2
