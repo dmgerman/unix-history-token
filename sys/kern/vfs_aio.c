@@ -865,12 +865,6 @@ name|fd_file
 decl_stmt|;
 comment|/* Pointer to file structure */
 name|struct
-name|aiothreadlist
-modifier|*
-name|jobaiothread
-decl_stmt|;
-comment|/* AIO process descriptor */
-name|struct
 name|aio_liojob
 modifier|*
 name|lio
@@ -3442,11 +3436,6 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|userp
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
 name|mycp
 decl_stmt|;
 name|struct
@@ -3477,9 +3466,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|off_t
-name|offset
-decl_stmt|;
 name|int
 name|oublock_st
 decl_stmt|,
@@ -3490,12 +3476,6 @@ name|inblock_st
 decl_stmt|,
 name|inblock_end
 decl_stmt|;
-name|userp
-operator|=
-name|aiocbe
-operator|->
-name|userproc
-expr_stmt|;
 name|td
 operator|=
 name|curthread
@@ -3610,8 +3590,6 @@ name|auio
 operator|.
 name|uio_offset
 operator|=
-name|offset
-operator|=
 name|cb
 operator|->
 name|aio_offset
@@ -3662,12 +3640,7 @@ name|p_ru
 operator|.
 name|ru_oublock
 expr_stmt|;
-comment|/* 	 * Temporarily bump the ref count while reading to avoid the 	 * descriptor being ripped out from under us. 	 */
-name|fhold
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
+comment|/* 	 * _aio_aqueue() acquires a reference to the file that is 	 * released in aio_free_entry(). 	 */
 if|if
 condition|(
 name|cb
@@ -3729,13 +3702,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|fdrop
-argument_list|(
-name|fp
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|inblock_end
 operator|=
 name|mycp
@@ -3824,19 +3790,25 @@ condition|)
 block|{
 name|PROC_LOCK
 argument_list|(
-name|userp
+name|aiocbe
+operator|->
+name|userproc
 argument_list|)
 expr_stmt|;
 name|psignal
 argument_list|(
-name|userp
+name|aiocbe
+operator|->
+name|userproc
 argument_list|,
 name|SIGPIPE
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|userp
+name|aiocbe
+operator|->
+name|userproc
 argument_list|)
 expr_stmt|;
 block|}
@@ -4327,12 +4299,6 @@ name|kaio_active_count
 operator|++
 expr_stmt|;
 comment|/* Do the I/O function. */
-name|aiocbe
-operator|->
-name|jobaiothread
-operator|=
-name|aiop
-expr_stmt|;
 name|aio_process
 argument_list|(
 name|aiocbe
