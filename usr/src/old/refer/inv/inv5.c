@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)inv5.c	4.1 (Berkeley) %G%"
+literal|"@(#)inv5.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,10 @@ condition|)
 block|{
 name|hpt_l
 operator|=
+operator|(
+name|long
+operator|*
+operator|)
 name|calloc
 argument_list|(
 sizeof|sizeof
@@ -178,6 +182,10 @@ else|else
 block|{
 name|hpt_s
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|calloc
 argument_list|(
 sizeof|sizeof

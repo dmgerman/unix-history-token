@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt1.c	4.2 (Berkeley) %G%"
+literal|"@(#)hunt1.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,6 +442,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|argv
 index|[
 literal|2
@@ -833,19 +836,33 @@ literal|0
 condition|)
 name|master
 operator|=
+operator|(
+name|unsigned
+operator|*
+operator|)
 name|calloc
 argument_list|(
 name|lmaster
 argument_list|,
 name|iflong
 condition|?
-literal|4
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
 else|:
-literal|2
+sizeof|sizeof
+argument_list|(
+name|unsigned
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hpt
 operator|=
+operator|(
+name|long
+operator|*
+operator|)
 name|calloc
 argument_list|(
 name|nhash
@@ -901,6 +918,10 @@ argument_list|)
 expr_stmt|;
 name|hfreq
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|calloc
 argument_list|(
 name|nhash

@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	quiz.c	4.1	82/10/24	"
+literal|"	quiz.c	4.2	85/01/09	"
 decl_stmt|;
 end_decl_stmt
 
@@ -1433,6 +1433,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
 for|for
 control|(
 name|i

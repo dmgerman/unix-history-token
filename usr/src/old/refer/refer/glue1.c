@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glue1.c	4.1 (Berkeley) %G%"
+literal|"@(#)glue1.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,6 +484,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|argv
 index|[
 literal|2
@@ -494,6 +497,9 @@ condition|)
 block|{
 name|soutlen
 operator|=
+operator|(
+name|int
+operator|)
 name|argv
 index|[
 literal|2
@@ -526,6 +532,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|argv
 index|[
 literal|2
@@ -536,6 +545,9 @@ condition|)
 block|{
 name|taglen
 operator|=
+operator|(
+name|int
+operator|)
 name|argv
 index|[
 literal|2
@@ -863,6 +875,10 @@ literal|0
 condition|)
 name|hpt
 operator|=
+operator|(
+name|long
+operator|*
+operator|)
 name|zalloc
 argument_list|(
 name|nhash
@@ -924,6 +940,10 @@ literal|0
 condition|)
 name|hfreq
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|zalloc
 argument_list|(
 name|nhash
@@ -1001,6 +1021,10 @@ name|master
 operator|.
 name|b
 operator|=
+operator|(
+name|long
+operator|*
+operator|)
 name|zalloc
 argument_list|(
 name|lmaster
@@ -1016,6 +1040,10 @@ name|master
 operator|.
 name|a
 operator|=
+operator|(
+name|unsigned
+operator|*
+operator|)
 name|zalloc
 argument_list|(
 name|lmaster

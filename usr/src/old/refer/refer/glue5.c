@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glue5.c	4.1 (Berkeley) %G%"
+literal|"@(#)glue5.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,8 +183,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|instr
-operator|=
 name|nsucc
 operator|=
 name|need
@@ -196,6 +194,10 @@ operator|=
 name|numwords
 operator|=
 name|nfound
+operator|=
+literal|0
+expr_stmt|;
+name|instr
 operator|=
 literal|0
 expr_stmt|;
@@ -211,6 +213,11 @@ literal|0
 condition|)
 name|www
 operator|=
+operator|(
+expr|struct
+name|words
+operator|*
+operator|)
 name|zalloc
 argument_list|(
 name|MAXSIZ
@@ -336,6 +343,9 @@ case|:
 comment|/* number of answers needed */
 name|need
 operator|=
+operator|(
+name|int
+operator|)
 name|xargv
 index|[
 literal|1
@@ -360,6 +370,9 @@ index|]
 expr_stmt|;
 name|inct
 operator|=
+operator|(
+name|int
+operator|)
 name|xargv
 index|[
 literal|2

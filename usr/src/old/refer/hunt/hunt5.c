@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt5.c	4.1 (Berkeley) %G%"
+literal|"@(#)hunt5.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,6 @@ modifier|*
 name|b
 decl_stmt|;
 block|}
-modifier|*
 name|master
 union|;
 end_union

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)inv6.c	4.1 (Berkeley) %G%"
+literal|"@(#)inv6.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,11 +132,13 @@ decl_stmt|;
 name|int
 modifier|*
 name|hfreq
-init|=
-name|NULL
 decl_stmt|;
 name|hpt
 operator|=
+operator|(
+name|long
+operator|*
+operator|)
 name|calloc
 argument_list|(
 name|nhash
@@ -159,6 +161,10 @@ argument_list|)
 expr_stmt|;
 name|hfreq
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|calloc
 argument_list|(
 name|nhash

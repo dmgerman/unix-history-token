@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt6.c	4.1 (Berkeley) %G%"
+literal|"@(#)hunt6.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,6 +527,10 @@ name|na
 operator|++
 index|]
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|need
 expr_stmt|;
 name|ar
@@ -551,6 +555,10 @@ name|na
 operator|++
 index|]
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|len
 expr_stmt|;
 for|for
