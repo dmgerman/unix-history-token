@@ -198,7 +198,7 @@ operator|(
 name|FILE
 operator|*
 operator|,
-name|u_long
+name|u_int32_t
 operator|,
 specifier|const
 name|char
@@ -219,7 +219,7 @@ name|__icheckhost
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|,
 name|char
 operator|*
@@ -1480,7 +1480,7 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|addr
 decl_stmt|;
 name|char
@@ -1582,7 +1582,8 @@ name|ruser
 parameter_list|,
 name|luser
 parameter_list|)
-name|u_long
+name|unsigned
+name|long
 name|raddr
 decl_stmt|;
 name|int
@@ -1660,6 +1661,9 @@ name|__ivaliduser
 argument_list|(
 name|hostf
 argument_list|,
+operator|(
+name|u_int32_t
+operator|)
 name|raddr
 argument_list|,
 name|luser
@@ -1946,7 +1950,7 @@ name|FILE
 modifier|*
 name|hostf
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|raddr
 decl_stmt|;
 specifier|const
@@ -2046,7 +2050,7 @@ name|raddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 argument_list|,
 name|AF_INET
@@ -2658,7 +2662,7 @@ name|raddr
 parameter_list|,
 name|lhost
 parameter_list|)
-name|u_long
+name|u_int32_t
 name|raddr
 decl_stmt|;
 specifier|register
@@ -2674,7 +2678,7 @@ modifier|*
 name|hp
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 name|laddr
 decl_stmt|;
 specifier|register
@@ -2693,7 +2697,7 @@ name|lhost
 argument_list|)
 operator|&&
 call|(
-name|long
+name|u_int32_t
 call|)
 argument_list|(
 name|laddr
@@ -2761,7 +2765,7 @@ name|pp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 argument_list|)
 condition|)
