@@ -936,6 +936,14 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(((a)>> 7)& 1)
+comment|/* XXX should be removed */
+define|#
+directive|define
+name|UE_GET_DIR
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& UE_DIR)
 name|uByte
 name|bmAttributes
 decl_stmt|;
