@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printcap.c	5.5 (Berkeley) %G%"
+literal|"@(#)printcap.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,23 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BUFSIZ
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|BUFSIZ
 value|1024
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
