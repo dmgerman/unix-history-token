@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_usrreq.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_usrreq.c	7.7.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -233,6 +233,11 @@ decl_stmt|;
 name|int
 name|ostate
 decl_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
 if|if
 condition|(
 name|req
@@ -264,6 +269,21 @@ name|rights
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+if|if
+condition|(
+name|req
+operator|==
+name|PRU_CONTROL
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|rights
@@ -835,12 +855,17 @@ operator|==
 literal|0
 operator|)
 operator|||
+ifdef|#
+directive|ifdef
+name|SO_OOBINLINE
 name|so
 operator|->
 name|so_options
 operator|&
 name|SO_OOBINLINE
 operator|||
+endif|#
+directive|endif
 name|tp
 operator|->
 name|t_oobflags
@@ -1086,6 +1111,14 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
+end_if
 
 begin_macro
 name|tcp_ctloutput
@@ -1361,6 +1394,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int

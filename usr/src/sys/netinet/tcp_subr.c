@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_subr.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_subr.c	7.13.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1458,6 +1458,11 @@ case|:
 case|case
 name|PRC_REDIRECT_TOSHOST
 case|:
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
 name|in_pcbnotify
 argument_list|(
 operator|&
@@ -1473,6 +1478,8 @@ argument_list|,
 name|in_rtchange
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 if|if
@@ -1510,6 +1517,44 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|<
+literal|43
+end_if
+
+begin_comment
+comment|/* XXX fake routine */
+end_comment
+
+begin_macro
+name|tcp_abort
+argument_list|(
+argument|inp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|inpcb
+modifier|*
+name|inp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * When a source quench is received, close congestion window  * to one segment.  We will gradually open it again as we proceed.  */
