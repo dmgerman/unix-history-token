@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)malloc.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)malloc.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -210,8 +210,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_TEMP
+name|M_CRED
 value|16
+end_define
+
+begin_comment
+comment|/* credentials */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_TEMP
+value|49
 end_define
 
 begin_comment
@@ -237,6 +248,18 @@ name|long
 name|ks_calls
 decl_stmt|;
 comment|/* total packets of this type ever allocated */
+name|long
+name|ks_memuse
+decl_stmt|;
+comment|/* total memory held in bytes */
+name|u_short
+name|ks_limblocks
+decl_stmt|;
+comment|/* number of times blocked for hitting limit */
+name|u_short
+name|ks_mapblocks
+decl_stmt|;
+comment|/* number of times blocked for kernel map */
 name|long
 name|ks_maxused
 decl_stmt|;
