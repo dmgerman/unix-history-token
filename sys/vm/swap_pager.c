@@ -3552,6 +3552,12 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|pbuf_mtx
+argument_list|)
+expr_stmt|;
 name|n
 operator|-=
 name|nsw_wcount_async_max
@@ -3580,6 +3586,12 @@ name|nsw_wcount_async
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pbuf_mtx
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
