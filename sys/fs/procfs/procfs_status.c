@@ -235,7 +235,7 @@ name|p_pid
 else|:
 literal|0
 expr_stmt|;
-comment|/* comm pid ppid pgid sid maj,min ctty,sldr start ut st wmsg 				euid ruid rgid,egid,groups[1 .. NGROUPS] */
+comment|/* comm pid ppid pgid sid tty ctty,sldr start ut st wmsg 				euid ruid rgid,egid,groups[1 .. NGROUPS] */
 name|pc
 operator|=
 name|p
@@ -325,16 +325,9 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%d,%d "
+literal|"%s "
 argument_list|,
-name|major
-argument_list|(
-name|tp
-operator|->
-name|t_dev
-argument_list|)
-argument_list|,
-name|minor
+name|devtoname
 argument_list|(
 name|tp
 operator|->
@@ -347,13 +340,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%d,%d "
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-operator|-
-literal|1
+literal|"- "
 argument_list|)
 expr_stmt|;
 name|sep
