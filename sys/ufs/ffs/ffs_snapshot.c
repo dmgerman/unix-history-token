@@ -3054,8 +3054,6 @@ argument_list|,
 name|VLKTIMEOUT
 argument_list|,
 name|LK_CANRECURSE
-operator||
-name|LK_NOPAUSE
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -10911,8 +10909,6 @@ argument_list|,
 name|VLKTIMEOUT
 argument_list|,
 name|LK_CANRECURSE
-operator||
-name|LK_NOPAUSE
 argument_list|)
 expr_stmt|;
 name|VI_LOCK

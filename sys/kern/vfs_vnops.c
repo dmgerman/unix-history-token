@@ -2206,8 +2206,6 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 operator||
-name|LK_NOPAUSE
-operator||
 name|LK_RETRY
 argument_list|,
 name|td
@@ -2228,8 +2226,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_SHARED
-operator||
-name|LK_NOPAUSE
 operator||
 name|LK_RETRY
 argument_list|,
@@ -3712,8 +3708,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|flags
-operator||
-name|LK_NOPAUSE
 operator||
 name|LK_INTERLOCK
 argument_list|,

@@ -532,8 +532,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_UPGRADE
-operator||
-name|LK_NOPAUSE
 argument_list|,
 name|td
 argument_list|)

@@ -2579,8 +2579,6 @@ name|backing_vnode
 argument_list|,
 name|LK_SHARED
 operator||
-name|LK_NOPAUSE
-operator||
 name|LK_RETRY
 argument_list|,
 name|td
@@ -2833,8 +2831,6 @@ operator|->
 name|uele_backing_vnode
 argument_list|,
 name|LK_SHARED
-operator||
-name|LK_NOPAUSE
 operator||
 name|LK_RETRY
 argument_list|,
@@ -3649,8 +3645,6 @@ name|uele_backing_vnode
 argument_list|,
 name|LK_SHARED
 operator||
-name|LK_NOPAUSE
-operator||
 name|LK_RETRY
 argument_list|,
 name|td
@@ -4450,19 +4444,13 @@ name|vp
 condition|)
 name|vn_lock
 argument_list|(
-name|attribute
-operator|->
-name|uele_backing_vnode
+argument|attribute->uele_backing_vnode
 argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_NOPAUSE
-operator||
-name|LK_RETRY
+argument|LK_EXCLUSIVE LK_RETRY
 argument_list|,
-name|td
+argument|td
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|ioflag
 operator|=
 name|IO_NODELOCKED
@@ -4903,8 +4891,6 @@ operator|->
 name|uele_backing_vnode
 argument_list|,
 name|LK_EXCLUSIVE
-operator||
-name|LK_NOPAUSE
 operator||
 name|LK_RETRY
 argument_list|,

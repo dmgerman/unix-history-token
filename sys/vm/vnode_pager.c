@@ -4770,8 +4770,6 @@ name|LK_CANRECURSE
 operator||
 name|LK_INTERLOCK
 operator||
-name|LK_NOPAUSE
-operator||
 name|LK_RETRY
 operator||
 name|LK_SHARED
