@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.114 1997/12/18 01:10:13 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.115 1997/12/19 18:11:05 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -7314,48 +7314,29 @@ else|else
 block|{
 name|strncpy
 argument_list|(
-name|VarDevice
+name|VarDeviceList
 argument_list|,
 name|argp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|VarDevice
+name|VarDeviceList
 argument_list|)
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|VarDevice
+name|VarDeviceList
 index|[
 sizeof|sizeof
 argument_list|(
-name|VarDevice
+name|VarDeviceList
 argument_list|)
 operator|-
 literal|1
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-name|VarBaseDevice
-operator|=
-name|strrchr
-argument_list|(
-name|VarDevice
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-name|VarBaseDevice
-operator|=
-name|VarBaseDevice
-condition|?
-name|VarBaseDevice
-operator|+
-literal|1
-else|:
-literal|""
 expr_stmt|;
 block|}
 break|break;
@@ -7754,7 +7735,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Set modem device name"
 block|,
-literal|"set device|line device-name"
+literal|"set device|line device-name[,device-name]"
 block|,
 operator|(
 specifier|const
