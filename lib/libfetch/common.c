@@ -699,6 +699,11 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|freeaddrinfo
+argument_list|(
+name|res0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sd
