@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.14 1994/11/11 07:58:08 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.15 1994/11/17 19:44:53 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -452,18 +452,35 @@ argument_list|(
 literal|"/mnt/stand"
 argument_list|)
 expr_stmt|;
-name|CopyFile
+name|TellEm
 argument_list|(
-literal|"/stand/sysinstall"
+literal|"unzipping /stand/sysinstall onto hard disk"
+argument_list|)
+expr_stmt|;
+name|exec
+argument_list|(
+literal|4
 argument_list|,
+literal|"/stand/gzip"
+argument_list|,
+literal|"zcat"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/*     CopyFile("/stand/sysinstall","/mnt/stand/sysinstall"); */
+name|Link
+argument_list|(
 literal|"/mnt/stand/sysinstall"
+argument_list|,
+literal|"/mnt/stand/cpio"
 argument_list|)
 expr_stmt|;
 name|Link
 argument_list|(
 literal|"/mnt/stand/sysinstall"
 argument_list|,
-literal|"/mnt/stand/cpio"
+literal|"/mnt/stand/bad144"
 argument_list|)
 expr_stmt|;
 name|Link

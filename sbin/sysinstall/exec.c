@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: exec.c,v 1.6 1994/11/08 14:04:16 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: exec.c,v 1.7 1994/11/08 18:44:13 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -308,6 +308,40 @@ case|:
 name|close
 argument_list|(
 name|debug_fd
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|open
+argument_list|(
+literal|"/stand/sysinstall"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|open
+argument_list|(
+literal|"/mnt/stand/sysinstall"
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
+argument_list|,
+literal|0755
 argument_list|)
 expr_stmt|;
 default|default:
