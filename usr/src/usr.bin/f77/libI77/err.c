@@ -949,7 +949,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"part of last format: "
+literal|"format: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -972,12 +972,25 @@ operator|-
 operator|(
 name|i
 operator|<
-literal|20
+literal|25
 condition|?
 name|i
 else|:
-literal|20
+literal|25
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|!=
+name|fmtbuf
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"... "
+argument_list|)
 expr_stmt|;
 name|i
 operator|=
@@ -1048,6 +1061,18 @@ name|i
 operator|--
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+name|ep
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" ..."
+argument_list|)
+expr_stmt|;
 name|fputc
 argument_list|(
 literal|'\n'
