@@ -344,7 +344,7 @@ name|bus_dma_tag_t
 parameter_list|,
 name|bus_dmamap_t
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2075,7 +2075,7 @@ parameter_list|,
 name|bus_dmamap_t
 name|map
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 name|op
 parameter_list|)
 block|{
@@ -2084,13 +2084,13 @@ if|if
 condition|(
 operator|(
 name|op
-operator|==
+operator|&
 name|BUS_DMASYNC_PREREAD
 operator|)
 operator|||
 operator|(
 name|op
-operator|==
+operator|&
 name|BUS_DMASYNC_PREWRITE
 operator|)
 condition|)
@@ -2106,13 +2106,13 @@ if|#
 directive|if
 literal|0
 comment|/* Should not be needed. */
-block|if (op == BUS_DMASYNC_POSTREAD) { 		ecache_flush((vm_offset_t)map->buf, 		    (vm_offset_t)map->buf + map->buflen - 1); 	}
+block|if (op& BUS_DMASYNC_POSTREAD) { 		ecache_flush((vm_offset_t)map->buf, 		    (vm_offset_t)map->buf + map->buflen - 1); 	}
 endif|#
 directive|endif
 if|if
 condition|(
 name|op
-operator|==
+operator|&
 name|BUS_DMASYNC_POSTWRITE
 condition|)
 block|{

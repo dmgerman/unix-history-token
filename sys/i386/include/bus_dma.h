@@ -124,24 +124,36 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  *	bus_dmasync_op_t  *  *	Operations performed by bus_dmamap_sync().  */
+comment|/*  * Operations performed by bus_dmamap_sync().  */
 end_comment
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
+begin_define
+define|#
+directive|define
 name|BUS_DMASYNC_PREREAD
-block|,
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUS_DMASYNC_POSTREAD
-block|,
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUS_DMASYNC_PREWRITE
-block|,
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUS_DMASYNC_POSTWRITE
-block|}
-name|bus_dmasync_op_t
-typedef|;
-end_typedef
+value|8
+end_define
 
 begin_comment
 comment|/*  *	bus_dma_tag_t  *  *	A machine-dependent opaque type describing the characteristics  *	of how to perform DMA mappings.  This structure encapsultes  *	information concerning address and alignment restrictions, number  *	of S/G	segments, amount of data per S/G segment, etc.  */
@@ -561,7 +573,7 @@ name|bus_dma_tag_t
 parameter_list|,
 name|bus_dmamap_t
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

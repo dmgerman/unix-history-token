@@ -4832,21 +4832,33 @@ name|uio
 struct_decl|;
 end_struct_decl
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
+begin_define
+define|#
+directive|define
 name|BUS_DMASYNC_PREREAD
-block|,
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUS_DMASYNC_POSTREAD
-block|,
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUS_DMASYNC_PREWRITE
-block|,
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUS_DMASYNC_POSTWRITE
-block|, }
-name|bus_dmasync_op_t
-typedef|;
-end_typedef
+value|8
+end_define
 
 begin_comment
 comment|/*  * A function that returns 1 if the address cannot be accessed by  * a device and 0 if it can be.  */
@@ -5138,7 +5150,7 @@ name|bus_dma_tag_t
 parameter_list|,
 name|bus_dmamap_t
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 parameter_list|)
 function_decl|;
 comment|/* 	 * DMA memory utility functions. 	 */
@@ -5853,7 +5865,7 @@ parameter_list|,
 name|bus_dmamap_t
 name|m
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 name|op
 parameter_list|)
 block|{

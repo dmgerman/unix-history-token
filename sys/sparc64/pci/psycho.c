@@ -518,7 +518,7 @@ name|bus_dma_tag_t
 parameter_list|,
 name|bus_dmamap_t
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7001,7 +7001,7 @@ parameter_list|,
 name|bus_dmamap_t
 name|map
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 name|op
 parameter_list|)
 block|{

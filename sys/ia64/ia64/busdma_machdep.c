@@ -3189,7 +3189,7 @@ parameter_list|,
 name|bus_dmamap_t
 name|map
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 name|op
 parameter_list|)
 block|{
@@ -3216,14 +3216,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Handle data bouncing.  We might also 		 * want to add support for invalidating 		 * the caches on broken hardware 		 */
-switch|switch
+if|if
 condition|(
 name|op
-condition|)
-block|{
-case|case
+operator|&
 name|BUS_DMASYNC_PREWRITE
-case|:
+condition|)
+block|{
 while|while
 condition|(
 name|bpage
@@ -3264,10 +3263,14 @@ name|links
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
+block|}
+if|if
+condition|(
+name|op
+operator|&
 name|BUS_DMASYNC_POSTREAD
-case|:
+condition|)
+block|{
 while|while
 condition|(
 name|bpage
@@ -3308,15 +3311,6 @@ name|links
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-name|BUS_DMASYNC_PREREAD
-case|:
-case|case
-name|BUS_DMASYNC_POSTWRITE
-case|:
-comment|/* No-ops */
-break|break;
 block|}
 block|}
 block|}
