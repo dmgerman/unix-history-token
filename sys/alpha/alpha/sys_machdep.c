@@ -666,7 +666,7 @@ decl_stmt|;
 name|struct
 name|thread
 modifier|*
-name|td
+name|td2
 decl_stmt|;
 name|error
 operator|=
@@ -718,7 +718,7 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE which threads? */
-name|td
+name|td2
 operator|=
 name|FIRST_THREAD_IN_PROC
 argument_list|(
@@ -727,7 +727,7 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-name|td
+name|td2
 operator|->
 name|td_md
 operator|.
@@ -736,7 +736,7 @@ operator|&=
 operator|~
 name|MDP_UAC_MASK
 expr_stmt|;
-name|td
+name|td2
 operator|->
 name|td_md
 operator|.
@@ -788,7 +788,7 @@ decl_stmt|;
 name|struct
 name|thread
 modifier|*
-name|td
+name|td2
 decl_stmt|;
 name|int
 name|error
@@ -827,7 +827,7 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE which threads? */
-name|td
+name|td2
 operator|=
 name|FIRST_THREAD_IN_PROC
 argument_list|(
@@ -838,7 +838,7 @@ argument_list|)
 expr_stmt|;
 name|uac
 operator|=
-name|td
+name|td2
 operator|->
 name|td_md
 operator|.

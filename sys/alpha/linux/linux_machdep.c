@@ -498,7 +498,7 @@ decl_stmt|;
 name|struct
 name|thread
 modifier|*
-name|td
+name|td2
 decl_stmt|;
 name|int
 name|exit_signal
@@ -680,14 +680,14 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-name|td
+name|td2
 operator|=
 name|FIRST_THREAD_IN_PROC
 argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-name|td
+name|td2
 operator|->
 name|td_pcb
 operator|->

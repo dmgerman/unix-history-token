@@ -770,7 +770,7 @@ decl_stmt|;
 name|struct
 name|thread
 modifier|*
-name|td
+name|td2
 decl_stmt|;
 name|struct
 name|iovec
@@ -1167,7 +1167,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|td
+name|td2
 operator|=
 name|FIRST_THREAD_IN_PROC
 argument_list|(
@@ -1185,7 +1185,7 @@ name|FIX_SSTEP
 comment|/* 	 * Single step fixup ala procfs 	 */
 name|FIX_SSTEP
 argument_list|(
-name|td
+name|td2
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
@@ -1375,7 +1375,7 @@ name|error
 operator|=
 name|ptrace_single_step
 argument_list|(
-name|td
+name|td2
 argument_list|)
 expr_stmt|;
 if|if
@@ -1423,7 +1423,7 @@ name|error
 operator|=
 name|ptrace_set_pc
 argument_list|(
-name|td
+name|td2
 argument_list|,
 operator|(
 name|u_long
@@ -1599,7 +1599,7 @@ name|data
 expr_stmt|;
 name|setrunnable
 argument_list|(
-name|td
+name|td2
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
@@ -1850,7 +1850,7 @@ name|error
 operator|=
 name|proc_write_regs
 argument_list|(
-name|td
+name|td2
 argument_list|,
 operator|&
 name|r
@@ -1887,7 +1887,7 @@ name|error
 operator|=
 name|proc_read_regs
 argument_list|(
-name|td
+name|td2
 argument_list|,
 operator|&
 name|r
@@ -1974,7 +1974,7 @@ name|error
 operator|=
 name|proc_write_fpregs
 argument_list|(
-name|td
+name|td2
 argument_list|,
 operator|&
 name|r
@@ -2011,7 +2011,7 @@ name|error
 operator|=
 name|proc_read_fpregs
 argument_list|(
-name|td
+name|td2
 argument_list|,
 operator|&
 name|r
@@ -2098,7 +2098,7 @@ name|error
 operator|=
 name|proc_write_dbregs
 argument_list|(
-name|td
+name|td2
 argument_list|,
 operator|&
 name|r
@@ -2135,7 +2135,7 @@ name|error
 operator|=
 name|proc_read_dbregs
 argument_list|(
-name|td
+name|td2
 argument_list|,
 operator|&
 name|r
