@@ -120,8 +120,6 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|int
-name|keep
-decl_stmt|,
 name|slice
 decl_stmt|;
 end_decl_stmt
@@ -138,7 +136,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-ks] device\n"
+literal|"usage: %s [-s] device\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -1607,12 +1605,6 @@ argument_list|,
 name|tpg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|keep
-condition|)
-block|{
 name|map
 operator|=
 name|map_find
@@ -1626,7 +1618,7 @@ name|map
 operator|->
 name|map_data
 expr_stmt|;
-comment|/* 		 * Turn the MBR into a Protective MBR. 		 */
+comment|/* 	 * Turn the MBR into a Protective MBR. 	 */
 name|bzero
 argument_list|(
 name|mbr
@@ -1809,7 +1801,6 @@ name|map
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_function
@@ -1842,7 +1833,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ks"
+literal|"s"
 argument_list|)
 operator|)
 operator|!=
@@ -1855,14 +1846,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'k'
-case|:
-name|keep
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 case|case
 literal|'s'
 case|:
