@@ -587,6 +587,32 @@ name|RTLD_VERSION
 value|1
 end_define
 
+begin_comment
+comment|/*  * Symbol cache entry used during relocation to avoid multiple lookups  * of the same symbol.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Struct_SymCache
+block|{
+specifier|const
+name|Elf_Sym
+modifier|*
+name|sym
+decl_stmt|;
+comment|/* Symbol table entry */
+specifier|const
+name|Obj_Entry
+modifier|*
+name|obj
+decl_stmt|;
+comment|/* Shared object which defines it */
+block|}
+name|SymCache
+typedef|;
+end_typedef
+
 begin_function_decl
 specifier|extern
 name|void
@@ -718,6 +744,9 @@ modifier|*
 modifier|*
 parameter_list|,
 name|bool
+parameter_list|,
+name|SymCache
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
