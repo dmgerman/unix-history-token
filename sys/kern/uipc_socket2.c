@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_param.h"
 end_include
 
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -713,6 +725,18 @@ operator|->
 name|so_cred
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_socket_from_socket
+argument_list|(
+name|head
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|soreserve
