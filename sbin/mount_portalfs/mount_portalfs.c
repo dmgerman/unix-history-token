@@ -326,8 +326,10 @@ modifier|*
 name|conf
 decl_stmt|;
 name|char
-modifier|*
 name|mountpt
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|int
 name|mntflags
@@ -442,14 +444,21 @@ index|[
 name|optind
 index|]
 expr_stmt|;
-name|mountpt
-operator|=
+comment|/* resolve the mountpoint with realpath(3) */
+operator|(
+name|void
+operator|)
+name|checkpath
+argument_list|(
 name|argv
 index|[
 name|optind
 operator|+
 literal|1
 index|]
+argument_list|,
+name|mountpt
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Construct the listening socket 	 */
 name|un
