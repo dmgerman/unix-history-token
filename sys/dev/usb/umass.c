@@ -8,7 +8,7 @@ comment|/*  * Universal Serial Bus Mass Storage Class Bulk-Only Transport  * htt
 end_comment
 
 begin_comment
-comment|/*  * The driver handles 3 Wire Protocols  * - Command/Bulk/Interrupt (CBI)  * - Command/Bulk/Interrupt with Command Completion Interrupt (CBI with CCI)  * - Mass Storage Bulk-Only (BBB)  *   (BBB refers Bulk/Bulk/Bulk for Command/Data/Status phases)  *  * Over these wire protocols it handles the following command protocols  * - SCSI  * - UFI (floppy command set)  * - 8070i (ATA/ATAPI)  *  * UFI and 8070i are transformed versions of the SCSI command set. The  * sc->transform method is used to convert the commands into the appropriate  * format (if at all necessary). For example, UFI requires all commands to be  * 12 bytes in length amongst other things.  *  * The source code below is marked and can be split into a number of pieces  * (in this order):  *  * - probe/attach/detach  * - generic transfer routines  * - BBB  * - CBI  * - CBI_I (in addition to functions from CBI)  * - CAM (Common Access Method)  * - SCSI  * - UFI  * - 8070i  *  * The protocols are implemented using a state machine, for the transfers as  * well as for the resets. The state machine is contained in umass_*_state.  * The state machine is started through either umass_*_transfer or  * umass_*_reset.  *  * The reason for doing this is a) CAM performs a lot better this way and b) it  * avoids using tsleep from interrupt context (for example after a failed  * transfer).  */
+comment|/*  * The driver handles 3 Wire Protocols  * - Command/Bulk/Interrupt (CBI)  * - Command/Bulk/Interrupt with Command Completion Interrupt (CBI with CCI)  * - Mass Storage Bulk-Only (BBB)  *   (BBB refers Bulk/Bulk/Bulk for Command/Data/Status phases)  *  * Over these wire protocols it handles the following command protocols  * - SCSI  * - UFI (floppy command set)  * - 8070i (ATA/ATAPI)  *  * UFI and 8070i (ATAPI) are transformed versions of the SCSI command set. The  * sc->transform method is used to convert the commands into the appropriate  * format (if at all necessary). For example, UFI requires all commands to be  * 12 bytes in length amongst other things.  *  * The source code below is marked and can be split into a number of pieces  * (in this order):  *  * - probe/attach/detach  * - generic transfer routines  * - BBB  * - CBI  * - CBI_I (in addition to functions from CBI)  * - CAM (Common Access Method)  * - SCSI  * - UFI  * - 8070i (ATAPI)  *  * The protocols are implemented using a state machine, for the transfers as  * well as for the resets. The state machine is contained in umass_*_state.  * The state machine is started through either umass_*_transfer or  * umass_*_reset.  *  * The reason for doing this is a) CAM performs a lot better this way and b) it  * avoids using tsleep from interrupt context (for example after a failed  * transfer).  */
 end_comment
 
 begin_comment
@@ -16,8 +16,18 @@ comment|/*  * The SCSI related part of this driver has been derived from the  * 
 end_comment
 
 begin_comment
-comment|/* XXX Should we split the driver into a number of files?  umass.c,  *     umass_scsi.c, umass_8070.c, umass_ufi.c, umass_bbb.c, umass_cbi.c or  *     something similar?  */
+comment|/* XXX Should we split the driver into a number of files?  umass.c,  *     umass_scsi.c, umass_atapi.c, umass_ufi.c, umass_bbb.c, umass_cbi.c or  *     something similar?  */
 end_comment
+
+begin_comment
+comment|/*  * XXX Currently CBI with CCI is not supported because it bombs the system  *     when the device is detached (low frequency interrupts are detached  *     too late.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CBI_I
+end_undef
 
 begin_include
 include|#
@@ -121,12 +131,6 @@ directive|include
 file|<cam/scsi/scsi_da.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UMASS_DO_CAM_RESCAN
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -138,11 +142,6 @@ include|#
 directive|include
 file|<cam/cam_periph.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -210,7 +209,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UDMASS_8070
+name|UDMASS_ATAPI
 value|0x00080000
 end_define
 
@@ -354,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|DEVNAME_SIM
-value|"umass-"
+value|"umass-sim"
 end_define
 
 begin_define
@@ -405,7 +404,7 @@ comment|/* CAM specific definitions */
 end_comment
 
 begin_comment
-comment|/* The bus id, whatever that is */
+comment|/* We only have one bus */
 end_comment
 
 begin_define
@@ -981,7 +980,7 @@ value|0x0100
 comment|/* command protocol */
 define|#
 directive|define
-name|PROTO_8070
+name|PROTO_ATAPI
 value|0x0200
 define|#
 directive|define
@@ -1272,6 +1271,13 @@ name|TSTATE_STATES
 value|18
 comment|/* # of states above */
 comment|/* SCSI/CAM specific variables */
+name|unsigned
+name|char
+name|cam_scsi_command
+index|[
+name|CAM_MAX_CDBLEN
+index|]
+decl_stmt|;
 name|struct
 name|scsi_sense
 name|cam_scsi_sense
@@ -1358,18 +1364,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* SCSI Interface Module */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|cam_path
-modifier|*
-name|umass_path
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*   and its path */
 end_comment
 
 begin_comment
@@ -1817,11 +1811,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UMASS_DO_CAM_RESCAN
-end_ifdef
+begin_decl_stmt
+specifier|static
+name|void
+name|umass_cam_rescan_callback
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|cam_periph
+operator|*
+name|periph
+operator|,
+expr|union
+name|ccb
+operator|*
+name|ccb
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1838,11 +1847,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1944,6 +1948,17 @@ begin_comment
 comment|/* UFI specific functions */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UFI_COMMAND_LENGTH
+value|12
+end_define
+
+begin_comment
+comment|/* UFI commands are always 12b */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1979,13 +1994,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 8070 specific functions */
+comment|/* ATAPI (8070i) specific functions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_COMMAND_LENGTH
+value|12
+end_define
+
+begin_comment
+comment|/* ATAPI commands are always 12b */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|umass_8070_transform
+name|umass_atapi_transform
 name|__P
 argument_list|(
 operator|(
@@ -2198,7 +2224,7 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_8070
+name|PROTO_ATAPI
 operator||
 name|PROTO_CBI_I
 expr_stmt|;
@@ -2208,7 +2234,7 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_8070
+name|PROTO_ATAPI
 operator||
 name|PROTO_CBI
 expr_stmt|;
@@ -2378,7 +2404,7 @@ name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_8070
+name|PROTO_ATAPI
 expr_stmt|;
 break|break;
 default|default:
@@ -2700,11 +2726,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PROTO_8070
+name|PROTO_ATAPI
 case|:
 name|printf
 argument_list|(
-literal|"8070i"
+literal|"8070i (ATAPI)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3417,13 +3443,13 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_8070
+name|PROTO_ATAPI
 condition|)
 name|sc
 operator|->
 name|transform
 operator|=
-name|umass_8070_transform
+name|umass_atapi_transform
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3458,7 +3484,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_8070
+name|PROTO_ATAPI
 operator|)
 operator|||
 operator|(
@@ -3626,7 +3652,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_8070
+name|PROTO_ATAPI
 operator|)
 operator|||
 operator|(
@@ -7575,7 +7601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * CAM specific functions (used by SCSI, UFI, 8070)  */
+comment|/*  * CAM specific functions (used by SCSI, UFI, 8070 (ATAPI))  */
 end_comment
 
 begin_function
@@ -7590,8 +7616,7 @@ modifier|*
 name|devq
 decl_stmt|;
 comment|/* Per device Queue */
-comment|/* A HBA is attached to the CAM layer. 	 * 	 * The CAM layer will then after a while start probing for 	 * devices on the bus. The number of devices is limitted to one. 	 */
-comment|/* SCSI transparent command set */
+comment|/* A HBA is attached to the CAM layer. 	 * 	 * The CAM layer will then after a while start probing for 	 * devices on the bus. The number of SIMs is limitted to one. 	 */
 name|devq
 operator|=
 name|cam_simq_alloc
@@ -7619,12 +7644,12 @@ name|umass_cam_action
 argument_list|,
 name|umass_cam_poll
 argument_list|,
-name|DEVNAME
+name|DEVNAME_SIM
 argument_list|,
 name|NULL
 comment|/*priv*/
 argument_list|,
-literal|0
+name|UMASS_SCSIID_HOST
 comment|/*unit number*/
 argument_list|,
 literal|1
@@ -7660,36 +7685,10 @@ name|xpt_bus_register
 argument_list|(
 name|umass_sim
 argument_list|,
-literal|0
+name|UMASS_SCSI_BUS
 argument_list|)
 operator|!=
 name|CAM_SUCCESS
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-if|if
-condition|(
-name|xpt_create_path
-argument_list|(
-operator|&
-name|umass_path
-argument_list|,
-name|NULL
-argument_list|,
-name|cam_sim_path
-argument_list|(
-name|umass_sim
-argument_list|)
-argument_list|,
-name|UMASS_SCSIID_HOST
-argument_list|,
-literal|0
-argument_list|)
-operator|!=
-name|CAM_REQ_CMP
 condition|)
 return|return
 operator|(
@@ -7703,34 +7702,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UMASS_DO_CAM_RESCAN
-end_ifdef
-
-begin_comment
-comment|/* this function is only used from umass_cam_rescan, so mention  * prototype down here.  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|umass_cam_rescan_callback
-parameter_list|(
-name|struct
-name|cam_periph
-modifier|*
-name|periph
-parameter_list|,
-name|union
-name|ccb
-modifier|*
-name|ccb
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -7751,22 +7722,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|UMASS_DEBUG
-name|struct
-name|umass_softc
-modifier|*
-name|sc
-init|=
-name|devclass_get_softc
-argument_list|(
-name|umass_devclass
-argument_list|,
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_id
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|ccb
@@ -7783,28 +7738,12 @@ argument_list|(
 name|UDMASS_SCSI
 argument_list|,
 operator|(
-literal|"%s:%d:%d:%d: Rescan failed, 0x%04x\n"
+literal|"scbus%d: Rescan failed, 0x%04x\n"
 operator|,
-name|USBDEVNAME
+name|cam_sim_path
 argument_list|(
-name|sc
-operator|->
-name|sc_dev
+name|umass_sim
 argument_list|)
-operator|,
-name|UMASS_SCSI_BUS
-operator|,
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_id
-operator|,
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_lun
 operator|,
 name|ccb
 operator|->
@@ -7822,28 +7761,12 @@ argument_list|(
 name|UDMASS_SCSI
 argument_list|,
 operator|(
-literal|"%s:%d:%d:%d: Rescan succeeded, freeing resources.\n"
+literal|"scbus%d: Rescan succeeded\n"
 operator|,
-name|USBDEVNAME
+name|cam_sim_path
 argument_list|(
-name|sc
-operator|->
-name|sc_dev
+name|umass_sim
 argument_list|)
-operator|,
-name|UMASS_SCSI_BUS
-operator|,
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_id
-operator|,
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_lun
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7903,6 +7826,11 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 decl_stmt|;
+name|struct
+name|cam_periph
+modifier|*
+name|periph
+decl_stmt|;
 name|memset
 argument_list|(
 name|ccb
@@ -7921,7 +7849,12 @@ argument_list|(
 name|UDMASS_SCSI
 argument_list|,
 operator|(
-literal|"%s:%d:%d:%d: scanning bus for new device %d\n"
+literal|"scbus%d: scanning for %s:%d:%d:%d\n"
+operator|,
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -7935,24 +7868,18 @@ argument_list|(
 name|umass_sim
 argument_list|)
 operator|,
-name|device_get_unit
+name|USBDEVUNIT
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
 argument_list|)
 operator|,
-literal|0
-operator|,
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+name|CAM_LUN_WILDCARD
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Lookup the peripheral for the SIM */
 if|if
 condition|(
 name|xpt_create_path
@@ -7960,19 +7887,113 @@ argument_list|(
 operator|&
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|cam_sim_path
 argument_list|(
 name|umass_sim
 argument_list|)
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
+name|UMASS_SCSIID_HOST
+argument_list|,
+literal|0
 argument_list|)
+operator|!=
+name|CAM_REQ_CMP
+condition|)
+return|return;
+name|periph
+operator|=
+name|cam_periph_find
+argument_list|(
+name|path
+argument_list|,
+name|cam_sim_name
+argument_list|(
+name|umass_sim
+argument_list|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UMASS_DO_CAM_RESCAN
+if|if
+condition|(
+name|periph
+operator|==
+name|NULL
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|UDMASS_SCSI
+argument_list|,
+operator|(
+literal|"scbus%d: abusing xpt_periph\n"
+operator|,
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|periph
+operator|=
+name|xpt_periph
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|periph
+operator|==
+name|NULL
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|UDMASS_SCSI
+argument_list|,
+operator|(
+literal|"scbus%d: no periph, rescan failed\n"
+operator|,
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|xpt_free_path
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|xpt_free_path
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+comment|/* Lookup the path again, but now include the periph in the path */
+if|if
+condition|(
+name|xpt_create_path
+argument_list|(
+operator|&
+name|path
+argument_list|,
+name|periph
+argument_list|,
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
+argument_list|,
+name|UMASS_SCSIID_HOST
 argument_list|,
 literal|0
 argument_list|)
@@ -8026,11 +8047,6 @@ comment|/* The scan is in progress now. */
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -8052,20 +8068,18 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|)
-operator|>
+operator|>=
 name|UMASS_SCSIID_MAX
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Increase UMASS_SCSIID_MAX (currently %d) in %s "
-literal|"and try again.\n"
+literal|"scbus%d: Increase UMASS_SCSIID_MAX (currently %d) in %s"
+literal|" and try again.\n"
 argument_list|,
-name|USBDEVNAME
+name|cam_sim_path
 argument_list|(
-name|sc
-operator|->
-name|sc_dev
+name|umass_sim
 argument_list|)
 argument_list|,
 name|UMASS_SCSIID_MAX
@@ -8079,9 +8093,53 @@ literal|1
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|UMASS_DO_CAM_RESCAN
+ifndef|#
+directive|ifndef
+name|UMASS_DEBUG
+if|if
+condition|(
+name|bootverbose
+condition|)
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"%s:%d:%d:%d: Attached to scbus%d as device %d\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
+argument_list|,
+name|USBDEVUNIT
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|CAM_LUN_WILDCARD
+argument_list|,
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
+argument_list|,
+name|USBDEVUNIT
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -8095,8 +8153,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -8126,22 +8182,6 @@ name|EBUSY
 operator|)
 return|;
 comment|/* XXX CAM can't handle disappearing SIMs yet */
-if|if
-condition|(
-name|umass_path
-condition|)
-block|{
-comment|/* XXX do we need to send an asynchroneous event for the SIM? 		xpt_async(AC_LOST_DEVICE, umass_path, NULL); 		 */
-name|xpt_free_path
-argument_list|(
-name|umass_path
-argument_list|)
-expr_stmt|;
-name|umass_path
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|umass_sim
@@ -8206,7 +8246,7 @@ argument_list|(
 name|UDMASS_SCSI
 argument_list|,
 operator|(
-literal|"%s: losing CAM device entry\n"
+literal|"%s:%d:%d:%d: losing CAM device entry\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -8214,6 +8254,20 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|)
+operator|,
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
+operator|,
+name|USBDEVUNIT
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+operator|,
+name|CAM_LUN_WILDCARD
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8231,7 +8285,7 @@ argument_list|(
 name|umass_sim
 argument_list|)
 argument_list|,
-name|device_get_unit
+name|USBDEVUNIT
 argument_list|(
 name|sc
 operator|->
@@ -8335,7 +8389,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -8412,7 +8469,10 @@ literal|"Invalid target\n"
 argument_list|,
 name|DEVNAME_SIM
 argument_list|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 argument_list|,
 name|ccb
 operator|->
@@ -8481,7 +8541,10 @@ literal|"Invalid target\n"
 operator|,
 name|DEVNAME_SIM
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -8558,6 +8621,14 @@ decl_stmt|;
 name|int
 name|cmdlen
 decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|rcmd
+decl_stmt|;
+name|int
+name|rcmdlen
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|UDMASS_SCSI
@@ -8574,7 +8645,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -8653,7 +8727,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -8740,27 +8817,91 @@ name|CAM_SIM_QUEUED
 expr_stmt|;
 if|if
 condition|(
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_CDB_POINTER
+condition|)
+block|{
+name|cmd
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|csio
+operator|->
+name|cdb_io
+operator|.
+name|cdb_ptr
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cmd
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|&
+name|csio
+operator|->
+name|cdb_io
+operator|.
+name|cdb_bytes
+expr_stmt|;
+block|}
+name|cmdlen
+operator|=
+name|csio
+operator|->
+name|cdb_len
+expr_stmt|;
+name|rcmd
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|&
+name|sc
+operator|->
+name|cam_scsi_command
+expr_stmt|;
+name|rcmdlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|cam_scsi_command
+argument_list|)
+expr_stmt|;
+comment|/* sc->transform will convert the command to the command 		 * (format) needed by the specific command set and return 		 * the converted command in a buffer pointed to be rcmd. 		 * We pass in a buffer, but if the command does not 		 * have to be transformed it returns a ptr to the original 		 * buffer (see umass_scsi_transform). 		 */
+if|if
+condition|(
 name|sc
 operator|->
 name|transform
 argument_list|(
 name|sc
 argument_list|,
-name|csio
-operator|->
-name|cdb_io
-operator|.
-name|cdb_bytes
-argument_list|,
-name|csio
-operator|->
-name|cdb_len
-argument_list|,
-operator|&
 name|cmd
 argument_list|,
-operator|&
 name|cmdlen
+argument_list|,
+operator|&
+name|rcmd
+argument_list|,
+operator|&
+name|rcmdlen
 argument_list|)
 condition|)
 block|{
@@ -8776,9 +8917,9 @@ name|ccb_h
 operator|.
 name|target_lun
 argument_list|,
-name|cmd
+name|rcmd
 argument_list|,
-name|cmdlen
+name|rcmdlen
 argument_list|,
 name|csio
 operator|->
@@ -8854,7 +8995,10 @@ name|sc_dev
 argument_list|)
 operator|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -9017,7 +9161,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -9084,7 +9231,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -9146,7 +9296,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -9206,7 +9359,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -9363,7 +9519,10 @@ name|sc_dev
 argument_list|)
 operator|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -9418,7 +9577,10 @@ name|sc_dev
 argument_list|)
 operator|)
 operator|,
-name|UMASS_SCSI_BUS
+name|cam_sim_path
+argument_list|(
+name|umass_sim
+argument_list|)
 operator|,
 name|ccb
 operator|->
@@ -9610,10 +9772,10 @@ block|{
 name|unsigned
 name|char
 modifier|*
-name|cmd
+name|rcmd
 decl_stmt|;
 name|int
-name|cmdlen
+name|rcmdlen
 decl_stmt|;
 comment|/* fetch sense data */
 name|DPRINTF
@@ -9638,6 +9800,7 @@ name|length
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* the rest of the command was filled in at attach */
 name|sc
 operator|->
 name|cam_scsi_sense
@@ -9648,6 +9811,18 @@ name|csio
 operator|->
 name|sense_len
 expr_stmt|;
+name|rcmd
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|&
+name|sc
+operator|->
+name|cam_scsi_command
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -9657,6 +9832,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -9673,10 +9849,10 @@ name|cam_scsi_sense
 argument_list|)
 argument_list|,
 operator|&
-name|cmd
+name|rcmd
 argument_list|,
 operator|&
-name|cmdlen
+name|rcmdlen
 argument_list|)
 condition|)
 block|{
@@ -9692,9 +9868,9 @@ name|ccb_h
 operator|.
 name|target_lun
 argument_list|,
-name|cmd
+name|rcmd
 argument_list|,
-name|cmdlen
+name|rcmdlen
 argument_list|,
 operator|&
 name|csio
@@ -9719,39 +9895,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|UMASS_DEBUG
 name|panic
 argument_list|(
 literal|"transform(REQUEST_SENSE) failed\n"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|csio
-operator|->
-name|resid
-operator|=
-name|sc
-operator|->
-name|transfer_datalen
-expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_CMP_ERR
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 break|break;
 block|}
@@ -10125,7 +10273,7 @@ name|rcmd
 operator|=
 name|cmd
 expr_stmt|;
-comment|/* trivial copy */
+comment|/* We don't need to copy it */
 operator|*
 name|rcmdlen
 operator|=
@@ -10171,31 +10319,48 @@ modifier|*
 name|rcmdlen
 parameter_list|)
 block|{
-operator|*
-name|rcmd
-operator|=
-name|cmd
-expr_stmt|;
 comment|/* A UFI command is always 12 bytes in length */
-comment|/* XXX cmd[(cmdlen+1)..12] contains garbage */
+name|KASSERT
+argument_list|(
+operator|*
+name|rcmdlen
+operator|<
+name|UFI_COMMAND_LENGTH
+argument_list|,
+operator|(
+literal|"rcmdlen = %d< %d, buffer too small"
+operator|,
+name|rcmdlen
+operator|,
+name|UFI_COMMAND_LENGTH
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|rcmdlen
 operator|=
-literal|12
+name|UFI_COMMAND_LENGTH
 expr_stmt|;
-switch|switch
+name|memset
+argument_list|(
+operator|*
+name|rcmd
+argument_list|,
+literal|0
+argument_list|,
+name|UFI_COMMAND_LENGTH
+argument_list|)
+expr_stmt|;
+comment|/* Handle any quirks */
+if|if
 condition|(
 name|cmd
 index|[
 literal|0
 index|]
-condition|)
-block|{
-case|case
+operator|==
 name|TEST_UNIT_READY
-case|:
-if|if
-condition|(
+operator|&&
 name|sc
 operator|->
 name|quirks
@@ -10203,6 +10368,7 @@ operator|&
 name|NO_TEST_UNIT_READY
 condition|)
 block|{
+comment|/* Some devices do not support this command. 		 * Start Stop Unit should give the same results 		 */
 name|DPRINTF
 argument_list|(
 name|UDMASS_UFI
@@ -10234,10 +10400,28 @@ index|]
 operator|=
 name|SSS_START
 expr_stmt|;
-block|}
 return|return
 literal|1
 return|;
+block|}
+switch|switch
+condition|(
+name|cmd
+index|[
+literal|0
+index|]
+condition|)
+block|{
+comment|/* Commands of which the format has been verified. They should work. */
+case|case
+name|TEST_UNIT_READY
+case|:
+case|case
+name|REZERO_UNIT
+case|:
+case|case
+name|REQUEST_SENSE
+case|:
 case|case
 name|INQUIRY
 case|:
@@ -10245,65 +10429,115 @@ case|case
 name|START_STOP_UNIT
 case|:
 case|case
-name|MODE_SENSE
+name|SEND_DIAGNOSTIC
 case|:
 case|case
 name|PREVENT_ALLOW
 case|:
 case|case
-name|READ_10
-case|:
-case|case
-name|READ_12
-case|:
-case|case
 name|READ_CAPACITY
 case|:
 case|case
-name|REQUEST_SENSE
+name|READ_10
 case|:
 case|case
-name|REZERO_UNIT
+name|WRITE_10
 case|:
 case|case
 name|POSITION_TO_ELEMENT
 case|:
 comment|/* SEEK_10 */
 case|case
-name|SEND_DIAGNOSTIC
+name|MODE_SELECT_10
 case|:
 case|case
-name|WRITE_10
+name|MODE_SENSE_10
 case|:
-case|case
-name|WRITE_12
-case|:
-comment|/* FORMAT_UNIT */
-comment|/* MODE_SELECT */
-comment|/* READ_FORMAT_CAPACITY */
-comment|/* VERIFY */
-comment|/* WRITE_AND_VERIFY */
+comment|/* Copy the command into the (zeroed out) destination buffer */
+name|memcpy
+argument_list|(
+operator|*
+name|rcmd
+argument_list|,
+name|cmd
+argument_list|,
+name|cmdlen
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
 comment|/* success */
+comment|/* Other UFI commands: FORMAT_UNIT, MODE_SELECT, READ_FORMAT_CAPACITY, 	 * VERIFY, WRITE_AND_VERIFY. 	 * These should be checked whether they somehow can be made to fit. 	 */
+comment|/* These commands are known _not_ to work. They should be converted 	 * The 6 byte commands can be switched off with a CAM quirk. See 	 * the entry for the Y-E data drive. 	 */
+case|case
+name|READ_6
+case|:
+case|case
+name|WRITE_6
+case|:
+case|case
+name|MODE_SENSE_6
+case|:
+case|case
+name|MODE_SELECT_6
+case|:
+case|case
+name|READ_12
+case|:
+case|case
+name|WRITE_12
+case|:
 default|default:
+name|printf
+argument_list|(
+literal|"%s: Unsupported UFI command 0x%02x"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|cmd
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmdlen
+operator|==
+literal|6
+condition|)
+name|printf
+argument_list|(
+literal|", 6 byte command should have been converted"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* success */
+comment|/* failure */
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * 8070 specific functions  */
+comment|/*  * 8070 (ATAPI) specific functions  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|umass_8070_transform
+name|umass_atapi_transform
 parameter_list|(
 name|struct
 name|umass_softc
@@ -10329,10 +10563,160 @@ modifier|*
 name|rcmdlen
 parameter_list|)
 block|{
+comment|/* A ATAPI command is always 12 bytes in length */
+name|KASSERT
+argument_list|(
+operator|*
+name|rcmdlen
+operator|<
+name|ATAPI_COMMAND_LENGTH
+argument_list|,
+operator|(
+literal|"rcmdlen = %d< %d, buffer too small"
+operator|,
+name|rcmdlen
+operator|,
+name|ATAPI_COMMAND_LENGTH
+operator|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|rcmdlen
+operator|=
+name|ATAPI_COMMAND_LENGTH
+expr_stmt|;
+name|memset
+argument_list|(
+operator|*
+name|rcmd
+argument_list|,
+literal|0
+argument_list|,
+name|ATAPI_COMMAND_LENGTH
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|cmd
+index|[
+literal|0
+index|]
+condition|)
+block|{
+comment|/* Commands of which the format has been verified. They should work. */
+case|case
+name|TEST_UNIT_READY
+case|:
+case|case
+name|REZERO_UNIT
+case|:
+case|case
+name|REQUEST_SENSE
+case|:
+case|case
+name|INQUIRY
+case|:
+case|case
+name|START_STOP_UNIT
+case|:
+case|case
+name|SEND_DIAGNOSTIC
+case|:
+case|case
+name|PREVENT_ALLOW
+case|:
+case|case
+name|READ_CAPACITY
+case|:
+case|case
+name|READ_10
+case|:
+case|case
+name|WRITE_10
+case|:
+case|case
+name|POSITION_TO_ELEMENT
+case|:
+comment|/* SEEK_10 */
+case|case
+name|MODE_SELECT_10
+case|:
+case|case
+name|MODE_SENSE_10
+case|:
+comment|/* Copy the command into the (zeroed out) destination buffer */
+name|memcpy
+argument_list|(
+operator|*
+name|rcmd
+argument_list|,
+name|cmd
+argument_list|,
+name|cmdlen
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+comment|/* success */
+comment|/* These commands are known _not_ to work. They should be converted 	 * The 6 byte commands can be switched off with a CAM quirk. See 	 * the entry for the Y-E data drive. 	 */
+case|case
+name|READ_6
+case|:
+case|case
+name|WRITE_6
+case|:
+case|case
+name|MODE_SENSE_6
+case|:
+case|case
+name|MODE_SELECT_6
+case|:
+case|case
+name|READ_12
+case|:
+case|case
+name|WRITE_12
+case|:
+default|default:
+name|printf
+argument_list|(
+literal|"%s: Unsupported ATAPI command 0x%02x"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|cmd
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmdlen
+operator|==
+literal|6
+condition|)
+name|printf
+argument_list|(
+literal|", 6 byte command should have been converted"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
 comment|/* failure */
+block|}
 block|}
 end_function
 
