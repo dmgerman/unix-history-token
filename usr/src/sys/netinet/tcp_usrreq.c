@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.62	82/09/26	*/
+comment|/*	tcp_usrreq.c	1.63	82/10/05	*/
 end_comment
 
 begin_include
@@ -794,6 +794,12 @@ name|EWOULDBLOCK
 expr_stmt|;
 break|break;
 block|}
+name|m
+operator|->
+name|m_len
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|mtod
 argument_list|(
