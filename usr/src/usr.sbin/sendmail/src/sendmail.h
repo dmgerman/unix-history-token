@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.60 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.61 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.60		%G%"
+literal|"@(#)sendmail.h	6.61		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3908,6 +3908,39 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|SendMIMEErrors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* send error messages in MIME format */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|MatchGecos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* look for user names in gecos field */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+name|SpaceSub
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* substitution for<lwsp> */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|int
 name|PrivacyFlags
 decl_stmt|;
@@ -3966,17 +3999,6 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|char
-name|SpaceSub
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* substitution for<lwsp> */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
 name|long
 name|WkClassFact
 decl_stmt|;
@@ -4006,29 +4028,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* priority offset each time this job is run */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|PostMasterCopy
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* address to get errs cc's */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|CheckpointInterval
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* queue file checkpoint interval */
 end_comment
 
 begin_decl_stmt
@@ -4079,13 +4078,71 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|bool
-name|MatchGecos
+name|char
+modifier|*
+name|ForwardPath
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* look for user names in gecos field */
+comment|/* path to search for .forward files */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|MinBlocksFree
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* min # of blocks free on queue fs */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|FallBackMX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fall back MX host */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|MaxMessageSize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* advertised max size we will accept */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|PostMasterCopy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address to get errs cc's */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|CheckpointInterval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* queue file checkpoint interval */
 end_comment
 
 begin_decl_stmt
@@ -4125,29 +4182,6 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|ForwardPath
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* path to search for .forward files */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|long
-name|MinBlocksFree
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* min # of blocks free on queue fs */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
 name|QueueLimitRecipient
 decl_stmt|;
 end_decl_stmt
@@ -4178,29 +4212,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* limit queue runs to this id */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|FallBackMX
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* fall back MX host */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|long
-name|MaxMessageSize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* advertised max size we will accept */
 end_comment
 
 begin_comment
