@@ -618,7 +618,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Error returned from PCIOCGETCONF ioctl"
+literal|"error returned from PCIOCGETCONF ioctl"
 argument_list|)
 expr_stmt|;
 name|exitstatus
