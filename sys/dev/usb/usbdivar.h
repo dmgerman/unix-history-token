@@ -535,6 +535,11 @@ modifier|*
 name|subdevs
 decl_stmt|;
 comment|/* sub-devices, 0 terminated */
+name|uint8_t
+modifier|*
+name|ifacenums
+decl_stmt|;
+comment|/* sub-device interfacenumbers */
 block|}
 struct|;
 end_struct
