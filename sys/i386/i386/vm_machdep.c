@@ -1011,6 +1011,51 @@ if|if
 condition|(
 name|pcb
 operator|->
+name|pcb_flags
+operator|&
+name|PCB_DBREGS
+condition|)
+block|{
+comment|/*                  * disable all hardware breakpoints                  */
+name|reset_dbregs
+argument_list|()
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+name|PCB_DBREGS
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|cpu_thread_dtor
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|struct
+name|pcb
+modifier|*
+name|pcb
+decl_stmt|;
+name|pcb
+operator|=
+name|td
+operator|->
+name|td_pcb
+expr_stmt|;
+if|if
+condition|(
+name|pcb
+operator|->
 name|pcb_ext
 operator|!=
 literal|0
@@ -1018,7 +1063,7 @@ condition|)
 block|{
 comment|/* XXXKSE  XXXSMP  not SMP SAFE.. what locks do we have? */
 comment|/* if (pcb->pcb_ext->ext_refcount-- == 1) ?? */
-comment|/*  		 * XXX do we need to move the TSS off the allocated pages  		 * before freeing them?  (not done here) 		 */
+comment|/* 		 * XXX do we need to move the TSS off the allocated pages 		 * before freeing them?  (not done here) 		 */
 name|kmem_free
 argument_list|(
 name|kernel_map
@@ -1043,27 +1088,6 @@ operator|->
 name|pcb_ext
 operator|=
 literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|pcb
-operator|->
-name|pcb_flags
-operator|&
-name|PCB_DBREGS
-condition|)
-block|{
-comment|/*                  * disable all hardware breakpoints                  */
-name|reset_dbregs
-argument_list|()
-expr_stmt|;
-name|pcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
-name|PCB_DBREGS
 expr_stmt|;
 block|}
 block|}

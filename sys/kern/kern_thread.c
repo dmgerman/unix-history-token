@@ -507,6 +507,14 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 operator|(
@@ -560,6 +568,11 @@ comment|/* NOTREACHED */
 block|}
 endif|#
 directive|endif
+name|cpu_thread_dtor
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -4319,6 +4319,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cpu_thread_dtor
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cpu_thread_exit
 parameter_list|(
 name|struct

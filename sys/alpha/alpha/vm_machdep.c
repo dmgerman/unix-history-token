@@ -741,6 +741,18 @@ end_function
 
 begin_function
 name|void
+name|cpu_thread_dtor
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
 name|cpu_thread_setup
 parameter_list|(
 name|struct
