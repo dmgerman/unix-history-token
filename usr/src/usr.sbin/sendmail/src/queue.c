@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.71
+literal|3.72
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.71
+literal|3.72
 operator|%
 name|G
 operator|%
@@ -2065,16 +2065,6 @@ operator|->
 name|e_header
 operator|=
 name|NULL
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|chompheader
-argument_list|(
-literal|"from: $q"
-argument_list|,
-name|TRUE
-argument_list|)
 expr_stmt|;
 comment|/* create the link to the control file during processing */
 if|if

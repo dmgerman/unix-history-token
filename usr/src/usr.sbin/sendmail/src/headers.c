@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -417,6 +417,9 @@ if|if
 condition|(
 operator|!
 name|def
+operator|&&
+operator|!
+name|QueueRun
 operator|&&
 name|strcmp
 argument_list|(
