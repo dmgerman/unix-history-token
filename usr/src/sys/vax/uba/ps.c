@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ps.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ps.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -197,14 +197,14 @@ begin_define
 define|#
 directive|define
 name|MAXAUTOREFRESH
-value|(4)
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXAUTOMAP
-value|(4)
+value|4
 end_define
 
 begin_define
@@ -225,22 +225,15 @@ begin_define
 define|#
 directive|define
 name|PSWAIT
-parameter_list|()
-value|{register short i, j; i=20000; while((i-- != 0)\&& (((j=psaddr->ps_iostat)&DIOREADY)==0));}
+parameter_list|(
+name|psaddr
+parameter_list|)
+value|{ \ 	register short i = 20000, j; \ 	while (i-- != 0&& ((j = psaddr->ps_iostat)& DIOREADY) == 0) \ 		;\ }
 end_define
 
 begin_struct
 struct|struct
-name|ps
-block|{
-name|char
-name|ps_open
-decl_stmt|;
-name|short
-name|int
-name|ps_uid
-decl_stmt|;
-struct|struct
+name|psrefresh
 block|{
 enum|enum
 block|{
@@ -264,20 +257,16 @@ name|STOPPED_RF
 block|}
 name|mode
 enum|;
-name|unsigned
-name|short
-name|int
+name|u_short
 name|sraddrs
 index|[
 name|MAXAUTOREFRESH
 index|]
 decl_stmt|;
 name|short
-name|int
 name|nsraddrs
 decl_stmt|;
 name|short
-name|int
 name|srcntr
 decl_stmt|;
 name|char
@@ -293,9 +282,12 @@ name|int
 name|timecnt
 decl_stmt|;
 block|}
-name|ps_refresh
 struct|;
+end_struct
+
+begin_struct
 struct|struct
+name|psdbuffer
 block|{
 enum|enum
 block|{
@@ -305,27 +297,25 @@ name|OFF_DB
 block|}
 name|state
 enum|;
-name|unsigned
-name|short
-name|int
+name|u_short
 name|dbaddrs
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|unsigned
-name|short
-name|int
+name|u_short
 name|dbsize
 decl_stmt|;
 name|short
-name|int
 name|rbuffer
 decl_stmt|;
 block|}
-name|ps_dbuffer
 struct|;
+end_struct
+
+begin_struct
 struct|struct
+name|psmap
 block|{
 enum|enum
 block|{
@@ -347,24 +337,19 @@ name|STOPPED_MAP
 block|}
 name|mode
 enum|;
-name|unsigned
-name|short
-name|int
+name|u_short
 name|maddrs
 index|[
 name|MAXAUTOMAP
 index|]
 decl_stmt|;
 name|short
-name|int
 name|nmaddrs
 decl_stmt|;
 name|short
-name|int
 name|mcntr
 decl_stmt|;
 name|short
-name|int
 name|outputstart
 decl_stmt|;
 name|char
@@ -377,53 +362,78 @@ name|int
 name|icnt
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * PS2 software state.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ps
+block|{
+name|char
+name|ps_open
+decl_stmt|;
+comment|/* device is open */
+name|uid_t
+name|ps_uid
+decl_stmt|;
+comment|/* uid of device owner */
+name|struct
+name|psrefresh
+name|ps_refresh
+decl_stmt|;
+comment|/* refresh state */
+name|struct
+name|psdbuffer
+name|ps_dbuffer
+decl_stmt|;
+comment|/* double buffering state */
+name|struct
+name|psmap
 name|ps_map
-struct|;
-struct|struct
-block|{
-name|short
-name|int
-name|ticked
 decl_stmt|;
-name|short
+comment|/* segment map state */
 name|int
-name|missed
+name|ps_clockticks
 decl_stmt|;
+comment|/* clock ints between refresh */
 name|int
-name|icnt
+name|ps_clockmiss
 decl_stmt|;
-block|}
-name|ps_clock
-struct|;
-struct|struct
-block|{
+comment|/* clock ints w/o refresh */
 name|int
-name|icnt
+name|ps_clockcnt
 decl_stmt|;
-block|}
-name|ps_hit
-struct|;
+comment|/* count of clock interrupts */
+name|int
+name|ps_hitcnt
+decl_stmt|;
+comment|/* count of hit interrupts */
 name|int
 name|ps_strayintr
 decl_stmt|;
-name|int
-name|last_request
-decl_stmt|;
-name|int
-name|strayrequest
-decl_stmt|;
+comment|/* count of stray interrupts */
 name|int
 name|ps_icnt
 decl_stmt|;
+comment|/* count of system interrupts */
+comment|/* BEGIN GROT */
 name|int
-name|last_request2
+name|ps_lastrequest
 decl_stmt|;
 name|int
-name|last_funnyrequest
+name|ps_lastrequest2
 decl_stmt|;
 name|int
-name|funny_cnt
+name|ps_lastfunnyrequest
 decl_stmt|;
+name|int
+name|ps_funnycnt
+decl_stmt|;
+comment|/* END GROT */
 block|}
 name|ps
 index|[
@@ -540,7 +550,9 @@ operator|=
 name|RTCIE
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -561,17 +573,17 @@ operator|=
 name|RTCSR
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
 name|ps_data
 operator|=
-operator|(
 name|SYNC
 operator||
 name|RUN
-operator|)
 expr_stmt|;
 name|DELAY
 argument_list|(
@@ -585,7 +597,9 @@ operator|=
 name|RTCREQ
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -813,17 +827,13 @@ literal|0
 expr_stmt|;
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|ticked
+name|ps_clockticks
 operator|=
 literal|0
 expr_stmt|;
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|missed
+name|ps_clockmiss
 operator|=
 literal|0
 expr_stmt|;
@@ -841,17 +851,13 @@ name|icnt
 operator|=
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|icnt
+name|ps_clockcnt
 operator|=
 literal|0
 expr_stmt|;
 name|psp
 operator|->
-name|ps_hit
-operator|.
-name|icnt
+name|ps_hitcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -932,7 +938,9 @@ literal|0
 expr_stmt|;
 comment|/* clear IENABLE */
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -942,7 +950,9 @@ name|RFSR
 expr_stmt|;
 comment|/* set in auto refresh mode */
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -1668,6 +1678,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1699,6 +1712,9 @@ argument_list|,
 name|PSPRI
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
@@ -1773,6 +1789,9 @@ name|stop
 operator|=
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1804,6 +1823,9 @@ argument_list|,
 name|PSPRI
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
@@ -1828,16 +1850,24 @@ begin_define
 define|#
 directive|define
 name|SAVEPSADDR
-parameter_list|()
-value|{register short i,xx1;xx1=spl6();i=psaddr->ps_addr;\ 		while(((psaddr->ps_iostat)&DIOREADY)==0);\ 		savepsaddr=psaddr->ps_data;splx(xx1);}
+parameter_list|(
+name|psaddr
+parameter_list|,
+name|savepsaddr
+parameter_list|)
+value|{ \ 	register short i, xx1; \ 	xx1 = spl6(); \ 	i = psaddr->ps_addr; \ 	while ((psaddr->ps_iostat& DIOREADY) == 0) \ 		; \ 	savepsaddr = psaddr->ps_data; \ 	splx(xx1); \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|RESTORPSADDR
-parameter_list|()
-value|{register short xx2;xx2=spl6();\ 		while(((psaddr->ps_iostat)&DIOREADY)==0);\ 		psaddr->ps_addr=savepsaddr;splx(xx2);}
+parameter_list|(
+name|psaddr
+parameter_list|,
+name|savepsaddr
+parameter_list|)
+value|{ \ 	register short xx2; \ 	xx2 = spl6(); \ 	while ((psaddr->ps_iostat& DIOREADY) == 0) \ 		;\ 	psaddr->ps_addr = savepsaddr; \ 	splx(xx2); \ }
 end_define
 
 begin_macro
@@ -1904,13 +1934,15 @@ condition|)
 return|return;
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|icnt
+name|ps_clockcnt
 operator|++
 expr_stmt|;
 name|SAVEPSADDR
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|,
+name|savepsaddr
+argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -1960,16 +1992,12 @@ else|else
 block|{
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|ticked
+name|ps_clockticks
 operator|++
 expr_stmt|;
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|missed
+name|ps_clockmiss
 operator|++
 expr_stmt|;
 block|}
@@ -1977,7 +2005,9 @@ block|}
 endif|#
 directive|endif
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -1986,7 +2016,9 @@ operator|=
 name|RTCREQ
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -1996,7 +2028,11 @@ literal|01
 expr_stmt|;
 comment|/* clear the request bits */
 name|RESTORPSADDR
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|,
+name|savepsaddr
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -2057,7 +2093,6 @@ argument_list|)
 index|]
 decl_stmt|;
 name|short
-name|int
 name|request
 decl_stmt|,
 name|tmp
@@ -2082,10 +2117,16 @@ name|ps_icnt
 operator|++
 expr_stmt|;
 name|SAVEPSADDR
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|,
+name|savepsaddr
+argument_list|)
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -2094,7 +2135,9 @@ operator|=
 name|SYSREQ
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|request
 operator|=
@@ -2110,15 +2153,15 @@ literal|0377
 expr_stmt|;
 name|psp
 operator|->
-name|last_request2
+name|ps_lastrequest2
 operator|=
 name|psp
 operator|->
-name|last_request
+name|ps_lastrequest
 expr_stmt|;
 name|psp
 operator|->
-name|last_request
+name|ps_lastrequest
 operator|=
 name|request
 expr_stmt|;
@@ -2126,7 +2169,6 @@ if|if
 condition|(
 name|request
 operator|&
-operator|(
 operator|~
 operator|(
 name|HALT_REQ
@@ -2135,23 +2177,24 @@ name|RFSTOP_REQ
 operator||
 name|HIT_REQ
 operator|)
-operator|)
 condition|)
 block|{
 name|psp
 operator|->
-name|last_funnyrequest
+name|ps_lastfunnyrequest
 operator|=
 name|request
 expr_stmt|;
 name|psp
 operator|->
-name|funny_cnt
+name|ps_funnycnt
 operator|++
 expr_stmt|;
 block|}
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -2174,7 +2217,9 @@ operator|)
 expr_stmt|;
 comment|/* acknowledge */
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -2262,7 +2307,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
 name|psp
 operator|->
 name|ps_map
@@ -2270,9 +2314,7 @@ operator|.
 name|state
 operator|==
 name|AUTO_MAP
-operator|)
 operator|&&
-operator|(
 operator|!
 name|psmapnext
 argument_list|(
@@ -2280,7 +2322,6 @@ name|psp
 argument_list|,
 name|psaddr
 argument_list|)
-operator|)
 condition|)
 block|{
 name|psp
@@ -2621,9 +2662,7 @@ if|if
 condition|(
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|ticked
+name|ps_clockticks
 condition|)
 operator|(
 name|void
@@ -2637,9 +2676,7 @@ argument_list|)
 expr_stmt|;
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|ticked
+name|ps_clockticks
 operator|=
 literal|0
 expr_stmt|;
@@ -2663,16 +2700,12 @@ name|request
 operator|&
 name|HIT_REQ
 condition|)
-block|{
 comment|/* Hit request */
 name|psp
 operator|->
-name|ps_hit
-operator|.
-name|icnt
+name|ps_hitcnt
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|request
@@ -2685,7 +2718,11 @@ name|ps_strayintr
 operator|++
 expr_stmt|;
 name|RESTORPSADDR
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|,
+name|savepsaddr
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -2716,9 +2753,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|unsigned
-name|short
-name|int
+name|u_short
 name|start
 decl_stmt|,
 name|last
@@ -2737,6 +2772,7 @@ name|ps_refresh
 operator|.
 name|nsraddrs
 condition|)
+block|{
 name|psrfstart
 argument_list|(
 name|psp
@@ -2760,7 +2796,12 @@ argument_list|,
 name|psaddr
 argument_list|)
 expr_stmt|;
-elseif|else
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|psp
@@ -2828,16 +2869,15 @@ name|srcntr
 operator|++
 expr_stmt|;
 comment|/* flag for after dbuffer */
-block|}
-else|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 return|return
 operator|(
 literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -2857,9 +2897,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|unsigned
-name|short
-name|int
+name|u_short
 name|dfaddr
 decl_stmt|,
 name|last
@@ -2887,11 +2925,12 @@ end_decl_stmt
 begin_block
 block|{
 name|short
-name|int
 name|dummy
 decl_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -2900,7 +2939,9 @@ operator|=
 name|RFASA
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -2909,7 +2950,9 @@ operator|=
 name|dfaddr
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2932,7 +2975,9 @@ name|ps_data
 expr_stmt|;
 comment|/* just access to get to status reg */
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -2940,7 +2985,7 @@ name|ps_data
 operator|=
 name|RFSTART
 expr_stmt|;
-comment|/* may want to | this value in */
+comment|/* may want | here */
 name|psp
 operator|->
 name|ps_refresh
@@ -2983,7 +3028,9 @@ end_decl_stmt
 begin_block
 block|{
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -2992,7 +3039,9 @@ operator|=
 name|RFSR
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3102,6 +3151,7 @@ name|ps_map
 operator|.
 name|nmaddrs
 condition|)
+block|{
 name|psmapstart
 argument_list|(
 name|psp
@@ -3123,15 +3173,15 @@ argument_list|,
 name|psaddr
 argument_list|)
 expr_stmt|;
-else|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 return|return
 operator|(
 literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -3163,15 +3213,15 @@ end_decl_stmt
 
 begin_block
 block|{
-name|unsigned
-name|short
-name|int
+name|u_short
 name|start
 decl_stmt|,
 name|last
 decl_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3180,7 +3230,9 @@ operator|=
 name|MAOL
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3229,7 +3281,9 @@ operator|=
 name|last
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3248,7 +3302,9 @@ name|ps_data
 expr_stmt|;
 comment|/* dummy: don't update limit */
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3276,9 +3332,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|unsigned
-name|short
-name|int
+name|u_short
 name|dfaddr
 decl_stmt|;
 end_decl_stmt
@@ -3304,7 +3358,9 @@ end_decl_stmt
 begin_block
 block|{
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3313,7 +3369,9 @@ operator|=
 name|MAIA
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3322,7 +3380,9 @@ operator|=
 name|dfaddr
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3380,7 +3440,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|short
-name|int
 name|request
 decl_stmt|;
 end_decl_stmt
@@ -3392,14 +3451,10 @@ name|int
 name|i
 decl_stmt|;
 name|request
-operator|=
-name|request
-operator|&
-operator|(
+operator|&=
 name|HALT_REQ
 operator||
 name|MOSTOP_REQ
-operator|)
 expr_stmt|;
 comment|/* overkill?? */
 for|for
@@ -3417,7 +3472,9 @@ operator|++
 control|)
 block|{
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3426,7 +3483,9 @@ operator|=
 name|MASR
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3434,9 +3493,11 @@ name|ps_data
 operator|=
 name|IOUT
 expr_stmt|;
-comment|/* zero MAI& MAO bits */
+comment|/* zero MAI& MAO */
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3445,7 +3506,9 @@ operator|=
 name|MAIA
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3453,9 +3516,11 @@ name|ps_data
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 0 input address register */
+comment|/* 0 input addr reg */
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3464,7 +3529,9 @@ operator|=
 name|MAOA
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3472,9 +3539,11 @@ name|ps_data
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 0 output address register */
+comment|/* 0 output addr reg */
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3483,7 +3552,9 @@ operator|=
 name|SYSREQ
 expr_stmt|;
 name|PSWAIT
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|)
 expr_stmt|;
 name|psaddr
 operator|->
@@ -3575,7 +3646,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{ }
+block|{  }
 end_block
 
 begin_comment
@@ -3679,7 +3750,11 @@ operator|->
 name|ui_addr
 expr_stmt|;
 name|SAVEPSADDR
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|,
+name|savepsaddr
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -3692,23 +3767,23 @@ name|psaddr
 argument_list|)
 expr_stmt|;
 name|RESTORPSADDR
-argument_list|()
+argument_list|(
+name|psaddr
+argument_list|,
+name|savepsaddr
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|ticked
+name|ps_clockticks
 operator|++
 expr_stmt|;
 name|psp
 operator|->
-name|ps_clock
-operator|.
-name|missed
+name|ps_clockmiss
 operator|++
 expr_stmt|;
 block|}
