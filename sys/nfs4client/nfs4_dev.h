@@ -95,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|NFS4DEV_VERSION
-value|(0x3<< 16 | sizeof(struct nfs4dev_msg))
+value|(0x3<< 16 | (int) sizeof(struct nfs4dev_msg))
 end_define
 
 begin_comment

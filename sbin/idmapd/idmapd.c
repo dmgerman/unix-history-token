@@ -840,7 +840,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad message length: %d/%d\n"
+literal|"bad message length: %zd/%zd\n"
 argument_list|,
 name|e
 operator|->
@@ -1421,21 +1421,6 @@ argument_list|(
 literal|0
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"sizeof nfs4dev_msg: %d\n"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nfs4dev_msg
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|maxfd
