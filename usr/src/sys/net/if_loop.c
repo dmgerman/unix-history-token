@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_loop.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_loop.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -61,6 +61,12 @@ directive|include
 file|"../net/route.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../machine/mtpr.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -89,23 +95,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/ip.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../vax/mtpr.h"
 end_include
 
 begin_endif
