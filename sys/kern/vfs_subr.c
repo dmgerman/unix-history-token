@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.13 (Berkeley) 4/18/94  * $Id: vfs_subr.c,v 1.18 1995/02/27 10:15:38 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.13 (Berkeley) 4/18/94  * $Id: vfs_subr.c,v 1.19 1995/03/07 18:59:45 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -243,6 +243,14 @@ end_expr_stmt
 begin_comment
 comment|/* vnode free list */
 end_comment
+
+begin_decl_stmt
+name|u_long
+name|freevnodes
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1269,12 +1277,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|long
-name|numvnodes
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Return the next vnode from the free list.  */
 end_comment
@@ -1333,17 +1335,30 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-if|if
-condition|(
+name|vp
+operator|=
 name|vnode_free_list
 operator|.
 name|tqh_first
+expr_stmt|;
+comment|/* 	 * we allocate a new vnode if 	 * 	1. we don't have any free 	 *		Pretty obvious, we actually used to panic, but that 	 *		is a silly thing to do. 	 *	2. we havn't filled our pool yet 	 *		We don't want to trash the incore (VM-)vnodecache. 	 *	3. if less that 1/16th of our vnodes are free. 	 *		We don't want to trash the namei cache either. 	 */
+if|if
+condition|(
+name|vp
 operator|==
 name|NULL
 operator|||
 name|numvnodes
 operator|<
 name|desiredvnodes
+operator|||
+name|freevnodes
+operator|<
+operator|(
+name|numvnodes
+operator|>>
+literal|4
+operator|)
 condition|)
 block|{
 name|vp
@@ -1386,35 +1401,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|vp
-operator|=
-name|vnode_free_list
-operator|.
-name|tqh_first
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|tablefull
+name|TAILQ_REMOVE
 argument_list|(
-literal|"vnode"
+operator|&
+name|vnode_free_list
+argument_list|,
+name|vp
+argument_list|,
+name|v_freelist
 argument_list|)
 expr_stmt|;
-operator|*
-name|vpp
-operator|=
-literal|0
+name|freevnodes
+operator|--
 expr_stmt|;
-return|return
-operator|(
-name|ENFILE
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|vp
@@ -1424,16 +1423,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"free vnode isn't"
-argument_list|)
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|vnode_free_list
-argument_list|,
-name|vp
-argument_list|,
-name|v_freelist
 argument_list|)
 expr_stmt|;
 comment|/* see comment on why 0xdeadb is set at end of vgone (below) */
@@ -3351,6 +3340,7 @@ name|v_usecount
 operator|==
 literal|0
 condition|)
+block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3361,6 +3351,10 @@ argument_list|,
 name|v_freelist
 argument_list|)
 expr_stmt|;
+name|freevnodes
+operator|--
+expr_stmt|;
+block|}
 name|vp
 operator|->
 name|v_usecount
@@ -3565,6 +3559,9 @@ name|v_freelist
 argument_list|)
 expr_stmt|;
 block|}
+name|freevnodes
+operator|++
+expr_stmt|;
 name|VOP_INACTIVE
 argument_list|(
 name|vp
