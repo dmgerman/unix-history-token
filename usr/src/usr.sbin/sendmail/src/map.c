@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.22 (Berkeley) %G%"
+literal|"@(#)map.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4175,6 +4175,18 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MF_OPTIONAL
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+condition|)
 name|syserr
 argument_list|(
 literal|"NIS map %s specified, but NIS not running\n"
