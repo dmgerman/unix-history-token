@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.19 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2931,6 +2931,7 @@ name|state
 operator|=
 name|TS_DATA
 expr_stmt|;
+comment|/* Strip off \n or \0 after a \r */
 if|if
 condition|(
 operator|(
@@ -2972,7 +2973,7 @@ operator|>
 literal|0
 condition|)
 break|break;
-comment|/* 			 * We map \r\n ==> \n, since \r\n says 			 * that we want to be in column 1 of the next 			 * printable line, and \n is the standard 			 * unix way of saying that (\r is only good 			 * if CRMOD is set, which it normally is). 			 */
+comment|/* 			 * We now map \r\n ==> \r for pragmatic reasons. 			 * Many client implementations send \r\n when 			 * the user hits the CarriageReturn key. 			 * 			 * We USED to map \r\n ==> \n, since \r\n says 			 * that we want to be in column 1 of the next 			 * printable line, and \n is the standard 			 * unix way of saying that (\r is only good 			 * if CRMOD is set, which it normally is). 			 */
 if|if
 condition|(
 operator|(
@@ -2991,40 +2992,10 @@ name|OPT_NO
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|ncc
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-literal|'\n'
-operator|==
-operator|*
-name|netip
-operator|)
-condition|)
-block|{
-name|netip
-operator|++
-expr_stmt|;
-name|ncc
-operator|--
-expr_stmt|;
-name|c
-operator|=
-literal|'\n'
-expr_stmt|;
-block|}
-else|else
-block|{
 name|state
 operator|=
 name|TS_CR
 expr_stmt|;
-block|}
 block|}
 operator|*
 name|pfrontp
