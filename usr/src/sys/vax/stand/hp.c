@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.7	83/01/31	*/
+comment|/*	hp.c	4.7	83/02/01	*/
 end_comment
 
 begin_comment
@@ -498,13 +498,6 @@ name|RM80
 value|(hptypes[hp_type[unit]] == MBDT_RM80)
 end_define
 
-begin_define
-define|#
-directive|define
-name|EAGLE
-value|(hp_type[unit] == 11)
-end_define
-
 begin_decl_stmt
 name|u_char
 name|hp_offset
@@ -567,8 +560,6 @@ literal|823
 block|,
 name|rm3_off
 block|,
-literal|0
-block|,
 comment|/* RM03 */
 literal|32
 block|,
@@ -581,8 +572,6 @@ block|,
 literal|823
 block|,
 name|rm5_off
-block|,
-literal|0
 block|,
 comment|/* RM05 */
 literal|22
@@ -597,8 +586,6 @@ literal|815
 block|,
 name|hp6_off
 block|,
-literal|0
-block|,
 comment|/* RP06 */
 literal|31
 block|,
@@ -611,8 +598,6 @@ block|,
 literal|559
 block|,
 name|rm80_off
-block|,
-literal|1
 block|,
 comment|/* RM80 */
 literal|22
@@ -627,8 +612,6 @@ literal|411
 block|,
 name|hp6_off
 block|,
-literal|0
-block|,
 comment|/* RP06 */
 literal|50
 block|,
@@ -642,8 +625,6 @@ literal|630
 block|,
 name|hp7_off
 block|,
-literal|0
-block|,
 comment|/* RP07 */
 literal|1
 block|,
@@ -655,8 +636,6 @@ literal|1
 block|,
 name|ml_off
 block|,
-literal|0
-block|,
 comment|/* ML11A */
 literal|1
 block|,
@@ -667,8 +646,6 @@ block|,
 literal|1
 block|,
 name|ml_off
-block|,
-literal|0
 block|,
 comment|/* ML11B */
 literal|32
@@ -683,8 +660,6 @@ literal|843
 block|,
 name|si9775_off
 block|,
-literal|0
-block|,
 comment|/* 9775 */
 literal|32
 block|,
@@ -697,8 +672,6 @@ block|,
 literal|823
 block|,
 name|si9730_off
-block|,
-literal|0
 block|,
 comment|/* 9730 */
 literal|32
@@ -713,8 +686,6 @@ literal|1024
 block|,
 name|hpam_off
 block|,
-literal|0
-block|,
 comment|/* capricorn */
 literal|43
 block|,
@@ -728,8 +699,6 @@ literal|842
 block|,
 name|hpfj_off
 block|,
-literal|1
-block|,
 comment|/* Eagle */
 literal|1
 block|,
@@ -738,8 +707,6 @@ block|,
 literal|1
 block|,
 literal|1
-block|,
-literal|0
 block|,
 literal|0
 block|,
@@ -1038,6 +1005,34 @@ index|]
 operator|=
 name|i
 expr_stmt|;
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|HP_DCLR
+operator||
+name|HP_GO
+expr_stmt|;
+comment|/* init drive */
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|HP_PRESET
+operator||
+name|HP_GO
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ML11
+condition|)
+name|hpaddr
+operator|->
+name|hpof
+operator|=
+name|HPOF_FMT22
+expr_stmt|;
 comment|/* 		 * Read in the bad sector table: 		 *	copy the contents of the io structure 		 *	to tio for use during the bb pointer 		 *	read operation. 		 */
 name|st
 operator|=
@@ -1246,6 +1241,16 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|ssect
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set to 1 if we are on a track with skip sectors */
+end_comment
+
 begin_expr_stmt
 name|hpstrategy
 argument_list|(
@@ -1392,12 +1397,8 @@ name|HP_GO
 expr_stmt|;
 if|if
 condition|(
-name|hp_type
-index|[
-name|unit
-index|]
-operator|!=
-literal|6
+operator|!
+name|ML11
 condition|)
 comment|/* any but ml11 */
 name|hpaddr
@@ -1410,6 +1411,10 @@ block|}
 name|io
 operator|->
 name|i_errcnt
+operator|=
+literal|0
+expr_stmt|;
+name|ssect
 operator|=
 literal|0
 expr_stmt|;
@@ -1474,6 +1479,8 @@ operator|%
 name|st
 operator|->
 name|nsect
+operator|+
+name|ssect
 expr_stmt|;
 while|while
 condition|(
@@ -1497,14 +1504,8 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|hp_type
-index|[
-name|unit
-index|]
-operator|==
-literal|6
+name|ML11
 condition|)
-comment|/* ml11 */
 name|hpaddr
 operator|->
 name|hpda
@@ -1857,6 +1858,8 @@ operator|->
 name|i_errblk
 operator|=
 name|bn
+operator|+
+name|ssect
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1988,6 +1991,20 @@ name|badsect
 label|:
 if|if
 condition|(
+operator|!
+name|ssect
+operator|&&
+operator|(
+name|er2
+operator|&
+name|HPER2_SSE
+operator|)
+condition|)
+goto|goto
+name|skipsect
+goto|;
+if|if
+condition|(
 operator|(
 name|io
 operator|->
@@ -2039,17 +2056,15 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|RM80
-operator|||
-name|EAGLE
-operator|)
 operator|&&
 name|er2
 operator|&
 name|HPER2_SSE
 condition|)
 block|{
+name|skipsect
+label|:
 comment|/* skip sector error */
 operator|(
 name|void
@@ -2061,10 +2076,10 @@ argument_list|,
 name|SSE
 argument_list|)
 expr_stmt|;
-name|startblock
-operator|++
+name|ssect
+operator|=
+literal|1
 expr_stmt|;
-comment|/* since one sector was skipped */
 goto|goto
 name|success
 goto|;
@@ -2527,7 +2542,10 @@ operator|->
 name|i_bn
 operator|+
 name|npf
+operator|+
+name|ssect
 expr_stmt|;
+comment|/* bn is physical block number*/
 switch|switch
 condition|(
 name|flag
@@ -2969,6 +2987,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|rp
+operator|->
+name|hpof
+operator|&=
+operator|~
+name|HPOF_SSEI
+expr_stmt|;
+comment|/* clear skip sector inhibit if set */
 name|mbp
 operator|->
 name|mba_sr
@@ -3083,6 +3109,13 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|unit
+operator|=
+name|io
+operator|->
+name|i_unit
+expr_stmt|;
 name|struct
 name|st
 modifier|*
@@ -3093,9 +3126,7 @@ name|hpst
 index|[
 name|hp_type
 index|[
-name|io
-operator|->
-name|i_unit
+name|unit
 index|]
 index|]
 decl_stmt|,
@@ -3109,9 +3140,7 @@ name|drv
 init|=
 name|mbadrv
 argument_list|(
-name|io
-operator|->
-name|i_unit
+name|unit
 argument_list|)
 decl_stmt|;
 switch|switch
@@ -3270,6 +3299,25 @@ block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+case|case
+name|SAIOSSDEV
+case|:
+comment|/* return null if device has skip sector 					 * handling, otherwise return ECMD 					 */
+if|if
+condition|(
+name|RM80
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|ECMD
 operator|)
 return|;
 default|default:
