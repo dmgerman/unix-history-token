@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -113,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
 end_include
 
 begin_include
@@ -6574,9 +6586,9 @@ name|u_sigacts
 condition|)
 name|FREE
 argument_list|(
-name|p
+name|q
 operator|->
-name|q_sigacts
+name|p_sigacts
 argument_list|,
 name|M_SUBPROC
 argument_list|)
