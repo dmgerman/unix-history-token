@@ -1402,6 +1402,9 @@ name|args
 operator|->
 name|buf
 argument_list|,
+operator|(
+name|long
+operator|)
 name|args
 operator|->
 name|bufsize
