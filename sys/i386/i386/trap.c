@@ -262,6 +262,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vm86.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/icu.h>
 end_include
 
@@ -297,19 +303,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/vm86.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ddb/ddb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
 end_include
 
 begin_function_decl
