@@ -892,6 +892,13 @@ name|fprintf
 argument_list|(
 name|outfp
 argument_list|,
+literal|"#ifdef NDIS_REGVALS\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outfp
+argument_list|,
 literal|"ndis_cfg ndis_regvals[] = {\n"
 argument_list|)
 expr_stmt|;
@@ -900,6 +907,13 @@ argument_list|(
 name|outfp
 argument_list|,
 literal|"\t{ NULL, NULL, { 0 }, 0 }\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outfp
+argument_list|,
+literal|"#endif /* NDIS_REGVALS */\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -953,7 +967,14 @@ name|fprintf
 argument_list|(
 name|outfp
 argument_list|,
-literal|"\n\nextern unsigned char drv_data[];\n\n"
+literal|"\n#ifdef NDIS_IMAGE\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outfp
+argument_list|,
+literal|"\nextern unsigned char drv_data[];\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1090,6 +1111,13 @@ expr_stmt|;
 block|}
 name|done
 label|:
+name|fprintf
+argument_list|(
+name|outfp
+argument_list|,
+literal|"#endif /* NDIS_IMAGE */\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fp

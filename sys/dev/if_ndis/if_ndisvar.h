@@ -5,7 +5,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ndis_type
+name|ndis_pci_type
 block|{
 name|uint16_t
 name|ndis_vid
@@ -15,6 +15,28 @@ name|ndis_did
 decl_stmt|;
 name|uint32_t
 name|ndis_subsys
+decl_stmt|;
+name|char
+modifier|*
+name|ndis_name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ndis_pccard_type
+block|{
+specifier|const
+name|char
+modifier|*
+name|ndis_vid
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ndis_did
 decl_stmt|;
 name|char
 modifier|*
