@@ -351,7 +351,7 @@ literal|0
 expr_stmt|;
 name|wraplines
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|initial_pos
 operator|=
