@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.71 (Berkeley) %G%"
+literal|"@(#)main.c	8.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4952,6 +4952,8 @@ operator|->
 name|e_flags
 operator||=
 name|EF_GLOBALERRS
+operator||
+name|EF_LOGSENDER
 expr_stmt|;
 block|}
 end_if

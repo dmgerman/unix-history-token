@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.44 (Berkeley) %G%"
+literal|"@(#)headers.c	8.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2222,7 +2222,14 @@ directive|ifdef
 name|LOG
 if|if
 condition|(
-name|full
+name|bitset
+argument_list|(
+name|EF_LOGSENDER
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 operator|&&
 name|LogLevel
 operator|>
