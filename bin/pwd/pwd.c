@@ -160,7 +160,7 @@ name|p
 decl_stmt|;
 name|physical
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 while|while
 condition|(
