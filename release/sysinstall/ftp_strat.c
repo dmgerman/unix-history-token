@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media_strategy.c,v 1.28 1995/05/26 20:30:59 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: ftp_strat.c,v 1.1 1995/05/27 10:38:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -78,7 +78,7 @@ name|i
 decl_stmt|;
 name|char
 modifier|*
-name|url
+name|cp
 decl_stmt|,
 modifier|*
 name|hostname
@@ -93,6 +93,11 @@ decl_stmt|,
 name|email
 index|[
 name|BUFSIZ
+index|]
+decl_stmt|,
+name|url
+index|[
+name|BUFSIZE
 index|]
 decl_stmt|;
 name|Device
@@ -157,7 +162,7 @@ return|return
 name|FALSE
 return|;
 block|}
-name|url
+name|cp
 operator|=
 name|getenv
 argument_list|(
@@ -167,7 +172,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|url
+name|cp
 condition|)
 return|return
 name|FALSE
@@ -185,7 +190,7 @@ name|strncmp
 argument_list|(
 literal|"ftp://"
 argument_list|,
-name|url
+name|cp
 argument_list|,
 literal|6
 argument_list|)
@@ -204,6 +209,15 @@ return|return
 name|FALSE
 return|;
 block|}
+name|strncpy
+argument_list|(
+name|url
+argument_list|,
+name|cp
+argument_list|,
+name|BUFSIZ
+argument_list|)
+expr_stmt|;
 name|msgDebug
 argument_list|(
 literal|"Using URL `%s'\n"
@@ -740,6 +754,11 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+name|Boolean
+name|needEOF
+init|=
+name|FALSE
+decl_stmt|;
 name|dup2
 argument_list|(
 name|pfd
@@ -789,6 +808,21 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+if|if
+condition|(
+name|needEOF
+condition|)
+block|{
+name|FtpEOF
+argument_list|(
+name|ftp
+argument_list|)
+expr_stmt|;
+name|needEOF
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 name|snprintf
 argument_list|(
 name|buf
@@ -849,6 +883,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|needEOF
+operator|=
+name|TRUE
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -901,20 +940,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Close all but the last, since the last will get closed by mediaCloseFTP */
-if|if
-condition|(
-name|chunk
-operator|+
-literal|1
-operator|!=
-name|numchunks
-condition|)
-name|FtpEOF
-argument_list|(
-name|ftp
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|fd
