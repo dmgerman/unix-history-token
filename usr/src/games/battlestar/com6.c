@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)com6.c	5.2 (Berkeley) %G%"
+literal|"@(#)com6.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"externs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_macro
@@ -373,7 +379,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|logfile
+name|_PATH_SCORE
 argument_list|,
 literal|"a"
 argument_list|)
@@ -430,7 +436,7 @@ block|}
 else|else
 name|perror
 argument_list|(
-name|logfile
+name|_PATH_SCORE
 argument_list|)
 expr_stmt|;
 name|sigsetmask
