@@ -1007,6 +1007,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|lfile
 argument_list|)
 expr_stmt|;
@@ -1402,6 +1404,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|l_opt
 argument_list|)
@@ -1856,6 +1860,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|l_opt
 argument_list|)
@@ -2479,6 +2485,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|f_opt
 argument_list|)
 expr_stmt|;
@@ -2521,6 +2529,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|q
 argument_list|)
@@ -2599,6 +2609,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|f_opt
 argument_list|)
@@ -4055,6 +4067,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|dest
 argument_list|)
