@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.40 (Berkeley) %G%"
+literal|"@(#)ps.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,12 +122,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
 end_include
 
 begin_include
@@ -770,7 +764,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|error
+name|err
 argument_list|(
 literal|"stdin: not a terminal"
 argument_list|)
@@ -851,15 +845,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: %s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|ttypath
 argument_list|,
@@ -869,12 +857,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -885,7 +867,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|error
+name|err
 argument_list|(
 literal|"%s: not a terminal"
 argument_list|,
@@ -1043,7 +1025,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
 literal|"kvm_openfiles: %s"
 argument_list|,
@@ -1154,32 +1136,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: %s\n"
+literal|"%s"
 argument_list|,
 name|kvm_geterr
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|kinfo
 operator|=
-operator|(
-name|KINFO
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|nentries
@@ -1196,28 +1162,16 @@ name|kinfo
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: %s\n"
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
-name|ENOMEM
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|nentries
@@ -1580,11 +1534,6 @@ condition|(
 operator|(
 name|usp
 operator|=
-operator|(
-expr|struct
-name|usave
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1
@@ -1599,15 +1548,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: %s\n"
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1615,12 +1558,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|ki
 operator|->
 name|ki_u
@@ -1909,15 +1846,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: %s\n"
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1925,12 +1856,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * options begin with '-' 	 */
 if|if
 condition|(
@@ -2088,50 +2013,54 @@ name|newopts
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|lint
-comment|/* VARARGS1 */
-name|error
-argument_list|(
-argument|fmt
-argument_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-block|{
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-name|fmt
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
+if|#
+directive|if
+name|__STDC__
+include|#
+directive|include
+file|<stdarg.h>
 else|#
 directive|else
-name|error
-argument_list|(
-argument|fmt
-argument_list|)
+include|#
+directive|include
+file|<varargs.h>
+endif|#
+directive|endif
+name|void
+if|#
+directive|if
+name|__STDC__
+name|err
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|err
+parameter_list|(
+name|fmt
+parameter_list|,
+name|va_alist
+parameter_list|)
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
+function|va_dcl
+endif|#
+directive|endif
 block|{
 name|va_list
 name|ap
 decl_stmt|;
+if|#
+directive|if
+name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -2139,6 +2068,15 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -2161,6 +2099,11 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2171,19 +2114,13 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
-endif|#
-directive|endif
 name|usage
 argument_list|()
 block|{
@@ -2194,7 +2131,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\tps [ -aChjlmrSsTuvwx ] [ -O|o fmt ] [ -p pid ] [ -t tty ] [ system ] [ core ] [ swap ]\n\t ps [ -L ]\n"
+literal|"usage: ps [-aChjlmrSTuvwx] [-O|o fmt] [-p pid] [-t tty]\n\t  [-M core] [-N system] [-W swap]\n       ps [-L]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.6 (Berkeley) %G%"
+literal|"@(#)print.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3676,7 +3676,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
+name|err
 argument_list|(
 literal|"unknown type %d"
 argument_list|,

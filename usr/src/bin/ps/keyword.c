@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.7 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -3475,11 +3481,6 @@ condition|(
 operator|(
 name|vent
 operator|=
-operator|(
-expr|struct
-name|varent
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -3492,23 +3493,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"ps: no space\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|vent
 operator|->
 name|var
@@ -3552,23 +3546,11 @@ condition|(
 operator|!
 name|vhead
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: no valid keywords\n"
+literal|"no valid keywords\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
