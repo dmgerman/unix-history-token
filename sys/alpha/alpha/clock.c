@@ -885,7 +885,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splhigh
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* Select timer0 and latch counter value. */
@@ -912,7 +915,7 @@ argument_list|(
 name|TIMER_CNTR0
 argument_list|)
 expr_stmt|;
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)
@@ -1214,7 +1217,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splhigh
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 name|timer_freq
@@ -1269,7 +1275,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)
@@ -1299,9 +1305,12 @@ block|{
 name|int
 name|s
 init|=
-name|splhigh
+name|save_intr
 argument_list|()
 decl_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|i8254_ticked
@@ -1325,7 +1334,7 @@ name|clkintr_pending
 operator|=
 literal|0
 expr_stmt|;
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)
@@ -2049,7 +2058,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splhigh
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* Select timer0 and latch counter value. */
@@ -2140,7 +2152,7 @@ name|count
 operator|+=
 name|i8254_offset
 expr_stmt|;
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)
@@ -2302,11 +2314,14 @@ name|period
 parameter_list|)
 block|{
 name|int
-name|x
+name|s
 init|=
-name|splhigh
+name|save_intr
 argument_list|()
 decl_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|acquire_timer2
@@ -2323,9 +2338,9 @@ name|beeping
 condition|)
 block|{
 comment|/* Something else owns it. */
-name|splx
+name|restore_intr
 argument_list|(
-name|x
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2406,9 +2421,9 @@ name|period
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
+name|restore_intr
 argument_list|(
-name|x
+name|s
 argument_list|)
 expr_stmt|;
 return|return

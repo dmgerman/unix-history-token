@@ -3341,7 +3341,10 @@ decl_stmt|;
 comment|/* disable interrupts on this CPU, save interrupt status */
 name|s
 operator|=
-name|splhigh
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* obtain rendezvous lock */
@@ -3401,7 +3404,7 @@ name|smp_rv_lock
 argument_list|)
 expr_stmt|;
 comment|/* restore interrupt flag */
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)

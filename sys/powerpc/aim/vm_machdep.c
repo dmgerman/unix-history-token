@@ -723,12 +723,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&

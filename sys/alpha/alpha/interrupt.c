@@ -1455,7 +1455,10 @@ name|enable
 expr_stmt|;
 name|s
 operator|=
-name|splhigh
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -1471,7 +1474,7 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)
@@ -2118,7 +2121,7 @@ comment|/* XXX - if the ithd has no handlers left, we should remove it */
 if|#
 directive|if
 literal|0
-block|s = splhigh(); 	LIST_REMOVE(i, list); 	splx(s);  	free(i, M_DEVBUF);
+block|s = save_intr(); 	disable_intr(); 	LIST_REMOVE(i, list); 	restore_intr(s);  	free(i, M_DEVBUF);
 endif|#
 directive|endif
 return|return

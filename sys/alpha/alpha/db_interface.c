@@ -900,7 +900,10 @@ name|regs
 expr_stmt|;
 name|s
 operator|=
-name|splhigh
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 if|#
@@ -958,7 +961,7 @@ literal|0
 block|restart_cpus(stopped_cpus);
 endif|#
 directive|endif
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)

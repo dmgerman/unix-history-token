@@ -428,7 +428,7 @@ operator|=
 name|enter_prom
 argument_list|()
 expr_stmt|;
-comment|/* splhigh() and map prom */
+comment|/* disable_intr() and map prom */
 operator|*
 name|to
 operator|=
@@ -470,7 +470,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* unmap prom and splx(s) */
+comment|/* unmap prom and restore_intr(s) */
 block|}
 end_function
 
@@ -632,16 +632,19 @@ name|int
 name|enter_prom
 parameter_list|()
 block|{
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|lev1map
 decl_stmt|;
+name|int
+name|s
+init|=
+name|save_intr
+argument_list|()
+decl_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -806,7 +809,7 @@ argument_list|()
 expr_stmt|;
 comment|/* XXX */
 block|}
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)
@@ -959,10 +962,7 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* 	 * Turn off interrupts, for sanity. 	 */
-operator|(
-name|void
-operator|)
-name|splhigh
+name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Set "boot request" part of the CPU state depending on what 	 * we want to happen when we halt. 	 */
