@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mloop.c	3.3 84/03/03"
+literal|"@(#)mloop.c	3.4 84/04/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,9 +41,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|wwcurwin
-operator|==
-literal|0
+name|incmd
 condition|)
 block|{
 name|docmd
@@ -60,9 +58,10 @@ operator|!=
 name|WWS_HASPROC
 condition|)
 block|{
-name|wwcurwin
-operator|=
-literal|0
+name|setcmd
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -162,15 +161,16 @@ operator|==
 name|escapec
 condition|)
 block|{
-name|wwcurwin
-operator|=
-literal|0
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|wwgetc
 argument_list|()
+expr_stmt|;
+name|setcmd
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 block|}

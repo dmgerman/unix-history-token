@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	3.8 84/03/03"
+literal|"@(#)cmd4.c	3.9 84/04/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,21 +272,19 @@ end_macro
 begin_block
 block|{
 name|char
+name|oldterse
+init|=
+name|terse
+decl_stmt|;
+name|char
 name|buf
 index|[
 literal|512
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|terse
-condition|)
-name|wwadd
+name|setterse
 argument_list|(
-name|cmdwin
-argument_list|,
-operator|&
-name|wwhead
+literal|0
 argument_list|)
 expr_stmt|;
 name|wwputc
@@ -314,19 +312,14 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|terse
-condition|)
-name|wwdelete
+name|wwcurtowin
 argument_list|(
 name|cmdwin
 argument_list|)
 expr_stmt|;
-else|else
-name|wwcurtowin
+name|setterse
 argument_list|(
-name|cmdwin
+name|oldterse
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.10 84/03/29	  */
+comment|/*  *	@(#)defs.h	3.11 84/04/05	  */
 end_comment
 
 begin_include
@@ -250,6 +250,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* debug mode */
+end_comment
+
+begin_decl_stmt
+name|char
+name|incmd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in command mode */
 end_comment
 
 begin_function_decl

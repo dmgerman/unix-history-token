@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.16 84/03/29"
+literal|"@(#)lcmd1.c	3.17 84/04/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -1039,8 +1039,8 @@ name|v_num
 operator|=
 name|terse
 expr_stmt|;
-name|terse
-operator|=
+name|setterse
+argument_list|(
 name|vtobool
 argument_list|(
 name|a
@@ -1049,41 +1049,7 @@ literal|1
 argument_list|,
 name|terse
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|terse
-operator|&&
-name|v
-operator|->
-name|v_num
-condition|)
-name|wwadd
-argument_list|(
-name|cmdwin
-argument_list|,
-operator|&
-name|wwhead
 argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|v
-operator|->
-name|v_num
-operator|&&
-name|terse
-condition|)
-name|wwdelete
-argument_list|(
-name|cmdwin
-argument_list|)
-expr_stmt|;
-name|reframe
-argument_list|()
 expr_stmt|;
 block|}
 end_block

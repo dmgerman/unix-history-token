@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.23 84/03/03"
+literal|"@(#)cmd2.c	3.24 84/04/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -1132,16 +1132,14 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
+name|char
+name|oldterse
+init|=
 name|terse
-condition|)
-name|wwadd
+decl_stmt|;
+name|setterse
 argument_list|(
-name|cmdwin
-argument_list|,
-operator|&
-name|wwhead
+literal|0
 argument_list|)
 expr_stmt|;
 name|wwputs
@@ -1193,16 +1191,12 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|terse
-operator|&&
+name|setterse
+argument_list|(
 operator|!
 name|quit
-condition|)
-name|wwdelete
-argument_list|(
-name|cmdwin
+operator|&&
+name|oldterse
 argument_list|)
 expr_stmt|;
 block|}
