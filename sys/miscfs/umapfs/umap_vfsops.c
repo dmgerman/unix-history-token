@@ -1160,18 +1160,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|struct
-name|vnode
-modifier|*
-name|umapm_rootvp
-init|=
-name|MOUNTTOUMAPMOUNT
-argument_list|(
-name|mp
-argument_list|)
-operator|->
-name|umapm_rootvp
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1233,26 +1221,14 @@ operator|)
 return|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|umapm_rootvp
-operator|->
-name|v_usecount
-operator|>
-literal|1
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
+comment|/* There is 1 extra root vnode reference (umapm_rootvp). */
 name|error
 operator|=
 name|vflush
 argument_list|(
 name|mp
 argument_list|,
-name|umapm_rootvp
+literal|1
 argument_list|,
 name|flags
 argument_list|)
@@ -1266,30 +1242,6 @@ operator|(
 name|error
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|vprint
-argument_list|(
-literal|"alias root of lower"
-argument_list|,
-name|umapm_rootvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * Release reference on underlying root vnode 	 */
-name|vrele
-argument_list|(
-name|umapm_rootvp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * And blow it away for future re-use 	 */
-name|vgone
-argument_list|(
-name|umapm_rootvp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Finally, throw away the umap_mount structure 	 */
 name|free
 argument_list|(

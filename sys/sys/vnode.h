@@ -2489,10 +2489,8 @@ name|mount
 operator|*
 name|mp
 operator|,
-expr|struct
-name|vnode
-operator|*
-name|skipvp
+name|int
+name|rootrefs
 operator|,
 name|int
 name|flags

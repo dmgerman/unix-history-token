@@ -1249,7 +1249,7 @@ name|vflush
 argument_list|(
 name|mp
 argument_list|,
-name|NULLVP
+literal|0
 argument_list|,
 name|flags
 argument_list|)
@@ -3706,7 +3706,7 @@ name|vflush
 argument_list|(
 name|mp
 argument_list|,
-name|NULLVP
+literal|0
 argument_list|,
 name|flags
 argument_list|)

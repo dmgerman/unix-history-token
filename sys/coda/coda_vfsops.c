@@ -949,7 +949,7 @@ name|mi
 operator|->
 name|mi_vfsp
 argument_list|,
-name|NULLVP
+literal|0
 argument_list|,
 name|FORCECLOSE
 argument_list|)
