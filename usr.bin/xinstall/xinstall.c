@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.24 1997/08/27 06:29:23 charnier Exp $"
+literal|"$Id: xinstall.c,v 1.25 1997/09/14 08:21:44 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -458,12 +458,18 @@ end_ifdef
 begin_decl_stmt
 name|uid_t
 name|uid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|gid_t
 name|gid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -778,11 +784,7 @@ expr_stmt|;
 comment|/* some options make no sense when creating directories */
 if|if
 condition|(
-operator|(
-name|docompare
-operator|||
 name|dostrip
-operator|)
 operator|&&
 name|dodir
 condition|)
@@ -3177,7 +3179,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"%s"
+literal|"mkdir %s"
 argument_list|,
 name|path
 argument_list|)
@@ -3199,7 +3201,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
 operator|(
 name|gid
 operator|!=
@@ -3226,8 +3227,21 @@ name|uid
 argument_list|,
 name|gid
 argument_list|)
-operator|)
-operator|||
+condition|)
+name|warn
+argument_list|(
+literal|"chown %u:%u %s"
+argument_list|,
+name|uid
+argument_list|,
+name|gid
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|chmod
 argument_list|(
 name|path
@@ -3235,15 +3249,15 @@ argument_list|,
 name|mode
 argument_list|)
 condition|)
-block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"chmod %o %s"
+argument_list|,
+name|mode
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
