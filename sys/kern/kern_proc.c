@@ -1867,15 +1867,21 @@ name|p_ucred
 operator|->
 name|cr_svuid
 expr_stmt|;
+comment|/* XXX bde doesn't like KI_NGROUPS */
 name|kp
 operator|->
 name|ki_ngroups
 operator|=
+name|min
+argument_list|(
 name|p
 operator|->
 name|p_ucred
 operator|->
 name|cr_ngroups
+argument_list|,
+name|KI_NGROUPS
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -1889,7 +1895,9 @@ name|kp
 operator|->
 name|ki_groups
 argument_list|,
-name|KI_NGROUPS
+name|kp
+operator|->
+name|ki_ngroups
 operator|*
 sizeof|sizeof
 argument_list|(
