@@ -1179,7 +1179,7 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-name|fatal
+name|debug
 argument_list|(
 literal|"PAM setcred failed[%d]: %.200s"
 argument_list|,
