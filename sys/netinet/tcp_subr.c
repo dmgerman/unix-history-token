@@ -2965,7 +2965,6 @@ comment|/* INET6 */
 name|tcp_mssdflt
 expr_stmt|;
 comment|/* Set up our timeouts. */
-comment|/* 	 * XXXRW: Are these actually MPSAFE?  I think so, but need to 	 * review the timed wait code, as it has some list variables, 	 * etc, that are global. 	 */
 name|callout_flag
 operator|=
 name|debug_mpsafenet
@@ -8243,7 +8242,7 @@ value|250000
 end_define
 
 begin_comment
-comment|/*  * Determine if the ISN we will generate has advanced beyond the last  * sequence number used by the previous connection.  If so, indicate  * that it is safe to recycle this tw socket by returning 1.  *  * XXXRW: This function should assert the inpcb lock as it does multiple  * non-atomic reads from the tcptw, but is currently * called without it from  * in_pcb.c:in_pcblookup_local().  */
+comment|/*  * Determine if the ISN we will generate has advanced beyond the last  * sequence number used by the previous connection.  If so, indicate  * that it is safe to recycle this tw socket by returning 1.  *  * XXXRW: This function should assert the inpcb lock as it does multiple  * non-atomic reads from the tcptw, but is currently called without it from  * in_pcb.c:in_pcblookup_local().  */
 end_comment
 
 begin_function
