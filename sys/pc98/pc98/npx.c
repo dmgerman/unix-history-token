@@ -2955,7 +2955,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|I586_CPU
+name|I586_CPU_XXX
 end_ifdef
 
 begin_function_decl
