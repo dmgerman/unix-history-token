@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfsmount.h,v 1.10 1997/02/22 09:40:49 peter Exp $ */
+comment|/*	$Id: msdosfsmount.h,v 1.11 1997/03/03 17:36:11 bde Exp $ */
 end_comment
 
 begin_comment
@@ -32,6 +32,25 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_DECLARE
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_MSDOSFSMNT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Layout of the mount control block for a msdos file system.  */

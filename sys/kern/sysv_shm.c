@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.29 1997/08/02 14:31:39 bde Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.30 1997/10/11 18:31:25 phk Exp $ */
 end_comment
 
 begin_comment
@@ -267,6 +267,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SHM

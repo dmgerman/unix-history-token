@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.26 1997/09/02 20:06:15 bde Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.27 1997/10/11 18:31:30 phk Exp $ */
 end_comment
 
 begin_comment
@@ -110,6 +110,7 @@ file|<msdosfs/fat.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_MSDOSFSNODE

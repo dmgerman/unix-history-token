@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $Id: malloc.h,v 1.28 1997/10/11 13:10:17 phk Exp $  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $Id: malloc.h,v 1.29 1997/10/11 18:31:36 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -53,12 +53,14 @@ block|{
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ks_shortdesc
 decl_stmt|;
 comment|/* Short description */
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ks_longdesc
 decl_stmt|;
 comment|/* Long description */
@@ -143,12 +145,12 @@ name|MALLOC_MAKE_TYPE
 parameter_list|(
 name|type
 parameter_list|,
-name|short
+name|shortdesc
 parameter_list|,
-name|long
+name|longdesc
 parameter_list|)
 define|\
-value|MALLOC_DEFINE(type, short, long);
+value|MALLOC_DEFINE(type, shortdesc, longdesc);
 end_define
 
 begin_else
@@ -163,9 +165,9 @@ name|MALLOC_MAKE_TYPE
 parameter_list|(
 name|type
 parameter_list|,
-name|short
+name|shortdesc
 parameter_list|,
-name|long
+name|longdesc
 parameter_list|)
 define|\
 value|MALLOC_DECLARE(type);
@@ -179,23 +181,11 @@ end_endif
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
 argument_list|(
-name|M_FREE
+name|M_CACHE
 argument_list|,
-literal|"free"
+literal|"namecache"
 argument_list|,
-literal|"should be on free list"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_MBUF
-argument_list|,
-literal|"mbuf"
-argument_list|,
-literal|"mbuf"
+literal|"Dynamically allocated cache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -215,431 +205,11 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
 argument_list|(
-name|M_PCB
-argument_list|,
-literal|"pcb"
-argument_list|,
-literal|"protocol control block"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_RTABLE
-argument_list|,
-literal|"routetbl"
-argument_list|,
-literal|"routing tables"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_FTABLE
-argument_list|,
-literal|"fragtbl"
-argument_list|,
-literal|"fragment reassembly header"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_IFADDR
-argument_list|,
-literal|"ifaddr"
-argument_list|,
-literal|"interface address"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_SOCKET
-argument_list|,
-literal|"socket"
-argument_list|,
-literal|"socket structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_SOOPTS
-argument_list|,
-literal|"soopts"
-argument_list|,
-literal|"socket options"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_SONAME
-argument_list|,
-literal|"soname"
-argument_list|,
-literal|"socket name"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_CRED
-argument_list|,
-literal|"cred"
-argument_list|,
-literal|"credentials"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_SESSION
-argument_list|,
-literal|"session"
-argument_list|,
-literal|"session header"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_IOV
-argument_list|,
-literal|"iov"
-argument_list|,
-literal|"large iov's"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_MOUNT
-argument_list|,
-literal|"mount"
-argument_list|,
-literal|"vfs mount struct"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_NFSREQ
-argument_list|,
-literal|"NFS req"
-argument_list|,
-literal|"NFS request header"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_NFSMNT
-argument_list|,
-literal|"NFS mount"
-argument_list|,
-literal|"NFS mount structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_VNODE
-argument_list|,
-literal|"vnodes"
-argument_list|,
-literal|"Dynamically allocated vnodes"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_CACHE
-argument_list|,
-literal|"namecache"
-argument_list|,
-literal|"Dynamically allocated cache entries"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_UFSMNT
-argument_list|,
-literal|"UFS mount"
-argument_list|,
-literal|"UFS mount structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_VMPGDATA
-argument_list|,
-literal|"VM pgdata"
-argument_list|,
-literal|"XXX: VM pager private data"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_FILE
-argument_list|,
-literal|"file"
-argument_list|,
-literal|"Open file structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_PROC
-argument_list|,
-literal|"proc"
-argument_list|,
-literal|"Proc structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_SUBPROC
-argument_list|,
-literal|"subproc"
-argument_list|,
-literal|"Proc sub-structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_SEGMENT
-argument_list|,
-literal|"LFS segment"
-argument_list|,
-literal|"Segment for LFS"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_LFSNODE
-argument_list|,
-literal|"LFS node"
-argument_list|,
-literal|"LFS vnode private part"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_NQLEASE
-argument_list|,
-literal|"NQNFS Lease"
-argument_list|,
-literal|"Nqnfs lease"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_NFSUID
-argument_list|,
-literal|"NFS uid"
-argument_list|,
-literal|"Nfs uid mapping structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_NFSD
-argument_list|,
-literal|"NFS daemon"
-argument_list|,
-literal|"Nfs server daemon structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_IFMADDR
-argument_list|,
-literal|"ether_multi"
-argument_list|,
-literal|"link-level multicast address"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_ISOFSMNT
-argument_list|,
-literal|"ISOFS mount"
-argument_list|,
-literal|"ISOFS mount structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_ISOFSNODE
-argument_list|,
-literal|"ISOFS node"
-argument_list|,
-literal|"ISOFS vnode private part"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_NFSRVDESC
-argument_list|,
-literal|"NFSV3 srvdesc"
-argument_list|,
-literal|"NFS server socket descriptor"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_NFSDIROFF
-argument_list|,
-literal|"NFSV3 diroff"
-argument_list|,
-literal|"NFS directory offset data"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_NFSBIGFH
-argument_list|,
-literal|"NFSV3 bigfh"
-argument_list|,
-literal|"NFS version 3 file handle"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_MSDOSFSMNT
-argument_list|,
-literal|"MSDOSFS mount"
-argument_list|,
-literal|"MSDOSFS mount structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
 name|M_TEMP
 argument_list|,
 literal|"temp"
 argument_list|,
 literal|"misc temporary data buffers"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_TTYS
-argument_list|,
-literal|"ttys"
-argument_list|,
-literal|"tty data structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_IPFW
-argument_list|,
-literal|"IpFw/IpAcct"
-argument_list|,
-literal|"IpFw/IpAcct chain's"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_HOSTCACHE
-argument_list|,
-literal|"hostcache"
-argument_list|,
-literal|"per-host information cache structure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

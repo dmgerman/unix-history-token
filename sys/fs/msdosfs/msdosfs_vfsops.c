@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.20 1997/08/16 19:15:24 wollman Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.21 1997/10/11 18:31:30 phk Exp $ */
 end_comment
 
 begin_comment
@@ -126,6 +126,19 @@ file|<msdosfs/fat.h>
 end_include
 
 begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_MSDOSFSMNT
+argument_list|,
+literal|"MSDOSFS mount"
+argument_list|,
+literal|"MSDOSFS mount structure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_MSDOSFSFAT
