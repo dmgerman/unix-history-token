@@ -2425,7 +2425,6 @@ operator|->
 name|icmp_seq
 operator|=
 name|ntransmitted
-operator|++
 expr_stmt|;
 name|icp
 operator|->
@@ -2580,6 +2579,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ntransmitted
+operator|++
+expr_stmt|;
+comment|/* only count ones that made it out */
 block|}
 if|if
 condition|(
