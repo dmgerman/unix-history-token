@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.27	83/02/10	*/
+comment|/*	ip_icmp.c	4.28	83/02/22	*/
 end_comment
 
 begin_include
@@ -914,6 +914,13 @@ goto|;
 block|}
 name|reflect
 label|:
+name|ip
+operator|->
+name|ip_len
+operator|+=
+name|hlen
+expr_stmt|;
+comment|/* since ip_input deducts this */
 name|icmp_reflect
 argument_list|(
 name|ip
