@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.10 (Berkeley) 87/07/20"
+literal|"@(#)bugfiler.c	5.11 (Berkeley) 87/07/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,7 +500,7 @@ end_if
 begin_expr_stmt
 name|error
 argument_list|(
-literal|"can't make copy using %s.\n"
+literal|"can't make copy using %s."
 argument_list|,
 name|tmpname
 argument_list|)
@@ -526,9 +526,15 @@ name|tp
 decl_stmt|;
 name|char
 modifier|*
+name|C1
+decl_stmt|,
+modifier|*
+name|C2
+decl_stmt|,
+modifier|*
 name|ctime
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|gettimeofday
@@ -551,12 +557,12 @@ argument_list|,
 name|CHN
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n>>> BUGFILER<<<\n\t%s"
-argument_list|,
+for|for
+control|(
+name|C1
+operator|=
+name|C2
+operator|=
 name|ctime
 argument_list|(
 operator|&
@@ -564,6 +570,29 @@ name|tp
 operator|.
 name|tv_sec
 argument_list|)
+init|;
+operator|*
+name|C1
+operator|&&
+operator|*
+name|C1
+operator|!=
+literal|'\n'
+condition|;
+operator|++
+name|C1
+control|)
+empty_stmt|;
+operator|*
+name|C1
+operator|=
+name|EOS
+expr_stmt|;
+name|fputs
+argument_list|(
+name|C2
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 block|}

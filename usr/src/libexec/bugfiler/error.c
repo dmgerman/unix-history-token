@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)error.c	5.3 (Berkeley) 87/04/11"
+literal|"@(#)error.c	5.4 (Berkeley) 87/07/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ argument_list|)
 condition|)
 name|error
 argument_list|(
-literal|"can't open error file %s.\n"
+literal|"can't open error file %s."
 argument_list|,
 name|ERROR_FILE
 argument_list|)
@@ -137,11 +137,13 @@ name|err_redir
 condition|)
 block|{
 comment|/* don't combine these, "fmt" may not require "arg" */
-name|fputc
+name|fprintf
 argument_list|(
-literal|'\t'
-argument_list|,
 name|stderr
+argument_list|,
+literal|"\t%s\n\t"
+argument_list|,
+name|tmpname
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -153,13 +155,11 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fputc
 argument_list|(
+literal|'\n'
+argument_list|,
 name|stderr
-argument_list|,
-literal|"\n\ttemporary file is %s.\n"
-argument_list|,
-name|tmpname
 argument_list|)
 expr_stmt|;
 block|}
