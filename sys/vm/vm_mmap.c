@@ -4218,6 +4218,7 @@ name|vp
 operator|->
 name|v_rdev
 expr_stmt|;
+comment|/* XXX: lack thredref on device */
 if|if
 condition|(
 name|vp

@@ -2501,7 +2501,7 @@ argument_list|(
 name|de
 argument_list|)
 expr_stmt|;
-comment|/* 	 * At this point, if dev is NULL, we should assume that any 	 * criteria that depend on it don't match.  We should *not* 	 * just ignore them (i.e., act like they weren't specified), 	 * since that makes a rule that only has criteria dependent on 	 * the struct cdev *match all symlinks and directories. 	 * 	 * Note also that the following tests are somewhat reversed: 	 * They're actually testing to see whether the condition does 	 * *not* match, since the default is to assume the rule should 	 * be run (such as if there are no conditions). 	 */
+comment|/* 	 * At this point, if dev is NULL, we should assume that any 	 * criteria that depend on it don't match.  We should *not* 	 * just ignore them (i.e., act like they weren't specified), 	 * since that makes a rule that only has criteria dependent on 	 * the struct cdev *match all symlinks and directories. 	 * 	 * Note also that the following tests are somewhat reversed: 	 * They're actually testing to see whether the condition does 	 * *not* match, since the default is to assume the rule should 	 * be run (such as if there are no conditions). 	 * 	 * XXX: lacks threadref on dev 	 */
 if|if
 condition|(
 name|dr
