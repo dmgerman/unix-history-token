@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	8.3 (Berkeley) %G%"
+literal|"@(#)random.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -335,7 +335,10 @@ comment|/* 	 * Select whether to print the first line.  (Prime the pump.) 	 * We
 name|selected
 operator|=
 operator|!
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|denom
 operator|*
@@ -344,7 +347,7 @@ argument_list|()
 operator|)
 operator|/
 name|LONG_MAX
-operator|)
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -396,7 +399,10 @@ comment|/* Now see if the next line is to be printed. */
 name|selected
 operator|=
 operator|!
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|denom
 operator|*
@@ -405,7 +411,7 @@ argument_list|()
 operator|)
 operator|/
 name|LONG_MAX
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
