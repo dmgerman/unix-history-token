@@ -753,27 +753,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|OCB_ACT_MASK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCB_RESERVED
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCB_DONE
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
 name|OCB_MATCH
 parameter_list|(
 name|o
@@ -5332,110 +5311,17 @@ block|}
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|sbp_doorbell
-parameter_list|(
-name|struct
-name|sbp_dev
-modifier|*
-name|sdev
-parameter_list|)
-block|{
-name|struct
-name|fw_xfer
-modifier|*
-name|xfer
-decl_stmt|;
-name|struct
-name|fw_pkt
-modifier|*
-name|fp
-decl_stmt|;
-name|SBP_DEBUG
-argument_list|(
-literal|1
-argument_list|)
-name|sbp_show_sdev_info
-argument_list|(
-name|sdev
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"sbp_doorbell\n"
-argument_list|)
-expr_stmt|;
-name|END_DEBUG
-name|xfer
-init|=
-name|sbp_write_cmd
-argument_list|(
-name|sdev
-argument_list|,
-name|FWTCODE_WREQQ
-argument_list|,
-literal|0x10
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|xfer
-operator|==
-name|NULL
-condition|)
-return|return;
-name|xfer
-operator|->
-name|act
-operator|.
-name|hand
-operator|=
-name|sbp_cmd_callback
-expr_stmt|;
-name|fp
-operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
-name|xfer
-operator|->
-name|send
-operator|.
-name|buf
-expr_stmt|;
-name|fp
-operator|->
-name|mode
-operator|.
-name|wreqq
-operator|.
-name|data
-operator|=
-name|htonl
-argument_list|(
-literal|0xf
-argument_list|)
-expr_stmt|;
-name|fw_asyreq
-argument_list|(
-name|xfer
-operator|->
-name|fc
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-name|xfer
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void sbp_doorbell(struct sbp_dev *sdev) { 	struct fw_xfer *xfer; 	struct fw_pkt *fp; SBP_DEBUG(1) 	sbp_show_sdev_info(sdev, 2); 	printf("sbp_doorbell\n"); END_DEBUG  	xfer = sbp_write_cmd(sdev, FWTCODE_WREQQ, 0x10); 	if (xfer == NULL) 		return; 	xfer->act.hand = sbp_cmd_callback; 	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.wreqq.data = htonl(0xf); 	fw_asyreq(xfer->fc, -1, xfer); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -7660,7 +7546,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"No ocb on the queue\n"
+literal|"No ocb(%x) on the queue\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|sbp_status
+operator|->
+name|orb_lo
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7996,8 +7889,6 @@ condition|(
 name|ocb
 operator|->
 name|flags
-operator|&
-name|OCB_ACT_MASK
 condition|)
 block|{
 case|case
@@ -8455,17 +8346,6 @@ default|default:
 break|break;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|ocb
-operator|->
-name|flags
-operator|&
-name|OCB_RESERVED
-operator|)
-condition|)
 name|sbp_free_ocb
 argument_list|(
 name|sbp
@@ -11671,7 +11551,7 @@ argument|, seg); END_DEBUG 			ocb->ind_ptr[i].hi = htonl(s->ds_len<<
 literal|16
 argument|); 			ocb->ind_ptr[i].lo = htonl(s->ds_addr); 		} 		ocb->orb[
 literal|4
-argument|] |= htonl(ORB_CMD_PTBL | seg); 	} 	 	ccb = ocb->ccb; 	prev = sbp_enqueue_ocb(ocb->sdev, ocb); 	if (prev) 		sbp_doorbell(ocb->sdev); 	else 		sbp_orb_pointer(ocb->sdev, ocb);  }  static void sbp_poll(struct cam_sim *sim) {
+argument|] |= htonl(ORB_CMD_PTBL | seg); 	} 	 	ccb = ocb->ccb; 	prev = sbp_enqueue_ocb(ocb->sdev, ocb); 	if (prev == NULL) 		sbp_orb_pointer(ocb->sdev, ocb);  }  static void sbp_poll(struct cam_sim *sim) {
 comment|/* should call fwohci_intr? */
 argument|return; } static struct sbp_ocb * sbp_dequeue_ocb(struct sbp_dev *sdev, struct sbp_status *sbp_status) { 	struct sbp_ocb *ocb; 	struct sbp_ocb *next; 	int s = splfw()
 argument_list|,
@@ -11703,9 +11583,9 @@ argument|]), ntohl(ocb->orb[
 literal|1
 argument|]), flags); END_DEBUG 		if (OCB_MATCH(ocb, sbp_status)) {
 comment|/* found */
-argument|if (ocb->flags& OCB_RESERVED) 				ocb->flags |= OCB_DONE; 			else 				STAILQ_REMOVE(&sdev->ocbs, ocb, sbp_ocb, ocb); 			if (ocb->ccb != NULL) 				untimeout(sbp_timeout, (caddr_t)ocb, 						ocb->ccb->ccb_h.timeout_ch); 			if (ocb->dmamap != NULL) { 				bus_dmamap_destroy(sdev->target->sbp->dmat, 							ocb->dmamap); 				ocb->dmamap = NULL; 			} 			break; 		} else { 			if ((ocb->flags& OCB_RESERVED)&& 					(ocb->flags& OCB_DONE)) {
-comment|/* next orb must be fetched already */
-argument|STAILQ_REMOVE(&sdev->ocbs, ocb, sbp_ocb, ocb); 				sbp_free_ocb(sdev->target->sbp, ocb); 			} else 				order ++; 		} 	} 	splx(s); SBP_DEBUG(
+argument|STAILQ_REMOVE(&sdev->ocbs, ocb, sbp_ocb, ocb); 			if (ocb->ccb != NULL) 				untimeout(sbp_timeout, (caddr_t)ocb, 						ocb->ccb->ccb_h.timeout_ch); 			if (ocb->dmamap != NULL) { 				bus_dmamap_destroy(sdev->target->sbp->dmat, 							ocb->dmamap); 				ocb->dmamap = NULL; 			} 			if (next != NULL&& sbp_status->src ==
+literal|1
+argument|) 				sbp_orb_pointer(sdev, next);  			break; 		} else 			order ++; 	} 	splx(s); SBP_DEBUG(
 literal|0
 argument|) 	if (ocb&& order>
 literal|0
@@ -11763,7 +11643,7 @@ endif|#
 directive|endif
 argument|vtophys(&ocb->orb[
 literal|0
-argument|])); END_DEBUG 		prev->flags |= OCB_RESERVED; 		prev->orb[
+argument|])); END_DEBUG 		prev->orb[
 literal|1
 argument|] = htonl(vtophys(&ocb->orb[
 literal|0
@@ -11792,9 +11672,25 @@ argument|; 	ocb->ccb = NULL; 	STAILQ_INSERT_TAIL(&sbp->free_ocbs, ocb, ocb); }  
 literal|1
 argument|) 	sbp_show_sdev_info(sdev,
 literal|2
-argument|); 	printf(
+argument|);
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+argument|printf(
+literal|"sbp_abort_ocb 0x%tx\n"
+argument|,
+else|#
+directive|else
+argument|printf(
 literal|"sbp_abort_ocb 0x%x\n"
-argument|, status); 	if (ocb->ccb != NULL) 		sbp_print_scsi_cmd(ocb); END_DEBUG 	if (ocb->ccb != NULL&& !(ocb->flags& OCB_DONE)) { 		untimeout(sbp_timeout, (caddr_t)ocb, 					ocb->ccb->ccb_h.timeout_ch); 		ocb->ccb->ccb_h.status = status; 		xpt_done(ocb->ccb); 	} 	if (ocb->dmamap != NULL) { 		bus_dmamap_destroy(sdev->target->sbp->dmat, ocb->dmamap); 		ocb->dmamap = NULL; 	} 	sbp_free_ocb(sdev->target->sbp, ocb); }  static void sbp_abort_all_ocbs(struct sbp_dev *sdev, int status) { 	int s; 	struct sbp_ocb *ocb, *next; 	STAILQ_HEAD(, sbp_ocb) temp;  	s = splfw();  	bcopy(&sdev->ocbs,&temp, sizeof(temp)); 	STAILQ_INIT(&sdev->ocbs); 	for (ocb = STAILQ_FIRST(&temp); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		sbp_abort_ocb(ocb, status); 	}  	splx(s); }  static devclass_t sbp_devclass;  static device_method_t sbp_methods[] = {
+argument|,
+endif|#
+directive|endif
+argument|vtophys(&ocb->orb[
+literal|0
+argument|])); 	if (ocb->ccb != NULL) 		sbp_print_scsi_cmd(ocb); END_DEBUG 	if (ocb->ccb != NULL) { 		untimeout(sbp_timeout, (caddr_t)ocb, 					ocb->ccb->ccb_h.timeout_ch); 		ocb->ccb->ccb_h.status = status; 		xpt_done(ocb->ccb); 	} 	if (ocb->dmamap != NULL) { 		bus_dmamap_destroy(sdev->target->sbp->dmat, ocb->dmamap); 		ocb->dmamap = NULL; 	} 	sbp_free_ocb(sdev->target->sbp, ocb); }  static void sbp_abort_all_ocbs(struct sbp_dev *sdev, int status) { 	int s; 	struct sbp_ocb *ocb, *next; 	STAILQ_HEAD(, sbp_ocb) temp;  	s = splfw();  	bcopy(&sdev->ocbs,&temp, sizeof(temp)); 	STAILQ_INIT(&sdev->ocbs); 	for (ocb = STAILQ_FIRST(&temp); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		sbp_abort_ocb(ocb, status); 	}  	splx(s); }  static devclass_t sbp_devclass;  static device_method_t sbp_methods[] = {
 comment|/* device interface */
 argument|DEVMETHOD(device_identify,	sbp_identify), 	DEVMETHOD(device_probe,		sbp_probe), 	DEVMETHOD(device_attach,	sbp_attach), 	DEVMETHOD(device_detach,	sbp_detach), 	DEVMETHOD(device_shutdown,	sbp_shutdown),  	{
 literal|0
