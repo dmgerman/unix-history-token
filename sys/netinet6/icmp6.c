@@ -6823,9 +6823,13 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* DNS label length restriction, RFC1035 page 8 */
+comment|/* 			 * DNS label length restriction, RFC1035 page 8. 			 * "i == 0" case is included here to avoid returning 			 * 0-length label on "foo..bar". 			 */
 if|if
 condition|(
+name|i
+operator|<=
+literal|0
+operator|||
 name|i
 operator|>=
 literal|64
