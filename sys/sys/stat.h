@@ -1395,7 +1395,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|u_long
+name|unsigned
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1419,7 +1420,8 @@ name|fchflags
 parameter_list|(
 name|int
 parameter_list|,
-name|u_long
+name|unsigned
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl
