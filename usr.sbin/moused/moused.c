@@ -756,6 +756,12 @@ name|MOUSE_MODEL_4DPLUS
 block|}
 block|,
 block|{
+literal|"Synaptics Touchpad"
+block|,
+name|MOUSE_MODEL_SYNAPTICS
+block|}
+block|,
+block|{
 literal|"generic"
 block|,
 name|MOUSE_MODEL_GENERIC
@@ -5574,7 +5580,7 @@ literal|"usage: moused [-DRcdfs] [-I file] [-F rate] [-r resolution] [-S baudrat
 argument_list|,
 literal|"              [-a X [,Y]] [-C threshold] [-m N=M] [-w N] [-z N]"
 argument_list|,
-literal|"              [-t<mousetype>] [-3 [-E timeout]] -p<port>"
+literal|"              [-t<mousetype>] [-l level] [-3 [-E timeout]] -p<port>"
 argument_list|,
 literal|"       moused [-d] -i<port|if|type|model|all> -p<port>"
 argument_list|)
