@@ -67,6 +67,40 @@ name|reg
 struct_decl|;
 end_struct_decl
 
+begin_struct
+struct|struct
+name|ia64_fdesc
+block|{
+name|u_int64_t
+name|func
+decl_stmt|;
+name|u_int64_t
+name|gp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FDESC_FUNC
+parameter_list|(
+name|fn
+parameter_list|)
+value|(((struct ia64_fdesc *) fn)->func)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDESC_GP
+parameter_list|(
+name|fn
+parameter_list|)
+value|(((struct ia64_fdesc *) fn)->gp)
+end_define
+
 begin_function_decl
 name|void
 name|busdma_swi
@@ -96,6 +130,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ia64_running_in_simulator
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|is_physical_memory
 parameter_list|(
 name|vm_offset_t
@@ -106,19 +149,28 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|swi_vm
+name|os_boot_rendez
 parameter_list|(
 name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ia64_running_in_simulator
+name|void
+name|os_mca
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|swi_vm
+parameter_list|(
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
