@@ -230,18 +230,18 @@ begin_typedef
 typedef|typedef
 name|void
 name|ispfwfunc
-name|__P
-typedef|((
+parameter_list|(
 name|int
-typedef|,
+parameter_list|,
 name|int
-typedef|,
+parameter_list|,
 name|int
-typedef|,
+parameter_list|,
 name|u_int16_t
 modifier|*
 modifier|*
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_ifdef
@@ -414,6 +414,20 @@ name|proc
 modifier|*
 name|kproc
 decl_stmt|;
+name|bus_dma_tag_t
+name|cdmat
+decl_stmt|;
+name|bus_dmamap_t
+name|cdmap
+decl_stmt|;
+define|#
+directive|define
+name|isp_cdmat
+value|isp_osinfo.cdmat
+define|#
+directive|define
+name|isp_cdmap
+value|isp_osinfo.cdmap
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
@@ -534,7 +548,7 @@ begin_define
 define|#
 directive|define
 name|ISP2100_SCRLEN
-value|0x400
+value|0x800
 end_define
 
 begin_define
