@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.10 83/09/01"
+literal|"@(#)cmd.c	3.11 83/09/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1144,6 +1144,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * This is all heuristic.  * wwvisible() doesn't work for partially tinted windows.  * and wwmoveup() doesn't work for transparent (completely or in part) windows.  * But anything to make it faster.  */
+end_comment
+
 begin_expr_stmt
 name|front
 argument_list|(
@@ -1164,6 +1168,18 @@ name|moved
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|wwvisible
+argument_list|(
+name|w
+argument_list|)
+condition|)
+name|moved
+operator|=
+literal|1
+expr_stmt|;
+else|else
 while|while
 condition|(
 name|w
