@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.14	%G%"
+literal|"@(#)recipient.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -993,11 +993,28 @@ argument_list|,
 name|name
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"sending to login name %s"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|pw
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
