@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.38 (Berkeley) %G%"
+literal|"@(#)conf.c	6.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1198,6 +1198,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|uid_t
+name|uid
+init|=
+name|getuid
+argument_list|()
+decl_stmt|;
 name|myname
 operator|=
 name|newstr
@@ -1218,20 +1224,24 @@ operator|)
 operator|==
 name|NULL
 operator|||
-name|getuid
-argument_list|()
+operator|(
+name|uid
+operator|!=
+literal|0
+operator|&&
+name|uid
 operator|!=
 name|pw
 operator|->
 name|pw_uid
+operator|)
 condition|)
 block|{
 name|pw
 operator|=
 name|getpwuid
 argument_list|(
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 if|if
