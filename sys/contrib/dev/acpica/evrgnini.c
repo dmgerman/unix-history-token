@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 48 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -763,6 +763,10 @@ operator|*
 operator|)
 name|METHOD_NAME__REG
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RegionObj2
+decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
 literal|"EvInitializeRegion"
@@ -779,6 +783,42 @@ block|{
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|RegionObj
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_OBJECT_INITIALIZED
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+name|RegionObj2
+operator|=
+name|AcpiNsGetSecondaryObject
+argument_list|(
+name|RegionObj
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RegionObj2
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NOT_EXIST
 argument_list|)
 expr_stmt|;
 block|}
@@ -809,11 +849,7 @@ name|AddrHandler
 operator|=
 name|NULL
 expr_stmt|;
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Extra
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -823,14 +859,22 @@ name|NULL
 expr_stmt|;
 name|RegionObj
 operator|->
-name|Region
+name|Common
 operator|.
 name|Flags
 operator|&=
 operator|~
 operator|(
-name|AOPOBJ_INITIALIZED
+name|AOPOBJ_SETUP_COMPLETE
 operator|)
+expr_stmt|;
+name|RegionObj
+operator|->
+name|Common
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_OBJECT_INITIALIZED
 expr_stmt|;
 comment|/*      *  Find any "_REG" associated with this region definition      */
 name|Status
@@ -857,11 +901,7 @@ argument_list|)
 condition|)
 block|{
 comment|/*          *  The _REG method is optional and there can be only one per region          *  definition.  This will be executed when the handler is attached          *  or removed          */
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Extra
+name|RegionObj2
 operator|->
 name|Extra
 operator|.

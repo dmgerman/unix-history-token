@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -124,9 +124,10 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|SourceNode
-operator|->
-name|Object
+argument_list|)
 argument_list|,
 name|SourceNode
 operator|->
@@ -189,15 +190,14 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Create the actual OS semaphore */
-comment|/* TBD: [Investigate] should be created with 0 or 1 units? */
+comment|/*       * Create the actual OS semaphore, with zero initial units -- meaning      * that the event is created in an unsignalled state      */
 name|Status
 operator|=
 name|AcpiOsCreateSemaphore
 argument_list|(
 name|ACPI_NO_UNIT_LIMIT
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|ObjDesc
@@ -245,7 +245,7 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
-comment|/*       * Remove local reference to the object (on error, will cause deletion      * of both object and semaphore if present.)      */
+comment|/*      * Remove local reference to the object (on error, will cause deletion      * of both object and semaphore if present.)      */
 name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
@@ -310,7 +310,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Create the actual OS semaphore */
+comment|/*       * Create the actual OS semaphore.      * One unit max to make it a mutex, with one initial unit to allow      * the mutex to be acquired.      */
 name|Status
 operator|=
 name|AcpiOsCreateSemaphore
@@ -385,7 +385,7 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
-comment|/*       * Remove local reference to the object (on error, will cause deletion      * of both object and semaphore if present.)      */
+comment|/*      * Remove local reference to the object (on error, will cause deletion      * of both object and semaphore if present.)      */
 name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
@@ -433,6 +433,12 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RegionObj2
+init|=
+name|NULL
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"ExCreateRegion"
@@ -441,23 +447,19 @@ expr_stmt|;
 comment|/* Get the Node from the object stack  */
 name|Node
 operator|=
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
 name|WalkState
 operator|->
-name|Operands
-index|[
-literal|0
-index|]
+name|Op
+operator|->
+name|Node
 expr_stmt|;
 comment|/*      * If the region object is already attached to this node,      * just return      */
 if|if
 condition|(
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|Node
-operator|->
-name|Object
+argument_list|)
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -472,13 +474,13 @@ condition|(
 operator|(
 name|RegionSpace
 operator|>=
-name|NUM_REGION_TYPES
+name|ACPI_NUM_PREDEFINED_REGIONS
 operator|)
 operator|&&
 operator|(
 name|RegionSpace
 operator|<
-name|USER_REGION_BEGIN
+name|ACPI_USER_REGION_BEGIN
 operator|)
 condition|)
 block|{
@@ -535,42 +537,16 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Allocate a method object for this region */
-name|ObjDesc
-operator|->
-name|Region
-operator|.
-name|Extra
-operator|=
-name|AcpiUtCreateInternalObject
-argument_list|(
-name|INTERNAL_TYPE_EXTRA
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-operator|->
-name|Region
-operator|.
-name|Extra
-condition|)
-block|{
-name|Status
-operator|=
-name|AE_NO_MEMORY
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
-block|}
 comment|/*      * Remember location in AML stream of address& length      * operands since they need to be evaluated at run time.      */
+name|RegionObj2
+operator|=
 name|ObjDesc
 operator|->
-name|Region
+name|Common
 operator|.
-name|Extra
+name|NextObject
+expr_stmt|;
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -578,11 +554,7 @@ name|AmlStart
 operator|=
 name|AmlStart
 expr_stmt|;
-name|ObjDesc
-operator|->
-name|Region
-operator|.
-name|Extra
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -638,50 +610,6 @@ operator|)
 name|ACPI_TYPE_REGION
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|Cleanup
-goto|;
-block|}
-comment|/*      * If we have a valid region, initialize it      * Namespace is NOT locked at this point.      */
-name|Status
-operator|=
-name|AcpiEvInitializeRegion
-argument_list|(
-name|ObjDesc
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-comment|/*          *  If AE_NOT_EXIST is returned, it is not fatal          *  because many regions get created before a handler          *  is installed for said region.          */
-if|if
-condition|(
-name|AE_NOT_EXIST
-operator|==
-name|Status
-condition|)
-block|{
-name|Status
-operator|=
-name|AE_OK
-expr_stmt|;
-block|}
-block|}
 name|Cleanup
 label|:
 comment|/* Remove local reference to the object */

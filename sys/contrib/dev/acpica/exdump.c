@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 126 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 138 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -126,6 +126,26 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
+operator|(
+name|ACPI_LV_LOAD
+operator|&
+name|AcpiDbgLevel
+operator|)
+operator|&&
+operator|(
+name|_COMPONENT
+operator|&
+name|AcpiDbgLayer
+operator|)
+operator|)
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
+operator|!
 name|AmlStart
 condition|)
 block|{
@@ -136,6 +156,7 @@ literal|"ExShowHexValue: null pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/*      * AML numbers are always stored little-endian,      * even if the processor is big-endian.      */
 for|for
@@ -237,13 +258,9 @@ operator|--
 name|Length
 control|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_LOAD
-operator|,
 literal|" "
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -253,17 +270,13 @@ name|ByteCount
 operator|--
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_LOAD
-operator|,
 literal|"%02x"
-operator|,
+argument_list|,
 operator|*
 name|AmlStart
 operator|++
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -271,13 +284,9 @@ condition|(
 name|ByteCount
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_LOAD
-operator|,
 literal|" "
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -287,15 +296,11 @@ condition|(
 name|ShowDecimalValue
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_LOAD
-operator|,
 literal|" [%d]"
-operator|,
+argument_list|,
 name|Value
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -306,23 +311,15 @@ operator|==
 name|LeadSpace
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_LOAD
-operator|,
 literal|" "
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_LOAD
-operator|,
 literal|"\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|return_VOID
@@ -359,6 +356,30 @@ name|PROC_NAME
 argument_list|(
 literal|"ExDumpOperand"
 argument_list|)
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|ACPI_LV_INFO
+operator|&
+name|AcpiDbgLevel
+operator|)
+operator|&&
+operator|(
+name|_COMPONENT
+operator|&
+name|AcpiDbgLayer
+operator|)
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -489,65 +510,45 @@ block|{
 case|case
 name|AML_ZERO_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference: Zero\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_ONE_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference: One\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_ONES_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference: Ones\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_REVISION_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference: Revision\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_DEBUG_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference: Debug\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -584,38 +585,30 @@ break|break;
 case|case
 name|AML_INDEX_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference: Index %p\n"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Reference
 operator|.
 name|Object
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_ARG_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference: Arg%d"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Reference
 operator|.
 name|Offset
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -630,13 +623,10 @@ name|Type
 condition|)
 block|{
 comment|/* Value is a Number */
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|" value is [%8.8X%8.8x]"
-operator|,
+argument_list|,
 name|HIDWORD
 argument_list|(
 name|EntryDesc
@@ -645,7 +635,7 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|,
+argument_list|,
 name|LODWORD
 argument_list|(
 name|EntryDesc
@@ -654,36 +644,27 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_LOCAL_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference: Local%d"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Reference
 operator|.
 name|Offset
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -698,13 +679,10 @@ name|Type
 condition|)
 block|{
 comment|/* Value is a Number */
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|" value is [%8.8X%8.8x]"
-operator|,
+argument_list|,
 name|HIDWORD
 argument_list|(
 name|EntryDesc
@@ -713,7 +691,7 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|,
+argument_list|,
 name|LODWORD
 argument_list|(
 name|EntryDesc
@@ -722,30 +700,22 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_INT_NAMEPATH_OP
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Reference.Node->Name %X\n"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Reference
@@ -753,25 +723,20 @@ operator|.
 name|Node
 operator|->
 name|Name
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 comment|/*  unknown opcode  */
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Unknown opcode=%X\n"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Reference
 operator|.
 name|Opcode
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -780,25 +745,21 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Buffer len %X @ %p \n"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Buffer
 operator|.
 name|Length
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Buffer
 operator|.
 name|Pointer
-operator|)
 argument_list|)
 expr_stmt|;
 name|Length
@@ -831,13 +792,9 @@ operator|.
 name|Pointer
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Buffer Contents: "
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -857,26 +814,18 @@ operator|++
 name|Buf
 control|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|" %02x"
-operator|,
+argument_list|,
 operator|*
 name|Buf
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"\n"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -884,13 +833,10 @@ break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Integer %8.8X%8.8X\n"
-operator|,
+argument_list|,
 name|HIDWORD
 argument_list|(
 name|EntryDesc
@@ -899,7 +845,7 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|,
+argument_list|,
 name|LODWORD
 argument_list|(
 name|EntryDesc
@@ -908,20 +854,16 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|INTERNAL_TYPE_IF
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"If [Integer] %8.8X%8.8X\n"
-operator|,
+argument_list|,
 name|HIDWORD
 argument_list|(
 name|EntryDesc
@@ -930,7 +872,7 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|,
+argument_list|,
 name|LODWORD
 argument_list|(
 name|EntryDesc
@@ -939,20 +881,16 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|INTERNAL_TYPE_WHILE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"While [Integer] %8.8X%8.8X\n"
-operator|,
+argument_list|,
 name|HIDWORD
 argument_list|(
 name|EntryDesc
@@ -961,7 +899,7 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|,
+argument_list|,
 name|LODWORD
 argument_list|(
 name|EntryDesc
@@ -970,32 +908,27 @@ name|Integer
 operator|.
 name|Value
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Package count %X @ %p\n"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Package
 operator|.
 name|Count
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Package
 operator|.
 name|Elements
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/*          * If elements exist, package vector pointer is valid,          * and debug_level exceeds 1, dump package's elements.          */
@@ -1063,26 +996,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_REGION
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Region %s (%X)"
-operator|,
+argument_list|,
 name|AcpiUtGetRegionName
 argument_list|(
 name|EntryDesc
@@ -1091,13 +1017,12 @@ name|Region
 operator|.
 name|SpaceId
 argument_list|)
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Region
 operator|.
 name|SpaceId
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/*          * If the address and length have not been evaluated,          * don't print them.          */
@@ -1115,25 +1040,18 @@ name|AOPOBJ_DATA_VALID
 operator|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"\n"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|" base %8.8X%8.8X Length %X\n"
-operator|,
+argument_list|,
 name|HIDWORD
 argument_list|(
 name|EntryDesc
@@ -1142,7 +1060,7 @@ name|Region
 operator|.
 name|Address
 argument_list|)
-operator|,
+argument_list|,
 name|LODWORD
 argument_list|(
 name|EntryDesc
@@ -1151,13 +1069,12 @@ name|Region
 operator|.
 name|Address
 argument_list|)
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Region
 operator|.
 name|Length
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1165,25 +1082,21 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"String length %X @ %p \""
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|String
 operator|.
 name|Length
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|String
 operator|.
 name|Pointer
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1204,13 +1117,10 @@ name|i
 operator|++
 control|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"%c"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|String
@@ -1219,79 +1129,70 @@ name|Pointer
 index|[
 name|i
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"\"\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|INTERNAL_TYPE_BANK_FIELD
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"BankField\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|INTERNAL_TYPE_REGION_FIELD
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"RegionField: bits=%X  bitaccwidth=%X lock=%X update=%X at byte=%X bit=%X of below:\n"
-operator|,
+literal|"RegionField: Bits=%X  BitAccWidth=%X Lock=%X Update=%X at byte=%X bit=%X of below:\n"
+argument_list|,
 name|EntryDesc
 operator|->
 name|Field
 operator|.
 name|BitLength
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Field
 operator|.
 name|AccessBitWidth
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Field
 operator|.
-name|LockRule
-operator|,
+name|FieldFlags
+operator|&
+name|AML_FIELD_LOCK_RULE_MASK
+argument_list|,
 name|EntryDesc
 operator|->
 name|Field
 operator|.
-name|UpdateRule
-operator|,
+name|FieldFlags
+operator|&
+name|AML_FIELD_UPDATE_RULE_MASK
+argument_list|,
 name|EntryDesc
 operator|->
 name|Field
 operator|.
 name|BaseByteOffset
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Field
 operator|.
 name|StartFieldBitOffset
-operator|)
 argument_list|)
 expr_stmt|;
 name|DUMP_STACK_ENTRY
@@ -1307,44 +1208,36 @@ break|break;
 case|case
 name|INTERNAL_TYPE_INDEX_FIELD
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"IndexField\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"BufferField: %X bits at byte %X bit %X of \n"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|BufferField
 operator|.
 name|BitLength
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|BufferField
 operator|.
 name|BaseByteOffset
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|BufferField
 operator|.
 name|StartFieldBitOffset
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1383,13 +1276,9 @@ operator|.
 name|Type
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"*not a Buffer* \n"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1409,165 +1298,95 @@ break|break;
 case|case
 name|ACPI_TYPE_EVENT
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Event\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_METHOD
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Method(%X) @ %p:%X\n"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Method
 operator|.
 name|ParamCount
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Method
 operator|.
 name|AmlStart
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Method
 operator|.
 name|AmlLength
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_MUTEX
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Mutex\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_DEVICE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Device\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_POWER
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Power\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_PROCESSOR
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Processor\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_THERMAL
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Thermal\n"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 comment|/*  unknown EntryDesc->Common.Type value    */
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Unknown Type %X\n"
-operator|,
+argument_list|,
 name|EntryDesc
 operator|->
 name|Common
 operator|.
 name|Type
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Back up to previous entry */
-name|EntryDesc
-operator|--
-expr_stmt|;
-comment|/* TBD: [Restructure]  Change to use dump object routine !! */
-comment|/*       What is all of this?? */
-name|DUMP_BUFFER
-argument_list|(
-name|EntryDesc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|DUMP_BUFFER
-argument_list|(
-operator|++
-name|EntryDesc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|DUMP_BUFFER
-argument_list|(
-operator|++
-name|EntryDesc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1736,6 +1555,132 @@ block|}
 end_function
 
 begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExOut*  *  * PARAMETERS:  Title               - Descriptive text  *              Value               - Value to be displayed  *  * DESCRIPTION: Object dump output formatting functions.  These functions  *              reduce the number of format strings required and keeps them  *              all in one place for easy modification.  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiExOutString
+parameter_list|(
+name|char
+modifier|*
+name|Title
+parameter_list|,
+name|char
+modifier|*
+name|Value
+parameter_list|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%20s : %s\n"
+argument_list|,
+name|Title
+argument_list|,
+name|Value
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|AcpiExOutPointer
+parameter_list|(
+name|char
+modifier|*
+name|Title
+parameter_list|,
+name|void
+modifier|*
+name|Value
+parameter_list|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%20s : %p\n"
+argument_list|,
+name|Title
+argument_list|,
+name|Value
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|AcpiExOutInteger
+parameter_list|(
+name|char
+modifier|*
+name|Title
+parameter_list|,
+name|UINT32
+name|Value
+parameter_list|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%20s : %X\n"
+argument_list|,
+name|Title
+argument_list|,
+name|Value
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|AcpiExOutAddress
+parameter_list|(
+name|char
+modifier|*
+name|Title
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+name|Value
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|_IA16
+name|AcpiOsPrintf
+argument_list|(
+literal|"%20s : %p\n"
+argument_list|,
+name|Title
+argument_list|,
+name|Value
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|AcpiOsPrintf
+argument_list|(
+literal|"%20s : %8.8X%8.8X\n"
+argument_list|,
+name|Title
+argument_list|,
+name|HIDWORD
+argument_list|(
+name|Value
+argument_list|)
+argument_list|,
+name|LODWORD
+argument_list|(
+name|Value
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpNode  *  * PARAMETERS:  *Node           - Descriptor to dump  *              Flags               - Force display  *  * DESCRIPTION: Dumps the members of the given.Node  *  ****************************************************************************/
 end_comment
 
@@ -1797,10 +1742,8 @@ operator|->
 name|Name
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutString
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
 literal|"Type"
 argument_list|,
 name|AcpiUtGetTypeName
@@ -1811,10 +1754,8 @@ name|Type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Flags"
 argument_list|,
 name|Node
@@ -1822,10 +1763,8 @@ operator|->
 name|Flags
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Owner Id"
 argument_list|,
 name|Node
@@ -1833,10 +1772,8 @@ operator|->
 name|OwnerId
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Reference Count"
 argument_list|,
 name|Node
@@ -1844,21 +1781,18 @@ operator|->
 name|ReferenceCount
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Attached Object"
 argument_list|,
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|Node
-operator|->
-name|Object
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"ChildList"
 argument_list|,
 name|Node
@@ -1866,10 +1800,8 @@ operator|->
 name|Child
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"NextPeer"
 argument_list|,
 name|Node
@@ -1877,10 +1809,8 @@ operator|->
 name|Peer
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Parent"
 argument_list|,
 name|AcpiNsGetParentObject
@@ -1908,10 +1838,8 @@ name|UINT32
 name|Flags
 parameter_list|)
 block|{
-specifier|const
-name|ACPI_OPCODE_INFO
-modifier|*
-name|OpInfo
+name|UINT32
+name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -1960,7 +1888,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p is not a valid ACPI object\n"
+literal|"ExDumpObjectDescriptor: %p is not a valid ACPI object\n"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -1968,10 +1896,22 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Common Fields */
-name|AcpiOsPrintf
+name|AcpiExOutString
 argument_list|(
-literal|"%20s : %X\n"
+literal|"Type"
 argument_list|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AcpiExOutInteger
+argument_list|(
 literal|"Reference Count"
 argument_list|,
 name|ObjDesc
@@ -1981,10 +1921,8 @@ operator|.
 name|ReferenceCount
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Flags"
 argument_list|,
 name|ObjDesc
@@ -2007,15 +1945,6 @@ block|{
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Integer"
-argument_list|)
-expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"%20s : %X%8.8X\n"
@@ -2045,19 +1974,8 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"String"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Length"
 argument_list|,
 name|ObjDesc
@@ -2067,10 +1985,8 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Pointer"
 argument_list|,
 name|ObjDesc
@@ -2084,19 +2000,8 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Buffer"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Length"
 argument_list|,
 name|ObjDesc
@@ -2106,10 +2011,8 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Pointer"
 argument_list|,
 name|ObjDesc
@@ -2123,19 +2026,8 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Package"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Flags"
 argument_list|,
 name|ObjDesc
@@ -2145,10 +2037,8 @@ operator|.
 name|Flags
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Count"
 argument_list|,
 name|ObjDesc
@@ -2158,10 +2048,8 @@ operator|.
 name|Count
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Elements"
 argument_list|,
 name|ObjDesc
@@ -2171,10 +2059,8 @@ operator|.
 name|Elements
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"NextElement"
 argument_list|,
 name|ObjDesc
@@ -2184,88 +2070,106 @@ operator|.
 name|NextElement
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|ACPI_TYPE_BUFFER_FIELD
-case|:
+comment|/* Dump the package contents */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Package
+operator|.
+name|Count
+operator|>
+literal|0
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"BufferField"
+literal|"\nPackage Contents:\n"
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ObjDesc
+operator|->
+name|Package
+operator|.
+name|Count
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : %X\n"
+literal|"[%.3d] %p"
 argument_list|,
-literal|"BitLength"
+name|i
 argument_list|,
 name|ObjDesc
 operator|->
-name|BufferField
+name|Package
 operator|.
-name|BitLength
+name|Elements
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"BitOffset"
-argument_list|,
+if|if
+condition|(
 name|ObjDesc
 operator|->
-name|BufferField
+name|Package
 operator|.
-name|StartFieldBitOffset
-argument_list|)
-expr_stmt|;
+name|Elements
+index|[
+name|i
+index|]
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : %X\n"
+literal|" %s"
 argument_list|,
-literal|"BaseByteOffset"
-argument_list|,
+name|AcpiUtGetTypeName
+argument_list|(
+operator|(
 name|ObjDesc
 operator|->
-name|BufferField
+name|Package
 operator|.
-name|BaseByteOffset
+name|Elements
+index|[
+name|i
+index|]
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
-literal|"BufferObj"
-argument_list|,
-name|ObjDesc
-operator|->
-name|BufferField
-operator|.
-name|BufferObj
+literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_DEVICE
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Device"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"AddrHandler"
 argument_list|,
 name|ObjDesc
@@ -2275,10 +2179,8 @@ operator|.
 name|AddrHandler
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"SysHandler"
 argument_list|,
 name|ObjDesc
@@ -2288,10 +2190,8 @@ operator|.
 name|SysHandler
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"DrvHandler"
 argument_list|,
 name|ObjDesc
@@ -2305,19 +2205,8 @@ break|break;
 case|case
 name|ACPI_TYPE_EVENT
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Event"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Semaphore"
 argument_list|,
 name|ObjDesc
@@ -2331,19 +2220,8 @@ break|break;
 case|case
 name|ACPI_TYPE_METHOD
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Method"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"ParamCount"
 argument_list|,
 name|ObjDesc
@@ -2353,10 +2231,8 @@ operator|.
 name|ParamCount
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Concurrency"
 argument_list|,
 name|ObjDesc
@@ -2366,10 +2242,8 @@ operator|.
 name|Concurrency
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Semaphore"
 argument_list|,
 name|ObjDesc
@@ -2379,10 +2253,8 @@ operator|.
 name|Semaphore
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"AmlLength"
 argument_list|,
 name|ObjDesc
@@ -2392,10 +2264,8 @@ operator|.
 name|AmlLength
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"AmlStart"
 argument_list|,
 name|ObjDesc
@@ -2409,19 +2279,8 @@ break|break;
 case|case
 name|ACPI_TYPE_MUTEX
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Mutex"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"SyncLevel"
 argument_list|,
 name|ObjDesc
@@ -2431,23 +2290,19 @@ operator|.
 name|SyncLevel
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
-literal|"Owner"
+literal|"OwnerThread"
 argument_list|,
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
-name|Owner
+name|OwnerThread
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"AcquisitionDepth"
 argument_list|,
 name|ObjDesc
@@ -2457,10 +2312,8 @@ operator|.
 name|AcquisitionDepth
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Semaphore"
 argument_list|,
 name|ObjDesc
@@ -2474,19 +2327,8 @@ break|break;
 case|case
 name|ACPI_TYPE_REGION
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Region"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"SpaceId"
 argument_list|,
 name|ObjDesc
@@ -2496,10 +2338,8 @@ operator|.
 name|SpaceId
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Flags"
 argument_list|,
 name|ObjDesc
@@ -2509,10 +2349,8 @@ operator|.
 name|Flags
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutAddress
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Address"
 argument_list|,
 name|ObjDesc
@@ -2522,10 +2360,8 @@ operator|.
 name|Address
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Length"
 argument_list|,
 name|ObjDesc
@@ -2535,10 +2371,8 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"AddrHandler"
 argument_list|,
 name|ObjDesc
@@ -2548,10 +2382,8 @@ operator|.
 name|AddrHandler
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Next"
 argument_list|,
 name|ObjDesc
@@ -2565,19 +2397,8 @@ break|break;
 case|case
 name|ACPI_TYPE_POWER
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"PowerResource"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"SystemLevel"
 argument_list|,
 name|ObjDesc
@@ -2587,10 +2408,8 @@ operator|.
 name|SystemLevel
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"ResourceOrder"
 argument_list|,
 name|ObjDesc
@@ -2600,10 +2419,8 @@ operator|.
 name|ResourceOrder
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"SysHandler"
 argument_list|,
 name|ObjDesc
@@ -2613,10 +2430,8 @@ operator|.
 name|SysHandler
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"DrvHandler"
 argument_list|,
 name|ObjDesc
@@ -2630,19 +2445,8 @@ break|break;
 case|case
 name|ACPI_TYPE_PROCESSOR
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Processor"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Processor ID"
 argument_list|,
 name|ObjDesc
@@ -2652,10 +2456,8 @@ operator|.
 name|ProcId
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Length"
 argument_list|,
 name|ObjDesc
@@ -2665,10 +2467,8 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Address"
 argument_list|,
 name|ObjDesc
@@ -2678,10 +2478,8 @@ operator|.
 name|Address
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"SysHandler"
 argument_list|,
 name|ObjDesc
@@ -2691,10 +2489,8 @@ operator|.
 name|SysHandler
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"DrvHandler"
 argument_list|,
 name|ObjDesc
@@ -2704,10 +2500,8 @@ operator|.
 name|DrvHandler
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"AddrHandler"
 argument_list|,
 name|ObjDesc
@@ -2721,19 +2515,8 @@ break|break;
 case|case
 name|ACPI_TYPE_THERMAL
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"ThermalZone"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"SysHandler"
 argument_list|,
 name|ObjDesc
@@ -2743,10 +2526,8 @@ operator|.
 name|SysHandler
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"DrvHandler"
 argument_list|,
 name|ObjDesc
@@ -2756,10 +2537,8 @@ operator|.
 name|DrvHandler
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"AddrHandler"
 argument_list|,
 name|ObjDesc
@@ -2771,64 +2550,156 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_TYPE_BUFFER_FIELD
+case|:
+case|case
 name|INTERNAL_TYPE_REGION_FIELD
 case|:
-name|AcpiOsPrintf
+case|case
+name|INTERNAL_TYPE_BANK_FIELD
+case|:
+case|case
+name|INTERNAL_TYPE_INDEX_FIELD
+case|:
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %p\n"
+literal|"FieldFlags"
 argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|FieldFlags
+argument_list|)
+expr_stmt|;
+name|AcpiExOutInteger
+argument_list|(
 literal|"AccessBitWidth"
 argument_list|,
 name|ObjDesc
 operator|->
-name|Field
+name|CommonField
 operator|.
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %p\n"
+literal|"AccessByteWidth"
 argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+argument_list|)
+expr_stmt|;
+name|AcpiExOutInteger
+argument_list|(
 literal|"BitLength"
 argument_list|,
 name|ObjDesc
 operator|->
-name|Field
+name|CommonField
 operator|.
 name|BitLength
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
-literal|"BaseByteOffset"
+literal|"FldBitOffset"
 argument_list|,
 name|ObjDesc
 operator|->
-name|Field
-operator|.
-name|BaseByteOffset
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
-literal|"BitOffset"
-argument_list|,
-name|ObjDesc
-operator|->
-name|Field
+name|CommonField
 operator|.
 name|StartFieldBitOffset
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %p\n"
+literal|"BaseByteOffset"
 argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BaseByteOffset
+argument_list|)
+expr_stmt|;
+name|AcpiExOutInteger
+argument_list|(
+literal|"DatumValidBits"
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|DatumValidBits
+argument_list|)
+expr_stmt|;
+name|AcpiExOutInteger
+argument_list|(
+literal|"EndFldValidBits"
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|EndFieldValidBits
+argument_list|)
+expr_stmt|;
+name|AcpiExOutInteger
+argument_list|(
+literal|"EndBufValidBits"
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|EndBufferValidBits
+argument_list|)
+expr_stmt|;
+name|AcpiExOutPointer
+argument_list|(
+literal|"ParentNode"
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|Node
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_BUFFER_FIELD
+case|:
+name|AcpiExOutPointer
+argument_list|(
+literal|"BufferObj"
+argument_list|,
+name|ObjDesc
+operator|->
+name|BufferField
+operator|.
+name|BufferObj
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|INTERNAL_TYPE_REGION_FIELD
+case|:
+name|AcpiExOutPointer
+argument_list|(
 literal|"RegionObj"
 argument_list|,
 name|ObjDesc
@@ -2842,97 +2713,8 @@ break|break;
 case|case
 name|INTERNAL_TYPE_BANK_FIELD
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"BankField"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"AccessBitWidth"
-argument_list|,
-name|ObjDesc
-operator|->
-name|BankField
-operator|.
-name|AccessBitWidth
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"LockRule"
-argument_list|,
-name|ObjDesc
-operator|->
-name|BankField
-operator|.
-name|LockRule
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"UpdateRule"
-argument_list|,
-name|ObjDesc
-operator|->
-name|BankField
-operator|.
-name|UpdateRule
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"BitLength"
-argument_list|,
-name|ObjDesc
-operator|->
-name|BankField
-operator|.
-name|BitLength
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"BitOffset"
-argument_list|,
-name|ObjDesc
-operator|->
-name|BankField
-operator|.
-name|StartFieldBitOffset
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"BaseByteOffset"
-argument_list|,
-name|ObjDesc
-operator|->
-name|BankField
-operator|.
-name|BaseByteOffset
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Value"
 argument_list|,
 name|ObjDesc
@@ -2942,10 +2724,8 @@ operator|.
 name|Value
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"RegionObj"
 argument_list|,
 name|ObjDesc
@@ -2955,101 +2735,23 @@ operator|.
 name|RegionObj
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"BankRegisterObj"
+literal|"BankObj"
 argument_list|,
 name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|BankRegisterObj
+name|BankObj
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|INTERNAL_TYPE_INDEX_FIELD
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"IndexField"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"AccessBitWidth"
-argument_list|,
-name|ObjDesc
-operator|->
-name|IndexField
-operator|.
-name|AccessBitWidth
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"LockRule"
-argument_list|,
-name|ObjDesc
-operator|->
-name|IndexField
-operator|.
-name|LockRule
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"UpdateRule"
-argument_list|,
-name|ObjDesc
-operator|->
-name|IndexField
-operator|.
-name|UpdateRule
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"BitLength"
-argument_list|,
-name|ObjDesc
-operator|->
-name|IndexField
-operator|.
-name|BitLength
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
-literal|"BitOffset"
-argument_list|,
-name|ObjDesc
-operator|->
-name|IndexField
-operator|.
-name|StartFieldBitOffset
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Value"
 argument_list|,
 name|ObjDesc
@@ -3059,10 +2761,8 @@ operator|.
 name|Value
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Index"
 argument_list|,
 name|ObjDesc
@@ -3072,10 +2772,8 @@ operator|.
 name|IndexObj
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Data"
 argument_list|,
 name|ObjDesc
@@ -3086,33 +2784,13 @@ name|DataObj
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+break|break;
 case|case
 name|INTERNAL_TYPE_REFERENCE
 case|:
-name|OpInfo
-operator|=
-name|AcpiPsGetOpcodeInfo
+name|AcpiExOutInteger
 argument_list|(
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Opcode
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Reference"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"TargetType"
 argument_list|,
 name|ObjDesc
@@ -3122,21 +2800,26 @@ operator|.
 name|TargetType
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutString
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
 literal|"Opcode"
 argument_list|,
-name|OpInfo
+operator|(
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+argument_list|)
+operator|)
 operator|->
 name|Name
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"Offset"
 argument_list|,
 name|ObjDesc
@@ -3146,10 +2829,8 @@ operator|.
 name|Offset
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"ObjDesc"
 argument_list|,
 name|ObjDesc
@@ -3159,10 +2840,8 @@ operator|.
 name|Object
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Node"
 argument_list|,
 name|ObjDesc
@@ -3172,10 +2851,8 @@ operator|.
 name|Node
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Where"
 argument_list|,
 name|ObjDesc
@@ -3189,19 +2866,8 @@ break|break;
 case|case
 name|INTERNAL_TYPE_ADDRESS_HANDLER
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutInteger
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Address Handler"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %X\n"
-argument_list|,
 literal|"SpaceId"
 argument_list|,
 name|ObjDesc
@@ -3211,10 +2877,8 @@ operator|.
 name|SpaceId
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Next"
 argument_list|,
 name|ObjDesc
@@ -3224,10 +2888,8 @@ operator|.
 name|Next
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"RegionList"
 argument_list|,
 name|ObjDesc
@@ -3237,10 +2899,8 @@ operator|.
 name|RegionList
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Node"
 argument_list|,
 name|ObjDesc
@@ -3250,23 +2910,8 @@ operator|.
 name|Node
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
-literal|"Handler"
-argument_list|,
-name|ObjDesc
-operator|->
-name|AddrHandler
-operator|.
-name|Handler
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Context"
 argument_list|,
 name|ObjDesc
@@ -3280,19 +2925,8 @@ break|break;
 case|case
 name|INTERNAL_TYPE_NOTIFY
 case|:
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %s\n"
-argument_list|,
-literal|"Type"
-argument_list|,
-literal|"Notify Handler"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Node"
 argument_list|,
 name|ObjDesc
@@ -3302,23 +2936,8 @@ operator|.
 name|Node
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
+name|AcpiExOutPointer
 argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
-literal|"Handler"
-argument_list|,
-name|ObjDesc
-operator|->
-name|NotifyHandler
-operator|.
-name|Handler
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%20s : %p\n"
-argument_list|,
 literal|"Context"
 argument_list|,
 name|ObjDesc
@@ -3356,9 +2975,15 @@ case|:
 case|case
 name|INTERNAL_TYPE_DEF_ANY
 case|:
+case|case
+name|INTERNAL_TYPE_EXTRA
+case|:
+case|case
+name|INTERNAL_TYPE_DATA
+case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"*** Structure display not implemented for type %X! ***\n"
+literal|"ExDumpObjectDescriptor: Display not implemented for object type %X\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -3371,7 +2996,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"*** Cannot display unknown type %X! ***\n"
+literal|"ExDumpObjectDescriptor: Unknown object type %X\n"
 argument_list|,
 name|ObjDesc
 operator|->

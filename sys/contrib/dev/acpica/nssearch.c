@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 75 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 77 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -438,8 +438,7 @@ condition|(
 name|ParentNode
 condition|)
 block|{
-comment|/* Search parent scope */
-comment|/* TBD: [Investigate] Why ACPI_TYPE_ANY? */
+comment|/*           * Search parent scope.  Use TYPE_ANY because we don't care about the          * object type at this point, we only care about the existence of           * the actual name we are searching for.  Typechecking comes later.          */
 name|Status
 operator|=
 name|AcpiNsSearchNode
@@ -650,7 +649,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 expr_stmt|;
 block|}
 comment|/*          * Either found it or there was an error          * -- finished either way          */
@@ -660,7 +659,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Not found in the table.  If we are NOT performing the      * first pass (name entry) of loading the namespace, search      * the parent tree (all the way to the root if necessary.)      * We don't want to perform the parent search when the      * namespace is actually being loaded.  We want to perform      * the search when namespace references are being resolved      * (load pass 2) and during the execution phase.      */
+comment|/*      * The name was not found.  If we are NOT performing the      * first pass (name entry) of loading the namespace, search      * the parent tree (all the way to the root if necessary.)      * We don't want to perform the parent search when the      * namespace is actually being loaded.  We want to perform      * the search when namespace references are being resolved      * (load pass 2) and during the execution phase.      */
 if|if
 condition|(
 operator|(

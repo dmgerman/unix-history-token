@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 92 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 94 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -141,13 +141,8 @@ case|:
 case|case
 name|AML_ARG_OP
 case|:
-operator|*
-name|ReturnDesc
+name|Status
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|AcpiDsMethodDataGetNode
 argument_list|(
 name|ObjDesc
@@ -163,6 +158,13 @@ operator|.
 name|Offset
 argument_list|,
 name|WalkState
+argument_list|,
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|*
+operator|)
+name|ReturnDesc
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 193 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 199 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1000,6 +1000,24 @@ value|4
 end_define
 
 begin_comment
+comment|/*  * Sleep type invalid value  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SLEEP_TYPE_MAX
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SLEEP_TYPE_INVALID
+value|0xFF
+end_define
+
+begin_comment
 comment|/*  * Standard notify values  */
 end_comment
 
@@ -1155,194 +1173,154 @@ begin_define
 define|#
 directive|define
 name|ACPI_TYPE_ANY
-value|0
+value|0x00
 end_define
-
-begin_comment
-comment|/* 0x00  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_INTEGER
-value|1
+value|0x01
 end_define
 
 begin_comment
-comment|/* 0x01  Byte/Word/Dword/Zero/One/Ones */
+comment|/* Byte/Word/Dword/Zero/One/Ones */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_STRING
-value|2
+value|0x02
 end_define
-
-begin_comment
-comment|/* 0x02  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_BUFFER
-value|3
+value|0x03
 end_define
-
-begin_comment
-comment|/* 0x03  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_PACKAGE
-value|4
+value|0x04
 end_define
 
 begin_comment
-comment|/* 0x04  ByteConst, multiple DataTerm/Constant/SuperName */
+comment|/* ByteConst, multiple DataTerm/Constant/SuperName */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_FIELD_UNIT
-value|5
+value|0x05
 end_define
-
-begin_comment
-comment|/* 0x05  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_DEVICE
-value|6
+value|0x06
 end_define
 
 begin_comment
-comment|/* 0x06  Name, multiple Node */
+comment|/* Name, multiple Node */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_EVENT
-value|7
+value|0x07
 end_define
-
-begin_comment
-comment|/* 0x07  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_METHOD
-value|8
+value|0x08
 end_define
 
 begin_comment
-comment|/* 0x08  Name, ByteConst, multiple Code */
+comment|/* Name, ByteConst, multiple Code */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_MUTEX
-value|9
+value|0x09
 end_define
-
-begin_comment
-comment|/* 0x09  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_REGION
-value|10
+value|0x0A
 end_define
-
-begin_comment
-comment|/* 0x0A  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_POWER
-value|11
+value|0x0B
 end_define
 
 begin_comment
-comment|/* 0x0B  Name,ByteConst,WordConst,multi Node */
+comment|/* Name,ByteConst,WordConst,multi Node */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_PROCESSOR
-value|12
+value|0x0C
 end_define
 
 begin_comment
-comment|/* 0x0C  Name,ByteConst,DWordConst,ByteConst,multi NmO */
+comment|/* Name,ByteConst,DWordConst,ByteConst,multi NmO */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_THERMAL
-value|13
+value|0x0D
 end_define
 
 begin_comment
-comment|/* 0x0D  Name, multiple Node */
+comment|/* Name, multiple Node */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_BUFFER_FIELD
-value|14
+value|0x0E
 end_define
-
-begin_comment
-comment|/* 0x0E  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_DDB_HANDLE
-value|15
+value|0x0F
 end_define
-
-begin_comment
-comment|/* 0x0F  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_DEBUG_OBJECT
-value|16
+value|0x10
 end_define
-
-begin_comment
-comment|/* 0x10  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_MAX
-value|16
+value|0x10
 end_define
 
 begin_comment
@@ -1353,113 +1331,81 @@ begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_BEGIN
-value|17
+value|0x11
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_REGION_FIELD
-value|17
+value|0x11
 end_define
-
-begin_comment
-comment|/* 0x11  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_BANK_FIELD
-value|18
+value|0x12
 end_define
-
-begin_comment
-comment|/* 0x12  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_INDEX_FIELD
-value|19
+value|0x13
 end_define
-
-begin_comment
-comment|/* 0x13  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_REFERENCE
-value|20
+value|0x14
 end_define
 
 begin_comment
-comment|/* 0x14  Arg#, Local#, Name, Debug; used only in descriptors */
+comment|/* Arg#, Local#, Name, Debug; used only in descriptors */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_ALIAS
-value|21
+value|0x15
 end_define
-
-begin_comment
-comment|/* 0x15  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_NOTIFY
-value|22
+value|0x16
 end_define
-
-begin_comment
-comment|/* 0x16  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_ADDRESS_HANDLER
-value|23
+value|0x17
 end_define
-
-begin_comment
-comment|/* 0x17  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_RESOURCE
-value|24
+value|0x18
 end_define
-
-begin_comment
-comment|/* 0x18  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_RESOURCE_FIELD
-value|25
+value|0x19
 end_define
-
-begin_comment
-comment|/* 0x19  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_NODE_MAX
-value|25
+value|0x19
 end_define
 
 begin_comment
@@ -1470,113 +1416,104 @@ begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_FIELD_DEFN
-value|26
+value|0x1A
 end_define
 
 begin_comment
-comment|/* 0x1A  Name, ByteConst, multiple FieldElement */
+comment|/* Name, ByteConst, multiple FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_BANK_FIELD_DEFN
-value|27
+value|0x1B
 end_define
 
 begin_comment
-comment|/* 0x1B  2 Name,DWordConst,ByteConst,multi FieldElement */
+comment|/* 2 Name,DWordConst,ByteConst,multi FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_INDEX_FIELD_DEFN
-value|28
+value|0x1C
 end_define
 
 begin_comment
-comment|/* 0x1C  2 Name, ByteConst, multiple FieldElement */
+comment|/* 2 Name, ByteConst, multiple FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_IF
-value|29
+value|0x1D
 end_define
-
-begin_comment
-comment|/* 0x1D  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_ELSE
-value|30
+value|0x1E
 end_define
-
-begin_comment
-comment|/* 0x1E  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_WHILE
-value|31
+value|0x1F
 end_define
-
-begin_comment
-comment|/* 0x1F  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_SCOPE
-value|32
+value|0x20
 end_define
 
 begin_comment
-comment|/* 0x20  Name, multiple Node */
+comment|/* Name, multiple Node */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_DEF_ANY
-value|33
+value|0x21
 end_define
 
 begin_comment
-comment|/* 0x21  type is Any, suppress search of enclosing scopes */
+comment|/* type is Any, suppress search of enclosing scopes */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_EXTRA
-value|34
+value|0x22
 end_define
 
-begin_comment
-comment|/* 0x22  */
-end_comment
+begin_define
+define|#
+directive|define
+name|INTERNAL_TYPE_DATA
+value|0x23
+end_define
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_MAX
-value|34
+value|0x23
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_INVALID
-value|35
+value|0x24
 end_define
 
 begin_define
@@ -1767,6 +1704,24 @@ define|#
 directive|define
 name|ACPI_BTYPE_ALL_OBJECTS
 value|0x0000FFFF
+end_define
+
+begin_comment
+comment|/*  * All I/O  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_READ
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WRITE
+value|1
 end_define
 
 begin_comment
@@ -2413,23 +2368,30 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ACPI_OBJECT_HANDLER
+function_decl|)
+parameter_list|(
+name|ACPI_HANDLE
+name|Object
+parameter_list|,
+name|UINT32
+name|Function
+parameter_list|,
+name|void
+modifier|*
+name|Data
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/* Address Spaces (Operation Regions */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_READ_ADR_SPACE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_WRITE_ADR_SPACE
-value|2
-end_define
 
 begin_typedef
 typedef|typedef
@@ -2448,7 +2410,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|,

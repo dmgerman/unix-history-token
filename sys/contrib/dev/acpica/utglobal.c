@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 133 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 136 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -312,14 +312,6 @@ end_comment
 
 begin_decl_stmt
 name|UINT32
-name|AcpiGbl_SystemFlags
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT32
 name|AcpiGbl_StartupFlags
 init|=
 literal|0
@@ -327,7 +319,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* System starts unitialized! */
+comment|/* System starts uninitialized */
 end_comment
 
 begin_decl_stmt
@@ -603,7 +595,10 @@ name|NSP_NORMAL
 block|,
 comment|/* 34 Extra            */
 name|NSP_NORMAL
-comment|/* 35 Invalid          */
+block|,
+comment|/* 35 Data             */
+name|NSP_NORMAL
+comment|/* 36 Invalid          */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1058,6 +1053,9 @@ comment|/* 34 */
 literal|"Extra"
 block|,
 comment|/* 35 */
+literal|"Data"
+block|,
+comment|/* 36 */
 literal|"Invalid"
 block|}
 decl_stmt|;
@@ -1118,7 +1116,7 @@ name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_RegionTypes
 index|[
-name|NUM_REGION_TYPES
+name|ACPI_NUM_PREDEFINED_REGIONS
 index|]
 init|=
 block|{
@@ -1156,7 +1154,7 @@ if|if
 condition|(
 name|SpaceId
 operator|>=
-name|USER_REGION_BEGIN
+name|ACPI_USER_REGION_BEGIN
 condition|)
 block|{
 return|return
@@ -1170,7 +1168,7 @@ if|if
 condition|(
 name|SpaceId
 operator|>=
-name|NUM_REGION_TYPES
+name|ACPI_NUM_PREDEFINED_REGIONS
 condition|)
 block|{
 return|return
@@ -1268,12 +1266,10 @@ literal|"WordAcc"
 block|,
 literal|"DWordAcc"
 block|,
-literal|"BlockAcc"
+literal|"QWordAcc"
 block|,
-literal|"SMBSendRecvAcc"
-block|,
-literal|"SMBQuickAcc"
-block|}
+literal|"BufferAcc"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1893,40 +1889,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Address Space handler array */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ACPI_NUM_ADDRESS_SPACES
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|AcpiGbl_AddressSpaces
-index|[
-name|i
-index|]
-operator|.
-name|Handler
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiGbl_AddressSpaces
-index|[
-name|i
-index|]
-operator|.
-name|Context
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* Mutex locked flags */
 for|for
 control|(
@@ -2014,14 +1976,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Miscellaneous variables */
-name|AcpiGbl_SystemFlags
-operator|=
-literal|0
-expr_stmt|;
-name|AcpiGbl_StartupFlags
-operator|=
-literal|0
-expr_stmt|;
 name|AcpiGbl_RsdpOriginalLocation
 operator|=
 literal|0

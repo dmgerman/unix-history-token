@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 52 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 56 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1324,6 +1324,75 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateThreadState  *  * PARAMETERS:  None  *  * RETURN:      Thread State  *  * DESCRIPTION: Create a "Thread State" - a flavor of the generic state used  *              to track per-thread info during method execution  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_THREAD_STATE
+modifier|*
+name|AcpiUtCreateThreadState
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_GENERIC_STATE
+modifier|*
+name|State
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"UtCreateThreadState"
+argument_list|)
+expr_stmt|;
+comment|/* Create the generic state object */
+name|State
+operator|=
+name|AcpiUtCreateGenericState
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|State
+condition|)
+block|{
+name|return_PTR
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Init fields specific to the update struct */
+name|State
+operator|->
+name|Common
+operator|.
+name|DataType
+operator|=
+name|ACPI_DESC_TYPE_STATE_THREAD
+expr_stmt|;
+name|State
+operator|->
+name|Thread
+operator|.
+name|ThreadId
+operator|=
+name|AcpiOsGetThreadId
+argument_list|()
+expr_stmt|;
+name|return_PTR
+argument_list|(
+operator|(
+name|ACPI_THREAD_STATE
+operator|*
+operator|)
+name|State
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateUpdateState  *  * PARAMETERS:  Object              - Initial Object to be installed in the  *                                    state  *              Action              - Update action to be performed  *  * RETURN:      Status  *  * DESCRIPTION: Create an "Update State" - a flavor of the generic state used  *              to update reference counts and delete complex objects such  *              as packages.  *  ******************************************************************************/
 end_comment
 
@@ -1363,11 +1432,11 @@ operator|!
 name|State
 condition|)
 block|{
-return|return
-operator|(
+name|return_PTR
+argument_list|(
 name|NULL
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Init fields specific to the update struct */
 name|State
@@ -1446,11 +1515,11 @@ operator|!
 name|State
 condition|)
 block|{
-return|return
-operator|(
+name|return_PTR
+argument_list|(
 name|NULL
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Init fields specific to the update struct */
 name|State
@@ -1538,11 +1607,11 @@ operator|!
 name|State
 condition|)
 block|{
-return|return
-operator|(
+name|return_PTR
+argument_list|(
 name|NULL
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Init fields specific to the control struct */
 name|State
@@ -2021,7 +2090,7 @@ index|[
 name|ThisIndex
 index|]
 expr_stmt|;
-comment|/*          * Check for          * 1) An uninitialized package element.  It is completely          *      legal to declare a package and leave it uninitialized          * 2) Not an internal object - can be a namespace node instead          * 3) Any type other than a package.  Packages are handled in else          *      case below.          */
+comment|/*          * Check for:          * 1) An uninitialized package element.  It is completely          *      legal to declare a package and leave it uninitialized          * 2) Not an internal object - can be a namespace node instead          * 3) Any type other than a package.  Packages are handled in else          *      case below.          */
 if|if
 condition|(
 operator|(
@@ -2071,7 +2140,6 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* TBD: must delete package created up to this point */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -2144,7 +2212,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* This is a sub-object of type package */
+comment|/* This is a subobject of type package */
 name|Status
 operator|=
 name|WalkCallback
@@ -2166,15 +2234,13 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* TBD: must delete package created up to this point */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * The callback above returned a new target package object.              */
-comment|/*              * Push the current state and create a new one              */
+comment|/*              * Push the current state and create a new one              * The callback above returned a new target package object.              */
 name|AcpiUtPushGenericState
 argument_list|(
 operator|&
@@ -2204,7 +2270,6 @@ operator|!
 name|State
 condition|)
 block|{
-comment|/* TBD: must delete package created up to this point */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NO_MEMORY
@@ -2214,11 +2279,11 @@ block|}
 block|}
 block|}
 comment|/* We should never get here */
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_INTERNAL
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

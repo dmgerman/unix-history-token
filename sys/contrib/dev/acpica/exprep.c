@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 99 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -58,29 +58,58 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDecodeFieldAccessType  *  * PARAMETERS:  Access          - Encoded field access bits  *              Length          - Field length.  *  * RETURN:      Field granularity (8, 16, 32 or 64)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDecodeFieldAccess  *  * PARAMETERS:  Access          - Encoded field access bits  *              Length          - Field length.  *  * RETURN:      Field granularity (8, 16, 32 or 64) and  *              ByteAlignment (1, 2, 3, or 4)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|UINT32
-name|AcpiExDecodeFieldAccessType
+name|AcpiExDecodeFieldAccess
 parameter_list|(
-name|UINT32
-name|Access
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 parameter_list|,
-name|UINT16
-name|Length
+name|UINT8
+name|FieldFlags
 parameter_list|,
 name|UINT32
 modifier|*
-name|Alignment
+name|ReturnByteAlignment
 parameter_list|)
 block|{
+name|UINT32
+name|Access
+decl_stmt|;
+name|UINT16
+name|Length
+decl_stmt|;
+name|UINT8
+name|ByteAlignment
+decl_stmt|;
+name|UINT8
+name|BitLength
+decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"ExDecodeFieldAccessType"
+literal|"ExDecodeFieldAccess"
 argument_list|)
+expr_stmt|;
+name|Access
+operator|=
+operator|(
+name|FieldFlags
+operator|&
+name|AML_FIELD_ACCESS_TYPE_MASK
+operator|)
+expr_stmt|;
+name|Length
+operator|=
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BitLength
 expr_stmt|;
 switch|switch
 condition|(
@@ -88,12 +117,11 @@ name|Access
 condition|)
 block|{
 case|case
-name|ACCESS_ANY_ACC
+name|AML_FIELD_ACCESS_ANY
 case|:
-operator|*
-name|Alignment
+name|ByteAlignment
 operator|=
-literal|8
+literal|1
 expr_stmt|;
 comment|/* Use the length to set the access type */
 if|if
@@ -103,11 +131,10 @@ operator|<=
 literal|8
 condition|)
 block|{
-return|return
-operator|(
+name|BitLength
+operator|=
 literal|8
-operator|)
-return|;
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -117,11 +144,10 @@ operator|<=
 literal|16
 condition|)
 block|{
-return|return
-operator|(
+name|BitLength
+operator|=
 literal|16
-operator|)
-return|;
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -131,11 +157,10 @@ operator|<=
 literal|32
 condition|)
 block|{
-return|return
-operator|(
+name|BitLength
+operator|=
 literal|32
-operator|)
-return|;
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -145,75 +170,81 @@ operator|<=
 literal|64
 condition|)
 block|{
-return|return
-operator|(
+name|BitLength
+operator|=
 literal|64
-operator|)
-return|;
+expr_stmt|;
 block|}
-comment|/* Default is 8 (byte) */
-return|return
-operator|(
-literal|8
-operator|)
-return|;
-break|break;
-case|case
-name|ACCESS_BYTE_ACC
-case|:
-operator|*
-name|Alignment
+else|else
+block|{
+comment|/* Larger than Qword - just use byte-size chunks */
+name|BitLength
 operator|=
 literal|8
 expr_stmt|;
-return|return
-operator|(
-literal|8
-operator|)
-return|;
+block|}
 break|break;
 case|case
-name|ACCESS_WORD_ACC
+name|AML_FIELD_ACCESS_BYTE
 case|:
-operator|*
-name|Alignment
+name|ByteAlignment
+operator|=
+literal|1
+expr_stmt|;
+name|BitLength
+operator|=
+literal|8
+expr_stmt|;
+break|break;
+case|case
+name|AML_FIELD_ACCESS_WORD
+case|:
+name|ByteAlignment
+operator|=
+literal|2
+expr_stmt|;
+name|BitLength
 operator|=
 literal|16
 expr_stmt|;
-return|return
-operator|(
-literal|16
-operator|)
-return|;
 break|break;
 case|case
-name|ACCESS_DWORD_ACC
+name|AML_FIELD_ACCESS_DWORD
 case|:
-operator|*
-name|Alignment
+name|ByteAlignment
+operator|=
+literal|4
+expr_stmt|;
+name|BitLength
 operator|=
 literal|32
 expr_stmt|;
-return|return
-operator|(
-literal|32
-operator|)
-return|;
 break|break;
 case|case
-name|ACCESS_QWORD_ACC
+name|AML_FIELD_ACCESS_QWORD
 case|:
 comment|/* ACPI 2.0 */
-operator|*
-name|Alignment
+name|ByteAlignment
+operator|=
+literal|8
+expr_stmt|;
+name|BitLength
 operator|=
 literal|64
 expr_stmt|;
-return|return
-operator|(
-literal|64
-operator|)
-return|;
+break|break;
+case|case
+name|AML_FIELD_ACCESS_BUFFER
+case|:
+comment|/* ACPI 2.0 */
+name|ByteAlignment
+operator|=
+literal|8
+expr_stmt|;
+name|BitLength
+operator|=
+literal|8
+expr_stmt|;
 break|break;
 default|default:
 comment|/* Invalid field access type */
@@ -234,11 +265,38 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|==
+name|ACPI_TYPE_BUFFER_FIELD
+condition|)
+block|{
+comment|/*          * BufferField access can be on any byte boundary, so the          * ByteAlignment is always 1 byte -- regardless of any ByteAlignment          * implied by the field access type.          */
+name|ByteAlignment
+operator|=
+literal|1
+expr_stmt|;
+block|}
+operator|*
+name|ReturnByteAlignment
+operator|=
+name|ByteAlignment
+expr_stmt|;
+return|return
+operator|(
+name|BitLength
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepCommonFieldObject  *  * PARAMETERS:  ObjDesc             - The field object  *              FieldFlags          - Access, LockRule, and UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the areas of the field object that are common  *              to the various types of fields.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepCommonFieldObject  *  * PARAMETERS:  ObjDesc             - The field object  *              FieldFlags          - Access, LockRule, and UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the areas of the field object that are common  *              to the various types of fields.  Note: This is very "sensitive"  *              code because we are solving the general case for field  *              alignment.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -252,6 +310,9 @@ parameter_list|,
 name|UINT8
 name|FieldFlags
 parameter_list|,
+name|UINT8
+name|FieldAttribute
+parameter_list|,
 name|UINT32
 name|FieldBitPosition
 parameter_list|,
@@ -263,7 +324,7 @@ name|UINT32
 name|AccessBitWidth
 decl_stmt|;
 name|UINT32
-name|Alignment
+name|ByteAlignment
 decl_stmt|;
 name|UINT32
 name|NearestByteAddress
@@ -273,47 +334,43 @@ argument_list|(
 literal|"ExPrepCommonFieldObject"
 argument_list|)
 expr_stmt|;
-comment|/*      * Note: the structure being initialized is the      * ACPI_COMMON_FIELD_INFO;  No structure fields outside of the common area      * are initialized by this procedure.      */
-comment|/* Demultiplex the FieldFlags byte */
+if|if
+condition|(
+name|FieldBitLength
+operator|>
+name|ACPI_UINT16_MAX
+condition|)
+block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Field size too long (> 0xFFFF), not supported\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_SUPPORT
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Note: the structure being initialized is the      * ACPI_COMMON_FIELD_INFO;  No structure fields outside of the common      * area are initialized by this procedure.      */
 name|ObjDesc
 operator|->
 name|CommonField
 operator|.
-name|LockRule
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
 name|FieldFlags
-operator|&
-name|LOCK_RULE_MASK
-operator|)
-operator|>>
-name|LOCK_RULE_SHIFT
-argument_list|)
+operator|=
+name|FieldFlags
 expr_stmt|;
 name|ObjDesc
 operator|->
 name|CommonField
 operator|.
-name|UpdateRule
+name|Attribute
 operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-operator|(
-name|FieldFlags
-operator|&
-name|UPDATE_RULE_MASK
-operator|)
-operator|>>
-name|UPDATE_RULE_SHIFT
-argument_list|)
+name|FieldAttribute
 expr_stmt|;
-comment|/* Other misc fields */
 name|ObjDesc
 operator|->
 name|CommonField
@@ -325,29 +382,17 @@ name|UINT16
 operator|)
 name|FieldBitLength
 expr_stmt|;
-comment|/*      * Decode the access type so we can compute offsets.  The access type gives      * two pieces of information - the width of each field access and the      * necessary alignment of the access.  For AnyAcc, the width used is the      * largest necessary/possible in an attempt to access the whole field in one      * I/O operation.  However, for AnyAcc, the alignment is 8.  For all other      * access types (Byte, Word, Dword, Qword), the width is the same as the      * alignment.      */
+comment|/*      * Decode the access type so we can compute offsets.  The access type gives      * two pieces of information - the width of each field access and the      * necessary ByteAlignment (address granularity) of the access.        *       * For AnyAcc, the AccessBitWidth is the largest width that is both necessary      * and possible in an attempt to access the whole field in one      * I/O operation.  However, for AnyAcc, the ByteAlignment is always one byte.        *       * For all Buffer Fields, the ByteAlignment is always one byte.      *      * For all other access types (Byte, Word, Dword, Qword), the Bitwidth is the       * same (equivalent) as the ByteAlignment.      */
 name|AccessBitWidth
 operator|=
-name|AcpiExDecodeFieldAccessType
+name|AcpiExDecodeFieldAccess
 argument_list|(
-operator|(
-operator|(
-name|FieldFlags
-operator|&
-name|ACCESS_TYPE_MASK
-operator|)
-operator|>>
-name|ACCESS_TYPE_SHIFT
-operator|)
-argument_list|,
 name|ObjDesc
-operator|->
-name|Field
-operator|.
-name|BitLength
+argument_list|,
+name|FieldFlags
 argument_list|,
 operator|&
-name|Alignment
+name|ByteAlignment
 argument_list|)
 expr_stmt|;
 if|if
@@ -390,24 +435,7 @@ name|AccessBitWidth
 argument_list|)
 expr_stmt|;
 comment|/* 1,  2,  4,  8 */
-if|if
-condition|(
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
-operator|==
-name|ACPI_TYPE_BUFFER_FIELD
-condition|)
-block|{
-comment|/*          * BufferField access can be on any byte boundary, so the          * alignment is always 8 (regardless of any alignment implied by the          * field access type.)          */
-name|Alignment
-operator|=
-literal|8
-expr_stmt|;
-block|}
-comment|/*      * BaseByteOffset is the address of the start of the field within the region.  It is      * the byte address of the first *datum* (field-width data unit) of the field.      * (i.e., the first datum that contains at least the first *bit* of the field.)      */
+comment|/*      * BaseByteOffset is the address of the start of the field within the region.  It is      * the byte address of the first *datum* (field-width data unit) of the field.      * (i.e., the first datum that contains at least the first *bit* of the field.)      * Note: ByteAlignment is always either equal to the AccessBitWidth or 8 (Byte access),      * and it defines the addressing granularity of the parent region or buffer.      */
 name|NearestByteAddress
 operator|=
 name|ROUND_BITS_DOWN_TO_BYTES
@@ -425,13 +453,10 @@ name|ROUND_DOWN
 argument_list|(
 name|NearestByteAddress
 argument_list|,
-name|DIV_8
-argument_list|(
-name|Alignment
-argument_list|)
+name|ByteAlignment
 argument_list|)
 expr_stmt|;
-comment|/*      * StartFieldBitOffset is the offset of the first bit of the field within a field datum.      * This is calculated as the number of bits from the BaseByteOffset.  In other words,      * the start of the field is relative to a byte address, regardless of the access type      * of the field.      */
+comment|/*      * StartFieldBitOffset is the offset of the first bit of the field within a field datum.      */
 name|ObjDesc
 operator|->
 name|CommonField
@@ -441,31 +466,17 @@ operator|=
 call|(
 name|UINT8
 call|)
-argument_list|(
-name|MOD_8
 argument_list|(
 name|FieldBitPosition
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/*      * DatumValidBits is the number of valid field bits in the first field datum.      */
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|DatumValidBits
-operator|=
-call|(
-name|UINT8
-call|)
-argument_list|(
-name|AccessBitWidth
 operator|-
+name|MUL_8
+argument_list|(
 name|ObjDesc
 operator|->
 name|CommonField
 operator|.
-name|StartFieldBitOffset
+name|BaseByteOffset
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Valid bits -- the number of bits that compose a partial datum,      * 1) At the end of the field within the region (arbitrary starting bit offset)      * 2) At the end of a buffer used to contain the field (starting offset always zero)      */
@@ -508,7 +519,27 @@ name|AccessBitWidth
 argument_list|)
 expr_stmt|;
 comment|/* StartBufferBitOffset always = 0 */
-comment|/*      * Does the entire field fit within a single field access element      * (datum)?  (without crossing a datum boundary)      */
+comment|/*      * DatumValidBits is the number of valid field bits in the first field datum.      */
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|DatumValidBits
+operator|=
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|AccessBitWidth
+operator|-
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+argument_list|)
+expr_stmt|;
+comment|/*      * Does the entire field fit within a single field access element? (datum)      * (i.e., without crossing a datum boundary)      */
 if|if
 condition|(
 operator|(
@@ -518,30 +549,22 @@ name|CommonField
 operator|.
 name|StartFieldBitOffset
 operator|+
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|BitLength
+name|FieldBitLength
 operator|)
 operator|<=
 operator|(
 name|UINT16
 operator|)
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 condition|)
 block|{
 name|ObjDesc
 operator|->
-name|CommonField
+name|Common
 operator|.
-name|AccessFlags
+name|Flags
 operator||=
-name|AFIELD_SINGLE_DATUM
+name|AOPOBJ_SINGLE_DATUM
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS
@@ -652,7 +675,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Allocate a new region object */
+comment|/* Allocate a new field object */
 name|ObjDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -675,6 +698,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Initialize areas of the object that are common to all fields */
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|Node
+operator|=
+name|Info
+operator|->
+name|FieldNode
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiExPrepCommonFieldObject
@@ -684,6 +717,10 @@ argument_list|,
 name|Info
 operator|->
 name|FieldFlags
+argument_list|,
+name|Info
+operator|->
+name|Attribute
 argument_list|,
 name|Info
 operator|->
@@ -811,7 +848,7 @@ name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|BankRegisterObj
+name|BankObj
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
@@ -836,7 +873,7 @@ name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|BankRegisterObj
+name|BankObj
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -874,7 +911,7 @@ name|ObjDesc
 operator|->
 name|BankField
 operator|.
-name|BankRegisterObj
+name|BankObj
 operator|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 54 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ value|0x0030
 end_define
 
 begin_comment
-comment|/* psapi - Parser external interfaces */
+comment|/* Parser external interfaces */
 end_comment
 
 begin_function_decl
@@ -190,17 +190,12 @@ parameter_list|,
 name|UINT32
 name|ArgType
 parameter_list|,
-comment|/* type of argument */
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Arg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* (OUT) argument data */
-end_comment
 
 begin_function_decl
 name|void
@@ -256,6 +251,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* psfind */
+end_comment
+
+begin_function_decl
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|AcpiPsFindName
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Scope
+parameter_list|,
+name|UINT32
+name|Name
+parameter_list|,
+name|UINT32
+name|Opcode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|AcpiPsGetParent
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* psopcode - AML Opcode information */
 end_comment
 
@@ -285,6 +314,49 @@ end_function_decl
 begin_comment
 comment|/* psparse - top level parsing routines */
 end_comment
+
+begin_function_decl
+name|UINT32
+name|AcpiPsGetOpcodeSize
+parameter_list|(
+name|UINT32
+name|Opcode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiPsCompleteThisOp
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiPsNextParseState
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ACPI_STATUS
+name|CallbackStatus
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -613,6 +685,17 @@ name|Op
 parameter_list|,
 name|ACPI_PARSE_UPWARDS
 name|AscendingCallback
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiPsDeleteCompletedOp
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl

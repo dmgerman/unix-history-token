@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 97 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 100 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1000,7 +1000,7 @@ name|MASK_BITS_ABOVE
 parameter_list|(
 name|position
 parameter_list|)
-value|(~(((UINT32)(-1))<< ((UINT32) (position))))
+value|(~(((ACPI_INTEGER)(-1))<< ((UINT32) (position))))
 end_define
 
 begin_define
@@ -1010,7 +1010,7 @@ name|MASK_BITS_BELOW
 parameter_list|(
 name|position
 parameter_list|)
-value|(((UINT32)(-1))<< ((UINT32) (position)))
+value|(((ACPI_INTEGER)(-1))<< ((UINT32) (position)))
 end_define
 
 begin_comment
@@ -1119,7 +1119,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * An ACPI_HANDLE (which is actually an ACPI_NAMESPACE_NODE *) can appear in some contexts,  * such as on apObjStack, where a pointer to an ACPI_OPERAND_OBJECT  can also  * appear.  This macro is used to distinguish them.  *  * The DataType field is the first field in both structures.  */
+comment|/*  * An ACPI_NAMESPACE_NODE * can appear in some contexts,  * where a pointer to an ACPI_OPERAND_OBJECT  can also  * appear.  This macro is used to distinguish them.  *  * The DataType field is the first field in both structures.  */
 end_comment
 
 begin_define
@@ -1229,13 +1229,15 @@ name|PArgs
 parameter_list|,
 name|IArgs
 parameter_list|,
+name|ObjType
+parameter_list|,
 name|Class
 parameter_list|,
 name|Type
 parameter_list|,
 name|Flags
 parameter_list|)
-value|{PArgs,IArgs,Flags,Class,Type,Name}
+value|{Name,PArgs,IArgs,Flags,ObjType,Class,Type}
 end_define
 
 begin_else
@@ -1254,13 +1256,15 @@ name|PArgs
 parameter_list|,
 name|IArgs
 parameter_list|,
+name|ObjType
+parameter_list|,
 name|Class
 parameter_list|,
 name|Type
 parameter_list|,
 name|Flags
 parameter_list|)
-value|{PArgs,IArgs,Flags,Class,Type}
+value|{PArgs,IArgs,Flags,ObjType,Class,Type}
 end_define
 
 begin_endif

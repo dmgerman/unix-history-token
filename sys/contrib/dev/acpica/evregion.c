@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 113 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 120 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ argument_list|(
 literal|"EvInstallDefaultAddressSpaceHandlers"
 argument_list|)
 expr_stmt|;
-comment|/*      * All address spaces (PCI Config, EC, SMBus) are scope dependent      * and registration must occur for a specific device.  In the case      * system memory and IO address spaces there is currently no device      * associated with the address space.  For these we use the root.      * We install the default PCI config space handler at the root so      * that this space is immediately available even though the we have      * not enumerated all the PCI Root Buses yet.  This is to conform      * to the ACPI specification which states that the PCI config      * space must be always available -- even though we are nowhere      * near ready to find the PCI root buses at this point.      *      * NOTE: We ignore AE_EXIST because this means that a handler has      * already been installed (via AcpiInstallAddressSpaceHandler)      */
+comment|/*      * All address spaces (PCI Config, EC, SMBus) are scope dependent      * and registration must occur for a specific device.  In the case      * system memory and IO address spaces there is currently no device      * associated with the address space.  For these we use the root.      * We install the default PCI config space handler at the root so      * that this space is immediately available even though the we have      * not enumerated all the PCI Root Buses yet.  This is to conform      * to the ACPI specification which states that the PCI config      * space must be always available -- even though we are nowhere      * near ready to find the PCI root buses at this point.      *      * NOTE: We ignore AE_ALREADY_EXISTS because this means that a handler      * has already been installed (via AcpiInstallAddressSpaceHandler)      */
 name|Status
 operator|=
 name|AcpiInstallAddressSpaceHandler
@@ -104,7 +104,7 @@ operator|&&
 operator|(
 name|Status
 operator|!=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 operator|)
 condition|)
 block|{
@@ -141,7 +141,7 @@ operator|&&
 operator|(
 name|Status
 operator|!=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 operator|)
 condition|)
 block|{
@@ -178,7 +178,7 @@ operator|&&
 operator|(
 name|Status
 operator|!=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 operator|)
 condition|)
 block|{
@@ -195,10 +195,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* TBD: [Restructure] Move elsewhere */
-end_comment
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvExecuteRegMethod  *  * PARAMETERS:  RegionObj           - Object structure  *              Function            - On (1) or Off (0)  *  * RETURN:      Status  *  * DESCRIPTION: Execute _REG method for a region  *  ******************************************************************************/
@@ -224,6 +220,10 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RegionObj2
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -232,13 +232,28 @@ argument_list|(
 literal|"EvExecuteRegMethod"
 argument_list|)
 expr_stmt|;
+name|RegionObj2
+operator|=
+name|AcpiNsGetSecondaryObject
+argument_list|(
+name|RegionObj
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Extra
+operator|!
+name|RegionObj2
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NOT_EXIST
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -345,11 +360,7 @@ name|DEBUG_EXEC
 argument_list|(
 name|AcpiUtDisplayInitPathname
 argument_list|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Extra
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -363,11 +374,7 @@ name|Status
 operator|=
 name|AcpiNsEvaluateByHandle
 argument_list|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Extra
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -405,7 +412,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddressSpaceDispatch  *  * PARAMETERS:  RegionObj           - internal region object  *              SpaceId             - ID of the address space (0-255)  *              Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch an address space or operation region access to  *              a previously installed handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddressSpaceDispatch  *  * PARAMETERS:  RegionObj           - internal region object  *              SpaceId             - ID of the address space (0-255)  *              Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, 32, or 64)  *              Value               - Pointer to in or out value  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch an address space or operation region access to  *              a previously installed handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -425,7 +432,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|)
@@ -443,6 +450,10 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|HandlerDesc
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RegionObj2
+decl_stmt|;
 name|void
 modifier|*
 name|RegionContext
@@ -454,6 +465,25 @@ argument_list|(
 literal|"EvAddressSpaceDispatch"
 argument_list|)
 expr_stmt|;
+name|RegionObj2
+operator|=
+name|AcpiNsGetSecondaryObject
+argument_list|(
+name|RegionObj
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RegionObj2
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NOT_EXIST
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Ensure that there is a handler associated with this region      */
 name|HandlerDesc
 operator|=
@@ -506,7 +536,7 @@ name|Region
 operator|.
 name|Flags
 operator|&
-name|AOPOBJ_INITIALIZED
+name|AOPOBJ_SETUP_COMPLETE
 operator|)
 condition|)
 block|{
@@ -622,14 +652,10 @@ name|Region
 operator|.
 name|Flags
 operator||=
-name|AOPOBJ_INITIALIZED
+name|AOPOBJ_SETUP_COMPLETE
 expr_stmt|;
 comment|/*          *  Save the returned context for use in all accesses to          *  this particular region.          */
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Extra
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -715,11 +741,7 @@ name|AddrHandler
 operator|.
 name|Context
 argument_list|,
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Extra
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -821,6 +843,10 @@ name|void
 modifier|*
 name|RegionContext
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RegionObj2
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -829,13 +855,24 @@ argument_list|(
 literal|"EvDisassociateRegionFromHandler"
 argument_list|)
 expr_stmt|;
+name|RegionObj2
+operator|=
+name|AcpiNsGetSecondaryObject
+argument_list|(
+name|RegionObj
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RegionObj2
+condition|)
+block|{
+return|return;
+block|}
 name|RegionContext
 operator|=
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Extra
+name|RegionObj2
 operator|->
 name|Extra
 operator|.
@@ -1021,7 +1058,7 @@ name|Flags
 operator|&=
 operator|~
 operator|(
-name|AOPOBJ_INITIALIZED
+name|AOPOBJ_SETUP_COMPLETE
 operator|)
 expr_stmt|;
 comment|/*              *  Remove handler reference in the region              *              *  NOTE: this doesn't mean that the region goes away              *  The region is just inaccessible as indicated to              *  the _REG method              *              *  If the region is on the handler's list              *  this better be the region's handler              */
@@ -1125,7 +1162,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      *  Link this region to the front of the handler's list      */
+comment|/*      * Link this region to the front of the handler's list      */
 name|RegionObj
 operator|->
 name|Region
@@ -1146,7 +1183,7 @@ name|RegionList
 operator|=
 name|RegionObj
 expr_stmt|;
-comment|/*      *  set the region's handler      */
+comment|/*      * Set the region's handler      */
 name|RegionObj
 operator|->
 name|Region
@@ -1155,7 +1192,7 @@ name|AddrHandler
 operator|=
 name|HandlerObj
 expr_stmt|;
-comment|/*      *  Last thing, tell all users that this region is usable      */
+comment|/*      * Tell all users that this region is usable by running the _REG      * method      */
 if|if
 condition|(
 name|AcpiNsIsLocked
@@ -1196,7 +1233,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddrHandlerHelper  *  * PARAMETERS:  Handle              - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into AcpiNsWalkNamespace  *  * DESCRIPTION: This routine checks to see if the object is a Region if it  *              is then the address handler is installed in it.  *  *              If the Object is a Device, and the device has a handler of  *              the same type then the search is terminated in that branch.  *  *              This is because the existing handler is closer in proximity  *              to any more regions than the one we are trying to install.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddrHandlerHelper  *  * PARAMETERS:  Handle              - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into AcpiNsWalkNamespace  *  * DESCRIPTION: This routine installs an address handler into objects that are  *              of type Region.  *  *              If the Object is a Device, and the device has a handler of  *              the same type then the search is terminated in that branch.  *  *              This is because the existing handler is closer in proximity  *              to any more regions than the one we are trying to install.  *  ******************************************************************************/
 end_comment
 
 begin_function

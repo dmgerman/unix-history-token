@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 50 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 53 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -451,15 +451,25 @@ name|j
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|Op
 condition|)
 block|{
+name|AcpiDbDisplayOpcode
+argument_list|(
+name|WalkState
+argument_list|,
+name|Op
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 while|while
 condition|(
 name|Op
 condition|)
 block|{
-comment|/* indentation */
+comment|/* Indentation */
 name|DepthCount
 operator|=
 literal|0
@@ -867,17 +877,6 @@ argument_list|)
 expr_stmt|;
 name|DepthCount
 operator|--
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|AcpiDbDisplayOpcode
-argument_list|(
-name|WalkState
-argument_list|,
-name|Op
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1910,22 +1909,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|AcpiGbl_DbOpt_verbose
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Opcode
+operator|!=
+name|AML_INT_NAMEDFIELD_OP
+operator|)
 condition|)
 block|{
-name|AcpiOsPrintf
+name|AcpiPsDisplayObjectPathname
 argument_list|(
-literal|"  (Path \\"
-argument_list|)
-expr_stmt|;
-name|AcpiDbDisplayPath
-argument_list|(
+name|WalkState
+argument_list|,
 name|Op
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|")"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 106 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -356,13 +356,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|UINT32
-name|AcpiGbl_SystemFlags
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
 name|AcpiGbl_StartupFlags
 decl_stmt|;
 end_decl_stmt
@@ -504,23 +497,9 @@ end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
 name|AcpiGbl_CurrentWalkList
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Address Space handlers */
-end_comment
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|ACPI_ADR_SPACE_INFO
-name|AcpiGbl_AddressSpaces
-index|[
-name|ACPI_NUM_ADDRESS_SPACES
-index|]
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsmisc - Miscellaneous resource descriptors  *              $Revision: 16 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsmisc - Miscellaneous resource descriptors  *              $Revision: 17 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -285,7 +285,7 @@ operator|&
 literal|0x80
 condition|)
 block|{
-comment|/*          * Large Item          * Point to the length field          */
+comment|/*          * Large Item, point to the length field          */
 name|Buffer
 operator|+=
 literal|1
@@ -315,7 +315,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Small Item          * Dereference the size          */
+comment|/*          * Small Item, dereference the size          */
 name|Temp16
 operator|=
 call|(
@@ -481,7 +481,7 @@ operator|>
 literal|7
 condition|)
 block|{
-comment|/*          * Large Item          * Set the descriptor field and length bytes          */
+comment|/*          * Large Item, Set the descriptor field and length bytes          */
 operator|*
 name|Buffer
 operator|=
@@ -519,7 +519,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Small Item          * Set the descriptor field          */
+comment|/*          * Small Item, Set the descriptor field          */
 name|Temp8
 operator|=
 literal|0x70

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 93 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 101 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_OBJECT_COMMON_HEADER
-comment|/* SIZE/ALIGNMENT: 32-bits plus trailing 8-bit flag */
+comment|/* SIZE/ALIGNMENT: 32 bits, one ptr plus trailing 8-bit flag */
 define|\
 value|UINT8                       DataType;
 comment|/* To differentiate various internal objs */
@@ -43,6 +43,8 @@ value|\     UINT8                       Type;
 comment|/* ACPI_OBJECT_TYPE */
 value|\     UINT16                      ReferenceCount;
 comment|/* For object deletion management */
+value|\     union acpi_operand_obj      *NextObject;
+comment|/* Objects linked to parent NS node */
 value|\     UINT8                       Flags;
 end_define
 
@@ -55,35 +57,42 @@ begin_define
 define|#
 directive|define
 name|AOPOBJ_STATIC_ALLOCATION
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|AOPOBJ_STATIC_POINTER
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|AOPOBJ_DATA_VALID
-value|0x4
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|AOPOBJ_ZERO_CONST
-value|0x4
+name|AOPOBJ_OBJECT_INITIALIZED
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|AOPOBJ_INITIALIZED
-value|0x8
+name|AOPOBJ_SETUP_COMPLETE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AOPOBJ_SINGLE_DATUM
+value|0x20
 end_define
 
 begin_comment
@@ -96,7 +105,9 @@ directive|define
 name|ACPI_COMMON_FIELD_INFO
 comment|/* SIZE/ALIGNMENT: 24 bits + three 32-bit values */
 define|\
-value|UINT8                       AccessFlags;\     UINT16                      BitLength;
+value|UINT8                       FieldFlags;
+comment|/* Access, update, and lock bits */
+value|\     UINT16                      BitLength;
 comment|/* Length of field in bits */
 value|\     UINT32                      BaseByteOffset;
 comment|/* Byte offset within containing object */
@@ -104,10 +115,8 @@ value|\     UINT8                       AccessBitWidth;
 comment|/* Read/Write size in bits (from ASL AccessType)*/
 value|\     UINT8                       AccessByteWidth;
 comment|/* Read/Write size in bytes */
-value|\     UINT8                       UpdateRule;
-comment|/* How neighboring field bits are handled */
-value|\     UINT8                       LockRule;
-comment|/* Global Lock: 1 = "Must Lock" */
+value|\     UINT8                       Attribute ;
+comment|/* From AccessAs keyword */
 value|\     UINT8                       StartFieldBitOffset;
 comment|/* Bit offset within first field datum (0-63) */
 value|\     UINT8                       DatumValidBits;
@@ -116,23 +125,16 @@ value|\     UINT8                       EndFieldValidBits;
 comment|/* Valid bits in the last "field datum" */
 value|\     UINT8                       EndBufferValidBits;
 comment|/* Valid bits in the last "buffer datum" */
+value|\     UINT8                       Reserved;
+comment|/* Reserved for future use */
 value|\     UINT32                      Value;
-end_define
-
-begin_comment
 comment|/* Value to store into the Bank or Index register */
-end_comment
+value|\     ACPI_NAMESPACE_NODE         *Node;
+end_define
 
 begin_comment
-comment|/* Access flag bits */
+comment|/* Link back to parent node */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|AFIELD_SINGLE_DATUM
-value|0x1
-end_define
 
 begin_comment
 comment|/*  * Fields common to both Strings and Buffers  */
@@ -221,6 +223,11 @@ modifier|*
 name|Pointer
 decl_stmt|;
 comment|/* Buffer value in AML stream or in allocated space */
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+comment|/* Link back to parent node */
 block|}
 name|ACPI_OBJECT_BUFFER
 typedef|;
@@ -356,13 +363,14 @@ decl_stmt|;
 name|UINT16
 name|AcquisitionDepth
 decl_stmt|;
-name|void
+name|struct
+name|acpi_thread_state
 modifier|*
-name|Semaphore
+name|OwnerThread
 decl_stmt|;
 name|void
 modifier|*
-name|Owner
+name|Semaphore
 decl_stmt|;
 name|union
 name|acpi_operand_obj
@@ -396,12 +404,6 @@ decl_stmt|;
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 decl_stmt|;
-name|union
-name|acpi_operand_obj
-modifier|*
-name|Extra
-decl_stmt|;
-comment|/* Pointer to executable AML (in region definition) */
 name|union
 name|acpi_operand_obj
 modifier|*
@@ -576,7 +578,7 @@ comment|/* Containing OpRegion object */
 name|union
 name|acpi_operand_obj
 modifier|*
-name|BankRegisterObj
+name|BankObj
 decl_stmt|;
 comment|/* BankSelect Register object */
 block|}
@@ -623,19 +625,8 @@ name|ACPI_COMMON_FIELD_INFO
 expr|union
 name|acpi_operand_obj
 operator|*
-name|Extra
-expr_stmt|;
-comment|/* Pointer to executable AML (in field definition) */
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-decl_stmt|;
-comment|/* Parent (containing) object node */
-name|union
-name|acpi_operand_obj
-modifier|*
 name|BufferObj
-decl_stmt|;
+expr_stmt|;
 comment|/* Containing Buffer object */
 block|}
 name|ACPI_OBJECT_BUFFER_FIELD
@@ -802,6 +793,24 @@ name|ACPI_OBJECT_EXTRA
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+comment|/* DATA */
+block|{
+name|ACPI_OBJECT_COMMON_HEADER
+name|ACPI_OBJECT_HANDLER
+name|Handler
+decl_stmt|;
+name|void
+modifier|*
+name|Pointer
+decl_stmt|;
+block|}
+name|ACPI_OBJECT_DATA
+typedef|;
+end_typedef
+
 begin_comment
 comment|/******************************************************************************  *  * ACPI_OPERAND_OBJECT  Descriptor - a giant union of all of the above  *  *****************************************************************************/
 end_comment
@@ -879,6 +888,9 @@ name|AddrHandler
 decl_stmt|;
 name|ACPI_OBJECT_EXTRA
 name|Extra
+decl_stmt|;
+name|ACPI_OBJECT_DATA
+name|Data
 decl_stmt|;
 block|}
 name|ACPI_OPERAND_OBJECT

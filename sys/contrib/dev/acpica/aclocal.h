@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 138 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 145 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -138,6 +138,13 @@ define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_NOTIFY
 value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_THREAD
+value|0x29
 end_define
 
 begin_define
@@ -577,7 +584,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ANOBJ_AML_ATTACHMENT
+name|ANOBJ_RESERVED
 value|0x01
 end_define
 
@@ -850,37 +857,15 @@ name|UINT8
 name|FieldFlags
 decl_stmt|;
 name|UINT8
+name|Attribute
+decl_stmt|;
+name|UINT8
 name|FieldType
 decl_stmt|;
 block|}
 name|ACPI_CREATE_FIELD_INFO
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Field flags: Bits 00 - 03 : AccessType (AnyAcc, ByteAcc, etc.)  *                   04      : LockRule (1 == Lock)  *                   05 - 06 : UpdateRule  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FIELD_ACCESS_TYPE_MASK
-value|0x0F
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIELD_LOCK_RULE_MASK
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIELD_UPDATE_RULE_MASK
-value|0x60
-end_define
 
 begin_comment
 comment|/*****************************************************************************  *  * Event typedefs and structs  *  ****************************************************************************/
@@ -970,26 +955,6 @@ directive|define
 name|ACPI_ENABLE_RTC_ALARM
 value|0x0400
 end_define
-
-begin_comment
-comment|/*  * Entry in the AddressSpace (AKA Operation Region) table  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|ACPI_ADR_SPACE_HANDLER
-name|Handler
-decl_stmt|;
-name|void
-modifier|*
-name|Context
-decl_stmt|;
-block|}
-name|ACPI_ADR_SPACE_INFO
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Values and addresses of the GPE registers (both banks) */
@@ -1167,12 +1132,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|acpi_walk_list
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|acpi_parse_obj
 struct_decl|;
 end_struct_decl
@@ -1345,6 +1304,41 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Thread state - one per thread across multiple walk states.  Multiple walk   * states are created when there are nested control methods executing.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_thread_state
+block|{
+name|ACPI_STATE_COMMON
+name|struct
+name|acpi_walk_state
+modifier|*
+name|WalkStateList
+decl_stmt|;
+comment|/* Head of list of WalkStates for this thread */
+name|union
+name|acpi_operand_obj
+modifier|*
+name|AcquiredMutexList
+decl_stmt|;
+comment|/* List of all currently acquired mutexes */
+name|UINT32
+name|ThreadId
+decl_stmt|;
+comment|/* Running thread ID */
+name|UINT16
+name|CurrentSyncLevel
+decl_stmt|;
+comment|/* Mutex Sync (nested acquire) level */
+block|}
+name|ACPI_THREAD_STATE
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Result values - used to accumulate the results of nested  * AML arguments  */
 end_comment
 
@@ -1462,6 +1456,9 @@ decl_stmt|;
 name|ACPI_PKG_STATE
 name|Pkg
 decl_stmt|;
+name|ACPI_THREAD_STATE
+name|Thread
+decl_stmt|;
 name|ACPI_RESULT_VALUES
 name|Results
 decl_stmt|;
@@ -1506,6 +1503,16 @@ typedef|typedef
 struct|struct
 name|acpi_opcode_info
 block|{
+ifdef|#
+directive|ifdef
+name|_OPCODE_NAMES
+name|NATIVE_CHAR
+modifier|*
+name|Name
+decl_stmt|;
+comment|/* Opcode name (debug only) */
+endif|#
+directive|endif
 name|UINT32
 name|ParseArgs
 decl_stmt|;
@@ -1514,10 +1521,14 @@ name|UINT32
 name|RuntimeArgs
 decl_stmt|;
 comment|/* Interpret time arguments */
-name|UINT16
+name|UINT32
 name|Flags
 decl_stmt|;
 comment|/* Misc flags */
+name|UINT8
+name|ObjectType
+decl_stmt|;
+comment|/* Corresponding internal object type */
 name|UINT8
 name|Class
 decl_stmt|;
@@ -1526,16 +1537,6 @@ name|UINT8
 name|Type
 decl_stmt|;
 comment|/* Opcode type */
-ifdef|#
-directive|ifdef
-name|_OPCODE_NAMES
-name|NATIVE_CHAR
-modifier|*
-name|Name
-decl_stmt|;
-comment|/* op name (debug only) */
-endif|#
-directive|endif
 block|}
 name|ACPI_OPCODE_INFO
 typedef|;
@@ -2306,20 +2307,6 @@ begin_define
 define|#
 directive|define
 name|GPE1_EN_MASK
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_READ
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_WRITE
-value|2
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -600,7 +600,7 @@ name|Value
 operator|=
 name|TempVal
 expr_stmt|;
-comment|/*           * Truncate value if we are executing from a 32-bit ACPI table          * AND actually executing AML code.  If we are resolving          * an object in the namespace via an external call to the          * subsystem, we will have a null WalkState          */
+comment|/*          * Truncate value if we are executing from a 32-bit ACPI table          * AND actually executing AML code.  If we are resolving          * an object in the namespace via an external call to the          * subsystem, we will have a null WalkState          */
 if|if
 condition|(
 name|WalkState

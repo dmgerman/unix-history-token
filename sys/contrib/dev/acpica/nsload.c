@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -416,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsLoadTable  *  * PARAMETERS:  TableDesc       - Descriptor for table to be loaded  *              Node            - Owning NS node   *  * RETURN:      Status  *  * DESCRIPTION: Load one ACPI table into the namespace  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsLoadTable  *  * PARAMETERS:  TableDesc       - Descriptor for table to be loaded  *              Node            - Owning NS node  *  * RETURN:      Status  *  * DESCRIPTION: Load one ACPI table into the namespace  *  ******************************************************************************/
 end_comment
 
 begin_function

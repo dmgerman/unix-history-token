@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 53 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 54 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -909,7 +909,7 @@ if|if
 condition|(
 name|Status
 operator|==
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 condition|)
 block|{
 name|AcpiOsPrintf

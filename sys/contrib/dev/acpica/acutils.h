@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 117 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 119 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -999,6 +999,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|METHOD_NAME__CID
+value|"_CID"
+end_define
+
+begin_define
+define|#
+directive|define
 name|METHOD_NAME__UID
 value|"_UID"
 end_define
@@ -1075,6 +1082,21 @@ parameter_list|,
 name|ACPI_DEVICE_ID
 modifier|*
 name|Hid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtExecute_CID
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|DeviceNode
+parameter_list|,
+name|ACPI_DEVICE_ID
+modifier|*
+name|Cid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1366,6 +1388,16 @@ begin_function_decl
 name|ACPI_GENERIC_STATE
 modifier|*
 name|AcpiUtCreateGenericState
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_THREAD_STATE
+modifier|*
+name|AcpiUtCreateThreadState
 parameter_list|(
 name|void
 parameter_list|)

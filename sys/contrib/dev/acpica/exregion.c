@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 61 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|,
@@ -146,6 +146,14 @@ case|:
 name|Length
 operator|=
 literal|4
+expr_stmt|;
+break|break;
+case|case
+literal|64
+case|:
+name|Length
+operator|=
+literal|8
 expr_stmt|;
 break|break;
 default|default:
@@ -280,7 +288,6 @@ name|SYSMEM_REGION_WINDOW_SIZE
 expr_stmt|;
 block|}
 comment|/*      * Generate a logical pointer corresponding to the address we want to      * access      */
-comment|/* TBD: should these pointers go to 64-bit in all cases ? */
 name|LogicalAddrPtr
 operator|=
 name|MemInfo
@@ -331,7 +338,7 @@ name|Function
 condition|)
 block|{
 case|case
-name|ACPI_READ_ADR_SPACE
+name|ACPI_READ
 case|:
 switch|switch
 condition|(
@@ -377,10 +384,21 @@ name|LogicalAddrPtr
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|64
+case|:
+name|MOVE_UNALIGNED64_TO_64
+argument_list|(
+name|Value
+argument_list|,
+name|LogicalAddrPtr
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
-name|ACPI_WRITE_ADR_SPACE
+name|ACPI_WRITE
 case|:
 switch|switch
 condition|(
@@ -426,6 +444,17 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|64
+case|:
+name|MOVE_UNALIGNED64_TO_64
+argument_list|(
+name|LogicalAddrPtr
+argument_list|,
+name|Value
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 default|default:
@@ -460,7 +489,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|,
@@ -513,7 +542,7 @@ name|Function
 condition|)
 block|{
 case|case
-name|ACPI_READ_ADR_SPACE
+name|ACPI_READ
 case|:
 operator|*
 name|Value
@@ -536,7 +565,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_WRITE_ADR_SPACE
+name|ACPI_WRITE
 case|:
 name|Status
 operator|=
@@ -586,7 +615,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|,
@@ -616,7 +645,7 @@ argument_list|(
 literal|"ExPciConfigSpaceHandler"
 argument_list|)
 expr_stmt|;
-comment|/*      *  The arguments to AcpiOs(Read|Write)PciCfg(Byte|Word|Dword) are:      *      *  PciSegment  is the PCI bus segment range 0-31      *  PciBus      is the PCI bus number range 0-255      *  PciDevice   is the PCI device number range 0-31      *  PciFunction is the PCI device function number      *  PciRegister is the Config space register range 0-255 bytes      *      *  Value - input value for write, output address for read      *      */
+comment|/*      *  The arguments to AcpiOs(Read|Write)PciConfiguration are:      *      *  PciSegment  is the PCI bus segment range 0-31      *  PciBus      is the PCI bus number range 0-255      *  PciDevice   is the PCI device number range 0-31      *  PciFunction is the PCI device function number      *  PciRegister is the Config space register range 0-255 bytes      *      *  Value - input value for write, output address for read      *      */
 name|PciId
 operator|=
 operator|(
@@ -669,7 +698,7 @@ name|Function
 condition|)
 block|{
 case|case
-name|ACPI_READ_ADR_SPACE
+name|ACPI_READ
 case|:
 operator|*
 name|Value
@@ -691,7 +720,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_WRITE_ADR_SPACE
+name|ACPI_WRITE
 case|:
 name|Status
 operator|=
@@ -740,7 +769,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|,
@@ -788,7 +817,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|,

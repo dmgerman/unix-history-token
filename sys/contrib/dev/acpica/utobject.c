@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -84,6 +84,10 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|Object
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SecondObject
+decl_stmt|;
 name|FUNCTION_TRACE_STR
 argument_list|(
 literal|"UtCreateInternalObjectDbg"
@@ -112,12 +116,78 @@ operator|!
 name|Object
 condition|)
 block|{
-comment|/* Allocation failure */
 name|return_PTR
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_REGION
+case|:
+case|case
+name|ACPI_TYPE_BUFFER_FIELD
+case|:
+comment|/* These types require a secondary object */
+name|SecondObject
+operator|=
+name|AcpiUtAllocateObjectDescDbg
+argument_list|(
+name|ModuleName
+argument_list|,
+name|LineNumber
+argument_list|,
+name|ComponentId
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SecondObject
+condition|)
+block|{
+name|AcpiUtDeleteObjectDesc
+argument_list|(
+name|Object
+argument_list|)
+expr_stmt|;
+name|return_PTR
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|SecondObject
+operator|->
+name|Common
+operator|.
+name|Type
+operator|=
+name|INTERNAL_TYPE_EXTRA
+expr_stmt|;
+name|SecondObject
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Link the second object to the first */
+name|Object
+operator|->
+name|Common
+operator|.
+name|NextObject
+operator|=
+name|SecondObject
+expr_stmt|;
+break|break;
 block|}
 comment|/* Save the object type in the object descriptor */
 name|Object
@@ -861,6 +931,20 @@ operator|&
 name|Info
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * We have handled all of the objects in all levels of the package.      * just add the length of the package objects themselves.      * Round up to the next machine word.      */
 name|Info
 operator|.

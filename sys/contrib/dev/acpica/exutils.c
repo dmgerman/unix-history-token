@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 85 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 88 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEnterInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Enter the interpreter execution region  *              TBD: should be a macro  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEnterInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Enter the interpreter execution region  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -114,7 +114,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Exit the interpreter execution region  *  * Cases where the interpreter is unlocked:  *      1) Completion of the execution of a control method  *      2) Method blocked on a Sleep() AML opcode  *      3) Method blocked on an Acquire() AML opcode  *      4) Method blocked on a Wait() AML opcode  *      5) Method blocked to acquire the global lock  *      6) Method blocked to execute a serialized control method that is  *          already executing  *      7) About to invoke a user-installed opregion handler  *  *              TBD: should be a macro  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * DESCRIPTION: Exit the interpreter execution region  *  * Cases where the interpreter is unlocked:  *      1) Completion of the execution of a control method  *      2) Method blocked on a Sleep() AML opcode  *      3) Method blocked on an Acquire() AML opcode  *      4) Method blocked on a Wait() AML opcode  *      5) Method blocked to acquire the global lock  *      6) Method blocked to execute a serialized control method that is  *          already executing  *      7) About to invoke a user-installed opregion handler  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -263,7 +263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireGlobalLock  *  * PARAMETERS:  Rule            - Lock rule: AlwaysLock, NeverLock  *  * RETURN:      TRUE/FALSE indicating whether the lock was actually acquired  *  * DESCRIPTION: Obtain the global lock and keep track of this fact via two  *              methods.  A global variable keeps the state of the lock, and  *              the state is returned to the caller.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireGlobalLock  *  * PARAMETERS:  FieldFlags            - Flags with Lock rule:   *                                      AlwaysLock or NeverLock  *  * RETURN:      TRUE/FALSE indicating whether the lock was actually acquired  *  * DESCRIPTION: Obtain the global lock and keep track of this fact via two  *              methods.  A global variable keeps the state of the lock, and  *              the state is returned to the caller.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -271,7 +271,7 @@ name|BOOLEAN
 name|AcpiExAcquireGlobalLock
 parameter_list|(
 name|UINT32
-name|Rule
+name|FieldFlags
 parameter_list|)
 block|{
 name|BOOLEAN
@@ -287,15 +287,12 @@ argument_list|(
 literal|"ExAcquireGlobalLock"
 argument_list|)
 expr_stmt|;
-comment|/* Only attempt lock if the Rule says so */
+comment|/* Only attempt lock if the AlwaysLock bit is set */
 if|if
 condition|(
-name|Rule
-operator|==
-operator|(
-name|UINT32
-operator|)
-name|GLOCK_ALWAYS_LOCK
+name|FieldFlags
+operator|&
+name|AML_FIELD_LOCK_RULE_MASK
 condition|)
 block|{
 comment|/* We should attempt to get the lock */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -362,7 +362,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 expr_stmt|;
 goto|goto
 name|UnlockAndExit

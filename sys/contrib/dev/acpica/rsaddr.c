@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 19 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 20 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -180,7 +180,7 @@ operator|=
 operator|*
 name|Buffer
 expr_stmt|;
-comment|/*      * Producer / Consumer      */
+comment|/* Producer / Consumer */
 name|OutputStruct
 operator|->
 name|Data
@@ -193,7 +193,7 @@ name|Temp8
 operator|&
 literal|0x01
 expr_stmt|;
-comment|/*      * Decode      */
+comment|/* Decode */
 name|OutputStruct
 operator|->
 name|Data
@@ -210,7 +210,7 @@ operator|)
 operator|&
 literal|0x01
 expr_stmt|;
-comment|/*      * Min Address Fixed      */
+comment|/* Min Address Fixed */
 name|OutputStruct
 operator|->
 name|Data
@@ -227,7 +227,7 @@ operator|)
 operator|&
 literal|0x01
 expr_stmt|;
-comment|/*      * Max Address Fixed      */
+comment|/* Max Address Fixed */
 name|OutputStruct
 operator|->
 name|Data

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 106 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -985,11 +985,19 @@ modifier|*
 name|Element
 decl_stmt|;
 name|UINT32
-name|i
+name|NumOutstanding
+init|=
+literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"UtDumpAllocations"
+argument_list|)
+expr_stmt|;
+comment|/*      * Walk the allocation list.      */
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_MEMORY
 argument_list|)
 expr_stmt|;
 name|Element
@@ -1001,51 +1009,10 @@ index|]
 operator|.
 name|ListHead
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|Element
-operator|==
-name|NULL
 condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|"No outstanding allocations.\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-comment|/*      * Walk the allocation list.      */
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_MEMORY
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|"Outstanding allocations:\n"
-operator|)
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-condition|;
-name|i
-operator|++
-control|)
-comment|/* Just a counter */
 block|{
 if|if
 condition|(
@@ -1079,6 +1046,7 @@ operator|)
 operator|)
 condition|)
 block|{
+comment|/* Ignore allocated objects that are in a cache */
 if|if
 condition|(
 operator|(
@@ -1101,30 +1069,26 @@ operator|!=
 name|ACPI_CACHED_OBJECT
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|"%p Len %04X %9.9s-%d"
-operator|,
+literal|"%p Len %04X %9.9s-%d "
+argument_list|,
 operator|&
 name|Element
 operator|->
 name|UserSpace
-operator|,
+argument_list|,
 name|Element
 operator|->
 name|Size
-operator|,
+argument_list|,
 name|Element
 operator|->
 name|Module
-operator|,
+argument_list|,
 name|Element
 operator|->
 name|Line
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Most of the elements will be internal objects. */
@@ -1151,13 +1115,10 @@ block|{
 case|case
 name|ACPI_DESC_TYPE_INTERNAL
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" ObjType %12.12s R%d"
-operator|,
+literal|"ObjType %12.12s R%d"
+argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
 operator|(
@@ -1177,7 +1138,7 @@ name|Common
 operator|.
 name|Type
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 operator|(
 name|ACPI_OPERAND_OBJECT
@@ -1194,20 +1155,16 @@ operator|->
 name|Common
 operator|.
 name|ReferenceCount
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_PARSER
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" ParseObj Opcode %04X"
-operator|,
+literal|"ParseObj Opcode %04X"
+argument_list|,
 operator|(
 operator|(
 name|ACPI_PARSE_OBJECT
@@ -1222,20 +1179,16 @@ operator|)
 operator|)
 operator|->
 name|Opcode
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_NAMED
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" Node %4.4s"
-operator|,
+literal|"Node %4.4s"
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -1255,149 +1208,109 @@ operator|)
 operator|)
 operator|->
 name|Name
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" Untyped StateObj"
-operator|)
+literal|"Untyped StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE_UPDATE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" UPDATE StateObj"
-operator|)
+literal|"UPDATE StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE_PACKAGE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" PACKAGE StateObj"
-operator|)
+literal|"PACKAGE StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE_CONTROL
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" CONTROL StateObj"
-operator|)
+literal|"CONTROL StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE_RPSCOPE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" ROOT-PARSE-SCOPE StateObj"
-operator|)
+literal|"ROOT-PARSE-SCOPE StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE_PSCOPE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" PARSE-SCOPE StateObj"
-operator|)
+literal|"PARSE-SCOPE StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE_WSCOPE
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" WALK-SCOPE StateObj"
-operator|)
+literal|"WALK-SCOPE StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE_RESULT
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" RESULT StateObj"
-operator|)
+literal|"RESULT StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_DESC_TYPE_STATE_NOTIFY
 case|:
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
-literal|" NOTIFY StateObj"
-operator|)
+literal|"NOTIFY StateObj"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DESC_TYPE_STATE_THREAD
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"THREAD StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|ACPI_DEBUG_PRINT_RAW
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_OK
-operator|,
 literal|"\n"
-operator|)
 argument_list|)
 expr_stmt|;
+name|NumOutstanding
+operator|++
+expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|Element
-operator|->
-name|Next
-operator|==
-name|NULL
-condition|)
-block|{
-break|break;
 block|}
 name|Element
 operator|=
@@ -1411,19 +1324,39 @@ argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
 expr_stmt|;
+comment|/* Print summary */
+if|if
+condition|(
+operator|!
+name|NumOutstanding
+condition|)
+block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_OK
 operator|,
-literal|"Total number of unfreed allocations = %d(%X)\n"
-operator|,
-name|i
-operator|,
-name|i
+literal|"No outstanding allocations.\n"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_OK
+operator|,
+literal|"%d(%X) Outstanding allocations\n"
+operator|,
+name|NumOutstanding
+operator|,
+name|NumOutstanding
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|return_VOID
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pswalk - Parser routines to walk parsed op tree(s)  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pswalk - Parser routines to walk parsed op tree(s)  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -392,8 +392,7 @@ operator|=
 name|Op
 expr_stmt|;
 block|}
-comment|/* Got all the way to the top of the tree, we must be done! */
-comment|/* However, the code should have terminated in the loop above */
+comment|/*      * Got all the way to the top of the tree, we must be done!      * However, the code should have terminated in the loop above      */
 name|WalkState
 operator|->
 name|NextOp
@@ -413,7 +412,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_STATUS
 name|AcpiPsDeleteCompletedOp
 parameter_list|(
@@ -454,8 +452,9 @@ name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
 decl_stmt|;
-name|ACPI_WALK_LIST
-name|WalkList
+name|ACPI_THREAD_STATE
+modifier|*
+name|Thread
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
@@ -474,28 +473,20 @@ name|return_VOID
 expr_stmt|;
 block|}
 comment|/* Create and initialize a new walk list */
-name|WalkList
-operator|.
-name|WalkState
+name|Thread
 operator|=
-name|NULL
+name|AcpiUtCreateThreadState
+argument_list|()
 expr_stmt|;
-name|WalkList
-operator|.
-name|AcquiredMutexList
-operator|.
-name|Prev
-operator|=
-name|NULL
+if|if
+condition|(
+operator|!
+name|Thread
+condition|)
+block|{
+name|return_VOID
 expr_stmt|;
-name|WalkList
-operator|.
-name|AcquiredMutexList
-operator|.
-name|Next
-operator|=
-name|NULL
-expr_stmt|;
+block|}
 name|WalkState
 operator|=
 name|AcpiDsCreateWalkState
@@ -506,8 +497,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
-name|WalkList
+name|Thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -577,16 +567,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* We are done with this walk */
-name|AcpiExReleaseAllMutexes
+name|AcpiUtDeleteGenericState
 argument_list|(
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|ACPI_GENERIC_STATE
 operator|*
 operator|)
-operator|&
-name|WalkList
-operator|.
-name|AcquiredMutexList
+name|Thread
 argument_list|)
 expr_stmt|;
 name|AcpiDsDeleteWalkState

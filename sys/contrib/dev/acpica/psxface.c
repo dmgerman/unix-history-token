@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -295,7 +295,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* TBD: delete walk state */
+name|AcpiDsDeleteWalkState
+argument_list|(
+name|WalkState
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -428,7 +432,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* TBD: delete walk state */
+name|AcpiDsDeleteWalkState
+argument_list|(
+name|WalkState
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -481,6 +489,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Now check status from the method execution */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -489,11 +498,23 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Method execution failed, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|DUMP_PATHNAME
 argument_list|(
 name|MethodNode
 argument_list|,
-literal|"PsExecute: method failed -"
+literal|"Method pathname: "
 argument_list|,
 name|ACPI_LV_ERROR
 argument_list|,

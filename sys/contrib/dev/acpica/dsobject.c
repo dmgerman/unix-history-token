@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -552,6 +552,23 @@ block|{
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
+name|ObjDesc
+operator|->
+name|Buffer
+operator|.
+name|Node
+operator|=
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|WalkState
+operator|->
+name|Operands
+index|[
+literal|0
+index|]
+expr_stmt|;
 comment|/* First arg is a number */
 name|AcpiDsCreateOperand
 argument_list|(
@@ -879,7 +896,7 @@ operator|.
 name|String
 argument_list|)
 expr_stmt|;
-comment|/*           * The string is contained in the ACPI table, don't ever try          * to delete it          */
+comment|/*          * The string is contained in the ACPI table, don't ever try          * to delete it          */
 name|ObjDesc
 operator|->
 name|Common
@@ -1036,9 +1053,6 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_OBJECT_TYPE8
-name|Type
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -1063,7 +1077,7 @@ operator|==
 name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
-comment|/*          * This is an object reference.  If The name was          * previously looked up in the NS, it is stored in this op.          * Otherwise, go ahead and look it up now          */
+comment|/*          * This is an object reference.  If this name was          * previously looked up in the namespace, it was stored in this op.          * Otherwise, go ahead and look it up now          */
 if|if
 condition|(
 operator|!
@@ -1205,32 +1219,22 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*          * The reference will be a Reference          * TBD: [Restructure] unless we really need a separate          *  type of INTERNAL_TYPE_REFERENCE change          *  AcpiDsMapOpcodeToDataType to handle this case          */
-name|Type
-operator|=
-name|INTERNAL_TYPE_REFERENCE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|Type
-operator|=
-name|AcpiDsMapOpcodeToDataType
-argument_list|(
-name|Op
-operator|->
-name|Opcode
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Create and init the internal ACPI object */
 name|ObjDesc
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
-name|Type
+operator|(
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|Op
+operator|->
+name|Opcode
+argument_list|)
+operator|)
+operator|->
+name|ObjectType
 argument_list|)
 expr_stmt|;
 if|if
@@ -1648,9 +1652,10 @@ expr_stmt|;
 comment|/*      * Because of the execution pass through the non-control-method      * parts of the table, we can arrive here twice.  Only init      * the named object node the first time through      */
 if|if
 condition|(
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|Node
-operator|->
-name|Object
+argument_list|)
 condition|)
 block|{
 name|return_ACPI_STATUS

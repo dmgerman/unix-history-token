@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -278,6 +278,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDsInitFieldObjects
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* dsload - Parser/Interpreter interface, namespace load callbacks */
 end_comment
@@ -496,8 +511,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_NAMESPACE_NODE
-modifier|*
+name|ACPI_STATUS
 name|AcpiDsMethodDataGetNode
 parameter_list|(
 name|UINT16
@@ -509,6 +523,11 @@ parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
+parameter_list|,
+name|ACPI_NAMESPACE_NODE
+modifier|*
+modifier|*
+name|Node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -526,7 +545,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiDsMethodDataSetEntry
+name|AcpiDsMethodDataSetValue
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -563,9 +582,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiDsCallControlMethod
 parameter_list|(
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
@@ -872,30 +891,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_OBJECT_TYPE8
-name|AcpiDsMapOpcodeToDataType
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
-name|UINT32
-modifier|*
-name|OutFlags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_OBJECT_TYPE8
-name|AcpiDsMapNamedOpcodeToDataType
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * dswscope - Scope Stack manipulation  */
 end_comment
@@ -960,9 +955,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|MthDesc
 parameter_list|,
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1047,9 +1042,9 @@ name|ACPI_WALK_STATE
 modifier|*
 name|AcpiDsPopWalkState
 parameter_list|(
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1062,9 +1057,9 @@ name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
 parameter_list|,
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1107,9 +1102,9 @@ name|ACPI_WALK_STATE
 modifier|*
 name|AcpiDsGetCurrentWalkState
 parameter_list|(
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|)
 function_decl|;
 end_function_decl

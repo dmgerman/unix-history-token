@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 54 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1824,7 +1824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsGetCurrentWalkState  *  * PARAMETERS:  WalkList        - Get current active state for this walk list  *  * RETURN:      Pointer to the current walk state  *  * DESCRIPTION: Get the walk state that is at the head of the list (the "current"  *              walk state.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsGetCurrentWalkState  *  * PARAMETERS:  Thread          - Get current active state for this Thread  *  * RETURN:      Pointer to the current walk state  *  * DESCRIPTION: Get the walk state that is at the head of the list (the "current"  *              walk state.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1832,9 +1832,9 @@ name|ACPI_WALK_STATE
 modifier|*
 name|AcpiDsGetCurrentWalkState
 parameter_list|(
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|)
 block|{
 name|PROC_NAME
@@ -1842,23 +1842,10 @@ argument_list|(
 literal|"DsGetCurrentWalkState"
 argument_list|)
 expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_PARSE
-operator|,
-literal|"DsGetCurrentWalkState, =%p\n"
-operator|,
-name|WalkList
-operator|->
-name|WalkState
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|WalkList
+name|Thread
 condition|)
 block|{
 return|return
@@ -1867,11 +1854,24 @@ name|NULL
 operator|)
 return|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"DsGetCurrentWalkState, =%p\n"
+operator|,
+name|Thread
+operator|->
+name|WalkStateList
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|WalkList
+name|Thread
 operator|->
-name|WalkState
+name|WalkStateList
 operator|)
 return|;
 block|}
@@ -1889,9 +1889,9 @@ name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
 parameter_list|,
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|)
 block|{
 name|FUNCTION_TRACE
@@ -1903,13 +1903,13 @@ name|WalkState
 operator|->
 name|Next
 operator|=
-name|WalkList
+name|Thread
 operator|->
-name|WalkState
+name|WalkStateList
 expr_stmt|;
-name|WalkList
+name|Thread
 operator|->
-name|WalkState
+name|WalkStateList
 operator|=
 name|WalkState
 expr_stmt|;
@@ -1927,9 +1927,9 @@ name|ACPI_WALK_STATE
 modifier|*
 name|AcpiDsPopWalkState
 parameter_list|(
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|)
 block|{
 name|ACPI_WALK_STATE
@@ -1943,9 +1943,9 @@ argument_list|)
 expr_stmt|;
 name|WalkState
 operator|=
-name|WalkList
+name|Thread
 operator|->
-name|WalkState
+name|WalkStateList
 expr_stmt|;
 if|if
 condition|(
@@ -1953,15 +1953,15 @@ name|WalkState
 condition|)
 block|{
 comment|/* Next walk state becomes the current walk state */
-name|WalkList
+name|Thread
 operator|->
-name|WalkState
+name|WalkStateList
 operator|=
 name|WalkState
 operator|->
 name|Next
 expr_stmt|;
-comment|/*          * Don't clear the NEXT field, this serves as an indicator          * that there is a parent WALK STATE          *     WalkState->Next = NULL;          */
+comment|/*          * Don't clear the NEXT field, this serves as an indicator          * that there is a parent WALK STATE          *     NO: WalkState->Next = NULL;          */
 block|}
 name|return_PTR
 argument_list|(
@@ -1972,7 +1972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateWalkState  *  * PARAMETERS:  Origin          - Starting point for this walk  *              WalkList        - Owning walk list  *  * RETURN:      Pointer to the new walk state.  *  * DESCRIPTION: Allocate and initialize a new walk state.  The current walk state  *              is set to this new state.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateWalkState  *  * PARAMETERS:  Origin          - Starting point for this walk  *              Thread          - Current thread state  *  * RETURN:      Pointer to the new walk state.  *  * DESCRIPTION: Allocate and initialize a new walk state.  The current walk   *              state is set to this new state.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1991,9 +1991,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|MthDesc
 parameter_list|,
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|)
 block|{
 name|ACPI_WALK_STATE
@@ -2053,9 +2053,9 @@ name|MthDesc
 expr_stmt|;
 name|WalkState
 operator|->
-name|WalkList
+name|Thread
 operator|=
-name|WalkList
+name|Thread
 expr_stmt|;
 comment|/* Init the method args/local */
 ifndef|#
@@ -2093,14 +2093,14 @@ block|}
 comment|/* Put the new state at the head of the walk list */
 if|if
 condition|(
-name|WalkList
+name|Thread
 condition|)
 block|{
 name|AcpiDsPushWalkState
 argument_list|(
 name|WalkState
 argument_list|,
-name|WalkList
+name|Thread
 argument_list|)
 expr_stmt|;
 block|}
@@ -2207,7 +2207,6 @@ operator|+
 name|AmlLength
 expr_stmt|;
 comment|/* The NextOp of the NextWalk will be the beginning of the method */
-comment|/* TBD: [Restructure] -- obsolete? */
 name|WalkState
 operator|->
 name|NextOp

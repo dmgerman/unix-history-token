@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -926,9 +926,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|MethodNode
-operator|->
-name|Object
+argument_list|)
 condition|)
 block|{
 name|return_VOID
@@ -938,9 +939,10 @@ operator|*
 name|ArgCount
 operator|=
 operator|(
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|MethodNode
-operator|->
-name|Object
+argument_list|)
 operator|)
 operator|->
 name|Method
@@ -1387,14 +1389,13 @@ break|break;
 case|case
 name|AML_INT_ACCESSFIELD_OP
 case|:
-comment|/* Get AccessType and AccessAtrib and merge into the field Op */
+comment|/*               * Get AccessType and AccessAttrib and merge into the field Op              * AccessType is first operand, AccessAttribute is second              */
 name|Field
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 operator|=
-operator|(
 operator|(
 name|GET8
 argument_list|(
@@ -1405,20 +1406,29 @@ argument_list|)
 operator|<<
 literal|8
 operator|)
-operator||
+expr_stmt|;
+name|ParserState
+operator|->
+name|Aml
+operator|++
+expr_stmt|;
+name|Field
+operator|->
+name|Value
+operator|.
+name|Integer32
+operator||=
 name|GET8
 argument_list|(
 name|ParserState
 operator|->
 name|Aml
 argument_list|)
-operator|)
 expr_stmt|;
 name|ParserState
 operator|->
 name|Aml
-operator|+=
-literal|2
+operator|++
 expr_stmt|;
 break|break;
 block|}

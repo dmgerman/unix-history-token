@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 66 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 67 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -245,9 +245,10 @@ block|}
 comment|/* Check for match against the object attached to the node */
 if|if
 condition|(
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|Node
-operator|->
-name|Object
+argument_list|)
 operator|==
 name|ObjDesc
 condition|)
@@ -1462,15 +1463,14 @@ index|]
 decl_stmt|;
 name|ObjDesc
 operator|=
-operator|(
+name|AcpiNsGetAttachedObject
+argument_list|(
 operator|(
 name|ACPI_NAMESPACE_NODE
 operator|*
 operator|)
 name|ObjHandle
-operator|)
-operator|->
-name|Object
+argument_list|)
 expr_stmt|;
 name|BufSize
 operator|=

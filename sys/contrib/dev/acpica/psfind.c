@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -50,7 +50,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiPsGetParent
@@ -125,7 +124,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiPsFindName
@@ -508,9 +506,6 @@ operator|->
 name|Parent
 expr_stmt|;
 block|}
-comment|/* get first object within the scope */
-comment|/* TBD: [Investigate] OR - set next in root scope to point to the same value as arg */
-comment|/* Scope = Scope->Value.Arg; */
 break|break;
 case|case
 literal|'^'

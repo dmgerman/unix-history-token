@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 97 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 98 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*!  * Naming convention for AML interpreter execution routines.  *  * The routines that begin execution of AML opcodes are named with a common  * convention based upon the number of arguments, the number of target operands,  * and whether or not a value is returned:  *  *      AcpiExOpcode_xA_yT_zR  *  * Where:    *  * xA - ARGUMENTS:    The number of arguments (input operands) that are   *                    required for this opcode type (1 through 6 args).  * yT - TARGETS:      The number of targets (output operands) that are required   *                    for this opcode type (0, 1, or 2 targets).  * zR - RETURN VALUE: Indicates whether this opcode type returns a value   *                    as the function return (0 or 1).  *  * The AcpiExOpcode* functions are called via the Dispatcher component with   * fully resolved operands. !*/
+comment|/*!  * Naming convention for AML interpreter execution routines.  *  * The routines that begin execution of AML opcodes are named with a common  * convention based upon the number of arguments, the number of target operands,  * and whether or not a value is returned:  *  *      AcpiExOpcode_xA_yT_zR  *  * Where:  *  * xA - ARGUMENTS:    The number of arguments (input operands) that are  *                    required for this opcode type (1 through 6 args).  * yT - TARGETS:      The number of targets (output operands) that are required  *                    for this opcode type (0, 1, or 2 targets).  * zR - RETURN VALUE: Indicates whether this opcode type returns a value  *                    as the function return (0 or 1).  *  * The AcpiExOpcode* functions are called via the Dispatcher component with  * fully resolved operands. !*/
 end_comment
 
 begin_comment
@@ -1510,7 +1510,7 @@ break|break;
 block|}
 name|StoreLogicalResult
 label|:
-comment|/*       * Set return value to according to LogicalResult. logical TRUE (all ones)      * Default is FALSE (zero)       */
+comment|/*      * Set return value to according to LogicalResult. logical TRUE (all ones)      * Default is FALSE (zero)      */
 if|if
 condition|(
 name|LogicalResult

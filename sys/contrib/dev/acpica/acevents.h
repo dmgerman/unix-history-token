@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -191,7 +191,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 modifier|*
 name|Value
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmath - Integer math support routines  *              $Revision: 7 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmath - Integer math support routines  *              $Revision: 8 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -718,7 +718,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtShortDivide, AcpiUtDivide  *  * DESCRIPTION: Native versions of the UtDivide functions. Use these if either  *              1) The target is a 64-bit platform and therefore 64-bit  *                 integer math is supported directly by the machine.  *              2) The target is a 32-bit or 16-bit platform, and the   *                 double-precision integer math library is available to   *                 perform the divide.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtShortDivide, AcpiUtDivide  *  * DESCRIPTION: Native versions of the UtDivide functions. Use these if either  *              1) The target is a 64-bit platform and therefore 64-bit  *                 integer math is supported directly by the machine.  *              2) The target is a 32-bit or 16-bit platform, and the  *                 double-precision integer math library is available to  *                 perform the divide.  *  ******************************************************************************/
 end_comment
 
 begin_function
