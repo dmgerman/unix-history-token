@@ -135,12 +135,12 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* align next field to 16 bytes */
+comment|/* align mc_fpstate to 16 bytes */
 comment|/* 	 * See<machine/npx.h> for the internals of mc_fpstate[]. 	 */
 name|long
 name|mc_fpstate
 index|[
-literal|128
+literal|64
 index|]
 name|__aligned
 decl|(16
