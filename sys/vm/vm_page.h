@@ -122,6 +122,10 @@ name|u_short
 name|wire_count
 decl_stmt|;
 comment|/* wired down maps refs (P) */
+name|u_int
+name|cow
+decl_stmt|;
+comment|/* page cow mapping count */
 name|short
 name|hold_count
 decl_stmt|;
@@ -190,10 +194,6 @@ decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks */
 endif|#
 directive|endif
-name|u_int
-name|cow
-decl_stmt|;
-comment|/* page cow mapping count */
 block|}
 struct|;
 end_struct
