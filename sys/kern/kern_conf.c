@@ -142,7 +142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This is the number of hash-buckets.  Experiements with 'real-life'  * dev_t's show that a prime halfway between two powers of two works  * best.  */
+comment|/*  * This is the number of hash-buckets.  Experiments with 'real-life'  * dev_t's show that a prime halfway between two powers of two works  * best.  */
 end_comment
 
 begin_define
@@ -902,7 +902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct cdev *and u_dev_t primitives  */
+comment|/*  * struct cdev * and u_dev_t primitives  */
 end_comment
 
 begin_function
@@ -3198,7 +3198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper functions for cloning device drivers.  *  * The objective here is to make it unnecessary for the device drivers to  * use rman or similar to manage their unit number space.  Due to the way  * we do "on-demand" devices, using rman or other "private" methods   * will be very tricky to lock down properly once we lock down this file.  *  * Instead we give the drivers these routines which puts the struct cdev *'s that  * are to be managed on their own list, and gives the driver the ability  * to ask for the first free unit number or a given specified unit number.  *  * In addition these routines support paired devices (pty, nmdm and similar)  * by respecting a number of "flag" bits in the minor number.  *  */
+comment|/*  * Helper functions for cloning device drivers.  *  * The objective here is to make it unnecessary for the device drivers to  * use rman or similar to manage their unit number space.  Due to the way  * we do "on-demand" devices, using rman or other "private" methods   * will be very tricky to lock down properly once we lock down this file.  *  * Instead we give the drivers these routines which puts the struct cdev *'s  * that are to be managed on their own list, and gives the driver the ability  * to ask for the first free unit number or a given specified unit number.  *  * In addition these routines support paired devices (pty, nmdm and similar)  * by respecting a number of "flag" bits in the minor number.  *  */
 end_comment
 
 begin_struct
@@ -3672,7 +3672,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper sysctl for devname(3).  We're given a {u}struct cdev *and return  * the name, if any, registered by the device driver.  */
+comment|/*  * Helper sysctl for devname(3).  We're given a struct cdev * and return  * the name, if any, registered by the device driver.  */
 end_comment
 
 begin_function
