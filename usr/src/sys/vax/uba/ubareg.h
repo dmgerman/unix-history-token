@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.26	81/12/03	*/
+comment|/*	ubareg.h	4.27	82/03/18	*/
 end_comment
 
 begin_comment
@@ -701,25 +701,10 @@ name|uba
 parameter_list|,
 name|bdp
 parameter_list|)
-value|{ \ 	if (cpu==VAX_780) {
+value|{ \ 	if (cpu==VAX_780) { \ 		UBA_PURGE780((uba), (bdp)); \ 	} \ }
 end_define
 
-begin_expr_stmt
-name|UBA_PURGE780
-argument_list|(
-operator|(
-name|uba
-operator|)
-argument_list|,
-operator|(
-name|bdp
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
-unit|\ 	} \ }
 endif|#
 directive|endif
 end_endif
@@ -748,29 +733,10 @@ name|uba
 parameter_list|,
 name|bdp
 parameter_list|)
-value|{ \ 	if (cpu==VAX_750) {
+value|{ \ 	if (cpu==VAX_750) { \ 		UBA_PURGE750((uba), (bdp)); break; \ 	} \ }
 end_define
 
-begin_expr_stmt
-name|UBA_PURGE750
-argument_list|(
-operator|(
-name|uba
-operator|)
-argument_list|,
-operator|(
-name|bdp
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_break
-break|break;
-end_break
-
 begin_endif
-unit|\ 	} \ }
 endif|#
 directive|endif
 end_endif
