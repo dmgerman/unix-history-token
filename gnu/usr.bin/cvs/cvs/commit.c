@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Commit Files  *  * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Commit Files  *   * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *   */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"cvs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"getline.h"
 end_include
 
 begin_ifndef
@@ -17,6 +23,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +32,13 @@ literal|"$CVSid: @(#)commit.c 1.101 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -131,6 +139,10 @@ operator|,
 name|char
 operator|*
 name|tag
+operator|,
+name|char
+operator|*
+name|options
 operator|,
 name|List
 operator|*
@@ -263,6 +275,10 @@ name|options
 operator|,
 name|char
 operator|*
+name|update_dir
+operator|,
+name|char
+operator|*
 name|repository
 operator|,
 name|List
@@ -299,10 +315,12 @@ name|fsortcmp
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|Node
 operator|*
 name|p
 operator|,
+specifier|const
 name|Node
 operator|*
 name|q
@@ -638,6 +656,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|force_ci
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -714,8 +734,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|commit_usage
 index|[]
 init|=
@@ -754,8 +776,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 name|int
@@ -1106,6 +1128,8 @@ argument_list|(
 name|logfile
 argument_list|,
 name|O_RDONLY
+operator||
+name|OPEN_BINARY
 argument_list|)
 operator|)
 operator|<
@@ -1204,6 +1228,127 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+if|if
+condition|(
+name|client_active
+condition|)
+block|{
+comment|/* 	 * Do this now; don't ask for a log message if we can't talk to the 	 * server.  But if there is a syntax error in the options, give 	 * an error message without connecting. 	 */
+name|start_server
+argument_list|()
+expr_stmt|;
+name|ign_setup
+argument_list|()
+expr_stmt|;
+comment|/* 	 * We do this once, not once for each directory as in normal CVS. 	 * The protocol is designed this way.  This is a feature. 	 * 	 * We could provide the lists of changed, modified, etc. files, 	 * however.  Our failure to do so is just laziness, not design. 	 */
+if|if
+condition|(
+name|use_editor
+condition|)
+name|do_editor
+argument_list|(
+literal|"."
+argument_list|,
+operator|&
+name|message
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|List
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* We always send some sort of message, even if empty.  */
+name|option_with_arg
+argument_list|(
+literal|"-m"
+argument_list|,
+name|message
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|local
+condition|)
+name|send_arg
+argument_list|(
+literal|"-l"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|force_ci
+condition|)
+name|send_arg
+argument_list|(
+literal|"-f"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|run_module_prog
+condition|)
+name|send_arg
+argument_list|(
+literal|"-n"
+argument_list|)
+expr_stmt|;
+name|option_with_arg
+argument_list|(
+literal|"-r"
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
+name|send_files
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|local
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|to_server
+argument_list|,
+literal|"ci\n"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"writing to server"
+argument_list|)
+expr_stmt|;
+return|return
+name|get_responses_and_close
+argument_list|()
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* XXX - this is not the perfect check for this */
 if|if
 condition|(
@@ -1214,6 +1359,9 @@ condition|)
 name|write_dirtag
 operator|=
 name|tag
+expr_stmt|;
+name|wrap_setup
+argument_list|()
 expr_stmt|;
 comment|/*      * Run the recursion processor to find all the dirs to lock and lock all      * the dirs      */
 name|locklist
@@ -1226,31 +1374,19 @@ operator|=
 name|start_recursion
 argument_list|(
 operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
+name|FILEPROC
 operator|)
 name|NULL
 argument_list|,
 name|lock_filesdoneproc
 argument_list|,
 operator|(
-name|Dtype
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
+name|DIRENTPROC
 operator|)
 name|NULL
 argument_list|,
 operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
+name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
@@ -1320,11 +1456,7 @@ argument_list|,
 name|check_direntproc
 argument_list|,
 operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
+name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
@@ -1448,16 +1580,16 @@ name|p
 parameter_list|,
 name|q
 parameter_list|)
+specifier|const
 name|Node
 modifier|*
 name|p
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|Node
+modifier|*
 name|q
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1474,7 +1606,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create a list of repositories to lock  */
@@ -2090,11 +2222,22 @@ block|{
 case|case
 name|T_CHECKOUT
 case|:
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+case|case
+name|T_PATCH
+case|:
+endif|#
+directive|endif
 case|case
 name|T_NEEDS_MERGE
 case|:
 case|case
 name|T_CONFLICT
+case|:
+case|case
+name|T_REMOVE_ENTRY
 case|:
 if|if
 condition|(
@@ -2126,17 +2269,6 @@ argument_list|,
 literal|"Up-to-date check failed for `%s/%s'"
 argument_list|,
 name|update_dir
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"Up-to-date check failed for `%s'"
 argument_list|,
 name|file
 argument_list|)
@@ -2328,6 +2460,26 @@ name|int
 name|retcode
 decl_stmt|;
 comment|/* 		 * We found a "conflict" marker. 		 * 		 * If the timestamp on the file is the same as the 		 * timestamp stored in the Entries file, we block the commit. 		 */
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
+condition|)
+name|retcode
+operator|=
+name|vers
+operator|->
+name|ts_conflict
+index|[
+literal|0
+index|]
+operator|!=
+literal|'='
+expr_stmt|;
+else|else
+block|{
 name|filestamp
 operator|=
 name|time_stamp
@@ -2351,6 +2503,34 @@ argument_list|(
 name|filestamp
 argument_list|)
 expr_stmt|;
+block|}
+else|#
+directive|else
+name|filestamp
+operator|=
+name|time_stamp
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+name|retcode
+operator|=
+name|strcmp
+argument_list|(
+name|vers
+operator|->
+name|ts_conflict
+argument_list|,
+name|filestamp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|filestamp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|retcode
@@ -2407,7 +2587,7 @@ block|}
 comment|/* 		 * If the timestamps differ, look for Conflict indicators 		 * in the file to see if we should block the commit anyway 		 */
 name|run_setup
 argument_list|(
-literal|"%s -s"
+literal|"%s"
 argument_list|,
 name|GREP
 argument_list|)
@@ -2428,11 +2608,11 @@ name|run_exec
 argument_list|(
 name|RUN_TTY
 argument_list|,
-name|RUN_TTY
+name|DEVNULL
 argument_list|,
 name|RUN_TTY
 argument_list|,
-name|RUN_NORMAL
+name|RUN_REALLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -2619,6 +2799,25 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+comment|/* Don't look in the attic; if it exists there we will 		   move it back out in checkaddfile.  */
+name|sprintf
+argument_list|(
+name|rcs
+argument_list|,
+literal|"%s/%s%s"
+argument_list|,
+name|repository
+argument_list|,
+name|file
+argument_list|,
+name|RCSEXT
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|locate_rcs
 argument_list|(
 name|file
@@ -2628,6 +2827,8 @@ argument_list|,
 name|rcs
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|isreadable
@@ -3355,12 +3556,10 @@ block|{
 comment|/* see if the filter is there, only if it's a full path */
 if|if
 condition|(
+name|isabsolute
+argument_list|(
 name|filter
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
+argument_list|)
 condition|)
 block|{
 name|char
@@ -3904,6 +4103,10 @@ name|ci
 operator|->
 name|tag
 argument_list|,
+name|ci
+operator|->
+name|options
+argument_list|,
 name|srcfiles
 argument_list|)
 operator|!=
@@ -3925,6 +4128,106 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+comment|/* adding files with a tag, now means adding them on a branch. 	   Since the branch test was done in check_fileproc for 	   modified files, we need to stub it in again here. */
+if|if
+condition|(
+name|ci
+operator|->
+name|tag
+condition|)
+block|{
+name|locate_rcs
+argument_list|(
+name|file
+argument_list|,
+name|repository
+argument_list|,
+name|rcs
+argument_list|)
+expr_stmt|;
+name|ci
+operator|->
+name|rev
+operator|=
+name|RCS_whatbranch
+argument_list|(
+name|file
+argument_list|,
+name|ci
+operator|->
+name|tag
+argument_list|,
+name|srcfiles
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|Checkin
+argument_list|(
+literal|'A'
+argument_list|,
+name|file
+argument_list|,
+name|update_dir
+argument_list|,
+name|repository
+argument_list|,
+name|rcs
+argument_list|,
+name|ci
+operator|->
+name|rev
+argument_list|,
+name|ci
+operator|->
+name|tag
+argument_list|,
+name|ci
+operator|->
+name|options
+argument_list|,
+name|message
+argument_list|,
+name|entries
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+block|{
+name|unlockrcs
+argument_list|(
+name|file
+argument_list|,
+name|repository
+argument_list|)
+expr_stmt|;
+name|fixbranch
+argument_list|(
+name|file
+argument_list|,
+name|repository
+argument_list|,
+name|sbranch
+argument_list|)
+expr_stmt|;
+block|}
+name|ci
+operator|->
+name|status
+operator|=
+name|T_UPTODATE
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* DEATH_SUPPORT */
 block|}
 comment|/*      * Add the file for real      */
 if|if
@@ -4027,6 +4330,8 @@ name|ci
 operator|->
 name|options
 argument_list|,
+name|update_dir
+argument_list|,
 name|repository
 argument_list|,
 name|entries
@@ -4068,6 +4373,8 @@ argument_list|(
 literal|'M'
 argument_list|,
 name|file
+argument_list|,
+name|update_dir
 argument_list|,
 name|repository
 argument_list|,
@@ -4124,6 +4431,7 @@ name|status
 operator|==
 name|T_REMOVED
 condition|)
+block|{
 name|err
 operator|=
 name|remove_file
@@ -4143,6 +4451,47 @@ argument_list|,
 name|srcfiles
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
+condition|)
+block|{
+name|server_scratch_entry_only
+argument_list|()
+expr_stmt|;
+name|server_updated
+argument_list|(
+name|file
+argument_list|,
+name|update_dir
+argument_list|,
+name|repository
+argument_list|,
+comment|/* Doesn't matter, it won't get checked.  */
+name|SERVER_UPDATED
+argument_list|,
+operator|(
+expr|struct
+name|stat
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 name|out
 label|:
 if|if
@@ -4327,25 +4676,10 @@ operator|&&
 name|run_module_prog
 condition|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|char
-name|line
-index|[
-name|MAXLINELEN
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-comment|/* It is not an error if Checkin.prog does not exist.  */
 if|if
 condition|(
 operator|(
@@ -4362,40 +4696,65 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|fgets
+name|char
+modifier|*
+name|line
+decl_stmt|;
+name|int
+name|line_length
+decl_stmt|;
+name|size_t
+name|line_chars_allocated
+decl_stmt|;
+name|char
+modifier|*
+name|repository
+decl_stmt|;
+name|line
+operator|=
+name|NULL
+expr_stmt|;
+name|line_chars_allocated
+operator|=
+literal|0
+expr_stmt|;
+name|line_length
+operator|=
+name|getline
 argument_list|(
+operator|&
 name|line
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
+operator|&
+name|line_chars_allocated
 argument_list|,
 name|fp
 argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
-operator|(
-name|cp
-operator|=
-name|strrchr
-argument_list|(
-name|line
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
+name|line_length
+operator|>
+literal|0
 condition|)
-operator|*
-name|cp
+block|{
+comment|/* Remove any trailing newline.  */
+if|if
+condition|(
+name|line
+index|[
+name|line_length
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|line
+index|[
+operator|--
+name|line_length
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -4466,12 +4825,78 @@ name|repository
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+else|else
+block|{
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: error reading %s"
+argument_list|,
+name|CVSADM_CIPROG
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|line
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot close %s"
+argument_list|,
+name|CVSADM_CIPROG
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|existence_error
+argument_list|(
+name|errno
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot open %s"
+argument_list|,
+name|CVSADM_CIPROG
 argument_list|)
 expr_stmt|;
 block|}
@@ -4694,6 +5119,7 @@ name|write_dirtag
 operator|!=
 name|NULL
 condition|)
+block|{
 name|WriteTag
 argument_list|(
 operator|(
@@ -4711,6 +5137,36 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
+condition|)
+name|server_set_sticky
+argument_list|(
+name|update_dir
+argument_list|,
+name|Name_Repository
+argument_list|(
+name|dir
+argument_list|,
+name|update_dir
+argument_list|)
+argument_list|,
+name|write_dirtag
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 return|return
 operator|(
 name|err
@@ -4884,6 +5340,55 @@ name|char
 modifier|*
 name|tmp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+name|int
+name|branch
+decl_stmt|;
+name|char
+modifier|*
+name|lockflag
+decl_stmt|;
+name|char
+modifier|*
+name|corev
+decl_stmt|;
+name|char
+modifier|*
+name|rev
+decl_stmt|;
+name|char
+modifier|*
+name|prev_rev
+decl_stmt|;
+name|Node
+modifier|*
+name|p
+decl_stmt|;
+name|RCSNode
+modifier|*
+name|rcsfile
+decl_stmt|;
+name|corev
+operator|=
+name|NULL
+expr_stmt|;
+name|rev
+operator|=
+name|NULL
+expr_stmt|;
+name|prev_rev
+operator|=
+name|NULL
+expr_stmt|;
+name|lockflag
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEATH_SUPPORT */
 name|retcode
 operator|=
 literal|0
@@ -4897,42 +5402,53 @@ argument_list|,
 name|rcs
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+name|branch
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|tag
+operator|&&
+operator|!
+operator|(
+name|branch
+operator|=
+name|RCS_isbranch
+argument_list|(
+name|file
+argument_list|,
+name|tag
+argument_list|,
+name|srcfiles
+argument_list|)
+operator|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|tag
 condition|)
+endif|#
+directive|endif
 block|{
 comment|/* a symbolic tag is specified; just remove the tag from the file */
-name|run_setup
-argument_list|(
-literal|"%s%s -q -N%s"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|,
-name|tag
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
 name|retcode
 operator|=
-name|run_exec
+name|RCS_deltag
 argument_list|(
-name|RUN_TTY
+name|rcs
 argument_list|,
-name|RUN_TTY
+name|tag
 argument_list|,
-name|DEVNULL
-argument_list|,
-name|RUN_NORMAL
+literal|1
 argument_list|)
 operator|)
 operator|!=
@@ -4983,946 +5499,97 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-block|{
-comment|/* this was the head; really move it into the Attic */
-name|tmp
-operator|=
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|repository
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-literal|'/'
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|CVSATTIC
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-literal|'/'
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|file
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|RCSEXT
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+comment|/* we are removing the file from either the head or a branch */
+comment|/* commit a new, dead revision. */
+comment|/* Print message indicating that file is going to be removed. */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|printf
 argument_list|(
-name|tmp
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|repository
-argument_list|,
-name|CVSATTIC
-argument_list|)
-expr_stmt|;
-name|omask
-operator|=
-name|umask
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mkdir
-argument_list|(
-name|tmp
-argument_list|,
-literal|0777
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|umask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|tmp
-argument_list|,
-literal|"%s/%s/%s%s"
-argument_list|,
-name|repository
-argument_list|,
-name|CVSATTIC
-argument_list|,
-name|file
-argument_list|,
-name|RCSEXT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|strcmp
-argument_list|(
-name|rcs
-argument_list|,
-name|tmp
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|rename
-argument_list|(
-name|rcs
-argument_list|,
-name|tmp
-argument_list|)
-operator|!=
-operator|-
-literal|1
-operator|)
-operator|||
-operator|(
-operator|!
-name|isreadable
-argument_list|(
-name|rcs
-argument_list|)
-operator|&&
-name|isreadable
-argument_list|(
-name|tmp
-argument_list|)
-operator|)
-condition|)
-block|{
-name|Scratch_Entry
-argument_list|(
-name|entries
+literal|"Removing %s;\n"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Do the actual checkin for added files  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|finaladd
-parameter_list|(
-name|file
-parameter_list|,
 name|rev
-parameter_list|,
-name|tag
-parameter_list|,
-name|options
-parameter_list|,
-name|repository
-parameter_list|,
-name|entries
-parameter_list|)
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|char
-modifier|*
-name|rev
-decl_stmt|;
-name|char
-modifier|*
-name|tag
-decl_stmt|;
-name|char
-modifier|*
-name|options
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-name|List
-modifier|*
-name|entries
-decl_stmt|;
-block|{
-name|int
-name|ret
-decl_stmt|;
-name|char
-name|tmp
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|char
-name|rcs
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|locate_rcs
-argument_list|(
-name|file
-argument_list|,
-name|repository
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-name|ret
 operator|=
-name|Checkin
-argument_list|(
-literal|'A'
-argument_list|,
-name|file
-argument_list|,
-name|repository
-argument_list|,
-name|rcs
-argument_list|,
-name|rev
-argument_list|,
-name|tag
-argument_list|,
-name|options
-argument_list|,
-name|message
-argument_list|,
-name|entries
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|tmp
-argument_list|,
-literal|"%s/%s%s"
-argument_list|,
-name|CVSADM
-argument_list|,
-name|file
-argument_list|,
-name|CVSEXT_OPT
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink_file
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|tmp
-argument_list|,
-literal|"%s/%s%s"
-argument_list|,
-name|CVSADM
-argument_list|,
-name|file
-argument_list|,
-name|CVSEXT_LOG
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink_file
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|fixaddfile
-argument_list|(
-name|file
-argument_list|,
-name|repository
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Unlock an rcs file  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|unlockrcs
-parameter_list|(
-name|file
-parameter_list|,
-name|repository
-parameter_list|)
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-block|{
-name|char
-name|rcs
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|int
-name|retcode
-init|=
-literal|0
-decl_stmt|;
-name|locate_rcs
-argument_list|(
-name|file
-argument_list|,
-name|repository
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-name|run_setup
-argument_list|(
-literal|"%s%s -q -u"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|retcode
-operator|=
-name|run_exec
-argument_list|(
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-name|error
-argument_list|(
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|,
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-name|errno
-else|:
-literal|0
-argument_list|,
-literal|"could not unlock %s"
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * remove a partially added file.  if we can parse it, leave it alone.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|fixaddfile
-parameter_list|(
-name|file
-parameter_list|,
-name|repository
-parameter_list|)
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-block|{
-name|RCSNode
-modifier|*
-name|rcsfile
-decl_stmt|;
-name|char
-name|rcs
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|int
-name|save_really_quiet
-decl_stmt|;
-name|locate_rcs
-argument_list|(
-name|file
-argument_list|,
-name|repository
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-name|save_really_quiet
-operator|=
-name|really_quiet
-expr_stmt|;
-name|really_quiet
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rcsfile
-operator|=
-name|RCS_parsercsfile
-argument_list|(
-name|rcs
-argument_list|)
-operator|)
-operator|==
 name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|unlink_file
-argument_list|(
-name|rcs
-argument_list|)
 expr_stmt|;
-else|else
-name|freercsnode
-argument_list|(
-operator|&
-name|rcsfile
-argument_list|)
-expr_stmt|;
-name|really_quiet
+name|lockflag
 operator|=
-name|save_really_quiet
+literal|"-l"
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * put the branch back on an rcs file  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|fixbranch
-parameter_list|(
-name|file
-parameter_list|,
-name|repository
-parameter_list|,
-name|branch
-parameter_list|)
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-name|char
-modifier|*
-name|branch
-decl_stmt|;
-block|{
-name|char
-name|rcs
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|int
-name|retcode
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|branch
-operator|!=
-name|NULL
-operator|&&
-name|branch
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
 condition|)
 block|{
-name|locate_rcs
-argument_list|(
-name|file
-argument_list|,
-name|repository
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-name|run_setup
-argument_list|(
-literal|"%s%s -q -b%s"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|,
-name|branch
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|retcode
+name|char
+modifier|*
+name|branchname
+decl_stmt|;
+name|rev
 operator|=
-name|run_exec
+name|RCS_whatbranch
 argument_list|(
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-name|error
-argument_list|(
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|,
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-name|errno
-else|:
-literal|0
-argument_list|,
-literal|"cannot restore branch to %s for %s"
-argument_list|,
-name|branch
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * do the initial part of a file add for the named file.  if adding  * with a tag, put the file in the Attic and point the symbolic tag  * at the committed revision.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|checkaddfile
-parameter_list|(
 name|file
-parameter_list|,
-name|repository
-parameter_list|,
+argument_list|,
 name|tag
-parameter_list|,
+argument_list|,
 name|srcfiles
-parameter_list|)
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-name|char
-modifier|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rev
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"cannot find branch \"%s\"."
+argument_list|,
 name|tag
-decl_stmt|;
-name|List
-modifier|*
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|p
+operator|=
+name|findnode
+argument_list|(
 name|srcfiles
-decl_stmt|;
-block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|char
-name|rcs
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|char
-name|fname
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|mode_t
-name|omask
-decl_stmt|;
-name|int
-name|retcode
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|tag
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|rcs
 argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|repository
-argument_list|,
-name|CVSATTIC
-argument_list|)
-expr_stmt|;
-name|omask
-operator|=
-name|umask
-argument_list|(
-literal|2
+name|file
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mkdir
-argument_list|(
-name|rcs
-argument_list|,
-literal|0777
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-name|errno
-operator|!=
-name|EEXIST
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"cannot make directory `%s'"
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-empty_stmt|;
-operator|(
-name|void
-operator|)
-name|umask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|rcs
-argument_list|,
-literal|"%s/%s/%s%s"
-argument_list|,
-name|repository
-argument_list|,
-name|CVSATTIC
-argument_list|,
-name|file
-argument_list|,
-name|RCSEXT
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|locate_rcs
-argument_list|(
-name|file
-argument_list|,
-name|repository
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-name|run_setup
-argument_list|(
-literal|"%s%s -i"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|)
-expr_stmt|;
-name|run_args
-argument_list|(
-literal|"-t%s/%s%s"
-argument_list|,
-name|CVSADM
-argument_list|,
-name|file
-argument_list|,
-name|CVSEXT_LOG
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|fname
-argument_list|,
-literal|"%s/%s%s"
-argument_list|,
-name|CVSADM
-argument_list|,
-name|file
-argument_list|,
-name|CVSEXT_OPT
-argument_list|)
-expr_stmt|;
-name|fp
-operator|=
-name|open_file
-argument_list|(
-name|fname
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|fgets
-argument_list|(
-name|fname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fname
-argument_list|)
-argument_list|,
-name|fp
-argument_list|)
-operator|!=
+name|p
+operator|==
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|strrchr
-argument_list|(
-name|fname
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|cp
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|fname
-condition|)
-name|run_arg
-argument_list|(
-name|fname
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|retcode
-operator|=
-name|run_exec
-argument_list|(
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
-argument_list|)
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|error
 argument_list|(
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-literal|1
-else|:
 literal|0
 argument_list|,
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-name|errno
-else|:
 literal|0
 argument_list|,
-literal|"could not create %s"
-argument_list|,
-name|rcs
+literal|"boy, I'm confused."
 argument_list|)
 expr_stmt|;
 return|return
@@ -5931,237 +5598,155 @@ literal|1
 operator|)
 return|;
 block|}
-name|fix_rcs_modes
-argument_list|(
-name|rcs
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-return|return
+name|rcsfile
+operator|=
 operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Lock the rcs file ``file''  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|lockrcsfile
-parameter_list|(
-name|file
-parameter_list|,
-name|repository
-parameter_list|,
-name|rev
-parameter_list|)
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-name|char
-modifier|*
-name|rev
-decl_stmt|;
-block|{
-name|char
-name|rcs
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|locate_rcs
-argument_list|(
-name|file
-argument_list|,
-name|repository
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lock_RCS
-argument_list|(
-name|file
-argument_list|,
-name|rcs
-argument_list|,
-name|rev
-argument_list|,
-name|repository
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-else|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Attempt to place a lock on the RCS file; returns 0 if it could and 1 if it  * couldn't.  If the RCS file currently has a branch as the head, we must  * move the head back to the trunk before locking the file, and be sure to  * put the branch back as the head if there are any errors.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|lock_RCS
-parameter_list|(
-name|user
-parameter_list|,
-name|rcs
-parameter_list|,
-name|rev
-parameter_list|,
-name|repository
-parameter_list|)
-name|char
-modifier|*
-name|user
-decl_stmt|;
-name|char
-modifier|*
-name|rcs
-decl_stmt|;
-name|char
-modifier|*
-name|rev
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-block|{
 name|RCSNode
-modifier|*
-name|rcsfile
-decl_stmt|;
-name|char
-modifier|*
-name|branch
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|err
-init|=
-literal|0
-decl_stmt|;
-comment|/*      * For a specified, numeric revision of the form "1" or "1.1", (or when      * no revision is specified ""), definitely move the branch to the trunk      * before locking the RCS file.      *      * The assumption is that if there is more than one revision on the trunk,      * the head points to the trunk, not a branch... and as such, it's not      * necessary to move the head in this case.      */
-if|if
-condition|(
-name|rev
-operator|==
-name|NULL
-operator|||
-operator|(
-name|rev
-operator|&&
-name|isdigit
-argument_list|(
 operator|*
-name|rev
-argument_list|)
-operator|&&
-name|numdots
-argument_list|(
-name|rev
-argument_list|)
-operator|<
-literal|2
 operator|)
-condition|)
-block|{
+name|p
+operator|->
+name|data
+expr_stmt|;
+name|branchname
+operator|=
+name|RCS_getbranch
+argument_list|(
+name|rcsfile
+argument_list|,
+name|rev
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-name|rcsfile
-operator|=
-name|RCS_parsercsfile
-argument_list|(
-name|rcs
-argument_list|)
-operator|)
+name|branchname
 operator|==
 name|NULL
 condition|)
 block|{
-comment|/* invalid rcs file? */
-name|err
+comment|/* no revision exists on this branch.  use the previous 	       revision but do not lock. */
+name|corev
 operator|=
+name|RCS_gettag
+argument_list|(
+name|rcsfile
+argument_list|,
+name|tag
+argument_list|,
 literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* rcsfile is valid */
-name|branch
+name|prev_rev
 operator|=
 name|xstrdup
 argument_list|(
-name|rcsfile
-operator|->
-name|branch
+name|rev
 argument_list|)
 expr_stmt|;
-name|freercsnode
+name|lockflag
+operator|=
+literal|""
+expr_stmt|;
+block|}
+else|else
+block|{
+name|corev
+operator|=
+name|xstrdup
 argument_list|(
-operator|&
-name|rcsfile
+name|rev
+argument_list|)
+expr_stmt|;
+name|prev_rev
+operator|=
+name|xstrdup
+argument_list|(
+name|branchname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|branchname
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+comment|/* Not a branch */
+block|{
+comment|/* Get current head revision of file. */
+name|p
+operator|=
+name|findnode
+argument_list|(
+name|srcfiles
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|branch
-operator|!=
+name|p
+operator|==
 name|NULL
 condition|)
 block|{
-name|run_setup
+name|error
 argument_list|(
-literal|"%s%s -q -b"
+literal|0
 argument_list|,
-name|Rcsbin
+literal|0
 argument_list|,
-name|RCS
+literal|"could not find parsed rcsfile %s"
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
-name|run_arg
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|rcsfile
+operator|=
+operator|(
+name|RCSNode
+operator|*
+operator|)
+name|p
+operator|->
+name|data
+expr_stmt|;
+name|prev_rev
+operator|=
+name|RCS_head
 argument_list|(
-name|rcs
+name|rcsfile
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* if removing without a tag or a branch, then make sure the default        branch is the trunk. */
 if|if
 condition|(
-name|run_exec
+operator|!
+name|tag
+operator|&&
+operator|!
+name|branch
+condition|)
+block|{
+if|if
+condition|(
+name|RCS_setbranch
 argument_list|(
-name|RUN_TTY
+name|rcs
 argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -6178,15 +5763,6 @@ argument_list|,
 name|rcs
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|branch
-condition|)
-name|free
-argument_list|(
-name|branch
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -6194,60 +5770,54 @@ operator|)
 return|;
 block|}
 block|}
-name|run_setup
-argument_list|(
-literal|"%s%s -q -l"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|run_exec
-argument_list|(
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
+condition|)
 block|{
+comment|/* If this is the server, there will be a file sitting in the 	   temp directory which is the kludgy way in which server.c 	   tells time_stamp that the file is no longer around.  Remove 	   it so we can create temp files with that name (ignore errors).  */
+name|unlink_file
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* check something out.  Generally this is the head.  If we have a        particular rev, then name it.  except when creating a branch,        lock the rev we're checking out.  */
 name|run_setup
 argument_list|(
-literal|"%s%s -q -l%s"
+literal|"%s%s %s %s%s %s"
 argument_list|,
 name|Rcsbin
 argument_list|,
-name|RCS
+name|RCS_CO
+argument_list|,
+name|lockflag
 argument_list|,
 name|rev
 condition|?
-name|rev
+literal|"-r"
 else|:
 literal|""
-argument_list|)
-expr_stmt|;
-name|run_arg
-argument_list|(
+argument_list|,
+name|rev
+condition|?
+name|corev
+else|:
+literal|""
+argument_list|,
 name|rcs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 operator|(
-name|void
-operator|)
+name|retcode
+operator|=
 name|run_exec
 argument_list|(
 name|RUN_TTY
@@ -6258,403 +5828,534 @@ name|DEVNULL
 argument_list|,
 name|RUN_NORMAL
 argument_list|)
-expr_stmt|;
-block|}
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
-name|err
+operator|!
+name|quiet
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|retcode
 operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|branch
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|sbranch
-argument_list|,
-name|branch
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|branch
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|sbranch
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* try to restore the branch if we can on error */
-if|if
-condition|(
-name|branch
-operator|!=
-name|NULL
-condition|)
-name|fixbranch
-argument_list|(
-name|user
-argument_list|,
-name|repository
-argument_list|,
-name|branch
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|branch
-condition|)
-name|free
-argument_list|(
-name|branch
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Called when "add"ing files to the RCS respository, as it is necessary to  * preserve the file modes in the same fashion that RCS does.  This would be  * automatic except that we are placing the RCS ,v file very far away from  * the user file, and I can't seem to convince RCS of the location of the  * user file.  So we munge it here, after the ,v file has been successfully  * initialized with "rcs -i".  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|fix_rcs_modes
-parameter_list|(
-name|rcs
-parameter_list|,
-name|user
-parameter_list|)
-name|char
-modifier|*
-name|rcs
-decl_stmt|;
-name|char
-modifier|*
-name|user
-decl_stmt|;
-block|{
-name|struct
-name|stat
-name|sb
-decl_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-name|user
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|!=
 operator|-
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-name|chmod
-argument_list|(
-name|rcs
+condition|?
+name|errno
+else|:
+literal|0
 argument_list|,
-operator|(
-name|int
-operator|)
-name|sb
-operator|.
-name|st_mode
-operator|&
-operator|~
-literal|0222
+literal|"failed to check out `%s'"
+argument_list|,
+name|rcs
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * free an UPDATE node's data (really nothing to do)  */
-end_comment
-
-begin_function
-name|void
-name|update_delproc
-parameter_list|(
-name|p
-parameter_list|)
-name|Node
-modifier|*
-name|p
-decl_stmt|;
-block|{
-name|p
-operator|->
-name|data
-operator|=
+return|return
 operator|(
-name|char
-operator|*
+literal|1
 operator|)
+return|;
+block|}
+if|if
+condition|(
+name|corev
+operator|!=
 name|NULL
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Free the commit_info structure in p.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ci_delproc
-parameter_list|(
-name|p
-parameter_list|)
-name|Node
-modifier|*
-name|p
-decl_stmt|;
-block|{
-name|struct
-name|commit_info
-modifier|*
-name|ci
-decl_stmt|;
-name|ci
-operator|=
-operator|(
-expr|struct
-name|commit_info
-operator|*
-operator|)
-name|p
-operator|->
-name|data
-expr_stmt|;
-if|if
-condition|(
-name|ci
-operator|->
-name|rev
 condition|)
 name|free
 argument_list|(
-name|ci
-operator|->
-name|rev
+name|corev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ci
-operator|->
-name|tag
-condition|)
-name|free
+ifdef|#
+directive|ifdef
+name|DEATH_STATE
+name|run_setup
 argument_list|(
-name|ci
-operator|->
-name|tag
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ci
-operator|->
-name|options
-condition|)
-name|free
-argument_list|(
-name|ci
-operator|->
-name|options
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ci
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Free the commit_info structure in p.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|masterlist_delproc
-parameter_list|(
-name|p
-parameter_list|)
-name|Node
-modifier|*
-name|p
-decl_stmt|;
-block|{
-name|struct
-name|master_lists
-modifier|*
-name|ml
-decl_stmt|;
-name|ml
-operator|=
-operator|(
-expr|struct
-name|master_lists
-operator|*
-operator|)
-name|p
-operator|->
-name|data
-expr_stmt|;
-name|dellist
-argument_list|(
-operator|&
-name|ml
-operator|->
-name|ulist
-argument_list|)
-expr_stmt|;
-name|dellist
-argument_list|(
-operator|&
-name|ml
-operator|->
-name|cilist
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ml
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Find an RCS file in the repository.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|locate_rcs
-parameter_list|(
-name|file
-parameter_list|,
-name|repository
-parameter_list|,
-name|rcs
-parameter_list|)
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-name|char
-modifier|*
-name|rcs
-decl_stmt|;
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|rcs
+literal|"%s%s -f -sdead %s%s"
 argument_list|,
-literal|"%s/%s%s"
+argument|Rcsbin
 argument_list|,
-name|repository
+argument|RCS_CI
 argument_list|,
-name|file
+argument|rev ?
+literal|"-r"
+argument|:
+literal|""
 argument_list|,
-name|RCSEXT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|isreadable
-argument_list|(
-name|rcs
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|rcs
-argument_list|,
+else|#
+directive|else
+argument|run_setup (
+literal|"%s%s -K %s%s"
+argument|, Rcsbin, RCS_CI, rev ?
+literal|"-r"
+argument|:
+literal|""
+argument|,
+endif|#
+directive|endif
+argument|rev ? rev :
+literal|""
+argument|);      run_args (
+literal|"-m%s"
+argument|, make_message_rcslegal (message));     run_arg (rcs);     if ((retcode = run_exec (RUN_TTY, RUN_TTY, DEVNULL, RUN_NORMAL)) 	!=
+literal|0
+argument|) { 	if (!quiet) 	    error (
+literal|0
+argument|, retcode == -
+literal|1
+argument|? errno :
+literal|0
+argument|,
+literal|"failed to commit dead revision for `%s'"
+argument|, rcs); 	return (
+literal|1
+argument|);     }      if (rev != NULL) 	free (rev);      if (!branch)
+else|#
+directive|else
+comment|/* No DEATH_SUPPORT */
+argument|else
+endif|#
+directive|endif
+comment|/* No DEATH_SUPPORT */
+argument|{
+comment|/* this was the head; really move it into the Attic */
+argument|tmp = xmalloc(strlen(repository) +  		      sizeof(
+literal|'/'
+argument|) + 		      sizeof(CVSATTIC) + 		      sizeof(
+literal|'/'
+argument|) + 		      strlen(file) + 		      sizeof(RCSEXT) +
+literal|1
+argument|); 	(void) sprintf (tmp,
+literal|"%s/%s"
+argument|, repository, CVSATTIC); 	omask = umask (cvsumask); 	(void) CVS_MKDIR (tmp,
+literal|0777
+argument|); 	(void) umask (omask); 	(void) sprintf (tmp,
 literal|"%s/%s/%s%s"
-argument_list|,
-name|repository
-argument_list|,
-name|CVSATTIC
-argument_list|,
-name|file
-argument_list|,
-name|RCSEXT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|isreadable
-argument_list|(
-name|rcs
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|rcs
-argument_list|,
+argument|, repository, CVSATTIC, file, RCSEXT);
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+argument|if (strcmp (rcs, tmp) !=
+literal|0
+argument|&& rename (rcs, tmp) == -
+literal|1
+argument|&& (isreadable (rcs) || !isreadable (tmp))) 	{ 	    free(tmp); 	    return (
+literal|1
+argument|); 	} 	free(tmp);     }
+comment|/* Print message that file was removed. */
+argument|(void) printf (
+literal|"%s<--  %s\n"
+argument|, rcs, file);     (void) printf (
+literal|"new revision: delete; "
+argument|);     (void) printf (
+literal|"previous revision: %s\n"
+argument|, prev_rev);     (void) printf (
+literal|"done\n"
+argument|);     free(prev_rev);      Scratch_Entry (entries, file);     return (
+literal|0
+argument|);
+else|#
+directive|else
+comment|/* No DEATH_SUPPORT */
+argument|if ((strcmp (rcs, tmp) ==
+literal|0
+argument||| rename (rcs, tmp) != -
+literal|1
+argument|) || 	    (!isreadable (rcs)&& isreadable (tmp)))  	{ 	    Scratch_Entry (entries, file);
+comment|/* FIXME: should free tmp.  */
+argument|return (
+literal|0
+argument|); 	}
+comment|/* FIXME: should free tmp.  */
+argument|}     return (
+literal|1
+argument|);
+endif|#
+directive|endif
+comment|/* No DEATH_SUPPORT */
+argument|}
+comment|/*  * Do the actual checkin for added files  */
+argument|static int finaladd (file, rev, tag, options, update_dir, repository, entries)     char *file;     char *rev;     char *tag;     char *options;     char *update_dir;     char *repository;     List *entries; {     int ret;     char tmp[PATH_MAX];     char rcs[PATH_MAX];      locate_rcs (file, repository, rcs);     ret = Checkin (
+literal|'A'
+argument|, file, update_dir, repository, rcs, rev, tag, options, 		   message, entries);     if (ret ==
+literal|0
+argument|)     { 	(void) sprintf (tmp,
 literal|"%s/%s%s"
-argument_list|,
-name|repository
-argument_list|,
-name|file
-argument_list|,
-name|RCSEXT
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+argument|, CVSADM, file, CVSEXT_LOG); 	(void) unlink_file (tmp);     }     else 	fixaddfile (file, repository);     return (ret); }
+comment|/*  * Unlock an rcs file  */
+argument|static void unlockrcs (file, repository)     char *file;     char *repository; {     char rcs[PATH_MAX];     int retcode =
+literal|0
+argument|;      locate_rcs (file, repository, rcs);      if ((retcode = RCS_unlock (rcs, NULL,
+literal|0
+argument|)) !=
+literal|0
+argument|) 	error (retcode == -
+literal|1
+argument|?
+literal|1
+argument|:
+literal|0
+argument|, retcode == -
+literal|1
+argument|? errno :
+literal|0
+argument|,
+literal|"could not unlock %s"
+argument|, rcs); }
+comment|/*  * remove a partially added file.  if we can parse it, leave it alone.  */
+argument|static void fixaddfile (file, repository)     char *file;     char *repository; {     RCSNode *rcsfile;     char rcs[PATH_MAX];     int save_really_quiet;      locate_rcs (file, repository, rcs);     save_really_quiet = really_quiet;     really_quiet =
+literal|1
+argument|;     if ((rcsfile = RCS_parsercsfile (rcs)) == NULL) 	(void) unlink_file (rcs);     else 	freercsnode (&rcsfile);     really_quiet = save_really_quiet; }
+comment|/*  * put the branch back on an rcs file  */
+argument|static void fixbranch (file, repository, branch)     char *file;     char *repository;     char *branch; {     char rcs[PATH_MAX];     int retcode =
+literal|0
+argument|;      if (branch != NULL&& branch[
+literal|0
+argument|] !=
+literal|'\0'
+argument|)     { 	locate_rcs (file, repository, rcs); 	if ((retcode = RCS_setbranch (rcs, branch)) !=
+literal|0
+argument|) 	    error (retcode == -
+literal|1
+argument|?
+literal|1
+argument|:
+literal|0
+argument|, retcode == -
+literal|1
+argument|? errno :
+literal|0
+argument|,
+literal|"cannot restore branch to %s for %s"
+argument|, branch, rcs);     } }
+comment|/*  * do the initial part of a file add for the named file.  if adding  * with a tag, put the file in the Attic and point the symbolic tag  * at the committed revision.  */
+argument|static int checkaddfile (file, repository, tag, options, srcfiles)     char *file;     char *repository;     char *tag;     char *options;     List *srcfiles; {     char rcs[PATH_MAX];     char fname[PATH_MAX];     mode_t omask;     int retcode =
+literal|0
+argument|;
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+argument|int newfile =
+literal|0
+argument|;
+endif|#
+directive|endif
+argument|if (tag)     { 	(void) sprintf(rcs,
+literal|"%s/%s"
+argument|, repository, CVSATTIC); 	omask = umask (cvsumask); 	if (CVS_MKDIR (rcs,
+literal|0777
+argument|) !=
+literal|0
+argument|&& errno != EEXIST) 	    error (
+literal|1
+argument|, errno,
+literal|"cannot make directory `%s'"
+argument|, rcs);; 	(void) umask (omask); 	(void) sprintf (rcs,
+literal|"%s/%s/%s%s"
+argument|, repository, CVSATTIC, file, RCSEXT);     }     else 	locate_rcs (file, repository, rcs);
+ifdef|#
+directive|ifdef
+name|DEATH_SUPPORT
+argument|if (isreadable(rcs))     {
+comment|/* file has existed in the past.  Prepare to resurrect. */
+argument|char oldfile[PATH_MAX]; 	char *rev; 	Node *p; 	RCSNode *rcsfile;  	if (tag == NULL) 	{
+comment|/* we are adding on the trunk, so move the file out of the 	       Attic. */
+argument|strcpy (oldfile, rcs); 	    sprintf (rcs,
+literal|"%s/%s%s"
+argument|, repository, file, RCSEXT); 	     	    if (strcmp (oldfile, rcs) ==
+literal|0
+argument||| rename (oldfile, rcs) !=
+literal|0
+argument||| isreadable (oldfile) 		|| !isreadable (rcs)) 	    { 		error (
+literal|0
+argument|,
+literal|0
+argument|,
+literal|"failed to move `%s' out of the attic."
+argument|, 		       file); 		return (
+literal|1
+argument|); 	    } 	}  	p = findnode (srcfiles, file); 	if (p == NULL) 	{ 	    error (
+literal|0
+argument|,
+literal|0
+argument|,
+literal|"could not find parsed rcsfile %s"
+argument|, file); 	    return (
+literal|1
+argument|); 	}  	rcsfile = (RCSNode *) p->data; 	rev = RCS_getversion (rcsfile, tag, NULL,
+literal|1
+argument|,
+literal|0
+argument|);
+comment|/* and lock it */
+argument|if (lock_RCS (file, rcs, rev, repository)) { 	    error (
+literal|0
+argument|,
+literal|0
+argument|,
+literal|"cannot lock `%s'."
+argument|, rcs); 	    free (rev); 	    return (
+literal|1
+argument|); 	}  	free (rev);     } else {
+comment|/* this is the first time we have ever seen this file; create 	   an rcs file.  */
+argument|run_setup (
+literal|"%s%s -i"
+argument|, Rcsbin, RCS);  	(void) sprintf (fname,
+literal|"%s/%s%s"
+argument|, CVSADM, file, CVSEXT_LOG);
+comment|/* If the file does not exist, no big deal.  In particular, the 	   server does not (yet at least) create CVSEXT_LOG files.  */
+argument|if (isfile (fname)) 	    run_args (
+literal|"-t%s/%s%s"
+argument|, CVSADM, file, CVSEXT_LOG);
+comment|/* Set RCS keyword expansion options.  */
+argument|if (options&& options[
+literal|0
+argument|] ==
+literal|'-'
+argument|&& options[
+literal|1
+argument|] ==
+literal|'k'
+argument|) 	    run_arg (options); 	run_arg (rcs); 	if ((retcode = run_exec (RUN_TTY, RUN_TTY, RUN_TTY, RUN_NORMAL)) !=
+literal|0
+argument|) 	{ 	    error (retcode == -
+literal|1
+argument|?
+literal|1
+argument|:
+literal|0
+argument|, retcode == -
+literal|1
+argument|? errno :
+literal|0
+argument|,
+literal|"could not create %s"
+argument|, rcs); 	    return (
+literal|1
+argument|); 	} 	newfile =
+literal|1
+argument|;     }
+comment|/* when adding a file for the first time, and using a tag, we need        to create a dead revision on the trunk.  */
+argument|if (tag&& newfile)     { 	char tmp[PATH_MAX];
+comment|/* move the new file out of the way. */
+argument|(void) sprintf (fname,
+literal|"%s/%s%s"
+argument|, CVSADM, CVSPREFIX, file); 	rename_file (file, fname); 	copy_file (DEVNULL, file);
+comment|/* commit a dead revision. */
+argument|(void) sprintf (tmp,
+literal|"-mfile %s was initially added on branch %s."
+argument|, file, tag);
+ifdef|#
+directive|ifdef
+name|DEATH_STATE
+argument|run_setup (
+literal|"%s%s -q -f -sdead"
+argument|, Rcsbin, RCS_CI);
+else|#
+directive|else
+argument|run_setup (
+literal|"%s%s -q -K"
+argument|, Rcsbin, RCS_CI);
+endif|#
+directive|endif
+argument|run_arg (tmp); 	run_arg (rcs); 	if ((retcode = run_exec (RUN_TTY, RUN_TTY, RUN_TTY, RUN_NORMAL)) !=
+literal|0
+argument|) 	{ 	    error (retcode == -
+literal|1
+argument|?
+literal|1
+argument|:
+literal|0
+argument|, retcode == -
+literal|1
+argument|? errno :
+literal|0
+argument|,
+literal|"could not create initial dead revision %s"
+argument|, rcs); 	    return (
+literal|1
+argument|); 	}
+comment|/* put the new file back where it was */
+argument|rename_file (fname, file);
+comment|/* and lock it once again. */
+argument|if (lock_RCS (file, rcs, NULL, repository)) { 	    error (
+literal|0
+argument|,
+literal|0
+argument|,
+literal|"cannot lock `%s'."
+argument|, rcs); 	    return (
+literal|1
+argument|); 	}     }      if (tag != NULL)     {
+comment|/* when adding with a tag, we need to stub a branch, if it 	   doesn't already exist.  */
+argument|Node *p; 	RCSNode *rcsfile;  	rcsfile = RCS_parse (file, repository); 	if (rcsfile == NULL) 	{ 	    error (
+literal|0
+argument|,
+literal|0
+argument|,
+literal|"could not read %s"
+argument|, rcs); 	    return (
+literal|1
+argument|); 	} 	 	if (!RCS_nodeisbranch (tag, rcsfile)) {
+comment|/* branch does not exist.  Stub it.  */
+argument|char *head; 	    char *magicrev; 	     	    head = RCS_getversion (rcsfile, NULL, NULL,
+literal|0
+argument|,
+literal|0
+argument|); 	    magicrev = RCS_magicrev (rcsfile, head); 	    if ((retcode = RCS_settag(rcs, tag, magicrev)) !=
+literal|0
+argument|) 	    { 		error (retcode == -
+literal|1
+argument|?
+literal|1
+argument|:
+literal|0
+argument|, retcode == -
+literal|1
+argument|? errno :
+literal|0
+argument|,
+literal|"could not stub branch %s for %s"
+argument|, tag, rcs); 		return (
+literal|1
+argument|); 	    } 	     	    freercsnode (&rcsfile);
+comment|/* reparse the file, then add it to our list. */
+argument|rcsfile = RCS_parse (file, repository); 	    if (rcsfile == NULL) 	    { 		error (
+literal|0
+argument|,
+literal|0
+argument|,
+literal|"could not reparse %s"
+argument|, rcs); 		return (
+literal|1
+argument|); 	    }  	    free (head); 	    free (magicrev); 	} 	else 	{
+comment|/* lock the branch. (stubbed branches need not be locked.)  */
+argument|if (lock_RCS (file, rcs, NULL, repository)) { 		error (
+literal|0
+argument|,
+literal|0
+argument|,
+literal|"cannot lock `%s'."
+argument|, rcs); 		return (
+literal|1
+argument|); 	    } 	}
+comment|/* add (replace) this rcs file to our list */
+argument|p = findnode (srcfiles, file);  	if (p != NULL) 	  freercsnode((RCSNode **)&p->data);  	delnode(p);  	RCS_addnode (file, rcsfile, srcfiles);     }
+else|#
+directive|else
+comment|/* No DEATH_SUPPORT */
+argument|run_setup (
+literal|"%s%s -i"
+argument|, Rcsbin, RCS);     run_args (
+literal|"-t%s/%s%s"
+argument|, CVSADM, file, CVSEXT_LOG);
+comment|/* Set RCS keyword expansion options.  */
+argument|if (options&& options[
+literal|0
+argument|] ==
+literal|'-'
+argument|&& options[
+literal|1
+argument|] ==
+literal|'k'
+argument|) 	run_arg (options);     run_arg (rcs);     if ((retcode = run_exec (RUN_TTY, RUN_TTY, RUN_TTY, RUN_NORMAL)) !=
+literal|0
+argument|)     { 	error (retcode == -
+literal|1
+argument|?
+literal|1
+argument|:
+literal|0
+argument|, retcode == -
+literal|1
+argument|? errno :
+literal|0
+argument|,
+literal|"could not create %s"
+argument|, rcs); 	return (
+literal|1
+argument|);     }
+endif|#
+directive|endif
+comment|/* No DEATH_SUPPORT */
+argument|fix_rcs_modes (rcs, file);     return (
+literal|0
+argument|); }
+comment|/*  * Lock the rcs file ``file''  */
+argument|static int lockrcsfile (file, repository, rev)     char *file;     char *repository;     char *rev; {     char rcs[PATH_MAX];      locate_rcs (file, repository, rcs);     if (lock_RCS (file, rcs, rev, repository) !=
+literal|0
+argument|) 	return (
+literal|1
+argument|);     else 	return (
+literal|0
+argument|); }
+comment|/*  * Attempt to place a lock on the RCS file; returns 0 if it could and 1 if it  * couldn't.  If the RCS file currently has a branch as the head, we must  * move the head back to the trunk before locking the file, and be sure to  * put the branch back as the head if there are any errors.  */
+argument|static int lock_RCS (user, rcs, rev, repository)     char *user;     char *rcs;     char *rev;     char *repository; {     RCSNode *rcsfile;     char *branch = NULL;     int err =
+literal|0
+argument|;
+comment|/*      * For a specified, numeric revision of the form "1" or "1.1", (or when      * no revision is specified ""), definitely move the branch to the trunk      * before locking the RCS file.      *       * The assumption is that if there is more than one revision on the trunk,      * the head points to the trunk, not a branch... and as such, it's not      * necessary to move the head in this case.      */
+argument|if (rev == NULL || (rev&& isdigit (*rev)&& numdots (rev)<
+literal|2
+argument|))     { 	if ((rcsfile = RCS_parsercsfile (rcs)) == NULL) 	{
+comment|/* invalid rcs file? */
+argument|err =
+literal|1
+argument|; 	} 	else 	{
+comment|/* rcsfile is valid */
+argument|branch = xstrdup (rcsfile->branch); 	    freercsnode (&rcsfile); 	    if (branch != NULL) 	    { 		if (RCS_setbranch (rcs, NULL) !=
+literal|0
+argument|) 		{ 		    error (
+literal|0
+argument|,
+literal|0
+argument|,
+literal|"cannot change branch to default for %s"
+argument|, 			   rcs); 		    if (branch) 			free (branch); 		    return (
+literal|1
+argument|); 		} 	    } 	    err = RCS_lock(rcs, NULL,
+literal|0
+argument|); 	}     }     else     { 	(void) RCS_lock(rcs, rev,
+literal|1
+argument|);     }      if (err ==
+literal|0
+argument|)     { 	if (branch) 	{ 	    (void) strcpy (sbranch, branch); 	    free (branch); 	} 	else 	    sbranch[
+literal|0
+argument|] =
+literal|'\0'
+argument|; 	return (
+literal|0
+argument|);     }
+comment|/* try to restore the branch if we can on error */
+argument|if (branch != NULL) 	fixbranch (user, repository, branch);      if (branch) 	free (branch);     return (
+literal|1
+argument|); }
+comment|/*  * Called when "add"ing files to the RCS respository, as it is necessary to  * preserve the file modes in the same fashion that RCS does.  This would be  * automatic except that we are placing the RCS ,v file very far away from  * the user file, and I can't seem to convince RCS of the location of the  * user file.  So we munge it here, after the ,v file has been successfully  * initialized with "rcs -i".  */
+argument|static void fix_rcs_modes (rcs, user)     char *rcs;     char *user; {     struct stat sb;      if (stat (user,&sb) != -
+literal|1
+argument|) 	(void) chmod (rcs, (int) sb.st_mode& ~
+literal|0222
+argument|); }
+comment|/*  * free an UPDATE node's data (really nothing to do)  */
+argument|void update_delproc (p)     Node *p; {     p->data = (char *) NULL; }
+comment|/*  * Free the commit_info structure in p.  */
+argument|static void ci_delproc (p)     Node *p; {     struct commit_info *ci;      ci = (struct commit_info *) p->data;     if (ci->rev) 	free (ci->rev);     if (ci->tag) 	free (ci->tag);     if (ci->options) 	free (ci->options);     free (ci); }
+comment|/*  * Free the commit_info structure in p.  */
+argument|static void masterlist_delproc (p)     Node *p; {     struct master_lists *ml;      ml = (struct master_lists *) p->data;     dellist (&ml->ulist);     dellist (&ml->cilist);     free (ml); }
+comment|/*  * Find an RCS file in the repository.  */
+argument|static void locate_rcs (file, repository, rcs)     char *file;     char *repository;     char *rcs; {     (void) sprintf (rcs,
+literal|"%s/%s%s"
+argument|, repository, file, RCSEXT);     if (!isreadable (rcs))     { 	(void) sprintf (rcs,
+literal|"%s/%s/%s%s"
+argument|, repository, CVSATTIC, file, RCSEXT); 	if (!isreadable (rcs)) 	    (void) sprintf (rcs,
+literal|"%s/%s%s"
+argument|, repository, file, RCSEXT);     } }
 end_function
 
 end_unit

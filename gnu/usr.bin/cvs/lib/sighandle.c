@@ -31,6 +31,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -133,27 +139,6 @@ begin_comment
 comment|/* STDC_HEADERS */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MINIX
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|POSIX
-end_undef
-
-begin_comment
-comment|/* Minix 1.6 doesn't support POSIX.1 sigaction yet */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Define the highest signal number (usually) */
 end_comment
@@ -221,7 +206,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 end_ifdef
 
 begin_decl_stmt
@@ -300,7 +285,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 end_ifdef
 
 begin_decl_stmt
@@ -353,7 +338,7 @@ name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 name|sigset_t
 name|sigset_test
 decl_stmt|;
@@ -373,7 +358,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 operator|(
 name|void
 operator|)
@@ -669,7 +654,7 @@ name|this
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 name|struct
 name|sigaction
 name|act
@@ -716,7 +701,7 @@ expr_stmt|;
 comment|/* Block this signal while we look at handler chain */
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 operator|(
 name|void
 operator|)
@@ -837,7 +822,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 name|act
 operator|.
 name|sa_handler
@@ -1037,7 +1022,7 @@ block|}
 comment|/* Unblock the signal */
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 operator|(
 name|void
 operator|)
@@ -1121,7 +1106,7 @@ name|last
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 name|sigset_t
 name|sigset_mask
 decl_stmt|,
@@ -1169,7 +1154,7 @@ expr_stmt|;
 comment|/* Block this signal while we look at handler chain */
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 operator|(
 name|void
 operator|)
@@ -1338,7 +1323,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 name|val
 operator|=
 name|sigaction
@@ -1421,7 +1406,7 @@ block|}
 comment|/* Unblock the signal */
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 operator|(
 name|void
 operator|)
@@ -1487,7 +1472,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 name|sigset_t
 name|sigset_mask
 decl_stmt|;
@@ -1574,7 +1559,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|POSIX
+name|POSIX_SIGNALS
 operator|(
 name|void
 operator|)

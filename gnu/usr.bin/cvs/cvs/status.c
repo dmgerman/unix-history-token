@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Status Information  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Status Information  */
 end_comment
 
 begin_include
@@ -17,6 +17,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +26,13 @@ literal|"$CVSid: @(#)status.c 1.56 94/10/07 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -146,8 +148,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|status_usage
 index|[]
 init|=
@@ -178,8 +182,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 name|int
@@ -274,6 +278,84 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|wrap_setup
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+if|if
+condition|(
+name|client_active
+condition|)
+block|{
+name|start_server
+argument_list|()
+expr_stmt|;
+name|ign_setup
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|long_format
+condition|)
+name|send_arg
+argument_list|(
+literal|"-v"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|local
+condition|)
+name|send_arg
+argument_list|(
+literal|"-l"
+argument_list|)
+expr_stmt|;
+comment|/* XXX This should only need to send file info; the file 	 contents themselves will not be examined.  */
+name|send_files
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|local
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|to_server
+argument_list|,
+literal|"status\n"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"writing to server"
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|get_responses_and_close
+argument_list|()
+expr_stmt|;
+return|return
+name|err
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* start the recursion processor */
 name|err
 operator|=
@@ -282,22 +364,14 @@ argument_list|(
 name|status_fileproc
 argument_list|,
 operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
+name|FILESDONEPROC
 operator|)
 name|NULL
 argument_list|,
 name|status_dirproc
 argument_list|,
 operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
+name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
@@ -450,6 +524,19 @@ operator|=
 literal|"Needs Checkout"
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+case|case
+name|T_PATCH
+case|:
+name|sstat
+operator|=
+literal|"Needs Patch"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 name|T_CONFLICT
 case|:
@@ -612,6 +699,28 @@ argument_list|(
 literal|"   Working revision:\tNew file!\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+elseif|else
+if|if
+condition|(
+name|server_active
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"   Working revision:\t%s\n"
+argument_list|,
+name|vers
+operator|->
+name|vn_user
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 operator|(
 name|void
@@ -788,7 +897,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
 operator|(
 name|void
 operator|)
@@ -815,7 +929,12 @@ operator|->
 name|date
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
 operator|(
 name|void
 operator|)
@@ -849,7 +968,12 @@ operator|->
 name|options
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
 operator|(
 name|void
 operator|)

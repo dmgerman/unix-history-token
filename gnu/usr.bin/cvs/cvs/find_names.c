@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Find Names  *  * Finds all the pertinent file names, both from the administration and from the  * repository  *  * Find Dirs  *  * Finds all pertinent sub-directories of the checked out instantiation and the  * repository (and optionally the attic)  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Find Names  *   * Finds all the pertinent file names, both from the administration and from the  * repository  *   * Find Dirs  *   * Finds all pertinent sub-directories of the checked out instantiation and the  * repository (and optionally the attic)  */
 end_comment
 
 begin_include
@@ -17,6 +17,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +26,13 @@ literal|"$CVSid: @(#)find_names.c 1.45 94/10/22 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -89,6 +91,23 @@ end_decl_stmt
 begin_comment
 comment|/*  * add the key from entry on entries list to the files list  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|add_entries_proc
+name|PROTO
+argument_list|(
+operator|(
+name|Node
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -162,6 +181,25 @@ begin_comment
 comment|/*  * compare two files list node (for sort)  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|fsortcmp
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|Node
+operator|*
+operator|,
+specifier|const
+name|Node
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -171,16 +209,16 @@ name|p
 parameter_list|,
 name|q
 parameter_list|)
+specifier|const
 name|Node
 modifier|*
 name|p
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|Node
+modifier|*
 name|q
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 return|return
 operator|(
@@ -197,7 +235,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|List
@@ -261,7 +299,7 @@ block|{
 comment|/* parse the entries file (if it exists) */
 name|entries
 operator|=
-name|ParseEntries
+name|Entries_Open
 argument_list|(
 name|aflag
 argument_list|)
@@ -299,9 +337,8 @@ operator|=
 name|entries
 expr_stmt|;
 else|else
-name|dellist
+name|Entries_Close
 argument_list|(
-operator|&
 name|entries
 argument_list|)
 expr_stmt|;
@@ -996,36 +1033,7 @@ argument_list|(
 name|tmp
 argument_list|)
 condition|)
-block|{
-comment|/* and old style */
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|tmp
-argument_list|,
-literal|"%s/%s/%s"
-argument_list|,
-name|dir
-argument_list|,
-name|dp
-operator|->
-name|d_name
-argument_list|,
-name|OCVSADM
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|isdir
-argument_list|(
-name|tmp
-argument_list|)
-condition|)
 continue|continue;
-block|}
 block|}
 comment|/* put it in the list */
 name|p

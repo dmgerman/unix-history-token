@@ -19,6 +19,27 @@ begin_comment
 comment|/* For pid_t. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_RESOURCE_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
+begin_comment
+comment|/* for rusage */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

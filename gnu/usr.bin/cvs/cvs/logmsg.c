@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"cvs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"getline.h"
 end_include
 
 begin_ifndef
@@ -17,6 +23,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,34 +32,15 @@ literal|"$CVSid: @(#)logmsg.c 1.48 94/09/29 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* this is slightly dangerous, since it could conflict with other systems'  *  own prototype.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Which is why I'll nuke this */
-end_comment
-
-begin_endif
-unit|extern int gethostname PROTO((char *name, int len));
 endif|#
 directive|endif
 end_endif
@@ -245,7 +233,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|strlist
+name|str_list
 decl_stmt|;
 end_decl_stmt
 
@@ -680,7 +668,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Builds a temporary file using setup_tmpfile() and invokes the user's  * editor on the file.  The header garbage in the resultant file is then  * stripped and the log message is stored in the "message" argument.  *  * rcsinfo - is the name of a file containing lines tacked onto the end of the  * RCS info offered to the user for editing. If specified, the '-m' flag to  * "commit" is disabled -- users are forced to run the editor.  *  */
+comment|/*  * Builds a temporary file using setup_tmpfile() and invokes the user's  * editor on the file.  The header garbage in the resultant file is then  * stripped and the log message is stored in the "message" argument.  *   * rcsinfo - is the name of a file containing lines tacked onto the end of the  * RCS info offered to the user for editing. If specified, the '-m' flag to  * "commit" is disabled -- users are forced to run the editor.  *   */
 end_comment
 
 begin_function
@@ -720,11 +708,16 @@ init|=
 literal|0
 decl_stmt|;
 name|char
+modifier|*
 name|line
-index|[
-name|MAXLINELEN
-index|]
-decl_stmt|,
+decl_stmt|;
+name|int
+name|line_length
+decl_stmt|;
+name|size_t
+name|line_chars_allocated
+decl_stmt|;
+name|char
 name|fname
 index|[
 name|L_tmpnam
@@ -904,6 +897,9 @@ condition|(
 name|dir
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|dir
 condition|)
 operator|(
 name|void
@@ -949,12 +945,24 @@ name|CVSEDITPREFIX
 argument_list|)
 expr_stmt|;
 comment|/* finish off the temp file */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+operator|==
+name|EOF
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"%s"
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1146,6 +1154,8 @@ argument_list|(
 name|post_stbuf
 operator|.
 name|st_size
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1157,7 +1167,14 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/* !!! XXX FIXME: fgets is broken.  This should not have any line    length limits. */
+name|line
+operator|=
+name|NULL
+expr_stmt|;
+name|line_chars_allocated
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1171,21 +1188,50 @@ name|messagep
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+literal|1
+condition|)
+block|{
+name|line_length
+operator|=
+name|getline
 argument_list|(
+operator|&
 name|line
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
+operator|&
+name|line_chars_allocated
 argument_list|,
 name|fp
 argument_list|)
-operator|!=
-name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|line_length
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot read %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|strncmp
@@ -1217,19 +1263,28 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|+=
-name|strlen
-argument_list|(
-name|line
-argument_list|)
+name|line_length
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot close %s"
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1296,32 +1351,24 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-operator|*
-name|line
+name|line_length
 operator|=
-literal|'\0'
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fgets
+name|getline
 argument_list|(
+operator|&
 name|line
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
+operator|&
+name|line_chars_allocated
 argument_list|,
 name|stdin
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|line
-operator|==
-literal|'\0'
+name|line_length
+operator|<=
+literal|0
 operator|||
 operator|*
 name|line
@@ -1399,11 +1446,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|line
+condition|)
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot remove temp file %s"
+argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
@@ -1444,12 +1512,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|tfp
-decl_stmt|;
-name|char
-name|line
-index|[
-name|MAXLINELEN
-index|]
 decl_stmt|;
 comment|/* nothing to do if the last one included is the same as this one */
 if|if
@@ -1502,21 +1564,31 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|char
+modifier|*
+name|line
+init|=
+name|NULL
+decl_stmt|;
+name|size_t
+name|line_chars_allocated
+init|=
+literal|0
+decl_stmt|;
 while|while
 condition|(
-name|fgets
+name|getline
 argument_list|(
+operator|&
 name|line
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
+operator|&
+name|line_chars_allocated
 argument_list|,
 name|tfp
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 operator|(
 name|void
@@ -1528,12 +1600,51 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|tfp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot read %s"
+argument_list|,
+name|template
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|tfp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot close %s"
+argument_list|,
+name|template
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|line
+condition|)
+name|free
+argument_list|(
+name|line
 argument_list|)
 expr_stmt|;
 return|return
@@ -1548,7 +1659,7 @@ name|error
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|errno
 argument_list|,
 literal|"Couldn't open rcsinfo template file %s"
 argument_list|,
@@ -1694,16 +1805,16 @@ comment|/* allocate a chunk of memory to hold the title string */
 if|if
 condition|(
 operator|!
-name|strlist
+name|str_list
 condition|)
-name|strlist
+name|str_list
 operator|=
 name|xmalloc
 argument_list|(
 name|MAXLISTLEN
 argument_list|)
 expr_stmt|;
-name|strlist
+name|str_list
 index|[
 literal|0
 index|]
@@ -1785,7 +1896,7 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|strlist
+name|str_list
 argument_list|)
 operator|+
 literal|1
@@ -1805,16 +1916,16 @@ literal|"'%s%s'"
 argument_list|,
 name|srepos
 argument_list|,
-name|strlist
+name|str_list
 argument_list|)
 expr_stmt|;
 comment|/* to be nice, free up this chunk of memory */
 name|free
 argument_list|(
-name|strlist
+name|str_list
 argument_list|)
 expr_stmt|;
-name|strlist
+name|str_list
 operator|=
 operator|(
 name|char
@@ -1892,7 +2003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * concatenate each name onto strlist  */
+comment|/*  * concatenate each name onto str_list  */
 end_comment
 
 begin_function
@@ -1931,7 +2042,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|strlist
+name|str_list
 argument_list|,
 literal|" "
 argument_list|)
@@ -1941,7 +2052,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|strlist
+name|str_list
 argument_list|,
 name|p
 operator|->
@@ -2036,11 +2147,6 @@ name|cwd
 index|[
 name|PATH_MAX
 index|]
-decl_stmt|,
-name|host
-index|[
-name|MAXHOSTNAMELEN
-index|]
 decl_stmt|;
 name|FILE
 modifier|*
@@ -2066,6 +2172,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+comment|/* XXX<woods@web.net> -- this is gross, ugly, and a hack!  FIXME! */
 comment|/*      * A maximum of 6 %s arguments are supported in the filter      */
 operator|(
 name|void
@@ -2132,30 +2239,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|gethostname
-argument_list|(
-name|host
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|host
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|host
-argument_list|,
-literal|"(unknown)"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2177,7 +2260,7 @@ name|pipefp
 argument_list|,
 literal|"In directory %s:%s\n\n"
 argument_list|,
-name|host
+name|hostname
 argument_list|,
 operator|(
 operator|(
@@ -2258,9 +2341,6 @@ argument_list|,
 literal|"Status:\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|rewind
 argument_list|(
 name|logfp

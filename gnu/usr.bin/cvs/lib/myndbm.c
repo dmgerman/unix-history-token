@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * A simple ndbm-emulator for CVS.  It parses a text file of the format:  *  * key	value  *  * at dbm_open time, and loads the entire file into memory.  As such, it is  * probably only good for fairly small modules files.  Ours is about 30K in  * size, and this code works fine.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * A simple ndbm-emulator for CVS.  It parses a text file of the format:  *   * key	value  *   * at dbm_open time, and loads the entire file into memory.  As such, it is  * probably only good for fairly small modules files.  Ours is about 30K in  * size, and this code works fine.  */
 end_comment
 
 begin_include
@@ -23,6 +23,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -31,12 +32,13 @@ literal|"$CVSid: @(#)myndbm.c 1.7 94/09/23 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
