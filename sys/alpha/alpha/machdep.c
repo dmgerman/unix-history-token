@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -352,12 +358,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ddb/ddb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<alpha/alpha/db_instruction.h>
 end_include
 
@@ -499,23 +499,12 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_comment
-comment|/* start and end of kernel symbol table */
-end_comment
-
 begin_decl_stmt
-name|void
-modifier|*
+specifier|extern
+name|vm_offset_t
 name|ksym_start
 decl_stmt|,
-modifier|*
 name|ksym_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|db_regs_t
-name|ddb_regs
 decl_stmt|;
 end_decl_stmt
 
@@ -2327,20 +2316,12 @@ directive|ifdef
 name|DDB
 name|ksym_start
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|bootinfo
 operator|.
 name|ssym
 expr_stmt|;
 name|ksym_end
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|bootinfo
 operator|.
 name|esym
@@ -3522,27 +3503,6 @@ endif|#
 directive|endif
 block|}
 comment|/* 	 * Initalize the real console, so the the bootstrap console is 	 * no longer necessary.  Note this now involves mutexes as part 	 * of some operations so needs to be after proc0/thread0/curthread 	 * become valid. 	 */
-ifndef|#
-directive|ifndef
-name|NO_SIO
-if|if
-condition|(
-name|platform
-operator|.
-name|cons_init
-condition|)
-block|{
-name|platform
-operator|.
-name|cons_init
-argument_list|()
-expr_stmt|;
-name|promcndetach
-argument_list|()
-expr_stmt|;
-block|}
-else|#
-directive|else
 if|if
 condition|(
 name|platform
@@ -3560,8 +3520,6 @@ expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Check to see if promcons needs to make_dev() now, 	 * doing it before now crashes with kernel stack issues. 	 */
 if|if
 condition|(
@@ -3688,16 +3646,6 @@ name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
-ifdef|#
-directive|ifdef
-name|KADB
-name|boothowto
-operator||=
-name|RB_KDB
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*	boothowto |= RB_KDB | RB_GDB; */
 for|for
 control|(
 name|p
@@ -3754,12 +3702,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DDB
-argument_list|)
 case|case
 literal|'d'
 case|:
@@ -3784,8 +3726,6 @@ operator||=
 name|RB_GDB
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'h'
 case|:
@@ -3973,28 +3913,36 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
-ifdef|#
-directive|ifdef
-name|DDB
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"boot_gdb"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|boothowto
+operator||=
+name|RB_GDB
+expr_stmt|;
 name|kdb_init
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
 if|if
 condition|(
 name|boothowto
 operator|&
 name|RB_KDB
 condition|)
-block|{
-name|printf
+name|kdb_enter
 argument_list|(
 literal|"Boot flags requested debugger\n"
 argument_list|)
 expr_stmt|;
-name|breakpoint
-argument_list|()
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Figure out the number of cpus in the box, from RPB fields. 	 * Really.  We mean it. 	 */
@@ -10376,41 +10324,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DDB
-end_ifndef
-
-begin_function
-name|void
-name|Debugger
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Debugger(\"%s\") called.\n"
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no DDB */
-end_comment
 
 begin_function
 specifier|static

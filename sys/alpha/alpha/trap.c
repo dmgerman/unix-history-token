@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ktr.h>
 end_include
 
@@ -221,23 +227,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ktrace.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
 end_include
 
 begin_endif
@@ -1267,6 +1256,21 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|kdb_active
+condition|)
+block|{
+name|kdb_reenter
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 comment|/* 	GIANT_REQUIRED; 	 * Giant hasn't been acquired yet. 	 */
 name|cnt
 operator|.
@@ -1518,8 +1522,8 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DDB
-comment|/* 			 * ...unless, of course, DDB is configured; BUGCHK 			 * is used to invoke the kernel debugger, and we 			 * might have set a breakpoint. 			 */
+name|KDB
+comment|/* 			 * ...unless, of course, KDB is configured; BUGCHK 			 * is used to invoke the kernel debugger, and we 			 * might have set a breakpoint. 			 */
 if|if
 condition|(
 name|a0
@@ -1535,13 +1539,9 @@ if|if
 condition|(
 name|kdb_trap
 argument_list|(
-name|a0
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
 name|entry
+argument_list|,
+name|a0
 argument_list|,
 name|framep
 argument_list|)
@@ -1550,7 +1550,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 			 * If we get here, DDB did _not_ handle the 			 * trap, and we need to PANIC! 			 */
+comment|/* 			 * If we get here, KDB did _not_ handle the 			 * trap, and we need to PANIC! 			 */
 endif|#
 directive|endif
 goto|goto
@@ -2301,16 +2301,12 @@ expr_stmt|;
 comment|/* XXX dump registers */
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 name|kdb_trap
 argument_list|(
-name|a0
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
 name|entry
+argument_list|,
+name|a0
 argument_list|,
 name|framep
 argument_list|)

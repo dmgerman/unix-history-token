@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -61,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -197,23 +197,6 @@ begin_include
 include|#
 directive|include
 file|<machine/intrcnt.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
 end_include
 
 begin_endif
@@ -882,16 +865,12 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 name|kdb_trap
 argument_list|(
-name|mces
-argument_list|,
-name|vector
-argument_list|,
-name|param
-argument_list|,
 name|ALPHA_KENTRY_MM
+argument_list|,
+name|mces
 argument_list|,
 name|framep
 argument_list|)
