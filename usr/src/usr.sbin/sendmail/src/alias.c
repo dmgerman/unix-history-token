@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.14 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.15 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.14 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.15 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,23 +90,11 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOCK
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|FLOCK
-end_endif
 
 begin_comment
 comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
@@ -973,9 +961,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|DBM
-ifdef|#
-directive|ifdef
-name|FLOCK
 comment|/* see if someone else is rebuilding the alias file already */
 if|if
 condition|(
@@ -1042,9 +1027,6 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-endif|FLOCK
 endif|#
 directive|endif
 endif|DBM
