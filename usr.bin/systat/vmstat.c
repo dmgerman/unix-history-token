@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.32 1999/01/09 06:03:54 obrien Exp $"
+literal|"$Id: vmstat.c,v 1.33 1999/02/08 02:11:52 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2020,7 +2020,7 @@ name|VMSTATCOL
 operator|-
 literal|6
 argument_list|,
-literal|"%%slo-z"
+literal|"ofod"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2028,6 +2028,19 @@ argument_list|(
 name|VMSTATROW
 operator|+
 literal|13
+argument_list|,
+name|VMSTATCOL
+operator|-
+literal|6
+argument_list|,
+literal|"%%slo-z"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|VMSTATROW
+operator|+
+literal|14
 argument_list|,
 name|VMSTATCOL
 operator|-
@@ -3268,13 +3281,6 @@ condition|(
 name|extended_vm_stats
 condition|)
 block|{
-name|Y
-argument_list|(
-name|Cnt
-operator|.
-name|v_ozfod
-argument_list|)
-expr_stmt|;
 name|PUTRATE
 argument_list|(
 name|Cnt
@@ -3284,6 +3290,23 @@ argument_list|,
 name|VMSTATROW
 operator|+
 literal|11
+argument_list|,
+name|VMSTATCOL
+operator|-
+literal|16
+argument_list|,
+literal|9
+argument_list|)
+expr_stmt|;
+name|PUTRATE
+argument_list|(
+name|Cnt
+operator|.
+name|v_ozfod
+argument_list|,
+name|VMSTATROW
+operator|+
+literal|12
 argument_list|,
 name|VMSTATCOL
 operator|-
@@ -3328,7 +3351,7 @@ operator|)
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|12
+literal|13
 argument_list|,
 name|VMSTATCOL
 operator|-
@@ -3345,7 +3368,7 @@ name|v_tfree
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|13
+literal|14
 argument_list|,
 name|VMSTATCOL
 operator|-
