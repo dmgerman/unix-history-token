@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwhod.c,v 1.7 1997/10/13 11:27:55 charnier Exp $"
+literal|"$Id: rwhod.c,v 1.8 1998/12/17 11:05:57 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,12 @@ end_comment
 begin_decl_stmt
 name|int
 name|insecure_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|quiet_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -768,6 +774,23 @@ name|insecure_mode
 operator|=
 literal|1
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-l"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|quiet_mode
+operator|=
+literal|1
+expr_stmt|;
 else|else
 name|usage
 argument_list|()
@@ -1168,6 +1191,12 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet_mode
+condition|)
+block|{
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1180,6 +1209,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 init|;
