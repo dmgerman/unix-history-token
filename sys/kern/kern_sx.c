@@ -192,6 +192,10 @@ name|lock_class_sx
 expr_stmt|;
 name|lock
 operator|->
+name|lo_type
+operator|=
+name|lock
+operator|->
 name|lo_name
 operator|=
 name|description
