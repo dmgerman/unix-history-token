@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|RCSBASE
-value|"$Id$"
+value|"$Id: rcsbase.h,v 1.8 1997/02/22 15:47:33 peter Exp $"
 end_define
 
 begin_comment
@@ -1262,15 +1262,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD
-value|"FreeBSD"
+name|CVSHEADER
+value|"CVSHeader"
 end_define
 
 begin_define
 define|#
 directive|define
 name|keylength
-value|8
+value|9
 end_define
 
 begin_comment
@@ -1305,7 +1305,9 @@ name|Source
 block|,
 name|State
 block|,
-name|FreeBSD
+name|CVSHeader
+block|,
+name|LocalId
 block|}
 enum|;
 end_enum
@@ -2071,6 +2073,20 @@ begin_decl_stmt
 name|char
 specifier|const
 modifier|*
+name|getfullCVSname
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+specifier|const
+modifier|*
 name|maketemp
 name|P
 argument_list|(
@@ -2495,9 +2511,16 @@ specifier|extern
 name|char
 specifier|const
 modifier|*
-specifier|const
 name|Keyword
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|markers
+name|LocalIdMode
 decl_stmt|;
 end_decl_stmt
 
@@ -2515,6 +2538,28 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|setRCSLocalId
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setIncExc
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* rcslex */

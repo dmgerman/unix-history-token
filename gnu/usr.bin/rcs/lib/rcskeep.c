@@ -22,7 +22,7 @@ name|libId
 argument_list|(
 argument|keepId
 argument_list|,
-literal|"$Id$"
+literal|"$Id: rcskeep.c,v 1.6 1997/02/22 15:47:38 peter Exp $"
 argument_list|)
 end_macro
 
@@ -472,6 +472,9 @@ name|Header
 case|:
 case|case
 name|Id
+case|:
+case|case
+name|LocalId
 case|:
 if|if
 condition|(
