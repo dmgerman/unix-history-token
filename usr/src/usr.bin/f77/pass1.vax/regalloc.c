@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regalloc.c	5.5 (Berkeley) %G%"
+literal|"@(#)regalloc.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,7 +1078,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -2466,7 +2466,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -3372,7 +3372,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -6414,7 +6414,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -7306,7 +7306,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -7657,7 +7657,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -9201,7 +9201,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==

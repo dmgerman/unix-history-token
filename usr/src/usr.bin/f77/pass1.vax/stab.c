@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	5.2 (Berkeley) %G%"
+literal|"@(#)stab.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,7 +648,7 @@ name|ep
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -670,7 +670,7 @@ name|ep
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1525,7 +1525,7 @@ name|lb
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1556,7 +1556,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1597,7 +1597,7 @@ name|ub
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1628,7 +1628,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1712,7 +1712,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)

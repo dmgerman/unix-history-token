@@ -16,7 +16,7 @@ modifier|*
 name|sccsid
 index|[]
 init|=
-literal|"@(#)equiv.c	5.1 (Berkeley) %G%"
+literal|"@(#)equiv.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,7 +348,7 @@ name|offp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;

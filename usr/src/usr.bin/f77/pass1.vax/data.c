@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)data.c	5.1 (Berkeley) %G%"
+literal|"@(#)data.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2907,7 +2907,7 @@ name|paramval
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -2937,7 +2937,7 @@ name|paramval
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -6856,7 +6856,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -7723,7 +7723,7 @@ name|dimsize
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -7747,7 +7747,7 @@ name|baseoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -7765,7 +7765,7 @@ name|nelt
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 condition|)
@@ -8053,7 +8053,7 @@ name|nelt
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -8082,7 +8082,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -8280,7 +8280,7 @@ argument|repl
 argument_list|,
 argument|len
 argument_list|,
-argument|const
+argument|constant
 argument_list|)
 end_macro
 
@@ -8302,12 +8302,12 @@ name|len
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
-operator|*
-specifier|const
-expr_stmt|;
-end_expr_stmt
+modifier|*
+name|constant
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -8903,7 +8903,7 @@ name|NO
 condition|)
 if|if
 condition|(
-specifier|const
+name|constant
 index|[
 operator|--
 name|k
@@ -8971,7 +8971,7 @@ name|write
 argument_list|(
 name|datafile
 argument_list|,
-specifier|const
+name|constant
 argument_list|,
 name|len
 argument_list|)
@@ -9273,8 +9273,8 @@ name|upb
 decl_stmt|;
 specifier|register
 name|Constp
-specifier|const
-expr_stmt|;
+name|constant
+decl_stmt|;
 specifier|register
 name|int
 name|k
@@ -9333,7 +9333,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -9628,25 +9628,25 @@ name|upb
 argument_list|)
 expr_stmt|;
 block|}
-specifier|const
+name|constant
 operator|=
 name|getdatum
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-specifier|const
+name|constant
 operator|==
 name|NULL
 operator|||
 operator|!
 name|ISCONST
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 condition|)
 return|return;
-specifier|const
+name|constant
 operator|=
 operator|(
 name|Constp
@@ -9657,19 +9657,19 @@ name|type
 argument_list|,
 name|typelen
 argument_list|,
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-specifier|const
+name|constant
 operator|==
 name|NULL
 operator|||
 operator|!
 name|ISCONST
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 condition|)
 block|{
@@ -9678,7 +9678,7 @@ argument_list|(
 operator|(
 name|tagptr
 operator|)
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9699,9 +9699,9 @@ literal|1
 argument_list|,
 name|typelen
 argument_list|,
-specifier|const
+name|constant
 operator|->
-specifier|const
+name|constant
 operator|.
 name|ccp
 argument_list|)
@@ -9719,7 +9719,7 @@ name|typelen
 argument_list|,
 name|packbytes
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9728,7 +9728,7 @@ argument_list|(
 operator|(
 name|tagptr
 operator|)
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 block|}
@@ -9748,7 +9748,7 @@ name|nelt
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -9839,7 +9839,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|const
+name|constant
 operator|=
 name|grvals
 operator|->
@@ -9847,14 +9847,14 @@ name|value
 expr_stmt|;
 if|if
 condition|(
-specifier|const
+name|constant
 operator|==
 name|NULL
 operator|||
 operator|!
 name|ISCONST
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 condition|)
 block|{
@@ -9865,7 +9865,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|const
+name|constant
 operator|=
 operator|(
 name|Constp
@@ -9876,19 +9876,19 @@ name|type
 argument_list|,
 name|typelen
 argument_list|,
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-specifier|const
+name|constant
 operator|==
 name|NULL
 operator|||
 operator|!
 name|ISCONST
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 condition|)
 block|{
@@ -9901,7 +9901,7 @@ argument_list|(
 operator|(
 name|tagptr
 operator|)
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 block|}
@@ -9952,9 +9952,9 @@ name|repl
 argument_list|,
 name|typelen
 argument_list|,
-specifier|const
+name|constant
 operator|->
-specifier|const
+name|constant
 operator|.
 name|ccp
 argument_list|)
@@ -9972,7 +9972,7 @@ name|typelen
 argument_list|,
 name|packbytes
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9989,7 +9989,7 @@ argument_list|(
 operator|(
 name|tagptr
 operator|)
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 block|}

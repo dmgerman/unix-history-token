@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.5 (Berkeley) %G%"
+literal|"@(#)exec.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1442,7 +1442,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1465,7 +1465,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 operator|=
@@ -1634,21 +1634,21 @@ begin_define
 define|#
 directive|define
 name|CONSTINIT
-value|const[0]
+value|constant[0]
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONSTLIMIT
-value|const[1]
+value|constant[1]
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONSTINCR
-value|const[2]
+value|constant[2]
 end_define
 
 begin_define
@@ -1732,11 +1732,11 @@ literal|3
 index|]
 decl_stmt|;
 name|expptr
-specifier|const
+name|constant
 index|[
 literal|3
 index|]
-expr_stmt|;
+decl_stmt|;
 name|Slotp
 name|doslot
 decl_stmt|;
@@ -1904,7 +1904,7 @@ argument_list|(
 name|q
 argument_list|)
 condition|)
-specifier|const
+name|constant
 index|[
 name|i
 index|]
@@ -1923,7 +1923,7 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-specifier|const
+name|constant
 index|[
 name|i
 index|]

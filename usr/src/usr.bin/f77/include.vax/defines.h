@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defines.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defines.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1271,7 +1271,7 @@ name|ISONE
 parameter_list|(
 name|z
 parameter_list|)
-value|(ISICON(z)&& z->constblock.const.ci==1)
+value|(ISICON(z)&& z->constblock.constant.ci==1)
 end_define
 
 begin_define

@@ -16,7 +16,7 @@ modifier|*
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expr.c	5.8 (Berkeley) %G%"
+literal|"@(#)expr.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,7 +106,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -182,7 +182,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -223,7 +223,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -305,7 +305,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -558,7 +558,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ccp
 operator|=
@@ -619,7 +619,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ccp
 operator|=
@@ -751,7 +751,7 @@ argument_list|)
 condition|)
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -762,14 +762,14 @@ name|realp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
 else|else
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -780,7 +780,7 @@ name|realp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -796,7 +796,7 @@ argument_list|)
 condition|)
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -807,14 +807,14 @@ name|imagp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
 else|else
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -825,7 +825,7 @@ name|imagp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1149,7 +1149,7 @@ name|q
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|)
 argument_list|,
 name|p
@@ -1164,7 +1164,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1366,7 +1366,7 @@ name|q
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|)
 argument_list|,
 name|p
@@ -1381,7 +1381,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1702,7 +1702,7 @@ name|e
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 operator|=
@@ -1716,7 +1716,7 @@ name|e
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|)
@@ -1725,7 +1725,7 @@ name|e
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|)
@@ -2101,7 +2101,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|)
@@ -6876,7 +6876,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|<
@@ -6900,7 +6900,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|<
@@ -6910,7 +6910,7 @@ name|nelt
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 condition|)
@@ -7392,7 +7392,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -8049,7 +8049,7 @@ name|neltp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -8120,7 +8120,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -8226,7 +8226,7 @@ name|neltp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -8273,7 +8273,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -8472,7 +8472,7 @@ name|z
 parameter_list|,
 name|c
 parameter_list|)
-value|(ISICON(z)&& z->constblock.const.ci==c)
+value|(ISICON(z)&& z->constblock.constant.ci==c)
 end_define
 
 begin_define
@@ -8881,7 +8881,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -9083,7 +9083,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -9098,7 +9098,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -9180,7 +9180,7 @@ name|rightp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|%
@@ -9188,7 +9188,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|)
@@ -9321,7 +9321,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -9546,7 +9546,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -9597,7 +9597,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -10846,7 +10846,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -10855,7 +10855,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -10871,7 +10871,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -10880,7 +10880,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -10986,7 +10986,7 @@ name|OPAND
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -10994,7 +10994,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|&&
@@ -11002,7 +11002,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11012,7 +11012,7 @@ name|OPOR
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -11020,7 +11020,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|||
@@ -11028,7 +11028,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11038,7 +11038,7 @@ name|OPEQV
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -11046,7 +11046,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -11054,7 +11054,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11064,7 +11064,7 @@ name|OPNEQV
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -11072,7 +11072,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|!=
@@ -11080,7 +11080,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11090,7 +11090,7 @@ name|OPBITAND
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -11098,7 +11098,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|&
@@ -11106,7 +11106,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11116,7 +11116,7 @@ name|OPBITOR
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -11124,7 +11124,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator||
@@ -11132,7 +11132,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11142,7 +11142,7 @@ name|OPBITXOR
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -11150,7 +11150,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|^
@@ -11158,7 +11158,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11168,7 +11168,7 @@ name|OPLSHIFT
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -11176,7 +11176,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|<<
@@ -11184,7 +11184,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11194,7 +11194,7 @@ name|OPRSHIFT
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -11202,7 +11202,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|>>
@@ -11210,7 +11210,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11228,7 +11228,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11242,13 +11242,13 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ccp
 operator|=
@@ -11282,7 +11282,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 expr_stmt|;
@@ -11313,7 +11313,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 expr_stmt|;
@@ -11361,7 +11361,7 @@ operator|&
 operator|(
 name|p
 operator|->
-expr|const
+name|constant
 operator|)
 argument_list|,
 name|lp
@@ -11370,7 +11370,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -11394,7 +11394,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|,
@@ -11402,7 +11402,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|,
@@ -11414,7 +11414,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|,
@@ -11426,7 +11426,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -11468,7 +11468,7 @@ name|lp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11487,7 +11487,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11502,7 +11502,7 @@ operator|&
 operator|(
 name|p
 operator|->
-expr|const
+name|constant
 operator|)
 argument_list|,
 operator|&
@@ -11820,14 +11820,14 @@ name|TYLONG
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
 operator|-
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -11840,7 +11840,7 @@ name|TYDCOMPLEX
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -11850,7 +11850,7 @@ operator|=
 operator|-
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -11866,7 +11866,7 @@ name|TYDREAL
 case|:
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -11876,7 +11876,7 @@ operator|=
 operator|-
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -12018,7 +12018,7 @@ if|if
 condition|(
 name|ap
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -12034,7 +12034,7 @@ if|if
 condition|(
 name|ap
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -12046,7 +12046,7 @@ if|if
 condition|(
 name|ap
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -12117,7 +12117,7 @@ operator|&
 operator|(
 name|ap
 operator|->
-expr|const
+name|constant
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12138,7 +12138,7 @@ operator|&
 operator|(
 name|ap
 operator|->
-expr|const
+name|constant
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12983,7 +12983,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|>
@@ -13000,7 +13000,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|<
@@ -13029,7 +13029,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -13049,7 +13049,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -13081,7 +13081,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -13094,7 +13094,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -13229,7 +13229,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -13286,7 +13286,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|<
@@ -13322,7 +13322,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -13331,7 +13331,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -13365,7 +13365,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -13928,7 +13928,7 @@ name|e
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
