@@ -1655,7 +1655,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * We need these two options before the others, 	 * and they are mandatory for any filesystem. 	 * Ensure they are NULL terminated as well. 	 */
+comment|/* 	 * We need these two options before the others, 	 * and they are mandatory for any filesystem. 	 * Ensure they are NUL terminated as well. 	 */
 name|fstypelen
 operator|=
 literal|0
