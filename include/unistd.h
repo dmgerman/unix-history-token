@@ -123,7 +123,7 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__uid_t_
+name|__uid_t
 name|uid_t
 typedef|;
 end_typedef
