@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.69
+literal|3.70
 operator|%
 name|G
 operator|%
@@ -51,10 +51,14 @@ comment|/* originator fields, most to least significant  */
 literal|"resent-sender"
 block|,
 name|H_FROM
+operator||
+name|H_RESENT
 block|,
 literal|"resent-from"
 block|,
 name|H_FROM
+operator||
+name|H_RESENT
 block|,
 literal|"sender"
 block|,
@@ -84,6 +88,8 @@ block|,
 literal|"resent-to"
 block|,
 name|H_RCPT
+operator||
+name|H_RESENT
 block|,
 literal|"cc"
 block|,
@@ -92,6 +98,8 @@ block|,
 literal|"resent-cc"
 block|,
 name|H_RCPT
+operator||
+name|H_RESENT
 block|,
 literal|"bcc"
 block|,
@@ -104,8 +112,18 @@ block|,
 name|H_RCPT
 operator||
 name|H_ACHECK
+operator||
+name|H_RESENT
 block|,
 comment|/* message identification and control */
+literal|"message-id"
+block|,
+literal|0
+block|,
+literal|"resent-message-id"
+block|,
+name|H_RESENT
+block|,
 literal|"message"
 block|,
 name|H_EOH
@@ -113,6 +131,15 @@ block|,
 literal|"text"
 block|,
 name|H_EOH
+block|,
+comment|/* date fields */
+literal|"date"
+block|,
+literal|0
+block|,
+literal|"resent-date"
+block|,
+name|H_RESENT
 block|,
 comment|/* trace fields */
 literal|"received"

@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.115		%G%"
+literal|"@(#)sendmail.h	3.116		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -805,7 +805,7 @@ value|00010
 end_define
 
 begin_comment
-comment|/* this address is a "resent-..." address */
+comment|/* this address is a "Resent-..." address */
 end_comment
 
 begin_define
@@ -1101,6 +1101,17 @@ end_define
 
 begin_comment
 comment|/* this is an error or return receipt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_RESENT
+value|000400
+end_define
+
+begin_comment
+comment|/* this message is being forwarded */
 end_comment
 
 begin_decl_stmt
