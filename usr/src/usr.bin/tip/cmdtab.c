@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmdtab.c	4.3	81/05/31	*/
+comment|/*	cmdtab.c	4.4	81/11/29	*/
 end_comment
 
 begin_include
@@ -49,6 +49,9 @@ name|dollar
 argument_list|()
 decl_stmt|,
 name|genbrk
+argument_list|()
+decl_stmt|,
+name|suspend
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -167,6 +170,24 @@ block|,
 name|finish
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|SIGTSTP
+block|{
+name|CTRL
+argument_list|(
+name|z
+argument_list|)
+block|,
+name|NORM
+block|,
+literal|"suspend tip"
+block|,
+name|suspend
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|'s'
 block|,

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.c	4.9	81/11/20	*/
+comment|/*	tip.c	4.10	81/11/29	*/
 end_comment
 
 begin_comment
-comment|/*  * tip - Unix link to other systems  *  tip [-v] [-speed] system-name  *  * Uses remote file for system descriptions.  * Current commands (escapes):  *  *	~!	fork a shell on the local machine  *	~c	change working directory on local machine  *	~^D	exit tip  *	~<	fetch file from remote system  *	~>	send file to remote system  *	~t	take a file from a remote UNIX (uses cat& echo)  *	~p	send a file to a remote UNIX (uses cat)  *	~|	fetch file from remote system and pipe it to  *		 a local process  *	~%	fork and wait for a program which inherits file  *		 descriptors 3& 4 attached to the remote machine  *		 (optional by CONNECT define)  *	~s	set or show variable  *	~?	give a help summary  *  * Samuel J. Leffler	1-18-81  *  * sjl			2-11-81  * add auto-dial stuff for the BIZCOMP  *  * sjl			2-14-81  * cleaned up auto-dialer stuff and added variables  *  * sjl			2-19-81  * handle quit and interrupt during calls  *  * sjl			3-8-81  * made to pass lint  *  * sjl			4-11-81  * mods to handle both FIOCAPACITY and FIONREAD in biz.c  *  * sjl			4-17-81  * added take and put, made piping stuff work  * honor uucp locks  * rewrite remote file stuff for DN-11 like acu's and just to clean  *   it up  *  * sjl			6-16-81  * real working setup for DN-11's  */
+comment|/*  * tip - UNIX link to other systems  *  tip [-v] [-speed] system-name  * or  *  cu phone-number [-s speed] [-l line] [-a acu]  */
 end_comment
 
 begin_include
@@ -97,7 +97,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|cleanup
 parameter_list|()
@@ -131,6 +130,34 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"tip"
+argument_list|)
+condition|)
+block|{
+name|cumain
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+name|cumode
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|cucommon
+goto|;
+block|}
 if|if
 condition|(
 name|argc
@@ -526,7 +553,9 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up local tty state 	 */
+name|cucommon
+label|:
+comment|/* 	 * From here down the code is shared with 	 * the "cu" version of tip. 	 */
 name|ioctl
 argument_list|(
 literal|0
@@ -622,13 +651,13 @@ name|timeout
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Everything's set up now: 	 *	connection established (hardwired or diaulup) 	 *	line conditioned (baud rate, mode, etc.) 	 *	internal data structures (variables) 	 * so, fork one process for local side and one for remote. 	 */
-name|write
+name|printf
 argument_list|(
-literal|1
-argument_list|,
+name|cumode
+condition|?
+literal|"Connected\r\n"
+else|:
 literal|"\07connected\r\n"
-argument_list|,
-literal|12
 argument_list|)
 expr_stmt|;
 if|if
@@ -649,16 +678,18 @@ comment|/*NOTREACHED*/
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|cleanup
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|delock
 argument_list|(
 name|uucplock
 argument_list|)
-block|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VMUNIX
@@ -687,17 +718,19 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * put the controlling keyboard into raw mode  */
 end_comment
 
-begin_expr_stmt
-unit|raw
-operator|(
-operator|)
+begin_macro
+name|raw
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|ioctl
 argument_list|(
@@ -708,7 +741,7 @@ argument_list|,
 operator|&
 name|arg
 argument_list|)
-block|;
+expr_stmt|;
 name|ioctl
 argument_list|(
 literal|0
@@ -718,7 +751,7 @@ argument_list|,
 operator|&
 name|tchars
 argument_list|)
-block|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VMUNIX
@@ -735,13 +768,22 @@ operator|)
 operator|&
 name|disc
 argument_list|)
-block|;
+expr_stmt|;
 endif|#
 directive|endif
 block|}
+end_block
+
+begin_comment
 comment|/*  * return keyboard to normal mode  */
+end_comment
+
+begin_macro
 name|unraw
 argument_list|()
+end_macro
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -759,7 +801,7 @@ operator|)
 operator|&
 name|odisc
 argument_list|)
-block|;
+expr_stmt|;
 endif|#
 directive|endif
 name|ioctl
@@ -775,7 +817,7 @@ operator|)
 operator|&
 name|defarg
 argument_list|)
-block|;
+expr_stmt|;
 name|ioctl
 argument_list|(
 literal|0
@@ -789,19 +831,29 @@ operator|)
 operator|&
 name|defchars
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Print string ``s'', then read a string  *  in from the terminal.  Handles signals& allows use of  *  normal erase and kill characters.  */
+end_comment
+
+begin_macro
 name|prompt
 argument_list|(
 argument|s
 argument_list|,
 argument|p
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -1026,6 +1078,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|cumode
+operator|&&
 name|gch
 operator|==
 name|character
@@ -1051,22 +1106,6 @@ argument_list|(
 name|value
 argument_list|(
 name|RAISE
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|ctrl
-argument_list|(
-name|character
-argument_list|(
-name|value
-argument_list|(
-name|RAISECHAR
-argument_list|)
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1099,6 +1138,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|cumode
+operator|&&
 name|gch
 operator|==
 name|character
@@ -1109,23 +1151,6 @@ name|FORCE
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|ctrl
-argument_list|(
-name|character
-argument_list|(
-name|value
-argument_list|(
-name|FORCE
-argument_list|)
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|gch
 operator|=
 name|getchar
@@ -1133,7 +1158,6 @@ argument_list|()
 operator|&
 literal|0177
 expr_stmt|;
-block|}
 name|bol
 operator|=
 name|any
@@ -1792,21 +1816,23 @@ begin_comment
 comment|/*  * Set up the "remote" tty's state  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|ttysetup
 argument_list|(
 argument|speed
 argument_list|)
+end_macro
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
 name|VMUNIX
 name|unsigned
 name|bits
-operator|=
+init|=
 name|LDECCTQ
-block|;
+decl_stmt|;
 endif|#
 directive|endif
 name|arg
@@ -1818,7 +1844,7 @@ operator|.
 name|sg_ospeed
 operator|=
 name|speed
-block|;
+expr_stmt|;
 name|arg
 operator|.
 name|sg_flags
@@ -1826,7 +1852,7 @@ operator|=
 name|TANDEM
 operator||
 name|RAW
-block|;
+expr_stmt|;
 name|ioctl
 argument_list|(
 name|FD
@@ -1840,7 +1866,7 @@ operator|)
 operator|&
 name|arg
 argument_list|)
-block|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VMUNIX
@@ -1857,11 +1883,11 @@ operator|)
 operator|&
 name|bits
 argument_list|)
-block|;
+expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_expr_stmt
+end_block
 
 end_unit
 

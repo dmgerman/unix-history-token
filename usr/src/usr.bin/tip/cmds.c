@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmds.c	4.6	81/11/20	*/
+comment|/*	cmds.c	4.7	81/11/29	*/
 end_comment
 
 begin_include
@@ -3223,6 +3223,44 @@ endif|#
 directive|endif
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGTSTP
+end_ifdef
+
+begin_comment
+comment|/*  * Suspend tip  */
+end_comment
+
+begin_macro
+name|suspend
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|unraw
+argument_list|()
+expr_stmt|;
+name|kill
+argument_list|(
+literal|0
+argument_list|,
+name|SIGTSTP
+argument_list|)
+expr_stmt|;
+name|raw
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

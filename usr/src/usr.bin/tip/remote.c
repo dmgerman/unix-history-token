@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	remote.c	4.4	81/11/20	*/
+comment|/*	remote.c	4.5	81/11/29	*/
 end_comment
 
 begin_include
@@ -194,6 +194,14 @@ operator|,
 name|q
 operator|++
 control|)
+if|if
+condition|(
+operator|*
+operator|*
+name|q
+operator|==
+name|NULL
+condition|)
 operator|*
 operator|*
 name|q
@@ -209,6 +217,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|BR
+operator|&&
 operator|(
 name|BR
 operator|=
@@ -241,18 +252,22 @@ name|FS
 operator|=
 name|DEFFS
 expr_stmt|;
+if|if
+condition|(
+name|DU
+operator|<
+literal|0
+condition|)
+name|DU
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|DU
 operator|=
 name|rgetflag
 argument_list|(
 literal|"du"
-argument_list|)
-expr_stmt|;
-name|HW
-operator|=
-name|rgetflag
-argument_list|(
-literal|"hw"
 argument_list|)
 expr_stmt|;
 if|if
