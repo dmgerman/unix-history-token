@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1446,9 +1446,24 @@ expr|struct
 name|udpiphdr
 argument_list|)
 argument_list|,
-name|M_WAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
+goto|goto
+name|release
+goto|;
+block|}
 comment|/* 	 * Fill in mbuf with extended UDP header 	 * and addresses and length put into network format. 	 */
 name|ui
 operator|=
