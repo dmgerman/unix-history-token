@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.6 1998/10/13 23:43:38 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.7 1998/10/15 20:04:21 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -980,6 +980,18 @@ literal|1
 expr_stmt|;
 name|readfile
 argument_list|(
+name|PATH_HELP
+argument_list|,
+name|help
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|help
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|readfile
+argument_list|(
 name|PATH_CONFIG
 argument_list|,
 name|cmd
@@ -1067,18 +1079,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|readfile
-argument_list|(
-name|PATH_HELP
-argument_list|,
-name|help
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|help
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 init|;
