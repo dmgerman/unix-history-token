@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.3 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3004,18 +3004,9 @@ argument_list|(
 name|stdin
 argument_list|)
 condition|)
-block|{
-name|clearerr
-argument_list|(
-name|stdin
-argument_list|)
+name|quit
+argument_list|()
 expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 block|}
 if|if
