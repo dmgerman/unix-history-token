@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pccard/pccard_cis.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"card_if.h"
 end_include
 
@@ -174,7 +180,7 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|result
 decl_stmt|;
 name|int
@@ -449,13 +455,6 @@ literal|"3Com 3CCEM556"
 operator|)
 return|;
 default|default:
-name|printf
-argument_list|(
-literal|"Unknown ID: 0x%x\n"
-argument_list|,
-name|id
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -495,7 +494,7 @@ comment|/* 3C572BT */
 case|case
 literal|0x4057
 case|:
-comment|/* 3C574 */
+comment|/* 3C574, 3C574-TX */
 case|case
 literal|0x4b57
 case|:
@@ -567,7 +566,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|result
 decl_stmt|;
 name|int
@@ -1030,6 +1029,47 @@ name|pccard_product
 modifier|*
 name|pp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|uint32_t
+name|fcn
+init|=
+name|PCCARD_FUNCTION_UNSPEC
+decl_stmt|;
+comment|/* Make sure we're a network function */
+name|error
+operator|=
+name|pccard_get_function
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|fcn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|fcn
+operator|!=
+name|PCCARD_FUNCTION_NETWORK
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 operator|(
