@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.4 %G%"
+literal|"@(#)main.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"symbols.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"scanner.h"
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"object.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mappings.h"
 end_include
 
 begin_ifndef
@@ -538,10 +550,26 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|coredump
+condition|)
+block|{
+name|curfunc
+operator|=
+name|whatblock
+argument_list|(
+name|pc
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|curfunc
 operator|=
 name|program
 expr_stmt|;
+block|}
 name|bpinit
 argument_list|()
 expr_stmt|;
