@@ -272,17 +272,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_CT_RUNE_T_
-value|int
-end_define
-
-begin_comment
-comment|/* arg type for ctype funcs */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|_BSD_OFF_T_
 value|__int64_t
 end_define
@@ -314,7 +303,85 @@ comment|/* va_list */
 end_comment
 
 begin_comment
-comment|/*  * The rune type is declared to be an ``int'' instead of the more natural  * ``unsigned long'' or ``long''.  Two things are happening here.  It is not  * unsigned so that EOF (-1) can be naturally assigned to it and used.  Also,  * it looks like 10646 will be a 31 bit standard.  This means that if your  * ints cannot hold 32 bits, you will be in trouble.  The reason an int was  * chosen over a long is that the is*() and to*() routines take ints (says  * ANSI C), but they use _BSD_CT_RUNE_T_ instead of int.  By changing it  * here, you lose a bit of ANSI conformance, but your programs will still  * work.  */
+comment|/*  * NOTE: rune_t is not covered by ANSI nor other standards, and should not  * be instantiated outside of lib/libc/locale.  Use wchar_t.  *  * The rune type is declared to be an ``int'' instead of the more natural  * ``unsigned long'' or ``long''.  Two things are happening here.  It is not  * unsigned so that EOF (-1) can be naturally assigned to it and used.  Also,  * it looks like 10646 will be a 31 bit standard.  This means that if your  * ints cannot hold 32 bits, you will be in trouble.  The reason an int was  * chosen over a long is that the is*() and to*() routines take ints (says  * ANSI C), but they use _BSD_CT_RUNE_T_ instead of int.  By changing it  * here, you lose a bit of ANSI conformance, but your programs will still  * work.  *  * Note that _WCHAR_T_ and _RUNE_T_ must be of the same type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_CT_RUNE_T_
+value|int
+end_define
+
+begin_comment
+comment|/* arg type for ctype funcs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_RUNE_T_
+value|_BSD_CT_RUNE_T_
+end_define
+
+begin_comment
+comment|/* rune_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_WCHAR_T_
+value|_BSD_CT_RUNE_T_
+end_define
+
+begin_comment
+comment|/* wchar_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_WINT_T_
+value|_BSD_CT_RUNE_T_
+end_define
+
+begin_comment
+comment|/* wint_t */
+end_comment
+
+begin_comment
+comment|/*  * mbstate_t is an opaque object to keep conversion state, during multibyte  * stream conversions.  The content must not be referenced by user programs.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|char
+name|__mbstate8
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|__int64_t
+name|_mbstateL
+decl_stmt|;
+comment|/* for alignment */
+block|}
+name|__mbstate_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_BSD_MBSTATE_T_
+value|__mbstate_t
+end_define
+
+begin_comment
+comment|/* mbstate_t */
 end_comment
 
 begin_comment

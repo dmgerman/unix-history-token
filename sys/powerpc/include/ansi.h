@@ -290,17 +290,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_CT_RUNE_T_
-value|int
-end_define
-
-begin_comment
-comment|/* arg type for ctype funcs */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|_BSD_OFF_T_
 value|__int64_t
 end_define
@@ -327,8 +316,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_WCHAR_T_
+name|_BSD_CT_RUNE_T_
 value|int
+end_define
+
+begin_comment
+comment|/* arg type for ctype funcs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_RUNE_T_
+value|_BSD_CT_RUNE_T_
+end_define
+
+begin_comment
+comment|/* rune_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_WCHAR_T_
+value|_BSD_CT_RUNE_T_
 end_define
 
 begin_comment
@@ -339,22 +350,45 @@ begin_define
 define|#
 directive|define
 name|_BSD_WINT_T_
-value|int
+value|_BSD_CT_RUNE_T_
 end_define
 
 begin_comment
 comment|/* wint_t */
 end_comment
 
+begin_comment
+comment|/*  * mbstate_t is an opaque object to keep conversion state, during multibyte  * stream conversions.  The content must not be referenced by user programs.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|char
+name|__mbstate8
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|__int64_t
+name|_mbstateL
+decl_stmt|;
+comment|/* for alignment */
+block|}
+name|__mbstate_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
-name|_BSD_RUNE_T_
-value|int
+name|_BSD_MBSTATE_T_
+value|__mbstate_t
 end_define
 
 begin_comment
-comment|/* rune_t */
+comment|/* mbstate_t */
 end_comment
 
 begin_comment
