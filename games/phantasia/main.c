@@ -19,6 +19,12 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * The program allocates as much file space as it needs to store characters,  * so the possibility exists for the character file to grow without bound.  * The file is purged upon normal entry to try to avoid that problem.  * A similar problem exists for energy voids.  To alleviate the problem here,  * the void file is cleared with every new king, and a limit is placed  * on the size of the energy void file.  */
 end_comment
@@ -88,7 +94,7 @@ init|=
 name|FALSE
 decl_stmt|;
 comment|/* set if examine a character */
-name|long
+name|time_t
 name|seconds
 decl_stmt|;
 comment|/* for time of day */

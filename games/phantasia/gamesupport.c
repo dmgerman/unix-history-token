@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"include.h"
 end_include
 
@@ -71,7 +77,7 @@ name|long
 name|loc
 decl_stmt|;
 comment|/* location in player file */
-name|long
+name|time_t
 name|now
 decl_stmt|;
 comment|/* time now */
@@ -2257,7 +2263,7 @@ name|int
 name|daysold
 decl_stmt|;
 comment|/* how many days since the character has been used */
-name|long
+name|time_t
 name|ltime
 decl_stmt|;
 comment|/* time in seconds */
