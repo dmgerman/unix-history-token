@@ -4,29 +4,11 @@ comment|/*  * Ported to boot 386BSD by Julian Elischer (julian@tfs.com) Sept 199
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log:	table.c,v $  * Revision 2.2  92/04/04  11:36:43  rpd  * 	Fix Intel Copyright as per B. Davies authorization.  * 	[92/04/03            rvb]  * 	Taken from 2.5 bootstrap.  * 	[92/03/30            rvb]  *   * Revision 2.2  91/04/02  14:42:22  mbj  * 	Add Intel copyright  * 	[90/02/09            rvb]  *   */
+comment|/*  * HISTORY  * $Log: table.c,v $  * Revision 1.2  1993/07/11  12:02:25  andrew  * Fixes from bde, including support for loading @ any MB boundary (e.g. a  * kernel linked for 0xfe100000 will load at the 1MB mark) and read-ahead  * buffering to speed booting from floppies.  Also works with aha174x  * controllers in enhanced mode.  *  *  * 93/06/28  bde  *	Remove remaining magic numbers that depend on the load address.  *	IDTs and many more GDT entries to support my debugger.  *  * 93/06/27  bde  *	Remove unused Gdtr2.  *	Remove some magic numbers from Gdtr and Gdt.  The boot loader may  *	override the ones related to the standard load address of 0x90000.  *  * Revision 1.1  1993/03/21  18:08:47  cgd  * after 0.2.2 "stable" patches applied  *  * Revision 2.2  92/04/04  11:36:43  rpd  * 	Fix Intel Copyright as per B. Davies authorization.  * 	[92/04/03            rvb]  * 	Taken from 2.5 bootstrap.  * 	[92/03/30            rvb]  *   * Revision 2.2  91/04/02  14:42:22  mbj  * 	Add Intel copyright  * 	[90/02/09            rvb]  *   */
 end_comment
 
 begin_comment
 comment|/*   Copyright 1988, 1989, 1990, 1991, 1992     by Intel Corporation, Santa Clara, California.                  All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appears in all copies and that both the copyright notice and this permission notice appear in supporting documentation, and that the name of Intel not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  INTEL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL INTEL BE LIABLE FOR ANY SPECIAL, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN ACTION OF CONTRACT, NEGLIGENCE, OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NGDTENT
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|GDTLIMIT
-value|48
-end_define
-
-begin_comment
-comment|/* NGDTENT * 8 */
 end_comment
 
 begin_comment
@@ -51,11 +33,11 @@ name|base_23_16
 decl_stmt|;
 name|unsigned
 name|char
-name|bit_15_8
+name|p_dpl_type
 decl_stmt|;
 name|unsigned
 name|char
-name|bit_23_16
+name|g_b_a_limit
 decl_stmt|;
 name|unsigned
 name|char
@@ -65,13 +47,22 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RUN
+value|0
+end_define
+
+begin_comment
+comment|/* not really 0, but filled in at boot time */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|seg_desc
 name|Gdt
-index|[
-name|NGDTENT
-index|]
+index|[]
 init|=
 block|{
 block|{
@@ -104,6 +95,7 @@ literal|0x0
 block|}
 block|,
 comment|/* 0x08 : kernel code */
+comment|/* 0x9E? */
 block|{
 literal|0xFFFF
 block|,
@@ -119,12 +111,13 @@ literal|0x0
 block|}
 block|,
 comment|/* 0x10 : kernel data */
+comment|/* 0x92? */
 block|{
 literal|0xFFFF
 block|,
-literal|0x0000
+name|RUN
 block|,
-literal|0x9
+name|RUN
 block|,
 literal|0x9E
 block|,
@@ -137,9 +130,9 @@ comment|/* 0x18 : boot code */
 block|{
 literal|0xFFFF
 block|,
-literal|0x0000
+name|RUN
 block|,
-literal|0x9
+name|RUN
 block|,
 literal|0x92
 block|,
@@ -152,9 +145,9 @@ comment|/* 0x20 : boot data */
 block|{
 literal|0xFFFF
 block|,
-literal|0x0000
+name|RUN
 block|,
-literal|0x9
+name|RUN
 block|,
 literal|0x9E
 block|,
@@ -162,7 +155,216 @@ literal|0x0
 block|,
 literal|0x0
 block|}
+block|,
 comment|/* 0x28 : boot code, 16 bits */
+comment|/* More for bdb. */
+block|{}
+block|,
+comment|/* BIOS_CS_INDEX = 6 : null */
+block|{}
+block|,
+comment|/* BIOS_TMP_INDEX = 7 : null */
+block|{}
+block|,
+comment|/* TSS_INDEX = 8 : null */
+block|{
+literal|0xFFFF
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0xB2
+block|,
+literal|0x40
+block|,
+literal|0x0
+block|}
+block|,
+comment|/* DS_286_INDEX = 9 */
+block|{
+literal|0xFFFF
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0xB2
+block|,
+literal|0x40
+block|,
+literal|0x0
+block|}
+block|,
+comment|/* ES_286_INDEX = 10 */
+block|{}
+block|,
+comment|/* Unused = 11 : null */
+block|{
+literal|0x7FFF
+block|,
+literal|0x8000
+block|,
+literal|0xB
+block|,
+literal|0xB2
+block|,
+literal|0x40
+block|,
+literal|0x0
+block|}
+block|,
+comment|/* COLOR_INDEX = 12 */
+block|{
+literal|0x7FFF
+block|,
+literal|0x0
+block|,
+literal|0xB
+block|,
+literal|0xB2
+block|,
+literal|0x40
+block|,
+literal|0x0
+block|}
+block|,
+comment|/* MONO_INDEX = 13 */
+block|{
+literal|0xFFFF
+block|,
+name|RUN
+block|,
+name|RUN
+block|,
+literal|0x9A
+block|,
+literal|0x40
+block|,
+literal|0x0
+block|}
+block|,
+comment|/* DB_CS_INDEX = 14 */
+block|{
+literal|0xFFFF
+block|,
+name|RUN
+block|,
+name|RUN
+block|,
+literal|0x9A
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|}
+block|,
+comment|/* DB_CS16_INDEX = 15 */
+block|{
+literal|0xFFFF
+block|,
+name|RUN
+block|,
+name|RUN
+block|,
+literal|0x92
+block|,
+literal|0x40
+block|,
+literal|0x0
+block|}
+block|,
+comment|/* DB_DS_INDEX = 16 */
+block|{
+literal|8
+operator|*
+literal|18
+operator|-
+literal|1
+block|,
+name|RUN
+block|,
+name|RUN
+block|,
+literal|0x92
+block|,
+literal|0x40
+block|,
+literal|0x0
+block|}
+block|,
+comment|/* GDT_INDEX = 17 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|idt_desc
+block|{
+name|unsigned
+name|short
+name|entry_15_0
+decl_stmt|;
+name|unsigned
+name|short
+name|selector
+decl_stmt|;
+name|unsigned
+name|char
+name|padding
+decl_stmt|;
+name|unsigned
+name|char
+name|p_dpl_type
+decl_stmt|;
+name|unsigned
+name|short
+name|entry_31_16
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|idt_desc
+name|Idt
+index|[]
+init|=
+block|{
+block|{}
+block|,
+comment|/* Null (int 0) */
+block|{
+name|RUN
+block|,
+literal|0x70
+block|,
+literal|0
+block|,
+literal|0x8E
+block|,
+literal|0
+block|}
+block|,
+comment|/* DEBUG_VECTOR = 1 */
+block|{}
+block|,
+comment|/* Null (int 2) */
+block|{
+name|RUN
+block|,
+literal|0x70
+block|,
+literal|0
+block|,
+literal|0xEE
+block|,
+literal|0
+block|}
+block|,
+comment|/* BREAKPOINT_VECTOR = 3 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -193,11 +395,14 @@ name|pseudo_desc
 name|Gdtr
 init|=
 block|{
-name|GDTLIMIT
+sizeof|sizeof
+name|Gdt
+operator|-
+literal|1
 block|,
-literal|0x0400
+name|RUN
 block|,
-literal|9
+name|RUN
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -205,21 +410,37 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pseudo_desc
-name|Gdtr2
+name|Idtr_prot
 init|=
 block|{
-name|GDTLIMIT
+sizeof|sizeof
+name|Idt
+operator|-
+literal|1
 block|,
-literal|0xfe00
+name|RUN
 block|,
-literal|9
+name|RUN
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* boot is loaded at 0x90000, Gdt is at boot+1024 */
-end_comment
+begin_decl_stmt
+name|struct
+name|pseudo_desc
+name|Idtr_real
+init|=
+block|{
+literal|0x400
+operator|-
+literal|1
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

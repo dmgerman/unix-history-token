@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ported to boot 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00159  * --------------------         -----   ----------------------  *  * 23 May 93	Rodney W. Grimes	Added pad to kernel size for structs  *					allocated by locore.s  */
+comment|/*  * Ported to boot 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  */
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log:	boot.c,v $  * Revision 2.2  92/04/04  11:34:37  rpd  * 	Change date in banner.  * 	[92/04/03  16:51:14  rvb]  *   * 	Fix Intel Copyright as per B. Davies authorization.  * 	[92/04/03            rvb]  * 	From 2.5 version.  * 	[92/03/30            mg32]  *   */
+comment|/*  * HISTORY  * $Log: boot.c,v $  * Revision 1.8  1993/07/11  12:02:21  andrew  * Fixes from bde, including support for loading @ any MB boundary (e.g. a  * kernel linked for 0xfe100000 will load at the 1MB mark) and read-ahead  * buffering to speed booting from floppies.  Also works with aha174x  * controllers in enhanced mode.  *  * Revision 1.7  1993/06/18  06:50:52  cgd  * convert magic numbers to network byte order, and attendent changes  *  * Revision 1.6  1993/06/14  00:47:08  deraadt  * *whoops*. The previous commit killed a few important characters of code.  *  * Revision 1.5  1993/06/05  22:52:11  cgd  * make sure kernel is small enough; this is a really weird fix from  * rod, pk patch #159.  the comment is:  *  * The +28672 is for memory allocated by locore.s that must fit in the bss!  *  * this seems way wrong to me, but i'm not going to fix it in locore right  * now...  *  * Revision 1.4  1993/05/04  10:22:39  deraadt  * if we timeout asking for kernel name, print a \n before proceeding.  * Funny how one character can bug ya so much, eh?  *  * Revision 1.3  1993/04/28  06:37:58  cgd  * bsd->netbsd  *  * Revision 1.2  1993/04/28  05:32:55  cgd  * new kernel name is "bsd"  also, add "o*" to list of kernels to boot.  *  * Revision 1.1  1993/03/21  18:08:26  cgd  * after 0.2.2 "stable" patches applied  *  * Revision 2.2  92/04/04  11:34:37  rpd  *  * 93/07/03  bde  *	Write first 4096 bytes to load address, not always to address 0.  *  * 93/06/29  bde  *	Don't clobber BIOS variables.  *  * 	Change date in banner.  * 	[92/04/03  16:51:14  rvb]  *   * 	Fix Intel Copyright as per B. Davies authorization.  * 	[92/04/03            rvb]  * 	From 2.5 version.  * 	[92/03/30            mg32]  *   */
 end_comment
 
 begin_comment
@@ -69,9 +69,13 @@ init|=
 block|{
 literal|"/386bsd"
 block|,
+literal|"/o386bsd"
+block|,
 literal|"/386bsd.old"
 block|,
 literal|"/vmunix"
+block|,
+literal|"/ovmunix"
 block|,
 literal|"/vmunix.old"
 block|}
@@ -114,9 +118,13 @@ name|currname
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|t
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"\n>> 386bsd BOOT @ 0x%x: %d/%d k of memory  [20/9/92]\n"
+literal|"\n>> 386BSD BOOT @ 0x%x: %d/%d k of memory  [%s]\n"
 argument_list|,
 name|ouraddr
 argument_list|,
@@ -139,6 +147,8 @@ name|memsize
 argument_list|(
 literal|1
 argument_list|)
+argument_list|,
+literal|"$Revision: 1.8 $"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -252,6 +262,10 @@ name|int
 name|addr
 decl_stmt|;
 comment|/* physical address.. not directly useable */
+name|long
+name|int
+name|addr0
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -300,19 +314,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|N_BADMAG
+argument_list|(
 name|head
-operator|.
-name|a_magic
-operator|==
-literal|0413
+argument_list|)
 condition|)
-block|{
-name|poff
-operator|=
-literal|4096
-expr_stmt|;
-block|}
-else|else
 block|{
 name|printf
 argument_list|(
@@ -321,6 +327,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|poff
+operator|=
+name|N_TXTOFF
+argument_list|(
+name|head
+argument_list|)
+expr_stmt|;
+comment|/*if(poff==0) 		poff = 32;*/
 name|startaddr
 operator|=
 operator|(
@@ -339,6 +353,10 @@ literal|0x00f00000
 operator|)
 expr_stmt|;
 comment|/* some MEG boundary */
+name|addr0
+operator|=
+name|addr
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Booting %s(%d,%c)%s @ 0x%x\n"
@@ -390,7 +408,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * The +28672 is for memory allocated by locore.s that must 		 * fit in the bss! 		 */
+comment|/* 		 * The +28672 is for memory allocated by locore.s that must 		 * fit in the bss! (XXX - cgd) 		 */
 if|if
 condition|(
 operator|(
@@ -456,7 +474,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"text=0x%x"
+literal|"text=0x%x "
 argument_list|,
 name|head
 operator|.
@@ -518,7 +536,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" data=0x%x"
+literal|"data=0x%x "
 argument_list|,
 name|head
 operator|.
@@ -546,7 +564,7 @@ comment|/* (but clear it)					*/
 comment|/********************************************************/
 name|printf
 argument_list|(
-literal|" bss=0x%x"
+literal|"bss=0x%x "
 argument_list|,
 name|head
 operator|.
@@ -657,7 +675,7 @@ comment|/* READ in the symbol table				*/
 comment|/********************************************************/
 name|printf
 argument_list|(
-literal|" symbols=[+0x%x"
+literal|"symbols=[+0x%x"
 argument_list|,
 name|head
 operator|.
@@ -726,7 +744,7 @@ comment|/* and that many bytes of (debug symbols?)		*/
 comment|/********************************************************/
 name|printf
 argument_list|(
-literal|"+0x%x]"
+literal|"+0x%x] "
 argument_list|,
 name|i
 argument_list|)
@@ -779,7 +797,7 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" total=0x%x"
+literal|"total=0x%x "
 argument_list|,
 name|argv
 index|[
@@ -873,7 +891,7 @@ comment|/* copy that first page and overwrite any BIOS variables	*/
 comment|/****************************************************************/
 name|printf
 argument_list|(
-literal|" entry point=0x%x \n"
+literal|"entry point=0x%x\n"
 argument_list|,
 operator|(
 operator|(
@@ -885,13 +903,29 @@ operator|&
 literal|0xffffff
 argument_list|)
 expr_stmt|;
+comment|/* Under no circumstances overwrite precious BIOS variables! */
 name|pcpy
 argument_list|(
 name|tmpbuf
 argument_list|,
-literal|0
+name|addr0
+argument_list|,
+literal|0x400
+argument_list|)
+expr_stmt|;
+name|pcpy
+argument_list|(
+name|tmpbuf
+operator|+
+literal|0x500
+argument_list|,
+name|addr0
+operator|+
+literal|0x500
 argument_list|,
 literal|4096
+operator|-
+literal|0x500
 argument_list|)
 expr_stmt|;
 name|startprog
@@ -1092,6 +1126,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+else|else
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
