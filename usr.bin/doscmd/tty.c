@@ -7731,7 +7731,10 @@ end_function
 begin_function
 name|void
 name|tty_index
-parameter_list|()
+parameter_list|(
+name|int
+name|scroll
+parameter_list|)
 block|{
 name|int
 name|i
@@ -7765,6 +7768,11 @@ name|height
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|scroll
+condition|)
+block|{
 name|memcpy
 argument_list|(
 name|vmem
@@ -7816,6 +7824,7 @@ name|vattr
 operator||
 literal|' '
 expr_stmt|;
+block|}
 block|}
 name|SetVREGCur
 argument_list|()
@@ -8007,7 +8016,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|tty_index
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -8023,7 +8034,9 @@ case|case
 literal|'\n'
 case|:
 name|tty_index
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -8039,7 +8052,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|tty_index
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -8182,7 +8197,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|tty_index
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -8326,7 +8343,7 @@ name|col
 operator|=
 literal|0
 expr_stmt|;
-comment|/* tty_index(); */
+comment|/* tty_index(0); */
 comment|/* scroll up if last line is filled */
 block|}
 if|if
