@@ -1938,12 +1938,9 @@ begin_comment
 comment|/* Define if you have the<netinet6/in6.h> header file.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_NETINET6_IN6_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_NETINET6_IN6_H */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<netinfo/ni.h> header file.  */
