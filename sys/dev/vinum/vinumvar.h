@@ -166,6 +166,7 @@ init|=
 literal|64
 block|,
 comment|/* maximum length of any name */
+comment|/*  * Define a minor device number.  * This is not used directly; instead, it's  * called by the other macros.  */
 define|#
 directive|define
 name|VINUMMINOR
@@ -178,7 +179,7 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|(  (v<< VINUM_VOL_SHIFT)		\ 			      | (p<< VINUM_PLEX_SHIFT)		\ 			      | (s<< VINUM_SD_SHIFT) 		\ 			      | (t<< VINUM_TYPE_SHIFT) )
+value|( (v<< VINUM_VOL_SHIFT)		\ 			      | (p<< VINUM_PLEX_SHIFT)		\ 			      | (s<< VINUM_SD_SHIFT) 		\ 			      | (t<< VINUM_TYPE_SHIFT) )
 comment|/* Create block and character device minor numbers */
 define|#
 directive|define
