@@ -1173,13 +1173,6 @@ name|pscnt
 operator|=
 name|psdiv
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|idleproc
-condition|)
-block|{
 name|schedclock
 argument_list|(
 name|p
@@ -1277,7 +1270,6 @@ name|ru_maxrss
 operator|=
 name|rss
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
