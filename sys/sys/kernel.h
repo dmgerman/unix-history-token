@@ -280,6 +280,11 @@ init|=
 literal|0x1B00000
 block|,
 comment|/* lockmgr locks */
+name|SI_SUB_EVENTHANDLER
+init|=
+literal|0x1C00000
+block|,
+comment|/* eventhandler init */
 name|SI_SUB_CPU
 init|=
 literal|0x2000000
