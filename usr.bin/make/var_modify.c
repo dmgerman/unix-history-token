@@ -178,6 +178,7 @@ argument_list|,
 literal|2
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -285,6 +286,7 @@ name|slash
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -304,6 +306,7 @@ name|word
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -392,6 +395,7 @@ name|dot
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -703,6 +707,7 @@ name|word
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -787,6 +792,7 @@ name|word
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1037,6 +1043,7 @@ operator|->
 name|leftLen
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1163,6 +1170,7 @@ operator|-
 name|word
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1284,6 +1292,7 @@ operator|-
 name|word
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1388,6 +1397,7 @@ argument_list|,
 name|wordLen
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1443,6 +1453,7 @@ argument_list|,
 name|wordLen
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1619,6 +1630,7 @@ operator|.
 name|rm_so
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1940,6 +1952,7 @@ argument_list|,
 name|sublen
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -2061,6 +2074,7 @@ name|wp
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -2105,6 +2119,7 @@ name|wp
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
