@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * $FreeBSD$  */
+end_comment
+
+begin_comment
 comment|/*  *  Top - a top users display for Berkeley Unix  *  *  General (global) definitions  */
 end_comment
 
@@ -110,6 +114,29 @@ directive|define
 name|NUM_AVERAGES
 value|3
 end_define
+
+begin_enum
+enum|enum
+name|displaymodes
+block|{
+name|DISP_CPU
+init|=
+literal|0
+block|,
+name|DISP_IO
+block|,
+name|DISP_MAX
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|displaymodes
+name|displaymode
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
