@@ -206,7 +206,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -[Mm]: set local timestamp to remote timestamp */
+comment|/* -[Mm]: mirror mode */
+end_comment
+
+begin_decl_stmt
+name|int
+name|n_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    -n: do not preserve modification time */
 end_comment
 
 begin_decl_stmt
@@ -1437,32 +1447,6 @@ literal|1
 condition|)
 block|{
 comment|/* output to file, mirror mode */
-name|warnx
-argument_list|(
-literal|" local: %lld bytes, mtime %ld"
-argument_list|,
-name|sb
-operator|.
-name|st_size
-argument_list|,
-name|sb
-operator|.
-name|st_mtime
-argument_list|)
-expr_stmt|;
-name|warnx
-argument_list|(
-literal|"remote: %lld bytes, mtime %ld"
-argument_list|,
-name|us
-operator|.
-name|size
-argument_list|,
-name|us
-operator|.
-name|mtime
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sb
@@ -1923,7 +1907,8 @@ block|}
 comment|/* Set mtime of local file */
 if|if
 condition|(
-name|m_flag
+operator|!
+name|n_flag
 operator|&&
 name|us
 operator|.
@@ -2003,6 +1988,40 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* check the file size */
+if|if
+condition|(
+name|us
+operator|.
+name|size
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|count
+operator|<
+name|us
+operator|.
+name|size
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s appears to be truncated: %lld/%lld bytes"
+argument_list|,
+name|path
+argument_list|,
+name|count
+argument_list|,
+name|us
+operator|.
+name|size
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
 block|}
 name|success
 label|:
@@ -2333,9 +2352,9 @@ break|break;
 case|case
 literal|'n'
 case|:
-name|m_flag
+name|n_flag
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2812,7 +2831,7 @@ name|v_tty
 operator|=
 name|isatty
 argument_list|(
-name|STDOUT_FILENO
+name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 name|r
