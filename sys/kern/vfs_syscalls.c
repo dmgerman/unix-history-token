@@ -2771,6 +2771,13 @@ operator|->
 name|vfc_name
 argument_list|)
 expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp
@@ -4485,6 +4492,13 @@ operator|->
 name|mnt_vfc
 operator|->
 name|vfc_name
+argument_list|)
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
