@@ -1376,7 +1376,10 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
+operator|&
 name|sc
+operator|->
+name|sc_bus
 argument_list|)
 expr_stmt|;
 comment|/* uhci_pci_match must never return NULL if uhci_pci_probe succeeded */

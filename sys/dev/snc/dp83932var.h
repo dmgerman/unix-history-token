@@ -12,11 +12,7 @@ comment|/*	$NetBSD: if_snvar.h,v 1.12 1998/05/01 03:42:47 scottr Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * [NetBSD for NEC PC-98 series]  *  Copyright (c) 1997, 1998, 1999  *	Kouichi Matsuda.  All rights reserved.  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1991   Algorithmics Ltd (http://www.algor.co.uk)  * You may use, copy, and modify this program so long as you retain the  * copyright line.  */
+comment|/*-  * [NetBSD for NEC PC-98 series]  *  Copyright (c) 1997, 1998, 1999  *	Kouichi Matsuda.  All rights reserved.  *  * Copyright (c) 1991   Algorithmics Ltd (http://www.algor.co.uk)  * You may use, copy, and modify this program so long as you retain the  * copyright line.  */
 end_comment
 
 begin_comment

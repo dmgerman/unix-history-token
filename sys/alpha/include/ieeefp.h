@@ -8,7 +8,7 @@ comment|/* From: NetBSD: ieeefp.h,v 1.2 1997/04/06 08:47:28 cgd Exp */
 end_comment
 
 begin_comment
-comment|/*   * Written by J.T. Conklin, Apr 28, 1995  * Public domain.  */
+comment|/*-  * Written by J.T. Conklin, Apr 28, 1995  * Public domain.  */
 end_comment
 
 begin_ifndef

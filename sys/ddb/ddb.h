@@ -29,13 +29,6 @@ begin_comment
 comment|/* type definitions */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DB_LINES_PER_PAGE
-value|db_lines_per_page
-end_define
-
 begin_typedef
 typedef|typedef
 name|void

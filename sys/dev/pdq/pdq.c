@@ -8170,7 +8170,7 @@ name|printf
 argument_list|(
 literal|"%s() - PDQ_OS_MEMALLOC_CONTIG() failed!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Cronyx-Sigma Driver Development Kit.  *  * Copyright (C) 1998 Cronyx Engineering.  * Author: Pavel Novikov,<pavel@inr.net.kiae.su>  *  * Copyright (C) 1998-2003 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Cronyx Id: cxddk.c,v 1.1.2.2 2003/11/27 14:24:50 rik Exp $  */
+comment|/*-  * Cronyx-Sigma Driver Development Kit.  *  * Copyright (C) 1998 Cronyx Engineering.  * Author: Pavel Novikov,<pavel@inr.net.kiae.su>  *  * Copyright (C) 1998-2003 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Cronyx Id: cxddk.c,v 1.1.2.2 2003/11/27 14:24:50 rik Exp $  */
 end_comment
 
 begin_include
