@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.21 (Berkeley) 5/20/95  *	$Id: mount.h,v 1.71 1998/11/07 04:51:36 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.21 (Berkeley) 5/20/95  *	$Id: mount.h,v 1.72 1998/11/10 09:04:09 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -160,7 +160,7 @@ comment|/* user that mounted the filesystem */
 name|int
 name|f_type
 decl_stmt|;
-comment|/* type of filesystem (see below) */
+comment|/* type of filesystem */
 name|int
 name|f_flags
 decl_stmt|;
@@ -1582,7 +1582,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		-1, \ 		0, \ 		flags, \ 	}; \ 	extern struct linker_set MODVNOPS; \ 	MOD_VFS(fsname,&MODVNOPS,&_fs_vfsconf); \ 	extern int \ 	fsname ## _mod __P((struct lkm_table *, int, int)); \ 	int \ 	fsname ## _mod(struct lkm_table *lkmtp, int cmd, int ver) { \ 		MOD_DISPATCH(fsname, \ 		lkmtp, cmd, ver, lkm_nullcmd, lkm_nullcmd, lkm_nullcmd); }
+value|static struct vfsconf _fs_vfsconf = { \&vfsops, \ 		#fsname, \ 		-1, \ 		0, \ 		flags, \ 	}; \ 	extern struct linker_set MODVNOPS; \ 	MOD_VFS(fsname,&MODVNOPS,&_fs_vfsconf); \ 	int \ 	fsname ## _mod(struct lkm_table *lkmtp, int cmd, int ver); \ 	int \ 	fsname ## _mod(struct lkm_table *lkmtp, int cmd, int ver) { \ 		MOD_DISPATCH(fsname, \ 		lkmtp, cmd, ver, lkm_nullcmd, lkm_nullcmd, lkm_nullcmd); } \ 	struct __hack
 end_define
 
 begin_else
@@ -1919,6 +1919,23 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|vfs_modevent
+name|__P
+argument_list|(
+operator|(
+name|module_t
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|vfs_mountedon
 name|__P
 argument_list|(
@@ -2008,23 +2025,6 @@ argument_list|(
 operator|(
 expr|struct
 name|vfsconf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vfs_modevent
-name|__P
-argument_list|(
-operator|(
-name|module_t
-operator|,
-name|modeventtype_t
-operator|,
-name|void
 operator|*
 operator|)
 argument_list|)
