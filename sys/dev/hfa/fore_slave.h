@@ -424,13 +424,6 @@ name|FORE_VENDOR_ID
 value|0x1127
 end_define
 
-begin_define
-define|#
-directive|define
-name|FORE_PCA200E_ID
-value|0x0300
-end_define
-
 begin_comment
 comment|/*  * PCA-200E PCI Configuration Space  */
 end_comment
