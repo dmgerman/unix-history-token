@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmx.c	1.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmx.c	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -135,12 +135,6 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
 end_include
 
 begin_include
@@ -403,6 +397,10 @@ name|int
 name|s
 decl_stmt|,
 name|unit
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|dmxparam
@@ -646,6 +644,10 @@ name|t_state
 operator||=
 name|TS_WOPEN
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|(
@@ -657,18 +659,30 @@ operator|->
 name|t_rawq
 argument_list|,
 name|TTIPRI
+operator||
+name|PCATCH
 argument_list|,
-name|SLP_DMX_OPN
+name|ttopen
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 return|return
 operator|(
 operator|(
@@ -766,11 +780,14 @@ argument_list|,
 name|DMSET
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|ttyclose
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
