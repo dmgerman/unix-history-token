@@ -106,18 +106,18 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_object.h>
 end_include
 
 begin_comment
 comment|/* for vm cache coherency */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
 
 begin_include
 include|#
@@ -3380,9 +3380,11 @@ name|cn
 operator|->
 name|cn_pnbuf
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -3693,7 +3695,7 @@ operator|&
 name|HASBUF
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -3805,7 +3807,7 @@ operator|&
 name|HASBUF
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -3977,7 +3979,7 @@ operator|&
 name|HASBUF
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -4057,7 +4059,7 @@ operator|&
 name|HASBUF
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -4221,9 +4223,11 @@ name|cn
 operator|.
 name|cn_pnbuf
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -4347,7 +4351,7 @@ operator|&
 name|HASBUF
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -4446,7 +4450,7 @@ operator|&
 name|HASBUF
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
