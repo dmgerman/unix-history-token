@@ -4636,6 +4636,7 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
+operator|*
 name|tl
 argument_list|)
 expr_stmt|;
