@@ -2626,34 +2626,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|mac_test_create_devfs_vnode
-parameter_list|(
-name|struct
-name|devfs_dirent
-modifier|*
-name|devfs_dirent
-parameter_list|,
-name|struct
-name|label
-modifier|*
-name|direntlabel
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|struct
-name|label
-modifier|*
-name|vnodelabel
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
 name|int
 name|mac_test_create_vnode_extattr
 parameter_list|(
@@ -5541,11 +5513,6 @@ operator|.
 name|mpo_create_devfs_symlink
 operator|=
 name|mac_test_create_devfs_symlink
-block|,
-operator|.
-name|mpo_create_devfs_vnode
-operator|=
-name|mac_test_create_devfs_vnode
 block|,
 operator|.
 name|mpo_create_vnode_extattr

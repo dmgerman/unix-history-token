@@ -931,23 +931,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|mac_create_devfs_vnode
-parameter_list|(
-name|struct
-name|devfs_dirent
-modifier|*
-name|de
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|mac_create_vnode_extattr
 parameter_list|(
