@@ -15026,10 +15026,9 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -15082,10 +15081,9 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -15109,7 +15107,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Allocate the transmission DMA tag. 	 */
+comment|/* 	 * Allocate the transmission DMA tag. Must add 1, because 	 * rounded up PDU will be 65536 bytes long. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -15131,6 +15129,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|FATM_MAXPDU
+operator|+
+literal|1
 argument_list|,
 name|TPD_EXTENSIONS
 operator|+
@@ -15140,10 +15140,9 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
