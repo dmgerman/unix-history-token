@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)objfmt.h 1.12 %G%"; */
+comment|/* static char sccsid[] = "@(#)objfmt.h 1.13 %G%"; */
 end_comment
 
 begin_comment
@@ -430,6 +430,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  *	START defines the beginning of the text space.  *	This should be the defined external label "start",  *	however there is no way to access externals from C  *	whose names do not begin with an "_".  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -445,6 +449,17 @@ end_define
 
 begin_comment
 comment|/* the size of px_header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|START
+value|0x0
+end_define
+
+begin_comment
+comment|/* beginning of text */
 end_comment
 
 begin_endif
@@ -468,6 +483,17 @@ end_define
 
 begin_comment
 comment|/* the size of px_header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|START
+value|0x8000
+end_define
+
+begin_comment
+comment|/* beginning of text */
 end_comment
 
 begin_endif
