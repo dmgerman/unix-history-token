@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$NecBSD: ncr53c500reg.h,v 1.5 1998/12/26 11:50:01 honda Exp $	*/
+comment|/*	$NecBSD: ncr53c500reg.h,v 1.5.14.1 2001/06/08 06:27:44 honda Exp $	*/
 end_comment
 
 begin_comment
@@ -426,39 +426,6 @@ directive|define
 name|C4_ANE
 value|0x04
 end_define
-
-begin_comment
-comment|/* cfg3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|C3_NULL
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|C3_FCLK
-value|0x08
-end_define
-
-begin_comment
-comment|/* Fast SCSI		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|C3_FSCSI
-value|0x10
-end_define
-
-begin_comment
-comment|/* Fast Clock (>25Mhz)	*/
-end_comment
 
 begin_comment
 comment|/* cfg2 */

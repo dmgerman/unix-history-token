@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$NecBSD: bshwvar.h,v 1.3 1999/04/15 01:36:10 kmatsuda Exp $	*/
+comment|/*	$NecBSD: bshwvar.h,v 1.3.14.3 2001/06/21 04:07:37 honda Exp $	*/
 end_comment
 
 begin_comment
@@ -69,13 +69,13 @@ name|u_int
 name|hw_flags
 decl_stmt|;
 name|u_int
-name|sregaddr
+name|hw_sregaddr
 decl_stmt|;
 name|int
 argument_list|(
 operator|(
 operator|*
-name|dma_init
+name|hw_dma_init
 operator|)
 name|__P
 argument_list|(
@@ -91,7 +91,7 @@ name|void
 argument_list|(
 operator|(
 operator|*
-name|dma_start
+name|hw_dma_start
 operator|)
 name|__P
 argument_list|(
@@ -107,7 +107,7 @@ name|void
 argument_list|(
 operator|(
 operator|*
-name|dma_stop
+name|hw_dma_stop
 operator|)
 name|__P
 argument_list|(
@@ -150,10 +150,14 @@ decl_stmt|;
 name|int
 name|sc_seglen
 decl_stmt|;
-name|int
-name|sc_tdatalen
+name|u_int
+name|sc_sdatalen
 decl_stmt|;
-comment|/* temp datalen */
+comment|/* SMIT */
+name|u_int
+name|sc_edatalen
+decl_stmt|;
+comment|/* SMIT */
 comment|/* private bounce */
 name|u_int8_t
 modifier|*
@@ -169,12 +173,58 @@ decl_stmt|;
 name|bus_addr_t
 name|sc_minphys
 decl_stmt|;
+comment|/* io control */
+define|#
+directive|define
+name|BSHW_READ_INTERRUPT_DRIVEN
+value|0x0001
+define|#
+directive|define
+name|BSHW_WRITE_INTERRUPT_DRIVEN
+value|0x0002
+define|#
+directive|define
+name|BSHW_DMA_BLOCK
+value|0x0010
+define|#
+directive|define
+name|BSHW_SMIT_BLOCK
+value|0x0020
+name|u_int
+name|sc_io_control
+decl_stmt|;
 comment|/* hardware */
 name|struct
 name|bshw
 modifier|*
 name|sc_hw
 decl_stmt|;
+name|void
+argument_list|(
+argument|(*sc_dmasync_before)
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ct_softc
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|(*sc_dmasync_after)
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ct_softc
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -190,7 +240,7 @@ name|ct_softc
 operator|*
 operator|,
 expr|struct
-name|lun_info
+name|targ_info
 operator|*
 operator|)
 argument_list|)
@@ -217,9 +267,9 @@ name|bshw_read_settings
 name|__P
 argument_list|(
 operator|(
-name|bus_space_tag_t
-operator|,
-name|bus_space_handle_t
+expr|struct
+name|ct_bus_access_handle
+operator|*
 operator|,
 expr|struct
 name|bshw_softc
@@ -230,7 +280,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|bshw_smit_xfer_start
 name|__P
 argument_list|(
@@ -258,7 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|bshw_dma_xfer_start
 name|__P
 argument_list|(

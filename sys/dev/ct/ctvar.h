@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$NecBSD: ctvar.h,v 1.4 1999/04/15 01:36:13 kmatsuda Exp $	*/
+comment|/*	$NecBSD: ctvar.h,v 1.4.14.3 2001/06/20 06:13:34 honda Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*	$NetBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * [NetBSD for NEC PC-98 series]  *  Copyright (c) 1995, 1996, 1997, 1998  *	NetBSD/pc98 porting staff. All rights reserved.  *  Copyright (c) 1995, 1996, 1997, 1998  *	Naofumi HONDA. All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  3. The name of the author may not be used to endorse or promote products  *     derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * [NetBSD for NEC PC-98 series]  *  Copyright (c) 1995, 1996, 1997, 1998, 1999, 2000, 2001  *	NetBSD/pc98 porting staff. All rights reserved.  *  Copyright (c) 1995, 1996, 1997, 1998, 1999, 2000, 2001  *	Naofumi HONDA. All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  3. The name of the author may not be used to endorse or promote products  *     derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -37,6 +37,67 @@ end_comment
 
 begin_struct
 struct|struct
+name|ct_bus_access_handle
+block|{
+name|bus_space_tag_t
+name|ch_iot
+decl_stmt|;
+comment|/* core chip ctrl port tag */
+name|bus_space_tag_t
+name|ch_delayt
+decl_stmt|;
+comment|/* delay port tag */
+name|bus_space_tag_t
+name|ch_datat
+decl_stmt|;
+comment|/* data port tag (pio) */
+name|bus_space_tag_t
+name|ch_memt
+decl_stmt|;
+comment|/* data port tag (shm) */
+name|bus_space_handle_t
+name|ch_ioh
+decl_stmt|;
+name|bus_space_handle_t
+name|ch_delaybah
+decl_stmt|;
+name|bus_space_handle_t
+name|ch_datah
+decl_stmt|;
+name|bus_space_handle_t
+name|ch_memh
+decl_stmt|;
+name|void
+argument_list|(
+argument|*ch_bus_weight
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ct_bus_access_handle
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CT_USE_RELOCATE_OFFSET
+name|bus_addr_t
+name|ch_offset
+index|[
+literal|4
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CT_USE_RELOCATE_OFFSET */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ct_softc
 block|{
 name|struct
@@ -44,6 +105,28 @@ name|scsi_low_softc
 name|sc_sclow
 decl_stmt|;
 comment|/* generic data */
+name|struct
+name|ct_bus_access_handle
+name|sc_ch
+decl_stmt|;
+comment|/* bus access handle */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|bus_dma_tag_t
+name|sc_dmat
+decl_stmt|;
+comment|/* data DMA tag */
+name|void
+modifier|*
+name|sc_ih
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|struct
 name|resource
 modifier|*
@@ -64,18 +147,6 @@ name|resource
 modifier|*
 name|drq_res
 decl_stmt|;
-name|bus_space_tag_t
-name|sc_iot
-decl_stmt|;
-comment|/* core chip ctrl port tag */
-name|bus_space_tag_t
-name|sc_datat
-decl_stmt|;
-comment|/* data port tag (pio) */
-name|bus_space_tag_t
-name|sc_memt
-decl_stmt|;
-comment|/* data port tag (shm) */
 name|bus_dma_tag_t
 name|sc_dmat
 decl_stmt|;
@@ -84,39 +155,37 @@ name|bus_dmamap_t
 name|sc_dmamapt
 decl_stmt|;
 comment|/* data DMAMAP tag */
-name|bus_space_handle_t
-name|sc_ioh
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_datah
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_memh
-decl_stmt|;
 name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
-name|int
-name|sc_wc
-decl_stmt|;
-comment|/* weight counter */
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 name|int
 name|sc_chiprev
 decl_stmt|;
 comment|/* chip version */
 define|#
 directive|define
-name|CT_WD33C93_A
+name|CT_WD33C93
 value|0x00000
 define|#
 directive|define
-name|CT_WD33C93_B
+name|CT_WD33C93_A
 value|0x10000
 define|#
 directive|define
-name|CT_WD33C93_C
+name|CT_AM33C93_A
+value|0x10001
+define|#
+directive|define
+name|CT_WD33C93_B
 value|0x20000
+define|#
+directive|define
+name|CT_WD33C93_C
+value|0x30000
 name|int
 name|sc_xmode
 decl_stmt|;
@@ -149,6 +218,9 @@ directive|define
 name|CT_SAT_GOING
 value|1
 name|int
+name|sc_tmaxcnt
+decl_stmt|;
+name|int
 name|sc_atten
 decl_stmt|;
 comment|/* attention */
@@ -174,13 +246,20 @@ modifier|*
 name|sc_sdp
 struct|;
 comment|/* synchronous data table pt */
+name|struct
+name|ct_synch_data
+name|sc_default_sdt
+index|[
+literal|16
+index|]
+decl_stmt|;
 comment|/* 	 * Machdep stuff. 	 */
 name|void
 modifier|*
 name|ct_hw
 decl_stmt|;
 comment|/* point to bshw_softc etc ... */
-name|void
+name|int
 argument_list|(
 argument|*ct_dma_xfer_start
 argument_list|)
@@ -193,7 +272,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|void
+name|int
 argument_list|(
 argument|*ct_pio_xfer_start
 argument_list|)
@@ -257,7 +336,7 @@ name|ct_softc
 operator|*
 operator|,
 expr|struct
-name|lun_info
+name|targ_info
 operator|*
 operator|)
 argument_list|)
@@ -267,7 +346,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*****************************************************************  * Target information   *****************************************************************/
+comment|/*****************************************************************  * Lun information   *****************************************************************/
 end_comment
 
 begin_struct
@@ -289,56 +368,24 @@ begin_comment
 comment|/*****************************************************************  * PROTO  *****************************************************************/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/ct/ct_machdep.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dev/ct/ct_machdep.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|ctprobesubr
 name|__P
 argument_list|(
 operator|(
-name|bus_space_tag_t
-operator|,
-name|bus_space_handle_t
-name|ioh
+expr|struct
+name|ct_bus_access_handle
+operator|*
 operator|,
 name|u_int
 operator|,
 name|int
 operator|,
 name|u_int
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
