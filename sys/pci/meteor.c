@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserv
 end_comment
 
 begin_comment
-comment|/*		Change History: 	8/21/95		Release 	8/23/95		On advice from Stefan Esser, added volatile to PCI 			memory pointers to remove PCI caching . */
+comment|/*		Change History: 	8/21/95		Release 	8/23/95		On advice from Stefan Esser, added volatile to PCI 			memory pointers to remove PCI caching . 	8/29/95		Fixes suggested by Bruce Evans. 			meteor_mmap should return -1 on error rather than 0. 			unit #> NMETEOR should be unit #>= NMETEOR. */
 end_comment
 
 begin_include
@@ -1762,7 +1762,7 @@ decl_stmt|;
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|NMETEOR
 condition|)
 block|{
@@ -2138,7 +2138,7 @@ expr_stmt|;
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|NMETEOR
 condition|)
 comment|/* unit out of range */
@@ -2282,7 +2282,7 @@ expr_stmt|;
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|NMETEOR
 condition|)
 comment|/* unit out of range */
@@ -2644,7 +2644,7 @@ expr_stmt|;
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|NMETEOR
 condition|)
 comment|/* unit out of range */
@@ -2909,7 +2909,7 @@ expr_stmt|;
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|NMETEOR
 condition|)
 comment|/* unit out of range */
@@ -5557,13 +5557,13 @@ expr_stmt|;
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|NMETEOR
 condition|)
-comment|/* at this point could this happen? */
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 name|mtr
@@ -5583,7 +5583,8 @@ operator|&
 name|PROT_EXEC
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 if|if
 condition|(
@@ -5596,7 +5597,8 @@ operator|*
 name|PAGE_SIZE
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 return|return
 name|i386_btop
