@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -791,6 +791,8 @@ name|int
 name|todrop
 decl_stmt|,
 name|acked
+decl_stmt|,
+name|ourfinisacked
 decl_stmt|,
 name|needoutput
 init|=
@@ -2768,7 +2770,7 @@ operator|->
 name|t_state
 condition|)
 block|{
-comment|/* 	 * In SYN_RECEIVED state if the ack ACKs our SYN then enter 	 * ESTABLISHED state and continue processing, othewise 	 * send an RST. 	 */
+comment|/* 	 * In SYN_RECEIVED state if the ack ACKs our SYN then enter 	 * ESTABLISHED state and continue processing, otherwise 	 * send an RST. 	 */
 case|case
 name|TCPS_SYN_RECEIVED
 case|:
@@ -2799,42 +2801,6 @@ condition|)
 goto|goto
 name|dropwithreset
 goto|;
-name|tp
-operator|->
-name|snd_una
-operator|++
-expr_stmt|;
-comment|/* SYN acked */
-if|if
-condition|(
-name|SEQ_LT
-argument_list|(
-name|tp
-operator|->
-name|snd_nxt
-argument_list|,
-name|tp
-operator|->
-name|snd_una
-argument_list|)
-condition|)
-name|tp
-operator|->
-name|snd_nxt
-operator|=
-name|tp
-operator|->
-name|snd_una
-expr_stmt|;
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_REXMT
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_connects
@@ -3178,10 +3144,10 @@ operator|.
 name|sb_cc
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
 name|ourfinisacked
-value|(acked> 0)
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3201,7 +3167,7 @@ name|snd_wnd
 operator|-=
 name|acked
 expr_stmt|;
-name|acked
+name|ourfinisacked
 operator|=
 literal|0
 expr_stmt|;
@@ -3382,9 +3348,6 @@ goto|goto
 name|dropafterack
 goto|;
 block|}
-undef|#
-directive|undef
-name|ourfinisacked
 block|}
 name|step6
 label|:
@@ -4033,21 +3996,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|tcp_respond
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_ACKNOW
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|tcp_output
 argument_list|(
 name|tp
-argument_list|,
-name|ti
-argument_list|,
-name|tp
-operator|->
-name|rcv_nxt
-argument_list|,
-name|tp
-operator|->
-name|snd_nxt
-argument_list|,
-name|TH_ACK
 argument_list|)
 expr_stmt|;
 return|return;
