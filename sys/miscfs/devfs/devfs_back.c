@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_back.c,v 1.3 1995/05/30 08:06:49 rgrimes Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_back.c,v 1.4 1995/09/03 05:43:38 julian Exp $  */
 end_comment
 
 begin_include
@@ -124,235 +124,26 @@ name|devfs_sinit
 parameter_list|()
 comment|/*proto*/
 block|{
-name|devnm_p
-name|devbp
+name|int
+name|retval
 decl_stmt|;
-name|dn_p
-name|dnp
-decl_stmt|;
-comment|/*  	 * Allocate and fill out a new backing node  	 */
-if|if
-condition|(
-operator|!
-operator|(
-name|devbp
+comment|/* we will discard this */
+comment|/* 	 * call the right routine at the right time with the right args.... 	 */
+name|retval
 operator|=
-operator|(
-name|devnm_p
-operator|)
-name|malloc
+name|dev_add_node
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|devnm_t
-argument_list|)
+literal|"root"
 argument_list|,
-name|M_DEVFSBACK
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-operator|)
-condition|)
-block|{
-return|return ;
-block|}
-name|bzero
-argument_list|(
-name|devbp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|devnm_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * And the devnode associated with it 	 */
-if|if
-condition|(
-operator|!
-operator|(
-name|dnp
-operator|=
-operator|(
-name|dn_p
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|devnode_t
-argument_list|)
-argument_list|,
-name|M_DEVFSNODE
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-operator|)
-condition|)
-block|{
-name|free
-argument_list|(
-name|devbp
-argument_list|,
-name|M_DEVFSBACK
-argument_list|)
-expr_stmt|;
-return|return ;
-block|}
-name|bzero
-argument_list|(
-name|dnp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|devnode_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Link the two together 	 */
-name|devbp
-operator|->
-name|dnp
-operator|=
-name|dnp
-expr_stmt|;
-name|dnp
-operator|->
-name|links
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 	 * set up the directory node for the root 	 * and put in all the usual entries for a directory node 	 */
-name|dnp
-operator|->
-name|type
-operator|=
-name|DEV_DIR
-expr_stmt|;
-name|dnp
-operator|->
-name|links
-operator|++
-expr_stmt|;
-comment|/* for .*/
-comment|/* root loops to self */
-name|dnp
-operator|->
-name|by
-operator|.
-name|Dir
-operator|.
-name|parent
-operator|=
-name|dnp
-expr_stmt|;
-name|dnp
-operator|->
-name|links
-operator|++
-expr_stmt|;
-comment|/* for ..*/
-comment|/* 	 * set up the list of children (none so far) 	 */
-name|dnp
-operator|->
-name|by
-operator|.
-name|Dir
-operator|.
-name|dirlist
-operator|=
-operator|(
-name|devnm_p
-operator|)
-literal|0
-expr_stmt|;
-name|dnp
-operator|->
-name|by
-operator|.
-name|Dir
-operator|.
-name|dirlast
-operator|=
-operator|&
-name|dnp
-operator|->
-name|by
-operator|.
-name|Dir
-operator|.
-name|dirlist
-expr_stmt|;
-name|dnp
-operator|->
-name|by
-operator|.
-name|Dir
-operator|.
-name|myname
-operator|=
-name|devbp
-expr_stmt|;
-comment|/* 	 * set up a pointer to directory type ops 	 */
-name|dnp
-operator|->
-name|ops
-operator|=
-operator|&
-name|devfs_vnodeop_p
-expr_stmt|;
-name|dnp
-operator|->
-name|mode
-operator||=
-literal|0555
-expr_stmt|;
-comment|/* default perms */
-comment|/* 	 * note creation times etc, as now (boot time) 	 */
-name|TIMEVAL_TO_TIMESPEC
-argument_list|(
-argument|&time
-argument_list|,
-argument|&(dnp->ctime)
-argument_list|)
-name|dnp
-operator|->
-name|mtime
-operator|=
-name|dnp
-operator|->
-name|ctime
-expr_stmt|;
-name|dnp
-operator|->
-name|atime
-operator|=
-name|dnp
-operator|->
-name|ctime
-expr_stmt|;
-comment|/* 	 * and the list of layers 	 */
-name|devbp
-operator|->
-name|next_front
-operator|=
 name|NULL
-expr_stmt|;
-name|devbp
-operator|->
-name|prev_frontp
-operator|=
+argument_list|,
+name|DEV_DIR
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
-operator|(
-name|devbp
-operator|->
-name|next_front
-operator|)
-expr_stmt|;
-comment|/* 	 * next time, we don't need to do all this 	 */
 name|dev_root
-operator|=
-name|devbp
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -387,7 +178,7 @@ parameter_list|)
 comment|/*proto*/
 block|{
 name|devnm_p
-name|devbp
+name|devnmp
 decl_stmt|;
 name|char
 name|pathbuf
@@ -559,7 +350,7 @@ expr_stmt|;
 comment|/* no more to do */
 block|}
 comment|/***************************************\ 	* Start scanning along the linked list	* 	\***************************************/
-name|devbp
+name|devnmp
 operator|=
 name|dirnode
 operator|->
@@ -571,11 +362,11 @@ name|dirlist
 expr_stmt|;
 while|while
 condition|(
-name|devbp
+name|devnmp
 operator|&&
 name|strcmp
 argument_list|(
-name|devbp
+name|devnmp
 operator|->
 name|name
 argument_list|,
@@ -583,22 +374,22 @@ name|name
 argument_list|)
 condition|)
 block|{
-name|devbp
+name|devnmp
 operator|=
-name|devbp
+name|devnmp
 operator|->
 name|next
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|devbp
+name|devnmp
 condition|)
 block|{
 comment|/* check it's a directory */
 if|if
 condition|(
-name|devbp
+name|devnmp
 operator|->
 name|dnp
 operator|->
@@ -636,7 +427,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|devbp
+name|devnmp
 argument_list|)
 condition|)
 block|{
@@ -657,7 +448,7 @@ name|dev_finddir
 argument_list|(
 name|path
 argument_list|,
-name|devbp
+name|devnmp
 operator|->
 name|dnp
 argument_list|,
@@ -673,7 +464,7 @@ block|{
 operator|*
 name|dn_pp
 operator|=
-name|devbp
+name|devnmp
 operator|->
 name|dnp
 expr_stmt|;
@@ -685,7 +476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************************************************************\ * Add a new element to the devfs backing structure. 			* \***********************************************************************/
+comment|/***********************************************************************\ * Add a new element to the devfs backing structure. 			* * If we're creating a root node, then dirname is NULL			* \***********************************************************************/
 end_comment
 
 begin_function
@@ -714,7 +505,7 @@ parameter_list|)
 comment|/*proto*/
 block|{
 name|devnm_p
-name|devbp
+name|devnmp
 decl_stmt|;
 name|devnm_p
 name|realthing
@@ -736,6 +527,11 @@ expr_stmt|;
 if|if
 condition|(
 name|dirnode
+condition|)
+block|{
+if|if
+condition|(
+name|dirnode
 operator|->
 name|type
 operator|!=
@@ -744,24 +540,6 @@ condition|)
 return|return
 operator|(
 name|ENOTDIR
-operator|)
-return|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|>
-operator|(
-name|DEVMAXNAMESIZE
-operator|-
-literal|1
-operator|)
-condition|)
-return|return
-operator|(
-name|ENAMETOOLONG
 operator|)
 return|;
 name|retval
@@ -796,12 +574,32 @@ operator|(
 name|EEXIST
 operator|)
 return|;
+block|}
+comment|/* 	 * make sure the name is legal 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|>
+operator|(
+name|DEVMAXNAMESIZE
+operator|-
+literal|1
+operator|)
+condition|)
+return|return
+operator|(
+name|ENAMETOOLONG
+operator|)
+return|;
 comment|/* 	 * Allocate and fill out a new backing node 	 */
 if|if
 condition|(
 operator|!
 operator|(
-name|devbp
+name|devnmp
 operator|=
 operator|(
 name|devnm_p
@@ -826,7 +624,7 @@ return|;
 block|}
 name|bzero
 argument_list|(
-name|devbp
+name|devnmp
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -859,7 +657,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|devbp
+name|devnmp
 argument_list|,
 name|M_DEVFSBACK
 argument_list|)
@@ -878,7 +676,8 @@ name|devnode_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|devbp
+comment|/* 	 * Link hte two together 	 * include the implicit link in the count of links to the devnode.. 	 * this stops it from being accidentally freed later. 	 */
+name|devnmp
 operator|->
 name|dnp
 operator|=
@@ -891,10 +690,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* implicit from our own name-node */
-comment|/* 	 * note the node type we are adding 	 * and set the creation times to NOW 	 * put in it's name 	 * include the implicit link in the count of links to the devnode.. 	 * this stops it from being accidentally freed later. 	 */
+comment|/* 	 * note the node type we are adding 	 * and set the creation times to NOW 	 * put in it's name 	 */
 name|strcpy
 argument_list|(
-name|devbp
+name|devnmp
 operator|->
 name|name
 argument_list|,
@@ -930,25 +729,31 @@ operator|->
 name|ctime
 expr_stmt|;
 comment|/* 	 * And set up a new 'clones' list (empty) 	 */
-name|devbp
+name|devnmp
 operator|->
 name|prev_frontp
 operator|=
 operator|&
 operator|(
-name|devbp
+name|devnmp
 operator|->
 name|next_front
 operator|)
 expr_stmt|;
-comment|/* 	 * Put it on the END of the linked list of directory entries 	 */
-name|devbp
+comment|/*  	 * Check if we are making a root node.. 	 * (with no parent) 	 */
+if|if
+condition|(
+name|dirnode
+condition|)
+block|{
+comment|/* 	 	 * Put it on the END of the linked list of directory entries 	 	 */
+name|devnmp
 operator|->
 name|parent
 operator|=
 name|dirnode
 expr_stmt|;
-name|devbp
+name|devnmp
 operator|->
 name|prevp
 operator|=
@@ -960,13 +765,13 @@ name|Dir
 operator|.
 name|dirlast
 expr_stmt|;
-name|devbp
+name|devnmp
 operator|->
 name|next
 operator|=
 operator|*
 operator|(
-name|devbp
+name|devnmp
 operator|->
 name|prevp
 operator|)
@@ -975,12 +780,12 @@ comment|/* should be NULL */
 comment|/*right?*/
 operator|*
 operator|(
-name|devbp
+name|devnmp
 operator|->
 name|prevp
 operator|)
 operator|=
-name|devbp
+name|devnmp
 expr_stmt|;
 name|dirnode
 operator|->
@@ -992,7 +797,7 @@ name|dirlast
 operator|=
 operator|&
 operator|(
-name|devbp
+name|devnmp
 operator|->
 name|next
 operator|)
@@ -1006,6 +811,7 @@ operator|.
 name|entrycount
 operator|++
 expr_stmt|;
+block|}
 comment|/* 	 * return the answer 	 */
 switch|switch
 condition|(
@@ -1048,6 +854,11 @@ name|devnm_p
 operator|)
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|dirnode
+condition|)
+block|{
 name|dnp
 operator|->
 name|by
@@ -1061,6 +872,39 @@ name|dn_p
 operator|)
 name|dirnode
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* root loops to self */
+name|dnp
+operator|->
+name|by
+operator|.
+name|Dir
+operator|.
+name|parent
+operator|=
+name|dnp
+expr_stmt|;
+block|}
+name|dnp
+operator|->
+name|by
+operator|.
+name|Dir
+operator|.
+name|parent
+operator|->
+name|links
+operator|++
+expr_stmt|;
+comment|/* account for .. */
+name|dnp
+operator|->
+name|links
+operator|++
+expr_stmt|;
+comment|/* for .*/
 name|dnp
 operator|->
 name|by
@@ -1069,7 +913,7 @@ name|Dir
 operator|.
 name|myname
 operator|=
-name|devbp
+name|devnmp
 expr_stmt|;
 comment|/* 		 * make sure that the ops associated with it are the ops 		 * that we use (by default) for directories 		 */
 name|dnp
@@ -1242,7 +1086,7 @@ name|back
 operator|.
 name|aliases
 operator|=
-name|devbp
+name|devnmp
 expr_stmt|;
 name|realthing
 operator|->
@@ -1255,6 +1099,12 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * If we have a parent, then maybe we should duplicate 	 * ourselves onto any plane that the parent is on... 	 * Though this may be better handled elsewhere as 	 * it stops this routine from being used for front nodes 	 */
+if|if
+condition|(
+name|dirnode
+condition|)
+block|{
 if|if
 condition|(
 name|retval
@@ -1268,9 +1118,8 @@ operator|.
 name|Dir
 operator|.
 name|myname
-comment|/*XXX*/
 argument_list|,
-name|devbp
+name|devnmp
 argument_list|)
 condition|)
 block|{
@@ -1280,10 +1129,11 @@ return|return
 name|retval
 return|;
 block|}
+block|}
 operator|*
 name|devnm_pp
 operator|=
-name|devbp
+name|devnmp
 expr_stmt|;
 return|return
 literal|0
@@ -1300,7 +1150,7 @@ name|int
 name|dev_remove
 parameter_list|(
 name|devnm_p
-name|devbp
+name|devnmp
 parameter_list|)
 comment|/*proto*/
 block|{
@@ -1317,7 +1167,7 @@ expr_stmt|;
 comment|/* 	 * Check the type of the node.. for now don't allow dirs 	 */
 switch|switch
 condition|(
-name|devbp
+name|devnmp
 operator|->
 name|dnp
 operator|->
@@ -1353,7 +1203,7 @@ block|}
 comment|/* 	 * Free each alias 	 */
 while|while
 condition|(
-name|devbp
+name|devnmp
 operator|->
 name|as
 operator|.
@@ -1364,7 +1214,7 @@ condition|)
 block|{
 name|alias
 operator|=
-name|devbp
+name|devnmp
 operator|->
 name|as
 operator|.
@@ -1372,7 +1222,7 @@ name|back
 operator|.
 name|aliases
 expr_stmt|;
-name|devbp
+name|devnmp
 operator|->
 name|as
 operator|.
@@ -1390,7 +1240,7 @@ name|Alias
 operator|.
 name|next
 expr_stmt|;
-name|devbp
+name|devnmp
 operator|->
 name|as
 operator|.
@@ -1417,20 +1267,20 @@ block|}
 comment|/* 	 * Now remove front items of the Main node itself 	 */
 name|devfs_remove_fronts
 argument_list|(
-name|devbp
+name|devnmp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * now we should free the main node 	 */
 name|devfs_dn_free
 argument_list|(
-name|devbp
+name|devnmp
 operator|->
 name|dnp
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|devbp
+name|devnmp
 argument_list|,
 name|M_DEVFSBACK
 argument_list|)
