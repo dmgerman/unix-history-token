@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.35 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -146,71 +146,6 @@ end_decl_stmt
 begin_comment
 comment|/* pointer to console "window" tty */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KADB
-end_ifdef
-
-begin_extern
-extern|extern	cngetc(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* standard console getc */
-end_comment
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|v_getc
-function_decl|)
-parameter_list|()
-init|=
-name|cngetc
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* "" getc from virtual console */
-end_comment
-
-begin_extern
-extern|extern	cnpoll(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|v_poll
-function_decl|)
-parameter_list|()
-init|=
-name|cnpoll
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* kdb hook to enable input polling */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_extern
 extern|extern	cnputc(
@@ -449,7 +384,8 @@ directive|else
 function|panic
 parameter_list|(
 name|fmt
-comment|/*, va_alist */
+parameter_list|,
+name|va_alist
 parameter_list|)
 name|char
 modifier|*
@@ -521,25 +457,9 @@ name|boothowto
 operator|&
 name|RB_KDB
 condition|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
+name|kdbpanic
 argument_list|()
 expr_stmt|;
-comment|/* below kdb pri */
-name|setsoftkdb
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|boot
