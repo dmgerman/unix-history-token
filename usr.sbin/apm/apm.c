@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<apm_bios.h>
+file|<machine/apm_bios.h>
 end_include
 
 begin_define
