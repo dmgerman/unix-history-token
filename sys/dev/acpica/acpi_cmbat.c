@@ -2590,6 +2590,27 @@ name|bif
 operator|.
 name|lfcap
 expr_stmt|;
+comment|/*  	 * Some laptops report the "design-capacity" instead of the  	 * "real-capacity" when the battery is fully charged. 	 * That breaks the above arithmetic as it needs to be 100% maximum. 	 */
+if|if
+condition|(
+name|bat
+index|[
+name|i
+index|]
+operator|->
+name|cap
+operator|>
+literal|100
+condition|)
+name|bat
+index|[
+name|i
+index|]
+operator|->
+name|cap
+operator|=
+literal|100
+expr_stmt|;
 name|batt_stat
 operator||=
 name|bat
