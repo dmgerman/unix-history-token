@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.64 1995/05/08 16:53:33 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.65 1995/05/30 08:13:51 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -159,7 +159,7 @@ comment|/* XXX */
 end_comment
 
 begin_decl_stmt
-name|u_int32
+name|u_int32_t
 name|sdstrats
 decl_stmt|,
 name|sdqueues
@@ -286,9 +286,9 @@ name|sdstart
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -298,7 +298,7 @@ begin_struct
 struct|struct
 name|scsi_data
 block|{
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 define|#
@@ -313,7 +313,7 @@ name|u_char
 name|heads
 decl_stmt|;
 comment|/* Number of heads */
-name|u_int16
+name|u_int16_t
 name|cyls
 decl_stmt|;
 comment|/* Number of cylinders */
@@ -322,11 +322,11 @@ name|sectors
 decl_stmt|;
 comment|/*dubious */
 comment|/* Number of sectors/track */
-name|u_int16
+name|u_int16_t
 name|secsiz
 decl_stmt|;
 comment|/* Number of bytes/sector */
-name|u_int32
+name|u_int32_t
 name|disksize
 decl_stmt|;
 comment|/* total number sectors */
@@ -800,7 +800,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|struct
@@ -999,7 +999,7 @@ name|errcode
 init|=
 literal|0
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|struct
@@ -1578,7 +1578,7 @@ name|buf
 modifier|*
 name|dp
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|opri
 decl_stmt|;
 name|struct
@@ -1586,7 +1586,7 @@ name|scsi_data
 modifier|*
 name|sd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|sdstrats
@@ -1785,10 +1785,10 @@ begin_function
 name|void
 name|sdstart
 parameter_list|(
-name|u_int32
+name|u_int32_t
 name|unit
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 block|{
@@ -1832,7 +1832,7 @@ name|struct
 name|scsi_rw_big
 name|cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|blkno
 decl_stmt|,
 name|nblk
@@ -2357,7 +2357,7 @@ comment|/*  * Find out from the device what it's capacity is  */
 end_comment
 
 begin_function
-name|u_int32
+name|u_int32_t
 name|sd_size
 parameter_list|(
 name|unit
@@ -2378,7 +2378,7 @@ name|struct
 name|scsi_read_capacity
 name|scsi_cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|size
 decl_stmt|;
 name|struct
@@ -2801,7 +2801,7 @@ decl_stmt|;
 block|}
 name|scsi_sense
 struct|;
-name|u_int32
+name|u_int32_t
 name|sectors
 decl_stmt|;
 comment|/* 	 * First check if we have it all loaded 	 */
@@ -3182,7 +3182,7 @@ operator|&
 name|sd_switch
 argument_list|,
 operator|(
-name|u_int32
+name|u_int32_t
 operator|)
 name|SDUNIT
 argument_list|(
@@ -3391,16 +3391,16 @@ name|scsi_link
 modifier|*
 name|sc_link
 decl_stmt|;
-name|int32
+name|int32_t
 name|num
 decl_stmt|;
 comment|/* number of sectors to write */
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|part
 decl_stmt|;
-name|int32
+name|int32_t
 name|blkoff
 decl_stmt|,
 name|blknum
@@ -3409,7 +3409,7 @@ name|blkcnt
 init|=
 name|MAXTRANSFER
 decl_stmt|;
-name|int32
+name|int32_t
 name|nblocks
 decl_stmt|;
 name|char
@@ -3571,7 +3571,7 @@ comment|/* Convert to disk sectors */
 name|num
 operator|=
 operator|(
-name|u_int32
+name|u_int32_t
 operator|)
 name|num
 operator|*

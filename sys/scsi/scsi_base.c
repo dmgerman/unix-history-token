@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.29 1995/05/30 08:13:27 rgrimes Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.29.4.1 1995/10/10 00:42:00 davidg Exp $  */
 end_comment
 
 begin_define
@@ -147,7 +147,7 @@ modifier|*
 name|sc_link
 decl_stmt|;
 comment|/* who to charge the xs to */
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 comment|/* if this call can sleep */
@@ -157,7 +157,7 @@ name|scsi_xfer
 modifier|*
 name|xs
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|s
 decl_stmt|;
 name|SC_DEBUG
@@ -380,7 +380,7 @@ modifier|*
 name|sc_link
 decl_stmt|;
 comment|/* who to credit for returning it */
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -501,7 +501,7 @@ comment|/*  * Find out from the device what its capacity is.  */
 end_comment
 
 begin_function
-name|u_int32
+name|u_int32_t
 name|scsi_read_capacity
 parameter_list|(
 name|sc_link
@@ -515,11 +515,11 @@ name|scsi_link
 modifier|*
 name|sc_link
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 modifier|*
 name|blk_size
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -531,7 +531,7 @@ name|struct
 name|scsi_read_capacity
 name|scsi_cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|size
 decl_stmt|;
 comment|/* 	 * make up a scsi command and ask the scsi driver to do 	 * it for you. 	 */
@@ -793,7 +793,7 @@ name|scsi_link
 modifier|*
 name|sc_link
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -871,7 +871,7 @@ name|scsi_link
 modifier|*
 name|sc_link
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -962,7 +962,7 @@ name|scsi_inquiry_data
 modifier|*
 name|inqbuf
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -1062,7 +1062,7 @@ name|scsi_link
 modifier|*
 name|sc_link
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|type
 decl_stmt|,
 name|flags
@@ -1148,7 +1148,7 @@ name|scsi_link
 modifier|*
 name|sc_link
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -1234,10 +1234,10 @@ name|scsi_link
 modifier|*
 name|sc_link
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|eject
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -1642,20 +1642,20 @@ name|scsi_generic
 modifier|*
 name|scsi_cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|cmdlen
 decl_stmt|;
 name|u_char
 modifier|*
 name|data_addr
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|datalen
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|retries
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|timeout
 decl_stmt|;
 name|struct
@@ -1663,7 +1663,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -1675,7 +1675,7 @@ decl_stmt|;
 name|errval
 name|retval
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|s
 decl_stmt|;
 comment|/* 	 * Illegal command lengths will wedge host adapter software. 	 * Reject zero length commands and assert all defined commands 	 * are the correct length. 	 */
@@ -1706,7 +1706,7 @@ return|;
 else|else
 block|{
 specifier|static
-name|u_int8
+name|u_int8_t
 name|sizes
 index|[]
 init|=
@@ -1728,7 +1728,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|u_int8
+name|u_int8_t
 name|size
 init|=
 name|sizes
@@ -2806,6 +2806,9 @@ argument_list|)
 return|;
 comment|/* fall through */
 case|case
+name|XS_SELTIMEOUT
+case|:
+case|case
 name|XS_DRIVER_STUFFUP
 case|:
 return|return
@@ -2977,10 +2980,10 @@ name|scsi_sense_extended
 modifier|*
 name|ext
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|key
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|info
 decl_stmt|;
 name|int
@@ -3539,10 +3542,10 @@ name|xs
 operator|->
 name|sc_link
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|key
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|silent
 decl_stmt|;
 name|errval
@@ -3586,7 +3589,7 @@ operator|&
 name|SDEV_DB1
 condition|)
 block|{
-name|u_int32
+name|u_int32_t
 name|count
 init|=
 literal|0
@@ -4192,7 +4195,7 @@ name|val
 parameter_list|,
 name|bytes
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|val
 decl_stmt|;
 name|u_char
@@ -4235,7 +4238,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32
+name|u_int32_t
 name|scsi_3btou
 parameter_list|(
 name|bytes
@@ -4245,7 +4248,7 @@ modifier|*
 name|bytes
 decl_stmt|;
 block|{
-name|u_int32
+name|u_int32_t
 name|rc
 decl_stmt|;
 name|rc
@@ -4280,7 +4283,7 @@ block|}
 end_function
 
 begin_function
-name|int32
+name|int32_t
 name|scsi_3btoi
 parameter_list|(
 name|bytes
@@ -4290,7 +4293,7 @@ modifier|*
 name|bytes
 decl_stmt|;
 block|{
-name|u_int32
+name|u_int32_t
 name|rc
 init|=
 name|scsi_3btou
@@ -4310,7 +4313,7 @@ literal|0xff000000
 expr_stmt|;
 return|return
 operator|(
-name|int32
+name|int32_t
 operator|)
 name|rc
 return|;
@@ -4325,7 +4328,7 @@ name|val
 parameter_list|,
 name|bytes
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|val
 decl_stmt|;
 name|u_char
@@ -4356,7 +4359,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32
+name|u_int32_t
 name|scsi_2btou
 parameter_list|(
 name|bytes
@@ -4366,7 +4369,7 @@ modifier|*
 name|bytes
 decl_stmt|;
 block|{
-name|u_int32
+name|u_int32_t
 name|rc
 decl_stmt|;
 name|rc
@@ -4398,7 +4401,7 @@ name|val
 parameter_list|,
 name|bytes
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|val
 decl_stmt|;
 name|u_char
@@ -4453,7 +4456,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32
+name|u_int32_t
 name|scsi_4btou
 parameter_list|(
 name|bytes
@@ -4463,7 +4466,7 @@ modifier|*
 name|bytes
 decl_stmt|;
 block|{
-name|u_int32
+name|u_int32_t
 name|rc
 decl_stmt|;
 name|rc
@@ -5008,11 +5011,11 @@ name|char
 modifier|*
 name|address
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|num
 decl_stmt|;
 block|{
-name|u_int32
+name|u_int32_t
 name|y
 decl_stmt|;
 name|printf
