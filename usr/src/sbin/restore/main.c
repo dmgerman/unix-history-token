@@ -14,7 +14,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 2.13 %G%"
+literal|"@(#)main.c 2.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2338,6 +2338,40 @@ break|break;
 case|case
 name|IFLNK
 case|:
+comment|/* 				 * Some early dump tapes have symbolic links 				 * present without the associated data blocks. 				 * This hack avoids trashing a file system with 				 * inodes with missing data blocks. 				 */
+if|if
+condition|(
+name|spcl
+operator|.
+name|c_count
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|vflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s: 0 length symbolic link (ignored)\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xp
+operator|->
+name|x_flags
+operator||=
+name|XTRACTD
+expr_stmt|;
+name|xtrcnt
+operator|--
+expr_stmt|;
+goto|goto
+name|skipfile
+goto|;
+block|}
 if|if
 condition|(
 name|vflag
