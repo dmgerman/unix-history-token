@@ -3173,6 +3173,8 @@ decl_stmt|,
 name|rval
 decl_stmt|,
 name|phy_reg
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
@@ -3627,6 +3629,8 @@ name|int
 name|i
 decl_stmt|,
 name|phy_reg
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
