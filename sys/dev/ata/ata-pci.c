@@ -760,6 +760,12 @@ case|:
 return|return
 literal|"HighPoint HPT370 ATA100 controller"
 return|;
+case|case
+literal|0x05
+case|:
+return|return
+literal|"HighPoint HPT372 ATA133 controller"
+return|;
 default|default:
 return|return
 literal|"Unknown revision HighPoint ATA controller"
@@ -1189,6 +1195,7 @@ block|{
 case|case
 literal|0x00
 case|:
+comment|/* HPT 366 */
 case|case
 literal|0x01
 case|:
@@ -1220,12 +1227,18 @@ break|break;
 case|case
 literal|0x02
 case|:
+comment|/* HPT 368 */
 case|case
 literal|0x03
 case|:
+comment|/* HPT 370 */
 case|case
 literal|0x04
 case|:
+case|case
+literal|0x05
+case|:
+comment|/* HPT 372 */
 comment|/* turn off interrupt prediction */
 name|pci_write_config
 argument_list|(
@@ -1643,7 +1656,7 @@ block|{
 case|case
 literal|0x00041103
 case|:
-comment|/* HighPoint HPT366/368/370 */
+comment|/* HighPoint HPT366/368/370/372 */
 if|if
 condition|(
 operator|(
