@@ -4371,16 +4371,9 @@ name|all
 condition|)
 block|{
 comment|/* 		 * broadcast 		 */
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_SHARED
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_SHARED
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -4436,16 +4429,9 @@ name|sig
 argument_list|)
 expr_stmt|;
 block|}
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_RELEASE
 argument_list|)
 expr_stmt|;
 block|}

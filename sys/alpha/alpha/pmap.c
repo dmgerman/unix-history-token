@@ -2351,16 +2351,9 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_SHARED
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_SHARED
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -2404,16 +2397,9 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_RELEASE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5632,16 +5618,9 @@ name|PG_KRE
 operator||
 name|PG_KWE
 expr_stmt|;
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_SHARED
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_SHARED
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -5681,16 +5660,9 @@ name|newlev1
 expr_stmt|;
 block|}
 block|}
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_RELEASE
 argument_list|)
 expr_stmt|;
 operator|*
@@ -11023,7 +10995,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index; 	lockmgr(&allproc_lock, LK_SHARED, NULL, CURPROC); 	LIST_FOREACH(p,&allproc, p_list) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for(i=0;i<1024;i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				unsigned base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for(j=0;j<1024;j++) { 						unsigned va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							lockmgr(&allproc_lock, LK_RELEASE, NULL, CURPROC); 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE(pa); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	lockmgr(&allproc_lock, LK_RELEASE, NULL, CURPROC); 	return npte; }
+unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index; 	ALLPROC_LOCK(AP_SHARED); 	LIST_FOREACH(p,&allproc, p_list) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for(i=0;i<1024;i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				unsigned base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for(j=0;j<1024;j++) { 						unsigned va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							ALLPROC_LOCK(AP_RELEASE); 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE(pa); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	ALLPROC_LOCK(AP_RELEASE); 	return npte; }
 endif|#
 directive|endif
 end_endif

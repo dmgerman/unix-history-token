@@ -1592,6 +1592,42 @@ value|mtx_exit(&(p)->p_mtx, MTX_DEF)
 end_define
 
 begin_comment
+comment|/* Lock and unlock the proc lists. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALLPROC_LOCK
+parameter_list|(
+name|how
+parameter_list|)
+define|\
+value|lockmgr(&allproc_lock, (how), NULL, CURPROC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AP_SHARED
+value|LK_SHARED
+end_define
+
+begin_define
+define|#
+directive|define
+name|AP_EXCLUSIVE
+value|LK_EXCLUSIVE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AP_RELEASE
+value|LK_RELEASE
+end_define
+
+begin_comment
 comment|/* Hold process U-area in memory, normally for ptrace/procfs work. */
 end_comment
 

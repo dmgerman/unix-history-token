@@ -4754,6 +4754,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|ALLPROC_LOCK
+argument_list|(
+name|AP_SHARED
+argument_list|)
+expr_stmt|;
 comment|/* look in the live processes */
 if|if
 condition|(
@@ -4768,9 +4773,9 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-return|return
-name|p
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* look in the zombies */
 for|for
 control|(
@@ -4800,11 +4805,16 @@ name|p_pid
 operator|==
 name|pid
 condition|)
+break|break;
+name|out
+label|:
+name|ALLPROC_LOCK
+argument_list|(
+name|AP_RELEASE
+argument_list|)
+expr_stmt|;
 return|return
 name|p
-return|;
-return|return
-name|NULL
 return|;
 block|}
 end_function
@@ -6142,6 +6152,11 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
+name|ALLPROC_LOCK
+argument_list|(
+name|AP_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|q
@@ -6150,6 +6165,11 @@ name|p_list
 argument_list|)
 expr_stmt|;
 comment|/* off zombproc */
+name|ALLPROC_LOCK
+argument_list|(
+name|AP_RELEASE
+argument_list|)
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|q

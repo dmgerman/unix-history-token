@@ -1008,16 +1008,9 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Find an unused process ID.  We remember a range of unused IDs 	 * ready to use (from nextpid+1 through pidchecked-1). 	 * 	 * If RFHIGHPID is set (used during system boot), do not allocate 	 * low-numbered pids. 	 */
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 name|trypid
@@ -1326,16 +1319,9 @@ argument_list|,
 name|p_hash
 argument_list|)
 expr_stmt|;
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_RELEASE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make a proc table entry for the new process. 	 * Start by zeroing the section of proc that is zero-initialized, 	 * then copy the section that is copied directly from the parent. 	 */

@@ -889,16 +889,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Remove proc from allproc queue and pidhash chain. 	 * Place onto zombproc.  Unlink from parent's child list. 	 */
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -925,16 +918,9 @@ argument_list|,
 name|p_hash
 argument_list|)
 expr_stmt|;
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_RELEASE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We have to wait until after releasing this lock before 	 * changing p_stat.  If we block on a mutex while waiting to 	 * release the allproc_lock, then we will be back at SRUN when 	 * we resume here and our parent will never harvest us. 	 */
@@ -1931,16 +1917,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -1951,16 +1930,9 @@ name|p_list
 argument_list|)
 expr_stmt|;
 comment|/* off zombproc */
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_RELEASE
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE

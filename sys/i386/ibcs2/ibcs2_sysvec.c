@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -185,6 +191,11 @@ name|p
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|rval
+init|=
+literal|0
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -194,6 +205,11 @@ case|case
 name|MOD_UNLOAD
 case|:
 comment|/* if this was an ELF module we'd use elf_brand_inuse()... */
+name|ALLPROC_LOCK
+argument_list|(
+name|AP_SHARED
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -224,15 +240,26 @@ operator|==
 operator|&
 name|ibcs2_svr3_sysvec
 condition|)
-return|return
+block|{
+name|rval
+operator|=
 name|EBUSY
-return|;
+expr_stmt|;
+break|break;
 block|}
+block|}
+name|ALLPROC_LOCK
+argument_list|(
+name|AP_RELEASE
+argument_list|)
+expr_stmt|;
 default|default:
 comment|/* do not care */
 block|}
 return|return
-literal|0
+operator|(
+name|rval
+operator|)
 return|;
 block|}
 end_function

@@ -1606,16 +1606,9 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* 	 * Now we can look at the time, having had a chance to verify the 	 * time from the file system.  Pretend that proc0 started now. 	 */
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_SHARED
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_SHARED
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -1644,16 +1637,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|lockmgr
+name|ALLPROC_LOCK
 argument_list|(
-operator|&
-name|allproc_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|,
-name|CURPROC
+name|AP_RELEASE
 argument_list|)
 expr_stmt|;
 name|microuptime
