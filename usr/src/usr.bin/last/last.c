@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.5 (Berkeley) %G%"
+literal|"@(#)last.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1486,6 +1486,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+else|else
+name|C
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|indx
