@@ -45,14 +45,22 @@ end_typedef
 begin_struct
 struct|struct
 name|osigcontext
-block|{ }
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
 struct|;
 end_struct
 
 begin_struct
 struct|struct
 name|sigcontext
-block|{ }
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
 struct|;
 end_struct
 
