@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.16 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6842,13 +6842,19 @@ name|bang
 operator|==
 name|NULL
 condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|syserr
 argument_list|(
-literal|"554 No ! in UUCP! (%s)"
+literal|"554 No ! in UUCP From address! (%s given)"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 operator|*
