@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|1
+value|2
 end_define
 
 begin_include
@@ -159,11 +159,9 @@ directive|include
 file|"opt_isp.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSI_ISP_FABRIC
-end_ifdef
+begin_comment
+comment|/*  * We are now always supporting fabric mode.  */
+end_comment
 
 begin_define
 define|#
@@ -178,41 +176,6 @@ directive|define
 name|ISP2100_SCRLEN
 value|0x400
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP2100_SCRLEN
-value|0x100
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSI_ISP_SCCLUN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISP2100_SCCLUN
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -274,6 +237,24 @@ directive|define
 name|ISP_SCSI_XFER_T
 value|struct ccb_scsiio
 end_define
+
+begin_typedef
+typedef|typedef
+name|void
+name|ispfwfunc
+name|__P
+typedef|((
+name|int
+typedef|,
+name|int
+typedef|,
+name|int
+typedef|, const
+name|u_int16_t
+modifier|*
+modifier|*
+typedef|));
+end_typedef
 
 begin_ifdef
 ifdef|#
