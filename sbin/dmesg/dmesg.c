@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dmesg.c,v 1.8 1998/05/19 08:58:53 phk Exp $"
+literal|"$Id: dmesg.c,v 1.9 1998/06/04 06:51:14 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,7 +439,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"magic number incorrect"
+literal|"kernel message buffer has different magic number"
 argument_list|)
 expr_stmt|;
 name|bp
