@@ -711,6 +711,106 @@ end_define
 
 begin_struct
 struct|struct
+name|ohci_dma
+block|{
+name|fwohcireg_t
+name|cntl
+decl_stmt|;
+define|#
+directive|define
+name|OHCI_CNTL_CYCMATCH_S
+value|(0x1<< 31)
+define|#
+directive|define
+name|OHCI_CNTL_BUFFIL
+value|(0x1<< 31)
+define|#
+directive|define
+name|OHCI_CNTL_ISOHDR
+value|(0x1<< 30)
+define|#
+directive|define
+name|OHCI_CNTL_CYCMATCH_R
+value|(0x1<< 29)
+define|#
+directive|define
+name|OHCI_CNTL_MULTICH
+value|(0x1<< 28)
+define|#
+directive|define
+name|OHCI_CNTL_DMA_RUN
+value|(0x1<< 15)
+define|#
+directive|define
+name|OHCI_CNTL_DMA_WAKE
+value|(0x1<< 12)
+define|#
+directive|define
+name|OHCI_CNTL_DMA_DEAD
+value|(0x1<< 11)
+define|#
+directive|define
+name|OHCI_CNTL_DMA_ACTIVE
+value|(0x1<< 10)
+define|#
+directive|define
+name|OHCI_CNTL_DMA_BT
+value|(0x1<< 8)
+define|#
+directive|define
+name|OHCI_CNTL_DMA_BAD
+value|(0x1<< 7)
+define|#
+directive|define
+name|OHCI_CNTL_DMA_STAT
+value|(0xff)
+name|fwohcireg_t
+name|cntl_clr
+decl_stmt|;
+name|fwohcireg_t
+name|dummy0
+decl_stmt|;
+name|fwohcireg_t
+name|cmd
+decl_stmt|;
+name|fwohcireg_t
+name|match
+decl_stmt|;
+name|fwohcireg_t
+name|dummy1
+decl_stmt|;
+name|fwohcireg_t
+name|dummy2
+decl_stmt|;
+name|fwohcireg_t
+name|dummy3
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ohci_itdma
+block|{
+name|fwohcireg_t
+name|cntl
+decl_stmt|;
+name|fwohcireg_t
+name|cntl_clr
+decl_stmt|;
+name|fwohcireg_t
+name|dummy0
+decl_stmt|;
+name|fwohcireg_t
+name|cmd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ohci_registers
 block|{
 name|fwohcireg_t
@@ -1081,84 +1181,6 @@ literal|23
 index|]
 decl_stmt|;
 comment|/* dummy 0x124-0x17c */
-struct|struct
-name|ohci_dma
-block|{
-name|fwohcireg_t
-name|cntl
-decl_stmt|;
-define|#
-directive|define
-name|OHCI_CNTL_CYCMATCH_S
-value|(0x1<< 31)
-define|#
-directive|define
-name|OHCI_CNTL_BUFFIL
-value|(0x1<< 31)
-define|#
-directive|define
-name|OHCI_CNTL_ISOHDR
-value|(0x1<< 30)
-define|#
-directive|define
-name|OHCI_CNTL_CYCMATCH_R
-value|(0x1<< 29)
-define|#
-directive|define
-name|OHCI_CNTL_MULTICH
-value|(0x1<< 28)
-define|#
-directive|define
-name|OHCI_CNTL_DMA_RUN
-value|(0x1<< 15)
-define|#
-directive|define
-name|OHCI_CNTL_DMA_WAKE
-value|(0x1<< 12)
-define|#
-directive|define
-name|OHCI_CNTL_DMA_DEAD
-value|(0x1<< 11)
-define|#
-directive|define
-name|OHCI_CNTL_DMA_ACTIVE
-value|(0x1<< 10)
-define|#
-directive|define
-name|OHCI_CNTL_DMA_BT
-value|(0x1<< 8)
-define|#
-directive|define
-name|OHCI_CNTL_DMA_BAD
-value|(0x1<< 7)
-define|#
-directive|define
-name|OHCI_CNTL_DMA_STAT
-value|(0xff)
-name|fwohcireg_t
-name|cntl_clr
-decl_stmt|;
-name|fwohcireg_t
-name|dummy0
-decl_stmt|;
-name|fwohcireg_t
-name|cmd
-decl_stmt|;
-name|fwohcireg_t
-name|match
-decl_stmt|;
-name|fwohcireg_t
-name|dummy1
-decl_stmt|;
-name|fwohcireg_t
-name|dummy2
-decl_stmt|;
-name|fwohcireg_t
-name|dummy3
-decl_stmt|;
-block|}
-name|dummy8
-struct|;
 comment|/*       0x180, 0x184, 0x188, 0x18c */
 comment|/*       0x190, 0x194, 0x198, 0x19c */
 comment|/*       0x1a0, 0x1a4, 0x1a8, 0x1ac */
@@ -1176,24 +1198,6 @@ index|]
 decl_stmt|;
 comment|/*       0x200, 0x204, 0x208, 0x20c */
 comment|/*       0x210, 0x204, 0x208, 0x20c */
-struct|struct
-name|ohci_itdma
-block|{
-name|fwohcireg_t
-name|cntl
-decl_stmt|;
-name|fwohcireg_t
-name|cntl_clr
-decl_stmt|;
-name|fwohcireg_t
-name|dummy0
-decl_stmt|;
-name|fwohcireg_t
-name|cmd
-decl_stmt|;
-block|}
-name|dummy9
-struct|;
 name|struct
 name|ohci_itdma
 name|dma_itch

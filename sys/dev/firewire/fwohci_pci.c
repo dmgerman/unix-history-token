@@ -1457,9 +1457,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|err
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"fwohci_init failed with err=%d\n"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+name|fwohci_pci_detach
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+return|return
+name|EIO
+return|;
+block|}
 name|err
 operator|=
 name|device_probe_and_attach
@@ -1480,7 +1498,9 @@ name|device_printf
 argument_list|(
 name|self
 argument_list|,
-literal|"FireWire init failed\n"
+literal|"probe_and_attach failed with err=%d\n"
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
 name|fwohci_pci_detach
