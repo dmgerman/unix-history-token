@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -390,6 +396,13 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ia64_running_in_simulator
+argument_list|()
+condition|)
+return|return;
 name|cp
 operator|->
 name|cn_dev
@@ -405,7 +418,7 @@ name|cp
 operator|->
 name|cn_pri
 operator|=
-name|CN_NORMAL
+name|CN_INTERNAL
 expr_stmt|;
 block|}
 end_function
