@@ -2545,6 +2545,7 @@ operator|->
 name|event_thread
 argument_list|,
 literal|0
+argument_list|,
 literal|"%s,%s"
 argument_list|,
 name|device_get_name
