@@ -1017,13 +1017,13 @@ name|u_long
 name|mb_mbfree
 decl_stmt|;
 name|u_long
-name|mb_mbpgs
+name|mb_mbbucks
 decl_stmt|;
 name|u_long
 name|mb_clfree
 decl_stmt|;
 name|u_long
-name|mb_clpgs
+name|mb_clbucks
 decl_stmt|;
 name|long
 name|mb_mbtypes
@@ -1086,6 +1086,14 @@ name|u_long
 name|m_mhlen
 decl_stmt|;
 comment|/* length of data in a header mbuf */
+name|u_int
+name|m_mbperbuck
+decl_stmt|;
+comment|/* number of mbufs per "bucket" */
+name|u_int
+name|m_clperbuck
+decl_stmt|;
+comment|/* number of clusters per "bucket" */
 comment|/* Number of mbtypes (gives # elems in mbpstat's mb_mbtypes[] array: */
 name|short
 name|m_numtypes

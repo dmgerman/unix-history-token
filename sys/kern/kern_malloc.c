@@ -1562,13 +1562,6 @@ name|nmbclusters
 operator|*
 name|MCLBYTES
 operator|+
-name|nmbcnt
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_int
-argument_list|)
-operator|+
 name|vm_kmem_size
 operator|)
 operator|/
