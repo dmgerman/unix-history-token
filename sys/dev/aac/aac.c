@@ -5903,11 +5903,6 @@ operator|==
 name|EBUSY
 condition|)
 block|{
-name|aac_remove_busy
-argument_list|(
-name|cm
-argument_list|)
-expr_stmt|;
 name|aac_unmap_command
 argument_list|(
 name|cm
