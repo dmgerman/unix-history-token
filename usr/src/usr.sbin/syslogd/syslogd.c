@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.20 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
