@@ -4656,9 +4656,13 @@ argument|) { 			wderror((struct buf *)NULL, du,
 literal|"wddump: timeout waiting to to give command"
 argument|); 			return (EIO); 		} 		while (blkcnt !=
 literal|0
-argument|) { 			if (is_physical_memory((vm_offset_t)addr)) 				pmap_kenter((vm_offset_t)CADDR1, 					   trunc_page((vm_offset_t)addr)); 			else 				pmap_kenter((vm_offset_t)CADDR1, 					   trunc_page(
+argument|) { 			caddr_t va;  			if (is_physical_memory((vm_offset_t)addr)) 				va = pmap_kenter_temporary( 					trunc_page((vm_offset_t)addr),
 literal|0
-argument|));
+argument|); 			else 				va = pmap_kenter_temporary( 					trunc_page(
+literal|0
+argument|),
+literal|0
+argument|);
 comment|/* Ready to send data? */
 argument|DELAY(
 literal|5
@@ -4668,7 +4672,7 @@ argument|if (wdwait(du, WDCS_READY | WDCS_SEEKCMPLT | WDCS_DRQ, TIMEOUT)<
 literal|0
 argument|) { 				wderror((struct buf *)NULL, du,
 literal|"wddump: timeout waiting for DRQ"
-argument|); 				return (EIO); 			} 			if (du->dk_flags& DKFL_32BIT) 				outsl(du->dk_port + wd_data, 				      CADDR1 + ((int)addr& PAGE_MASK), 				      DEV_BSIZE / sizeof(long)); 			else 				outsw(du->dk_port + wd_data, 				      CADDR1 + ((int)addr& PAGE_MASK), 				      DEV_BSIZE / sizeof(short)); 			addr += DEV_BSIZE;
+argument|); 				return (EIO); 			} 			if (du->dk_flags& DKFL_32BIT) 				outsl(du->dk_port + wd_data, 				      va + ((int)addr& PAGE_MASK), 				      DEV_BSIZE / sizeof(long)); 			else 				outsw(du->dk_port + wd_data, 				      va + ((int)addr& PAGE_MASK), 				      DEV_BSIZE / sizeof(short)); 			addr += DEV_BSIZE;
 comment|/* 			 * If we are dumping core, it may take a while. 			 * So reassure the user and hold off any watchdogs. 			 */
 argument|if ((unsigned)addr % (
 literal|1024
