@@ -775,6 +775,12 @@ name|USB_ATTACH_SETUP
 expr_stmt|;
 if|if
 condition|(
+name|dev
+operator|->
+name|depth
+operator|>
+literal|0
+operator|&&
 name|UHUB_IS_HIGH_SPEED
 argument_list|(
 name|sc
