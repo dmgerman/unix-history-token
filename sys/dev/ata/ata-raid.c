@@ -6271,6 +6271,12 @@ decl_stmt|;
 name|caddr_t
 name|buffer
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
