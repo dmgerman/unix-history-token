@@ -200,14 +200,22 @@ end_include
 begin_define
 define|#
 directive|define
-name|REGEXEC
+name|REGEX
 end_define
+
+begin_comment
+comment|/* Use POSIX.2 regular expression functions */
+end_comment
 
 begin_undef
 undef|#
 directive|undef
 name|REGEXP
 end_undef
+
+begin_comment
+comment|/* Use UNIX V8 regular expression functions */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -218,7 +226,13 @@ end_ifdef
 begin_undef
 undef|#
 directive|undef
-name|REGEXEC
+name|REGEX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|REGEXP
 end_undef
 
 begin_include

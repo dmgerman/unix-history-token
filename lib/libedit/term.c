@@ -1492,6 +1492,7 @@ argument_list|,
 name|cap
 argument_list|)
 expr_stmt|;
+comment|/* XXX strcpy is safe */
 return|return;
 block|}
 comment|/*      * New string is longer; see if we have enough space to append      */
@@ -1508,6 +1509,7 @@ operator|<
 name|TC_BUFSIZE
 condition|)
 block|{
+comment|/* XXX strcpy is safe */
 operator|(
 name|void
 operator|)
@@ -1671,6 +1673,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* XXX strcpy is safe */
 operator|(
 name|void
 operator|)
@@ -4003,9 +4006,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 operator|(
 name|void
 operator|)
@@ -4015,25 +4015,9 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"Cannot open /usr/share/misc/termcap.\n"
+literal|"Cannot read termcap database;\n"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|el
-operator|->
-name|el_errfile
-argument_list|,
-literal|"Cannot open /etc/termcap.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 elseif|else
 if|if
 condition|(
@@ -4050,7 +4034,7 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"No entry for terminal type \"%s\"\n"
+literal|"No entry for terminal type \"%s\";\n"
 argument_list|,
 name|term
 argument_list|)
@@ -4332,6 +4316,13 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+name|i
+operator|<=
+literal|0
+condition|?
+operator|-
+literal|1
+else|:
 literal|0
 return|;
 block|}

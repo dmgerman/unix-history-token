@@ -4369,13 +4369,6 @@ argument_list|)
 expr_stmt|;
 name|buf
 index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|buf
-index|[
 literal|1
 index|]
 operator|=
@@ -4383,6 +4376,13 @@ name|CONTROL
 argument_list|(
 literal|'X'
 argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|2
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|key_add
 argument_list|(

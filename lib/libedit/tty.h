@@ -647,6 +647,27 @@ begin_comment
 comment|/* convex || __convex__ */
 end_comment
 
+begin_comment
+comment|/*  * So that we don't lose job control.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SVR4
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|CSWTCH
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2778,10 +2799,10 @@ name|char
 modifier|*
 name|t_name
 decl_stmt|;
-name|int
+name|u_int
 name|t_setmask
 decl_stmt|;
-name|int
+name|u_int
 name|t_clrmask
 decl_stmt|;
 block|}

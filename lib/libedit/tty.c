@@ -69,7 +69,7 @@ name|char
 modifier|*
 name|m_name
 decl_stmt|;
-name|int
+name|u_int
 name|m_value
 decl_stmt|;
 name|int
