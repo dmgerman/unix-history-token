@@ -868,16 +868,6 @@ name|enum
 name|asm_oper_type
 name|o_type
 decl_stmt|;
-name|int
-name|o_read
-range|:
-literal|1
-decl_stmt|;
-name|int
-name|o_write
-range|:
-literal|1
-decl_stmt|;
 name|uint64_t
 name|o_value
 decl_stmt|;
