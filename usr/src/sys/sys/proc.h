@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.3	81/02/19	*/
+comment|/*	proc.h	4.4	81/02/26	*/
 end_comment
 
 begin_comment
-comment|/*  * One structure allocated per active  * process. It contains all data needed  * about the process while the  * process may be swapped out.  * Other per process data (user.h)  * is swapped with the process.  *  * NB: OFFSETS HERE ARE ALSO DEFINED IN proc.m  */
+comment|/*  * One structure allocated per active  * process. It contains all data needed  * about the process while the  * process may be swapped out.  * Other per process data (user.h)  * is swapped with the process.  */
 end_comment
 
 begin_struct
@@ -243,12 +243,6 @@ begin_comment
 comment|/* the proc table itself */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FASTVAX
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -292,24 +286,6 @@ end_decl_stmt
 begin_comment
 comment|/* bit mask summarizing non-empty qs's */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|runq
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

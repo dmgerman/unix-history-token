@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.12	81/02/23	*/
+comment|/*	ubavar.h	4.13	81/02/26	*/
 end_comment
 
 begin_comment
@@ -828,7 +828,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This structure exists per-uba.  *  * N.B.: THE SIZE AND SHAPE OF THIS STRUCTURE IS KNOWN IN uba.m.  */
+comment|/*  * This structure exists per-uba.  */
 end_comment
 
 begin_struct

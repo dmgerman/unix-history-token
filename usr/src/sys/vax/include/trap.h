@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.h	4.3	81/02/19	*/
+comment|/*	trap.h	4.4	81/02/26	*/
 end_comment
 
 begin_comment
-comment|/*  * Trap type values  *  * NB: OFFSETS HERE ARE ALSO DEFINED IN trap.m  */
+comment|/*  * Trap type values  */
 end_comment
 
 begin_define

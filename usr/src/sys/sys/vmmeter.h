@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmmeter.h	4.2	%G%	*/
+comment|/*	vmmeter.h	4.3	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Virtual memory related instrumentation  *  * NB: THE OFFSETS IN THE vmmeter STRUCTURE ARE KNOWN IN vm.m.  */
+comment|/*  * Virtual memory related instrumentation  */
 end_comment
 
 begin_struct

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cpu.h	4.2	81/02/19	*/
+comment|/*	cpu.h	4.3	81/02/26	*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/*  * Cpu identification, from SID register.  */
@@ -84,6 +90,11 @@ block|}
 union|;
 end_union
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -104,6 +115,12 @@ directive|define
 name|VAX_MAX
 value|2
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/*  * Per-cpu information for system.  */
@@ -138,6 +155,11 @@ name|int
 name|cpu
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

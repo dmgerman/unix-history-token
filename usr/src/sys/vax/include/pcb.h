@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pcb.h	4.3	81/02/19	*/
+comment|/*	pcb.h	4.4	81/02/26	*/
 end_comment
 
 begin_comment
-comment|/*  * VAX process control block  *  * THE SIZE OF THE pcb, AS INFLUENCED BY THE SIZE OF THE SOFTWARE  * EXTENSION, IS KNOWN IN THE #ifdef FASTVAX'ed DEFINITIONS OF THE  * OFFSETS OF U_ARG and U_QSAV IN THE FILE user.h.  */
+comment|/*  * VAX process control block  */
 end_comment
 
 begin_struct
