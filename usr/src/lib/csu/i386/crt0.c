@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.3 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,19 +64,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|asm("#define _start start");
+asm|asm(".text");
 end_asm
 
 begin_asm
-asm|asm("#define _eprol eprol");
-end_asm
-
-begin_asm
-asm|asm("	.text");
-end_asm
-
-begin_asm
-asm|asm("	.long 0xc000c000");
+asm|asm(".long 0xc000c000");
 end_asm
 
 begin_decl_stmt
@@ -92,8 +84,21 @@ specifier|extern
 name|unsigned
 name|char
 name|eprol
+name|asm
+argument_list|(
+literal|"eprol"
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_extern
+extern|extern			start(
+end_extern
+
+begin_asm
+unit|)
+asm|asm("start");
+end_asm
 
 begin_macro
 name|start
@@ -172,7 +177,7 @@ expr_stmt|;
 else|#
 directive|else
 else|not lint
-asm|asm("	lea	4(%ebp),%ebx");
+asm|asm("lea 4(%ebp),%ebx");
 comment|/* catch it quick */
 endif|#
 directive|endif
@@ -292,14 +297,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_asm
-asm|asm("#undef _start");
-end_asm
-
-begin_asm
-asm|asm("#undef _eprol");
-end_asm
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -321,10 +318,6 @@ name|code
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* r11 */
-end_comment
-
 begin_block
 block|{
 name|monitor
@@ -335,9 +328,9 @@ expr_stmt|;
 name|_cleanup
 argument_list|()
 expr_stmt|;
-asm|asm("	pushl	8(bp)") ;
-asm|asm("	movl $1,%eax");
-asm|asm("	.byte 0x9a; .long 0; .word 0");
+asm|asm("pushl 8(%ebp)") ;
+asm|asm("movl $1,%eax");
+asm|asm(".byte 0x9a; .long 0; .word 0");
 block|}
 end_block
 
@@ -375,11 +368,11 @@ block|{  }
 end_block
 
 begin_asm
-asm|asm("	.globl	mcount");
+asm|asm(".globl mcount");
 end_asm
 
 begin_asm
-asm|asm("mcount:	ret");
+asm|asm("mcount: ret");
 end_asm
 
 begin_endif
