@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwpty.c	3.8 84/04/15"
+literal|"@(#)wwpty.c	3.9 84/05/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,11 +61,10 @@ name|on
 init|=
 literal|1
 decl_stmt|;
-name|int
-name|count
+name|char
+name|hasq
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 define|#
 directive|define
@@ -152,32 +151,18 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|count
-operator|<
-literal|0
-operator|&&
-operator|(
-name|count
-operator|=
 name|c
-operator|-
+operator|!=
 literal|'p'
-operator|-
-literal|1
-operator|)
-operator|==
-literal|0
 condition|)
-name|count
+name|hasq
 operator|=
 literal|1
 expr_stmt|;
+elseif|else
 if|if
 condition|(
-operator|--
-name|count
-operator|<
-literal|0
+name|hasq
 condition|)
 break|break;
 for|for
