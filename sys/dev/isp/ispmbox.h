@@ -4,7 +4,7 @@ comment|/* $Id: $ */
 end_comment
 
 begin_comment
-comment|/* ispmbox 1.10 */
+comment|/* release_12_28_98_A */
 end_comment
 
 begin_comment

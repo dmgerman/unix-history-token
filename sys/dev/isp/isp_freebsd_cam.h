@@ -4,7 +4,7 @@ comment|/* $Id: $ */
 end_comment
 
 begin_comment
-comment|/* isp_freebsd_cam.h 1.10 */
+comment|/* release_12_28_98_A */
 end_comment
 
 begin_comment
@@ -191,10 +191,6 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
-name|struct
-name|callout_handle
-name|watchid
-decl_stmt|;
 specifier|volatile
 name|char
 name|simqfrozen
@@ -317,6 +313,13 @@ define|#
 directive|define
 name|ISP_LOCKVAL_DECL
 value|int isp_spl_save
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ILOCKVAL_DECL
+value|ISP_LOCKVAL_DECL
 end_define
 
 begin_define
@@ -723,51 +726,33 @@ end_define
 begin_define
 define|#
 directive|define
-name|WATCH_INTERVAL
-value|30
-end_define
-
-begin_define
-define|#
-directive|define
-name|START_WATCHDOG
-parameter_list|(
-name|f
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|(s)->isp_osinfo.watchid = timeout(f, s, WATCH_INTERVAL * hz), \ 	s->isp_dogactive = 1
-end_define
-
-begin_define
-define|#
-directive|define
 name|STOP_WATCHDOG
 parameter_list|(
 name|f
 parameter_list|,
 name|s
 parameter_list|)
-value|untimeout(f, s, (s)->isp_osinfo.watchid),\ 	(s)->isp_dogactive = 0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESTART_WATCHDOG
-parameter_list|(
-name|f
-parameter_list|,
-name|s
-parameter_list|)
-value|START_WATCHDOG(f, s)
 end_define
 
 begin_decl_stmt
 specifier|extern
 name|void
 name|isp_attach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|isp_uninit
 name|__P
 argument_list|(
 operator|(

@@ -4,7 +4,7 @@ comment|/* $Id: $ */
 end_comment
 
 begin_comment
-comment|/* isp_freebsd.h 1.16 */
+comment|/* release_12_28_98_A */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|97
+value|98
 end_define
 
 begin_include
@@ -235,6 +235,13 @@ define|#
 directive|define
 name|ISP_LOCKVAL_DECL
 value|int isp_spl_save
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ILOCKVAL_DECL
+value|ISP_LOCKVAL_DECL
 end_define
 
 begin_define
@@ -585,7 +592,7 @@ name|XS_KINDOF_TAG
 parameter_list|(
 name|xs
 parameter_list|)
-value|REQFLAG_OTAG
+value|REQFLAG_STAG
 end_define
 
 begin_define
@@ -717,6 +724,21 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|isp_attach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|isp_uninit
 name|__P
 argument_list|(
 operator|(
