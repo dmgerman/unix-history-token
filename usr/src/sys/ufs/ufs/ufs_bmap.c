@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_bmap.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_bmap.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -87,7 +87,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 	} */
+comment|/* { 		struct vnode *a_vp; 		ufs_daddr_t a_bn; 		struct vnode **a_vpp; 		ufs_daddr_t *a_bnp; 		int *a_runp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -182,11 +182,10 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 name|bn
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|bnp
 decl_stmt|;
@@ -240,7 +239,7 @@ decl_stmt|,
 modifier|*
 name|xap
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|;
 name|long
@@ -677,7 +676,7 @@ name|daddr
 operator|=
 operator|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -728,7 +727,7 @@ name|ump
 argument_list|,
 operator|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -743,7 +742,7 @@ index|]
 argument_list|,
 operator|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -823,8 +822,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 name|bn
 decl_stmt|;
 name|struct

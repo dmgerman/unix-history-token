@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -90,7 +90,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_alloccg
 name|__P
 argument_list|(
@@ -101,7 +101,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
 name|int
 operator|)
@@ -111,7 +111,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_alloccgblk
 name|__P
 argument_list|(
@@ -124,7 +124,7 @@ expr|struct
 name|cg
 operator|*
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -132,7 +132,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_clusteralloc
 name|__P
 argument_list|(
@@ -143,7 +143,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
 name|int
 operator|)
@@ -168,7 +168,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_fragextend
 name|__P
 argument_list|(
@@ -249,7 +249,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
 name|int
 operator|)
@@ -259,7 +259,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_mapsearch
 name|__P
 argument_list|(
@@ -272,7 +272,7 @@ expr|struct
 name|cg
 operator|*
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
 name|int
 operator|)
@@ -308,7 +308,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|lbn
 decl_stmt|,
 name|bpref
@@ -330,7 +330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|bnp
 decl_stmt|;
@@ -344,7 +344,7 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|bno
 decl_stmt|;
 name|int
@@ -540,7 +540,7 @@ expr_stmt|;
 name|bno
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 name|ffs_hashalloc
 argument_list|(
@@ -687,13 +687,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|lbprev
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|bpref
 decl_stmt|;
 end_decl_stmt
@@ -743,7 +743,7 @@ name|request
 decl_stmt|,
 name|error
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|bprev
 decl_stmt|,
 name|bno
@@ -1248,7 +1248,7 @@ block|}
 name|bno
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 name|ffs_hashalloc
 argument_list|(
@@ -1653,7 +1653,7 @@ decl_stmt|,
 modifier|*
 name|ebp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|bap
 decl_stmt|,
@@ -1668,7 +1668,7 @@ name|cluster_save
 modifier|*
 name|buflist
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|start_lbn
 decl_stmt|,
 name|end_lbn
@@ -1966,7 +1966,7 @@ block|}
 name|sbap
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|sbp
@@ -2093,7 +2093,7 @@ goto|;
 name|ebap
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|ebp
@@ -2108,7 +2108,7 @@ operator|(
 name|newblk
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 name|ffs_hashalloc
 argument_list|(
@@ -2984,7 +2984,7 @@ comment|/*  * Select the desired position for the next block in a file.  The fil
 end_comment
 
 begin_function
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_blkpref
 parameter_list|(
 name|ip
@@ -3000,13 +3000,13 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|lbn
 decl_stmt|;
 name|int
 name|indx
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|bap
 decl_stmt|;
@@ -3026,7 +3026,7 @@ name|avgbfree
 decl_stmt|,
 name|startcg
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|nextblk
 decl_stmt|;
 name|fs
@@ -3613,7 +3613,7 @@ end_comment
 
 begin_function
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_fragextend
 parameter_list|(
 name|ip
@@ -4078,7 +4078,7 @@ end_comment
 
 begin_function
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_alloccg
 parameter_list|(
 name|ip
@@ -4097,7 +4097,7 @@ decl_stmt|;
 name|int
 name|cg
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|bpref
 decl_stmt|;
 name|int
@@ -4660,7 +4660,7 @@ end_comment
 
 begin_function
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_alloccgblk
 parameter_list|(
 name|fs
@@ -4681,11 +4681,11 @@ name|cg
 modifier|*
 name|cgp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|bpref
 decl_stmt|;
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|bno
 decl_stmt|,
 name|blkno
@@ -5240,7 +5240,7 @@ end_comment
 
 begin_function
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_clusteralloc
 parameter_list|(
 name|ip
@@ -5259,7 +5259,7 @@ decl_stmt|;
 name|int
 name|cg
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|bpref
 decl_stmt|;
 name|int
@@ -5801,7 +5801,7 @@ decl_stmt|;
 name|int
 name|cg
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|ipref
 decl_stmt|;
 name|int
@@ -6340,7 +6340,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|bno
 decl_stmt|;
 end_decl_stmt
@@ -6370,7 +6370,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 decl_stmt|;
 name|int
@@ -7474,7 +7474,7 @@ end_comment
 
 begin_function
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|ffs_mapsearch
 parameter_list|(
 name|fs
@@ -7497,14 +7497,14 @@ name|cg
 modifier|*
 name|cgp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|bpref
 decl_stmt|;
 name|int
 name|allocsiz
 decl_stmt|;
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|bno
 decl_stmt|;
 name|int
@@ -7892,7 +7892,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 decl_stmt|;
 end_decl_stmt

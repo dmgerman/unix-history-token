@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_subr.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_subr.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -9,17 +9,29 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|ufs_daddr_t
+typedef|;
+end_typedef
+
 begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -31,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/ffs_extern.h>
 end_include
 
 begin_include
@@ -55,6 +61,18 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/ffs_extern.h>
 end_include
 
 begin_comment
@@ -90,7 +108,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|lbn
 decl_stmt|;
 name|int
@@ -450,7 +468,7 @@ modifier|*
 name|ep
 decl_stmt|;
 specifier|register
-name|daddr_t
+name|ufs_daddr_t
 name|start
 decl_stmt|,
 name|last
@@ -531,7 +549,7 @@ operator|->
 name|b_vp
 argument_list|,
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 literal|0
 argument_list|,
@@ -539,7 +557,7 @@ operator|&
 name|vp
 argument_list|,
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 literal|0
 argument_list|,
@@ -663,7 +681,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|h
 decl_stmt|;
 block|{
@@ -822,7 +840,7 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|h
 decl_stmt|;
 block|{
@@ -955,7 +973,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|h
 decl_stmt|;
 block|{

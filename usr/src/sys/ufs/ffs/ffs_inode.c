@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -122,11 +122,11 @@ expr|struct
 name|inode
 operator|*
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
-name|daddr_t
+name|ufs_daddr_t
 operator|,
 name|int
 operator|,
@@ -269,8 +269,6 @@ condition|)
 name|ip
 operator|->
 name|i_atime
-operator|.
-name|ts_sec
 operator|=
 name|ap
 operator|->
@@ -290,8 +288,6 @@ block|{
 name|ip
 operator|->
 name|i_mtime
-operator|.
-name|ts_sec
 operator|=
 name|ap
 operator|->
@@ -316,8 +312,6 @@ condition|)
 name|ip
 operator|->
 name|i_ctime
-operator|.
-name|ts_sec
 operator|=
 name|time
 operator|.
@@ -562,8 +556,7 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 name|lastblock
 decl_stmt|;
 specifier|register
@@ -572,7 +565,7 @@ name|inode
 modifier|*
 name|oip
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|bn
 decl_stmt|,
 name|lbn
@@ -587,7 +580,7 @@ index|[
 name|NIADDR
 index|]
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|oldblks
 index|[
 name|NDADDR
@@ -1950,12 +1943,12 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|lbn
 decl_stmt|,
 name|lastbn
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|dbn
 decl_stmt|;
 name|int
@@ -1986,7 +1979,7 @@ operator|->
 name|i_fs
 decl_stmt|;
 specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|bap
 decl_stmt|;
@@ -1995,7 +1988,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|copy
 decl_stmt|,
@@ -2258,7 +2251,7 @@ block|}
 name|bap
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -2269,7 +2262,7 @@ name|MALLOC
 argument_list|(
 name|copy
 argument_list|,
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 argument_list|,
 name|fs
@@ -2332,7 +2325,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2441,7 +2434,7 @@ name|nb
 argument_list|)
 argument_list|,
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|)
 operator|-
 literal|1

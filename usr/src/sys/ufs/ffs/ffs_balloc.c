@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -104,7 +104,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|register
-name|daddr_t
+name|ufs_daddr_t
 name|lbn
 decl_stmt|;
 end_decl_stmt
@@ -147,7 +147,7 @@ modifier|*
 name|fs
 decl_stmt|;
 specifier|register
-name|daddr_t
+name|ufs_daddr_t
 name|nb
 decl_stmt|;
 name|struct
@@ -177,7 +177,7 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|newb
 decl_stmt|,
 modifier|*
@@ -823,7 +823,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 literal|0
@@ -1007,7 +1007,7 @@ block|}
 name|bap
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1068,7 +1068,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -59,14 +59,14 @@ begin_define
 define|#
 directive|define
 name|BBLOCK
-value|((daddr_t)(0))
+value|((ufs_daddr_t)(0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBLOCK
-value|((daddr_t)(BBLOCK + BBSIZE / DEV_BSIZE))
+value|((ufs_daddr_t)(BBLOCK + BBSIZE / DEV_BSIZE))
 end_define
 
 begin_endif
@@ -185,19 +185,19 @@ name|int32_t
 name|fs_unused_1
 decl_stmt|;
 comment|/*     used for incore super blocks */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_sblkno
 decl_stmt|;
 comment|/* addr of super-block in filesys */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_cblkno
 decl_stmt|;
 comment|/* offset of cyl-block in filesys */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_iblkno
 decl_stmt|;
 comment|/* offset of inode-blocks in filesys */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_dblkno
 decl_stmt|;
 comment|/* offset of first data after cg */
@@ -336,7 +336,7 @@ name|fs_trkseek
 decl_stmt|;
 comment|/* track-to-track seek, usec */
 comment|/* sizes determined by number of cylinder groups and their sizes */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_csaddr
 decl_stmt|;
 comment|/* blk addr of cyl grp summary area */
@@ -1039,7 +1039,7 @@ name|fs
 parameter_list|,
 name|c
 parameter_list|)
-value|((daddr_t)((fs)->fs_fpg * (c)))
+value|((ufs_daddr_t)((fs)->fs_fpg * (c)))
 end_define
 
 begin_define
@@ -1145,7 +1145,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((daddr_t)(cgimin(fs, ino_to_cg(fs, x)) +			\ 	    (blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
+value|((ufs_daddr_t)(cgimin(fs, ino_to_cg(fs, x)) +			\ 	    (blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
 end_define
 
 begin_define
