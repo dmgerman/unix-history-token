@@ -4098,6 +4098,7 @@ operator|)
 return|;
 default|default:
 comment|/* DO NOTHING */
+break|break;
 block|}
 return|return
 name|EROFS

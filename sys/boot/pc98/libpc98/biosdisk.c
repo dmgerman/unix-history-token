@@ -1793,6 +1793,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|beak
+expr_stmt|;
 block|}
 block|}
 else|#
@@ -4971,6 +4973,8 @@ operator|)
 return|;
 default|default:
 comment|/* DO NOTHING */
+name|beak
+expr_stmt|;
 block|}
 return|return
 name|EROFS
