@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2838,6 +2838,10 @@ begin_comment
 comment|/*  * Do operations associated with quotas, not supported  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|nfs_quotactl
 argument_list|(
@@ -2868,7 +2872,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uid_t
+name|u_int
 name|uid
 decl_stmt|;
 end_decl_stmt
@@ -2889,28 +2893,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|mp
-operator|=
-name|mp
-expr_stmt|;
-name|cmd
-operator|=
-name|cmd
-expr_stmt|;
-name|uid
-operator|=
-name|uid
-expr_stmt|;
-name|arg
-operator|=
-name|arg
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* lint */
 return|return
 operator|(
 name|EOPNOTSUPP

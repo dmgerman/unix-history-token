@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5217,6 +5217,9 @@ argument_list|(
 name|pmap_kernel
 argument_list|()
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|vmmap
 argument_list|,
 name|maddr
