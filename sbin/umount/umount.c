@@ -974,18 +974,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"%s: unknown mount type"
-argument_list|,
-name|fs
-operator|->
-name|fs_vfstype
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 if|if
 condition|(
 name|checkvfsname
