@@ -532,6 +532,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|HUG_TWHEEL
+value|0x0048
+end_define
+
+begin_comment
+comment|// M$ Wireless Intellimouse Wheel
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HUG_SYSTEM_CONTROL
 value|0x0080
 end_define
