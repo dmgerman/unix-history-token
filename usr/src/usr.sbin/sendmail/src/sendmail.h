@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.14	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.15	%G% */
 end_comment
 
 begin_include
@@ -832,6 +832,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* save leading "From" lines */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|Verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if blow-by-blow desired */
 end_comment
 
 begin_decl_stmt
