@@ -1,13 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tdef.h	4.6	85/05/05	*/
+comment|/*	tdef.h	4.7	86/10/19	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/machparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
 
 begin_define
 define|#
 directive|define
 name|MAXPTR
-value|0x7fffffff
+value|(USRSTACK-1)
 end_define
 
 begin_comment
