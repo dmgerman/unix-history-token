@@ -114,13 +114,13 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|uint64_t
 name|pci_addr_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* u_int64_t for system with 64bit addresses */
+comment|/* uint64_t for system with 64bit addresses */
 end_comment
 
 begin_else
@@ -130,13 +130,13 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|pci_addr_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* u_int64_t for system with 64bit addresses */
+comment|/* uint64_t for system with 64bit addresses */
 end_comment
 
 begin_endif
@@ -159,107 +159,107 @@ modifier|*
 name|dev
 decl_stmt|;
 comment|/* device which owns this */
-name|u_int16_t
+name|uint16_t
 name|subvendor
 decl_stmt|;
 comment|/* card vendor ID */
-name|u_int16_t
+name|uint16_t
 name|subdevice
 decl_stmt|;
 comment|/* card device ID, assigned by card vendor */
-name|u_int16_t
+name|uint16_t
 name|vendor
 decl_stmt|;
 comment|/* chip vendor ID */
-name|u_int16_t
+name|uint16_t
 name|device
 decl_stmt|;
 comment|/* chip device ID, assigned by chip vendor */
-name|u_int16_t
+name|uint16_t
 name|cmdreg
 decl_stmt|;
 comment|/* disable/enable chip and PCI options */
-name|u_int16_t
+name|uint16_t
 name|statreg
 decl_stmt|;
 comment|/* supported PCI features and error state */
-name|u_int8_t
+name|uint8_t
 name|baseclass
 decl_stmt|;
 comment|/* chip PCI class */
-name|u_int8_t
+name|uint8_t
 name|subclass
 decl_stmt|;
 comment|/* chip PCI subclass */
-name|u_int8_t
+name|uint8_t
 name|progif
 decl_stmt|;
 comment|/* chip PCI programming interface */
-name|u_int8_t
+name|uint8_t
 name|revid
 decl_stmt|;
 comment|/* chip revision ID */
-name|u_int8_t
+name|uint8_t
 name|hdrtype
 decl_stmt|;
 comment|/* chip config header type */
-name|u_int8_t
+name|uint8_t
 name|cachelnsz
 decl_stmt|;
 comment|/* cache line size in 4byte units */
-name|u_int8_t
+name|uint8_t
 name|intpin
 decl_stmt|;
 comment|/* PCI interrupt pin */
-name|u_int8_t
+name|uint8_t
 name|intline
 decl_stmt|;
 comment|/* interrupt line (IRQ for PC arch) */
-name|u_int8_t
+name|uint8_t
 name|mingnt
 decl_stmt|;
 comment|/* min. useful bus grant time in 250ns units */
-name|u_int8_t
+name|uint8_t
 name|maxlat
 decl_stmt|;
 comment|/* max. tolerated bus grant latency in 250ns */
-name|u_int8_t
+name|uint8_t
 name|lattimer
 decl_stmt|;
 comment|/* latency timer in units of 30ns bus cycles */
-name|u_int8_t
+name|uint8_t
 name|mfdev
 decl_stmt|;
 comment|/* multi-function device (from hdrtype reg) */
-name|u_int8_t
+name|uint8_t
 name|nummaps
 decl_stmt|;
 comment|/* actual number of PCI maps used */
-name|u_int8_t
+name|uint8_t
 name|bus
 decl_stmt|;
 comment|/* config space bus address */
-name|u_int8_t
+name|uint8_t
 name|slot
 decl_stmt|;
 comment|/* config space slot address */
-name|u_int8_t
+name|uint8_t
 name|func
 decl_stmt|;
 comment|/* config space function number */
-name|u_int16_t
+name|uint16_t
 name|pp_cap
 decl_stmt|;
 comment|/* PCI power management capabilities */
-name|u_int8_t
+name|uint8_t
 name|pp_status
 decl_stmt|;
 comment|/* config space address of PCI power status reg */
-name|u_int8_t
+name|uint8_t
 name|pp_pmcsr
 decl_stmt|;
 comment|/* config space address of PMCSR reg */
-name|u_int8_t
+name|uint8_t
 name|pp_data
 decl_stmt|;
 comment|/* config space address of PCI power data reg */
@@ -376,31 +376,31 @@ name|pci_addr_t
 name|pmemlimit
 decl_stmt|;
 comment|/* topmost address of prefetchable memory */
-name|u_int32_t
+name|uint32_t
 name|membase
 decl_stmt|;
 comment|/* base address of memory window */
-name|u_int32_t
+name|uint32_t
 name|memlimit
 decl_stmt|;
 comment|/* topmost address of memory window */
-name|u_int32_t
+name|uint32_t
 name|iobase
 decl_stmt|;
 comment|/* base address of port window */
-name|u_int32_t
+name|uint32_t
 name|iolimit
 decl_stmt|;
 comment|/* topmost address of port window */
-name|u_int16_t
+name|uint16_t
 name|secstat
 decl_stmt|;
 comment|/* secondary bus status register */
-name|u_int16_t
+name|uint16_t
 name|bridgectl
 decl_stmt|;
 comment|/* bridge control register */
-name|u_int8_t
+name|uint8_t
 name|seclat
 decl_stmt|;
 comment|/* CardBus latency timer */
@@ -417,51 +417,51 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|membase0
 decl_stmt|;
 comment|/* base address of memory window */
-name|u_int32_t
+name|uint32_t
 name|memlimit0
 decl_stmt|;
 comment|/* topmost address of memory window */
-name|u_int32_t
+name|uint32_t
 name|membase1
 decl_stmt|;
 comment|/* base address of memory window */
-name|u_int32_t
+name|uint32_t
 name|memlimit1
 decl_stmt|;
 comment|/* topmost address of memory window */
-name|u_int32_t
+name|uint32_t
 name|iobase0
 decl_stmt|;
 comment|/* base address of port window */
-name|u_int32_t
+name|uint32_t
 name|iolimit0
 decl_stmt|;
 comment|/* topmost address of port window */
-name|u_int32_t
+name|uint32_t
 name|iobase1
 decl_stmt|;
 comment|/* base address of port window */
-name|u_int32_t
+name|uint32_t
 name|iolimit1
 decl_stmt|;
 comment|/* topmost address of port window */
-name|u_int32_t
+name|uint32_t
 name|pccardif
 decl_stmt|;
 comment|/* PC Card 16bit IF legacy more base addr. */
-name|u_int16_t
+name|uint16_t
 name|secstat
 decl_stmt|;
 comment|/* secondary bus status register */
-name|u_int16_t
+name|uint16_t
 name|bridgectl
 decl_stmt|;
 comment|/* bridge control register */
-name|u_int8_t
+name|uint8_t
 name|seclat
 decl_stmt|;
 comment|/* CardBus latency timer */
@@ -472,7 +472,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|u_int32_t
+name|uint32_t
 name|pci_numdevs
 decl_stmt|;
 end_decl_stmt
@@ -651,7 +651,7 @@ argument|subvendor
 argument_list|,
 argument|SUBVENDOR
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|)
 end_macro
 
@@ -662,7 +662,7 @@ argument|subdevice
 argument_list|,
 argument|SUBDEVICE
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|)
 end_macro
 
@@ -673,7 +673,7 @@ argument|vendor
 argument_list|,
 argument|VENDOR
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|)
 end_macro
 
@@ -684,7 +684,7 @@ argument|device
 argument_list|,
 argument|DEVICE
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|)
 end_macro
 
@@ -695,7 +695,7 @@ argument|devid
 argument_list|,
 argument|DEVID
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|)
 end_macro
 
@@ -706,7 +706,7 @@ argument|class
 argument_list|,
 argument|CLASS
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -717,7 +717,7 @@ argument|subclass
 argument_list|,
 argument|SUBCLASS
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -728,7 +728,7 @@ argument|progif
 argument_list|,
 argument|PROGIF
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -739,7 +739,7 @@ argument|revid
 argument_list|,
 argument|REVID
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -750,7 +750,7 @@ argument|intpin
 argument_list|,
 argument|INTPIN
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -761,7 +761,7 @@ argument|irq
 argument_list|,
 argument|IRQ
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -772,7 +772,7 @@ argument|bus
 argument_list|,
 argument|BUS
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -783,7 +783,7 @@ argument|slot
 argument_list|,
 argument|SLOT
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -794,7 +794,7 @@ argument|function
 argument_list|,
 argument|FUNCTION
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -805,7 +805,7 @@ argument|ether
 argument_list|,
 argument|ETHADDR
 argument_list|,
-argument|u_int8_t *
+argument|uint8_t *
 argument_list|)
 end_macro
 
@@ -822,7 +822,7 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|pci_read_config
 parameter_list|(
 name|device_t
@@ -865,7 +865,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
 name|int
@@ -930,7 +930,7 @@ argument|bus
 argument_list|,
 argument|BUS
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|)
 end_macro
 
@@ -1175,11 +1175,11 @@ begin_function_decl
 name|device_t
 name|pci_find_bsf
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1188,9 +1188,9 @@ begin_function_decl
 name|device_t
 name|pci_find_device
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1240,7 +1240,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int32_t
+name|uint32_t
 name|pci_generation
 decl_stmt|;
 end_decl_stmt

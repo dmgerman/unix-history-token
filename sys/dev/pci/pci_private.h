@@ -152,7 +152,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int32_t
+name|uint32_t
 name|pci_read_config_method
 parameter_list|(
 name|device_t
@@ -183,7 +183,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
 name|int

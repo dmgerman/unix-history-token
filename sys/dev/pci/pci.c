@@ -155,7 +155,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|pci_mapbase
 parameter_list|(
 name|unsigned
@@ -727,7 +727,7 @@ begin_struct
 struct|struct
 name|pci_quirk
 block|{
-name|u_int32_t
+name|uint32_t
 name|devid
 decl_stmt|;
 comment|/* Vendor/device of the card */
@@ -840,13 +840,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
+name|uint32_t
 name|pci_generation
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
+name|uint32_t
 name|pci_numdevs
 init|=
 literal|0
@@ -928,13 +928,13 @@ begin_function
 name|device_t
 name|pci_find_bsf
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 name|bus
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|slot
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|func
 parameter_list|)
 block|{
@@ -1012,10 +1012,10 @@ begin_function
 name|device_t
 name|pci_find_device
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|vendor
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|device
 parameter_list|)
 block|{
@@ -1081,7 +1081,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|pci_mapbase
 parameter_list|(
 name|unsigned
@@ -1132,7 +1132,7 @@ name|mapreg
 parameter_list|)
 block|{
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|maptype
 index|[
 literal|0x10
@@ -2289,7 +2289,7 @@ name|dinfo
 operator|->
 name|cfg
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 name|int
@@ -2470,7 +2470,7 @@ name|dinfo
 operator|->
 name|cfg
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 name|int
@@ -2579,11 +2579,11 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|bit
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|command
 decl_stmt|;
 name|command
@@ -2631,11 +2631,11 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|bit
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|command
 decl_stmt|;
 name|command
@@ -2742,10 +2742,10 @@ name|int
 name|space
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|command
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bit
 decl_stmt|;
 name|char
@@ -2860,10 +2860,10 @@ name|int
 name|space
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|command
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bit
 decl_stmt|;
 name|char
@@ -3137,7 +3137,7 @@ operator|->
 name|pp_cap
 condition|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 name|status
@@ -3311,22 +3311,22 @@ modifier|*
 name|rl
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|map
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|base
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ln2size
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ln2range
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|testval
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|cmd
 decl_stmt|;
 name|int
@@ -3466,7 +3466,7 @@ comment|/* Read the other half of a 64bit map register */
 name|base
 operator||=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|PCIB_READ_CONFIG
 argument_list|(
@@ -4106,7 +4106,7 @@ name|f
 decl_stmt|,
 name|pcifunchigh
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|hdrtype
 decl_stmt|;
 name|KASSERT
@@ -5850,7 +5850,7 @@ comment|/* 		 * The generic accessor doesn't deal with failure, so 		 * we set t
 operator|*
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|*
 operator|)
@@ -6886,7 +6886,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32_t
+name|uint32_t
 name|pci_read_config_method
 parameter_list|(
 name|device_t
@@ -6964,7 +6964,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
 name|int

@@ -405,7 +405,7 @@ name|pcib_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|iolow
 decl_stmt|;
 name|sc
@@ -766,7 +766,7 @@ literal|0x12258086
 case|:
 comment|/* Intel 82454KX/GX (Orion) */
 block|{
-name|u_int8_t
+name|uint8_t
 name|supbus
 decl_stmt|;
 name|supbus
@@ -2044,7 +2044,7 @@ comment|/*  * Since we are a child of a PCI bus, its parent must support the pci
 end_comment
 
 begin_function
-name|u_int32_t
+name|uint32_t
 name|pcib_read_config
 parameter_list|(
 name|device_t
@@ -2112,7 +2112,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
 name|int
@@ -2271,12 +2271,12 @@ parameter_list|,
 name|int
 name|func
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|busnum
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|id
 decl_stmt|;
 name|id

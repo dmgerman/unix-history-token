@@ -30,15 +30,15 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|command
 decl_stmt|;
 comment|/* command register */
-name|u_int8_t
+name|uint8_t
 name|secbus
 decl_stmt|;
 comment|/* secondary bus number */
-name|u_int8_t
+name|uint8_t
 name|subbus
 decl_stmt|;
 comment|/* subordinate bus number */
@@ -58,23 +58,23 @@ name|pci_addr_t
 name|memlimit
 decl_stmt|;
 comment|/* topmost address of memory window */
-name|u_int32_t
+name|uint32_t
 name|iobase
 decl_stmt|;
 comment|/* base address of port window */
-name|u_int32_t
+name|uint32_t
 name|iolimit
 decl_stmt|;
 comment|/* topmost address of port window */
-name|u_int16_t
+name|uint16_t
 name|secstat
 decl_stmt|;
 comment|/* secondary bus status register */
-name|u_int16_t
+name|uint16_t
 name|bridgectl
 decl_stmt|;
 comment|/* bridge control register */
-name|u_int8_t
+name|uint8_t
 name|seclat
 decl_stmt|;
 comment|/* secondary bus latency timer */
@@ -84,7 +84,7 @@ end_struct
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|pci_read_config_fn
 parameter_list|(
 name|int
@@ -121,7 +121,7 @@ parameter_list|,
 name|int
 name|func
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|busnum
 parameter_list|)
@@ -232,7 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int32_t
+name|uint32_t
 name|pcib_read_config
 parameter_list|(
 name|device_t
@@ -275,7 +275,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
 name|int
