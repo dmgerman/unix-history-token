@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.102 1998/12/22 20:38:06 luigi Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.103 1998/12/31 07:43:29 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -354,6 +354,14 @@ ifdef|#
 directive|ifdef
 name|SYSCTL_NODE
 end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_ip
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE

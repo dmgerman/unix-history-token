@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sysctl.h	8.1 (Berkeley) 6/2/93  * $Id: sysctl.h,v 1.68 1998/12/27 18:03:29 dfr Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sysctl.h	8.1 (Berkeley) 6/2/93  * $Id: sysctl.h,v 1.70 1999/01/10 07:45:27 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -293,6 +293,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|sysctl_oid_list
+argument_list|,
+name|sysctl_oid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This describes one "oid" in the MIB tree.  Potentially more nodes can  * be hidden behind it, expanded by the handler.  */
 end_comment
@@ -301,6 +311,17 @@ begin_struct
 struct|struct
 name|sysctl_oid
 block|{
+name|struct
+name|sysctl_oid_list
+modifier|*
+name|oid_parent
+decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|sysctl_oid
+argument_list|)
+name|oid_link
+expr_stmt|;
 name|int
 name|oid_number
 decl_stmt|;
@@ -398,6 +419,49 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * These functions are used to add/remove an oid from the mib.  */
+end_comment
+
+begin_function_decl
+name|void
+name|sysctl_register_oid
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sysctl_unregister_oid
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Declare an oid to allow child oids to be added to it. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_DECL
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|extern struct sysctl_oid_list sysctl_##name##_children
+end_define
+
+begin_comment
 comment|/* This constructs a "raw" MIB oid. */
 end_comment
 
@@ -425,7 +489,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = { \ 		nbr, kind, a1, a2, #name, handler, fmt }; \ 	DATA_SET(sysctl_##parent, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 },			 \ 		nbr, kind, a1, a2, #name, handler, fmt };		 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name);
 end_define
 
 begin_comment
@@ -450,7 +514,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|extern struct linker_set sysctl_##parent##_##name; \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|access, \ 		(void*)&sysctl_##parent##_##name, 0, handler, "N", descr); \ 	DATA_SET(sysctl_##parent##_##name, sysctl__##parent##_##name)
+value|struct sysctl_oid_list sysctl_##parent##_##name##_children;	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|access,		    \ 		   (void*)&sysctl_##parent##_##name##_children, 0, handler, \ 		   "N", descr);
 end_define
 
 begin_comment
@@ -2033,6 +2097,90 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * Declare some common oids.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sysctl_oid_list
+name|sysctl__children
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_sysctl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_machdep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_user
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -2056,6 +2204,30 @@ name|ostype
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|sysctl_register_set
+parameter_list|(
+name|struct
+name|linker_set
+modifier|*
+name|lsp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sysctl_unregister_set
+parameter_list|(
+name|struct
+name|linker_set
+modifier|*
+name|lsp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -2091,15 +2263,6 @@ parameter_list|,
 name|size_t
 modifier|*
 name|retval
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sysctl_order_all
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -49,6 +55,14 @@ directive|if
 literal|1
 end_if
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_p1003_1b
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -66,6 +80,14 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_p1003_1b
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
