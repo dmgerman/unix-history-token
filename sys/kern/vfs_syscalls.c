@@ -8267,7 +8267,7 @@ name|vp
 argument_list|,
 name|flags
 argument_list|,
-name|cred
+name|tmpcred
 argument_list|,
 name|p
 argument_list|)
