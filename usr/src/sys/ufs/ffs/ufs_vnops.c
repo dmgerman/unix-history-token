@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.105 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.106 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7299,15 +7299,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-modifier|*
-name|spec_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
 comment|/* 	 * Set access flag. 	 */
 name|VTOI
 argument_list|(
@@ -7355,15 +7346,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-modifier|*
-name|spec_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
 comment|/* 	 * Set update and change flags. 	 */
 name|VTOI
 argument_list|(
@@ -7413,15 +7395,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-modifier|*
-name|spec_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
 specifier|register
 name|struct
 name|inode
@@ -8107,15 +8080,6 @@ decl_stmt|,
 modifier|*
 name|nvp
 decl_stmt|;
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-modifier|*
-name|spec_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
 name|vp
 operator|=
 operator|*
