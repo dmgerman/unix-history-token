@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tipout.c,v 1.4 1997/08/18 07:16:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,15 @@ condition|(
 name|c
 operator|!=
 literal|'\n'
+operator|&&
+name|pline
+operator|-
+name|line
+operator|<
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 condition|)
 block|{
 operator|*
