@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cpu.h	4.3	81/02/26	*/
+comment|/*	cpu.h	4.4	81/03/13	*/
 end_comment
 
 begin_ifndef
@@ -130,16 +130,44 @@ begin_struct
 struct|struct
 name|percpu
 block|{
-name|int
-function_decl|(
-modifier|*
-name|pc_config
-function_decl|)
-parameter_list|()
-function_decl|;
 name|short
 name|pc_cputype
 decl_stmt|;
+comment|/* cpu type code */
+name|short
+name|pc_nnexus
+decl_stmt|;
+comment|/* number of nexus slots */
+name|struct
+name|nexus
+modifier|*
+name|pc_nexbase
+decl_stmt|;
+comment|/* base of nexus space */
+comment|/* we should be able to have just one address for the unibus memories */
+comment|/* and calculate successive addresses by adding to the base, but the 750 */
+comment|/* doesn't obey the sensible rule: uba1 has a lower address than uba0! */
+name|caddr_t
+modifier|*
+name|pc_umaddr
+decl_stmt|;
+comment|/* unibus memory addresses */
+name|short
+name|pc_nubabdp
+decl_stmt|;
+comment|/* number of bdp's per uba */
+name|short
+name|pc_haveubasr
+decl_stmt|;
+comment|/* have uba status register */
+comment|/* the 750 has some slots which don't promise to tell you their types */
+comment|/* if this pointer is non-zero, then you get the type from this array */
+comment|/* rather than from the (much more sensible) low byte of the config register */
+name|short
+modifier|*
+name|pc_nextype
+decl_stmt|;
+comment|/* botch */
 block|}
 struct|;
 end_struct
@@ -153,6 +181,14 @@ end_ifdef
 begin_decl_stmt
 name|int
 name|cpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|percpu
+name|percpu
+index|[]
 decl_stmt|;
 end_decl_stmt
 
