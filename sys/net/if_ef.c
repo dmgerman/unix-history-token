@@ -1441,6 +1441,10 @@ operator|->
 name|ether_type
 argument_list|)
 expr_stmt|;
+name|l
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|ether_type
