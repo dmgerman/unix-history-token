@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.3 90/01/21$  *  *	@(#)vm_mmap.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.3 90/01/21$  *  *	@(#)vm_mmap.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -70,25 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm_pager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pager.h"
+file|"vm_prot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_prot.h"
+file|"vm_statistics.h"
 end_include
 
 begin_ifdef
@@ -155,8 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|args
+name|void
 modifier|*
 name|uap
 decl_stmt|;
@@ -535,19 +528,19 @@ operator|)
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|uap
 operator|->
 name|fd
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
@@ -739,9 +732,12 @@ name|error
 operator|=
 name|vm_mmap
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 operator|&
 name|addr
@@ -944,9 +940,12 @@ condition|(
 operator|!
 name|vm_map_is_allocated
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 name|addr
 argument_list|,
@@ -967,9 +966,12 @@ name|rv
 operator|=
 name|vm_region
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 operator|&
 name|addr
@@ -1042,7 +1044,7 @@ name|object
 operator|->
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 operator|||
 name|object
 operator|->
@@ -1274,9 +1276,12 @@ condition|(
 operator|!
 name|vm_map_is_allocated
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 name|addr
 argument_list|,
@@ -1298,9 +1303,12 @@ name|void
 operator|)
 name|vm_map_remove
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 name|addr
 argument_list|,
@@ -1339,9 +1347,7 @@ name|printf
 argument_list|(
 literal|"munmapfd(%d): fd %d\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|,
@@ -1351,16 +1357,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * XXX -- should vm_deallocate any regions mapped to this file 	 */
-name|OFILEFLAGS
-argument_list|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_fd
-argument_list|,
+operator|->
+name|fd_ofileflags
+index|[
 name|fd
-argument_list|)
+index|]
 operator|&=
 operator|~
 name|UF_MAPPED
@@ -1540,9 +1544,12 @@ switch|switch
 condition|(
 name|vm_map_protect
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 name|addr
 argument_list|,
@@ -1928,7 +1935,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2040,9 +2047,7 @@ name|printf
 argument_list|(
 literal|"vm_mmap(%d): ANON *addr %x size %x pager %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|,
@@ -2121,7 +2126,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 name|printf
 argument_list|(
@@ -2217,7 +2222,7 @@ name|vm_map_find
 argument_list|(
 name|map
 argument_list|,
-name|VM_OBJECT_NULL
+name|NULL
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -2480,9 +2485,7 @@ name|printf
 argument_list|(
 literal|"vm_mmap(%d): FILE *addr %x size %x pager %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|,
@@ -2799,7 +2802,7 @@ if|if
 condition|(
 name|map
 operator|==
-name|VM_MAP_NULL
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3152,7 +3155,7 @@ if|if
 condition|(
 name|map
 operator|==
-name|VM_MAP_NULL
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3192,7 +3195,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 name|object
@@ -3255,7 +3258,7 @@ if|if
 condition|(
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 condition|)
 name|vm_object_setpager
 argument_list|(
@@ -3419,28 +3422,36 @@ begin_comment
 comment|/*  * Doesn't trust the COW bit in the page structure.  * vm_fault can improperly set it.  */
 end_comment
 
-begin_function
-name|void
+begin_expr_stmt
 name|vm_object_pmap_force_copy
-parameter_list|(
+argument_list|(
 name|object
-parameter_list|,
+argument_list|,
 name|start
-parameter_list|,
+argument_list|,
 name|end
-parameter_list|)
+argument_list|)
 specifier|register
 name|vm_object_t
 name|object
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|register
 name|vm_offset_t
 name|start
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|vm_offset_t
 name|end
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|vm_page_t
@@ -3450,7 +3461,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 name|vm_object_lock
@@ -3538,7 +3549,7 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 
