@@ -204,7 +204,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_xereg.h>
+file|<dev/pccard/if_xereg.h>
 end_include
 
 begin_include
