@@ -1047,6 +1047,9 @@ comment|/* for gdb */
 name|thr_id_t
 name|thr_id
 decl_stmt|;
+name|sigset_t
+name|savedsig
+decl_stmt|;
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|spinlock_t
 name|lock

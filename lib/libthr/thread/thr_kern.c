@@ -149,7 +149,9 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-name|restore
+name|curthread
+operator|->
+name|savedsig
 operator|=
 name|sav
 expr_stmt|;
@@ -167,12 +169,13 @@ block|{
 name|sigset_t
 name|set
 decl_stmt|;
-comment|/* 	 * restore is protected by giant.  We could restore our signal state 	 * incorrectly if someone else set restore between unlocking giant 	 * and restoring the signal mask.  To avoid this we cache a copy prior 	 * to the unlock. 	 */
+comment|/* 	 * Restore signals. 	 */
 name|set
 operator|=
-name|restore
+name|curthread
+operator|->
+name|savedsig
 expr_stmt|;
-comment|/* 	 * Restore signals. 	 */
 if|if
 condition|(
 name|__sys_sigprocmask
