@@ -2705,6 +2705,14 @@ name|sockaddr_un
 modifier|*
 name|sun
 decl_stmt|;
+name|port
+operator|=
+literal|0
+expr_stmt|;
+name|sin
+operator|=
+name|NULL
+expr_stmt|;
 name|addrstr
 operator|=
 name|strdup

@@ -276,6 +276,10 @@ decl_stmt|;
 name|rpcblist_ptr
 name|next_copy
 decl_stmt|;
+name|next
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -642,6 +646,10 @@ decl_stmt|;
 name|rpcb_entry_list_ptr
 name|next_copy
 decl_stmt|;
+name|next
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 init|;

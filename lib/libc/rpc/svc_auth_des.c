@@ -148,6 +148,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|extern
+name|int
+name|key_decryptsession_pk
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|netobj
+modifier|*
+parameter_list|,
+name|des_block
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

@@ -197,7 +197,7 @@ end_comment
 
 begin_function
 name|int
-name|_rpc_get_default_domain
+name|__rpc_get_default_domain
 parameter_list|(
 name|domain
 parameter_list|)

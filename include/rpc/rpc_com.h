@@ -98,6 +98,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|_rpc_dtablesize
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|netconfig
 modifier|*

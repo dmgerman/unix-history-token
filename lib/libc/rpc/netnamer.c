@@ -546,7 +546,7 @@ literal|0
 expr_stmt|;
 name|err
 operator|=
-name|_rpc_get_default_domain
+name|__rpc_get_default_domain
 argument_list|(
 operator|&
 name|domain
@@ -1050,7 +1050,7 @@ literal|0
 expr_stmt|;
 name|err
 operator|=
-name|_rpc_get_default_domain
+name|__rpc_get_default_domain
 argument_list|(
 operator|&
 name|domain

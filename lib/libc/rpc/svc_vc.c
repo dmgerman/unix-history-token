@@ -555,11 +555,6 @@ decl_stmt|;
 name|socklen_t
 name|slen
 decl_stmt|;
-name|int
-name|one
-init|=
-literal|1
-decl_stmt|;
 name|r
 operator|=
 name|mem_alloc

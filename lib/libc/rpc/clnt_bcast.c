@@ -1089,8 +1089,6 @@ decl_stmt|;
 comment|/* Remote results */
 name|size_t
 name|outlen
-decl_stmt|,
-name|outlen_pmap
 decl_stmt|;
 name|struct
 name|netconfig
@@ -1109,6 +1107,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PORTMAP
+name|size_t
+name|outlen_pmap
+init|=
+literal|0
+decl_stmt|;
 name|u_long
 name|port
 decl_stmt|;

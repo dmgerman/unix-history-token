@@ -356,6 +356,8 @@ name|FALSE
 operator|)
 return|;
 break|break;
+default|default:
+break|break;
 block|}
 return|return
 operator|(
@@ -534,6 +536,8 @@ name|FALSE
 operator|)
 return|;
 break|break;
+default|default:
+break|break;
 block|}
 return|return
 operator|(
@@ -679,6 +683,8 @@ operator|(
 name|FALSE
 operator|)
 return|;
+break|break;
+default|default:
 break|break;
 block|}
 return|return

@@ -1464,12 +1464,6 @@ name|firsttimeout
 init|=
 literal|1
 decl_stmt|;
-name|int
-name|dtbsize
-init|=
-name|__rpc_dtbsize
-argument_list|()
-decl_stmt|;
 name|struct
 name|sockaddr
 modifier|*
@@ -1497,6 +1491,10 @@ decl_stmt|;
 name|u_int32_t
 name|xid
 decl_stmt|;
+name|outlen
+operator|=
+literal|0
+expr_stmt|;
 name|sigfillset
 argument_list|(
 operator|&

@@ -329,7 +329,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_rpc_get_default_domain
+name|__rpc_get_default_domain
 argument_list|(
 operator|&
 name|dfltdom
@@ -460,7 +460,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_rpc_get_default_domain
+name|__rpc_get_default_domain
 argument_list|(
 operator|&
 name|dfltdom

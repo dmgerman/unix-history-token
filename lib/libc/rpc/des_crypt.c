@@ -91,6 +91,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
+name|int
 name|_des_crypt_call
 name|__P
 argument_list|(

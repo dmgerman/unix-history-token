@@ -470,6 +470,16 @@ name|svcxprt
 operator|=
 name|NULL
 expr_stmt|;
+name|recvsz
+operator|=
+literal|0
+expr_stmt|;
+name|xdrbuf
+operator|=
+name|netid
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|pl
@@ -484,6 +494,7 @@ name|pl
 operator|->
 name|p_nxt
 control|)
+block|{
 if|if
 condition|(
 name|strcmp
@@ -525,6 +536,7 @@ operator|->
 name|p_netid
 expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(

@@ -11,11 +11,20 @@ begin_empty
 empty|#ident	"@(#)key_call.c	1.25	94/04/24 SMI"
 end_empty
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LIBC_SCCS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1713,12 +1722,16 @@ return|;
 block|}
 while|while
 condition|(
+operator|(
 name|nconf
 operator|=
 name|getnetconfig
 argument_list|(
 name|localhandle
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
