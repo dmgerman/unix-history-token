@@ -80,7 +80,7 @@ parameter_list|,
 name|bits
 parameter_list|)
 define|\
-value|{ (t), (x), (y), 0, 0, 0, 0, (bits) }
+value|{ (t), (x), (y), (x), (y), 0, 0, (bits) }
 end_define
 
 begin_comment
