@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3878,11 +3878,26 @@ name|rep
 operator|==
 name|myrep
 condition|)
+block|{
+if|if
+condition|(
+name|rep
+operator|->
+name|r_mrep
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"nfsreply nil"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 block|}
 end_block
@@ -4249,6 +4264,19 @@ block|{
 name|auth_type
 operator|=
 name|RPCAUTH_UNIX
+expr_stmt|;
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_ngroups
+operator|<
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"nfsreq nogrps"
+argument_list|)
 expr_stmt|;
 name|auth_len
 operator|=
