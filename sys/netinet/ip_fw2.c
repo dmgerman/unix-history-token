@@ -2913,7 +2913,7 @@ name|q
 parameter_list|)
 value|{				\ 	ipfw_dyn_rule *old_q = q;					\ 									\
 comment|/* remove a refcount to the parent */
-value|\ 	if (q->dyn_type == O_LIMIT)					\ 		q->parent->count--;					\ 	DEB(printf("-- unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",	\ 		(q->id.src_ip), (q->id.src_port),			\ 		(q->id.dst_ip), (q->id.dst_port), dyn_count-1 ); )	\ 	if (prev != NULL)						\ 		prev->next = q = q->next;				\ 	else								\ 		head = q = q->next;					\ 	dyn_count--;							\ 	free(old_q, M_IPFW); }
+value|\ 	if (q->dyn_type == O_LIMIT)					\ 		q->parent->count--;					\ 	DEB(printf("ipfw: unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",\ 		(q->id.src_ip), (q->id.src_port),			\ 		(q->id.dst_ip), (q->id.dst_port), dyn_count-1 ); )	\ 	if (prev != NULL)						\ 		prev->next = q = q->next;				\ 	else								\ 		head = q = q->next;					\ 	dyn_count--;							\ 	free(old_q, M_IPFW); }
 end_define
 
 begin_define
@@ -3098,7 +3098,7 @@ block|{
 comment|/* XXX should not happen! */
 name|printf
 argument_list|(
-literal|"OUCH! cannot remove rule,"
+literal|"ipfw: OUCH! cannot remove rule,"
 literal|" count %d\n"
 argument_list|,
 name|q
@@ -3962,7 +3962,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sorry cannot allocate state\n"
+literal|"ipfw: sorry cannot allocate state\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4089,7 +4089,7 @@ expr_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"-- add dyn entry ty %d 0x%08x %d -> 0x%08x %d, total %d\n"
+literal|"ipfw: add dyn entry ty %d 0x%08x %d -> 0x%08x %d, total %d\n"
 argument|, 	   dyn_type, 	   (r->id.src_ip), (r->id.src_port), 	   (r->id.dst_ip), (r->id.dst_port), 	   dyn_count );
 argument_list|)
 return|return
@@ -4233,7 +4233,7 @@ expr_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"lookup_dyn_parent found 0x%p\n"
+literal|"ipfw: lookup_dyn_parent found 0x%p\n"
 argument|,q);
 argument_list|)
 return|return
@@ -4289,7 +4289,7 @@ decl_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"-- install state type %d 0x%08x %u -> 0x%08x %u\n"
+literal|"ipfw: install state type %d 0x%08x %u -> 0x%08x %u\n"
 argument|, 	    cmd->o.opcode, 	    (args->f_id.src_ip), (args->f_id.src_port), 	    (args->f_id.dst_ip), (args->f_id.dst_port) );
 argument_list|)
 name|q
@@ -4327,7 +4327,7 @@ name|time_second
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" install_state: entry already present, done\n"
+literal|"ipfw: install_state: entry already present, done\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4373,7 +4373,7 @@ name|time_second
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"install_state: Too many dynamic rules\n"
+literal|"ipfw: install_state: Too many dynamic rules\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4431,8 +4431,8 @@ decl_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"installing dyn-limit rule %d\n"
-argument|, cmd->conn_limit);
+literal|"ipfw: installing dyn-limit rule %d\n"
+argument|, 		    cmd->conn_limit);
 argument_list|)
 name|id
 operator|.
@@ -4547,7 +4547,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"add parent failed\n"
+literal|"ipfw: add parent failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4634,7 +4634,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unknown dynamic rule type %u\n"
+literal|"ipfw: unknown dynamic rule type %u\n"
 argument_list|,
 name|cmd
 operator|->
@@ -8026,7 +8026,7 @@ block|}
 comment|/* end of outer for, scan rules */
 name|printf
 argument_list|(
-literal|"+++ ipfw: ouch!, skip past end of rules, denying packet\n"
+literal|"ipfw: ouch!, skip past end of rules, denying packet\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8065,7 +8065,7 @@ name|fw_verbose
 condition|)
 name|printf
 argument_list|(
-literal|"pullup failed\n"
+literal|"ipfw: pullup failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8536,7 +8536,7 @@ expr_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"++ installed rule %d, static count now %d\n"
+literal|"ipfw: installed rule %d, static count now %d\n"
 argument|, 		rule->rulenum, static_count);
 argument_list|)
 return|return
@@ -10764,7 +10764,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"ipfw_ctl invalid option %d\n"
+literal|"ipfw: ipfw_ctl invalid option %d\n"
 argument_list|,
 name|sopt
 operator|->
