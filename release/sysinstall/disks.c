@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.44 1996/04/28 03:26:49 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.48 1996/05/09 09:42:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -425,7 +425,7 @@ name|current_chunk
 condition|)
 name|attrset
 argument_list|(
-name|A_REVERSE
+name|item_selected_attr
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -563,38 +563,9 @@ name|mvprintw
 argument_list|(
 literal|18
 argument_list|,
-literal|48
+literal|46
 argument_list|,
 literal|"W = Write Changes"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|20
-argument_list|,
-literal|0
-argument_list|,
-literal|"The currently selected partition is displayed in "
-argument_list|)
-expr_stmt|;
-name|attrset
-argument_list|(
-name|A_REVERSE
-argument_list|)
-expr_stmt|;
-name|addstr
-argument_list|(
-literal|"reverse"
-argument_list|)
-expr_stmt|;
-name|attrset
-argument_list|(
-name|A_NORMAL
-argument_list|)
-expr_stmt|;
-name|addstr
-argument_list|(
-literal|" video."
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -603,7 +574,7 @@ literal|21
 argument_list|,
 literal|0
 argument_list|,
-literal|"Use F1 or ? to get more help, arrow keys to move."
+literal|"Use F1 or ? to get more help, arrow keys to select."
 argument_list|)
 expr_stmt|;
 name|move
@@ -845,8 +816,10 @@ condition|(
 name|msg
 condition|)
 block|{
-name|standout
-argument_list|()
+name|attrset
+argument_list|(
+name|title_attr
+argument_list|)
 expr_stmt|;
 name|mvprintw
 argument_list|(
@@ -857,8 +830,10 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-name|standend
-argument_list|()
+name|attrset
+argument_list|(
+name|A_NORMAL
+argument_list|)
 expr_stmt|;
 name|beep
 argument_list|()
@@ -1507,6 +1482,13 @@ literal|"Are you absolutely sure you want to do this now?"
 argument_list|)
 condition|)
 block|{
+name|WINDOW
+modifier|*
+name|save
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|variable_set2
 argument_list|(
 name|DISK_PARTITIONED
@@ -1575,6 +1557,11 @@ else|else
 name|msgConfirm
 argument_list|(
 literal|"Wrote FDISK partition information out successfully."
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|save
 argument_list|)
 expr_stmt|;
 block|}
@@ -1718,8 +1705,29 @@ condition|(
 name|p
 condition|)
 block|{
+name|char
+name|buf
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
 name|dialog_clear
 argument_list|()
+expr_stmt|;
+name|use_helpline
+argument_list|(
+literal|"Press F1 to read more about disk partitioning."
+argument_list|)
+expr_stmt|;
+name|use_helpfile
+argument_list|(
+name|systemHelpFile
+argument_list|(
+literal|"partition"
+argument_list|,
+name|buf
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|dialog_mesgbox
 argument_list|(
@@ -1795,6 +1803,18 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+comment|/* Toggle enabled status? */
+if|if
+condition|(
+operator|!
+name|devs
+index|[
+literal|0
+index|]
+operator|->
+name|enabled
+condition|)
+block|{
 name|devs
 index|[
 literal|0
@@ -1823,8 +1843,21 @@ operator|->
 name|private
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|devs
+index|[
+literal|0
+index|]
+operator|->
+name|enabled
+operator|=
+name|FALSE
+expr_stmt|;
 return|return
 name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
 return|;
 block|}
 end_function
@@ -2141,6 +2174,21 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"diskPartitionWrite: Examining %d devices\n"
+argument_list|,
+name|deviceCount
+argument_list|(
+name|devs
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2206,6 +2254,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Fake
+operator|&&
 name|Write_Disk
 argument_list|(
 name|d

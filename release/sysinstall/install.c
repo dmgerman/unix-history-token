@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.89 1996/04/28 03:27:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.96 1996/05/02 10:09:45 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -103,6 +103,16 @@ directive|define
 name|TERMCAP_FILE
 value|"/usr/share/misc/termcap"
 end_define
+
+begin_function_decl
+specifier|static
+name|void
+name|installConfigure
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -673,7 +683,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"You need to assign disk labels before you can proceed with\nthe installation."
+literal|"You need to assign disk labels before you can proceed with\n"
+literal|"the installation."
 argument_list|)
 expr_stmt|;
 return|return
@@ -697,6 +708,9 @@ literal|"yes"
 argument_list|)
 expr_stmt|;
 comment|/* If we refuse to proceed, bail. */
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -710,6 +724,8 @@ argument_list|)
 condition|)
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 if|if
 condition|(
@@ -733,6 +749,17 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"installInitial: Scribbled successfully on the disk(s)\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1189,6 +1216,9 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -1200,31 +1230,39 @@ if|if
 condition|(
 name|DITEM_STATUS
 argument_list|(
+operator|(
+name|i
+operator|=
 name|diskPartitionEditor
 argument_list|(
 name|self
 argument_list|)
+operator|)
 argument_list|)
 operator|==
 name|DITEM_FAILURE
 condition|)
 return|return
-name|DITEM_FAILURE
+name|i
 return|;
 if|if
 condition|(
 name|DITEM_STATUS
 argument_list|(
+operator|(
+name|i
+operator|=
 name|diskLabelEditor
 argument_list|(
 name|self
 argument_list|)
+operator|)
 argument_list|)
 operator|==
 name|DITEM_FAILURE
 condition|)
 return|return
-name|DITEM_FAILURE
+name|i
 return|;
 if|if
 condition|(
@@ -1232,6 +1270,9 @@ operator|!
 name|Dists
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1258,6 +1299,9 @@ operator|!
 name|mediaDevice
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1282,23 +1326,30 @@ if|if
 condition|(
 name|DITEM_STATUS
 argument_list|(
+operator|(
+name|i
+operator|=
 name|installCommit
 argument_list|(
 name|self
 argument_list|)
+operator|)
 argument_list|)
 operator|==
-name|DITEM_FAILURE
+name|DITEM_SUCCESS
 condition|)
-return|return
-name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
-operator||
-name|DITEM_RECREATE
-return|;
-return|return
+block|{
+name|i
+operator||=
 name|DITEM_LEAVE_MENU
+expr_stmt|;
+comment|/* Give user the option of one last configuration spree, then write changes */
+name|installConfigure
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+name|i
 operator||
 name|DITEM_RESTORE
 operator||
@@ -1320,6 +1371,13 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+specifier|extern
+name|int
+name|cdromMounted
+decl_stmt|;
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -1468,179 +1526,45 @@ if|if
 condition|(
 name|DITEM_STATUS
 argument_list|(
+operator|(
+name|i
+operator|=
 name|installCommit
 argument_list|(
 name|self
 argument_list|)
+operator|)
 argument_list|)
 operator|==
 name|DITEM_FAILURE
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Installation completed with some errors.  You may wish to\n"
+literal|"scroll through the debugging messages on VTY1 with the\n"
+literal|"scroll-lock feature.  You can also chose \"No\" at the next\n"
+literal|"prompt and go back into the installation menus to try and retry\n"
+literal|"whichever operations have failed."
+argument_list|)
+expr_stmt|;
 return|return
-name|DITEM_FAILURE
+name|i
 operator||
 name|DITEM_RESTORE
 operator||
 name|DITEM_RECREATE
 return|;
-return|return
-name|DITEM_LEAVE_MENU
-operator||
-name|DITEM_RESTORE
-operator||
-name|DITEM_RECREATE
-return|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * What happens when we select "Commit" in the custom installation menu.  *  * This is broken into multiple stages so that the user can do a full installation but come back here  * again to load more distributions, perhaps from a different media type.  This would allow, for  * example, the user to load the majority of the system from CDROM and then use ftp to load just the  * DES dist.  */
-end_comment
-
-begin_function
-name|int
-name|installCommit
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-specifier|extern
-name|int
-name|cdromMounted
-decl_stmt|;
-name|char
-modifier|*
-name|str
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|mediaVerify
-argument_list|()
-condition|)
-return|return
-name|DITEM_FAILURE
-return|;
-name|str
-operator|=
-name|variable_get
-argument_list|(
-name|SYSTEM_STATE
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|DITEM_LEAVE_MENU
-expr_stmt|;
-if|if
-condition|(
-name|RunningAsInit
-condition|)
-block|{
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|installInitial
-argument_list|()
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
-return|return
-name|DITEM_FAILURE
-return|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|configFstab
-argument_list|()
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
-return|return
-name|DITEM_FAILURE
-return|;
-if|if
-condition|(
-operator|!
-name|rootExtract
-argument_list|()
-condition|)
-block|{
+else|else
 name|msgConfirm
 argument_list|(
-literal|"Failed to load the ROOT distribution.  Please correct\n"
-literal|"this problem and try again."
-argument_list|)
-expr_stmt|;
-return|return
-name|DITEM_FAILURE
-return|;
-block|}
-block|}
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|distExtractAll
-argument_list|(
-name|self
-argument_list|)
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
-name|i
-operator|=
-name|DITEM_FAILURE
-expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|installFixup
-argument_list|(
-name|self
-argument_list|)
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
-name|i
-operator|=
-name|DITEM_FAILURE
-expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|i
-argument_list|)
-operator|!=
-name|DITEM_FAILURE
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|str
-argument_list|,
-literal|"novice"
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Since you're running the novice installation, a few post-configuration\n"
-literal|"questions will be asked at this point.  For any option you do not wish\n"
-literal|"to configure, select Cancel."
+literal|"Congradulations!  You now have FreeBSD installed on your system.\n\n"
+literal|"We will now move on to the final configuration questions.\n"
+literal|"For any option you do not wish to configure, simply select\n"
+literal|"No.\n\n"
+literal|"If you wish to re-enter this utility after the system is up, you\n"
+literal|"may do so by typing: /stand/sysinstall."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1680,6 +1604,9 @@ expr_stmt|;
 name|mediaDevice
 operator|=
 name|save
+expr_stmt|;
+name|dialog_clear
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -1776,12 +1703,26 @@ argument_list|(
 literal|"Would you like to customize your system console settings?"
 argument_list|)
 condition|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuSyscons
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1820,12 +1761,26 @@ argument_list|(
 literal|"Does this system have a mouse attached to it?"
 argument_list|)
 condition|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuMouse
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|directory_exists
@@ -1887,31 +1842,159 @@ name|self
 argument_list|)
 expr_stmt|;
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
+comment|/* Give user the option of one last configuration spree, then write changes */
+name|installConfigure
+argument_list|()
+expr_stmt|;
+return|return
+name|DITEM_LEAVE_MENU
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
+return|;
 block|}
-comment|/* Final menu of last resort */
+end_function
+
+begin_comment
+comment|/*  * What happens when we finally "Commit" to going ahead with the installation.  *  * This is broken into multiple stages so that the user can do a full installation but come back here  * again to load more distributions, perhaps from a different media type.  This would allow, for  * example, the user to load the majority of the system from CDROM and then use ftp to load just the  * DES dist.  */
+end_comment
+
+begin_function
+name|int
+name|installCommit
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|char
+modifier|*
+name|str
+decl_stmt|;
 if|if
 condition|(
 operator|!
-name|msgYesNo
-argument_list|(
-literal|"Would you like to go to the general configuration menu for a chance to set\n"
-literal|"any last options?"
-argument_list|)
+name|mediaVerify
+argument_list|()
 condition|)
-name|dmenuOpenSimple
+return|return
+name|DITEM_FAILURE
+return|;
+name|str
+operator|=
+name|variable_get
 argument_list|(
-operator|&
-name|MenuConfigure
+name|SYSTEM_STATE
 argument_list|)
 expr_stmt|;
-comment|/* Write out any changes .. */
-name|configResolv
+if|if
+condition|(
+name|isDebug
 argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"installCommit: System state is `%s'\n"
+argument_list|,
+name|str
+argument_list|)
 expr_stmt|;
-name|configSysconfig
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+block|{
+comment|/* Do things we wouldn't do to a multi-user system */
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+operator|(
+name|i
+operator|=
+name|installInitial
 argument_list|()
+operator|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+return|return
+name|i
+return|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+operator|(
+name|i
+operator|=
+name|configFstab
+argument_list|()
+operator|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+return|return
+name|i
+return|;
+if|if
+condition|(
+operator|!
+name|rootExtract
+argument_list|()
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Failed to load the ROOT distribution.  Please correct\n"
+literal|"this problem and try again."
+argument_list|)
 expr_stmt|;
-comment|/* Don't print this if we're express or novice installing */
+return|return
+name|DITEM_FAILURE
+return|;
+block|}
+block|}
+name|i
+operator|=
+name|distExtractAll
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|i
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+operator|(
+name|void
+operator|)
+name|installFixup
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+else|else
+name|i
+operator|=
+name|installFixup
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+comment|/* Don't print this if we're express or novice installing - they have their own error reporting */
 if|if
 condition|(
 name|strcmp
@@ -1956,54 +2039,6 @@ literal|"see the Interfaces configuration item on the Configuration menu."
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|str
-argument_list|,
-literal|"novice"
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|Dists
-operator|||
-name|DITEM_STATUS
-argument_list|(
-name|i
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Installation completed with some errors.  You may wish to\n"
-literal|"scroll through the debugging messages on VTY1 with the\n"
-literal|"scroll-lock feature.  You can also chose \"No\" at the next\n"
-literal|"prompt and go back into the installation menus to try and retry\n"
-literal|"whichever operations have failed."
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Congradulations!  You now have FreeBSD installed on your system.\n"
-literal|"At this stage, there shouldn't be much left to do from this\n"
-literal|"installation utility so if you wish to come up from the hard disk\n"
-literal|"now, simply select \"Yes\" at the next prompt to reboot.\n"
-literal|"If you wish to re-enter this utility after the system is up, you\n"
-literal|"may do so by typing: /stand/sysinstall."
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -2027,6 +2062,54 @@ name|DITEM_RESTORE
 operator||
 name|DITEM_RECREATE
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|installConfigure
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Final menu of last resort */
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Visit the general configuration menu for a chance to set\n"
+literal|"any last options?"
+argument_list|)
+condition|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuConfigure
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Write out any changes .. */
+name|configResolv
+argument_list|()
+expr_stmt|;
+name|configSysconfig
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2066,7 +2149,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|system
+name|vsystem
 argument_list|(
 literal|"cp -p /kernel.GENERIC /kernel"
 argument_list|)
@@ -2290,12 +2373,12 @@ literal|"/usr/X11R6"
 argument_list|)
 condition|)
 block|{
-name|system
+name|vsystem
 argument_list|(
 literal|"chmod -R a+r /usr/X11R6"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"find /usr/X11R6 -type d | xargs chmod a+x"
 argument_list|)
@@ -3147,6 +3230,10 @@ name|DITEM_SUCCESS
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Initialize various user-settable values to their defaults */
+end_comment
 
 begin_function
 name|int

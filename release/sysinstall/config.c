@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.27 1996/04/28 03:26:46 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.30 1996/04/29 18:06:06 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1381,6 +1381,27 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Fake
+condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"Writing sysconfig out to debugging screen..\n"
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|fdopen
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|fp
 operator|=
 name|fopen
@@ -2624,47 +2645,47 @@ literal|"kinds of access to your local file systems.\n"
 literal|"Press [ENTER] now to invoke an editor on /etc/exports\n"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo '#The following examples export /usr to 3 machines named after ducks,'> /etc/exports"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo '#/home and all directories under it to machines named after dead rock stars'>> /etc/exports"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo '#and, finally, /a to 2 privileged machines allowed to write on it as root.'>> /etc/exports"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo '#/usr                huey louie dewie'>> /etc/exports"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo '#/home   -alldirs    janice jimmy frank'>> /etc/exports"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo '#/a      -maproot=0  bill albert'>> /etc/exports"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo '#'>> /etc/exports"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo '# You should replace these lines with your actual exported filesystems.'>> /etc/exports"
 argument_list|)
 expr_stmt|;
-name|system
+name|vsystem
 argument_list|(
 literal|"echo>> /etc/exports"
 argument_list|)
