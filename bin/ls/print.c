@@ -1866,6 +1866,7 @@ name|COLORLS
 end_ifdef
 
 begin_function
+specifier|static
 name|int
 name|putch
 parameter_list|(
@@ -1890,6 +1891,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|writech
 parameter_list|(
@@ -1924,6 +1926,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|printcolor
 parameter_list|(
