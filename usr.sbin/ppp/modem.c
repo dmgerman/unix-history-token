@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.93 1998/06/24 19:33:32 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.94 1998/06/27 14:18:07 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -3787,14 +3787,6 @@ operator|~
 name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
-comment|/* We do the timer only for ttys */
-name|modem_StartTimer
-argument_list|(
-name|bundle
-argument_list|,
-name|modem
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 name|modem
@@ -4079,7 +4071,6 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-operator|!
 operator|(
 name|modem
 operator|->
@@ -4089,11 +4080,25 @@ name|TIOCM_CD
 operator|)
 condition|)
 block|{
+name|modem_StartTimer
+argument_list|(
+name|bundle
+argument_list|,
+name|modem
+argument_list|)
+expr_stmt|;
+name|modem_Timeout
+argument_list|(
+name|modem
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"%s: Switching off timer - %s doesn't support CD\n"
+literal|"%s: %s doesn't support CD\n"
 argument_list|,
 name|modem
 operator|->
@@ -4106,21 +4111,6 @@ operator|->
 name|name
 operator|.
 name|full
-argument_list|)
-expr_stmt|;
-name|timer_Stop
-argument_list|(
-operator|&
-name|modem
-operator|->
-name|Timer
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|modem_Timeout
-argument_list|(
-name|modem
 argument_list|)
 expr_stmt|;
 return|return
@@ -4241,6 +4231,14 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+name|timer_Stop
+argument_list|(
+operator|&
+name|modem
+operator|->
+name|Timer
+argument_list|)
+expr_stmt|;
 name|newsid
 operator|=
 name|tcgetpgrp
@@ -4266,14 +4264,6 @@ name|fd
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|timer_Stop
-argument_list|(
-operator|&
-name|modem
-operator|->
-name|Timer
-argument_list|)
 expr_stmt|;
 name|log_SetTtyCommandMode
 argument_list|(
@@ -4384,6 +4374,14 @@ name|struct
 name|termios
 name|tio
 decl_stmt|;
+name|timer_Stop
+argument_list|(
+operator|&
+name|modem
+operator|->
+name|Timer
+argument_list|)
+expr_stmt|;
 name|modem
 operator|->
 name|mbits
