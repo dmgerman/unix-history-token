@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser.c	8.3 (Berkeley) %G%"
+literal|"@(#)parser.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5669,12 +5669,12 @@ argument_list|(
 name|savelen
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|str
+argument_list|,
 name|stackblock
 argument_list|()
-argument_list|,
-name|str
 argument_list|,
 name|savelen
 argument_list|)
@@ -5808,12 +5808,12 @@ argument_list|(
 name|savelen
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|str
+argument_list|,
 name|stackblock
 argument_list|()
-argument_list|,
-name|str
 argument_list|,
 name|savelen
 argument_list|)
@@ -5938,11 +5938,11 @@ condition|(
 name|str
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|str
-argument_list|,
 name|out
+argument_list|,
+name|str
 argument_list|,
 name|savelen
 argument_list|)

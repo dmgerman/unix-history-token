@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memalloc.c	8.1 (Berkeley) %G%"
+literal|"@(#)memalloc.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -650,11 +650,11 @@ argument_list|(
 name|newlen
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|oldspace
-argument_list|,
 name|p
+argument_list|,
+name|oldspace
 argument_list|,
 name|oldlen
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	8.1 (Berkeley) %G%"
+literal|"@(#)exec.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1279,11 +1279,11 @@ operator|!=
 name|start
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|start
-argument_list|,
 name|q
+argument_list|,
+name|start
 argument_list|,
 name|p
 operator|-

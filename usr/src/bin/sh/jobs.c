@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jobs.c	8.3 (Berkeley) %G%"
+literal|"@(#)jobs.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -564,7 +564,7 @@ argument_list|(
 name|SIGTTIN
 argument_list|)
 expr_stmt|;
-name|setpgrp
+name|setpgid
 argument_list|(
 literal|0
 argument_list|,
@@ -589,7 +589,7 @@ block|}
 else|else
 block|{
 comment|/* turning job control off */
-name|setpgrp
+name|setpgid
 argument_list|(
 literal|0
 argument_list|,
@@ -2222,11 +2222,11 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|jobtab
-argument_list|,
 name|jp
+argument_list|,
+name|jobtab
 argument_list|,
 name|njobs
 operator|*
@@ -2591,7 +2591,7 @@ index|]
 operator|.
 name|pid
 expr_stmt|;
-name|setpgrp
+name|setpgid
 argument_list|(
 literal|0
 argument_list|,
@@ -2832,7 +2832,7 @@ index|]
 operator|.
 name|pid
 expr_stmt|;
-name|setpgrp
+name|setpgid
 argument_list|(
 name|pid
 argument_list|,

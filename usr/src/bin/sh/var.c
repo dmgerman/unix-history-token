@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	8.1 (Berkeley) %G%"
+literal|"@(#)var.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2193,13 +2193,13 @@ sizeof|sizeof
 name|optlist
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|optlist
-argument_list|,
 name|lvp
 operator|->
 name|text
+argument_list|,
+name|optlist
 argument_list|,
 sizeof|sizeof
 name|optlist
@@ -2418,13 +2418,13 @@ name|NULL
 condition|)
 block|{
 comment|/* $- saved */
-name|bcopy
+name|memmove
 argument_list|(
+name|optlist
+argument_list|,
 name|lvp
 operator|->
 name|text
-argument_list|,
-name|optlist
 argument_list|,
 sizeof|sizeof
 name|optlist
