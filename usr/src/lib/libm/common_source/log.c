@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	5.7 (Berkeley) %G%"
+literal|"@(#)log.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +84,7 @@ name|TRUNC
 parameter_list|(
 name|x
 parameter_list|)
-value|(double) (float) (x)
+value|x = (double) (float) (x)
 end_define
 
 begin_else
@@ -102,11 +102,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|endian
+value|(((*(int *)&one)) ? 1 : 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TRUNC
 parameter_list|(
 name|x
 parameter_list|)
-value|*(((int *)&x) + 1)&= 0xf8000000
+value|*(((int *)&x) + endian)&= 0xf8000000
 end_define
 
 begin_define
