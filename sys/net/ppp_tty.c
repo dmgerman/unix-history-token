@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.21 1997/06/22 02:19:52 brian Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.22 1997/08/19 14:10:47 peter Exp $ */
 end_comment
 
 begin_include
@@ -1559,19 +1559,16 @@ name|ttysleep
 argument_list|(
 name|tp
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
+name|TSA_HUP_OR_INPUT
+argument_list|(
 name|tp
-operator|->
-name|t_rawq
+argument_list|)
 argument_list|,
 name|TTIPRI
 operator||
 name|PCATCH
 argument_list|,
-literal|"ttyin"
+literal|"pppin"
 argument_list|,
 literal|0
 argument_list|)
@@ -3034,6 +3031,7 @@ name|idle
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX assumes atomic access to *tp although we're not at spltty(). */
 while|while
 condition|(
 name|CCOUNT
@@ -3083,6 +3081,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 	     * The extra PPP_FLAG will start up a new packet, and thus 	     * will flush any accumulated garbage.  We do this whenever 	     * the line may have been idle for some time. 	     */
+comment|/* XXX as above. */
 if|if
 condition|(
 name|CCOUNT
@@ -3139,13 +3138,15 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
+name|gettime
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_if
 operator|.
 name|if_lastchange
-operator|=
-name|time
+argument_list|)
 expr_stmt|;
 block|}
 for|for
@@ -3775,7 +3776,7 @@ name|tp
 operator|->
 name|t_sc
 decl_stmt|;
-comment|/*      * If there is stuff in the output queue, send it now.      * We are being called in lieu of ttstart and must do what it would.      */
+comment|/*      * Call output process whether or not there is any output.      * We are being called in lieu of ttstart and must do what it would.      */
 if|if
 condition|(
 name|tp
