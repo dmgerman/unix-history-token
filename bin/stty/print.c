@@ -211,17 +211,6 @@ name|ldisc
 condition|)
 block|{
 case|case
-name|TABLDISC
-case|:
-name|cnt
-operator|+=
-name|printf
-argument_list|(
-literal|"tablet disc; "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|NTTYDISC
 case|:
 name|cnt
