@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.4 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,20 +81,6 @@ include|#
 directive|include
 file|<sys/disklabel.h>
 end_include
-
-begin_comment
-comment|/*  * MAXBLKPG determines the maximum number of data blocks which are  * placed in a single cylinder group. This is currently a function  * of the block and fragment size of the file system.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXBLKPG
-parameter_list|(
-name|fs
-parameter_list|)
-value|((fs)->fs_fsize / sizeof(daddr_t))
-end_define
 
 begin_define
 define|#
@@ -353,6 +339,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* rotational delay between blocks */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxbpg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum blocks per file in a cyl group */
 end_comment
 
 begin_decl_stmt
@@ -2990,11 +2987,7 @@ name|sblock
 operator|.
 name|fs_maxbpg
 operator|=
-name|MAXBLKPG
-argument_list|(
-operator|&
-name|sblock
-argument_list|)
+name|maxbpg
 expr_stmt|;
 name|sblock
 operator|.

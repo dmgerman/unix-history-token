@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.10 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,20 @@ define|#
 directive|define
 name|MAXCONTIG
 value|1
+end_define
+
+begin_comment
+comment|/*  * MAXBLKPG determines the maximum number of data blocks which are  * placed in a single cylinder group. The default is one indirect  * block worth of data blocks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXBLKPG
+parameter_list|(
+name|bsize
+parameter_list|)
+value|((bsize) / sizeof(daddr_t))
 end_define
 
 begin_comment
@@ -476,6 +490,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|maxbpg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum blocks per file in a cyl group */
+end_comment
+
+begin_decl_stmt
+name|int
 name|bbsize
 init|=
 name|BBSIZE
@@ -727,7 +751,7 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"-a: spare sectors per cylinder"
+literal|"-a: missing max contiguous blocks\n"
 argument_list|)
 expr_stmt|;
 name|argc
@@ -736,7 +760,7 @@ operator|,
 name|argv
 operator|++
 expr_stmt|;
-name|cylspares
+name|maxcontig
 operator|=
 name|atoi
 argument_list|(
@@ -746,13 +770,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cylspares
-operator|<
+name|maxcontig
+operator|<=
 literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad spare sectors per cylinder"
+literal|"%s: bad max contiguous blocks\n"
 argument_list|,
 operator|*
 name|argv
@@ -865,7 +889,7 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"-d: missing sectors/track"
+literal|"-d: missing rotational delay\n"
 argument_list|)
 expr_stmt|;
 name|argc
@@ -874,7 +898,7 @@ operator|,
 name|argv
 operator|++
 expr_stmt|;
-name|nsectors
+name|rotdelay
 operator|=
 name|atoi
 argument_list|(
@@ -884,13 +908,58 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nsectors
+name|rotdelay
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad rotational delay\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+case|case
+literal|'e'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-e: missing blocks pre file in a cyl group\n"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|maxbpg
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxbpg
 operator|<=
 literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad sectors/track"
+literal|"%s: bad blocks per file in a cyl group\n"
 argument_list|,
 operator|*
 name|argv
@@ -1375,6 +1444,96 @@ expr_stmt|;
 goto|goto
 name|next
 goto|;
+case|case
+literal|'u'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-u: missing sectors/track"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|nsectors
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nsectors
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad sectors/track"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+case|case
+literal|'x'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-x: spare sectors per cylinder"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|cylspares
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cylspares
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad spare sectors per cylinder"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
 default|default:
 name|fatal
 argument_list|(
@@ -1471,6 +1630,31 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-a maximum contiguous blocks\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-d rotational delay between %s\n"
+argument_list|,
+literal|"contiguous blocks"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-e maximum blocks per file in a %s\n"
+argument_list|,
+literal|"cylinder group"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-i number of bytes per inode\n"
 argument_list|)
 expr_stmt|;
@@ -1506,7 +1690,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-d sectors/track\n"
+literal|"\t-u sectors/track\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1527,7 +1711,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-a spare sectors per cylinder\n"
+literal|"\t-x spare sectors per cylinder\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1550,6 +1734,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|maxbpg
+operator|==
+literal|0
+condition|)
+name|maxbpg
+operator|=
+name|MAXBLKPG
+argument_list|(
+name|bsize
+argument_list|)
+expr_stmt|;
 name|special
 operator|=
 name|argv
