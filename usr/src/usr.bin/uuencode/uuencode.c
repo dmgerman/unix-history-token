@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuencode.c	5.3 (Berkeley) %G%"
+literal|"@(#)uuencode.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +152,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* figure out the input file mode */
+if|if
+condition|(
 name|fstat
 argument_list|(
 name|fileno
@@ -162,7 +164,29 @@ argument_list|,
 operator|&
 name|sbuf
 argument_list|)
+operator|<
+literal|0
+operator|||
+operator|!
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|in
+argument_list|)
+argument_list|)
+condition|)
+name|mode
+operator|=
+literal|0666
+operator|&
+operator|~
+name|umask
+argument_list|(
+literal|0666
+argument_list|)
 expr_stmt|;
+else|else
 name|mode
 operator|=
 name|sbuf
