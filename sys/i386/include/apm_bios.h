@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.18 1997/06/15 02:02:53 wollman Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.19 1997/11/12 04:12:51 jdp Exp $  */
 end_comment
 
 begin_ifndef
@@ -37,12 +37,6 @@ include|#
 directive|include
 file|<sys/ioccom.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_comment
 comment|/* BIOS id */
@@ -327,6 +321,34 @@ define|#
 directive|define
 name|APM_ENGAGEDISENGAGEPM
 value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_GETCAPABILITIES
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_RESUMETIMER
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_RESUMEONRING
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_TIMERREQUESTS
+value|0x13
 end_define
 
 begin_define
@@ -784,11 +806,18 @@ name|NAPM_HOOK
 value|2
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_function_decl
 name|void
 name|apm_suspend
 parameter_list|(
-name|void
+name|int
+name|state
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -856,6 +885,15 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* !ASSEMBLER&& !INITIALIZER */
 end_comment
 
@@ -879,15 +917,6 @@ directive|define
 name|APM_MAX_ORDER
 value|0xff
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
 
 begin_comment
 comment|/* power management event code */
@@ -977,8 +1006,15 @@ name|PMEV_STANDBYRESUME
 value|0x000b
 end_define
 
+begin_define
+define|#
+directive|define
+name|PMEV_CAPABILITIESCHANGE
+value|0x000c
+end_define
+
 begin_comment
-comment|/* 0x000c - 0x00ff	Reserved system events	*/
+comment|/* 0x000d - 0x00ff	Reserved system events	*/
 end_comment
 
 begin_comment
@@ -1101,9 +1137,17 @@ name|ai_status
 decl_stmt|;
 comment|/* True if enabled (0) */
 name|u_int
+name|ai_batteries
+decl_stmt|;
+comment|/* Number of batteries (1) */
+name|u_int
+name|ai_capabilities
+decl_stmt|;
+comment|/* APM Capabilities (1) */
+name|u_int
 name|ai_spare
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 comment|/* For future expansion */
@@ -1200,6 +1244,13 @@ define|#
 directive|define
 name|APMIO_GETINFO
 value|_IOR('P', 11, struct apm_info)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APMIO_STANDBY
+value|_IO('P', 12)
 end_define
 
 begin_endif
