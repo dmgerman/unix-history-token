@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ulpt.c,v 1.50 2002/07/11 21:14:31 augustss Exp $	*/
+comment|/*	$NetBSD: ulpt.c,v 1.51 2002/08/15 09:32:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1285,7 +1285,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: could not find bulk endpoint\n"
+literal|"%s: could not find bulk out endpoint\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1302,6 +1302,27 @@ operator|=
 literal|1
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|usbd_get_quirks
+argument_list|(
+name|dev
+argument_list|)
+operator|->
+name|uq_flags
+operator|&
+name|UQ_BROKEN_BIDIR
+condition|)
+block|{
+comment|/* This device doesn't handle reading properly. */
+name|sc
+operator|->
+name|sc_in
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 name|printf
@@ -1326,27 +1347,6 @@ else|:
 literal|"uni"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|usbd_get_quirks
-argument_list|(
-name|dev
-argument_list|)
-operator|->
-name|uq_flags
-operator|&
-name|UQ_BROKEN_BIDIR
-condition|)
-block|{
-comment|/* This device doesn't handle reading properly. */
-name|sc
-operator|->
-name|sc_in
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 name|DPRINTFN
 argument_list|(
 literal|10
