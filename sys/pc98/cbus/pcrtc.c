@@ -249,23 +249,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEV_MCA
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/mca_machdep.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|APIC_IO
 end_ifdef
 
@@ -1019,28 +1002,6 @@ directive|endif
 block|}
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|DEV_MCA
-comment|/* Reset clock interrupt by asserting bit 7 of port 0x61 */
-if|if
-condition|(
-name|MCA_system
-condition|)
-name|outb
-argument_list|(
-literal|0x61
-argument_list|,
-name|inb
-argument_list|(
-literal|0x61
-argument_list|)
-operator||
-literal|0x80
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
