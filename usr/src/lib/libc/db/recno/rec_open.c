@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	8.1 (Berkeley) %G%"
+literal|"@(#)rec_open.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -591,7 +591,7 @@ name|bt_msize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_PRIVATE
 argument_list|,
 name|rfd
 argument_list|,
