@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_alloc.c	2.22	83/02/10	*/
+comment|/*	lfs_alloc.c	2.23	83/02/10	*/
 end_comment
 
 begin_include
@@ -1898,7 +1898,15 @@ block|}
 comment|/* 	 * 3: brute force search 	 * Note that we start at i == 2, since 0 was checked initially, 	 * and 1 is always checked in the quadratic rehash. 	 */
 name|cg
 operator|=
+operator|(
 name|icg
+operator|+
+literal|2
+operator|)
+operator|%
+name|fs
+operator|->
+name|fs_ncg
 expr_stmt|;
 for|for
 control|(
