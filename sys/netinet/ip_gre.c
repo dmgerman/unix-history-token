@@ -382,7 +382,7 @@ argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ret == 0 : packet not processed, meaning that  	 * no matching tunnel that is up is found. 	 * we inject it to raw ip socket to see if anyone picks it up. 	 */
+comment|/* 	 * ret == 0 : packet not processed, meaning that 	 * no matching tunnel that is up is found. 	 * we inject it to raw ip socket to see if anyone picks it up. 	 */
 if|if
 condition|(
 name|ret
