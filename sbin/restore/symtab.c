@@ -2076,6 +2076,11 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|clearerr
 argument_list|(
