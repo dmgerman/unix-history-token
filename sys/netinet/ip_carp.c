@@ -748,6 +748,7 @@ value|do {				\ 	if (carp_opts[CARPCTL_LOG]> 1)			\ 		log(LOG_DEBUG, __VA_ARGS__
 end_define
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_hmac_prepare
 parameter_list|(
@@ -759,6 +760,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_hmac_generate
 parameter_list|(
@@ -777,6 +779,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_hmac_verify
 parameter_list|(
@@ -795,6 +798,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_setroute
 parameter_list|(
@@ -808,6 +812,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_input_c
 parameter_list|(
@@ -825,6 +830,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_clone_create
 parameter_list|(
@@ -838,6 +844,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_clone_destroy
 parameter_list|(
@@ -849,6 +856,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carpdetach
 parameter_list|(
@@ -860,6 +868,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_prepare_ad
 parameter_list|(
@@ -879,6 +888,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_send_ad_all
 parameter_list|(
@@ -888,6 +898,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_send_ad
 parameter_list|(
@@ -898,6 +909,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_send_arp
 parameter_list|(
@@ -909,6 +921,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_master_down
 parameter_list|(
@@ -919,6 +932,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_ioctl
 parameter_list|(
@@ -958,6 +972,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_start
 parameter_list|(
@@ -969,6 +984,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_setrun
 parameter_list|(
@@ -982,6 +998,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_set_state
 parameter_list|(
@@ -995,6 +1012,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_addrcount
 parameter_list|(
@@ -1022,6 +1040,7 @@ enum|;
 end_enum
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_set_addr
 parameter_list|(
@@ -1037,6 +1056,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_del_addr
 parameter_list|(
@@ -1058,6 +1078,7 @@ name|INET6
 end_ifdef
 
 begin_function_decl
+specifier|static
 name|void
 name|carp_send_na
 parameter_list|(
@@ -1069,6 +1090,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_set_addr6
 parameter_list|(
@@ -1084,6 +1106,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|carp_del_addr6
 parameter_list|(
@@ -1153,6 +1176,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carp_hmac_prepare
 parameter_list|(
@@ -1511,6 +1535,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carp_hmac_generate
 parameter_list|(
@@ -1626,6 +1651,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|carp_hmac_verify
 parameter_list|(
@@ -1683,6 +1709,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carp_setroute
 parameter_list|(
@@ -1837,6 +1864,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|carp_clone_create
 parameter_list|(
@@ -2083,6 +2111,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carp_clone_destroy
 parameter_list|(
@@ -3091,6 +3120,7 @@ comment|/* INET6 */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|carp_input_c
 parameter_list|(
@@ -3715,6 +3745,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carpdetach
 parameter_list|(
@@ -3911,6 +3942,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|carp_prepare_ad
 parameter_list|(
@@ -4113,6 +4145,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carp_send_ad_all
 parameter_list|(
@@ -4217,6 +4250,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carp_send_ad
 parameter_list|(
@@ -5321,6 +5355,7 @@ comment|/*  * Broadcast a gratuitous ARP request containing  * the virtual route
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|carp_send_arp
 parameter_list|(
@@ -5388,6 +5423,7 @@ name|INET6
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|carp_send_na
 parameter_list|(
@@ -5484,6 +5520,7 @@ comment|/* INET6 */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|carp_addrcount
 parameter_list|(
@@ -5939,6 +5976,7 @@ name|INET6
 end_ifdef
 
 begin_function
+specifier|static
 name|struct
 name|ifaddr
 modifier|*
@@ -6061,6 +6099,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|carp_macmatch6
@@ -6432,6 +6471,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carp_master_down
 parameter_list|(
@@ -6528,6 +6568,7 @@ comment|/*  * When in backup state, af indicates whether to reset the master dow
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|carp_setrun
 parameter_list|(
@@ -6895,6 +6936,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|carp_set_addr
 parameter_list|(
@@ -7579,6 +7621,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|carp_del_addr
 parameter_list|(
@@ -7751,6 +7794,7 @@ name|INET6
 end_ifdef
 
 begin_function
+specifier|static
 name|int
 name|carp_set_addr6
 parameter_list|(
@@ -8718,6 +8762,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|carp_del_addr6
 parameter_list|(
@@ -8918,6 +8963,7 @@ comment|/* INET6 */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|carp_ioctl
 parameter_list|(
@@ -10062,6 +10108,7 @@ comment|/*  * Start output on carp interface. This function should never be call
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|carp_start
 parameter_list|(
@@ -10498,6 +10545,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|carp_set_state
 parameter_list|(
