@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.10 1998/05/21 21:44:27 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.11 1999/02/06 02:54:44 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_struct_decl
@@ -48,6 +48,40 @@ struct|struct
 name|chap
 block|{
 name|struct
+name|descriptor
+name|desc
+decl_stmt|;
+struct|struct
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+struct|struct
+block|{
+name|char
+name|ptr
+index|[
+name|AUTHLEN
+operator|*
+literal|2
+operator|+
+literal|3
+index|]
+decl_stmt|;
+comment|/* Allow for \r\n at the end (- NUL) */
+name|int
+name|len
+decl_stmt|;
+block|}
+name|buf
+struct|;
+block|}
+name|child
+struct|;
+name|struct
 name|authinfo
 name|auth
 decl_stmt|;
@@ -72,11 +106,22 @@ end_struct
 begin_define
 define|#
 directive|define
+name|descriptor2chap
+parameter_list|(
+name|d
+parameter_list|)
+define|\
+value|((d)->type == CHAP_DESCRIPTOR ? (struct chap *)(d) : NULL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|auth2chap
 parameter_list|(
 name|a
 parameter_list|)
-value|((struct chap *)(a))
+value|(struct chap *)((char *)a - (int)&((struct chap *)0)->auth)
 end_define
 
 begin_function_decl
@@ -90,6 +135,18 @@ modifier|*
 parameter_list|,
 name|struct
 name|physical
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|chap_ReInit
+parameter_list|(
+name|struct
+name|chap
 modifier|*
 parameter_list|)
 function_decl|;
