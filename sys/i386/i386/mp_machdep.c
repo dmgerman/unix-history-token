@@ -70,12 +70,6 @@ begin_comment
 comment|/* cngetc() */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/dkstat.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dkstat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/callout.h>
 end_include
 
