@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)badsect.c	5.1 (Berkeley) %G%"
+literal|"@(#)badsect.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -745,7 +745,11 @@ expr_stmt|;
 name|errs
 operator|++
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|bn
 operator|=
