@@ -821,6 +821,10 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|grp_end
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|first
