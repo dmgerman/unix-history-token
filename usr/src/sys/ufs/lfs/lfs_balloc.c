@@ -1,118 +1,88 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.18 (Berkeley) %G%  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOGFS
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"resource.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"resourcevar.h"
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/specdev.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/trace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"specdev.h"
+file|<ufs/ufsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/quota.h"
+file|<lfs/lfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/ufsmount.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"trace.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lfs_extern.h"
+file|<lfs/lfs_extern.h>
 end_include
 
 begin_comment
-comment|/*  * Bmap converts a the logical block number of a file  * to its physical block number on the disk. The conversion  * is done by using the logical block number to index into  * the array of block pointers described by the dinode.  */
+comment|/*  * Bmap converts a the logical block number of a file to its physical block  * number on the disk. The conversion is done by using the logical block  * number to index into the array of block pointers described by the dinode.  */
 end_comment
 
 begin_function
@@ -145,7 +115,6 @@ name|LFS
 modifier|*
 name|fs
 decl_stmt|;
-comment|/* LFS */
 specifier|register
 name|daddr_t
 name|nb
@@ -199,30 +168,21 @@ name|ip
 operator|->
 name|i_lfs
 expr_stmt|;
-comment|/* LFS */
-comment|/* 	 * We access all blocks in the cache, even indirect blocks by means of 	 * a logical address. Indirect blocks (single, double, triple) all have 	 * negative block numbers. The first NDADDR blocks are direct blocks, 	 * the first NIADDR negative blocks are the indirect block pointers. 	 * The single, double and triple indirect blocks in the inode 	 * are addressed: -1, -2 and -3 respectively.   	 * XXX we don't handle triple indirect at all. 	 */
+comment|/* 	 * We access all blocks in the cache, even indirect blocks by means 	 * of a logical address. Indirect blocks (single, double, triple) all 	 * have negative block numbers. The first NDADDR blocks are direct 	 * blocks, the first NIADDR negative blocks are the indirect block 	 * pointers.  The single, double and triple indirect blocks in the 	 * inode * are addressed: -1, -2 and -3 respectively.   	 * 	 * XXX 	 * We don't handle triple indirect at all. 	 * 	 * XXX 	 * This panic shouldn't be here??? 	 */
 if|if
 condition|(
 name|bn
 operator|<
 literal|0
 condition|)
-block|{
-comment|/* Shouldn't be here -- we don't think */
-name|printf
+name|panic
 argument_list|(
-literal|"lfs_bmap: NEGATIVE indirect block number %d\n"
+literal|"lfs_bmap: negative indirect block number %d"
 argument_list|,
 name|bn
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"negative indirect block number"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * The first NDADDR blocks are direct blocks 	 */
+comment|/* The first NDADDR blocks are direct blocks. */
 if|if
 condition|(
 name|bn
@@ -268,7 +228,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Determine the number of levels of indirection. 	 */
+comment|/* Determine the number of levels of indirection. */
 name|sh
 operator|=
 literal|1
@@ -328,7 +288,7 @@ operator|(
 name|EFBIG
 operator|)
 return|;
-comment|/* 	 * Fetch through the indirect blocks. 	 */
+comment|/* Fetch through the indirect blocks. */
 name|vp
 operator|=
 name|ITOV
@@ -579,15 +539,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOGFS */
-end_comment
 
 end_unit
 
