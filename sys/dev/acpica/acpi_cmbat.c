@@ -1765,6 +1765,12 @@ operator|==
 name|ACPI_TYPE_DEVICE
 operator|)
 operator|&&
+operator|!
+name|acpi_disabled
+argument_list|(
+literal|"cmbat"
+argument_list|)
+operator|&&
 name|acpi_MatchHid
 argument_list|(
 name|dev
