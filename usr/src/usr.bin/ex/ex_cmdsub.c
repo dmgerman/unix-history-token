@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmdsub.c	7.2	%G%"
+literal|"@(#)ex_cmdsub.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,6 +360,8 @@ condition|)
 name|putchar
 argument_list|(
 literal|' '
+operator||
+name|QUOTE
 argument_list|)
 expr_stmt|;
 if|if
