@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -679,6 +679,32 @@ comment|/* built-in for gcc */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* getopt(3) external variables */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|opterr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|getopt
 name|__P
@@ -698,6 +724,18 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|suboptarg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* getsubopt(3) external variable */
+end_comment
 
 begin_decl_stmt
 name|int
