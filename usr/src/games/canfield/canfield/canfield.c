@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c	5.8 (Berkeley) %G%"
+literal|"@(#)canfield.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<curses.h>
 end_include
 
@@ -71,13 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -6871,9 +6877,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SIGTSTP
 name|kill
 argument_list|(
 name|getpid
@@ -6882,32 +6885,6 @@ argument_list|,
 name|SIGTSTP
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sh
-operator|=
-name|getenv
-argument_list|(
-literal|"SHELL"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sh
-operator|==
-name|NULL
-condition|)
-name|sh
-operator|=
-literal|"/bin/sh"
-expr_stmt|;
-name|system
-argument_list|(
-name|sh
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|raw
 argument_list|()
 expr_stmt|;
@@ -7938,7 +7915,7 @@ name|dbfd
 operator|=
 name|open
 argument_list|(
-literal|"/usr/games/lib/cfscores"
+name|_PATH_SCORE
 argument_list|,
 literal|2
 argument_list|)
