@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -465,19 +465,19 @@ literal|"VAX 8600, serial# %d(%d), hardware ECO level %d(%d)\n"
 argument_list|,
 name|cpusid
 operator|.
-name|cpu780
+name|cpu8600
 operator|.
 name|cp_sno
 argument_list|,
 name|cpusid
 operator|.
-name|cpu780
+name|cpu8600
 operator|.
 name|cp_plant
 argument_list|,
 name|cpusid
 operator|.
-name|cpu780
+name|cpu8600
 operator|.
 name|cp_eco
 operator|>>
@@ -485,7 +485,7 @@ literal|4
 argument_list|,
 name|cpusid
 operator|.
-name|cpu780
+name|cpu8600
 operator|.
 name|cp_eco
 argument_list|)
@@ -6092,6 +6092,10 @@ condition|(
 name|dumplo
 operator|==
 literal|0
+operator|&&
+name|dumpdev
+operator|!=
+name|NODEV
 operator|&&
 name|bdevsw
 index|[
