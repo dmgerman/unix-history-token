@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Marcel Moolenaar  * Copyright (c) 2000,2001 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003,2004 Marcel Moolenaar  * Copyright (c) 2000,2001 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -688,6 +688,20 @@ name|kmi
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|Mhz
+value|1000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|Ghz
+value|(1000L*Mhz)
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -710,7 +724,9 @@ modifier|*
 name|model_name
 decl_stmt|;
 name|u_int64_t
-name|t
+name|features
+decl_stmt|,
+name|tmp
 decl_stmt|;
 name|int
 name|number
@@ -722,9 +738,6 @@ decl_stmt|,
 name|family
 decl_stmt|,
 name|archrev
-decl_stmt|;
-name|u_int64_t
-name|features
 decl_stmt|;
 comment|/* 	 * Assumes little-endian. 	 */
 operator|*
@@ -766,7 +779,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|t
+name|tmp
 operator|=
 name|ia64_get_cpuid
 argument_list|(
@@ -776,7 +789,7 @@ expr_stmt|;
 name|number
 operator|=
 operator|(
-name|t
+name|tmp
 operator|>>
 literal|0
 operator|)
@@ -786,7 +799,7 @@ expr_stmt|;
 name|revision
 operator|=
 operator|(
-name|t
+name|tmp
 operator|>>
 literal|8
 operator|)
@@ -796,7 +809,7 @@ expr_stmt|;
 name|model
 operator|=
 operator|(
-name|t
+name|tmp
 operator|>>
 literal|16
 operator|)
@@ -806,7 +819,7 @@ expr_stmt|;
 name|family
 operator|=
 operator|(
-name|t
+name|tmp
 operator|>>
 literal|24
 operator|)
@@ -816,7 +829,7 @@ expr_stmt|;
 name|archrev
 operator|=
 operator|(
-name|t
+name|tmp
 operator|>>
 literal|32
 operator|)
@@ -869,6 +882,40 @@ break|break;
 case|case
 literal|0x01
 case|:
+comment|/* 			 * Deerfield is a low-voltage variant based on the 			 * Madison core. We need circumstantial evidence 			 * (i.e. the clock frequency) to identify those. 			 * Allow for roughly 1% error margin. 			 */
+name|tmp
+operator|=
+name|processor_frequency
+operator|>>
+literal|7
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|processor_frequency
+operator|-
+name|tmp
+operator|)
+operator|<
+literal|1
+operator|*
+name|Ghz
+operator|&&
+operator|(
+name|processor_frequency
+operator|+
+name|tmp
+operator|)
+operator|>=
+literal|1
+operator|*
+name|Ghz
+condition|)
+name|model_name
+operator|=
+literal|"Deerfield"
+expr_stmt|;
+else|else
 name|model_name
 operator|=
 literal|"Madison"
@@ -934,7 +981,7 @@ operator|+
 literal|4999
 operator|)
 operator|/
-literal|1000000
+name|Mhz
 argument_list|,
 operator|(
 operator|(
@@ -943,7 +990,11 @@ operator|+
 literal|4999
 operator|)
 operator|/
-literal|10000
+operator|(
+name|Mhz
+operator|/
+literal|100
+operator|)
 operator|)
 operator|%
 literal|100
