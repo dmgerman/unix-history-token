@@ -1,16 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.9 (Berkeley) %G%  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ENDIAN
-end_ifndef
-
 begin_comment
-comment|/*  * Machine dependent constants for vax.  */
+comment|/*  * Machine dependent constants for VAX.  */
 end_comment
 
 begin_define
@@ -19,6 +13,23 @@ directive|define
 name|MACHINE
 value|"vax"
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENDIAN
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -45,8 +56,12 @@ begin_define
 define|#
 directive|define
 name|CLK_TCK
-value|UNDEFINED_FOR_NOW
+value|60
 end_define
+
+begin_comment
+comment|/* for times() */
+end_comment
 
 begin_define
 define|#
@@ -132,162 +147,6 @@ name|USHRT_MAX
 value|0xffff
 end_define
 
-begin_comment
-comment|/*  * Definitions for byte order,  * according to byte significance from low address to high.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LITTLE
-value|1234
-end_define
-
-begin_comment
-comment|/* least-significant byte first (vax) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIG
-value|4321
-end_define
-
-begin_comment
-comment|/* most-significant byte first */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PDP
-value|3412
-end_define
-
-begin_comment
-comment|/* LSB first in word, MSW first in long (pdp) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENDIAN
-value|LITTLE
-end_define
-
-begin_comment
-comment|/* byte order on vax */
-end_comment
-
-begin_comment
-comment|/*  * Macros for network/external number representation conversion.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|ENDIAN
-operator|==
-name|BIG
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ntohl
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ntohs
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|htonl
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|htons
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|unsigned
-name|short
-name|ntohs
-argument_list|()
-decl_stmt|,
-name|htons
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|long
-name|ntohl
-argument_list|()
-decl_stmt|,
-name|htonl
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* start of kernel virtual */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BTOPKERNBASE
-value|((u_long)KERNBASE>> PGSHIFT)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -344,6 +203,24 @@ define|#
 directive|define
 name|NPTEPG
 value|(NBPG/(sizeof (struct pte)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BTOPKERNBASE
+value|((u_long)KERNBASE>> PGSHIFT)
 end_define
 
 begin_ifndef
@@ -810,12 +687,6 @@ begin_endif
 endif|#
 directive|endif
 endif|KERNEL
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|ENDIAN
 end_endif
 
 end_unit
