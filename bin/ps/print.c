@@ -3339,10 +3339,12 @@ index|]
 init|=
 literal|"%"
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fcp
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|cp
 decl_stmt|;
