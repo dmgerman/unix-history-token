@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.72 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.73 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -487,27 +487,22 @@ return|;
 block|}
 block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
+name|NDINIT
+argument_list|(
 name|ndp
-operator|->
-name|ni_nameiop
-operator|=
+argument_list|,
 name|LOOKUP
-operator||
+argument_list|,
 name|FOLLOW
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_segflg
-operator|=
+argument_list|,
 name|UIO_USERSPACE
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_dirp
-operator|=
+argument_list|,
 name|args
 operator|.
 name|fspec
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -516,8 +511,6 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
-argument_list|,
-name|p
 argument_list|)
 condition|)
 return|return
