@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)cfb.c	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)cfb.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -144,6 +144,16 @@ include|#
 directive|include
 file|<scc.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|PMAX
+end_define
+
+begin_comment
+comment|/* enable /dev/pm compatibility */
+end_comment
 
 begin_comment
 comment|/*  * These need to be mapped into user space.  */
@@ -1452,6 +1462,9 @@ modifier|*
 name|cursor
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|PMAX
 specifier|register
 name|int
 name|i
@@ -1661,6 +1674,9 @@ name|pos
 operator|++
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* PMAX */
 block|}
 end_function
 
@@ -2059,6 +2075,9 @@ literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* 	 * signature test, X-windows cursor, no overlays, SYNC* PLL, 	 * normal RAM select, 7.5 IRE pedestal, do sync 	 */
+ifndef|#
+directive|ifndef
+name|PMAX
 name|bt459_write_reg
 argument_list|(
 name|regs
@@ -2068,6 +2087,21 @@ argument_list|,
 literal|0xc2
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* PMAX */
+name|bt459_write_reg
+argument_list|(
+name|regs
+argument_list|,
+name|BT459_REG_CMD2
+argument_list|,
+literal|0xc0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PMAX */
 comment|/* get all pixel bits */
 name|bt459_write_reg
 argument_list|(
@@ -2548,6 +2582,9 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PMAX
 name|bt459_select_reg
 argument_list|(
 name|regs
@@ -2582,6 +2619,80 @@ name|MachEmptyWriteBuffer
 argument_list|()
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* PMAX */
+name|bt459_select_reg
+argument_list|(
+name|regs
+argument_list|,
+name|BT459_REG_CCOLOR_1
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|regs
+operator|->
+name|addr_reg
+operator|=
+name|cursor_RGB
+index|[
+name|i
+index|]
+expr_stmt|;
+name|MachEmptyWriteBuffer
+argument_list|()
+expr_stmt|;
+block|}
+name|bt459_select_reg
+argument_list|(
+name|regs
+argument_list|,
+name|BT459_REG_CCOLOR_3
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|3
+init|;
+name|i
+operator|<
+literal|6
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|regs
+operator|->
+name|addr_reg
+operator|=
+name|cursor_RGB
+index|[
+name|i
+index|]
+expr_stmt|;
+name|MachEmptyWriteBuffer
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* PMAX */
 block|}
 end_function
 
