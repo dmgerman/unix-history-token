@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.16 1999/06/02 00:46:54 brian Exp $  *  */
+comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.17 1999/06/05 21:35:51 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -5907,6 +5907,8 @@ decl_stmt|,
 name|h
 decl_stmt|,
 name|wasopen
+decl_stmt|,
+name|err
 decl_stmt|;
 name|char
 modifier|*
@@ -6093,6 +6095,10 @@ name|p
 argument_list|)
 condition|)
 block|{
+name|err
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -6104,6 +6110,7 @@ name|full
 operator|==
 literal|'/'
 condition|)
+block|{
 name|p
 operator|->
 name|fd
@@ -6121,6 +6128,19 @@ operator||
 name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|fd
+operator|<
+literal|0
+condition|)
+name|err
+operator|=
+name|errno
+expr_stmt|;
+block|}
 name|wasopen
 operator|=
 name|p
@@ -6196,6 +6216,36 @@ name|h
 operator|==
 name|NDEVICES
 condition|)
+block|{
+if|if
+condition|(
+name|err
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: %s: %s\n"
+argument_list|,
+name|p
+operator|->
+name|link
+operator|.
+name|name
+argument_list|,
+name|p
+operator|->
+name|name
+operator|.
+name|full
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|log_Printf
 argument_list|(
 name|LogWARN
@@ -6216,6 +6266,7 @@ operator|.
 name|full
 argument_list|)
 expr_stmt|;
+block|}
 name|physical_Unlock
 argument_list|(
 name|p
