@@ -583,6 +583,18 @@ end_macro
 begin_macro
 name|GENSET
 argument_list|(
+argument|setsofttq
+argument_list|,
+argument|&ipending
+argument_list|,
+literal|1
+argument|<< SWI_TQ
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
 argument|setsoftclock
 argument_list|,
 argument|&ipending
@@ -649,6 +661,18 @@ argument|&idelayed
 argument_list|,
 literal|1
 argument|<< SWI_VM
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
+argument|schedsofttq
+argument_list|,
+argument|&idelayed
+argument_list|,
+literal|1
+argument|<< SWI_TQ
 argument_list|)
 end_macro
 
@@ -978,6 +1002,15 @@ begin_macro
 name|GENSPLASSERT
 argument_list|(
 argument|splsoftvm
+argument_list|,
+argument|SOFT
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPLASSERT
+argument_list|(
+argument|splsofttq
 argument_list|,
 argument|SOFT
 argument_list|)

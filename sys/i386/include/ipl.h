@@ -85,6 +85,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SWI_TQ
+value|(NHWI + 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SWI_CLOCK
 value|30
 end_define
@@ -138,6 +145,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SWI_TQ_PENDING
+value|(1<< SWI_TQ)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SWI_CLOCK_PENDING
 value|(1<< SWI_CLOCK)
 end_define
@@ -179,6 +193,13 @@ define|#
 directive|define
 name|SWI_VM_MASK
 value|(SWI_VM_PENDING | SWI_CLOCK_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_TQ_MASK
+value|(SWI_TQ_PENDING | SWI_CLOCK_MASK)
 end_define
 
 begin_define

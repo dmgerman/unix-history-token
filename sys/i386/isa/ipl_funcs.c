@@ -144,6 +144,17 @@ end_macro
 begin_macro
 name|DO_SETBITS
 argument_list|(
+argument|setsofttq
+argument_list|,
+argument|&ipending
+argument_list|,
+argument|SWI_TQ_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
 argument|schedsoftcamnet
 argument_list|,
 argument|&idelayed
@@ -193,6 +204,17 @@ argument_list|,
 argument|&idelayed
 argument_list|,
 argument|SWI_VM_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
+argument|schedsofttq
+argument_list|,
+argument|&idelayed
+argument_list|,
+argument|SWI_TQ_PENDING
 argument_list|)
 end_macro
 
@@ -828,6 +850,19 @@ argument_list|,
 argument|SWI_VM_MASK
 argument_list|,
 literal|16
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsofttq
+argument_list|,
+argument||=
+argument_list|,
+argument|SWI_TQ_MASK
+argument_list|,
+literal|17
 argument_list|)
 end_macro
 
