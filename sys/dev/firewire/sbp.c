@@ -3254,6 +3254,31 @@ name|vendor
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* skip to the unit directory for SBP-2 */
+while|while
+condition|(
+operator|(
+name|reg
+operator|=
+name|crom_search_key
+argument_list|(
+name|cc
+argument_list|,
+name|CSRKEY_VER
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|reg
+operator|->
+name|val
+operator|==
+name|CSRVAL_T10SBP2
+condition|)
+break|break;
 comment|/* get firmware revision */
 name|reg
 operator|=
