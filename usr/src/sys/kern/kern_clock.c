@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	6.10	84/11/14	*/
+comment|/*	kern_clock.c	6.11	85/03/08	*/
 end_comment
 
 begin_include
@@ -1311,7 +1311,7 @@ decl_stmt|;
 if|if
 condition|(
 name|t
-operator|==
+operator|<=
 literal|0
 condition|)
 name|t
