@@ -1488,11 +1488,30 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_comment
+comment|/*  * IOCTLS for talking to the geom.ctl device.  */
+end_comment
+
+begin_struct
+struct|struct
+name|geomgetconf
+block|{
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
 name|GEOMGETCONF
-value|_IOWR('G',  0, struct sbuf)
+value|_IOW('G',  0, struct geomgetconf)
 end_define
 
 begin_comment
