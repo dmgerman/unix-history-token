@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_alloc.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_alloc.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -531,6 +531,8 @@ name|obp
 decl_stmt|;
 name|int
 name|cg
+decl_stmt|,
+name|request
 decl_stmt|;
 name|fs
 operator|=
@@ -843,6 +845,26 @@ name|bpref
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_optim
+operator|==
+name|FS_OPTSPACE
+condition|)
+name|request
+operator|=
+name|nsize
+expr_stmt|;
+else|else
+comment|/* if (fs->fs_optim == FS_OPTTIME) */
+name|request
+operator|=
+name|fs
+operator|->
+name|fs_bsize
+expr_stmt|;
 name|bno
 operator|=
 operator|(
@@ -859,9 +881,7 @@ name|long
 operator|)
 name|bpref
 argument_list|,
-name|fs
-operator|->
-name|fs_bsize
+name|request
 argument_list|,
 operator|(
 name|u_long
@@ -1020,9 +1040,7 @@ if|if
 condition|(
 name|nsize
 operator|<
-name|fs
-operator|->
-name|fs_bsize
+name|request
 condition|)
 name|free
 argument_list|(
@@ -1041,9 +1059,7 @@ call|(
 name|off_t
 call|)
 argument_list|(
-name|fs
-operator|->
-name|fs_bsize
+name|request
 operator|-
 name|nsize
 argument_list|)
