@@ -1950,7 +1950,6 @@ name|decimal_point
 operator|==
 literal|'\0'
 condition|)
-block|{
 name|decimal_point
 operator|=
 operator|*
@@ -1958,17 +1957,6 @@ name|lc
 operator|->
 name|decimal_point
 expr_stmt|;
-if|if
-condition|(
-name|decimal_point
-operator|==
-literal|'\0'
-condition|)
-name|decimal_point
-operator|=
-literal|'.'
-expr_stmt|;
-block|}
 name|thousands_sep
 operator|=
 operator|*
