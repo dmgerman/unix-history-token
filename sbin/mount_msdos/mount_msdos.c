@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_msdos.c,v 1.7 1997/02/22 14:32:30 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,20 +32,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|MSDOSFS
-end_define
 
 begin_include
 include|#
@@ -57,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<msdosfs/msdosfsmount.h>
 end_include
 
 begin_include
@@ -220,6 +214,8 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|,
+name|error
+decl_stmt|,
 name|mntflags
 decl_stmt|,
 name|set_gid
@@ -244,7 +240,6 @@ index|]
 decl_stmt|;
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
 decl_stmt|;
 name|mntflags
@@ -609,17 +604,19 @@ name|S_IRWXO
 operator|)
 expr_stmt|;
 block|}
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"msdos"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -645,18 +642,20 @@ name|endvfsent
 argument_list|()
 expr_stmt|;
 comment|/* clear cache */
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"msdos"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
 name|errx
 argument_list|(
@@ -670,8 +669,8 @@ condition|(
 name|mount
 argument_list|(
 name|vfc
-operator|->
-name|vfc_index
+operator|.
+name|vfc_name
 argument_list|,
 name|dir
 argument_list|,
