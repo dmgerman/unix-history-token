@@ -120,10 +120,6 @@ name|int
 name|maxunit
 decl_stmt|;
 comment|/* size of devices array */
-name|int
-name|nextunit
-decl_stmt|;
-comment|/* next unused unit number */
 block|}
 struct|;
 end_struct
@@ -368,6 +364,11 @@ directive|define
 name|DF_QUIET
 value|16
 comment|/* don't print verbose attach message */
+define|#
+directive|define
+name|DF_DONENOMATCH
+value|32
+comment|/* don't execute DEVICE_NOMATCH again */
 name|u_char
 name|order
 decl_stmt|;
