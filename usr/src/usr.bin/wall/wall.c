@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.15 (Berkeley) %G%"
+literal|"@(#)wall.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -711,7 +711,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|fname
 operator|&&
 operator|!
