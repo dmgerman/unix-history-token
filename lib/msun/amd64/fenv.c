@@ -289,6 +289,7 @@ name|mxcsr
 expr_stmt|;
 name|mxcsr
 operator|&=
+operator|~
 name|FE_ALL_EXCEPT
 expr_stmt|;
 name|mxcsr
