@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	5.3 (Berkeley) %G%"
+literal|"@(#)termstat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,11 +98,19 @@ directive|endif
 endif|LINEMODE
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
@@ -144,7 +152,15 @@ parameter_list|()
 function_decl|;
 ifdef|#
 directive|ifdef
+name|defined
+name|(
 name|CRAY2
+name|)
+name|&&
+name|defined
+name|(
+name|UNICOS5
+name|)
 comment|/* 	 * Keep track of that ol' CR/NL mapping while we're in the 	 * neighborhood. 	 */
 name|newmap
 operator|=
@@ -153,7 +169,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CRAY2 */
+endif|defined(CRAY2)&& defined(UNICOS5)
 comment|/* 	 * Check for state of BINARY options. 	 */
 if|if
 condition|(
@@ -333,10 +349,17 @@ operator|&&
 name|tty_israw
 argument_list|()
 condition|)
+block|{
 name|uselinemode
 operator|=
 literal|0
 expr_stmt|;
+name|tty_setlinemode
+argument_list|(
+name|uselinemode
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
@@ -1020,7 +1043,7 @@ name|parm1
 expr_stmt|;
 name|def_row
 operator|=
-name|parm1
+name|parm2
 expr_stmt|;
 return|return;
 block|}
@@ -1113,16 +1136,24 @@ comment|/* What? */
 break|break;
 block|}
 comment|/* end of switch */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 comment|/* 	 * Just in case of the likely event that we changed the pty state. 	 */
 name|rcv_ioctl
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CRAY2 */
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 name|netflush
 argument_list|()
 expr_stmt|;
@@ -1133,11 +1164,19 @@ begin_comment
 comment|/* end of clientstat */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
+end_if
 
 begin_macro
 name|termstat
@@ -1182,7 +1221,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CRAY2 */
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 end_comment
 
 begin_ifdef

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.4 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -828,9 +828,17 @@ operator|&
 name|termbuf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNCIOS5
+argument_list|)
 name|needtermstat
 operator|=
 literal|1
@@ -871,16 +879,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|cc_t
 modifier|*
 name|valp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|cc_t
 modifier|*
 modifier|*
 name|valpp
@@ -910,8 +916,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -942,8 +947,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -974,8 +978,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1006,8 +1009,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1042,8 +1044,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1078,8 +1079,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1110,8 +1110,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1142,8 +1141,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1174,8 +1172,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1206,8 +1203,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1238,8 +1234,7 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1270,8 +1265,38 @@ operator|*
 name|valpp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|cc_t
+operator|*
+operator|)
+operator|&
+name|termbuf
+operator|.
+name|ltc
+operator|.
+name|t_lnextc
+expr_stmt|;
+return|return
+operator|(
+name|SLC_VARIABLE
+operator|)
+return|;
+case|case
+name|SLC_FORW1
+case|:
+operator|*
+name|valp
+operator|=
+name|termbuf
+operator|.
+name|tc
+operator|.
+name|t_brkc
+expr_stmt|;
+operator|*
+name|valpp
+operator|=
+operator|(
+name|cc_t
 operator|*
 operator|)
 operator|&
@@ -1301,11 +1326,18 @@ case|:
 operator|*
 name|valp
 operator|=
+operator|(
+name|cc_t
+operator|)
 literal|0
 expr_stmt|;
 operator|*
 name|valpp
 operator|=
+operator|(
+name|cc_t
+operator|*
+operator|)
 literal|0
 expr_stmt|;
 return|return
@@ -1317,11 +1349,18 @@ default|default:
 operator|*
 name|valp
 operator|=
+operator|(
+name|cc_t
+operator|)
 literal|0
 expr_stmt|;
 operator|*
 name|valpp
 operator|=
+operator|(
+name|cc_t
+operator|*
+operator|)
 literal|0
 expr_stmt|;
 return|return
@@ -1360,16 +1399,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|cc_t
 modifier|*
 name|valp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|cc_t
 modifier|*
 modifier|*
 name|valpp
@@ -1393,7 +1430,7 @@ name|defval
 parameter_list|(
 name|a
 parameter_list|)
-value|*valp = (a); *valpp = 0; return(SLC_DEFAULT);
+value|*valp = ((cc_t)a); *valpp = (cc_t *)0; return(SLC_DEFAULT);
 switch|switch
 condition|(
 name|func
@@ -1615,6 +1652,36 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|VEOL
+case|case
+name|SLC_FORW1
+case|:
+name|setval
+argument_list|(
+name|VEOL
+argument_list|,
+name|SLC_VARIABLE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|VEOL2
+case|case
+name|SLC_FORW2
+case|:
+name|setval
+argument_list|(
+name|VEOL2
+argument_list|,
+name|SLC_VARIABLE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 case|case
 name|SLC_BRK
 case|:
@@ -1659,6 +1726,52 @@ end_endif
 
 begin_comment
 comment|/* USE_TERMIO */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRAY
+end_ifdef
+
+begin_comment
+comment|/*  * getnpty()  *  * Return the number of pty's configured into the system.  */
+end_comment
+
+begin_macro
+name|getnpty
+argument_list|()
+end_macro
+
+begin_block
+block|{
+ifdef|#
+directive|ifdef
+name|_SC_CRAY_NPTY
+return|return
+name|sysconf
+argument_list|(
+name|_SC_CRAY_NPTY
+argument_list|)
+return|;
+else|#
+directive|else
+return|return
+literal|128
+return|;
+endif|#
+directive|endif
+comment|/* _SC_CRAY_NPTY */
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CRAY */
 end_comment
 
 begin_comment
@@ -3016,11 +3129,19 @@ directive|endif
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
+end_if
 
 begin_macro
 name|tty_isnewmap
@@ -3108,18 +3229,25 @@ name|gotalarm
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|nologinproc
-argument_list|()
-end_macro
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
-begin_block
+begin_function
+name|void
+name|nologinproc
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|gotalarm
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -3302,6 +3430,8 @@ operator||
 name|ANYP
 operator||
 name|ECHO
+operator||
+name|XTABS
 expr_stmt|;
 name|termbuf
 operator|.
@@ -3706,7 +3836,7 @@ name|struct
 name|init_request
 name|request
 decl_stmt|;
-name|int
+name|void
 name|nologinproc
 parameter_list|()
 function_decl|;
@@ -3824,6 +3954,27 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
+name|request
+operator|.
+name|signal
+operator|=
+name|SIGCLD
+expr_stmt|;
+name|request
+operator|.
+name|pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|write
@@ -3901,6 +4052,12 @@ name|i
 operator|++
 control|)
 block|{
+name|char
+name|tbuf
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|alarm
 argument_list|(
 literal|15
@@ -3935,6 +4092,15 @@ name|gotalarm
 operator|=
 literal|0
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|tbuf
+argument_list|,
+literal|"telnetd: waiting for /etc/init to start login process on %s\r\n"
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3942,9 +4108,12 @@ name|write
 argument_list|(
 name|net
 argument_list|,
-literal|"telnetd: waiting for /etc/init to start login process.\r\n"
+name|tbuf
 argument_list|,
-literal|56
+name|strlen
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3981,26 +4150,6 @@ name|SIGALRM
 argument_list|,
 name|SIG_DFL
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Set tab expansion the way we like, in case init did something 	 * different. 	 */
-name|init_termbuf
-argument_list|()
-expr_stmt|;
-name|termbuf
-operator|.
-name|c_oflag
-operator|&=
-operator|~
-name|TABDLY
-expr_stmt|;
-name|termbuf
-operator|.
-name|c_oflag
-operator||=
-name|TAB0
-expr_stmt|;
-name|set_termbuf
-argument_list|()
 expr_stmt|;
 return|return;
 endif|#
@@ -4214,6 +4363,8 @@ operator|=
 name|OPOST
 operator||
 name|ONLCR
+operator||
+name|TAB3
 expr_stmt|;
 name|termbuf
 operator|.
@@ -4618,7 +4769,7 @@ argument_list|)
 expr_stmt|;
 name|sleep
 argument_list|(
-literal|5
+literal|2
 argument_list|)
 expr_stmt|;
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)defs.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)defs.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -206,6 +206,42 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOG_DAEMON
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOG_DAEMON
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOG_ODELAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOG_ODELAY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -229,6 +265,14 @@ include|#
 directive|include
 file|<sgtty.h>
 end_include
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|cc_t
+typedef|;
+end_typedef
 
 begin_else
 else|#
@@ -374,6 +418,12 @@ directive|ifndef
 name|FD_SET
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_fd_set
+end_ifndef
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -389,6 +439,11 @@ block|}
 name|fd_set
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -590,8 +645,7 @@ name|char
 name|flag
 decl_stmt|;
 comment|/* the flags for this function */
-name|unsigned
-name|char
+name|cc_t
 name|val
 decl_stmt|;
 comment|/* the value of the special character */
@@ -615,8 +669,7 @@ name|slcent
 name|current
 decl_stmt|;
 comment|/* the current settings */
-name|unsigned
-name|char
+name|cc_t
 modifier|*
 name|sptr
 decl_stmt|;

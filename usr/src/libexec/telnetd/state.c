@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	5.4 (Berkeley) %G%"
+literal|"@(#)state.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,9 +303,17 @@ name|state
 init|=
 name|TS_DATA
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 name|char
 modifier|*
 name|opfrontp
@@ -533,13 +541,21 @@ index|]
 operator|.
 name|sptr
 operator|!=
-literal|'\377'
+operator|(
+name|cc_t
+operator|)
+operator|-
+literal|1
 condition|)
 block|{
 operator|*
 name|pfrontp
 operator|++
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|slctab
 index|[
@@ -582,8 +598,7 @@ case|case
 name|EL
 case|:
 block|{
-name|unsigned
-name|char
+name|cc_t
 name|ch
 decl_stmt|;
 name|ptyflush
@@ -621,12 +636,20 @@ if|if
 condition|(
 name|ch
 operator|!=
-literal|'\377'
+operator|(
+name|cc_t
+operator|)
+operator|-
+literal|1
 condition|)
 operator|*
 name|pfrontp
 operator|++
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 expr_stmt|;
 break|break;
@@ -903,7 +926,15 @@ block|}
 block|}
 if|#
 directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -1009,7 +1040,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* CRAY2 */
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 block|}
 end_block
 
@@ -1018,7 +1049,7 @@ comment|/* end of telrcv */
 end_comment
 
 begin_comment
-comment|/*  * The will/wont/do/dont state machines are based on Dave Borman's  * Telnet option processing state machine.  We keep track of the full  * state of the option negotiation with the following state variables  *	myopts, hisopts - The last fully negotiated state for each  *			side of the connection.  *	mywants, hiswants - The state we wish to be in after a completed  *			negotiation.  (hiswants is slightly misleading,  *			this is more precisely the state I want him to  *			be in.  *	resp - We count the number of requests we have sent out.  *  * These correspond to the following states:  *	my_state = the last negotiated state  *	want_state = what I want the state to go to  *	want_resp = how many requests I have sent  * All state defaults are negative, and resp defaults to 0.  *  * When initiating a request to change state to new_state:  *   * if ((want_resp == 0&& new_state == my_state) || want_state == new_state) {  *	do nothing;  * } else {  *	want_state = new_state;  *	send new_state;  *	want_resp++;  * }  *  * When receiving new_state:  *  * if (want_resp) {  *	want_resp--;  *	if (want_resp&& (new_state == my_state))  *		want_resp--;  * }  * if ((want_resp == 0)&& (new_state != want_state)) {  *	if (ok_to_switch_to new_state)  *		want_state = new_state;  *	else  *		want_resp++;  *	send want_state;  * }  * my_state = new_state;  *  * Note that new_state is implied in these functions by the function itself.  * will and do imply positive new_state, wont and dont imply negative.  *  * Finally, there is one catch.  If we send a negative response to a  * positive request, my_state will be the positive while want_state will  * remain negative.  my_state will revert to negative when the negative  * acknowlegment arrives from the peer.  Thus, my_state generally tells  * us not only the last negotiated state, but also tells us what the peer  * wants to be doing as well.  It is important to understand this difference  * as we may wish to be processing data streams based on our desired state  * (want_state) or based on what the peer thinks the state is (my_state).  *  * This all works fine because if the peer sends a positive request, the data  * that we receive prior to negative acknowlegment will probably be affected  * by the positive state, and we can process it as such (if we can; if we  * can't then it really doesn't matter).  If it is that important, then the  * peer probably should be buffering until this option state negotiation  * is complete.  *  * In processing options, request signifies whether this is a request  * to send or a response.  request is true if this is a request to   * send generated locally.  */
+comment|/*  * The will/wont/do/dont state machines are based on Dave Borman's  * Telnet option processing state machine.  We keep track of the full  * state of the option negotiation with the following state variables  *	myopts, hisopts - The last fully negotiated state for each  *			side of the connection.  *	mywants, hiswants - The state we wish to be in after a completed  *			negotiation.  (hiswants is slightly misleading,  *			this is more precisely the state I want him to  *			be in.  *	resp - We count the number of requests we have sent out.  *  * These correspond to the following states:  *	my_state = the last negotiated state  *	want_state = what I want the state to go to  *	want_resp = how many requests I have sent  * All state defaults are negative, and resp defaults to 0.  *  * When initiating a request to change state to new_state:  *   * if ((want_resp == 0&& new_state == my_state) || want_state == new_state) {  *	do nothing;  * } else {  *	want_state = new_state;  *	send new_state;  *	want_resp++;  * }  *  * When receiving new_state:  *  * if (want_resp) {  *	want_resp--;  *	if (want_resp&& (new_state == my_state))  *		want_resp--;  * }  * if ((want_resp == 0)&& (new_state != want_state)) {  *	if (ok_to_switch_to new_state)  *		want_state = new_state;  *	else  *		want_resp++;  *	send want_state;  * }  * my_state = new_state;  *  * Note that new_state is implied in these functions by the function itself.  * will and do imply positive new_state, wont and dont imply negative.  *  * Finally, there is one catch.  If we send a negative response to a  * positive request, my_state will be the positive while want_state will  * remain negative.  my_state will revert to negative when the negative  * acknowlegment arrives from the peer.  Thus, my_state generally tells  * us not only the last negotiated state, but also tells us what the peer  * wants to be doing as well.  It is important to understand this difference  * as we may wish to be processing data streams based on our desired state  * (want_state) or based on what the peer thinks the state is (my_state).  *  * This all works fine because if the peer sends a positive request, the data  * that we receive prior to negative acknowlegment will probably be affected  * by the positive state, and we can process it as such (if we can; if we  * can't then it really doesn't matter).  If it is that important, then the  * peer probably should be buffering until this option state negotiation  * is complete.  *  */
 end_comment
 
 begin_macro
@@ -2936,6 +2967,7 @@ comment|/* 		 * According to spec, only server can send request for 		 * forward
 default|default:
 break|break;
 block|}
+break|break;
 block|}
 comment|/* end of case TELOPT_LINEMODE */
 endif|#
@@ -2980,7 +3012,9 @@ break|break;
 default|default:
 break|break;
 block|}
+break|break;
 block|}
+comment|/* end of case TELOPT_STATUS */
 default|default:
 break|break;
 block|}

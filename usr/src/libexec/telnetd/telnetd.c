@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.41 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,8 +132,6 @@ init|=
 literal|0
 decl_stmt|,
 name|highpty
-init|=
-literal|128
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +163,121 @@ name|progname
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IP_TOS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|NEED_GETTOS
+argument_list|)
+end_if
+
+begin_struct
+struct|struct
+name|tosent
+block|{
+name|char
+modifier|*
+name|t_name
+decl_stmt|;
+comment|/* name */
+name|char
+modifier|*
+modifier|*
+name|t_aliases
+decl_stmt|;
+comment|/* alias list */
+name|char
+modifier|*
+name|t_proto
+decl_stmt|;
+comment|/* protocol */
+name|int
+name|t_tos
+decl_stmt|;
+comment|/* Type Of Service bits */
+block|}
+struct|;
+end_struct
+
+begin_function
+name|struct
+name|tosent
+modifier|*
+name|gettosbyname
+parameter_list|(
+name|name
+parameter_list|,
+name|proto
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|,
+decl|*
+name|proto
+decl_stmt|;
+end_function
+
+begin_block
+block|{
+specifier|static
+name|struct
+name|tosent
+name|te
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|aliasp
+init|=
+literal|0
+decl_stmt|;
+name|te
+operator|.
+name|t_name
+operator|=
+name|name
+expr_stmt|;
+name|te
+operator|.
+name|t_aliases
+operator|=
+operator|&
+name|aliasp
+expr_stmt|;
+name|te
+operator|.
+name|t_proto
+operator|=
+name|proto
+expr_stmt|;
+name|te
+operator|.
+name|t_tos
+operator|=
+literal|020
+expr_stmt|;
+comment|/* Low Delay bit */
+return|return
+operator|(
+operator|&
+name|te
+operator|)
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|main
 parameter_list|(
@@ -189,6 +302,17 @@ literal|1
 decl_stmt|,
 name|fromlen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IP_TOS
+name|struct
+name|tosent
+modifier|*
+name|tp
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* IP_TOS */
 name|pfrontp
 operator|=
 name|pbackp
@@ -210,6 +334,18 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRAY
+comment|/* 	 * Get number of pty's before trying to process options, 	 * which may include changing pty range. 	 */
+name|highpty
+operator|=
+name|getnpty
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CRAY */
 name|top
 label|:
 name|argc
@@ -326,6 +462,7 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
+comment|/* 		 * Allow the specification of alterations to the pty search 		 * range.  It is legal to specify only one, and not change the 		 * other from its default. 		 */
 operator|*
 name|argv
 operator|+=
@@ -376,12 +513,14 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|highpty
-operator|=
-operator|-
-literal|1
-expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|*
+name|argv
+operator|!=
+literal|'\0'
+condition|)
 name|lowpty
 operator|=
 name|atoi
@@ -407,7 +546,7 @@ operator|||
 operator|(
 name|highpty
 operator|>
-literal|999
+literal|32767
 operator|)
 condition|)
 block|{
@@ -437,7 +576,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[-l] [-rlowpty-highpty] [port]\n"
+literal|"[-l] [-r[lowpty]-[highpty]] [port]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -945,6 +1084,55 @@ literal|"setsockopt (SO_KEEPALIVE): %m"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|IP_TOS
+if|if
+condition|(
+operator|(
+name|tp
+operator|=
+name|gettosbyname
+argument_list|(
+literal|"telnet"
+argument_list|,
+literal|"tcp"
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|setsockopt
+argument_list|(
+literal|0
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|&
+name|tp
+operator|->
+name|t_tos
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+operator|)
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (IP_TOS): %m"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* IP_TOS */
 name|net
 operator|=
 literal|0
@@ -964,7 +1152,7 @@ comment|/* end of main */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|cleanup
 parameter_list|()
 function_decl|;
@@ -1626,9 +1814,17 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 name|int
 name|termstat
 parameter_list|()
@@ -1792,11 +1988,13 @@ index|]
 operator|==
 name|OPT_YES
 condition|)
+block|{
 name|willoption
 argument_list|(
 name|TELOPT_ECHO
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Finally, to clean things up, we turn on our echo.  This 	 * will break stupid 4.2 telnets out of local terminal echo. 	 */
 if|if
 condition|(
@@ -1900,9 +2098,17 @@ operator|&
 name|on
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 name|init_termdriver
 argument_list|(
 name|f
@@ -1990,6 +2196,11 @@ name|defined
 argument_list|(
 name|CRAY2
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 comment|/* 	 * Cray-2 will send a signal when pty modes are changed by slave 	 * side.  Set up signal handler now. 	 */
 if|if
 condition|(
@@ -2049,6 +2260,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCSETCTTY
+name|ioctl
+argument_list|(
+name|p
+argument_list|,
+name|TCSETCTTY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Show banner that getty never gave. 	 * 	 * We put the banner in the pty input buffer.  This way, it 	 * gets carriage return null processing, etc., just like all 	 * other pty --> client data. 	 */
 operator|(
 name|void
@@ -2221,6 +2446,19 @@ argument_list|(
 name|ptyip
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LINEMODE
+comment|/* 	 * Last check to make sure all our states are correct. 	 */
+name|init_termbuf
+argument_list|()
+expr_stmt|;
+name|localstat
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LINEMODE */
 for|for
 control|(
 init|;
@@ -2249,9 +2487,17 @@ operator|<
 literal|0
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 if|if
 condition|(
 name|needtermstat
@@ -2261,7 +2507,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CRAY2 */
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -2683,9 +2929,19 @@ operator|<=
 literal|0
 condition|)
 break|break;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 ifdef|#
 directive|ifdef
 name|LINEMODE
@@ -2736,6 +2992,10 @@ name|netclear
 argument_list|()
 expr_stmt|;
 comment|/* clear buffer back */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* 					 * We really should have this in, but 					 * there are client telnets on some 					 * operating systems get screwed up 					 * royally if we send them urgent 					 * mode data.  So, for now, we'll not 					 * do this... 					 */
 operator|*
 name|nfrontp
 operator|++
@@ -2755,6 +3015,8 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* off by one XXX */
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -2824,7 +3086,7 @@ literal|1
 expr_stmt|;
 else|#
 directive|else
-comment|/* CRAY2 */
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 if|if
 condition|(
 operator|!
@@ -2866,7 +3128,7 @@ name|ptyibuf
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CRAY2 */
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 block|}
 block|}
 while|while
@@ -2914,9 +3176,17 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 elseif|else
 if|if
 condition|(
@@ -2941,7 +3211,7 @@ literal|'\r'
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CRAY2 */
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 operator|*
 name|nfrontp
 operator|++
@@ -3007,9 +3277,17 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY2
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
 comment|/* 		 * If chars were left over from the terminal driver, 		 * note their existence. 		 */
 if|if
 condition|(
@@ -3034,7 +3312,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* CRAY2 */
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 if|if
 condition|(
 name|FD_ISSET
@@ -3177,6 +3455,10 @@ index|]
 operator|.
 name|sptr
 condition|?
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|slctab
 index|[
@@ -3244,6 +3526,10 @@ index|]
 operator|.
 name|sptr
 condition|?
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|slctab
 index|[
@@ -3307,6 +3593,10 @@ index|]
 operator|.
 name|sptr
 condition|?
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|slctab
 index|[
@@ -3333,9 +3623,54 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_TERMIO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SYSV_TERMIO
+argument_list|)
+specifier|extern
+name|char
+name|oldeofc
+decl_stmt|;
+endif|#
+directive|endif
 name|init_termbuf
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_TERMIO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SYSV_TERMIO
+argument_list|)
+if|if
+condition|(
+operator|!
+name|tty_isediting
+argument_list|()
+condition|)
+block|{
+operator|*
+name|pfrontp
+operator|++
+operator|=
+name|oldeofc
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 operator|*
 name|pfrontp
 operator|++
@@ -3347,6 +3682,10 @@ index|]
 operator|.
 name|sptr
 condition|?
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|slctab
 index|[
