@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.12 (Berkeley) %G%"
+literal|"@(#)af.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,19 @@ block|,
 name|NIL
 block|,
 name|NIL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|sockaddr_in
+name|inet_default
+init|=
+block|{
+name|AF_INET
+block|,
+name|INADDR_ANY
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -480,16 +493,33 @@ operator|(
 literal|0
 operator|)
 return|;
-return|return
-operator|(
+if|if
+condition|(
+name|sin
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|!=
+literal|0
+operator|&&
 name|inet_netof
 argument_list|(
 name|sin
 operator|->
 name|sin_addr
 argument_list|)
-operator|!=
+operator|==
 literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}

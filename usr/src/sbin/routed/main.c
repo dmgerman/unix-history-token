@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.9 (Berkeley) %G%"
+literal|"@(#)main.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,13 @@ end_decl_stmt
 begin_comment
 comment|/* process should supply updates */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|gateway
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -359,11 +366,62 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-g"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|gateway
+operator|=
+literal|1
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-l"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|gateway
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+continue|continue;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: routed [ -s ] [ -q ] [ -t ]\n"
+literal|"usage: routed [ -s ] [ -q ] [ -t ] [ -g ] [ -l ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
