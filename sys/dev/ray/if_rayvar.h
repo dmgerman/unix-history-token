@@ -1018,5 +1018,29 @@ begin_comment
 comment|/* RAY_RECERR */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RAY_MAP_CM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RAY_MAP_CM
+parameter_list|(
+name|sc
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RAY_MAP_CM */
+end_comment
+
 end_unit
 
