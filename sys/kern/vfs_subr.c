@@ -3195,9 +3195,6 @@ modifier|*
 name|nmp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|done
 decl_stmt|;
 name|struct
@@ -3234,11 +3231,6 @@ name|p
 argument_list|,
 name|SHUTDOWN_PRI_FIRST
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -3428,11 +3420,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4750,8 +4737,6 @@ modifier|*
 name|blist
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|vm_object_t
@@ -4778,11 +4763,6 @@ operator|&
 name|V_SAVE
 condition|)
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 name|vp
@@ -4833,11 +4813,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4857,11 +4832,6 @@ name|v_dirtyblkhd
 argument_list|)
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
 name|vp
@@ -4897,11 +4867,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -4925,17 +4890,7 @@ literal|"vinvalbuf: dirty bufs"
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If you alter this loop please notice that interlock is dropped and 	 * reacquired in flushbuflist.  Special care is needed to ensure that 	 * no race conditions occur from this. 	 */
 for|for
 control|(
@@ -5033,11 +4988,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
 name|vp
@@ -5141,11 +5091,6 @@ do|;
 name|VI_UNLOCK
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Destroy the copy in the VM cache, too. 	 */
@@ -5629,8 +5574,6 @@ modifier|*
 name|nbp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|anyfreed
 decl_stmt|;
 name|int
@@ -5648,11 +5591,6 @@ literal|1
 operator|)
 operator|/
 name|blksize
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
@@ -6107,11 +6045,6 @@ block|}
 name|VI_UNLOCK
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|vnode_pager_setsize
@@ -7326,9 +7259,6 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|bp
@@ -7393,11 +7323,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Insert onto list for new vnode. 	 */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|buf_vlist_add
 argument_list|(
 name|bp
@@ -7405,11 +7330,6 @@ argument_list|,
 name|vp
 argument_list|,
 name|BX_VNCLEAN
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -7437,9 +7357,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|bp
@@ -7459,11 +7376,6 @@ operator|=
 name|bp
 operator|->
 name|b_vp
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|VI_LOCK
 argument_list|(
@@ -7538,11 +7450,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_vp
@@ -7566,9 +7473,9 @@ name|b_object
 operator|=
 name|NULL
 expr_stmt|;
-name|splx
+name|VI_UNLOCK
 argument_list|(
-name|s
+name|vp
 argument_list|)
 expr_stmt|;
 block|}
@@ -7593,15 +7500,8 @@ name|delay
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|,
 name|slot
 decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -7678,11 +7578,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|sync_mtx
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -7768,9 +7663,6 @@ decl_stmt|;
 name|long
 name|starttime
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|thread
 modifier|*
@@ -7819,11 +7711,6 @@ operator|=
 name|time_second
 expr_stmt|;
 comment|/* 		 * Push files whose dirty time has expired.  Be careful 		 * of interrupt race on slp queue. 		 */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -7851,11 +7738,6 @@ condition|)
 name|syncer_delayno
 operator|=
 literal|0
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -7943,11 +7825,6 @@ name|mp
 argument_list|)
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8028,11 +7905,6 @@ name|sync_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
@@ -8399,9 +8271,6 @@ block|{
 name|int
 name|delay
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|newvp
@@ -8432,11 +8301,6 @@ name|panic
 argument_list|(
 literal|"cannot reassign paging buffer"
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Delete from old vnode list, if on one. 	 */
 name|VI_LOCK
@@ -8668,11 +8532,6 @@ block|}
 name|VI_UNLOCK
 argument_list|(
 name|newvp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -9983,14 +9842,6 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|vp
 operator|->
 name|v_holdcnt
@@ -10006,11 +9857,6 @@ condition|)
 name|vbusy
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -10061,14 +9907,6 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -10103,11 +9941,6 @@ else|else
 name|vlruvp
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -11572,9 +11405,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 comment|/* 	 * If a vgone (or vclean) is already in progress, 	 * wait until it is done and return. 	 */
 name|ASSERT_VI_LOCKED
 argument_list|(
@@ -11755,11 +11585,6 @@ name|VI_DOOMED
 operator|)
 condition|)
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -11812,11 +11637,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|vnode_free_list_mtx
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -14029,20 +13849,12 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
 argument_list|,
 literal|"vfree"
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -14122,11 +13934,6 @@ name|v_iflag
 operator||=
 name|VI_FREE
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -14146,14 +13953,6 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -14213,11 +14012,6 @@ name|VI_FREE
 operator||
 name|VI_AGE
 operator|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -15134,7 +14928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The syncer vnode is no longer needed and is being decommissioned.  *  * Modifications to the worklist must be protected at splbio().  */
+comment|/*  * The syncer vnode is no longer needed and is being decommissioned.  *  * Modifications to the worklist must be protected by sync_mtx.  */
 end_comment
 
 begin_function
@@ -15160,13 +14954,10 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|vp
 operator|->
@@ -15175,11 +14966,6 @@ operator|->
 name|mnt_syncer
 operator|=
 name|NULL
-expr_stmt|;
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -15220,11 +15006,6 @@ block|}
 name|VI_UNLOCK
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
