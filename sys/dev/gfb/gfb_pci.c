@@ -1487,9 +1487,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1562,7 +1562,7 @@ name|flag
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1587,9 +1587,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1630,7 +1630,7 @@ name|flag
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -1769,9 +1769,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1814,7 +1814,7 @@ name|arg
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
