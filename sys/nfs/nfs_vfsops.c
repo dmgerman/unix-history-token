@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_bootp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2451,6 +2457,23 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOTP_NFSROOT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BOOTP
+argument_list|)
+name|bootpc_init
+argument_list|()
+expr_stmt|;
+comment|/* use bootp to get nfs_diskless filled in */
+endif|#
+directive|endif
 comment|/* 	 * XXX time must be non-zero when we init the interface or else 	 * the arp code will wedge... 	 */
 while|while
 condition|(
