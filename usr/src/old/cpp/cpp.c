@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.13 %G%"
+literal|"@(#)cpp.c	1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4827,6 +4827,16 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 comment|/* space for formal names */
+name|int
+name|opt_passcom
+init|=
+name|passcom
+decl_stmt|;
+name|passcom
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't put comments in macro expansions */
 operator|++
 name|flslvl
 expr_stmt|;
@@ -4875,6 +4885,10 @@ name|skipbl
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|passcom
+operator|=
+name|opt_passcom
 expr_stmt|;
 return|return
 operator|(
@@ -5249,6 +5263,10 @@ name|pperror
 argument_list|(
 literal|"too much defining"
 argument_list|)
+expr_stmt|;
+name|passcom
+operator|=
+name|opt_passcom
 expr_stmt|;
 return|return
 operator|(
@@ -5719,6 +5737,10 @@ operator|-
 name|space
 expr_stmt|;
 block|}
+name|passcom
+operator|=
+name|opt_passcom
+expr_stmt|;
 return|return
 operator|(
 name|p
