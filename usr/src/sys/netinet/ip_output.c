@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_output.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_output.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -690,6 +690,9 @@ block|}
 comment|/* don't allow broadcast messages to be fragmented */
 if|if
 condition|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
@@ -717,6 +720,9 @@ block|}
 comment|/* 	 * If small enough for interface, can just send directly. 	 */
 if|if
 condition|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
@@ -893,6 +899,9 @@ name|len
 init|;
 name|off
 operator|<
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
@@ -1033,12 +1042,18 @@ name|off
 operator|+
 name|len
 operator|>=
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
 condition|)
 name|len
 operator|=
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
@@ -1184,6 +1199,9 @@ name|hlen
 operator|+
 name|firstlen
 operator|-
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
@@ -1445,6 +1463,25 @@ operator|->
 name|ipopt_dst
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|optlen
+operator|+
+operator|(
+name|u_short
+operator|)
+name|ip
+operator|->
+name|ip_len
+operator|>
+name|IP_MAXPACKET
+condition|)
+return|return
+operator|(
+name|m
+operator|)
+return|;
+comment|/* XXX should fail */
 if|if
 condition|(
 name|p
