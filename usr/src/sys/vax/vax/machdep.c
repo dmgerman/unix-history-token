@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.52.1.1	82/06/14	*/
+comment|/*	machdep.c	4.55	82/06/14	*/
 end_comment
 
 begin_include
@@ -365,7 +365,7 @@ name|maxmem
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First determine how many buffers are reasonable. 	 * Current alg is 32 per megabyte, with min of 32. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
+comment|/* 	 * First determine how many buffers are reasonable. 	 * Current alg is 16 per megabyte, with min of 16. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
 if|if
 condition|(
 name|nbuf
@@ -376,7 +376,7 @@ block|{
 name|nbuf
 operator|=
 operator|(
-literal|32
+literal|16
 operator|*
 name|physmem
 operator|)
@@ -392,11 +392,11 @@ if|if
 condition|(
 name|nbuf
 operator|<
-literal|32
+literal|16
 condition|)
 name|nbuf
 operator|=
-literal|32
+literal|16
 expr_stmt|;
 block|}
 if|if
@@ -478,7 +478,7 @@ name|buffers
 argument_list|,
 name|char
 argument_list|,
-name|BSIZE
+name|MAXBSIZE
 operator|*
 name|nbuf
 argument_list|)
