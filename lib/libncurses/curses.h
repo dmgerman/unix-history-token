@@ -29,6 +29,31 @@ name|CURSES_H
 value|1
 end_define
 
+begin_comment
+comment|/* This is defined in more than one ncurses header, for identification */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NCURSES_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NCURSES_VERSION
+value|"1.8.6/ache"
+end_define
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|chtype
+typedef|;
+end_typedef
+
 begin_include
 include|#
 directive|include
@@ -105,14 +130,6 @@ directive|define
 name|bool
 value|char
 end_define
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|chtype
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* attributes */
