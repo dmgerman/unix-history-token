@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	5.5 (Berkeley) %G%"
+literal|"@(#)passwd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,7 +220,7 @@ name|strcmp
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|uname
