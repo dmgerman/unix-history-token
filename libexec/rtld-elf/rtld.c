@@ -8907,7 +8907,7 @@ index|[
 literal|1
 index|]
 operator|=
-literal|'0'
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
