@@ -177,7 +177,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s dettach dest\n"
+literal|"\t%s detach dest\n"
 argument_list|,
 name|p
 argument_list|)
@@ -1053,7 +1053,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|cmd_dettach
+name|cmd_detach
 parameter_list|(
 specifier|const
 name|char
@@ -3398,7 +3398,7 @@ name|ACT_HUH
 block|,
 name|ACT_ATTACH
 block|,
-name|ACT_DETTACH
+name|ACT_DETACH
 block|,
 name|ACT_INIT
 block|,
@@ -3534,13 +3534,13 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|"dettach"
+literal|"detach"
 argument_list|)
 condition|)
 block|{
 name|action
 operator|=
-name|ACT_DETTACH
+name|ACT_DETACH
 expr_stmt|;
 name|opts
 operator|=
@@ -3930,9 +3930,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACT_DETTACH
+name|ACT_DETACH
 case|:
-name|cmd_dettach
+name|cmd_detach
 argument_list|(
 name|dest
 argument_list|)
