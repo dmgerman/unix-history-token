@@ -3318,8 +3318,6 @@ decl_stmt|;
 comment|/*	struct ucred *cred = req->td->td_ucred;*/
 name|error
 operator|=
-literal|0
-expr_stmt|;
 name|sysctl_wire_old_buffer
 argument_list|(
 name|req
@@ -3327,6 +3325,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|ncp_conn_locklist
 argument_list|(
 name|LK_SHARED

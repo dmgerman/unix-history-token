@@ -472,6 +472,9 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
+name|size_t
+name|wiredlen
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3150,7 +3153,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sysctl_wire_old_buffer
 parameter_list|(
 name|struct

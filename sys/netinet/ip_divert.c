@@ -2216,6 +2216,8 @@ operator|&
 name|divcbinfo
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|sysctl_wire_old_buffer
 argument_list|(
 name|req
@@ -2236,6 +2238,17 @@ name|xinpcb
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|xig
 operator|.
 name|xig_len

@@ -598,6 +598,8 @@ name|error
 decl_stmt|,
 name|pid
 decl_stmt|;
+name|error
+operator|=
 name|sysctl_wire_old_buffer
 argument_list|(
 name|req
@@ -608,6 +610,17 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|sx_xlock
 argument_list|(
 operator|&

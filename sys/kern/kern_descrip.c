@@ -10476,6 +10476,8 @@ decl_stmt|,
 name|n
 decl_stmt|;
 comment|/* 	 * Note: because the number of file descriptors is calculated 	 * in different ways for sizing vs returning the data, 	 * there is information leakage from the first loop.  However, 	 * it is of a similar order of magnitude to the leakage from 	 * global system statistics such as kern.openfiles. 	 */
+name|error
+operator|=
 name|sysctl_wire_old_buffer
 argument_list|(
 name|req
@@ -10483,6 +10485,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|req
