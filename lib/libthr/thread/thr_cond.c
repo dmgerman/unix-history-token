@@ -1050,7 +1050,7 @@ if|if
 condition|(
 name|rval
 operator|==
-name|EAGAIN
+name|ETIMEDOUT
 condition|)
 block|{
 if|if
@@ -1068,10 +1068,6 @@ name|curthread
 argument_list|,
 name|PS_RUNNING
 argument_list|)
-expr_stmt|;
-name|rval
-operator|=
-name|ETIMEDOUT
 expr_stmt|;
 block|}
 else|else

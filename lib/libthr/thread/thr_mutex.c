@@ -3769,7 +3769,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|EAGAIN
+name|ETIMEDOUT
 condition|)
 block|{
 comment|/* 			 * Between the timeout and when the mutex was 			 * locked the previous owner may have released 			 * the mutex to this thread. Or not. 			 */
