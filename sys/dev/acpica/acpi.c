@@ -5216,6 +5216,31 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
+comment|/*      * If the register width is less than 4, assume the BIOS author made a      * mistake and assumed the width is in units of bytes not bits.  Ugh.      */
+switch|switch
+condition|(
+name|gas
+operator|->
+name|RegisterBitWidth
+condition|)
+block|{
+case|case
+literal|1
+case|:
+case|case
+literal|2
+case|:
+case|case
+literal|4
+case|:
+name|gas
+operator|->
+name|RegisterBitWidth
+operator|*=
+literal|8
+expr_stmt|;
+break|break;
+block|}
 comment|/* Validate the address after we're sure we support the space. */
 if|if
 condition|(
