@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SCSI Direct Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_da.c,v 1.17 1999/01/03 22:57:54 mjacob Exp $  */
+comment|/*  * Implementation of SCSI Direct Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_da.c,v 1.18 1999/01/05 20:43:41 mjacob Exp $  */
 end_comment
 
 begin_include
@@ -5624,15 +5624,6 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-name|xpt_release_ccb
-argument_list|(
-name|done_ccb
-argument_list|)
-expr_stmt|;
-name|done_ccb
-operator|=
-name|NULL
-expr_stmt|;
 name|xpt_print_path
 argument_list|(
 name|periph
@@ -5691,12 +5682,18 @@ name|state
 operator|=
 name|DA_STATE_NORMAL
 expr_stmt|;
+comment|/* 		 * Since our peripheral may be invalidated by an error 		 * above or an external event, we must release our CCB 		 * before releasing the probe lock on the peripheral. 		 * The peripheral will only go away once the last lock 		 * is removed, and we need it around for the CCB release 		 * operation. 		 */
+name|xpt_release_ccb
+argument_list|(
+name|done_ccb
+argument_list|)
+expr_stmt|;
 name|cam_periph_unlock
 argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 case|case
 name|DA_CCB_WAITING
@@ -5720,11 +5717,9 @@ name|DA_CCB_DUMP
 case|:
 comment|/* No-op.  We're polling */
 return|return;
+default|default:
+break|break;
 block|}
-if|if
-condition|(
-name|done_ccb
-condition|)
 name|xpt_release_ccb
 argument_list|(
 name|done_ccb
