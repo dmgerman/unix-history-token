@@ -92,6 +92,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pci_cfgreg.h>
 end_include
 
@@ -2759,13 +2765,9 @@ argument_list|,
 name|CONF1_ENABLE_CHK
 argument_list|)
 expr_stmt|;
-name|outb
+name|DELAY
 argument_list|(
-name|CONF1_ADDR_PORT
-operator|+
-literal|3
-argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|mode1res
