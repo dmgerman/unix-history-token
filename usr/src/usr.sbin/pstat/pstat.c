@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.10 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -621,12 +621,6 @@ block|{
 name|MNT_ROOTFS
 block|,
 literal|"rootfs"
-block|}
-block|,
-block|{
-name|MNT_USER
-block|,
-literal|"user"
 block|}
 block|,
 block|{
