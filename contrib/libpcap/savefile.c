@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.49 2000/12/21 10:29:23 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.55 2001/11/28 07:16:53 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +296,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LINKTYPE_PPP_ETHER
+value|51
+end_define
+
+begin_comment
+comment|/* NetBSD PPP-over-Ethernet */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LINKTYPE_ATM_RFC1483
 value|100
 end_define
@@ -351,21 +362,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINKTYPE_ATM_CLIP
-value|106
-end_define
-
-begin_comment
-comment|/* Linux Classical IP over ATM */
-end_comment
-
-begin_comment
-comment|/*  * Reserved for future use.  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LINKTYPE_IEEE802_11
 value|105
 end_define
@@ -377,12 +373,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINKTYPE_FR
-value|107
+name|LINKTYPE_ATM_CLIP
+value|106
 end_define
 
 begin_comment
-comment|/* BSD/OS Frame Relay */
+comment|/* Linux Classical IP over ATM */
 end_comment
 
 begin_define
@@ -394,6 +390,87 @@ end_define
 
 begin_comment
 comment|/* OpenBSD loopback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_LINUX_SLL
+value|113
+end_define
+
+begin_comment
+comment|/* Linux cooked socket capture */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_LTALK
+value|114
+end_define
+
+begin_comment
+comment|/* Apple LocalTalk hardware */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_ECONET
+value|115
+end_define
+
+begin_comment
+comment|/* Acorn Econet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_CISCO_IOS
+value|118
+end_define
+
+begin_comment
+comment|/* For Cisco-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_PRISM_HEADER
+value|119
+end_define
+
+begin_comment
+comment|/* 802.11+Prism II monitor mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_AIRONET_HEADER
+value|120
+end_define
+
+begin_comment
+comment|/* FreeBSD Aironet driver stuff */
+end_comment
+
+begin_comment
+comment|/*  * These types are reserved for future use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_FR
+value|107
+end_define
+
+begin_comment
+comment|/* BSD/OS Frame Relay */
 end_comment
 
 begin_define
@@ -443,12 +520,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINKTYPE_LINUX_SLL
-value|113
+name|LINKTYPE_IPFILTER
+value|116
 end_define
 
 begin_comment
-comment|/* Linux cooked socket capture */
+comment|/* IP Filter capture files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_PFLOG
+value|117
+end_define
+
+begin_comment
+comment|/* OpenBSD DLT_PFLOG */
 end_comment
 
 begin_struct
@@ -581,6 +669,13 @@ block|,
 name|LINKTYPE_PPP_HDLC
 block|}
 block|,
+comment|/* NetBSD PPP over Ethernet */
+block|{
+name|DLT_PPP_ETHER
+block|,
+name|LINKTYPE_PPP_ETHER
+block|}
+block|,
 comment|/* IEEE 802.11 wireless */
 block|{
 name|DLT_IEEE802_11
@@ -600,6 +695,41 @@ block|{
 name|DLT_LINUX_SLL
 block|,
 name|LINKTYPE_LINUX_SLL
+block|}
+block|,
+comment|/* Apple LocalTalk hardware */
+block|{
+name|DLT_LTALK
+block|,
+name|LINKTYPE_LTALK
+block|}
+block|,
+comment|/* Acorn Econet */
+block|{
+name|DLT_ECONET
+block|,
+name|LINKTYPE_ECONET
+block|}
+block|,
+comment|/* For Cisco-internal use */
+block|{
+name|DLT_CISCO_IOS
+block|,
+name|LINKTYPE_CISCO_IOS
+block|}
+block|,
+comment|/* Prism II monitor-mode header plus 802.11 header */
+block|{
+name|DLT_PRISM_HEADER
+block|,
+name|LINKTYPE_PRISM_HEADER
+block|}
+block|,
+comment|/* FreeBSD Aironet driver stuff */
+block|{
+name|DLT_AIRONET_HEADER
+block|,
+name|LINKTYPE_AIRONET_HEADER
 block|}
 block|,
 comment|/* 	 * Any platform that defines additional DLT_* codes should: 	 * 	 *	request a LINKTYPE_* code and value from tcpdump.org, 	 *	as per the above; 	 * 	 *	add, in their version of libpcap, an entry to map 	 *	those DLT_* codes to the corresponding LINKTYPE_* 	 *	code; 	 * 	 *	redefine, in their "net/bpf.h", any DLT_* values 	 *	that collide with the values used by their additional 	 *	DLT_* codes, to remove those collisions (but without 	 *	making them collide with any of the LINKTYPE_* 	 *	values equal to 50 or above; they should also avoid 	 *	defining DLT_* values that collide with those 	 *	LINKTYPE_* values, either). 	 */
