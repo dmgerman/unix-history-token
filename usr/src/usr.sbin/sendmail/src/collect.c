@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.9	%G%"
+literal|"@(#)collect.c	3.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -366,7 +366,7 @@ name|chompheader
 argument_list|(
 name|buf
 argument_list|,
-literal|0
+name|FALSE
 argument_list|)
 argument_list|)
 condition|)
@@ -1112,7 +1112,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		stat -- bits to set in the h_flags field. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. */
+comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. */
 end_comment
 
 begin_macro
@@ -1120,7 +1120,7 @@ name|chompheader
 argument_list|(
 argument|line
 argument_list|,
-argument|stat
+argument|def
 argument_list|)
 end_macro
 
@@ -1132,8 +1132,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|stat
+name|bool
+name|def
 decl_stmt|;
 end_decl_stmt
 
@@ -1445,8 +1445,6 @@ operator|=
 name|hi
 operator|->
 name|hi_flags
-operator||
-name|stat
 expr_stmt|;
 name|h
 operator|->
@@ -1457,13 +1455,23 @@ operator|->
 name|hi_mflags
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|def
+condition|)
+name|h
+operator|->
+name|h_flags
+operator||=
+name|H_DEFAULT
+expr_stmt|;
 else|else
 name|h
 operator|->
 name|h_flags
 operator|&=
 operator|~
-name|H_DEFAULT
+name|H_CHECK
 expr_stmt|;
 if|if
 condition|(
