@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.4	82/05/26	*/
+comment|/*	uda.c	4.5	82/05/27	*/
 end_comment
 
 begin_include
@@ -118,6 +118,18 @@ name|printd
 value|if(udadebug&1)printf
 end_define
 
+begin_decl_stmt
+name|int
+name|udaerror
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set to cause hex dump of error log packets */
+end_comment
+
 begin_comment
 comment|/*  * Parameters for the communications area  */
 end_comment
@@ -129,12 +141,20 @@ name|NRSPL2
 value|3
 end_define
 
+begin_comment
+comment|/* log2 number of response packets */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NCMDL2
 value|3
 end_define
+
+begin_comment
+comment|/* log2 number of command packets */
+end_comment
 
 begin_define
 define|#
@@ -348,21 +368,22 @@ block|,
 literal|0
 block|,
 comment|/* C=blk 0 thru end */
-literal|0
+literal|15884
 block|,
-literal|0
+literal|340670
 block|,
-comment|/* D reserved for RA81 */
-literal|0
+comment|/* D=blk 340670 thru 356553 */
+literal|55936
 block|,
-literal|0
+literal|356554
 block|,
-comment|/* E reserved for RA81 */
-literal|0
+comment|/* E=blk 356554 thru 412489 */
+operator|-
+literal|1
 block|,
-literal|0
+literal|412490
 block|,
-comment|/* F reserved for RA81 */
+comment|/* F=blk 412490 thru end */
 literal|82080
 block|,
 literal|49324
@@ -466,7 +487,7 @@ name|udstd
 index|[]
 init|=
 block|{
-literal|0777550
+literal|0772150
 block|,
 literal|0
 block|}
@@ -2418,6 +2439,10 @@ name|S_STEP1
 case|:
 define|#
 directive|define
+name|STEP1MASK
+value|0174377
+define|#
+directive|define
 name|STEP1GOOD
 value|(UDA_STEP2|UDA_IE|(NCMDL2<<3)|NRSPL2)
 if|if
@@ -2427,11 +2452,7 @@ name|udaddr
 operator|->
 name|udasa
 operator|&
-operator|(
-name|UDA_ERR
-operator||
-name|STEP1GOOD
-operator|)
+name|STEP1MASK
 operator|)
 operator|!=
 name|STEP1GOOD
@@ -2493,6 +2514,10 @@ name|S_STEP2
 case|:
 define|#
 directive|define
+name|STEP2MASK
+value|0174377
+define|#
+directive|define
 name|STEP2GOOD
 value|(UDA_STEP3|UDA_IE|(sc->sc_ivec/4))
 if|if
@@ -2502,11 +2527,7 @@ name|udaddr
 operator|->
 name|udasa
 operator|&
-operator|(
-name|UDA_ERR
-operator||
-name|STEP2GOOD
-operator|)
+name|STEP2MASK
 operator|)
 operator|!=
 name|STEP2GOOD
@@ -2560,6 +2581,10 @@ name|S_STEP3
 case|:
 define|#
 directive|define
+name|STEP3MASK
+value|0174000
+define|#
+directive|define
 name|STEP3GOOD
 value|UDA_STEP4
 if|if
@@ -2569,11 +2594,7 @@ name|udaddr
 operator|->
 name|udasa
 operator|&
-operator|(
-name|UDA_ERR
-operator||
-name|STEP3GOOD
-operator|)
+name|STEP3MASK
 operator|)
 operator|!=
 name|STEP3GOOD
@@ -3558,7 +3579,7 @@ operator|)
 operator|&
 name|bp
 operator|->
-name|b_resid
+name|b_ubinfo
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Unlink buffer from I/O wait queue. 		 */
@@ -3823,15 +3844,11 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"uda%d:%d: %s error, "
+literal|"uda%d: %s error, "
 argument_list|,
 name|um
 operator|->
 name|um_ctlr
-argument_list|,
-name|mp
-operator|->
-name|mslg_seqnum
 argument_list|,
 name|mp
 operator|->
@@ -3897,44 +3914,11 @@ name|M_FM_DISKTRN
 case|:
 name|printf
 argument_list|(
-literal|"disk transfer error, unit %d, grp %d, cyl %d, sec %d, "
+literal|"disk transfer error, unit %d\n"
 argument_list|,
 name|mp
 operator|->
 name|mslg_unit
-argument_list|,
-name|mp
-operator|->
-name|mslg_group
-argument_list|,
-name|mp
-operator|->
-name|mslg_cylinder
-argument_list|,
-name|mp
-operator|->
-name|mslg_sector
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"trk %d, lbn %d, retry %d, level %d\n"
-argument_list|,
-name|mp
-operator|->
-name|mslg_track
-argument_list|,
-name|mp
-operator|->
-name|mslg_lbn
-argument_list|,
-name|mp
-operator|->
-name|mslg_retry
-argument_list|,
-name|mp
-operator|->
-name|mslg_level
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3943,7 +3927,7 @@ name|M_FM_SDI
 case|:
 name|printf
 argument_list|(
-literal|"SDI error, unit %d, event 0%o, cyl %d\n"
+literal|"SDI error, unit %d, event 0%o\n"
 argument_list|,
 name|mp
 operator|->
@@ -3952,10 +3936,6 @@ argument_list|,
 name|mp
 operator|->
 name|mslg_event
-argument_list|,
-name|mp
-operator|->
-name|mslg_cylinder
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3996,6 +3976,63 @@ argument_list|,
 name|mp
 operator|->
 name|mslg_event
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|udaerror
+condition|)
+block|{
+specifier|register
+name|long
+modifier|*
+name|p
+init|=
+operator|(
+name|long
+operator|*
+operator|)
+name|mp
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|mp
+operator|->
+name|mslg_header
+operator|.
+name|uda_msglen
+condition|;
+name|i
+operator|+=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|p
+argument_list|)
+control|)
+name|printf
+argument_list|(
+literal|"%x "
+argument_list|,
+operator|*
+name|p
+operator|++
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
