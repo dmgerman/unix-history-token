@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)heapsort.c	5.7 (Berkeley) %G%"
+literal|"@(#)heapsort.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,11 +134,11 @@ name|count
 parameter_list|,
 name|tmp
 parameter_list|)
-value|{ \ 	for (par_i = initval; (child_i = par_i * 2)<= nmemb; \ 	    par_i = child_i) { \ 		child = (char *)bot + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = (char *)bot + par_i * size; \ 		if (compar(child, par)<= 0) \ 			break; \ 		SWAP(par, child, count, size, tmp); \ 	} \ }
+value|{ \ 	for (par_i = initval; (child_i = par_i * 2)<= nmemb; \ 	    par_i = child_i) { \ 		child = base + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = base + par_i * size; \ 		if (compar(child, par)<= 0) \ 			break; \ 		SWAP(par, child, count, size, tmp); \ 	} \ }
 end_define
 
 begin_comment
-comment|/*  * Select the top of the heap and 'heapify'.  Since by far the most expensive  * action is the call to the compar function, a considerable optimization  * in the average case can be achieved due to the fact that k, the displaced  * elememt, is ususally quite small, so it would be preferable to first  * heapify, always maintaining the invariant that the larger child is copied  * over its parent's record.  *  * Then, starting from the *bottom* of the heap, finding k's correct place,  * again maintianing the invariant.  As a result of the invariant no element  * is 'lost' when k is assigned its correct place in the heap.  *  * The time savings from this optimization are on the order of 15-20% for the  * average case. See Knuth, Vol. 3, page 158, problem 18.  */
+comment|/*  * Select the top of the heap and 'heapify'.  Since by far the most expensive  * action is the call to the compar function, a considerable optimization  * in the average case can be achieved due to the fact that k, the displaced  * elememt, is ususally quite small, so it would be preferable to first  * heapify, always maintaining the invariant that the larger child is copied  * over its parent's record.  *  * Then, starting from the *bottom* of the heap, finding k's correct place,  * again maintianing the invariant.  As a result of the invariant no element  * is 'lost' when k is assigned its correct place in the heap.  *  * The time savings from this optimization are on the order of 15-20% for the  * average case. See Knuth, Vol. 3, page 158, problem 18.  *  * XXX Don't break the #define SELECT line, below.  Reiser cpp gets upset.  */
 end_comment
 
 begin_define
@@ -163,10 +163,10 @@ parameter_list|,
 name|count
 parameter_list|,
 name|tmp1
-parameter_list|, \
+parameter_list|,
 name|tmp2
 parameter_list|)
-value|{ \ 	for (par_i = 1; (child_i = par_i * 2)<= nmemb; par_i = child_i) { \ 		child = (char *)bot + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = (char *)bot + par_i * size; \ 		COPY(par, child, count, size, tmp1, tmp2); \ 	} \ 	for (;;) { \ 		child_i = par_i; \ 		par_i = child_i / 2; \ 		child = (char *)bot + child_i * size; \ 		par = (char *)bot + par_i * size; \ 		if (child_i == 1 || compar(k, par)< 0) { \ 			COPY(child, k, count, size, tmp1, tmp2); \ 			break; \ 		} \ 		COPY(child, par, count, size, tmp1, tmp2); \ 	} \ }
+value|{ \ 	for (par_i = 1; (child_i = par_i * 2)<= nmemb; par_i = child_i) { \ 		child = base + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = base + par_i * size; \ 		COPY(par, child, count, size, tmp1, tmp2); \ 	} \ 	for (;;) { \ 		child_i = par_i; \ 		par_i = child_i / 2; \ 		child = base + child_i * size; \ 		par = base + par_i * size; \ 		if (child_i == 1 || compar(k, par)< 0) { \ 			COPY(child, k, count, size, tmp1, tmp2); \ 			break; \ 		} \ 		COPY(child, par, count, size, tmp1, tmp2); \ 	} \ }
 end_define
 
 begin_comment
@@ -177,7 +177,7 @@ begin_function_decl
 name|int
 name|heapsort
 parameter_list|(
-name|bot
+name|vbase
 parameter_list|,
 name|nmemb
 parameter_list|,
@@ -187,7 +187,7 @@ name|compar
 parameter_list|)
 name|void
 modifier|*
-name|bot
+name|vbase
 decl_stmt|;
 name|size_t
 name|nmemb
@@ -239,6 +239,9 @@ modifier|*
 name|tmp2
 decl_stmt|;
 name|char
+modifier|*
+name|base
+decl_stmt|,
 modifier|*
 name|k
 decl_stmt|,
@@ -296,8 +299,14 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Items are numbered from 1 to nmemb, so offset from size bytes 	 * below the starting address. 	 */
-name|bot
-operator|-=
+name|base
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|vbase
+operator|-
 name|size
 expr_stmt|;
 for|for
@@ -347,11 +356,7 @@ name|COPY
 argument_list|(
 name|k
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|bot
+name|base
 operator|+
 name|nmemb
 operator|*
@@ -368,21 +373,13 @@ argument_list|)
 expr_stmt|;
 name|COPY
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|bot
+name|base
 operator|+
 name|nmemb
 operator|*
 name|size
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|bot
+name|base
 operator|+
 name|size
 argument_list|,
