@@ -76,6 +76,9 @@ literal|12345
 operator|)
 operator|%
 operator|(
+operator|(
+name|u_long
+operator|)
 name|RAND_MAX
 operator|+
 literal|1
