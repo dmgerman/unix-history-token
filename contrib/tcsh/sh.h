@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.h,v 3.87 2000/01/14 22:57:28 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.h,v 3.88 2000/06/10 22:06:27 kim Exp $ */
 end_comment
 
 begin_comment
@@ -489,7 +489,7 @@ if|#
 directive|if
 name|BUFSIZE
 operator|<
-literal|1024
+literal|4096
 end_if
 
 begin_undef
@@ -502,7 +502,7 @@ begin_define
 define|#
 directive|define
 name|BUFSIZE
-value|1024
+value|4096
 end_define
 
 begin_comment
@@ -523,7 +523,7 @@ begin_define
 define|#
 directive|define
 name|BUFSIZE
-value|1024
+value|4096
 end_define
 
 begin_endif
