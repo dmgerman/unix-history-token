@@ -2262,12 +2262,6 @@ expr_stmt|;
 comment|/* we're just an empty header */
 name|bp
 operator|->
-name|b_dev
-operator|=
-name|NULL
-expr_stmt|;
-name|bp
-operator|->
 name|b_rcred
 operator|=
 name|NOCRED
@@ -5400,12 +5394,6 @@ argument_list|,
 name|b_freelist
 argument_list|)
 expr_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* buffers with junk contents */
 block|}
 elseif|else
@@ -5480,12 +5468,6 @@ name|bp
 argument_list|,
 name|b_freelist
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* remaining buffers */
 block|}
@@ -7217,12 +7199,6 @@ operator|->
 name|b_vflags
 operator|=
 literal|0
-expr_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|NULL
 expr_stmt|;
 name|bp
 operator|->
@@ -15013,7 +14989,7 @@ expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"b_error = %d, b_bufsize = %ld, b_bcount = %ld, b_resid = %ld\n"
-literal|"b_dev = (%d,%d), b_data = %p, b_blkno = %jd\n"
+literal|"b_bufobj = (%p), b_data = %p, b_blkno = %jd\n"
 argument_list|,
 name|bp
 operator|->
@@ -15031,19 +15007,9 @@ name|bp
 operator|->
 name|b_resid
 argument_list|,
-name|major
-argument_list|(
 name|bp
 operator|->
-name|b_dev
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
+name|b_bufobj
 argument_list|,
 name|bp
 operator|->

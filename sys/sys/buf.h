@@ -205,10 +205,6 @@ name|b_data
 value|b_io.bio_data
 define|#
 directive|define
-name|b_dev
-value|b_io.bio_dev
-define|#
-directive|define
 name|b_error
 value|b_io.bio_error
 define|#

@@ -3655,22 +3655,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"swap_pager: indefinite wait buffer: device: %s, blkno: %jd, size: %ld\n"
+literal|"swap_pager: indefinite wait buffer: bufobj: %p, blkno: %jd, size: %ld\n"
 argument_list|,
 name|bp
 operator|->
-name|b_dev
-operator|==
-name|NULL
-condition|?
-literal|"[NULL]"
-else|:
-name|devtoname
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
+name|b_bufobj
 argument_list|,
 operator|(
 name|intmax_t
@@ -8475,12 +8464,6 @@ name|vnode
 modifier|*
 name|vp2
 decl_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|NULL
-expr_stmt|;
 name|bp
 operator|->
 name|b_blkno

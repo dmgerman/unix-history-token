@@ -6257,15 +6257,6 @@ name|vp
 operator|->
 name|v_bufobj
 expr_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|vn_todev
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Insert onto list for new vnode. 	 */
 name|buf_vlist_add
 argument_list|(
@@ -7464,15 +7455,6 @@ operator|->
 name|b_flags
 operator||=
 name|B_PAGING
-expr_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|vn_todev
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 name|bp
 operator|->

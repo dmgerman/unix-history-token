@@ -217,12 +217,6 @@ name|BIO_WRITE
 expr_stmt|;
 name|bp
 operator|->
-name|b_dev
-operator|=
-name|dev
-expr_stmt|;
-name|bp
-operator|->
 name|b_iodone
 operator|=
 name|bdone

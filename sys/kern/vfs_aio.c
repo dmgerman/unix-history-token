@@ -5189,14 +5189,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get a copy of the kva from the physical buffer. 	 */
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|vp
-operator|->
-name|v_rdev
-expr_stmt|;
 name|error
 operator|=
 literal|0

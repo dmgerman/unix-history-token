@@ -1366,31 +1366,13 @@ name|B_DELWRI
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|bp
-operator|->
-name|b_dev
-operator|==
-name|NULL
-condition|)
-block|{
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|mountlist
-argument_list|,
-name|bp
-operator|->
-name|b_vp
-operator|->
-name|v_mount
-argument_list|,
-name|mnt_list
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX: This is bogus.  We should probably have a BO_REMOTE flag instead */
+block|if (bp->b_dev == NULL) { 					TAILQ_REMOVE(&mountlist, 					    bp->b_vp->v_mount, mnt_list); 					continue; 				}
+endif|#
+directive|endif
 name|nbusy
 operator|++
 expr_stmt|;
@@ -1407,16 +1389,13 @@ name|DIAGNOSTIC
 argument_list|)
 name|printf
 argument_list|(
-literal|"%d: dev:%s, flags:%0x, blkno:%ld, lblkno:%ld\n"
+literal|"%d: bufobj:%p, flags:%0x, blkno:%ld, lblkno:%ld\n"
 argument_list|,
 name|nbusy
 argument_list|,
-name|devtoname
-argument_list|(
 name|bp
 operator|->
-name|b_dev
-argument_list|)
+name|b_bufobj
 argument_list|,
 name|bp
 operator|->
