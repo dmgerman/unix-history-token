@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c	5.1 (Berkeley) %G%"
+literal|"@(#)printsym.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1039,9 +1039,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|Symbol
-name|t
-decl_stmt|;
 if|if
 condition|(
 name|isambiguous
@@ -1142,11 +1139,44 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|not
 name|canpush
 argument_list|(
 name|len
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"*** expression too large ***"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|isreg
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
+name|push
+argument_list|(
+name|Address
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+name|printval
+argument_list|(
+name|s
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|rpush
 argument_list|(
@@ -1160,14 +1190,6 @@ argument_list|(
 name|s
 operator|->
 name|type
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"*** expression too large ***"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2107,7 +2129,7 @@ name|language_op
 argument_list|(
 name|findlanguage
 argument_list|(
-literal|".c"
+literal|".s"
 argument_list|)
 argument_list|,
 name|L_PRINTVAL

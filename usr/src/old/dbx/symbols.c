@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c	5.1 (Berkeley) %G%"
+literal|"@(#)symbols.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -535,6 +535,16 @@ parameter_list|(
 name|f
 parameter_list|)
 value|((f)->symvalue.funcv.inline)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isreg
+parameter_list|(
+name|s
+parameter_list|)
+value|(s->level< 0)
 end_define
 
 begin_include
@@ -2319,16 +2329,6 @@ parameter_list|(
 name|s
 parameter_list|)
 value|(s->level>= 2 and s->symvalue.offset>= 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isreg
-parameter_list|(
-name|s
-parameter_list|)
-value|(s->level< 0)
 end_define
 
 begin_function
