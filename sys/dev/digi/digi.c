@@ -1159,7 +1159,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|digi_delay
 parameter_list|(
@@ -1180,7 +1179,7 @@ name|cold
 condition|)
 name|DELAY
 argument_list|(
-literal|5000
+literal|1000
 argument_list|)
 expr_stmt|;
 else|else
@@ -1613,7 +1612,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|1000
+literal|100
 condition|)
 block|{
 name|log
@@ -1975,7 +1974,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|1000
+literal|100
 condition|)
 block|{
 name|log
@@ -2046,7 +2045,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|2000
+literal|200
 condition|)
 block|{
 name|log
@@ -2323,7 +2322,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|10
+literal|100
 condition|)
 block|{
 name|log
@@ -2830,7 +2829,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|2000
+literal|200
 condition|)
 block|{
 name|log

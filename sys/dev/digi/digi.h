@@ -694,5 +694,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|digi_delay
+parameter_list|(
+name|struct
+name|digi_softc
+modifier|*
+name|_sc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_txt
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
