@@ -164,7 +164,7 @@ value|(kernel_debugging ? fbsd_kern_frame_saved_pc(FRAME) : \   (((FRAME)->signa
 end_define
 
 begin_comment
-comment|/* Sigtramp is not the same address as BSD/OS.. */
+comment|/* On FreeBSD, sigtramp has size 0x18 and is immediately below the    ps_strings struct which has size 0x10 and is at the top of the    user stack.  */
 end_comment
 
 begin_undef
@@ -183,14 +183,14 @@ begin_define
 define|#
 directive|define
 name|SIGTRAMP_START
-value|0xefbfdfc0
+value|0xefbfdfd8
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIGTRAMP_END
-value|0xefbfe000
+value|0xefbfdff0
 end_define
 
 begin_endif
@@ -199,7 +199,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TM_FBSD_H */
+comment|/* ifndef TM_FBSD_H */
 end_comment
 
 end_unit
