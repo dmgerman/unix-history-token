@@ -4847,6 +4847,8 @@ ifdef|#
 directive|ifdef
 name|USE_PAM
 comment|/* XXX Kluge! The conversation mechanism needs to be fixed. */
+if|if
+condition|(
 name|opiechallenge
 argument_list|(
 operator|&
@@ -4856,14 +4858,26 @@ name|name
 argument_list|,
 name|opieprompt
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|reply
 argument_list|(
 literal|331
 argument_list|,
-literal|"[ %s ] Password required for %s."
+literal|"Response to %s required for %s."
 argument_list|,
 name|opieprompt
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|reply
+argument_list|(
+literal|331
+argument_list|,
+literal|"Password required for %s."
 argument_list|,
 name|name
 argument_list|)
