@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initscr.c	5.12 (Berkeley) %G%"
+literal|"@(#)initscr.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,23 +143,8 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|tputs
-argument_list|(
-name|TI
-argument_list|,
-literal|0
-argument_list|,
-name|__cputchar
-argument_list|)
-expr_stmt|;
-name|tputs
-argument_list|(
-name|VS
-argument_list|,
-literal|0
-argument_list|,
-name|__cputchar
-argument_list|)
+name|__startwin
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -252,7 +237,7 @@ name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
-name|tstp
+name|__stop_signal_handler
 argument_list|)
 expr_stmt|;
 ifdef|#
