@@ -144,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|INICHOST
-value|"whois.internic.net"
+value|"whois.networksolutions.com"
 end_define
 
 begin_define
