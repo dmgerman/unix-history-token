@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * refclock_trak.c - clock driver for the TRAK 8810 GPS STATION CLOCK  *		Tsuruoka Tomoaki Oct 30, 1993   *  */
+comment|/*  * refclock_trak.c - clock driver for the TRAK 8810 GPS STATION CLOCK  *		Tsuruoka Tomoaki Oct 30, 1993   *		tsuruoka@nc.fukuoka-u.ac.jp  *		Faculty of Engineering,  *		Fukuoka University, Fukuoka, JAPAN  */
 end_comment
 
 begin_if
@@ -212,7 +212,7 @@ file|"ntp_stdlib.h"
 end_include
 
 begin_comment
-comment|/*  * This driver supports the TRAK 8810 GPS Receiver with  * Buffered RS-232-C Interface Module.   *  * Most of codes are copied from refclock_as2201.c, Thanks a lot.  *  * The program expects the radio responses once per seccond  * ( by "rqts,u" command or panel control )  * of the form "*RQTS U,ddd:hh:mm:ss.0,Q\r\n for UTC" where   * ddd= day of year  * hh=  hours  * mm=  minutes  * ss=  seconds  * Q=   Quality byte. Q=0 Phase error> 20 us  *		      Q=6 Pahse error< 20 us  *> 10 us  *		      Q=5 Pahse error< 10 us  *> 1 us  *		      Q=4 Pahse error< 1 us  *> 100 ns  *		      Q=3 Pahse error< 100 ns  *> 10 ns  *		      Q=2 Pahse error< 10 ns  *  (note that my clock almost stable at 1 us per 10 hours)  *  */
+comment|/*  * This driver supports the TRAK 8810 GPS Receiver with  * Buffered RS-232-C Interface Module.   *  * Most of codes are copied from refclock_as2201.c, Thanks a lot.  *  * The program expects the radio responses once per seccond  * ( by "rqts,u" command or panel control )  * of the form "*RQTS U,ddd:hh:mm:ss.0,Q\r\n for UTC" where   * ddd= day of year  * hh=  hours  * mm=  minutes  * ss=  seconds  * Q=   Quality byte. Q=0 Phase error> 20 us  *		      Q=6 Pahse error< 20 us  *> 10 us  *		      Q=5 Pahse error< 10 us  *> 1 us  *		      Q=4 Pahse error< 1 us  *> 100 ns  *		      Q=3 Pahse error< 100 ns  *> 10 ns  *		      Q=2 Pahse error< 10 ns  *  (note that my clock almost stable at 1 us per 10 hours)  *  * Request leap second status - if needed.  *	send:	rqls\n  *	reply:	RQLS yy,mm,dd  *	where:	yy is year  *		mm is month  *		dd is day of month.baud  *	Note:	Default data is all zeros  *		i.e. RQLS 00,00,00  */
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ value|B9600
 end_define
 
 begin_comment
-comment|/* uart speed (9600 baud) */
+comment|/* uart speed (9600 bps) */
 end_comment
 
 begin_comment
@@ -293,11 +293,11 @@ begin_define
 define|#
 directive|define
 name|GPSHSREFID
-value|0x7f7f110a
+value|0x7f7f020a
 end_define
 
 begin_comment
-comment|/* 127.127.17.10 refid hi strata */
+comment|/* 127.127.2.10 refid hi strata */
 end_comment
 
 begin_define
@@ -811,7 +811,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Just zero the data arrays 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -819,17 +819,21 @@ operator|*
 operator|)
 name|gpsunits
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 name|gpsunits
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|unitinuse
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|unitinuse
@@ -2393,6 +2397,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * We check the timecode format and decode its contents. The 	 * timecode has format *........RQTS U,ddd:hh:mm:ss.0,Q\r\n).          *                                     012345678901234567890123 	 */
+define|#
+directive|define
+name|RQTS
+value|0
+define|#
+directive|define
+name|RQLS
+value|1
 name|cp
 operator|=
 operator|(
@@ -2419,6 +2431,30 @@ name|strncmp
 argument_list|(
 name|cp
 argument_list|,
+literal|"*RQTS"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|cmdtype
+operator|=
+name|RQTS
+expr_stmt|;
+name|cp
+operator|+=
+literal|8
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
 literal|"RQTS"
 argument_list|,
 literal|4
@@ -2429,7 +2465,7 @@ condition|)
 block|{
 name|cmdtype
 operator|=
-literal|1
+name|RQTS
 expr_stmt|;
 name|cp
 operator|+=
@@ -2443,9 +2479,9 @@ name|strncmp
 argument_list|(
 name|cp
 argument_list|,
-literal|"*RQTS"
+literal|"RQLS"
 argument_list|,
-literal|5
+literal|4
 argument_list|)
 operator|==
 literal|0
@@ -2453,11 +2489,11 @@ condition|)
 block|{
 name|cmdtype
 operator|=
-literal|2
+name|RQLS
 expr_stmt|;
 name|cp
 operator|+=
-literal|8
+literal|5
 expr_stmt|;
 block|}
 else|else
@@ -2468,10 +2504,7 @@ name|cmdtype
 condition|)
 block|{
 case|case
-literal|1
-case|:
-case|case
-literal|2
+name|RQTS
 case|:
 comment|/* 		 *	Check time code format of TRAK 8810 		 */
 if|if
@@ -2594,6 +2627,33 @@ expr_stmt|;
 return|return;
 block|}
 break|break;
+case|case
+name|RQLS
+case|:
+comment|/* 		 * reply for leap second request 		 */
+if|if
+condition|(
+name|cp
+index|[
+literal|0
+index|]
+operator|!=
+literal|'0'
+operator|||
+name|cp
+index|[
+literal|1
+index|]
+operator|!=
+literal|'0'
+condition|)
+name|gps
+operator|->
+name|leap
+operator|=
+name|LEAP_ADDSECOND
+expr_stmt|;
+return|return;
 default|default:
 return|return;
 block|}
@@ -2779,14 +2839,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Test for synchronization 	 */
-comment|/* 	switch( cp[15] ) { 	case '0': 		if(gps->peer->stratum == stratumtouse[gps->unit]) { 			gps->peer->stratum = 10 ; 			bzero(&gps->peer->refid,4); 		} 		break; 	default: 		if(gps->peer->stratum != stratumtouse[gps->unit]) { 			gps->peer->stratum = stratumtouse[gps->unit]   ; 			bcopy(GPSREFID,&gps->peer->refid,4); 		} 		break; 	} */
-name|gps
-operator|->
-name|lasttime
-operator|=
-name|current_time
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2795,6 +2847,70 @@ operator|->
 name|polled
 condition|)
 return|return;
+comment|/* 	 * Test for synchronization  Check for quality byte. 	 */
+comment|/* 	switch( cp[15] ) { 	case '0': 		if(gps->peer->stratum == stratumtouse[gps->unit]) { 			gps->peer->stratum = 10 ; 			bzero(&gps->peer->refid,4); 		} 		break; 	default: 		if(gps->peer->stratum != stratumtouse[gps->unit]) { 			gps->peer->stratum = stratumtouse[gps->unit]   ; 			bcopy(GPSREFID,&gps->peer->refid,4); 		} 		break; 	} */
+if|if
+condition|(
+name|cp
+index|[
+literal|15
+index|]
+operator|==
+literal|'0'
+condition|)
+comment|/* TRAK derailed from tracking satellites */
+block|{
+name|gps
+operator|->
+name|leap
+operator|=
+name|LEAP_NOTINSYNC
+expr_stmt|;
+name|gps
+operator|->
+name|noreply
+operator|++
+expr_stmt|;
+name|trak_report_event
+argument_list|(
+name|gps
+argument_list|,
+name|CEVNT_TIMEOUT
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|gps
+operator|->
+name|lasttime
+operator|=
+name|current_time
+expr_stmt|;
+if|if
+condition|(
+name|gps
+operator|->
+name|lastevent
+operator|==
+name|CEVNT_TIMEOUT
+condition|)
+block|{
+name|gps
+operator|->
+name|status
+operator|=
+name|CEVNT_NOMINAL
+expr_stmt|;
+name|trak_report_event
+argument_list|(
+name|gps
+argument_list|,
+name|CEVNT_NOMINAL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Now, compute the reference time value. Use the heavy 	 * machinery for the second, which presumably is the one which 	 * occured at the last pps pulse and which was captured by the 	 * loop_filter module. All we have to do here is present a 	 * reasonable facsimile of the time at that pulse so the clock- 	 * filter and selection machinery declares us truechimer. The 	 * precision offset within the second is really tuned by the 	 * loop_filter module. Note that this code does not yet know how 	 * to do the years and relies on the clock-calendar chip for 	 * sanity. 	 */
 if|#
 directive|if
@@ -3642,7 +3758,7 @@ operator|->
 name|polls
 operator|++
 expr_stmt|;
-comment|/* 	 *	may be polled every 64 seconds 	 */
+comment|/* 	 *	may be polled every 16 seconds (minpoll 4) 	 */
 name|gps
 operator|->
 name|polled
@@ -3928,7 +4044,19 @@ name|out
 operator|->
 name|lencode
 operator|=
-name|LENTOC
+name|gps
+operator|->
+name|lencode
+expr_stmt|;
+comment|/* LENTOC */
+empty_stmt|;
+name|out
+operator|->
+name|lastcode
+operator|=
+name|gps
+operator|->
+name|lastcode
 expr_stmt|;
 name|out
 operator|->
