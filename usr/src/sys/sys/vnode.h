@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -253,10 +253,16 @@ name|simplelock
 name|v_interlock
 decl_stmt|;
 comment|/* lock on usecount and flag */
+name|struct
+name|lock
+modifier|*
+name|v_vnlock
+decl_stmt|;
+comment|/* used for non-locking fs's */
 name|long
 name|v_spare
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
 comment|/* round to 128 bytes */
