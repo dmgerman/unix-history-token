@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Advanced Power Management (APM) BIOS driver for laptop PCs.  *   * Copyright (c) 1994 by HOSOKAWA Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id$  */
+comment|/*  * Advanced Power Management (APM) BIOS driver for laptop PCs.  *   * Copyright (c) 1994 by HOSOKAWA Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.2 1994/10/01 05:13:36 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -948,29 +948,6 @@ name|apm_info_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|apm_eqv_event
-block|{
-name|u_int
-name|aee_event
-decl_stmt|;
-comment|/* Event ID */
-name|u_int
-name|aee_equiv
-decl_stmt|;
-comment|/* Equivalent event ID */
-name|u_int
-name|aee_resume
-decl_stmt|;
-comment|/* Equivalent event ID when system resumes */
-block|}
-typedef|*
-name|apm_eqv_event_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -983,20 +960,6 @@ define|#
 directive|define
 name|APMIO_GETINFO
 value|_IOR('P', 2, struct apm_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|APMIO_DEFEQV
-value|_IOW('P', 3, struct apm_eqv_event)
-end_define
-
-begin_define
-define|#
-directive|define
-name|APMIO_FLUSHEQV
-value|_IO('P', 4)
 end_define
 
 begin_define
@@ -1025,13 +988,6 @@ define|#
 directive|define
 name|APMIO_NOTHALTCPU
 value|_IO('P', 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|APM_MAX_EQUIV_EVENTS
-value|16
 end_define
 
 begin_endif

@@ -16,6 +16,16 @@ name|_MACHINE_CLOCK_H_
 value|1
 end_define
 
+begin_function_decl
+name|void
+name|inittodr
+parameter_list|(
+name|time_t
+name|base
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
