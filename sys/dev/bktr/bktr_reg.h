@@ -1859,15 +1859,6 @@ name|u_short
 name|fps
 decl_stmt|;
 comment|/* frames per second */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|meteor_video
 name|video
