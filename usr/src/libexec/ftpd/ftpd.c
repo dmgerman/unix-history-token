@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.20 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
 end_include
 
 begin_comment
@@ -3717,10 +3723,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/* VARARGS2 */
-end_comment
-
 begin_macro
 name|reply
 argument_list|(
@@ -3728,15 +3730,7 @@ argument|n
 argument_list|,
 argument|s
 argument_list|,
-argument|p0
-argument_list|,
-argument|p1
-argument_list|,
-argument|p2
-argument_list|,
-argument|p3
-argument_list|,
-argument|p4
+argument|argp
 argument_list|)
 end_macro
 
@@ -3753,6 +3747,12 @@ name|s
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|va_list
+name|argp
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|printf
@@ -3766,15 +3766,7 @@ name|printf
 argument_list|(
 name|s
 argument_list|,
-name|p0
-argument_list|,
-name|p1
-argument_list|,
-name|p2
-argument_list|,
-name|p3
-argument_list|,
-name|p4
+name|argp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3810,24 +3802,12 @@ name|LOG_DEBUG
 argument_list|,
 name|s
 argument_list|,
-name|p0
-argument_list|,
-name|p1
-argument_list|,
-name|p2
-argument_list|,
-name|p3
-argument_list|,
-name|p4
+name|argp
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_comment
-comment|/* VARARGS2 */
-end_comment
 
 begin_macro
 name|lreply
@@ -3835,16 +3815,6 @@ argument_list|(
 argument|n
 argument_list|,
 argument|s
-argument_list|,
-argument|p0
-argument_list|,
-argument|p1
-argument_list|,
-argument|p2
-argument_list|,
-argument|p3
-argument_list|,
-argument|p4
 argument_list|)
 end_macro
 
@@ -3865,29 +3835,11 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"%d-"
+literal|"%d- %s\r\n"
 argument_list|,
 name|n
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 name|s
-argument_list|,
-name|p0
-argument_list|,
-name|p1
-argument_list|,
-name|p2
-argument_list|,
-name|p3
-argument_list|,
-name|p4
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\r\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3902,34 +3854,17 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
 name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"<--- %d- "
+literal|"<--- %d- %s"
 argument_list|,
 name|n
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_DEBUG
 argument_list|,
 name|s
-argument_list|,
-name|p0
-argument_list|,
-name|p1
-argument_list|,
-name|p2
-argument_list|,
-name|p3
-argument_list|,
-name|p4
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
