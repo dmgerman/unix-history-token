@@ -2365,6 +2365,8 @@ argument_list|(
 name|mapbuf
 argument_list|,
 name|bufsize
+operator|+
+literal|1
 argument_list|)
 operator|)
 operator|==
@@ -2448,6 +2450,13 @@ literal|"empty map file %s"
 argument_list|,
 name|mapname
 argument_list|)
+expr_stmt|;
+name|mapbuf
+index|[
+name|mapsize
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|close
 argument_list|(
