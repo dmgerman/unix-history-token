@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -69,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -130,6 +130,18 @@ include|#
 directive|include
 file|<dev/ppbus/ppbio.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_LPT
+argument_list|,
+literal|"lpt"
+argument_list|,
+literal|"LPT buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -295,13 +307,11 @@ directive|define
 name|LP_BYPASS
 value|0x80
 comment|/* bypass  printer ready checks */
-name|struct
-name|buf
+name|void
 modifier|*
 name|sc_inbuf
 decl_stmt|;
-name|struct
-name|buf
+name|void
 modifier|*
 name|sc_statbuf
 decl_stmt|;
@@ -2121,18 +2131,26 @@ name|sc
 operator|->
 name|sc_inbuf
 operator|=
-name|geteblk
+name|malloc
 argument_list|(
 name|BUFSIZE
+argument_list|,
+name|M_LPT
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|sc_statbuf
 operator|=
-name|geteblk
+name|malloc
 argument_list|(
 name|BUFSTATSIZE
+argument_list|,
+name|M_LPT
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2401,18 +2419,22 @@ argument_list|,
 name|LPC_NINIT
 argument_list|)
 expr_stmt|;
-name|brelse
+name|free
 argument_list|(
 name|sc
 operator|->
 name|sc_inbuf
+argument_list|,
+name|M_LPT
 argument_list|)
 expr_stmt|;
-name|brelse
+name|free
 argument_list|(
 name|sc
 operator|->
 name|sc_statbuf
+argument_list|,
+name|M_LPT
 argument_list|)
 expr_stmt|;
 name|end_close
@@ -2789,8 +2811,6 @@ argument_list|,
 name|sc
 operator|->
 name|sc_statbuf
-operator|->
-name|b_data
 argument_list|,
 name|min
 argument_list|(
@@ -2830,8 +2850,6 @@ argument_list|(
 name|sc
 operator|->
 name|sc_statbuf
-operator|->
-name|b_data
 argument_list|,
 name|len
 argument_list|,
@@ -3051,8 +3069,6 @@ operator|=
 name|sc
 operator|->
 name|sc_inbuf
-operator|->
-name|b_data
 expr_stmt|;
 name|uiomove
 argument_list|(

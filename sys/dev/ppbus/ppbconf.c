@@ -2135,7 +2135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppb_release_bus()  *  * Release the device allocated with ppb_request_dev()  */
+comment|/*  * ppb_release_bus()  *  * Release the device allocated with ppb_request_bus()  */
 end_comment
 
 begin_function
