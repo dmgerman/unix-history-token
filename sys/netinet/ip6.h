@@ -77,12 +77,7 @@ name|ip6_dst
 decl_stmt|;
 comment|/* destination address */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -273,12 +268,7 @@ name|u_int8_t
 name|ip6e_len
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -304,12 +294,7 @@ decl_stmt|;
 comment|/* length in units of 8 octets */
 comment|/* followed by options */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -335,12 +320,7 @@ decl_stmt|;
 comment|/* length in units of 8 octets */
 comment|/* followed by options */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -594,12 +574,7 @@ decl_stmt|;
 comment|/* segments left */
 comment|/* followed by routing type specific data */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -647,12 +622,7 @@ index|]
 decl_stmt|;
 comment|/* up to 23 addresses */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -681,12 +651,7 @@ name|ip6f_ident
 decl_stmt|;
 comment|/* identification */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

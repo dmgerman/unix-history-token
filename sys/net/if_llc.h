@@ -51,12 +51,7 @@ name|window_x2
 decl_stmt|;
 block|}
 name|type_u
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -68,12 +63,7 @@ name|num_rcv_x2
 decl_stmt|;
 block|}
 name|type_i
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -85,12 +75,7 @@ name|num_rcv_x2
 decl_stmt|;
 block|}
 name|type_s
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -115,12 +100,7 @@ name|frmr_cause
 decl_stmt|;
 block|}
 name|type_frmr
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -138,12 +118,7 @@ name|ether_type
 decl_stmt|;
 block|}
 name|type_snap
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -155,24 +130,14 @@ name|control_ext
 decl_stmt|;
 block|}
 name|type_raw
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 block|}
 name|llc_un
-comment|/* XXX __attribute__((__packed__)) ??? */
+comment|/* XXX __packed ??? */
 union|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -196,12 +161,7 @@ name|u_int8_t
 name|frmr_cause
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

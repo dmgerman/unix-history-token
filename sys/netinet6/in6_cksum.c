@@ -156,12 +156,7 @@ name|ph_nxt
 decl_stmt|;
 block|}
 name|ph
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 block|}
 name|uph

@@ -196,12 +196,7 @@ name|mib_hop_seq_len
 decl_stmt|;
 comment|/*4a*/
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -242,12 +237,7 @@ name|mib_test_max_chan
 decl_stmt|;
 comment|/*07*/
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -274,12 +264,7 @@ name|mib_tail
 decl_stmt|;
 comment|/*4d*/
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -334,12 +319,7 @@ decl_stmt|;
 comment|/*5a*/
 comment|/*08*/
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

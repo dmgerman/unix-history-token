@@ -109,12 +109,7 @@ decl_stmt|;
 comment|/* protocol type of payload typically  				   Ether protocol type*/
 comment|/*   *  from here on: fields are optional, presence indicated by flags   * 	u_int_16 checksum	checksum (one-complements of GRE header 				and payload 				Present if (ck_pres | rt_pres == 1). 				Valid if (ck_pres == 1). 	u_int_16 offset		offset from start of routing filed to 				first octet of active SRE (see below). 				Present if (ck_pres | rt_pres == 1). 				Valid if (rt_pres == 1). 	u_int_32 key		inserted by encapsulator e.g. for 				authentication 				Present if (key_pres ==1 ). 	u_int_32 seq_num	Sequence number to allow for packet order 				Present if (seq_pres ==1 ). 	struct gre_sre[] routing Routing fileds (see below) 				Present if (rt_pres == 1)  */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -131,12 +126,7 @@ name|gre_h
 name|gi_g
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -306,12 +296,7 @@ name|osrc
 decl_stmt|;
 comment|/* original source addr, if S-bit set */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -328,12 +313,7 @@ name|mobile_h
 name|mh
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 

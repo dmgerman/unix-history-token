@@ -309,7 +309,7 @@ begin_define
 define|#
 directive|define
 name|UPACKED
-value|__attribute__((__packed__))
+value|__packed
 end_define
 
 begin_typedef

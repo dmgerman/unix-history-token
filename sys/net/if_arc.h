@@ -38,12 +38,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -85,12 +80,7 @@ name|arc_seqid2
 decl_stmt|;
 comment|/* real seqid value */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
