@@ -4639,11 +4639,6 @@ parameter_list|,
 name|int
 name|v3
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4657,14 +4652,13 @@ parameter_list|)
 block|{
 name|u_int32_t
 modifier|*
-name|cp
+name|tl
 decl_stmt|;
 if|if
 condition|(
 name|v3
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -4679,10 +4673,7 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|txdr_unsigned
@@ -4694,10 +4685,7 @@ name|bcopy
 argument_list|(
 name|f
 argument_list|,
-operator|(
-operator|*
 name|tl
-operator|)
 argument_list|,
 name|NFSX_V3FH
 argument_list|)
@@ -4705,7 +4693,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cp
+name|tl
 operator|=
 name|nfsm_build_xx
 argument_list|(
@@ -4720,7 +4708,7 @@ name|bcopy
 argument_list|(
 name|f
 argument_list|,
-name|cp
+name|tl
 argument_list|,
 name|NFSX_V2FH
 argument_list|)
@@ -4737,11 +4725,6 @@ name|fhandle_t
 modifier|*
 name|f
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4753,7 +4736,10 @@ modifier|*
 name|bpos
 parameter_list|)
 block|{
-operator|*
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -4770,19 +4756,13 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|nfs_true
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|txdr_unsigned
@@ -4794,10 +4774,7 @@ name|bcopy
 argument_list|(
 name|f
 argument_list|,
-operator|(
-operator|*
 name|tl
-operator|)
 argument_list|,
 name|NFSX_V3FH
 argument_list|)
@@ -4816,11 +4793,6 @@ parameter_list|,
 name|int
 name|m
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4832,7 +4804,10 @@ modifier|*
 name|dpos
 parameter_list|)
 block|{
-operator|*
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -4846,7 +4821,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -4861,7 +4835,6 @@ name|fxdr_unsigned
 argument_list|(
 name|int32_t
 argument_list|,
-operator|*
 operator|*
 name|tl
 argument_list|)
@@ -4895,11 +4868,6 @@ name|int
 modifier|*
 name|s
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4911,7 +4879,10 @@ modifier|*
 name|dpos
 parameter_list|)
 block|{
-operator|*
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -4925,7 +4896,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -4940,7 +4910,6 @@ name|fxdr_unsigned
 argument_list|(
 name|int32_t
 argument_list|,
-operator|*
 operator|*
 name|tl
 argument_list|)
@@ -5128,11 +5097,6 @@ name|nfsrv_descript
 modifier|*
 name|nfsd
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -5144,6 +5108,10 @@ modifier|*
 name|dpos
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|int
 name|fhlen
 decl_stmt|;
@@ -5156,7 +5124,6 @@ operator|&
 name|ND_NFSV3
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5170,7 +5137,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5184,7 +5150,6 @@ name|fxdr_unsigned
 argument_list|(
 name|int
 argument_list|,
-operator|*
 operator|*
 name|tl
 argument_list|)
@@ -5217,7 +5182,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5231,7 +5195,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5244,7 +5207,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|*
 name|tl
 argument_list|,
 call|(
@@ -5288,11 +5250,6 @@ name|vattr
 modifier|*
 name|a
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -5304,7 +5261,10 @@ modifier|*
 name|dpos
 parameter_list|)
 block|{
-operator|*
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5318,7 +5278,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5329,13 +5288,11 @@ return|;
 if|if
 condition|(
 operator|*
-operator|*
 name|tl
 operator|==
 name|nfs_true
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5349,7 +5306,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5366,12 +5322,10 @@ operator|=
 name|nfstov_mode
 argument_list|(
 operator|*
-operator|*
 name|tl
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5385,7 +5339,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5396,13 +5349,11 @@ return|;
 if|if
 condition|(
 operator|*
-operator|*
 name|tl
 operator|==
 name|nfs_true
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5416,7 +5367,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5435,12 +5385,10 @@ argument_list|(
 name|uid_t
 argument_list|,
 operator|*
-operator|*
 name|tl
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5454,7 +5402,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5465,13 +5412,11 @@ return|;
 if|if
 condition|(
 operator|*
-operator|*
 name|tl
 operator|==
 name|nfs_true
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5485,7 +5430,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5504,12 +5448,10 @@ argument_list|(
 name|gid_t
 argument_list|,
 operator|*
-operator|*
 name|tl
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5523,7 +5465,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5534,13 +5475,11 @@ return|;
 if|if
 condition|(
 operator|*
-operator|*
 name|tl
 operator|==
 name|nfs_true
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5556,7 +5495,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5572,12 +5510,10 @@ name|va_size
 operator|=
 name|fxdr_hyper
 argument_list|(
-operator|*
 name|tl
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5591,7 +5527,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5606,7 +5541,6 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-operator|*
 name|tl
 argument_list|)
 condition|)
@@ -5614,7 +5548,6 @@ block|{
 case|case
 name|NFSV3SATTRTIME_TOCLIENT
 case|:
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5630,7 +5563,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5640,7 +5572,6 @@ name|EBADRPC
 return|;
 name|fxdr_nfsv3time
 argument_list|(
-operator|*
 name|tl
 argument_list|,
 operator|&
@@ -5667,7 +5598,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5681,7 +5611,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5696,7 +5625,6 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-operator|*
 name|tl
 argument_list|)
 condition|)
@@ -5704,7 +5632,6 @@ block|{
 case|case
 name|NFSV3SATTRTIME_TOCLIENT
 case|:
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5720,7 +5647,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -5730,7 +5656,6 @@ name|EBADRPC
 return|;
 name|fxdr_nfsv3time
 argument_list|(
-operator|*
 name|tl
 argument_list|,
 operator|&

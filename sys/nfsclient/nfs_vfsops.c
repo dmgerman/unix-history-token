@@ -1280,10 +1280,6 @@ name|nfs_statfs
 modifier|*
 name|sfp
 decl_stmt|;
-name|u_int32_t
-modifier|*
-name|tl
-decl_stmt|;
 name|caddr_t
 name|bpos
 decl_stmt|,
@@ -1854,9 +1850,6 @@ modifier|*
 name|fsp
 decl_stmt|;
 name|u_int32_t
-modifier|*
-name|tl
-decl_stmt|,
 name|pref
 decl_stmt|,
 name|max

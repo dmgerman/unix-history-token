@@ -170,11 +170,6 @@ parameter_list|,
 name|int
 name|v3
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -199,11 +194,6 @@ name|va
 parameter_list|,
 name|int
 name|full
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
 parameter_list|,
 name|struct
 name|mbuf
@@ -232,11 +222,6 @@ name|s
 parameter_list|,
 name|int
 name|m
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
 parameter_list|,
 name|struct
 name|mbuf
@@ -274,7 +259,7 @@ parameter_list|,
 name|v3
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_fhtom_xx((v), (v3),&tl,&mb,&bpos); \ 	nfsm_bcheck(t1, mreq); \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_fhtom_xx((v), (v3),&mb,&bpos); \ 	nfsm_bcheck(t1, mreq); \ } while (0)
 end_define
 
 begin_comment
@@ -291,7 +276,7 @@ parameter_list|,
 name|full
 parameter_list|)
 define|\
-value|nfsm_v3attrbuild_xx(a, full,&tl,&mb,&bpos)
+value|nfsm_v3attrbuild_xx(a, full,&mb,&bpos)
 end_define
 
 begin_define
@@ -319,7 +304,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_strtom_xx((a), (s), (m),&tl,&mb,&bpos); \ 	nfsm_bcheck(t1, mreq); \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_strtom_xx((a), (s), (m),&mb,&bpos); \ 	nfsm_bcheck(t1, mreq); \ } while (0)
 end_define
 
 begin_comment
@@ -377,11 +362,6 @@ name|int
 modifier|*
 name|f
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -411,11 +391,6 @@ parameter_list|,
 name|int
 name|v3
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -444,11 +419,6 @@ name|vattr
 modifier|*
 name|va
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -475,11 +445,6 @@ parameter_list|,
 name|int
 modifier|*
 name|f
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
 parameter_list|,
 name|struct
 name|mbuf
@@ -508,11 +473,6 @@ name|int
 modifier|*
 name|f
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -540,7 +500,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_mtofh_xx((d),&(v), (v3),&(f),&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_mtofh_xx((d),&(v), (v3),&(f),&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_define
@@ -555,7 +515,7 @@ parameter_list|,
 name|v3
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_getfh_xx(&(f),&(s), (v3),&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_getfh_xx(&(f),&(s), (v3),&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_define
@@ -568,7 +528,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_loadattr_xx(&v, a,&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_loadattr_xx(&v, a,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_define
@@ -581,7 +541,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_postop_attr_xx(&v,&f,&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_postop_attr_xx(&v,&f,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_comment
@@ -612,7 +572,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_wcc_data_xx(&v,&f,&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_wcc_data_xx(&v,&f,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_endif

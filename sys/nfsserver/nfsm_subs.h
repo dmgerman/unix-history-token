@@ -82,11 +82,6 @@ parameter_list|,
 name|int
 name|m
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -107,11 +102,6 @@ parameter_list|(
 name|int
 modifier|*
 name|s
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
 parameter_list|,
 name|struct
 name|mbuf
@@ -139,11 +129,6 @@ name|nfsrv_descript
 modifier|*
 name|nfsd
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -165,11 +150,6 @@ name|struct
 name|vattr
 modifier|*
 name|a
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
 parameter_list|,
 name|struct
 name|mbuf
@@ -194,7 +174,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_srvstrsiz_xx(&(s), (m),&tl,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_srvstrsiz_xx(&(s), (m),&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
 end_define
 
 begin_define
@@ -205,7 +185,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_srvnamesiz_xx(&(s),&tl,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_srvnamesiz_xx(&(s),&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
 end_define
 
 begin_define
@@ -216,7 +196,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_srvmtofh_xx((f), nfsd,&tl,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_srvmtofh_xx((f), nfsd,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
 end_define
 
 begin_comment
@@ -231,7 +211,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_srvsattr_xx((a),&tl,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		m_freem(mrep); \ 		mrep = NULL; \ 		goto nfsmout; \ 	} \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_srvsattr_xx((a),&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		m_freem(mrep); \ 		mrep = NULL; \ 		goto nfsmout; \ 	} \ } while (0)
 end_define
 
 begin_comment
@@ -283,11 +263,6 @@ parameter_list|,
 name|int
 name|v3
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -308,11 +283,6 @@ parameter_list|(
 name|fhandle_t
 modifier|*
 name|f
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
 parameter_list|,
 name|struct
 name|mbuf
@@ -373,7 +343,7 @@ parameter_list|,
 name|v3
 parameter_list|)
 define|\
-value|nfsm_srvfhtom_xx((f), (v3),&tl,&mb,&bpos)
+value|nfsm_srvfhtom_xx((f), (v3),&mb,&bpos)
 end_define
 
 begin_define
@@ -384,7 +354,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|nfsm_srvpostop_fh_xx((f),&tl,&mb,&bpos)
+value|nfsm_srvpostop_fh_xx((f),&mb,&bpos)
 end_define
 
 begin_define

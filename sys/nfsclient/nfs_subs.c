@@ -4065,11 +4065,6 @@ name|int
 modifier|*
 name|f
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4095,6 +4090,10 @@ name|nfsfh_t
 modifier|*
 name|ttfhp
 decl_stmt|;
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|int
 name|ttfhsize
 decl_stmt|;
@@ -4106,7 +4105,6 @@ condition|(
 name|v3
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -4120,7 +4118,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -4135,7 +4132,6 @@ name|fxdr_unsigned
 argument_list|(
 name|int
 argument_list|,
-operator|*
 operator|*
 name|tl
 argument_list|)
@@ -4166,8 +4162,6 @@ argument_list|,
 operator|(
 name|v3
 operator|)
-argument_list|,
-name|tl
 argument_list|,
 name|md
 argument_list|,
@@ -4222,7 +4216,6 @@ condition|(
 name|v3
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -4236,7 +4229,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -4257,7 +4249,6 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-operator|*
 name|tl
 argument_list|)
 expr_stmt|;
@@ -4269,15 +4260,12 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-operator|*
 name|tl
 argument_list|)
 condition|)
 name|nfsm_adv_xx
 argument_list|(
 name|NFSX_V3FATTR
-argument_list|,
-name|tl
 argument_list|,
 name|md
 argument_list|,
@@ -4352,11 +4340,6 @@ parameter_list|,
 name|int
 name|v3
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4368,12 +4351,15 @@ modifier|*
 name|dpos
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 if|if
 condition|(
 name|v3
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -4387,7 +4373,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -4402,7 +4387,6 @@ name|fxdr_unsigned
 argument_list|(
 name|int
 argument_list|,
-operator|*
 operator|*
 name|tl
 argument_list|)
@@ -4477,11 +4461,6 @@ name|vattr
 modifier|*
 name|va
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4554,11 +4533,6 @@ name|int
 modifier|*
 name|f
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4570,6 +4544,10 @@ modifier|*
 name|dpos
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|int
 name|t1
 decl_stmt|;
@@ -4581,7 +4559,6 @@ init|=
 operator|*
 name|v
 decl_stmt|;
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -4595,7 +4572,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -4610,7 +4586,6 @@ name|fxdr_unsigned
 argument_list|(
 name|int
 argument_list|,
-operator|*
 operator|*
 name|tl
 argument_list|)
@@ -4686,11 +4661,6 @@ name|int
 modifier|*
 name|f
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4702,6 +4672,10 @@ modifier|*
 name|dpos
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|int
 name|ttattrf
 decl_stmt|,
@@ -4712,7 +4686,6 @@ decl_stmt|;
 name|int
 name|t1
 decl_stmt|;
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -4726,7 +4699,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -4737,13 +4709,11 @@ return|;
 if|if
 condition|(
 operator|*
-operator|*
 name|tl
 operator|==
 name|nfs_true
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -4759,7 +4729,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -4789,10 +4758,7 @@ name|u_int32_t
 argument_list|,
 operator|*
 operator|(
-operator|(
-operator|*
 name|tl
-operator|)
 operator|+
 literal|2
 operator|)
@@ -4808,8 +4774,6 @@ name|v
 argument_list|,
 operator|&
 name|ttattrf
-argument_list|,
-name|tl
 argument_list|,
 name|md
 argument_list|,
@@ -4860,11 +4824,6 @@ parameter_list|,
 name|int
 name|m
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4876,6 +4835,10 @@ modifier|*
 name|bpos
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|int
 name|t1
 decl_stmt|;
@@ -4908,7 +4871,6 @@ name|mb
 argument_list|)
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -4921,10 +4883,7 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|txdr_unsigned
@@ -4934,10 +4893,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 operator|(
-operator|(
-operator|*
 name|tl
-operator|)
 operator|+
 operator|(
 operator|(
@@ -4956,7 +4912,6 @@ name|bcopy
 argument_list|(
 name|a
 argument_list|,
-operator|*
 name|tl
 argument_list|,
 name|s
@@ -5006,11 +4961,6 @@ parameter_list|,
 name|int
 name|v3
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -5022,6 +4972,10 @@ modifier|*
 name|bpos
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|int
 name|t1
 decl_stmt|;
@@ -5058,7 +5012,6 @@ name|mb
 argument_list|)
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5071,10 +5024,7 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|txdr_unsigned
@@ -5089,10 +5039,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 operator|(
-operator|(
-operator|*
 name|tl
-operator|)
 operator|+
 operator|(
 operator|(
@@ -5116,7 +5063,6 @@ argument_list|)
 operator|->
 name|n_fhp
 argument_list|,
-operator|*
 name|tl
 argument_list|,
 name|VTONFS
@@ -5215,11 +5161,6 @@ parameter_list|,
 name|int
 name|full
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -5231,6 +5172,10 @@ modifier|*
 name|bpos
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 if|if
 condition|(
 name|va
@@ -5243,7 +5188,6 @@ operator|)
 name|VNOVAL
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5258,15 +5202,11 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|nfs_true
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5280,7 +5220,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5292,7 +5231,6 @@ argument_list|,
 name|bpos
 argument_list|)
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5313,7 +5251,6 @@ operator|)
 name|VNOVAL
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5328,15 +5265,11 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|nfs_true
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5350,7 +5283,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5362,7 +5294,6 @@ argument_list|,
 name|bpos
 argument_list|)
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5383,7 +5314,6 @@ operator|)
 name|VNOVAL
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5398,15 +5328,11 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|nfs_true
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5420,7 +5346,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5432,7 +5357,6 @@ argument_list|,
 name|bpos
 argument_list|)
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5450,7 +5374,6 @@ operator|!=
 name|VNOVAL
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5465,10 +5388,7 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|nfs_true
@@ -5479,14 +5399,12 @@ name|va
 operator|->
 name|va_size
 argument_list|,
-operator|*
 name|tl
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5498,7 +5416,6 @@ argument_list|,
 name|bpos
 argument_list|)
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5527,7 +5444,6 @@ operator|!=
 name|time_second
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5542,10 +5458,7 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|txdr_unsigned
@@ -5560,14 +5473,12 @@ name|va
 operator|->
 name|va_atime
 argument_list|,
-operator|*
 name|tl
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5579,7 +5490,6 @@ argument_list|,
 name|bpos
 argument_list|)
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5592,7 +5502,6 @@ block|}
 block|}
 else|else
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5604,7 +5513,6 @@ argument_list|,
 name|bpos
 argument_list|)
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5636,7 +5544,6 @@ operator|!=
 name|time_second
 condition|)
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5651,10 +5558,7 @@ name|bpos
 argument_list|)
 expr_stmt|;
 operator|*
-operator|(
-operator|*
 name|tl
-operator|)
 operator|++
 operator|=
 name|txdr_unsigned
@@ -5669,14 +5573,12 @@ name|va
 operator|->
 name|va_mtime
 argument_list|,
-operator|*
 name|tl
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5688,7 +5590,6 @@ argument_list|,
 name|bpos
 argument_list|)
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=
@@ -5701,7 +5602,6 @@ block|}
 block|}
 else|else
 block|{
-operator|*
 name|tl
 operator|=
 name|nfsm_build_xx
@@ -5713,7 +5613,6 @@ argument_list|,
 name|bpos
 argument_list|)
 expr_stmt|;
-operator|*
 operator|*
 name|tl
 operator|=

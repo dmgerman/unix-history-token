@@ -1312,11 +1312,6 @@ parameter_list|,
 name|int
 name|m
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -1328,7 +1323,10 @@ modifier|*
 name|bpos
 parameter_list|)
 block|{
-operator|*
+name|u_int32_t
+modifier|*
+name|tl
+decl_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -1342,7 +1340,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|tl
 operator|==
 name|NULL
@@ -1357,7 +1354,6 @@ name|fxdr_unsigned
 argument_list|(
 name|int32_t
 argument_list|,
-operator|*
 operator|*
 name|tl
 argument_list|)
@@ -1384,11 +1380,6 @@ name|nfsm_adv_xx
 parameter_list|(
 name|int
 name|s
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
 parameter_list|,
 name|struct
 name|mbuf

@@ -195,11 +195,6 @@ parameter_list|,
 name|int
 name|m
 parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -219,11 +214,6 @@ name|nfsm_adv_xx
 parameter_list|(
 name|int
 name|s
-parameter_list|,
-name|u_int32_t
-modifier|*
-modifier|*
-name|tl
 parameter_list|,
 name|struct
 name|mbuf
@@ -291,7 +281,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_strsiz_xx(&(s), (m),&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while(0)
+value|do { \ 	int t1; \ 	t1 = nfsm_strsiz_xx(&(s), (m),&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while(0)
 end_define
 
 begin_define
@@ -325,7 +315,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_adv_xx((s),&tl,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_adv_xx((s),&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_endif
