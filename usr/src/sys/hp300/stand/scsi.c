@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and the Systems  * Programming Group of the University of Utah Computer Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: scsi.c 1.3 90/01/27$  *  *	@(#)scsi.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and the Systems  * Programming Group of the University of Utah Computer Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: scsi.c 1.3 90/01/27$  *  *	@(#)scsi.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -517,11 +517,11 @@ operator|-
 name|scsi_softc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|DELAY
+argument_list|(
+literal|1000000
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

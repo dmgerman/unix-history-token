@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)samachdep.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)samachdep.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -173,6 +173,17 @@ end_define
 
 begin_comment
 comment|/* 25Mhz 68040 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HP_433
+value|8
+end_define
+
+begin_comment
+comment|/* 33Mhz 68040 */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mkboot.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mkboot.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -88,6 +88,68 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|LIF_NUMDIR
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIF_VOLSTART
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIF_VOLSIZE
+value|sizeof(struct lifvol)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIF_DIRSTART
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIF_DIRSIZE
+value|(LIF_NUMDIR * sizeof(struct lifdir))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIF_FILESTART
+value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|btolifs
+parameter_list|(
+name|b
+parameter_list|)
+value|(((b) + (SECTSIZE - 1)) / SECTSIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lifstob
+parameter_list|(
+name|s
+parameter_list|)
+value|((s) * SECTSIZE)
+end_define
+
 begin_decl_stmt
 name|int
 name|lpflag
@@ -119,7 +181,7 @@ name|struct
 name|lifdir
 name|lifd
 index|[
-literal|8
+name|LIF_NUMDIR
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -139,6 +201,10 @@ literal|10240
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Old Format:  *	sector 0:	LIF volume header (40 bytes)  *	sector 1:<unused>  *	sector 2:	LIF directory (8 x 32 == 256 bytes)  *	sector 3-:	LIF file 0, LIF file 1, etc.  * where sectors are 256 bytes.  *  * New Format:  *	sector 0:	LIF volume header (40 bytes)  *	sector 1:<unused>  *	sector 2:	LIF directory (8 x 32 == 256 bytes)  *	sector 3:<unused>  *	sector 4-31:	disklabel (~300 bytes right now)  *	sector 32-:	LIF file 0, LIF file 1, etc.  */
+end_comment
 
 begin_function
 name|main
@@ -530,7 +596,10 @@ name|lifv
 operator|.
 name|vol_addr
 operator|=
-literal|2
+name|btolifs
+argument_list|(
+name|LIF_DIRSTART
+argument_list|)
 expr_stmt|;
 name|lifv
 operator|.
@@ -542,7 +611,10 @@ name|lifv
 operator|.
 name|vol_dirsize
 operator|=
-literal|1
+name|btolifs
+argument_list|(
+name|LIF_DIRSIZE
+argument_list|)
 expr_stmt|;
 name|lifv
 operator|.
@@ -555,9 +627,7 @@ name|lseek
 argument_list|(
 name|to
 argument_list|,
-literal|3
-operator|*
-name|SECTSIZE
+name|LIF_FILESTART
 argument_list|,
 literal|0
 argument_list|)
@@ -571,7 +641,8 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-operator|(
+name|btolifs
+argument_list|(
 name|ld
 operator|.
 name|count
@@ -580,15 +651,7 @@ sizeof|sizeof
 argument_list|(
 name|ld
 argument_list|)
-operator|+
-operator|(
-name|SECTSIZE
-operator|-
-literal|1
-operator|)
-operator|)
-operator|/
-name|SECTSIZE
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -621,7 +684,10 @@ index|]
 operator|.
 name|dir_addr
 operator|=
-literal|3
+name|btolifs
+argument_list|(
+name|LIF_FILESTART
+argument_list|)
 expr_stmt|;
 name|lifd
 index|[
@@ -702,13 +768,12 @@ name|lseek
 argument_list|(
 name|to
 argument_list|,
-operator|(
-literal|3
+name|LIF_FILESTART
 operator|+
+name|lifstob
+argument_list|(
 name|n
-operator|)
-operator|*
-name|SECTSIZE
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -722,7 +787,8 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-operator|(
+name|btolifs
+argument_list|(
 name|ld
 operator|.
 name|count
@@ -731,15 +797,7 @@ sizeof|sizeof
 argument_list|(
 name|ld
 argument_list|)
-operator|+
-operator|(
-name|SECTSIZE
-operator|-
-literal|1
-operator|)
-operator|)
-operator|/
-name|SECTSIZE
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -772,14 +830,9 @@ index|]
 operator|.
 name|dir_addr
 operator|=
-literal|3
-operator|+
-name|lifd
-index|[
-literal|0
-index|]
+name|lifv
 operator|.
-name|dir_length
+name|vol_length
 expr_stmt|;
 name|lifd
 index|[
@@ -854,9 +907,7 @@ name|lseek
 argument_list|(
 name|to
 argument_list|,
-literal|0
-operator|*
-name|SECTSIZE
+name|LIF_VOLSTART
 argument_list|,
 literal|0
 argument_list|)
@@ -868,19 +919,14 @@ argument_list|,
 operator|&
 name|lifv
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|lifv
-argument_list|)
+name|LIF_VOLSIZE
 argument_list|)
 expr_stmt|;
 name|lseek
 argument_list|(
 name|to
 argument_list|,
-literal|2
-operator|*
-name|SECTSIZE
+name|LIF_DIRSTART
 argument_list|,
 literal|0
 argument_list|)
@@ -891,10 +937,7 @@ name|to
 argument_list|,
 name|lifd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|lifd
-argument_list|)
+name|LIF_DIRSIZE
 argument_list|)
 expr_stmt|;
 name|exit
