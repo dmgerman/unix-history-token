@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c	5.5 (Berkeley) %G%"
+literal|"@(#)lookup.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,13 +197,31 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|LOOKUPDEBUG
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[nllookup] binary search fails???\n"
+literal|"[nllookup] (%d) binary search fails\n"
+argument_list|,
+name|nname
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DEBUG
 return|return
 literal|0
 return|;
