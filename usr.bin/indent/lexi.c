@@ -131,7 +131,7 @@ name|struct
 name|templ
 name|specials
 index|[
-literal|100
+literal|1000
 index|]
 init|=
 block|{
@@ -251,6 +251,18 @@ block|}
 block|,
 block|{
 literal|"void"
+block|,
+literal|4
+block|}
+block|,
+block|{
+literal|"const"
+block|,
+literal|4
+block|}
+block|,
+block|{
+literal|"volatile"
 block|,
 literal|4
 block|}
