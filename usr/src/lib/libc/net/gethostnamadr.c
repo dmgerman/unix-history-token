@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.23 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1334,6 +1334,23 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|defflag
+init|=
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEFNAMES
+decl_stmt|;
+name|_res
+operator|.
+name|options
+operator|&=
+operator|~
+name|RES_DEFNAMES
+expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|n
@@ -1365,6 +1382,7 @@ if|if
 condition|(
 name|n
 operator|&&
+operator|*
 name|cp
 operator|==
 literal|0
@@ -1373,6 +1391,16 @@ operator|*
 name|cp
 operator|=
 literal|'.'
+expr_stmt|;
+if|if
+condition|(
+name|defflag
+condition|)
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_DEFNAMES
 expr_stmt|;
 return|return
 operator|(
