@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	8.2 (Berkeley) %G%"
+literal|"@(#)inode.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2810,6 +2810,20 @@ operator|++
 expr_stmt|;
 name|inodirty
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|newinofmt
+condition|)
+name|typemap
+index|[
+name|ino
+index|]
+operator|=
+name|IFTODT
+argument_list|(
+name|type
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
