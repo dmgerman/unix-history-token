@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ktrace.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ktrace.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -263,8 +263,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * kernel trace points  */
+comment|/*  * kernel trace points (in p_traceflag)  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_MASK
+value|0x00ffffff
+end_define
 
 begin_define
 define|#
@@ -301,12 +308,77 @@ name|KTRFAC_PSIG
 value|(1<<KTR_PSIG)
 end_define
 
+begin_comment
+comment|/*  * trace flags (also in p_traceflags)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_ROOT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* root set this trace */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KTRFAC_INHERIT
-value|0x80000000
+value|0x40000000
 end_define
+
+begin_comment
+comment|/* pass trace flags to children */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|int
+name|ktrace
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|pid_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !KERNEL */
+end_comment
 
 end_unit
 
