@@ -127,6 +127,10 @@ argument_list|()
 expr_stmt|;
 name|myname
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|getlogin
 argument_list|()
 expr_stmt|;
@@ -209,7 +213,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"fname"
+name|fname
 argument_list|)
 expr_stmt|;
 name|exit
