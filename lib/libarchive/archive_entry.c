@@ -29,6 +29,27 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EXT2FS_EXT2_FS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ext2fs/ext2_fs.h>
+end_include
+
+begin_comment
+comment|/* for Linux file flags */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -58,27 +79,6 @@ include|#
 directive|include
 file|<wchar.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_EXT2FS_EXT2_FS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ext2fs/ext2_fs.h>
-end_include
-
-begin_comment
-comment|/* for Linux file flags */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
