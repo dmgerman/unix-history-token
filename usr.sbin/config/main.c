@@ -382,6 +382,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_CLOBBER_EVER
 elseif|else
 if|if
 condition|(
@@ -478,6 +481,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|loadaddress
 operator|=
 operator|-

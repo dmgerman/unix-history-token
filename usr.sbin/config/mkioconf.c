@@ -4017,7 +4017,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6s, %2d, C 0x%05X, %5d, %8s,  %2d, 0x%04X, %2d, 0, 0, 0, 1, %2d, 0 },\n"
+literal|"%6s, %2d, C 0x%05X, %5d, %8s, %3d, 0x%04X, %5d,    0,       0,       0, %6d, %8d,   0 },\n"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4054,6 +4054,11 @@ argument_list|,
 name|dp
 operator|->
 name|d_drive
+argument_list|,
+operator|!
+name|dp
+operator|->
+name|d_disabled
 argument_list|,
 name|dp
 operator|->
@@ -4247,7 +4252,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6s, %2d, C 0x%05X, %5d, %8s,  %2d, 0x%04X, 0, 0, 0, 0, 1, %2d, 0 },\n"
+literal|"%6s, %2d, C 0x%05X, %5d, %8s, %3d, 0x%04X,     0,    0,       0,       0, %6d, %8d,   0 },\n"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4280,6 +4285,11 @@ argument_list|,
 name|dp
 operator|->
 name|d_flags
+argument_list|,
+operator|!
+name|dp
+operator|->
+name|d_disabled
 argument_list|,
 name|dp
 operator|->
