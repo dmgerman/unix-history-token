@@ -93,19 +93,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_reass_qsize
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MALLOC_DECLARE
+name|VM_UMA_H
 end_ifdef
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_TSEGQ
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|tcp_reass_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -154,6 +160,11 @@ name|struct
 name|tsegqe_head
 name|t_segq
 decl_stmt|;
+comment|/* segment reassembly queue */
+name|int
+name|t_segqlen
+decl_stmt|;
+comment|/* segment reassembly queue length */
 name|int
 name|t_dupacks
 decl_stmt|;
@@ -1903,6 +1914,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|tcp_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_reass_init
 parameter_list|(
 name|void
 parameter_list|)
