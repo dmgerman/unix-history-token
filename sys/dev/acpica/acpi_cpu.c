@@ -581,6 +581,16 @@ name|cpu_softc
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|cpu
+argument_list|,
+literal|"ACPI CPU"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1370,8 +1380,6 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ACPI_ASSERTLOCK
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1894,8 +1902,6 @@ name|uintptr_t
 operator|)
 name|__func__
 argument_list|)
-expr_stmt|;
-name|ACPI_ASSERTLOCK
 expr_stmt|;
 comment|/* Get throttling parameters from the FADT.  0 means not supported. */
 if|if
@@ -3282,8 +3288,6 @@ name|void
 name|acpi_cpu_startup_throttling
 parameter_list|()
 block|{
-name|ACPI_LOCK_DECL
-expr_stmt|;
 comment|/* Initialise throttling states */
 name|cpu_throttle_max
 operator|=
@@ -3348,14 +3352,18 @@ literal|"current CPU speed"
 argument_list|)
 expr_stmt|;
 comment|/* If ACPI 2.0+, signal platform that we are taking over throttling. */
-name|ACPI_LOCK
-expr_stmt|;
 if|if
 condition|(
 name|cpu_pstate_cnt
 operator|!=
 literal|0
 condition|)
+block|{
+name|ACPI_LOCK
+argument_list|(
+name|acpi
+argument_list|)
+expr_stmt|;
 name|AcpiOsWritePort
 argument_list|(
 name|cpu_smi_cmd
@@ -3365,13 +3373,27 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+name|ACPI_UNLOCK
+argument_list|(
+name|acpi
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Set initial speed to maximum. */
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|cpu
+argument_list|)
+expr_stmt|;
 name|acpi_cpu_throttle_set
 argument_list|(
 name|cpu_throttle_max
 argument_list|)
 expr_stmt|;
-name|ACPI_UNLOCK
+name|ACPI_SERIAL_END
+argument_list|(
+name|cpu
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -3412,8 +3434,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -3578,6 +3598,9 @@ literal|0
 condition|)
 block|{
 name|ACPI_LOCK
+argument_list|(
+name|acpi
+argument_list|)
 expr_stmt|;
 name|AcpiOsWritePort
 argument_list|(
@@ -3589,6 +3612,9 @@ literal|8
 argument_list|)
 expr_stmt|;
 name|ACPI_UNLOCK
+argument_list|(
+name|acpi
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -3627,7 +3653,10 @@ name|p_cnt
 decl_stmt|,
 name|clk_val
 decl_stmt|;
-name|ACPI_ASSERTLOCK
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|cpu
+argument_list|)
 expr_stmt|;
 comment|/* Iterate over processors */
 for|for
@@ -4347,8 +4376,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ACPI_LOCK_DECL
-expr_stmt|;
 name|argp
 operator|=
 operator|(
@@ -4412,7 +4439,10 @@ name|EINVAL
 operator|)
 return|;
 comment|/* If throttling changed, notify the BIOS of the new rate. */
-name|ACPI_LOCK
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|cpu
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4433,7 +4463,10 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_UNLOCK
+name|ACPI_SERIAL_END
+argument_list|(
+name|cpu
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4779,6 +4812,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|cpu
+argument_list|)
+expr_stmt|;
 name|cpu_cx_lowest
 operator|=
 name|val
@@ -4832,6 +4870,11 @@ sizeof|sizeof
 argument_list|(
 name|cpu_cx_stats
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ACPI_SERIAL_END
+argument_list|(
+name|cpu
 argument_list|)
 expr_stmt|;
 return|return
