@@ -100,6 +100,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+name|datefmt
+index|[]
+init|=
+literal|"%+"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|gettystrs
 name|gettystrs
@@ -376,6 +386,13 @@ literal|"al"
 block|}
 block|,
 comment|/* user to auto-login */
+block|{
+literal|"df"
+block|,
+name|datefmt
+block|}
+block|,
+comment|/* format for strftime() */
 block|{
 literal|0
 block|}
