@@ -491,7 +491,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Utility function to format a USTAR header into a buffer. */
+comment|/*  * Utility function to format a USTAR header into a buffer.  If  * "strict" is set, this tries to create the absolutely most portable  * version of a ustar header.  If "strict" is set to 0, then it will  * relax certain requirements.  */
 end_comment
 
 begin_function_decl
@@ -514,6 +514,9 @@ modifier|*
 parameter_list|,
 name|int
 name|tartype
+parameter_list|,
+name|int
+name|strict
 parameter_list|)
 function_decl|;
 end_function_decl

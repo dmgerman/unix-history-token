@@ -2793,8 +2793,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Format 'ustar' header for main entry. */
-comment|/* We don't care if this returns an error. */
+comment|/* Format 'ustar' header for main entry. 	 * 	 * The trouble with file size: If the reader can't understand 	 * the file size, they may not be able to locate the next 	 * entry and the rest of the archive is toast.  Pax-compliant 	 * readers are supposed to ignore the file size in the main 	 * header, so the question becomes how to maximize portability 	 * for readers that don't support pax attribute extensions. 	 * For maximum compatibility, I permit numeric extensions in 	 * the main header so that the file size stored will always be 	 * correct, even if it's in a format that only some 	 * implementations understand.  The technique used here is: 	 * 	 *  a) If possible, follow the standard exactly.  This handles 	 *  files up to 8 gigabytes minus 1. 	 * 	 *  b) If that fails, try octal but omit the field terminator. 	 *  That handles files up to 64 gigabytes minus 1. 	 * 	 *  c) Otherwise, use base-256 extensions.  That handles files 	 *  up to 2^63 in this implementation, with the potential to 	 *  go up to 2^94.  That should hold us for a while. ;-) 	 * 	 * The non-strict formatter uses similar logic for other 	 * numeric fields, though they're less critical. 	 */
 name|__archive_write_format_header_ustar
 argument_list|(
 name|a
@@ -2805,6 +2804,8 @@ name|entry_main
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* If we built any extended attributes, write that entry first. */
@@ -2960,6 +2961,8 @@ argument_list|,
 name|pax_attr_entry
 argument_list|,
 literal|'x'
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|archive_entry_free
