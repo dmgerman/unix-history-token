@@ -259,6 +259,17 @@ begin_comment
 comment|/* iname ipath iregex */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_EXACTTIME
+value|F_IGNCASE
+end_define
+
+begin_comment
+comment|/* -[acm]time units syntax */
+end_comment
+
 begin_comment
 comment|/* node definition */
 end_comment
