@@ -757,9 +757,17 @@ operator|++
 control|)
 empty_stmt|;
 return|return
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s1
 operator|-
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s2
 return|;
