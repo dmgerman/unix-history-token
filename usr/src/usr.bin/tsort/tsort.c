@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Rendell of Memorial University of Newfoundland.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Rendell of Memorial University of Newfoundland.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1989, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tsort.c	8.1 (Berkeley) %G%"
+literal|"@(#)tsort.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -69,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -92,17 +104,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_comment
-comment|/*  *  Topological sort.  Input is a list of pairs of strings separated by  *  white space (spaces, tabs, and/or newlines); strings are written to  *  standard output in sorted order, one per line.  *  *  usage:  *     tsort [inputfile]  *  If no input file is specified, standard input is read.  *  *  Should be compatable with AT&T tsort HOWEVER the output is not identical  *  (i.e. for most graphs there is more than one sorted order, and this tsort  *  usually generates a different one then the AT&T tsort).  Also, cycle  *  reporting seems to be more accurate in this version (the AT&T tsort  *  sometimes says a node is in a cycle when it isn't).  *  *  Michael Rendell, michael@stretch.cs.mun.ca - Feb 26, '90  */
+comment|/*  *  Topological sort.  Input is a list of pairs of strings separated by  *  white space (spaces, tabs, and/or newlines); strings are written to  *  standard output in sorted order, one per line.  *  *  usage:  *     tsort [-l] [inputfile]  *  If no input file is specified, standard input is read.  *  *  Should be compatable with AT&T tsort HOWEVER the output is not identical  *  (i.e. for most graphs there is more than one sorted order, and this tsort  *  usually generates a different one then the AT&T tsort).  Also, cycle  *  reporting seems to be more accurate in this version (the AT&T tsort  *  sometimes says a node is in a cycle when it isn't).  *  *  Michael Rendell, michael@stretch.cs.mun.ca - Feb 26, '90  */
 end_comment
 
 begin_define
@@ -136,6 +142,17 @@ end_define
 
 begin_comment
 comment|/* this node is cycle free */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NF_NODEST
+value|0x4
+end_define
+
+begin_comment
+comment|/* Unreachable */
 end_comment
 
 begin_typedef
@@ -222,22 +239,22 @@ begin_decl_stmt
 name|NODE
 modifier|*
 name|graph
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|NODE
+decl_stmt|,
 modifier|*
 modifier|*
 name|cycle_buf
+decl_stmt|,
+modifier|*
+modifier|*
+name|longest_cycle
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|NODE
-modifier|*
-modifier|*
-name|longest_cycle
+name|int
+name|debug
+decl_stmt|,
+name|longest
 decl_stmt|;
 end_decl_stmt
 
@@ -252,22 +269,6 @@ operator|*
 operator|,
 name|char
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -416,7 +417,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|""
+literal|"dl"
 argument_list|)
 operator|)
 operator|!=
@@ -427,6 +428,22 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+name|debug
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|longest
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'?'
 case|:
@@ -477,15 +494,12 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -695,8 +709,10 @@ if|if
 condition|(
 name|n
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"odd data count"
 argument_list|)
 expr_stmt|;
@@ -753,12 +769,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1000,14 +1013,11 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"db: open: %s"
+literal|1
+argument_list|,
+literal|"db: %s"
 argument_list|,
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|key
@@ -1082,14 +1092,11 @@ literal|1
 case|:
 name|err
 argument_list|(
-literal|"db: get %s: %s"
+literal|1
+argument_list|,
+literal|"db: %s"
 argument_list|,
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1115,12 +1122,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|n
@@ -1169,11 +1173,15 @@ expr_stmt|;
 comment|/* Add to linked list. */
 if|if
 condition|(
+operator|(
 name|n
 operator|->
 name|n_next
 operator|=
 name|graph
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|graph
 operator|->
@@ -1234,14 +1242,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"db: put %s: %s"
+literal|1
+argument_list|,
+literal|"db: %s"
 argument_list|,
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1249,6 +1254,45 @@ operator|(
 name|n
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Clear the NODEST flag from all nodes.  */
+end_comment
+
+begin_function
+name|void
+name|clear_cycle
+parameter_list|()
+block|{
+name|NODE
+modifier|*
+name|n
+decl_stmt|;
+for|for
+control|(
+name|n
+operator|=
+name|graph
+init|;
+name|n
+operator|!=
+name|NULL
+condition|;
+name|n
+operator|=
+name|n
+operator|->
+name|n_next
+control|)
+name|n
+operator|->
+name|n_flags
+operator|&=
+operator|~
+name|NF_NODEST
+expr_stmt|;
 block|}
 end_function
 
@@ -1272,10 +1316,14 @@ decl_stmt|;
 specifier|register
 name|int
 name|cnt
+decl_stmt|,
+name|i
 decl_stmt|;
 while|while
 condition|(
 name|graph
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Keep getting rid of simple cases until there are none left, 		 * if there are any nodes still in the graph, then there is 		 * a cycle in it. 		 */
@@ -1292,6 +1340,8 @@ operator|=
 name|graph
 init|;
 name|n
+operator|!=
+name|NULL
 condition|;
 name|n
 operator|=
@@ -1327,14 +1377,17 @@ block|}
 do|while
 condition|(
 name|graph
+operator|!=
+name|NULL
 operator|&&
 name|cnt
 condition|)
 do|;
 if|if
 condition|(
-operator|!
 name|graph
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -1355,6 +1408,8 @@ operator|=
 name|graph
 init|;
 name|n
+operator|!=
+name|NULL
 condition|;
 name|n
 operator|=
@@ -1409,12 +1464,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1425,6 +1477,8 @@ operator|=
 name|graph
 init|;
 name|n
+operator|!=
+name|NULL
 condition|;
 name|n
 operator|=
@@ -1443,7 +1497,6 @@ operator|&
 name|NF_ACYCLIC
 operator|)
 condition|)
-block|{
 if|if
 condition|(
 name|cnt
@@ -1460,18 +1513,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tsort: cycle in data\n"
+literal|"cycle in data"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1487,14 +1531,9 @@ condition|;
 name|i
 operator|++
 control|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tsort: %s\n"
+literal|"%s"
 argument_list|,
 name|longest_cycle
 index|[
@@ -1509,24 +1548,34 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
+name|clear_cycle
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
 else|else
+block|{
 comment|/* to avoid further checks */
 name|n
 operator|->
 name|n_flags
-operator|=
+operator||=
 name|NF_ACYCLIC
+expr_stmt|;
+name|clear_cycle
+argument_list|()
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|n
+operator|==
+name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error -- could not find cycle"
 argument_list|)
 expr_stmt|;
@@ -1637,7 +1686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* look for the longest cycle from node from to node to. */
+comment|/* look for the longest? cycle from node from to node to. */
 end_comment
 
 begin_function
@@ -1691,6 +1740,8 @@ operator|->
 name|n_flags
 operator|&
 operator|(
+name|NF_NODEST
+operator||
 name|NF_MARK
 operator||
 name|NF_ACYCLIC
@@ -1704,7 +1755,7 @@ return|;
 name|from
 operator|->
 name|n_flags
-operator|=
+operator||=
 name|NF_MARK
 expr_stmt|;
 for|for
@@ -1791,6 +1842,24 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|np
+operator|)
+operator|->
+name|n_flags
+operator|&
+operator|(
+name|NF_MARK
+operator||
+name|NF_ACYCLIC
+operator||
+name|NF_NODEST
+operator|)
+condition|)
+continue|continue;
 name|len
 operator|=
 name|find_cycle
@@ -1809,6 +1878,47 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|debug
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%*s %s->%s %d\n"
+argument_list|,
+name|depth
+argument_list|,
+literal|""
+argument_list|,
+name|from
+operator|->
+name|n_name
+argument_list|,
+name|to
+operator|->
+name|n_name
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+operator|(
+operator|*
+name|np
+operator|)
+operator|->
+name|n_flags
+operator||=
+name|NF_NODEST
+expr_stmt|;
+if|if
+condition|(
 name|len
 operator|>
 name|longest_len
@@ -1817,6 +1927,16 @@ name|longest_len
 operator|=
 name|len
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+operator|&&
+operator|!
+name|longest
+condition|)
+break|break;
 block|}
 block|}
 name|from
@@ -1846,7 +1966,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tsort [file]\n"
+literal|"usage: tsort [-l] [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1854,132 +1974,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tsort: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
