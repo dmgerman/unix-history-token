@@ -136,9 +136,10 @@ define|#
 directive|define
 name|LEAPYEAR
 parameter_list|(
-name|year
+name|y
 parameter_list|)
-value|(((year) % 4) == 0)
+define|\
+value|(((y) % 4) == 0&& (((y) % 100) != 0 || ((y) % 400) == 0))
 end_define
 
 begin_decl_stmt
