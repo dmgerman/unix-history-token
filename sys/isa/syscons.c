@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.203 1997/02/28 08:42:35 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.204 1997/02/28 14:26:34 bde Exp $  */
 end_comment
 
 begin_include
@@ -1020,6 +1020,16 @@ name|offset
 parameter_list|)
 define|\
 value|((scp->history) + ((((pointer) - (scp->history)) + (scp->history_size)\     + (offset)) % (scp->history_size)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISSIGVALID
+parameter_list|(
+name|sig
+parameter_list|)
+value|((sig)> 0&& (sig)< NSIG)
 end_define
 
 begin_comment
@@ -4532,6 +4542,8 @@ name|MOUSE_MODE
 case|:
 if|if
 condition|(
+name|ISSIGVALID
+argument_list|(
 name|mouse
 operator|->
 name|u
@@ -4539,18 +4551,7 @@ operator|.
 name|mode
 operator|.
 name|signal
-operator|>
-literal|0
-operator|&&
-name|mouse
-operator|->
-name|u
-operator|.
-name|mode
-operator|.
-name|signal
-operator|<
-name|NSIG
+argument_list|)
 condition|)
 block|{
 name|scp
@@ -6069,6 +6070,45 @@ case|case
 name|VT_SETMODE
 case|:
 comment|/* set screen switcher mode */
+block|{
+name|struct
+name|vt_mode
+modifier|*
+name|mode
+decl_stmt|;
+name|mode
+operator|=
+operator|(
+expr|struct
+name|vt_mode
+operator|*
+operator|)
+name|data
+expr_stmt|;
+if|if
+condition|(
+name|ISSIGVALID
+argument_list|(
+name|mode
+operator|->
+name|relsig
+argument_list|)
+operator|&&
+name|ISSIGVALID
+argument_list|(
+name|mode
+operator|->
+name|acqsig
+argument_list|)
+operator|&&
+name|ISSIGVALID
+argument_list|(
+name|mode
+operator|->
+name|frsig
+argument_list|)
+condition|)
+block|{
 name|bcopy
 argument_list|(
 name|data
@@ -6116,6 +6156,12 @@ block|}
 return|return
 literal|0
 return|;
+block|}
+else|else
+return|return
+name|EINVAL
+return|;
+block|}
 case|case
 name|VT_GETMODE
 case|:
