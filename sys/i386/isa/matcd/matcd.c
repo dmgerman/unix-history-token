@@ -765,7 +765,7 @@ name|matcd_probe
 block|,
 name|matcd_attach
 block|,
-literal|"matcdc"
+literal|"matcd"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4206,7 +4206,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"matcdc%d: - Too many interfaces specified in config\n"
+literal|"matcd%d: - Too many interfaces specified in config\n"
 argument_list|,
 name|nextcontroller
 argument_list|)
@@ -4297,7 +4297,7 @@ directive|ifdef
 name|DEBUGPROBE
 name|printf
 argument_list|(
-literal|"matcdc%d: In probe i %d y %d port %x\n"
+literal|"matcd%d: In probe i %d y %d port %x\n"
 argument_list|,
 name|nextcontroller
 argument_list|,
@@ -4376,7 +4376,7 @@ directive|ifdef
 name|DEBUGPROBE
 name|printf
 argument_list|(
-literal|"matcdc%d: Port hint %x\n"
+literal|"matcd%d: Port hint %x\n"
 argument_list|,
 name|nextcontroller
 argument_list|,
@@ -4553,7 +4553,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"matcdc%d: AUTOHUNT disabled but port? specified in config\n"
+literal|"matcd%d: AUTOHUNT disabled but port? specified in config\n"
 argument_list|,
 name|nextcontroller
 argument_list|)
@@ -4802,7 +4802,7 @@ directive|ifdef
 name|DEBUGPROBE
 name|printf
 argument_list|(
-literal|"matcdc%d: Probe found something\n"
+literal|"matcd%d: Probe found something\n"
 argument_list|,
 name|nextcontroller
 argument_list|)
@@ -4862,7 +4862,7 @@ directive|ifdef
 name|DEBUGPROBE
 name|printf
 argument_list|(
-literal|"matcdc%d: Probe DID NOT find something\n"
+literal|"matcd%d: Probe DID NOT find something\n"
 argument_list|,
 name|nextcontroller
 argument_list|)
@@ -4934,7 +4934,7 @@ directive|ifdef
 name|DEBUGPROBE
 name|printf
 argument_list|(
-literal|"matcdc: Attach dev %x id_unit %d\n"
+literal|"matcd: Attach dev %x id_unit %d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -4952,7 +4952,7 @@ directive|endif
 comment|/*DEBUGPROBE*/
 name|printf
 argument_list|(
-literal|"matcdc%d Host interface type %d\n"
+literal|"matcd%d Host interface type %d\n"
 argument_list|,
 name|nextcontroller
 argument_list|,
