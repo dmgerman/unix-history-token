@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.9 (Berkeley) %G%"
+literal|"@(#)last.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1831,7 +1831,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|optarg
+name|arg
 argument_list|,
 literal|"co"
 argument_list|)
