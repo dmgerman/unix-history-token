@@ -674,6 +674,8 @@ name|newproc
 decl_stmt|;
 name|int
 name|ok
+decl_stmt|,
+name|s
 decl_stmt|;
 specifier|static
 name|int
@@ -2231,9 +2233,8 @@ name|p_acflag
 operator|=
 name|AFORK
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
@@ -2248,11 +2249,10 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now can be swapped. 	 */
 name|PRELE
