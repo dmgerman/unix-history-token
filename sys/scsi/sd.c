@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.80 1995/12/11 04:57:07 dyson Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.81 1995/12/11 05:02:52 dyson Exp $  */
 end_comment
 
 begin_define
@@ -164,20 +164,6 @@ end_comment
 begin_comment
 comment|/* for aborting dump */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|SCSI_DEVICE_ENTRIES
-name|__P
-argument_list|(
-operator|(
-name|int
-name|sd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1262,6 +1248,7 @@ comment|/*  * open the device. Make sure the partition info is a up-to-date as c
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|sd_open
 parameter_list|(
@@ -1762,6 +1749,7 @@ comment|/*  * close the device.. only called if we are the LAST occurence of an 
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|sd_close
 parameter_list|(
@@ -1860,6 +1848,7 @@ comment|/*  * Actually translate the requested transfer into one the physical dr
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sd_strategy
 parameter_list|(
@@ -2102,6 +2091,7 @@ comment|/*  * sdstart looks to see if there is a buf waiting for the device  * a
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sdstart
 parameter_list|(
@@ -2502,6 +2492,7 @@ comment|/*  * Perform special action on behalf of the user  * Knows about the in
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|sd_ioctl
 parameter_list|(
@@ -3482,6 +3473,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sdsize
 parameter_list|(
@@ -3547,6 +3539,7 @@ comment|/*  * sense handler: Called to determine what to do when the  * device r
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sd_sense_handler
 parameter_list|(
@@ -3686,6 +3679,7 @@ comment|/*  * dump all of physical memory into the partition specified, starting
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|sddump
 parameter_list|(
