@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cat.c	5.1 (Berkeley) %G%"
+literal|"@(#)cat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,13 @@ argument_list|(
 name|fi
 argument_list|)
 expr_stmt|;
+else|else
+name|clearerr
+argument_list|(
+name|fi
+argument_list|)
+expr_stmt|;
+comment|/* reset sticky eof */
 if|if
 condition|(
 name|ferror
