@@ -2221,6 +2221,12 @@ name|vap
 operator|->
 name|va_mtime
 argument_list|,
+name|nmp
+operator|->
+name|m
+operator|.
+name|tz
+argument_list|,
 operator|&
 name|info
 operator|.
@@ -2258,6 +2264,12 @@ operator|&
 name|vap
 operator|->
 name|va_atime
+argument_list|,
+name|nmp
+operator|->
+name|m
+operator|.
+name|tz
 argument_list|,
 operator|&
 name|info
@@ -3017,6 +3029,8 @@ name|ncp_unix2dostime
 parameter_list|(
 name|tsp
 parameter_list|,
+name|tzoff
+parameter_list|,
 name|ddp
 parameter_list|,
 name|dtp
@@ -3027,6 +3041,9 @@ name|struct
 name|timespec
 modifier|*
 name|tsp
+decl_stmt|;
+name|int
+name|tzoff
 decl_stmt|;
 name|u_int16_t
 modifier|*
@@ -3067,13 +3084,15 @@ name|tsp
 operator|->
 name|tv_sec
 operator|-
-operator|(
+name|tzoff
+operator|*
+literal|60
+operator|-
 name|tz
 operator|.
 name|tz_minuteswest
 operator|*
 literal|60
-operator|)
 operator|-
 operator|(
 name|wall_cmos_clock
@@ -3083,7 +3102,6 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-comment|/* - daylight savings time correction */
 name|t
 operator|&=
 operator|~
@@ -3363,6 +3381,8 @@ name|dt
 parameter_list|,
 name|dh
 parameter_list|,
+name|tzoff
+parameter_list|,
 name|tsp
 parameter_list|)
 name|u_int
@@ -3373,6 +3393,9 @@ name|dt
 decl_stmt|;
 name|u_int
 name|dh
+decl_stmt|;
+name|int
+name|tzoff
 decl_stmt|;
 name|struct
 name|timespec
@@ -3605,17 +3628,24 @@ name|seconds
 operator|+
 name|lastseconds
 operator|+
-operator|(
 name|tz
 operator|.
 name|tz_minuteswest
 operator|*
 literal|60
-operator|)
 operator|+
+name|tzoff
+operator|*
+literal|60
+operator|+
+operator|(
+name|wall_cmos_clock
+condition|?
 name|adjkerntz
+else|:
+literal|0
+operator|)
 expr_stmt|;
-comment|/* + daylight savings time correction */
 name|tsp
 operator|->
 name|tv_nsec
