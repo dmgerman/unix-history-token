@@ -473,6 +473,15 @@ decl_stmt|;
 name|int
 name|intr
 decl_stmt|;
+comment|/* XXX where does it say so in the spec? */
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|usbrev
+operator|=
+name|USBREV_1_0
+expr_stmt|;
 name|rid
 operator|=
 name|PCI_CBMEM
