@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.62 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8085,6 +8085,9 @@ name|char
 modifier|*
 name|endp
 decl_stmt|;
+name|int
+name|oldoptions
+decl_stmt|;
 name|char
 modifier|*
 name|mxhosts
@@ -8178,6 +8181,32 @@ comment|/* 	**  Not already there -- create a signature. 	*/
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
+if|if
+condition|(
+name|ConfigLevel
+operator|<
+literal|2
+condition|)
+block|{
+name|oldoptions
+operator|=
+name|_res
+operator|.
+name|options
+expr_stmt|;
+name|_res
+operator|.
+name|options
+operator|&=
+operator|~
+operator|(
+name|RES_DEFNAMES
+operator||
+name|RES_DNSRCH
+operator|)
+expr_stmt|;
+comment|/* XXX */
+block|}
 if|if
 condition|(
 name|myhostbuf
@@ -8486,6 +8515,18 @@ name|s
 operator|->
 name|s_hostsig
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ConfigLevel
+operator|<
+literal|2
+condition|)
+name|_res
+operator|.
+name|options
+operator|=
+name|oldoptions
 expr_stmt|;
 else|#
 directive|else
