@@ -161,12 +161,12 @@ decl_stmt|;
 name|size_t
 name|stack_size
 decl_stmt|;
-comment|/* 	 * Round up stack size to nearest multiple of PAGE_SIZE, so that mmap() 	 * will work.  If the stack size is not an even multiple, we end up 	 * initializing things such that there is unused space above the 	 * beginning of the stack, so the stack sits snugly against its guard. 	 */
+comment|/* 	 * Round up stack size to nearest multiple of pthread_page_size, so that mmap() 	 * will work.  If the stack size is not an even multiple, we end up 	 * initializing things such that there is unused space above the 	 * beginning of the stack, so the stack sits snugly against its guard. 	 */
 if|if
 condition|(
 name|stacksize
 operator|%
-name|PAGE_SIZE
+name|pthread_page_size
 operator|!=
 literal|0
 condition|)
@@ -176,13 +176,13 @@ operator|(
 operator|(
 name|stacksize
 operator|/
-name|PAGE_SIZE
+name|pthread_page_size
 operator|)
 operator|+
 literal|1
 operator|)
 operator|*
-name|PAGE_SIZE
+name|pthread_page_size
 expr_stmt|;
 else|else
 name|stack_size
@@ -198,7 +198,7 @@ name|PTHREAD_STACK_DEFAULT
 operator|&&
 name|guardsize
 operator|==
-name|PTHREAD_GUARD_DEFAULT
+name|pthread_guard_default
 condition|)
 block|{
 comment|/* 		 * Use the garbage collector mutex for synchronization of the 		 * spare stack list. 		 */
@@ -360,7 +360,7 @@ name|_usrstack
 operator|-
 name|PTHREAD_STACK_INITIAL
 operator|-
-name|PTHREAD_GUARD_DEFAULT
+name|pthread_guard_default
 expr_stmt|;
 comment|/* Allocate a new stack. */
 name|stack
@@ -452,12 +452,12 @@ name|stack
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* Round stacksize up to nearest multiple of PAGE_SIZE. */
+comment|/* Round stacksize up to nearest multiple of pthread_page_size. */
 if|if
 condition|(
 name|stacksize
 operator|%
-name|PAGE_SIZE
+name|pthread_page_size
 operator|!=
 literal|0
 condition|)
@@ -470,13 +470,13 @@ operator|(
 operator|(
 name|stacksize
 operator|/
-name|PAGE_SIZE
+name|pthread_page_size
 operator|)
 operator|+
 literal|1
 operator|)
 operator|*
-name|PAGE_SIZE
+name|pthread_page_size
 expr_stmt|;
 block|}
 else|else
@@ -510,7 +510,7 @@ name|spare_stack
 operator|->
 name|guardsize
 operator|==
-name|PTHREAD_GUARD_DEFAULT
+name|pthread_guard_default
 condition|)
 block|{
 comment|/* Default stack/guard size. */

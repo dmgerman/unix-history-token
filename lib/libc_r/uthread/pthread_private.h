@@ -1183,15 +1183,22 @@ value|65536
 end_define
 
 begin_comment
-comment|/*  * Size of default red zone at the end of each stack.  In actuality, this "red  * zone" is merely an unmapped region, except in the case of the initial stack.  * Since mmap() makes it possible to specify the maximum growth of a MAP_STACK  * region, an unmapped gap between thread stacks achieves the same effect as  * explicitly mapped red zones.  */
+comment|/*  * Size of default red zone at the end of each stack.  In actuality, this "red  * zone" is merely an unmapped region, except in the case of the initial stack.  * Since mmap() makes it possible to specify the maximum growth of a MAP_STACK  * region, an unmapped gap between thread stacks achieves the same effect as  * explicitly mapped red zones.  * This is declared and initialized in uthread_init.c.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PTHREAD_GUARD_DEFAULT
-value|PAGE_SIZE
-end_define
+begin_decl_stmt
+specifier|extern
+name|int
+name|pthread_guard_default
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pthread_page_size
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Maximum size of initial thread's stack.  This perhaps deserves to be larger  * than the stacks of other threads, since many applications are likely to run  * almost entirely on this stack.  */
@@ -1202,17 +1209,6 @@ define|#
 directive|define
 name|PTHREAD_STACK_INITIAL
 value|0x100000
-end_define
-
-begin_comment
-comment|/* Size of the scheduler stack: */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCHED_STACK_SIZE
-value|PAGE_SIZE
 end_define
 
 begin_comment
@@ -2537,7 +2533,8 @@ name|NULL
 block|,
 name|PTHREAD_STACK_DEFAULT
 block|,
-name|PTHREAD_GUARD_DEFAULT
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt

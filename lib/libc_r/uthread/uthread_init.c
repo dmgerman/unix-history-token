@@ -406,6 +406,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|pthread_guard_default
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pthread_page_size
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Threaded process initialization  */
 end_comment
@@ -435,6 +447,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|sched_stack_size
+decl_stmt|;
+comment|/* Size of scheduler stack. */
 name|struct
 name|clockinfo
 name|clockinfo
@@ -443,6 +459,27 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
+name|pthread_page_size
+operator|=
+name|getpagesize
+argument_list|()
+expr_stmt|;
+name|pthread_guard_default
+operator|=
+name|getpagesize
+argument_list|()
+expr_stmt|;
+name|sched_stack_size
+operator|=
+name|getpagesize
+argument_list|()
+expr_stmt|;
+name|pthread_attr_default
+operator|.
+name|guardsize_attr
+operator|=
+name|pthread_guard_default
+expr_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
 condition|(
@@ -858,7 +895,7 @@ name|_thread_kern_sched_stack
 operator|=
 name|malloc
 argument_list|(
-name|SCHED_STACK_SIZE
+name|sched_stack_size
 argument_list|)
 operator|)
 operator|==
@@ -1006,9 +1043,9 @@ name|_usrstack
 operator|-
 name|PTHREAD_STACK_INITIAL
 operator|-
-name|PTHREAD_GUARD_DEFAULT
+name|pthread_guard_default
 argument_list|,
-name|PTHREAD_GUARD_DEFAULT
+name|pthread_guard_default
 argument_list|,
 literal|0
 argument_list|,
@@ -1067,7 +1104,7 @@ name|_thread_kern_sched_jb
 argument_list|,
 name|_thread_kern_sched_stack
 operator|+
-name|SCHED_STACK_SIZE
+name|sched_stack_size
 operator|-
 sizeof|sizeof
 argument_list|(
