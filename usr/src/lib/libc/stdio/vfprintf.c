@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.33 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -564,10 +564,16 @@ operator|)
 return|;
 name|flags
 operator|=
+literal|0
+expr_stmt|;
 name|dprec
 operator|=
+literal|0
+expr_stmt|;
 name|fpprec
 operator|=
+literal|0
+expr_stmt|;
 name|width
 operator|=
 literal|0
@@ -1780,15 +1786,9 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
+specifier|register
 name|double
 name|fract
-decl_stmt|,
-name|integer
-decl_stmt|,
-name|tmp
-decl_stmt|,
-name|modf
-argument_list|()
 decl_stmt|;
 name|int
 name|dotrim
@@ -1796,6 +1796,14 @@ decl_stmt|,
 name|expcnt
 decl_stmt|,
 name|gformat
+decl_stmt|;
+name|double
+name|integer
+decl_stmt|,
+name|tmp
+decl_stmt|,
+name|modf
+argument_list|()
 decl_stmt|;
 name|char
 modifier|*
