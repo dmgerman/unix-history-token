@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	6.1	83/07/29	*/
+comment|/*	if.c	6.2	83/09/27	*/
 end_comment
 
 begin_include
@@ -210,6 +210,10 @@ operator|->
 name|if_reset
 call|)
 argument_list|(
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
 name|uban
 argument_list|)
 expr_stmt|;
