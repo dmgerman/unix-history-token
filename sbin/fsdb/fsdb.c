@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<timeconv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 

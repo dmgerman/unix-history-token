@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<timeconv.h>
 end_include
 
 begin_include
@@ -751,7 +763,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"I=%lu MODE=%o SIZE=%qu"
+literal|"I=%lu MODE=%o SIZE=%ju"
 argument_list|,
 operator|(
 name|u_long
@@ -765,6 +777,9 @@ argument_list|,
 name|di_mode
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|DIP
 argument_list|(
 name|dp
@@ -1058,7 +1073,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LINKCNT=%hd FLAGS=%#x BLKCNT=%qx GEN=%qx\n"
+literal|"LINKCNT=%hd FLAGS=%#x BLKCNT=%jx GEN=%jx\n"
 argument_list|,
 name|DIP
 argument_list|(
@@ -1074,8 +1089,14 @@ argument_list|,
 name|di_flags
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blocks
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|gen
 argument_list|)
 expr_stmt|;
@@ -1361,8 +1382,11 @@ name|sprintf
 argument_list|(
 name|tempbuf
 argument_list|,
-literal|"%qd"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -1490,8 +1514,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|j
-decl_stmt|,
 name|nfrags
 decl_stmt|;
 name|long
@@ -1591,8 +1613,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%qd"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
