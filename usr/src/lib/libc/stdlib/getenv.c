@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getenv.c	5.10 (Berkeley) %G%"
+literal|"@(#)getenv.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,6 +244,8 @@ expr_stmt|;
 return|return
 operator|(
 name|c
+operator|+
+name|len
 operator|+
 literal|1
 operator|)
