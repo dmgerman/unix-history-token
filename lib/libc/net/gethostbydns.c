@@ -2694,7 +2694,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -2725,7 +2725,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}

@@ -1607,7 +1607,7 @@ name|udp6sock
 operator|=
 name|tcp6sock
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 comment|/* Check that another mountd isn't already running. */
 if|if

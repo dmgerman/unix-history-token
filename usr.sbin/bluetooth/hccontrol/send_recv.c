@@ -132,7 +132,6 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-operator|*
 name|rp_size
 operator|!=
 name|NULL

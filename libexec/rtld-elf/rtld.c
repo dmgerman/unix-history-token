@@ -1863,6 +1863,9 @@ name|obj_main
 operator|->
 name|fini
 operator|=
+operator|(
+name|Elf_Addr
+operator|)
 name|NULL
 expr_stmt|;
 comment|/* Initialize a fake symbol for resolving undefined weak references. */
@@ -5059,6 +5062,9 @@ name|obj
 operator|->
 name|init
 operator|!=
+operator|(
+name|Elf_Addr
+operator|)
 name|NULL
 condition|)
 name|objlist_push_tail
@@ -5075,6 +5081,9 @@ name|obj
 operator|->
 name|fini
 operator|!=
+operator|(
+name|Elf_Addr
+operator|)
 name|NULL
 condition|)
 name|objlist_push_head
@@ -5345,7 +5354,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|NULL
+literal|0
 return|;
 name|p
 operator|+=

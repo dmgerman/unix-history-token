@@ -1043,7 +1043,7 @@ operator|||
 operator|(
 name|argc
 operator|==
-name|NULL
+literal|0
 operator|)
 condition|)
 name|usage

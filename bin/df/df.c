@@ -3028,7 +3028,7 @@ operator|--
 name|strptr
 operator|)
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|free
 argument_list|(

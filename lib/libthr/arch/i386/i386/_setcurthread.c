@@ -316,7 +316,7 @@ if|if
 condition|(
 name|ldt_inited
 operator|==
-name|NULL
+literal|0
 condition|)
 name|ldt_init
 argument_list|()

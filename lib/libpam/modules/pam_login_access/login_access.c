@@ -701,7 +701,7 @@ name|item
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 comment|/* YES */
 break|break;

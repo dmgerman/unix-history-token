@@ -1427,7 +1427,7 @@ operator|&&
 operator|*
 name|str
 operator|!=
-name|NULL
+literal|'\0'
 operator|&&
 name|end
 operator|!=

@@ -4108,7 +4108,7 @@ name|ftree_add
 argument_list|(
 name|str
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

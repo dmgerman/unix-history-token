@@ -346,7 +346,7 @@ name|sorry
 argument_list|)
 expr_stmt|;
 return|return
-name|NULL
+literal|0
 return|;
 block|}
 end_function

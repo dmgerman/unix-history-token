@@ -2707,7 +2707,7 @@ name|strchr
 argument_list|(
 name|tmp
 argument_list|,
-name|NULL
+literal|'\0'
 argument_list|)
 operator|+
 literal|1
@@ -2735,7 +2735,7 @@ name|strchr
 argument_list|(
 name|tmp
 argument_list|,
-name|NULL
+literal|'\0'
 argument_list|)
 operator|+
 literal|1
@@ -2763,7 +2763,7 @@ name|strchr
 argument_list|(
 name|tmp
 argument_list|,
-name|NULL
+literal|'\0'
 argument_list|)
 operator|+
 literal|1
@@ -2858,7 +2858,7 @@ name|strchr
 argument_list|(
 name|tmp
 argument_list|,
-name|NULL
+literal|'\0'
 argument_list|)
 operator|+
 literal|1

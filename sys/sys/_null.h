@@ -9,17 +9,26 @@ directive|ifndef
 name|NULL
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|NULL
-value|(void *)0
+value|((void *)0)
 end_define
 
 begin_else
@@ -40,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|NULL
-value|0L
+value|(0L)
 end_define
 
 begin_else
@@ -60,13 +69,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __LP64__ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* _KERNEL || !__cplusplus */
 end_comment
 
 begin_endif

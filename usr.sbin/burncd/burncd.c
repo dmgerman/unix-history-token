@@ -1406,7 +1406,7 @@ condition|)
 operator|*
 name|eol
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|add_track
 argument_list|(

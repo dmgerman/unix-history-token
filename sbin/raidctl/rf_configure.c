@@ -1082,7 +1082,7 @@ condition|)
 operator|*
 name|bfr1
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 comment|/* Make sure the device exists */
 if|if
