@@ -852,7 +852,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|wrch
+name|rdch
 argument_list|,
 operator|(
 literal|"dsp_read: nonexistant channel"
@@ -861,7 +861,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|wrch
+name|rdch
 operator|->
 name|flags
 operator|&
