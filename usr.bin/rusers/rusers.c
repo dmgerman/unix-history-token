@@ -38,13 +38,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/pmap_clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/rnusers.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -81,30 +99,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/pmap_clnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpcsvc/rnusers.h>
 end_include
 
 begin_define
@@ -175,8 +169,9 @@ name|hp
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|hosts
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -242,7 +237,6 @@ name|hp
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|hp
 operator|=
@@ -260,6 +254,8 @@ name|host_list
 argument_list|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -372,10 +368,11 @@ condition|(
 operator|!
 name|allopt
 operator|&&
-operator|!
 name|up
 operator|->
 name|utmpidlearr_len
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -409,6 +406,8 @@ expr_stmt|;
 if|if
 condition|(
 name|hp
+operator|!=
+name|NULL
 condition|)
 name|host
 operator|=
@@ -1136,7 +1135,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 name|setlinebuf
 argument_list|(
