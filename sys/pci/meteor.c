@@ -4,6 +4,10 @@ comment|/*  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserv
 end_comment
 
 begin_comment
+comment|/* $Id: brooktree848.c,v 1.83 1999/05/31 11:28:53 phk Exp $ */
+end_comment
+
+begin_comment
 comment|/*		Change History: 	8/21/95		Release 	8/23/95		On advice from Stefan Esser, added volatile to PCI 			memory pointers to remove PCI caching . 	8/29/95		Fixes suggested by Bruce Evans. 			meteor_mmap should return -1 on error rather than 0. 			unit #> NMETEOR should be unit #>= NMETEOR. 	10/24/95	Turn 50 Hz processing for SECAM and 60 Hz processing 			off for AUTOMODE. 	11/11/95	Change UV from always begin signed to ioctl selected 			to either signed or unsigned. 	12/07/95	Changed 7196 startup codes for 50 Hz as recommended 			by Luigi Rizzo (luigi@iet.unipi.it) 	12/08/95	Clear SECAM bit in PAL/NTSC and set input field count 			bits for 50 Hz mode (PAL/SECAM) before I was setting the 			output count bits. by Luigi Rizzo (luigi@iet.unipi.it) 	12/18/95	Correct odd DMA field (never exceed, but good for safety 			Changed 7196 startup codes for 50 Hz as recommended 			by Luigi Rizzo (luigi@iet.unipi.it) 	12/19/95	Changed field toggle mode to enable (offset 0x3c) 			recommended by luigi@iet.unipi.it 			Added in prototyping, include file, staticizing, 			and DEVFS changes from FreeBSD team. 			Changed the default allocated pages from 151 (NTSC) 			to 217 (PAL). 			Cleaned up some old comments in iic_write(). 			Added a Field (even or odd) only capture mode to  			eliminate the high frequency problems with compression 			algorithms.  Recommended by luigi@iet.unipi.it. 			Changed geometry ioctl so if it couldn't allocated a 			large enough contiguous space, it wouldn't free the 			stuff it already had. 			Added new mode called YUV_422 which delivers the 			data in planer Y followed by U followed by V. This 			differs from the standard YUV_PACKED mode in that 			the chrominance (UV) data is in the correct (different) 			order. This is for programs like vic and mpeg_encode 			so they don't have to reorder the chrominance data. 			Added field count to stats. 			Increment frame count stat if capturing continuous on 			even frame grabs. 			Added my email address to these comments 			(james@cs.uwm.edu) suggested by (luigi@iet.unipt.it :-). 			Changed the user mode signal mechanism to allow the 			user program to be interrupted at the end of a frame 			in any one of the modes.  Added SSIGNAL ioctl. 			Added a SFPS/GFPS ioctl so one may set the frames per 			second that the card catpures.  This code needs to be 			completed. 			Changed the interrupt routine so synchronous capture 			will work on fields or frames and the starting frame 			can be either even or odd. 			Added HALT_N_FRAMES and CONT_N_FRAMES so one could 			stop and continue synchronous capture mode. 			Change the tsleep/wakeup function to wait on mtr 			rather than&read_intr_wait. 	1/22/96		Add option (METEOR_FreeBSD_210) for FreeBSD 2.1 			to compile. 			Changed intr so it only printed errors every 50 times. 			Added unit number to error messages. 			Added get_meteor_mem and enabled range checking. 	1/30/96		Added prelim test stuff for direct video dma transfers 			from Amancio Hasty (hasty@rah.star-gate.com).  Until 			we get some stuff sorted out, this will be ifdef'ed 			with METEOR_DIRECT_VIDEO.  This is very dangerous to 			use at present since we don't check the address that 			is passed by the user!!!!! 	2/26/96		Added special SVIDEO input device type. 	2/27/96		Added meteor_reg.h file and associate types Converted 			meteor.c over to using meteor.h file.  Prompted by 			Lars Jonas Olsson<ljo@po.cwru.edu>. 	2/28/96		Added meteor RGB code from Lars Jonas Olsson<ljo@po.cwru.edu>.  I make some mods to this code, so 			I hope it still works as I don't have an rgb card to 			test with. 	2/29/96<ljo@po.cwru.edu> tested the meteor RGB and supplied 			me with diffs.  Thanks, we now have a working RGB 			version of the driver.  Still need to clean up this 			code. 	3/1/96		Fixed a nasty little bug that was clearing the VTR 			mode bit when the 7196 status was requested. 	3/15/96		Fixed bug introduced in previous version that 			stopped the only fields mode from working. 			Added METEOR{GS}TS ioctl, still needs work. 	3/25/96		Added YUV_9 and YUV_12 modes.  Cleaned up some of the 			code and converted variables to use the new register 			types. 	4/8/96		Fixed the a bug in with the range enable.  Pointed 			out by Jim Bray. 	5/13/96		Fix the FPS ioctl so it actually sets the frames 			per second.  Code supplied by ian@robots.ox.ac.uk. 			The new code implements a new define: 			METEOR_SYSTEM_DEFAULT  which should be defined as 			METEOR_PAL, METEOR_SECAM, or METEOR_NTSC in your system 			configuration file.  If METEOR_SYSTEM_DEFAULT isn't 			defined, and there is not a signal when set_fps is 			called, then the call has no effect. 			Changed the spelling of PLANER to PLANAR as pointed 			out by Paco Hope<paco@cs.virigina.edu> and define 			PLANER to be PLANAR for backward compatibility. 	5/28/95		METEOR_INPUT_DEV_RCA -> METEOR_INPUT_DEV0, not 			METEOR_GEO_DEV0.  Pointed out by Ian Reid,<ian@robots.ox.ac.uk>. 			METEOR_DEV_MASK should be 0x0000f000 and not  			0x2000f000, otherwise METEOR_RGB gets masked 			out.  Pointed out by Ian Reid. 			Changed the fps code to give even distribution for 			low frame rates.  Code supplied by Ian Reid. 			Fix some problems with the RGB version.  Patch supplied 			by<ljo@po.cwru.edu>. 			Added METEOR_FIELD_MODE to include files for a  			future version of this driver. */
 end_comment
 
@@ -3187,6 +3191,103 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return ;
+block|}
+comment|/* 	 * Check for Meteor/PPB (PCI-PCI Bridge) 	 * Reprogram IBM Bridge if detected. 	 * New Meteor cards have an IBM PCI-PCI bridge, creating a secondary 	 * PCI bus. The SAA chip is connected to this secondary bus. 	 */
+comment|/* If we are not on PCI Bus 0, check for the Bridge */
+if|if
+condition|(
+name|pci_get_bus_from_tag
+argument_list|(
+name|tag
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|pcici_t
+name|bridge_tag
+decl_stmt|;
+comment|/* get tag of parent bridge */
+name|bridge_tag
+operator|=
+name|pci_get_parent_from_tag
+argument_list|(
+name|tag
+argument_list|)
+expr_stmt|;
+comment|/* Look for IBM 82351, 82352 or 82353 */
+if|if
+condition|(
+name|pci_conf_read
+argument_list|(
+name|bridge_tag
+argument_list|,
+name|PCI_ID_REG
+argument_list|)
+operator|==
+literal|0x00221014
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"meteor%d: PPB device detected, reprogramming IBM bridge.\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+comment|/* disable SERR */
+name|pci_cfgwrite
+argument_list|(
+name|bridge_tag
+argument_list|,
+literal|0x05
+argument_list|,
+literal|0x00
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* set LATENCY */
+name|pci_cfgwrite
+argument_list|(
+name|bridge_tag
+argument_list|,
+literal|0x0d
+argument_list|,
+literal|0x20
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* write posting enable, prefetch enabled --> GRAB direction */
+name|pci_cfgwrite
+argument_list|(
+name|bridge_tag
+argument_list|,
+literal|0x42
+argument_list|,
+literal|0x14
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* set PRTR Primary retry timer register */
+name|pci_cfgwrite
+argument_list|(
+name|bridge_tag
+argument_list|,
+literal|0x4c
+argument_list|,
+literal|0x10
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|mtr
 operator|=
