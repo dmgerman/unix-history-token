@@ -652,6 +652,10 @@ name|MINOR_MAGIC_MASK
 value|(CALLOUT_MASK | CONTROL_MASK)
 end_define
 
+begin_comment
+comment|/*  * Not all of the magic is parametrized in the following macros.  16 and  * 0xff are related to the bitfields in a udev_t.  CY_MAX_PORTS must be  * ((0xff& ~MINOR_MAGIC_MASK) + 1) for things to work.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -660,6 +664,16 @@ parameter_list|(
 name|mynor
 parameter_list|)
 value|(((mynor)>> 16) * CY_MAX_PORTS \ 				 | (((mynor)& 0xff)& ~MINOR_MAGIC_MASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNIT_TO_MINOR
+parameter_list|(
+name|unit
+parameter_list|)
+value|(((unit) / CY_MAX_PORTS)<< 16 \ 				 | (((unit)& 0xff)& ~MINOR_MAGIC_MASK))
 end_define
 
 begin_comment
@@ -2317,6 +2331,9 @@ name|cy_addr
 name|iobase
 decl_stmt|;
 name|int
+name|minorbase
+decl_stmt|;
+name|int
 name|ncyu
 decl_stmt|;
 name|int
@@ -2823,12 +2840,19 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+name|minorbase
+operator|=
+name|UNIT_TO_MINOR
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
 name|make_dev
 argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -2850,7 +2874,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CONTROL_INIT_STATE
 argument_list|,
@@ -2874,7 +2898,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CONTROL_LOCK_STATE
 argument_list|,
@@ -2898,7 +2922,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CALLOUT_MASK
 argument_list|,
@@ -2922,7 +2946,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CALLOUT_MASK
 operator||
@@ -2948,7 +2972,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CALLOUT_MASK
 operator||
