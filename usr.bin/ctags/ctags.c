@@ -565,6 +565,7 @@ if|if
 condition|(
 name|head
 condition|)
+block|{
 if|if
 condition|(
 name|xflag
@@ -688,6 +689,7 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|exit
