@@ -28,7 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/inttypes.h>
+file|<sys/stdint.h>
 end_include
 
 begin_comment
