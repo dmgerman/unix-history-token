@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.20 83/05/22"
+literal|"@(#)telnetd.c	4.21 83/05/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<getty.h>
 end_include
 
 begin_define
@@ -1202,7 +1208,7 @@ name|execl
 argument_list|(
 literal|"/bin/login"
 argument_list|,
-literal|"telnet-login"
+literal|"login"
 argument_list|,
 literal|"-h"
 argument_list|,
@@ -1380,6 +1386,12 @@ name|on
 init|=
 literal|1
 decl_stmt|;
+name|char
+name|hostname
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|net
 operator|=
 name|f
@@ -1434,6 +1446,35 @@ name|TELOPT_ECHO
 index|]
 operator|=
 literal|1
+expr_stmt|;
+comment|/* 	 * Show banner that getty never gave. 	 */
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|nfrontp
+argument_list|,
+name|BANNER
+argument_list|,
+name|hostname
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|nfrontp
+operator|+=
+name|strlen
+argument_list|(
+name|nfrontp
+argument_list|)
 expr_stmt|;
 for|for
 control|(
