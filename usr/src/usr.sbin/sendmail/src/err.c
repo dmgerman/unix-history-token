@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.13 (Berkeley) %G%"
+literal|"@(#)err.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -682,10 +682,6 @@ condition|(
 name|OpMode
 operator|==
 name|MD_SMTP
-operator|||
-name|OpMode
-operator|==
-name|MD_ARPAFTP
 condition|)
 name|fprintf
 argument_list|(

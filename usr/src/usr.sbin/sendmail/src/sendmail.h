@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.29		%G%"
+literal|"@(#)sendmail.h	5.30		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1991,17 +1991,6 @@ end_define
 
 begin_comment
 comment|/* be a mail sender */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD_ARPAFTP
-value|'a'
-end_define
-
-begin_comment
-comment|/* old-style arpanet protocols */
 end_comment
 
 begin_define

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.24 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1524,10 +1524,6 @@ operator|||
 name|OpMode
 operator|==
 name|MD_SMTP
-operator|||
-name|OpMode
-operator|==
-name|MD_ARPAFTP
 condition|)
 name|realname
 operator|=

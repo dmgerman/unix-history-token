@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.43 (Berkeley) %G%"
+literal|"@(#)main.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1580,9 +1580,6 @@ endif|#
 directive|endif
 endif|SMTP
 case|case
-name|MD_ARPAFTP
-case|:
-case|case
 name|MD_DELIVER
 case|:
 case|case
@@ -3080,10 +3077,6 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|OpMode
-operator|!=
-name|MD_ARPAFTP
-operator|&&
 operator|*
 name|av
 operator|==
