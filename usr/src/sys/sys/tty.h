@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	3.4	%G%	*/
+comment|/*	tty.h	3.5	%G%	*/
 end_comment
 
 begin_include
@@ -353,16 +353,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NSPEEDS
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTMASK
+value|15
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|short
+name|tthiwat
+index|[
+name|NSPEEDS
+index|]
+decl_stmt|,
+name|ttlowat
+index|[
+name|NSPEEDS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|TTHIWAT
-value|650
+parameter_list|(
+name|tp
+parameter_list|)
+value|tthiwat[(tp)->t_ospeed&TTMASK]
 end_define
 
 begin_define
 define|#
 directive|define
 name|TTLOWAT
-value|125
+parameter_list|(
+name|tp
+parameter_list|)
+value|ttlowat[(tp)->t_ospeed&TTMASK]
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
