@@ -573,13 +573,6 @@ name|res
 operator|->
 name|ai_canonname
 condition|)
-name|hostname
-operator|=
-name|res
-operator|->
-name|ai_canonname
-expr_stmt|;
-else|else
 block|{
 operator|(
 name|void
@@ -588,7 +581,9 @@ name|strncpy
 argument_list|(
 name|hostnamebuf
 argument_list|,
-name|host
+name|res
+operator|->
+name|ai_canonname
 argument_list|,
 sizeof|sizeof
 argument_list|(
