@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chown.c	4.1 (Berkeley) %G%"
+literal|"@(#)chown.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ name|status
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -99,13 +105,38 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usage: chown uid file ...\n"
+literal|"usage: chown -f uid file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
 literal|4
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-f"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fflag
+operator|++
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
 expr_stmt|;
 block|}
 if|if
@@ -216,6 +247,9 @@ name|st_gid
 argument_list|)
 operator|<
 literal|0
+operator|&&
+operator|!
+name|fflag
 condition|)
 block|{
 name|perror
