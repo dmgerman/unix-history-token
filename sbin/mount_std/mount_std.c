@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -40,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_std.c,v 1.6 1997/03/11 12:38:16 peter Exp $"
+literal|"$Id: mount_std.c,v 1.7 1997/03/29 03:32:46 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
