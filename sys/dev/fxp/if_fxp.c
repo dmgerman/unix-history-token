@@ -3510,12 +3510,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|rxp
-operator|->
-name|rx_mbuf
-operator|=
-name|NULL
-expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_create
