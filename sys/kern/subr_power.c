@@ -257,6 +257,8 @@ condition|)
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|power_profile_change
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
