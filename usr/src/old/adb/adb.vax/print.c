@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c 4.2 %G%"
+literal|"@(#)print.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1963,8 +1963,9 @@ init|=
 name|olp
 decl_stmt|;
 name|ELSE
-return|return
-operator|(
+name|int
+name|i
+init|=
 name|kcore
 condition|?
 operator|(
@@ -1977,6 +1978,17 @@ else|:
 name|p
 operator|->
 name|roffs
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"returning %X\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|i
 operator|)
 return|;
 name|FI

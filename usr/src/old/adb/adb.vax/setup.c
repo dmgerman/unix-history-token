@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c 4.2 %G%"
+literal|"@(#)setup.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,10 +582,6 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
-name|kernel
-operator|=
-literal|1
-expr_stmt|;
 name|fstat
 argument_list|(
 name|fcor
@@ -606,7 +602,6 @@ name|kcore
 operator|=
 literal|1
 expr_stmt|;
-comment|/* this is phoney baloney... it is boogered in access.c */
 name|datmap
 operator|.
 name|b1
@@ -620,7 +615,26 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* end phoney baloney */
+if|if
+condition|(
+name|kernel
+operator|==
+literal|0
+operator|&&
+operator|(
+name|stb
+operator|.
+name|st_mode
+operator|&
+name|S_IFREG
+operator|)
+condition|)
+name|datmap
+operator|.
+name|b1
+operator|=
+literal|0x80000000
+expr_stmt|;
 name|lookup
 argument_list|(
 literal|"_Sysmap"

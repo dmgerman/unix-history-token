@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 4.1 %G%"
+literal|"@(#)main.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,33 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* suitable for open() */
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+goto|goto
+name|another
+goto|;
+block|}
+if|if
+condition|(
+name|eqstr
+argument_list|(
+literal|"-k"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+block|{
+name|kernel
+operator|=
+literal|1
+expr_stmt|;
 name|argc
 operator|--
 operator|,

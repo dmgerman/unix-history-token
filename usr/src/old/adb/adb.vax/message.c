@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)message.c 4.1 %G%"
+literal|"@(#)message.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ begin_decl_stmt
 name|MSG
 name|VERSION
 init|=
-literal|"\nVERSION VM/VAX4.1	DATE %G%\n"
+literal|"\nVERSION VM/VAX4.2	DATE %G%\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,30 +122,6 @@ name|MSG
 name|BADVAR
 init|=
 literal|"bad variable"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MSG
-name|BADTXT
-init|=
-literal|"text address not found"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MSG
-name|BADDAT
-init|=
-literal|"data address not found"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MSG
-name|ODDADR
-init|=
-literal|"odd address"
 decl_stmt|;
 end_decl_stmt
 

@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expr.c 4.2 %G%"
+literal|"@(#)expr.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,8 +547,6 @@ name|INT
 name|base
 block|,
 name|d
-block|,
-name|regptr
 block|;
 name|CHAR
 name|savc
@@ -564,6 +562,9 @@ expr|struct
 name|nlist
 operator|*
 name|symp
+block|;
+name|int
+name|regptr
 block|;
 name|hex
 operator|=
