@@ -294,6 +294,9 @@ decl_stmt|;
 name|struct
 name|addrinfo
 modifier|*
+name|res0
+decl_stmt|,
+modifier|*
 name|res
 decl_stmt|;
 name|char
@@ -914,6 +917,10 @@ operator|&
 name|res
 argument_list|)
 expr_stmt|;
+name|res0
+operator|=
+name|res
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -934,7 +941,7 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|=
+operator|==
 name|EAI_SYSTEM
 condition|)
 name|warnx
@@ -1109,12 +1116,24 @@ condition|(
 name|res
 condition|)
 continue|continue;
+name|warn
+argument_list|(
+literal|"Can't connect to %s"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cleanup_url_get
 goto|;
 block|}
 break|break;
 block|}
+name|freeaddrinfo
+argument_list|(
+name|res0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Construct and send the request.  We're expecting a return 	 * status of "200". Proxy requests don't want leading /. 	 */
 if|if
 condition|(
@@ -1895,6 +1914,17 @@ expr_stmt|;
 name|free
 argument_list|(
 name|line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res0
+operator|!=
+name|NULL
+condition|)
+name|freeaddrinfo
+argument_list|(
+name|res0
 argument_list|)
 expr_stmt|;
 return|return

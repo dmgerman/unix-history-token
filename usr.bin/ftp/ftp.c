@@ -755,6 +755,11 @@ operator|->
 name|ai_addrlen
 argument_list|)
 expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res0
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof

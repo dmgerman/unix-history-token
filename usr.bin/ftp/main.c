@@ -848,10 +848,8 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|src_addr
@@ -868,10 +866,8 @@ name|error
 operator|==
 name|EAI_SYSTEM
 condition|)
-name|errx
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
