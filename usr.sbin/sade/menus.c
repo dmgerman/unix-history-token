@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.39 1995/06/10 19:38:27 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.3 1995/07/27 01:37:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"Welcome to FreeBSD 2.0.5!"
+literal|"Welcome to FreeBSD RELEASE_NAME!"
 block|,
 comment|/* title */
 literal|"This is the main menu of the FreeBSD installation system.  Please\n\ select one of the options below by using the arrow keys or typing the\n\ first character of the option name you're interested in.  Invoke an\n\ option by pressing [ENTER]."
@@ -69,22 +69,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Language"
-block|,
-literal|"Set your preferred language."
-block|,
-comment|/* L */
-name|DMENU_SUBMENU
-block|,
-operator|&
-name|MenuOptionsLanguage
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"Options"
 block|,
 literal|"Select various options for this utility."
@@ -101,15 +85,45 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Proceed"
+literal|"Custom"
 block|,
-literal|"Go to the installation menu"
+literal|"Begin a custom installation"
 block|,
-comment|/* P */
+comment|/* C */
 name|DMENU_SUBMENU
 block|,
 operator|&
-name|MenuInstall
+name|MenuInstallCustom
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Express"
+block|,
+literal|"Begin a quick installation"
+block|,
+comment|/* E */
+name|DMENU_CALL
+block|,
+operator|&
+name|installExpress
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Shell"
+block|,
+literal|"Go to a shell for debugging or repair"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"sh"
 block|,
 literal|0
 block|,
@@ -150,7 +164,7 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"Documentation for FreeBSD 2.0.5"
+literal|"Documentation for FreeBSD RELEASE_NAME"
 block|,
 comment|/* Title */
 literal|"If you are at all unsure about the configuration of your hardware\n\ or are looking to build a system specifically for FreeBSD, read the\n\ Hardware guide!  New users should also read the Install document for\n\ a step-by-step tutorial on installing FreeBSD.  For general information,\n\ consult the README file."
@@ -159,14 +173,12 @@ literal|"Confused?  Press F1 for help."
 block|,
 literal|"usage.hlp"
 block|,
-comment|/* help file */
 block|{
 block|{
 literal|"README"
 block|,
 literal|"Read this for a general description of FreeBSD"
 block|,
-comment|/* R */
 name|DMENU_DISPLAY_FILE
 block|,
 literal|"README"
@@ -181,7 +193,6 @@ literal|"Hardware"
 block|,
 literal|"The FreeBSD survival guide for PC hardware."
 block|,
-comment|/* H */
 name|DMENU_DISPLAY_FILE
 block|,
 literal|"hardware.hlp"
@@ -196,7 +207,6 @@ literal|"Install"
 block|,
 literal|"A step-by-step guide to installing FreeBSD."
 block|,
-comment|/* I */
 name|DMENU_DISPLAY_FILE
 block|,
 literal|"install.hlp"
@@ -211,7 +221,6 @@ literal|"Copyright"
 block|,
 literal|"The FreeBSD Copyright notices."
 block|,
-comment|/* C */
 name|DMENU_DISPLAY_FILE
 block|,
 literal|"COPYRIGHT"
@@ -226,7 +235,6 @@ literal|"Release"
 block|,
 literal|"The release notes for this version of FreeBSD."
 block|,
-comment|/* R */
 name|DMENU_DISPLAY_FILE
 block|,
 literal|"RELNOTES"
@@ -241,209 +249,9 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-comment|/* E */
 name|DMENU_CANCEL
 block|,
 name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * The language selection menu.  */
-end_comment
-
-begin_decl_stmt
-name|DMenu
-name|MenuOptionsLanguage
-init|=
-block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Natural language selection"
-block|,
-comment|/* title */
-literal|"Please specify the language you would like to use by default.\n\n\ While almost all of the system's documentation is still written\n\ in english (and may never be translated), there are a few guides\n\ and types of system documentation that may be written in your\n\ preferred language.  When such are found, they will be used instead\n\ of the english versions.  This feature is nonetheless considered\n\ to be in experimental status at this time."
-block|,
-comment|/* prompt */
-literal|"Press F1 for more information"
-block|,
-comment|/* help line */
-literal|"language.hlp"
-block|,
-comment|/* help file */
-block|{
-block|{
-literal|"Danish"
-block|,
-literal|"Danish language and character set (ISO-8859-1)"
-block|,
-comment|/* D */
-name|DMENU_CALL
-block|,
-name|lang_set_Danish
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Dutch"
-block|,
-literal|"Dutch language and character set (ISO-8859-1)"
-block|,
-comment|/* D */
-name|DMENU_CALL
-block|,
-name|lang_set_Dutch
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"English"
-block|,
-literal|"English language (system default)"
-block|,
-comment|/* E */
-name|DMENU_CALL
-block|,
-name|lang_set_English
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"French"
-block|,
-literal|"French language and character set (ISO-8859-1)"
-block|,
-comment|/* F */
-name|DMENU_CALL
-block|,
-name|lang_set_French
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"German"
-block|,
-literal|"German language and character set (ISO-8859-1)"
-block|,
-comment|/* G */
-name|DMENU_CALL
-block|,
-name|lang_set_German
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Italian"
-block|,
-literal|"Italian language and character set (ISO-8859-1)"
-block|,
-comment|/* I */
-name|DMENU_CALL
-block|,
-name|lang_set_Italian
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Japanese"
-block|,
-literal|"Japanese language and default character set (romaji)"
-block|,
-comment|/* J */
-name|DMENU_CALL
-block|,
-name|lang_set_Japanese
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Norwegian"
-block|,
-literal|"Norwegian language and character set (ISO-8859-1)"
-block|,
-comment|/* N */
-name|DMENU_CALL
-block|,
-name|lang_set_Norwegian
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Russian"
-block|,
-literal|"Russian language and character set (KOI8-R)"
-block|,
-comment|/* R */
-name|DMENU_CALL
-block|,
-name|lang_set_Russian
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Spanish"
-block|,
-literal|"Spanish language and character set (ISO-8859-1)"
-block|,
-comment|/* S */
-name|DMENU_CALL
-block|,
-name|lang_set_Spanish
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Swedish"
-block|,
-literal|"Swedish language and character set (ISO-8859-1)"
-block|,
-comment|/* S */
-name|DMENU_CALL
-block|,
-name|lang_set_Swedish
 block|,
 literal|0
 block|,
@@ -469,7 +277,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a CDROM type"
 block|,
-literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD 2.0.5 distribution.  If you are seeing this menu it is because\n\ more than one CDROM drive was found on your system.  Please select one\n\ of the following CDROM drives as your installation drive."
+literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD RELEASE_NAME distribution.  If you are seeing this menu it is because\n\ more than one CDROM drive was found on your system.  Please select one\n\ of the following CDROM drives as your installation drive."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -561,7 +369,7 @@ literal|"ftp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.freebsd.org/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.freebsd.org/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -575,7 +383,7 @@ literal|"freefall.cdrom.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://freefall.cdrom.com/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://freefall.cdrom.com/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -603,7 +411,7 @@ literal|"ftp.physics.usyd.edu.au"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.physics.usyd.edu.au/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.physics.usyd.edu.au/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -617,7 +425,7 @@ literal|"nic.funet.fi"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://nic.funet.fi/pub/unix/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://nic.funet.fi/pub/unix/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -631,7 +439,7 @@ literal|"ftp.ibp.fr"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.ibp.fr/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.ibp.fr/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -645,7 +453,7 @@ literal|"ftp.fb9dv.uni-duisburg.de"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.fb9dv.uni-duisburg.de/pub/unix/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.fb9dv.uni-duisburg.de/pub/unix/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -659,7 +467,7 @@ literal|"gil.physik.rwth-aachen.de"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://gil.physik.rwth-aachen.de/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://gil.physik.rwth-aachen.de/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -673,7 +481,7 @@ literal|"ftp.uni-paderborn.de"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.uni-paderborn.de/freebsd/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.uni-paderborn.de/freebsd/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -687,7 +495,7 @@ literal|"ftp.hk.super.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.hk.super.net/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.hk.super.net/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -701,7 +509,7 @@ literal|"orgchem.weizmann.ac.il"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://orgchem.weizmann.ac.il/pub/FreeBSD-2.0.5-RELEASE"
+literal|"ftp=ftp://orgchem.weizmann.ac.il/pub/FreeBSD-RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -715,7 +523,7 @@ literal|"ftp.sra.co.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.sra.co.jp/pub/os/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.sra.co.jp/pub/os/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -729,7 +537,7 @@ literal|"ftp.mei.co.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.mei.co.jp/free/PC-UNIX/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.mei.co.jp/free/PC-UNIX/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -743,7 +551,7 @@ literal|"ftp.waseda.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.waseda.ac.jp/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.waseda.ac.jp/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -757,7 +565,7 @@ literal|"ftp.pu-toyama.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.pu-toyama.ac.jp/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.pu-toyama.ac.jp/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -771,7 +579,7 @@ literal|"ftpsv1.u-aizu.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftpsv1.u-aizu.ac.jp/pub/os/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftpsv1.u-aizu.ac.jp/pub/os/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -785,7 +593,7 @@ literal|"ftp.tut.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp://ftp.tut.ac.jp/FreeBSD/2.0.5-RELEASE"
+literal|"ftp://ftp.tut.ac.jp/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -799,7 +607,7 @@ literal|"ftp.ee.uec.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.ee.uec.ac.jp/pub/os/mirror/ftp.freebsd.org/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.ee.uec.ac.jp/pub/os/mirror/ftp.freebsd.org/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -813,7 +621,7 @@ literal|"ftp.tokyonet.ad.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp://ftp.tokyonet.ad.jp/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp://ftp.tokyonet.ad.jp/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -827,7 +635,7 @@ literal|"ftp.cau.ac.kr"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.cau.ac.kr/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.cau.ac.kr/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -841,7 +649,7 @@ literal|"ftp.nl.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.nl.net/pub/os/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.nl.net/pub/os/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -855,7 +663,7 @@ literal|"ftp.kiae.su"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.kiae.su/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.kiae.su/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -869,7 +677,7 @@ literal|"ftp.luth.se"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.luth.se/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.luth.se/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -883,7 +691,7 @@ literal|"netbsd.csie.nctu.edu.tw"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://netbsd.csie.nctu.edu.tw/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://netbsd.csie.nctu.edu.tw/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -897,7 +705,7 @@ literal|"ftp.nectec.or.th"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.nectec.or.th/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.nectec.or.th/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -911,7 +719,7 @@ literal|"ftp.demon.co.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.demon.co.uk/pub/BSD/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.demon.co.uk/pub/BSD/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -925,7 +733,7 @@ literal|"src.doc.ic.ac.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://src.doc.ic.ac.uk/packages/unix/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://src.doc.ic.ac.uk/packages/unix/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -939,7 +747,7 @@ literal|"unix.hensa.ac.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://unix.hensa.ac.uk/mirrors/walnut.creek/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://unix.hensa.ac.uk/mirrors/walnut.creek/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -953,7 +761,7 @@ literal|"ref.tfs.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ref.tfs.com/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ref.tfs.com/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -967,7 +775,7 @@ literal|"ftp.dataplex.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.dataplex.net/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.dataplex.net/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -981,7 +789,7 @@ literal|"kryten.atinc.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://kryten.atinc.com/pub/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://kryten.atinc.com/pub/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -995,7 +803,7 @@ literal|"ftp.neosoft.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.neosoft.com/systems/FreeBSD/2.0.5-RELEASE"
+literal|"ftp=ftp://ftp.neosoft.com/systems/FreeBSD/RELEASE_NAME"
 block|,
 literal|0
 block|,
@@ -1077,7 +885,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose Installation Media"
 block|,
-literal|"FreeBSD can be installed from a variety of different installation\n\ media, ranging from floppies to the Internet.  If you're installing\n\ FreeBSD from a supported CDROM drive then this is generally the best\n\ method to use unless you have some overriding reason for using another\n\ method."
+literal|"FreeBSD can be installed from a variety of different installation\n\ media, ranging from floppies to the Internet.  If you're installing\n\ FreeBSD from a supported CDROM drive then this is generally the best\n\ media to use, unless you have some overriding reason for using another\n\ media."
 block|,
 literal|"Press F1 for more information on the various media types"
 block|,
@@ -1141,13 +949,27 @@ literal|0
 block|}
 block|,
 block|{
-literal|"FTP"
+literal|"FTP Active"
 block|,
-literal|"Install from an Internet FTP server"
+literal|"Install from an FTP server in active mode"
 block|,
 name|DMENU_CALL
 block|,
-name|mediaSetFTP
+name|mediaSetFTPActive
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"FTP Passive"
+block|,
+literal|"Install from an FTP server in passive mode"
+block|,
+name|DMENU_CALL
+block|,
+name|mediaSetFTPPassive
 block|,
 literal|0
 block|,
@@ -1358,20 +1180,6 @@ modifier|*
 name|item
 parameter_list|)
 block|{
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Dists& DIST_DES = %d\n"
-argument_list|,
-name|Dists
-operator|&
-name|DIST_DES
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|Dists
@@ -1397,20 +1205,6 @@ modifier|*
 name|item
 parameter_list|)
 block|{
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Dists& DIST_SRC = %d\n"
-argument_list|,
-name|Dists
-operator|&
-name|DIST_SRC
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|Dists
@@ -1436,20 +1230,6 @@ modifier|*
 name|item
 parameter_list|)
 block|{
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Dists& DIST_XF86 = %d\n"
-argument_list|,
-name|Dists
-operator|&
-name|DIST_XF86
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|Dists
@@ -1553,7 +1333,7 @@ block|,
 block|{
 literal|"DES"
 block|,
-literal|"NOT FOR EXPORT! DES encryption code [.3MB]"
+literal|"DES encryption code - NOT FOR EXPORT! [.3MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1586,7 +1366,7 @@ block|,
 block|{
 literal|"games"
 block|,
-literal|"Games and other amusements (non-commercial) [6.4MB]"
+literal|"Games (non-commercial) [6.4MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1620,7 +1400,7 @@ block|,
 block|{
 literal|"man"
 block|,
-literal|"System manual pages - strongly recommended [3.3MB]"
+literal|"System manual pages - recommended [3.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1840,7 +1620,7 @@ block|,
 block|{
 literal|"gnu"
 block|,
-literal|"/usr/src/gnu (software from the GNU Project) [42MB]]"
+literal|"/usr/src/gnu (software from the GNU Project) [42MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1967,6 +1747,23 @@ operator|&
 name|SrcDists
 block|,
 name|DIST_SRC_RELEASE
+block|,
+literal|0
+block|,
+name|dmenuFlagCheck
+block|}
+block|,
+block|{
+literal|"bin"
+block|,
+literal|"/usr/src/bin (system binaries) [2.5MB]"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|SrcDists
+block|,
+name|DIST_SRC_BIN
 block|,
 literal|0
 block|,
@@ -2120,7 +1917,6 @@ literal|"Basic"
 block|,
 literal|"Basic component menu (required)"
 block|,
-comment|/* B */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -2136,7 +1932,6 @@ literal|"Server"
 block|,
 literal|"X server menu"
 block|,
-comment|/* S */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -2152,7 +1947,6 @@ literal|"Fonts"
 block|,
 literal|"Font set menu"
 block|,
-comment|/* F */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -2184,7 +1978,6 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-comment|/* E */
 name|DMENU_CANCEL
 block|,
 name|NULL
@@ -2376,7 +2169,7 @@ block|,
 block|{
 literal|"sources"
 block|,
-literal|"XFree86 3.1.1u1 source + contrib distribution [200MB]"
+literal|"XFree86 3.1.1u1 standard + contrib sources [200MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2879,46 +2672,6 @@ name|OPT_FTP_ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|OptFlags
-operator|&
-operator|(
-name|OPT_FTP_ACTIVE
-operator|+
-name|OPT_FTP_PASSIVE
-operator|)
-operator|)
-operator|==
-operator|(
-name|OPT_FTP_ACTIVE
-operator|+
-name|OPT_FTP_PASSIVE
-operator|)
-condition|)
-name|OptFlags
-operator|&=
-operator|~
-name|OPT_FTP_ACTIVE
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|OptFlags
-operator|&
-operator|(
-name|OPT_FTP_ACTIVE
-operator|+
-name|OPT_FTP_PASSIVE
-operator|)
-operator|)
-condition|)
-name|OptFlags
-operator||=
-name|OPT_FTP_PASSIVE
-expr_stmt|;
-if|if
-condition|(
 operator|*
 operator|(
 operator|(
@@ -2967,6 +2720,23 @@ literal|"options.hlp"
 block|,
 block|{
 block|{
+literal|"FTP Options"
+block|,
+literal|"Set FTP specific options"
+block|,
+name|DMENU_SUBMENU
+block|,
+operator|&
+name|MenuFTPOptions
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"NFS Secure"
 block|,
 literal|"NFS server talks only on a secure port"
@@ -3001,74 +2771,6 @@ name|dmenuFlagCheck
 block|}
 block|,
 block|{
-literal|"FTP Abort"
-block|,
-literal|"On transfer failure, abort"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_FTP_ABORT
-block|,
-literal|0
-block|,
-name|ftpFlagCheck
-block|}
-block|,
-block|{
-literal|"FTP Reselect"
-block|,
-literal|"On transfer failure, ask for another host"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_FTP_RESELECT
-block|,
-literal|0
-block|,
-name|ftpFlagCheck
-block|}
-block|,
-block|{
-literal|"FTP active"
-block|,
-literal|"Use \"active mode\" for standard FTP"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_FTP_ACTIVE
-block|,
-literal|0
-block|,
-name|ftpFlagCheck
-block|}
-block|,
-block|{
-literal|"FTP passive"
-block|,
-literal|"Use \"passive mode\" for firewalled FTP"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_FTP_PASSIVE
-block|,
-literal|0
-block|,
-name|ftpFlagCheck
-block|}
-block|,
-block|{
 literal|"Debugging"
 block|,
 literal|"Turn on the extra debugging flag"
@@ -3100,22 +2802,6 @@ block|,
 literal|0
 block|,
 name|dmenuFlagCheck
-block|}
-block|,
-block|{
-literal|"FTP userpass"
-block|,
-literal|"Specify username and password instead of anonymous"
-block|,
-name|DMENU_CALL
-block|,
-name|mediaSetFtpUserPass
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|userPassCheck
 block|}
 block|,
 block|{
@@ -3154,21 +2840,96 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|DMenu
+name|MenuFTPOptions
+init|=
+block|{
+name|DMENU_MULTIPLE_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Choose FTP Options"
+block|,
+literal|"This menu allows you to customize the behavior of FTP transfers\n\ for an FTP installation.  To select \"Active\" or \"Passive\" mode\n\ FTP, see the Media menu."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"FTP Abort"
+block|,
+literal|"On transfer failure, abort"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|OptFlags
+block|,
+name|OPT_FTP_ABORT
+block|,
+literal|0
+block|,
+name|ftpFlagCheck
+block|}
+block|,
+block|{
+literal|"FTP Reselect"
+block|,
+literal|"On transfer failure, ask for another host"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|OptFlags
+block|,
+name|OPT_FTP_RESELECT
+block|,
+literal|0
+block|,
+name|ftpFlagCheck
+block|}
+block|,
+block|{
+literal|"FTP userpass"
+block|,
+literal|"Specify username and password instead of anonymous"
+block|,
+name|DMENU_CALL
+block|,
+name|mediaSetFtpUserPass
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|userPassCheck
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* The main installation menu */
 end_comment
 
 begin_decl_stmt
 name|DMenu
-name|MenuInstall
+name|MenuInstallCustom
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"Choose Installation Options"
+literal|"Choose Custom Installation Options"
 block|,
-comment|/* title */
-literal|"Before installation can continue, you need to specify a few\n\ details on the type of distribution you wish to have, where you wish\n\ to install it from and how you wish to allocate disk storage to FreeBSD.\n\n\ None of the items in this menu will actually modify the contents of\n\ your disk until you select the \"Install\" menu item (and even then, only\n\ after a final confirmation)."
+literal|"This is the custom installation menu. You may use this menu to specify\n\ details on the type of distribution you wish to have, where you wish\n\ to install it from and how you wish to allocate disk storage to FreeBSD."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -3180,7 +2941,6 @@ literal|"Partition"
 block|,
 literal|"Allocate disk space for FreeBSD"
 block|,
-comment|/* P */
 name|DMENU_CALL
 block|,
 name|diskPartitionEditor
@@ -3195,7 +2955,6 @@ literal|"Label"
 block|,
 literal|"Label allocated disk partitions"
 block|,
-comment|/* L */
 name|DMENU_CALL
 block|,
 name|diskLabelEditor
@@ -3210,7 +2969,6 @@ literal|"Distributions"
 block|,
 literal|"Choose the type of installation you want"
 block|,
-comment|/* T */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -3226,7 +2984,6 @@ literal|"Media"
 block|,
 literal|"Choose the installation media type"
 block|,
-comment|/* M */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -3238,11 +2995,24 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Extract"
+block|,
+literal|"Extract distributions from selected media"
+block|,
+name|DMENU_CALL
+block|,
+name|distExtractAll
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"Options"
 block|,
 literal|"Go to Options submenu"
 block|,
-comment|/* O */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -3256,9 +3026,8 @@ block|,
 block|{
 literal|"Commit"
 block|,
-literal|"Install FreeBSD onto your hard disk(s)"
+literal|"Do Write/Make/Extract options in one step"
 block|,
-comment|/* C */
 name|DMENU_CALL
 block|,
 name|installCommit
@@ -3273,7 +3042,6 @@ literal|"Configure"
 block|,
 literal|"Do post-install configuration of FreeBSD"
 block|,
-comment|/* C */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -3334,7 +3102,6 @@ literal|"BootMgr"
 block|,
 literal|"Install the FreeBSD Boot Manager (\"Booteasy\")"
 block|,
-comment|/* B */
 name|DMENU_SET_VALUE
 block|,
 operator|&
@@ -3352,7 +3119,6 @@ literal|"Standard"
 block|,
 literal|"Use a standard MBR (no boot manager)"
 block|,
-comment|/* S */
 name|DMENU_SET_VALUE
 block|,
 operator|&
@@ -3370,7 +3136,6 @@ literal|"None"
 block|,
 literal|"Leave the Master Boot Record untouched"
 block|,
-comment|/* N */
 name|DMENU_SET_VALUE
 block|,
 operator|&

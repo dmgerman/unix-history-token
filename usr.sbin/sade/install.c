@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.70.2.41 1995/06/10 07:58:37 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.1 1995/07/21 10:53:54 rgrimes Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -52,16 +58,6 @@ init|=
 name|FALSE
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|Boolean
-name|make_filesystems
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -501,7 +497,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Invalid placement of root partition.  For now, we only support\nmounting root partitions on \"a\" partitions due to limitations\nin the FreeBSD boot block code.  Please correct this and\ntry again."
+literal|"Invalid placement of root partition.  For now, we only support\nmounting root partitions on \"a\" partitions due to limitations\nin the FreeBSD boot code.  Please correct this and\ntry again."
 argument_list|)
 expr_stmt|;
 return|return
@@ -547,34 +543,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|u_char
-name|boot1
-index|[]
-decl_stmt|,
-name|boot2
-index|[]
-decl_stmt|;
-specifier|extern
-name|u_char
-name|mbr
-index|[]
-decl_stmt|,
-name|bteasy17
-index|[]
-decl_stmt|;
-name|u_char
-modifier|*
-name|mbrContents
-decl_stmt|;
-name|Device
-modifier|*
-modifier|*
-name|devs
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 specifier|static
 name|Boolean
 name|alreadyDone
@@ -633,49 +601,6 @@ condition|)
 return|return
 name|FALSE
 return|;
-comment|/* Figure out what kind of MBR the user wants */
-if|if
-condition|(
-operator|!
-name|dmenuOpenSimple
-argument_list|(
-operator|&
-name|MenuMBRType
-argument_list|)
-condition|)
-return|return
-name|FALSE
-return|;
-switch|switch
-condition|(
-name|BootMgr
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|mbrContents
-operator|=
-name|bteasy17
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|mbrContents
-operator|=
-name|mbr
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-default|default:
-name|mbrContents
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* If we refuse to proceed, bail. */
 if|if
 condition|(
@@ -687,200 +612,18 @@ condition|)
 return|return
 name|FALSE
 return|;
-name|devs
-operator|=
-name|deviceFind
-argument_list|(
-name|NULL
-argument_list|,
-name|DEVICE_TYPE_DISK
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|devs
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|Chunk
-modifier|*
-name|c1
-decl_stmt|;
-name|Disk
-modifier|*
-name|d
-init|=
 operator|(
-name|Disk
-operator|*
+name|void
 operator|)
-name|devs
-index|[
-name|i
-index|]
-operator|->
-name|private
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|devs
-index|[
-name|i
-index|]
-operator|->
-name|enabled
-condition|)
-continue|continue;
-if|if
-condition|(
-name|mbrContents
-condition|)
-block|{
-name|Set_Boot_Mgr
+name|diskPartitionWrite
 argument_list|(
-name|d
-argument_list|,
-name|mbrContents
-argument_list|)
-expr_stmt|;
-name|mbrContents
-operator|=
 name|NULL
-expr_stmt|;
-block|}
-name|Set_Boot_Blocks
-argument_list|(
-name|d
-argument_list|,
-name|boot1
-argument_list|,
-name|boot2
 argument_list|)
 expr_stmt|;
-name|msgNotify
-argument_list|(
-literal|"Writing partition information to drive %s"
-argument_list|,
-name|d
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|Write_Disk
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-comment|/* Now scan for bad blocks, if necessary */
-for|for
-control|(
-name|c1
-operator|=
-name|d
-operator|->
-name|chunks
-operator|->
-name|part
-init|;
-name|c1
-condition|;
-name|c1
-operator|=
-name|c1
-operator|->
-name|next
-control|)
-block|{
-if|if
-condition|(
-name|c1
-operator|->
-name|flags
-operator|&
-name|CHUNK_BAD144
-condition|)
-block|{
-name|int
-name|ret
-decl_stmt|;
-name|msgNotify
-argument_list|(
-literal|"Running bad block scan on partition %s"
-argument_list|,
-name|c1
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|vsystem
-argument_list|(
-literal|"bad144 -v /dev/r%s 1234"
-argument_list|,
-name|c1
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"Bad144 init on %s returned status of %d!"
-argument_list|,
-name|c1
-operator|->
-name|name
-argument_list|,
-name|ret
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|vsystem
-argument_list|(
-literal|"bad144 -v -s /dev/r%s"
-argument_list|,
-name|c1
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"Bad144 scan on %s returned status of %d!"
-argument_list|,
-name|c1
-operator|->
-name|name
-argument_list|,
-name|ret
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
 if|if
 condition|(
 operator|!
-name|make_filesystems
+name|installFilesystems
 argument_list|()
 condition|)
 block|{
@@ -890,7 +633,7 @@ literal|"Couldn't make filesystems properly.  Aborting."
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
 if|if
@@ -906,7 +649,7 @@ literal|"Couldn't clone the boot floppy onto the root file system.\nAborting."
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
 name|dialog_clear
@@ -1059,8 +802,95 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|installExpress
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"In the next menu, you will need to set up a DOS-style\n"
+literal|"partitioning scheme for your hard disk.  If you don't\n"
+literal|"want to do anything special, just type `A' to use the\n"
+literal|"whole disk and then `Q' to quit."
+argument_list|)
+expr_stmt|;
+name|diskPartitionEditor
+argument_list|(
+literal|"express"
+argument_list|)
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Next, you need to lay out BSD partitions inside of the\n"
+literal|"DOS-style partition just created.  If you don't want to\n"
+literal|"do anything special, just type `A' to use the default\n"
+literal|"partitioning scheme and then `Q' to quit."
+argument_list|)
+expr_stmt|;
+name|diskLabelEditor
+argument_list|(
+literal|"express"
+argument_list|)
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Now it is time to select an installation subset.  There\n"
+literal|"are two basic configurations: Developer and Router.  The\n"
+literal|"Developer subset includes sources, documentation, and\n"
+literal|"binaries for almost everything.  The Router subset\n"
+literal|"includes the same binaries and documentation, but no\n"
+literal|"sources.  You can also install absolutely everything,\n"
+literal|"or select a custom software set."
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|!
+name|Dists
+condition|)
+block|{
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuInstallType
+argument_list|)
+expr_stmt|;
+block|}
+name|msgConfirm
+argument_list|(
+literal|"Finally, you must specify an installation medium."
+argument_list|)
+expr_stmt|;
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuMedia
+argument_list|)
+expr_stmt|;
+name|installCommit
+argument_list|(
+literal|"express"
+argument_list|)
+expr_stmt|;
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuConfigure
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * What happens when we select "Install".  This is broken into a 3 stage installation so that  * the user can do a full installation but come back here again to load more distributions,  * perhaps from a different media type.  This would allow, for example, the user to load the  * majority of the system from CDROM and then use ftp to load just the DES dist.  */
+comment|/*  * What happens when we select "Commit" in the custom installation menu.  *  * This is broken into multiple stages so that the user can do a full installation but come  * back here again to load more distributions, perhaps from a different media type.  * This would allow, for example, the user to load the majority of the system from CDROM  * and then use ftp to load just the DES dist.  */
 end_comment
 
 begin_function
@@ -1127,6 +957,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|RunningAsInit
+operator|&&
 operator|!
 name|SystemWasInstalled
 operator|&&
@@ -1155,8 +987,13 @@ name|SystemWasInstalled
 operator|=
 name|FALSE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|distExtractAll
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1192,6 +1029,8 @@ block|}
 comment|/* Resurrect /dev after bin distribution screws it up */
 if|if
 condition|(
+name|RunningAsInit
+operator|&&
 operator|!
 name|SystemWasInstalled
 condition|)
@@ -1358,26 +1197,30 @@ argument_list|(
 literal|"/usr/X11R6"
 argument_list|)
 condition|)
-operator|(
-name|void
-operator|)
-name|system
+name|chmod
 argument_list|(
-literal|"chmod 755 /usr/X11R6"
+literal|"/usr/X11R6"
+argument_list|,
+literal|0755
 argument_list|)
 expr_stmt|;
 comment|/* BOGON #2: We leave /etc in a bad state */
-operator|(
-name|void
-operator|)
-name|system
+name|chmod
 argument_list|(
-literal|"chmod 755 /etc"
+literal|"/etc"
+argument_list|,
+literal|0755
 argument_list|)
 expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
+comment|/* We get a NULL value for str if run from installExpress(), in which case we don't want to print the following */
+if|if
+condition|(
+name|str
+condition|)
+block|{
 if|if
 condition|(
 name|Dists
@@ -1393,6 +1236,7 @@ argument_list|(
 literal|"Installation completed successfully, now  press [ENTER] to return\nto the main menu. If you have any network devices you have not yet\nconfigured, see the Interface configuration item on the\nConfiguration menu."
 argument_list|)
 expr_stmt|;
+block|}
 name|SystemWasInstalled
 operator|=
 name|TRUE
@@ -1408,9 +1252,8 @@ comment|/* Go newfs and/or mount all the filesystems we've been asked to */
 end_comment
 
 begin_function
-specifier|static
 name|Boolean
-name|make_filesystems
+name|installFilesystems
 parameter_list|(
 name|void
 parameter_list|)
