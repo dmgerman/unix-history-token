@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rusersd.c,v 1.1 1993/09/16 00:34:49 jtc Exp $"
+literal|"$Id: rusersd.c,v 1.1.1.1 1994/08/28 14:53:45 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,6 +158,13 @@ name|int
 name|fromlen
 decl_stmt|;
 comment|/*          * See if inetd started us          */
+name|fromlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|from
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getsockname
