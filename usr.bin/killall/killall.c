@@ -487,7 +487,7 @@ decl_stmt|;
 name|int
 name|mib
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 name|size_t
