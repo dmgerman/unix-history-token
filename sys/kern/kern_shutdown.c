@@ -1532,7 +1532,12 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"--> Press a key on the console to reboot<--\n"
+literal|"--> Press a key on the console to reboot,\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"--> or switch off the system now.\n"
 argument_list|)
 expr_stmt|;
 name|cngetc
