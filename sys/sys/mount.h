@@ -564,6 +564,10 @@ name|int
 name|mnt_nvnodelistsize
 decl_stmt|;
 comment|/* # of vnodes on this mount */
+name|u_int
+name|mnt_hashseed
+decl_stmt|;
+comment|/* Random seed for vfs_hash */
 block|}
 struct|;
 end_struct

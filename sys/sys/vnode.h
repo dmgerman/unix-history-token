@@ -605,17 +605,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VI_HASHED
-value|0x0004
-end_define
-
-begin_comment
-comment|/* vnode is hashed in vfs_hash */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VI_MOUNT
 value|0x0020
 end_define
