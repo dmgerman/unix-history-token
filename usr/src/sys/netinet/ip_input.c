@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.65	83/02/23	*/
+comment|/*	ip_input.c	1.66	83/03/12	*/
 end_comment
 
 begin_include
@@ -3122,9 +3122,6 @@ name|mopt
 argument_list|)
 expr_stmt|;
 comment|/* last 0 here means no directed broadcast */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|ip_output
@@ -3145,7 +3142,10 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|==
 literal|0
 condition|)
@@ -3161,6 +3161,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|mcopy
+operator|==
+name|NULL
+condition|)
+return|return;
 name|ip
 operator|=
 name|mtod
