@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -164,34 +164,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|F_ECCLM
-value|0x20
-end_define
-
-begin_comment
-comment|/* limit # of bits in ecc correction */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|F_SSI
 value|0x40
 end_define
 
 begin_comment
 comment|/* set skip sector inhibit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_SEVRE
-value|0x80
-end_define
-
-begin_comment
-comment|/* Severe burnin (no retries, no ECC) */
 end_comment
 
 begin_comment
@@ -622,18 +600,18 @@ value|(('d'<<8)|6)
 end_define
 
 begin_comment
-comment|/* limit ecc correction to 5 bits */
+comment|/* set limit to ecc correction, bits */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SAIOECCUNL
+name|SAIORETRIES
 value|(('d'<<8)|7)
 end_define
 
 begin_comment
-comment|/* use standard ecc procedures */
+comment|/* set retry count for unit */
 end_comment
 
 begin_define
@@ -694,60 +672,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SAIOSEVRE
+name|SAIOGBADINFO
 value|(('d'<<8)|13)
 end_define
 
 begin_comment
-comment|/* severe burnin, no ECC, no retries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIONSEVRE
-value|(('d'<<8)|14)
-end_define
-
-begin_comment
-comment|/* clear severe burnin */
-end_comment
-
-begin_comment
-comment|/* codes for sector header word 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HDR1_FMT22
-value|0x1000
-end_define
-
-begin_comment
-comment|/* standard 16 bit format */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HDR1_OKSCT
-value|0xc000
-end_define
-
-begin_comment
-comment|/* sector ok */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HDR1_SSF
-value|0x2000
-end_define
-
-begin_comment
-comment|/* skip sector flag */
+comment|/* get bad-sector table */
 end_comment
 
 end_unit
