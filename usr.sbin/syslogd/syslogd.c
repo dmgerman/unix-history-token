@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.40 1998/07/27 13:04:14 phk Exp $"
+literal|"$Id: syslogd.c,v 1.41 1998/08/25 21:16:47 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2614,9 +2614,16 @@ argument_list|,
 sizeof|sizeof
 name|line
 argument_list|,
-literal|"syslogd: discarded %d unwanted packets in secure mode"
+literal|"syslogd: discarded %d unwanted packets in secure mode, last from %s"
 argument_list|,
 name|Vogons
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|frominet
+operator|.
+name|sin_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|logmsg
