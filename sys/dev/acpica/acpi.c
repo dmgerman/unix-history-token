@@ -7514,8 +7514,7 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -7542,8 +7541,7 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -7573,8 +7571,7 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
