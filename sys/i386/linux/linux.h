@@ -95,7 +95,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Provide a seperate set of types for the Linux types.  */
+comment|/*  * Provide a separate set of types for the Linux types.  */
 end_comment
 
 begin_typedef
