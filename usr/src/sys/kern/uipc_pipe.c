@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.8	81/11/22	*/
+comment|/*	uipc_pipe.c	4.9	81/11/26	*/
 end_comment
 
 begin_include
@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_comment
@@ -431,7 +431,6 @@ define|#
 directive|define
 name|snd
 value|(&so2->so_snd)
-comment|/* printf("pru_rcvd in: "); psndrcv(snd, rcv); */
 comment|/* 		 * Transfer resources back to send port 		 * and wakeup any waiting to write. 		 */
 name|snd
 operator|->
@@ -473,7 +472,6 @@ name|rcv
 operator|->
 name|sb_cc
 expr_stmt|;
-comment|/* printf("pru_rcvd out: "); psndrcv(snd, rcv); */
 name|sbwakeup
 argument_list|(
 name|snd
@@ -509,7 +507,6 @@ literal|"pipe send"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Send to paired receive port, and then 		 * give it enough resources to hold what it already has. 		 * Wake up readers. 		 */
-comment|/* printf("pru_send in: "); psndrcv(snd, rcv); */
 name|sbappend
 argument_list|(
 name|rcv
@@ -562,7 +559,6 @@ argument_list|(
 name|rcv
 argument_list|)
 expr_stmt|;
-comment|/* printf("pru_send out: "); psndrcv(snd, rcv); */
 undef|#
 directive|undef
 name|snd

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.7	81/11/21	*/
+comment|/*	uipc_proto.c	4.8	81/11/26	*/
 end_comment
 
 begin_include
@@ -30,13 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_comment
@@ -58,15 +58,12 @@ begin_comment
 comment|/*  * TCP/IP protocol family: IP, ICMP, UDP, TCP.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
-name|ip_input
-argument_list|()
-decl_stmt|,
 name|ip_output
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -328,7 +325,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|ip_input
+literal|0
 block|,
 name|ip_output
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.16	81/11/22	*/
+comment|/*	uipc_mbuf.c	1.17	81/11/26	*/
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_comment
@@ -95,11 +95,13 @@ operator|>>
 literal|1
 operator|)
 operator|>
+operator|(
 name|NMBPAGES
-operator|*
-name|NMBPG
 operator|-
 literal|32
+operator|)
+operator|*
+name|CLBYTES
 condition|)
 return|return
 operator|(
@@ -697,9 +699,9 @@ operator|)
 operator|+
 name|off
 expr_stmt|;
-name|mprefcnt
+name|mclrefcnt
 index|[
-name|mtopf
+name|mtocl
 argument_list|(
 name|p
 argument_list|)
@@ -868,7 +870,13 @@ literal|0
 init|;
 name|i
 operator|<
-name|NMBPG
+name|CLBYTES
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mbuf
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -895,7 +903,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|pg_alloc
+name|m_pgalloc
 argument_list|(
 literal|3
 argument_list|)
@@ -970,7 +978,7 @@ literal|1
 expr_stmt|;
 name|m
 operator|=
-name|pftom
+name|cltom
 argument_list|(
 name|i
 argument_list|)
@@ -1043,17 +1051,23 @@ name|m
 operator|->
 name|m_next
 operator|=
-name|mpfree
+name|mclfree
 expr_stmt|;
-name|mpfree
+name|mclfree
 operator|=
 name|m
 expr_stmt|;
 name|m
 operator|+=
-name|NMBPG
+name|CLBYTES
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|m
+argument_list|)
 expr_stmt|;
-name|nmpfree
+name|nmclfree
 operator|++
 expr_stmt|;
 block|}
@@ -1062,7 +1076,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|pg_alloc
+name|m_pgalloc
 argument_list|(
 name|n
 argument_list|)
@@ -1094,7 +1108,7 @@ name|s
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|PG_ALLOC
+name|M_PGALLOC
 argument_list|)
 expr_stmt|;
 name|k
@@ -1131,7 +1145,7 @@ literal|1
 expr_stmt|;
 name|m
 operator|=
-name|pftom
+name|cltom
 argument_list|(
 name|i
 argument_list|)
@@ -1239,6 +1253,50 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_macro
+name|m_pgfree
+argument_list|(
+argument|addr
+argument_list|,
+argument|n
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|caddr_t
+name|addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|COUNT
+argument_list|(
+name|M_PGFREE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"m_pgfree %x %d\n"
+argument_list|,
+name|addr
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_macro
 name|m_expand
 argument_list|()
@@ -1281,7 +1339,7 @@ literal|3
 expr_stmt|;
 if|if
 condition|(
-name|pg_alloc
+name|m_pgalloc
 argument_list|(
 name|needp
 argument_list|)
@@ -1306,11 +1364,17 @@ operator|++
 operator|,
 name|need
 operator|-=
-name|NMBPG
+name|CLBYTES
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mbuf
+argument_list|)
 control|)
 if|if
 condition|(
-name|pg_alloc
+name|m_pgalloc
 argument_list|(
 literal|1
 argument_list|)
