@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.61 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.62 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1881,23 +1881,10 @@ block|{
 name|dirty
 operator|++
 expr_stmt|;
-comment|/* XXX */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_stat
-operator|.
-name|f_type
-operator|!=
-name|MOUNT_LFS
-condition|)
 operator|(
 name|void
 operator|)
-name|bwrite
+name|VOP_BWRITE
 argument_list|(
 name|bp
 argument_list|)
