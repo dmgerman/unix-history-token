@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.4	81/11/18	*/
+comment|/*	uipc_syscalls.c	4.5	81/11/20	*/
 end_comment
 
 begin_include
@@ -303,16 +303,6 @@ condition|)
 goto|goto
 name|free4
 goto|;
-name|rso
-operator|->
-name|so_isfilerefd
-operator|=
-name|wso
-operator|->
-name|so_isfilerefd
-operator|=
-literal|1
-expr_stmt|;
 return|return;
 name|free4
 label|:
@@ -354,6 +344,12 @@ literal|0
 expr_stmt|;
 name|free2
 label|:
+name|wso
+operator|->
+name|so_state
+operator||=
+name|SS_USERGONE
+expr_stmt|;
 name|sofree
 argument_list|(
 name|wso
@@ -361,6 +357,12 @@ argument_list|)
 expr_stmt|;
 name|free
 label|:
+name|rso
+operator|->
+name|so_state
+operator||=
+name|SS_USERGONE
+expr_stmt|;
 name|sofree
 argument_list|(
 name|rso
@@ -777,12 +779,6 @@ operator|->
 name|f_socket
 operator|=
 name|so
-expr_stmt|;
-name|so
-operator|->
-name|so_isfilerefd
-operator|=
-literal|1
 expr_stmt|;
 return|return;
 name|bad

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.15 81/11/18 */
+comment|/* ip_input.c 1.16 81/11/20 */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"../net/inet_systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
 end_include
 
 begin_include
@@ -115,6 +121,11 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|IP_INIT
+argument_list|)
+expr_stmt|;
 name|pr
 operator|=
 name|pffindproto
@@ -327,13 +338,16 @@ argument_list|(
 literal|"ip hdr ovflo\n"
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
+if|if
+condition|(
+name|ipcksum
+condition|)
+if|if
+condition|(
 name|ip
 operator|->
 name|ip_sum
@@ -344,12 +358,6 @@ name|m
 argument_list|,
 name|hlen
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_sum
 condition|)
 block|{
 name|printf
@@ -366,19 +374,11 @@ operator|.
 name|ips_badsum
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ipcksum
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
-block|}
+comment|/* 	 * Convert fields to host representation. 	 */
 name|ip
 operator|->
 name|ip_len
@@ -410,6 +410,9 @@ name|ip_off
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_off
@@ -466,12 +469,9 @@ argument_list|(
 literal|"ip_input: short packet\n"
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
 name|m_adj
 argument_list|(
@@ -732,6 +732,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Switch out to protocol's input routine. 	 */
 operator|(
 operator|*
 name|protosw
@@ -750,11 +751,19 @@ operator|(
 name|m
 operator|)
 expr_stmt|;
+return|return;
+name|bad
+label|:
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Take incoming datagram fragment and try to  * reassamble it into whole datagram.  If a chain for  * reassembly of this datagram already exists, then it  * is given as fp; otherwise have to make a chain.  */
+comment|/*  * Take incoming datagram fragment and try to  * reassemble it into whole datagram.  If a chain for  * reassembly of this datagram already exists, then it  * is given as fp; otherwise have to make a chain.  */
 end_comment
 
 begin_function
@@ -816,6 +825,11 @@ name|i
 decl_stmt|,
 name|next
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|IP_REASS
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Presence of header sizes in mbufs 	 * would confuse code below. 	 */
 name|m
 operator|->
@@ -1419,6 +1433,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|IP_FREEF
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|q
@@ -1666,13 +1685,42 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Drain off all datagram fragments.  */
+end_comment
+
 begin_macro
 name|ip_drain
 argument_list|()
 end_macro
 
 begin_block
-block|{  }
+block|{
+name|COUNT
+argument_list|(
+name|IP_DRAIN
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|ipq
+operator|.
+name|next
+operator|!=
+operator|&
+name|ipq
+condition|)
+operator|(
+name|void
+operator|)
+name|ip_freef
+argument_list|(
+name|ipq
+operator|.
+name|next
+argument_list|)
+expr_stmt|;
+block|}
 end_block
 
 begin_comment
@@ -1719,6 +1767,21 @@ name|ip_timestamp
 modifier|*
 name|ipt
 decl_stmt|;
+specifier|register
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
+name|in_addr
+name|t
+decl_stmt|;
+name|COUNT
+argument_list|(
+name|IP_DOOPTIONS
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 operator|(
@@ -1802,11 +1865,9 @@ condition|)
 block|{
 default|default:
 break|break;
+comment|/* 		 * Source routing with record. 		 * Find interface with current destination address. 		 * If none on this machine then drop if strictly routed, 		 * or do nothing if loosely routed. 		 * Record interface address and bring up next address 		 * component.  If strictly routed make sure next 		 * address on directly accessible net. 		 */
 case|case
 name|IPOPT_LSRR
-case|:
-case|case
-name|IPOPT_SSRR
 case|:
 if|if
 condition|(
@@ -1850,18 +1911,19 @@ literal|2
 index|]
 operator|)
 expr_stmt|;
+name|ifp
+operator|=
+name|if_ifwithaddr
+argument_list|(
+operator|*
+name|sin
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|n_lhost
-operator|.
-name|s_addr
+name|ifp
 operator|==
-operator|*
-operator|(
-name|u_long
-operator|*
-operator|)
-name|sin
+literal|0
 condition|)
 block|{
 if|if
@@ -1870,9 +1932,17 @@ name|opt
 operator|==
 name|IPOPT_SSRR
 condition|)
-block|{
-comment|/* MAKE SURE *SP DIRECTLY ACCESSIBLE */
+goto|goto
+name|bad
+goto|;
+break|break;
 block|}
+name|t
+operator|=
+name|ip
+operator|->
+name|ip_dst
+expr_stmt|;
 name|ip
 operator|->
 name|ip_dst
@@ -1883,7 +1953,7 @@ expr_stmt|;
 operator|*
 name|sin
 operator|=
-name|n_lhost
+name|t
 expr_stmt|;
 name|cp
 index|[
@@ -1892,7 +1962,52 @@ index|]
 operator|+=
 literal|4
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|cp
+index|[
+literal|2
+index|]
+operator|>
+name|optlen
+operator|-
+operator|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|-
+literal|1
+operator|)
+condition|)
+break|break;
+name|ip
+operator|->
+name|ip_dst
+operator|=
+name|sin
+index|[
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|opt
+operator|==
+name|IPOPT_SSRR
+operator|&&
+name|if_ifonnetof
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
 break|break;
 case|case
 name|IPOPT_TS
@@ -1992,16 +2107,14 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* stamp with ``first'' interface address */
 operator|*
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
 name|sin
 operator|++
 operator|=
-name|n_lhost
+name|ifnet
+operator|->
+name|if_addr
 expr_stmt|;
 break|break;
 case|case
@@ -2009,18 +2122,15 @@ name|IPOPT_TS_PRESPEC
 case|:
 if|if
 condition|(
+name|if_ifwithaddr
+argument_list|(
 operator|*
-operator|(
-name|u_long
-operator|*
-operator|)
 name|sin
-operator|!=
-name|n_lhost
-operator|.
-name|s_addr
+argument_list|)
+operator|==
+literal|0
 condition|)
-break|break;
+continue|continue;
 if|if
 condition|(
 name|ipt
@@ -2075,13 +2185,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Strip out IP options, e.g. before passing  * to higher level protocol in the kernel.  */
+comment|/*  * Strip out IP options, at higher  * level protocol in the kernel.  * Second argument is buffer to which options  * will be moved, and return value is their length.  */
 end_comment
 
 begin_macro
 name|ip_stripoptions
 argument_list|(
 argument|ip
+argument_list|,
+argument|cp
 argument_list|)
 end_macro
 
@@ -2090,6 +2202,13 @@ name|struct
 name|ip
 modifier|*
 name|ip
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 end_decl_stmt
 
@@ -2110,7 +2229,7 @@ name|olen
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|IP_OPT
+name|IP_STRIPOPTIONS
 argument_list|)
 expr_stmt|;
 name|olen
@@ -2133,8 +2252,29 @@ name|m
 operator|=
 name|dtom
 argument_list|(
-operator|++
 name|ip
+argument_list|)
+expr_stmt|;
+name|ip
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+name|bcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ip
+argument_list|,
+name|cp
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|olen
 argument_list|)
 expr_stmt|;
 name|i

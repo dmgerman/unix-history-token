@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.14	81/11/18	*/
+comment|/*	ip_output.c	1.15	81/11/20	*/
 end_comment
 
 begin_include
@@ -49,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"../net/imp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/inet_host.h"
 end_include
 
 begin_include
@@ -291,17 +285,13 @@ name|ip
 expr_stmt|;
 if|if
 condition|(
-name|ip
-operator|->
-name|ip_hl
+name|hlen
 operator|>
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
 argument_list|)
-operator|>>
-literal|2
 condition|)
 block|{
 name|int
@@ -414,7 +404,7 @@ goto|;
 block|}
 name|ip_send
 argument_list|(
-name|mh
+name|mhip
 argument_list|)
 expr_stmt|;
 block|}
@@ -429,7 +419,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Copy options from ip to jp.  * If off is 0 all options are copies  * otherwise copy selectively.  */
+comment|/*  * Copy options from ip to jp.  * If off is 0 all options are copied  * otherwise copy selectively.  */
 end_comment
 
 begin_macro
@@ -477,6 +467,11 @@ name|optlen
 decl_stmt|,
 name|cnt
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|IP_OPTCOPY
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 operator|(
@@ -591,10 +586,19 @@ condition|)
 block|{
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cp
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|dp
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|optlen
 argument_list|)
 expr_stmt|;
@@ -640,6 +644,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/* REST OF CODE HERE IS GARBAGE */
+end_comment
 
 begin_expr_stmt
 name|ip_send
@@ -903,6 +911,10 @@ directive|endif
 endif|IMPLOOP
 block|}
 end_block
+
+begin_comment
+comment|/* END GARBAGE */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.25 81/11/18 */
+comment|/* tcp_input.c 1.26 81/11/20 */
 end_comment
 
 begin_include
@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet_host.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../net/ip.h"
 end_include
 
@@ -120,6 +114,11 @@ name|inpcb
 modifier|*
 name|ip
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|TCP_DRAIN
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ip
@@ -171,6 +170,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|TCP_DRAINUNACK
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|m
@@ -218,6 +222,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|COUNT
+argument_list|(
+name|TCP_CTLINPUT
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -225,6 +234,17 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_decl_stmt
+name|struct
+name|sockaddr_in
+name|tcp_sockaddr
+init|=
+block|{
+name|AF_INET
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|tcp_input
@@ -339,6 +359,12 @@ name|ip
 operator|*
 operator|)
 name|ti
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -427,6 +453,9 @@ name|ti_len
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|tlen
 argument_list|)
 expr_stmt|;
@@ -567,7 +596,6 @@ argument_list|(
 operator|&
 name|tcb
 argument_list|,
-operator|&
 name|ti
 operator|->
 name|ti_src
@@ -576,7 +604,6 @@ name|ti
 operator|->
 name|ti_sport
 argument_list|,
-operator|&
 name|ti
 operator|->
 name|ti_dst
@@ -858,16 +885,11 @@ name|t_persist
 operator|=
 literal|0
 expr_stmt|;
-name|in_hostfree
-argument_list|(
 name|inp
 operator|->
-name|inp_fhost
-argument_list|)
-expr_stmt|;
-name|inp
-operator|->
-name|inp_fhost
+name|inp_faddr
+operator|.
+name|s_addr
 operator|=
 literal|0
 expr_stmt|;
@@ -1121,6 +1143,22 @@ block|{
 case|case
 name|LISTEN
 case|:
+name|tcp_sockaddr
+operator|.
+name|sin_addr
+operator|=
+name|ti
+operator|->
+name|ti_src
+expr_stmt|;
+name|tcp_sockaddr
+operator|.
+name|sin_port
+operator|=
+name|ti
+operator|->
+name|ti_sport
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1131,23 +1169,13 @@ operator|)
 operator|==
 literal|0
 operator|||
-operator|(
-operator|(
-name|inp
-operator|->
-name|inp_lhost
-operator|=
-name|in_hostalloc
+name|in_pcbsetpeer
 argument_list|(
+name|inp
+argument_list|,
 operator|&
-name|ti
-operator|->
-name|ti_src
+name|tcp_sockaddr
 argument_list|)
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 name|nstate
@@ -1158,14 +1186,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|inp
-operator|->
-name|inp_fport
-operator|=
-name|ti
-operator|->
-name|ti_sport
-expr_stmt|;
 name|tp
 operator|->
 name|t_template
@@ -1903,9 +1923,9 @@ condition|)
 block|{
 name|MFREE
 argument_list|(
-name|n
-argument_list|,
 name|m
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 name|m
@@ -2003,6 +2023,10 @@ name|ti_ackno
 operator|=
 name|htonl
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|ti
@@ -2013,6 +2037,7 @@ operator|+
 name|ti
 operator|->
 name|ti_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ti

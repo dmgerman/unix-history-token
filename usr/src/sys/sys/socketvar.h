@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* socketvar.h 4.5 81/11/18 */
+comment|/* socketvar.h 4.6 81/11/20 */
 end_comment
 
 begin_comment
@@ -23,10 +23,6 @@ name|short
 name|so_state
 decl_stmt|;
 comment|/* internal state flags SS_*, below */
-name|short
-name|so_isfilerefd
-decl_stmt|;
-comment|/* no file table reference */
 name|caddr_t
 name|so_pcb
 decl_stmt|;
@@ -153,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|SS_ISCONNECTING
-value|0x03
+value|0x04
 end_define
 
 begin_comment
@@ -164,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|SS_ISDISCONNECTING
-value|0x04
+value|0x08
 end_define
 
 begin_comment
@@ -175,7 +171,7 @@ begin_define
 define|#
 directive|define
 name|SS_CANTSENDMORE
-value|0x08
+value|0x10
 end_define
 
 begin_comment
@@ -186,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|SS_CANTRCVMORE
-value|0x10
+value|0x20
 end_define
 
 begin_comment
@@ -197,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|SS_CONNAWAITING
-value|0x20
+value|0x40
 end_define
 
 begin_comment
@@ -347,26 +343,6 @@ name|so
 parameter_list|)
 value|sbwakeup(&(so)->so_snd)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|sbcopy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

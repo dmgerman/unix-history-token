@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.1	81/11/18	*/
+comment|/*	if.c	4.2	81/11/20	*/
 end_comment
 
 begin_include
@@ -33,21 +33,22 @@ directive|include
 file|"../net/if.h"
 end_include
 
-begin_macro
-name|if_ifwithaddr
-argument_list|(
-argument|in
-argument_list|)
-end_macro
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
-begin_decl_stmt
+begin_function
+name|struct
+name|ifnet
+modifier|*
+name|if_ifwithaddr
+parameter_list|(
+name|in
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -55,6 +56,11 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|IF_IFWITHADDR
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -73,23 +79,24 @@ name|ifp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_function
+name|struct
+name|ifnet
+modifier|*
 name|if_ifonnetof
-argument_list|(
-argument|in
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|in
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -100,7 +107,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|int net;  	net = 0;
+block|int net;  COUNT(IF_IFONNETOF); 	net = 0;
 comment|/* XXX */
 block|for (ifp = ifnet; ifp; ifp = ifp->if_next) 		if (ifp->if_net == net) 			break;
 else|#
@@ -117,24 +124,12 @@ name|ifp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|struct
 name|ifnet
 name|ifen
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|1024
-block|,
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 

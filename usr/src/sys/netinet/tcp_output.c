@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.14 81/11/18 */
+comment|/*	tcp_output.c	4.15	81/11/20	*/
 end_comment
 
 begin_include
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|"../net/inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/inet_host.h"
 end_include
 
 begin_include
@@ -714,10 +708,11 @@ name|m
 operator|=
 name|m_copy
 argument_list|(
-operator|&
 name|so
 operator|->
 name|so_snd
+operator|.
+name|sb_mb
 argument_list|,
 call|(
 name|int
@@ -1044,16 +1039,6 @@ name|t_inpcb
 decl_stmt|;
 specifier|register
 name|struct
-name|in_host
-modifier|*
-name|h
-init|=
-name|inp
-operator|->
-name|inp_fhost
-decl_stmt|;
-specifier|register
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -1064,17 +1049,11 @@ name|tcpiphdr
 modifier|*
 name|n
 decl_stmt|;
-if|if
-condition|(
-name|h
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|COUNT
+argument_list|(
+name|TCP_TEMPLATE
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|m_get
@@ -1170,24 +1149,18 @@ expr_stmt|;
 name|n
 operator|->
 name|ti_src
-operator|.
-name|s_addr
 operator|=
-name|n_lhost
-operator|.
-name|s_addr
+name|inp
+operator|->
+name|inp_laddr
 expr_stmt|;
 name|n
 operator|->
 name|ti_dst
-operator|.
-name|s_addr
 operator|=
-name|h
+name|inp
 operator|->
-name|h_addr
-operator|.
-name|s_addr
+name|inp_faddr
 expr_stmt|;
 name|n
 operator|->
@@ -1338,9 +1311,6 @@ name|struct
 name|ip
 modifier|*
 name|ip
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1796,7 +1766,14 @@ argument_list|()
 end_macro
 
 begin_block
-block|{  }
+block|{
+name|COUNT
+argument_list|(
+name|TCP_FASTTIMO
+argument_list|)
+expr_stmt|;
+comment|/* someday do delayed ack processing here */
+block|}
 end_block
 
 end_unit

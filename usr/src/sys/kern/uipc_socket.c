@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.6	81/11/18	*/
+comment|/*	uipc_socket.c	4.7	81/11/20	*/
 end_comment
 
 begin_include
@@ -373,6 +373,39 @@ argument_list|(
 name|SOFREE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_pcb
+operator|||
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_USERGONE
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+name|sbrelease
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
+name|sbrelease
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 name|m_free
 argument_list|(
 name|dtom
@@ -559,14 +592,12 @@ argument_list|)
 expr_stmt|;
 name|discard
 label|:
-if|if
-condition|(
 name|so
 operator|->
-name|so_pcb
-operator|==
-literal|0
-condition|)
+name|so_state
+operator||=
+name|SS_USERGONE
+expr_stmt|;
 name|sofree
 argument_list|(
 name|so

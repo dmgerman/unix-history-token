@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.1	81/11/18	*/
+comment|/*	if.h	4.2	81/11/20	*/
 end_comment
 
 begin_comment
@@ -83,6 +83,11 @@ block|}
 modifier|*
 name|if_sw
 struct|;
+name|struct
+name|ifnet
+modifier|*
+name|if_next
+decl_stmt|;
 block|}
 struct|;
 end_struct

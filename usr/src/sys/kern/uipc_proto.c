@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.5	81/11/18	*/
+comment|/*	uipc_proto.c	4.6	81/11/20	*/
 end_comment
 
 begin_include
@@ -160,20 +160,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ri_input
+name|rip_input
 argument_list|()
 decl_stmt|,
-name|ri_ctlinput
+name|rip_ctlinput
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ri_usrreq
+name|rip_usrreq
 argument_list|()
 decl_stmt|,
-name|ri_sense
+name|rip_sense
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -460,17 +460,17 @@ name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-name|ri_input
+name|rip_input
 block|,
 literal|0
 block|,
-name|ri_ctlinput
+name|rip_ctlinput
 block|,
 literal|0
 block|,
-name|ri_usrreq
+name|rip_usrreq
 block|,
-name|ri_sense
+name|rip_sense
 block|,
 name|MLEN
 block|,

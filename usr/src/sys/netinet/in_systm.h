@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_systm.h 4.4 81/11/18 */
+comment|/* in_systm.h 4.5 81/11/20 */
 end_comment
 
 begin_comment
@@ -77,50 +77,6 @@ end_define
 begin_comment
 comment|/* splnet is defined in ../sys/asm.sed */
 end_comment
-
-begin_comment
-comment|/*  * Network statistics record.  *  * SHOULD BE KEPT PER INTERFACE, AND WITH CNT, RATE, SUM.  */
-end_comment
-
-begin_struct
-struct|struct
-name|net_stat
-block|{
-name|int
-name|imp_resets
-decl_stmt|;
-comment|/* # times imp reset */
-name|int
-name|imp_flushes
-decl_stmt|;
-comment|/* # packets flushed by imp */
-name|int
-name|imp_drops
-decl_stmt|;
-comment|/* # msgs from imp no-one wants */
-name|int
-name|m_drops
-decl_stmt|;
-comment|/* # mbuf drops from lack of bufs */
-name|int
-name|ip_badsum
-decl_stmt|;
-comment|/* # bad ip checksums */
-name|int
-name|t_badsum
-decl_stmt|;
-comment|/* # bad tcp checksums */
-name|int
-name|t_badsegs
-decl_stmt|;
-comment|/* # bad tcp segments */
-name|int
-name|t_unack
-decl_stmt|;
-comment|/* # tcp segs placed on rcv_unack */
-block|}
-struct|;
-end_struct
 
 begin_ifdef
 ifdef|#
