@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -103,6 +109,11 @@ operator|)
 operator|==
 name|_INVALID_RUNE
 condition|)
+block|{
+name|errno
+operator|=
+name|EILSEQ
+expr_stmt|;
 return|return
 operator|(
 name|s
@@ -110,6 +121,7 @@ operator|-
 name|e
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|pwc
