@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_map.h	8.5 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_map.h	8.6 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -246,11 +246,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOCKPID
+value|(curproc ? curproc->p_pid : LK_KERNPROC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|vm_map_lock
 parameter_list|(
 name|map
 parameter_list|)
-value|{ \ 	lockmgr(&(map)->lock, LK_EXCLUSIVE, curproc); \ 	(map)->timestamp++; \ }
+value|{ \ 	lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, LOCKPID); \ 	(map)->timestamp++; \ }
 end_define
 
 begin_define
@@ -260,7 +267,8 @@ name|vm_map_unlock
 parameter_list|(
 name|map
 parameter_list|)
-value|lockmgr(&(map)->lock, LK_RELEASE, curproc)
+define|\
+value|lockmgr(&(map)->lock, LK_RELEASE, (void *)0, LOCKPID)
 end_define
 
 begin_define
@@ -270,7 +278,8 @@ name|vm_map_lock_read
 parameter_list|(
 name|map
 parameter_list|)
-value|lockmgr(&(map)->lock, LK_SHARED, curproc)
+define|\
+value|lockmgr(&(map)->lock, LK_SHARED, (void *)0, LOCKPID)
 end_define
 
 begin_define
@@ -280,7 +289,8 @@ name|vm_map_unlock_read
 parameter_list|(
 name|map
 parameter_list|)
-value|lockmgr(&(map)->lock, LK_RELEASE, curproc)
+define|\
+value|lockmgr(&(map)->lock, LK_RELEASE, (void *)0, LOCKPID)
 end_define
 
 begin_define
