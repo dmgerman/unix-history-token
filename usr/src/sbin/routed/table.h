@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)table.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)table.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -73,6 +73,9 @@ name|rtu_timer
 decl_stmt|;
 name|int
 name|rtu_metric
+decl_stmt|;
+name|int
+name|rtu_ifmetric
 decl_stmt|;
 name|struct
 name|interface
@@ -175,6 +178,17 @@ end_define
 
 begin_comment
 comment|/* cost of route */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_ifmetric
+value|rt_rtu.rtu_entry.rtu_ifmetric
+end_define
+
+begin_comment
+comment|/* cost of route if */
 end_comment
 
 begin_define

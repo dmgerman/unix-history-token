@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.4 (Berkeley) %G%"
+literal|"@(#)output.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -577,7 +577,9 @@ name|rt
 operator|->
 name|rt_metric
 operator|+
-literal|1
+name|rt
+operator|->
+name|rt_ifmetric
 argument_list|,
 name|HOPCNT_INFINITY
 argument_list|)

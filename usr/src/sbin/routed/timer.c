@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timer.c	5.3 (Berkeley) %G%"
+literal|"@(#)timer.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,20 +198,6 @@ name|rt
 operator|->
 name|rt_timer
 operator|>=
-name|EXPIRE_TIME
-condition|)
-name|rt
-operator|->
-name|rt_metric
-operator|=
-name|HOPCNT_INFINITY
-expr_stmt|;
-if|if
-condition|(
-name|rt
-operator|->
-name|rt_timer
-operator|>=
 name|GARBAGE_TIME
 condition|)
 block|{
@@ -230,6 +216,26 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_timer
+operator|>=
+name|EXPIRE_TIME
+condition|)
+name|rtchange
+argument_list|(
+name|rt
+argument_list|,
+operator|&
+name|rt
+operator|->
+name|rt_router
+argument_list|,
+name|HOPCNT_INFINITY
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -322,7 +328,9 @@ name|rt
 operator|->
 name|rt_metric
 operator|+
-literal|1
+name|rt
+operator|->
+name|rt_ifmetric
 argument_list|,
 name|HOPCNT_INFINITY
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.7 (Berkeley) %G%"
+literal|"@(#)startup.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,7 +1283,7 @@ name|route
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* format: {net | host} XX gateway XX metric DD [passive]\n */
+comment|/* format: {net | host} XX gateway XX metric DD [passive | external]\n */
 define|#
 directive|define
 name|readentry

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.9 (Berkeley) %G%"
+literal|"@(#)input.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1096,6 +1096,7 @@ name|rt
 operator|->
 name|rt_metric
 condition|)
+block|{
 name|rtchange
 argument_list|(
 name|rt
@@ -1107,6 +1108,24 @@ operator|->
 name|rip_metric
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_metric
+operator|==
+name|HOPCNT_INFINITY
+condition|)
+name|rt
+operator|->
+name|rt_timer
+operator|=
+name|GARBAGE_TIME
+operator|-
+name|EXPIRE_TIME
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|rt
