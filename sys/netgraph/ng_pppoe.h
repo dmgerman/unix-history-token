@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|NGM_PPPOE_COOKIE
-value|939032003
+value|939032004
 end_define
 
 begin_comment
@@ -186,6 +186,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPPOESTAT_TYPE_INFO
+value|{				\ 	{							\ 	  { "packets_in",&ng_parse_uint_type	},	\ 	  { "packets_out",&ng_parse_uint_type	},	\ 	  { NULL }						\ 	}							\ }
+end_define
+
+begin_comment
 comment|/*  * When this structure is accepted by the NGM_PPPOE_CONNECT command :  * The data field is MANDATORY.  * The session sends out a PADI request for the named service.  *  *  * When this structure is accepted by the NGM_PPPOE_WAIT command.  * If no service is given this is assumed to accept ALL PADI requests.  * This may at some time take a regexp expression, but not yet.  * Matching PADI requests will be passed up the named hook.  *  *  * When this structure is accepted by the NGM_PPPOE_OFFER command:  * The AC-NAme field is set from that given and a PADI  * packet is expected to arrive from the session control daemon, on the  * named hook. The session will then issue the appropriate PADO  * and begin negotiation.  */
 end_comment
 
@@ -202,20 +213,27 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* hook to monitor on */
-name|u_int16_t
-name|data_len
-decl_stmt|;
-comment|/* Length of the service name */
 name|char
 name|data
 index|[
-literal|0
+literal|1
 index|]
 decl_stmt|;
 comment|/* init data goes here */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPPOE_INIT_DATA_TYPE_INFO
+value|{		\ 	{						\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { "data",&ng_parse_string_type	},	\ 	  { NULL }					\ 	}						\ }
+end_define
 
 begin_comment
 comment|/*  * This structure is used by the asychronous success and failure messages.  * (to report which hook has failed or connected). The message is sent  * to whoever requested the connection. (close may use this too).  */
@@ -237,6 +255,17 @@ comment|/* hook associated with event session */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPPOE_STS_TYPE_INFO
+value|{		\ 	{						\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { NULL }					\ 	}						\ }
+end_define
 
 begin_comment
 comment|/********************************************************************  * Constants and definitions specific to pppoe  ********************************************************************/
