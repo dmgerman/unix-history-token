@@ -279,12 +279,6 @@ name|from
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|fromlen
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|tftp
@@ -455,6 +449,11 @@ name|tftphdr
 modifier|*
 name|tp
 decl_stmt|;
+name|socklen_t
+name|fromlen
+decl_stmt|,
+name|len
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
@@ -466,9 +465,6 @@ decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|me
-decl_stmt|;
-name|int
-name|len
 decl_stmt|;
 name|char
 modifier|*
@@ -821,12 +817,9 @@ block|}
 comment|/* 	 * Now that we have read the message out of the UDP 	 * socket, we fork and exit.  Thus, inetd will go back 	 * to listening to the tftp port, and the next request 	 * to come in will start up a new instance of tftpd. 	 * 	 * We do this so that inetd can run tftpd in "wait" mode. 	 * The problem with tftpd running in "nowait" mode is that 	 * inetd may get one or more successful "selects" on the 	 * tftp port before we do our receive, so more than one 	 * instance of tftpd may be started up.  Worse, if tftpd 	 * break before doing the above "recvfrom", inetd would 	 * spawn endless instances, clogging the system. 	 */
 block|{
 name|int
-name|pid
-decl_stmt|;
-name|int
 name|i
 decl_stmt|,
-name|j
+name|pid
 decl_stmt|;
 for|for
 control|(
@@ -860,7 +853,7 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* 				 * flush out to most recently sent request. 				 * 				 * This may drop some request, but those 				 * will be resent by the clients when 				 * they timeout.  The positive effect of 				 * this flush is to (try to) prevent more 				 * than one tftpd being started up to service 				 * a single request from a single client. 				 */
-name|j
+name|fromlen
 operator|=
 sizeof|sizeof
 name|from
@@ -889,7 +882,7 @@ operator|&
 name|from
 argument_list|,
 operator|&
-name|j
+name|fromlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -902,10 +895,6 @@ block|{
 name|n
 operator|=
 name|i
-expr_stmt|;
-name|fromlen
-operator|=
-name|j
 expr_stmt|;
 block|}
 block|}
@@ -1876,11 +1865,6 @@ name|ccp
 decl_stmt|;
 name|char
 name|fnbuf
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|,
-name|resolved_fnbuf
 index|[
 name|PATH_MAX
 index|]
