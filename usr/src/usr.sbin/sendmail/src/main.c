@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.74 (Berkeley) %G%"
+literal|"@(#)main.c	8.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +229,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* warn about Q option use */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|SaveArgv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* argument vector for re-execing */
 end_comment
 
 begin_comment
@@ -545,6 +557,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|sighup
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* 	**  Check to see if we reentered. 	**	This would normally happen if e_putheader or e_putbody 	**	were NULL when invoked. 	*/
 end_comment
@@ -602,15 +622,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* arrange to dump state on signal */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|SIGUSR1
 end_ifdef
+
+begin_comment
+comment|/* arrange to dump state on user-1 signal */
+end_comment
 
 begin_expr_stmt
 name|setsignal
@@ -1064,6 +1084,31 @@ expr_stmt|;
 end_for
 
 begin_expr_stmt
+name|SaveArgv
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|xalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+operator|*
+operator|(
+name|argc
+operator|+
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CommandLineArgs
 operator|=
 name|xalloc
@@ -1086,6 +1131,10 @@ control|(
 name|av
 operator|=
 name|argv
+operator|,
+name|i
+operator|=
+literal|0
 init|;
 operator|*
 name|av
@@ -1094,6 +1143,18 @@ name|NULL
 condition|;
 control|)
 block|{
+name|SaveArgv
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|newstr
+argument_list|(
+operator|*
+name|av
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|av
@@ -1124,6 +1185,16 @@ argument_list|)
 expr_stmt|;
 block|}
 end_for
+
+begin_expr_stmt
+name|SaveArgv
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Handle any non-getoptable constructions. */
@@ -1440,30 +1511,6 @@ operator|)
 name|setsignal
 argument_list|(
 name|SIGINT
-argument_list|,
-name|intsig
-argument_list|)
-expr_stmt|;
-end_if
-
-begin_if
-if|if
-condition|(
-name|setsignal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-operator|!=
-name|SIG_IGN
-condition|)
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGHUP
 argument_list|,
 name|intsig
 argument_list|)
@@ -3317,20 +3364,38 @@ name|OpMode
 condition|)
 block|{
 case|case
-name|MD_INITALIAS
-case|:
-name|Verbose
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
 name|MD_DAEMON
 case|:
 comment|/* remove things that don't make sense in daemon mode */
 name|FullName
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* arrange to restart on hangup signal */
+name|setsignal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|sighup
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MD_INITALIAS
+case|:
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* fall through... */
+default|default:
+comment|/* arrange to exit cleanly on hangup signal */
+name|setsignal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|intsig
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -5832,16 +5897,6 @@ name|void
 operator|)
 name|setsignal
 argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
@@ -6681,6 +6736,75 @@ block|{
 name|dumpstate
 argument_list|(
 literal|"user signal"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|sighup
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|3
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"restarting %s on signal"
+argument_list|,
+name|SaveArgv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|execv
+argument_list|(
+name|SaveArgv
+index|[
+literal|0
+index|]
+argument_list|,
+name|SaveArgv
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"could not exec %s: %m"
+argument_list|,
+name|SaveArgv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|exit
+argument_list|(
+name|EX_OSFILE
 argument_list|)
 expr_stmt|;
 block|}
