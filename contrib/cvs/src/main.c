@@ -1903,7 +1903,7 @@ case|:
 comment|/* 		 * force full group write perms (used for shared checked-out 		 * source trees, see manual page) 		 */
 name|umask
 argument_list|(
-name|mask
+name|umask
 argument_list|(
 literal|077
 argument_list|)
