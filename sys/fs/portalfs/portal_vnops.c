@@ -781,7 +781,7 @@ expr|struct
 name|sockaddr_un
 operator|*
 operator|)
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -792,7 +792,7 @@ name|unp2
 operator|->
 name|unp_addr
 argument_list|,
-literal|0
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|so2

@@ -6477,7 +6477,7 @@ expr_stmt|;
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -6486,7 +6486,7 @@ operator|*
 operator|)
 name|sipx
 argument_list|,
-literal|0
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 return|return

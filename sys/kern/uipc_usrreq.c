@@ -570,7 +570,7 @@ block|{
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -583,7 +583,7 @@ name|unp_conn
 operator|->
 name|unp_addr
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -592,7 +592,7 @@ block|{
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -602,7 +602,7 @@ operator|)
 operator|&
 name|sun_noname
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -1032,7 +1032,7 @@ condition|)
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -1045,7 +1045,7 @@ name|unp_conn
 operator|->
 name|unp_addr
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 else|else
@@ -1054,7 +1054,7 @@ comment|/* 		 * XXX: It seems that this test always fails even when 		 * connect
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -1064,7 +1064,7 @@ operator|)
 operator|&
 name|sun_noname
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -2030,7 +2030,7 @@ condition|)
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -2041,14 +2041,14 @@ name|unp
 operator|->
 name|unp_addr
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 else|else
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -2058,7 +2058,7 @@ operator|)
 operator|&
 name|sun_noname
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 return|return
@@ -3245,11 +3245,11 @@ expr|struct
 name|sockaddr_un
 operator|*
 operator|)
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 name|nam
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -3609,7 +3609,7 @@ expr|struct
 name|sockaddr_un
 operator|*
 operator|)
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -3620,7 +3620,7 @@ name|unp2
 operator|->
 name|unp_addr
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 		 * unp_peercred management: 		 * 		 * The connecter's (client's) credentials are copied 		 * from its process structure at the time of connect() 		 * (which is now). 		 */

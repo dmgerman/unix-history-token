@@ -2708,11 +2708,11 @@ expr|struct
 name|sockaddr_nb
 operator|*
 operator|)
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 name|sap
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2878,11 +2878,11 @@ expr|struct
 name|sockaddr_nb
 operator|*
 operator|)
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 name|sap
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

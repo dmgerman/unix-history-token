@@ -64,7 +64,7 @@ file|<sys/socketvar.h>
 end_include
 
 begin_comment
-comment|/* for dup_sockaddr */
+comment|/* for sodupsockaddr */
 end_comment
 
 begin_include
@@ -937,13 +937,13 @@ name|rp
 operator|->
 name|rc_nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 name|nd
 operator|->
 name|nd_nam
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 break|break;

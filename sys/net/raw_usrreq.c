@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -745,13 +751,13 @@ block|}
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 name|rp
 operator|->
 name|rcb_faddr
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 return|return
@@ -1053,13 +1059,13 @@ return|;
 operator|*
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 name|rp
 operator|->
 name|rcb_laddr
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 return|return

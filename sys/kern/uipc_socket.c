@@ -598,8 +598,6 @@ argument_list|(
 name|so
 argument_list|,
 name|mflags
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4318,7 +4316,7 @@ condition|)
 operator|*
 name|psa
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 name|mtod
 argument_list|(
@@ -4331,7 +4329,11 @@ argument_list|)
 argument_list|,
 name|mp0
 operator|==
-literal|0
+name|NULL
+condition|?
+name|M_WAITOK
+else|:
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

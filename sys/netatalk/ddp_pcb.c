@@ -1043,7 +1043,7 @@ block|{
 operator|*
 name|addr
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -1055,7 +1055,7 @@ name|ddp
 operator|->
 name|ddp_lsat
 argument_list|,
-literal|0
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 block|}

@@ -2785,7 +2785,7 @@ name|mountflag
 expr_stmt|;
 name|nam
 operator|=
-name|dup_sockaddr
+name|sodupsockaddr
 argument_list|(
 operator|(
 expr|struct
@@ -2794,7 +2794,7 @@ operator|*
 operator|)
 name|sin
 argument_list|,
-literal|1
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
