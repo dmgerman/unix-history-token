@@ -1295,6 +1295,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 expr_stmt|;
+comment|/* package name */
 name|cp
 operator|+=
 name|copy_to_sep
@@ -1306,6 +1307,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 expr_stmt|;
+comment|/* ports directory */
 name|cp
 operator|+=
 name|copy_to_sep
@@ -1317,6 +1319,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 expr_stmt|;
+comment|/* prefix */
 name|cp
 operator|+=
 name|copy_to_sep
@@ -1328,6 +1331,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 expr_stmt|;
+comment|/* comment */
 name|cp
 operator|+=
 name|copy_to_sep
@@ -1339,6 +1343,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 expr_stmt|;
+comment|/* path to pkg-descr */
 name|cp
 operator|+=
 name|copy_to_sep
@@ -1350,6 +1355,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 expr_stmt|;
+comment|/* maintainer */
 name|cp
 operator|+=
 name|copy_to_sep
@@ -1361,6 +1367,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 expr_stmt|;
+comment|/* categories */
 name|cp
 operator|+=
 name|copy_to_sep
@@ -1384,6 +1391,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 expr_stmt|;
+comment|/* run deps */
 if|if
 condition|(
 name|index
@@ -1425,6 +1433,69 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+name|index
+argument_list|(
+name|cp
+argument_list|,
+literal|'|'
+argument_list|)
+condition|)
+name|cp
+operator|+=
+name|copy_to_sep
+argument_list|(
+name|junk
+argument_list|,
+name|cp
+argument_list|,
+literal|'|'
+argument_list|)
+expr_stmt|;
+comment|/* extract deps - not used */
+if|if
+condition|(
+name|index
+argument_list|(
+name|cp
+argument_list|,
+literal|'|'
+argument_list|)
+condition|)
+name|cp
+operator|+=
+name|copy_to_sep
+argument_list|(
+name|junk
+argument_list|,
+name|cp
+argument_list|,
+literal|'|'
+argument_list|)
+expr_stmt|;
+comment|/* patch deps - not used */
+if|if
+condition|(
+name|index
+argument_list|(
+name|cp
+argument_list|,
+literal|'|'
+argument_list|)
+condition|)
+name|cp
+operator|+=
+name|copy_to_sep
+argument_list|(
+name|junk
+argument_list|,
+name|cp
+argument_list|,
+literal|'|'
+argument_list|)
+expr_stmt|;
+comment|/* fetch deps - not used */
 if|if
 condition|(
 name|index
