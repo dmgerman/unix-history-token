@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.46 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3489,19 +3489,31 @@ goto|goto
 name|resetuid
 goto|;
 block|}
+if|if
+condition|(
+name|TimeOuts
+operator|.
+name|to_fileopen
+operator|>
+literal|0
+condition|)
 name|ev
 operator|=
 name|setevent
 argument_list|(
-operator|(
-name|time_t
-operator|)
-literal|60
+name|TimeOuts
+operator|.
+name|to_fileopen
 argument_list|,
 name|includetimeout
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+name|ev
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* the input file must be marked safe */
 name|rval
@@ -3594,6 +3606,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|ev
+operator|!=
+name|NULL
+condition|)
 name|clrevent
 argument_list|(
 name|ev
