@@ -5279,25 +5279,6 @@ name|css
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Mark the last descriptor with EOP and tell the 			 * chip to insert a final checksum. 			 */
-if|if
-condition|(
-name|m
-operator|->
-name|m_next
-operator|==
-name|NULL
-condition|)
-block|{
-name|td
-operator|->
-name|cmd
-operator||=
-name|TXCMD_EOP
-operator||
-name|TXCMD_IFCS
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -5308,7 +5289,7 @@ block|{
 name|printf
 argument_list|(
 literal|"%s: XMIT[%d] %p vptr %lx (length %d "
-literal|"DMA addr %x) idx %d cmd %x\n"
+literal|"DMA addr %x) idx %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -5334,10 +5315,6 @@ operator|.
 name|lowpart
 argument_list|,
 name|cidx
-argument_list|,
-name|td
-operator|->
-name|cmd
 argument_list|)
 expr_stmt|;
 block|}
@@ -5360,6 +5337,30 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 			 * Mark the last descriptor with EOP and tell the 			 * chip to insert a final checksum. 			 */
+name|wxtd_t
+modifier|*
+name|td
+init|=
+operator|&
+name|sc
+operator|->
+name|tdescriptors
+index|[
+name|T_PREV_IDX
+argument_list|(
+name|cidx
+argument_list|)
+index|]
+decl_stmt|;
+name|td
+operator|->
+name|cmd
+operator|=
+name|TXCMD_EOP
+operator||
+name|TXCMD_IFCS
+expr_stmt|;
 name|sc
 operator|->
 name|tbase
