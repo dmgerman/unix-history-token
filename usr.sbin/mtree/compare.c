@@ -1516,7 +1516,9 @@ name|cp
 operator|=
 name|rlink
 argument_list|(
-name|name
+name|p
+operator|->
+name|fts_accpath
 argument_list|)
 argument_list|,
 name|s
