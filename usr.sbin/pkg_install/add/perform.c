@@ -786,6 +786,9 @@ comment|/* 	     * Apply a crude heuristic to see how much space the package wil
 if|if
 condition|(
 operator|!
+name|extract
+operator|&&
+operator|!
 name|inPlace
 operator|&&
 name|min_free
@@ -840,9 +843,11 @@ condition|)
 goto|goto
 name|success
 goto|;
-comment|/* Finally unpack the whole mess */
+comment|/* Finally unpack the whole mess.  If extract is null we 	       already + did so so don't bother doing it again. */
 if|if
 condition|(
+name|extract
+operator|&&
 name|unpack
 argument_list|(
 name|pkg_fullname
