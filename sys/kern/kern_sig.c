@@ -11408,8 +11408,6 @@ name|char
 name|corefilename
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 init|=
 block|{
