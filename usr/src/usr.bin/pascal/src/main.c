@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 2.2 %G%"
+literal|"@(#)main.c 2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1315,6 +1315,32 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|ugh
+index|[]
+init|=
+literal|"Fatal error in pc\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ
+end_ifdef
+
 begin_decl_stmt
 name|char
 name|ugh
@@ -1323,6 +1349,11 @@ init|=
 literal|"Fatal error in pi\n"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Exit from the Pascal system.  * We throw in an ungraceful termination  * message if c> 1 indicating a severe  * error such as running out of memory  * or an internal inconsistency.  */
