@@ -22,7 +22,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ucb stdio.h defines BSD as something wierd  */
+comment|/*  * ucb stdio.h defines BSD as something weird  */
 end_comment
 
 begin_if
