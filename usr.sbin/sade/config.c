@@ -3336,6 +3336,12 @@ literal|"\"MouseSystems\" as the mouse protocol in the X configuration\n"
 literal|"utility."
 argument_list|)
 expr_stmt|;
+name|Mkdir
+argument_list|(
+literal|"/etc/X11"
+argument_list|)
+expr_stmt|;
+comment|/* XXX:Remove this later after we are happy mtree will have created this for us. */
 name|systemExecute
 argument_list|(
 name|execcmd
@@ -3346,7 +3352,7 @@ condition|(
 operator|!
 name|file_readable
 argument_list|(
-literal|"/etc/XF86Config"
+literal|"/etc/X11/XF86Config"
 argument_list|)
 condition|)
 block|{

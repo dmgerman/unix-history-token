@@ -136,7 +136,7 @@ block|,
 block|{
 name|JUST_COPY
 block|,
-literal|"XF86Config"
+literal|"X11"
 block|,
 name|TRUE
 block|,
