@@ -590,7 +590,6 @@ name|void
 name|tcp_slowtimo
 parameter_list|()
 block|{
-comment|/* 	 * XXXRW: Note that there is a minor race issue associated with rapid 	 * modification of the two components of tcp_maxidle.  This could be 	 * corrected by introducing sysctl handlers for those two fields, 	 * sliding this update of tcp_maxidle under the tcbinfo lock, and 	 * acquiring that lock in the handlers. 	 */
 name|tcp_maxidle
 operator|=
 name|tcp_keepcnt
