@@ -1596,7 +1596,7 @@ argument_list|(
 name|parent
 argument_list|)
 operator|<
-literal|0xC2
+literal|0xc2
 operator|&&
 name|scp
 operator|->
@@ -1633,7 +1633,7 @@ argument_list|(
 name|parent
 argument_list|)
 operator|>=
-literal|0xC4
+literal|0xc4
 condition|)
 block|{
 name|error
@@ -1796,7 +1796,7 @@ argument_list|(
 name|parent
 argument_list|)
 operator|>=
-literal|0xC2
+literal|0xc2
 condition|)
 block|{
 name|error
@@ -3174,6 +3174,16 @@ name|ata_find_dev
 argument_list|(
 name|parent
 argument_list|,
+literal|0x06451039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+comment|/* SiS 635 */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
 literal|0x07301039
 argument_list|,
 literal|0x00
@@ -3224,7 +3234,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator|&
-literal|0x00ff
+literal|0x0fff
 decl_stmt|;
 if|if
 condition|(
@@ -3287,7 +3297,7 @@ name|reg
 argument_list|,
 name|val
 operator||
-literal|0x8100
+literal|0x8000
 argument_list|,
 literal|2
 argument_list|)
@@ -3368,7 +3378,7 @@ name|reg
 argument_list|,
 name|val
 operator||
-literal|0x8200
+literal|0x9000
 argument_list|,
 literal|2
 argument_list|)
@@ -3449,7 +3459,7 @@ name|reg
 argument_list|,
 name|val
 operator||
-literal|0x8500
+literal|0xb000
 argument_list|,
 literal|2
 argument_list|)
@@ -3681,7 +3691,7 @@ name|reg
 argument_list|,
 name|val
 operator||
-literal|0xb000
+literal|0xa000
 argument_list|,
 literal|2
 argument_list|)

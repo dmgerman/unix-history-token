@@ -242,19 +242,6 @@ control|)
 block|{
 if|if
 condition|(
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|pci_get_slot
-argument_list|(
-name|children
-index|[
-name|i
-index|]
-argument_list|)
-operator|&&
 name|pci_get_devid
 argument_list|(
 name|children
@@ -530,15 +517,41 @@ name|pci_get_revid
 argument_list|(
 name|dev
 argument_list|)
-operator|<
+operator|>=
+literal|0xc4
+condition|)
+return|return
+literal|"AcerLabs Aladdin ATA100 controller"
+return|;
+elseif|else
+if|if
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|>=
+literal|0xc2
+condition|)
+return|return
+literal|"AcerLabs Aladdin ATA66 controller"
+return|;
+elseif|else
+if|if
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|>=
 literal|0x20
 condition|)
 return|return
-literal|"AcerLabs Aladdin ATA controller"
+literal|"AcerLabs Aladdin ATA33 controller"
 return|;
 else|else
 return|return
-literal|"AcerLabs Aladdin ATA33 controller"
+literal|"AcerLabs Aladdin ATA controller"
 return|;
 case|case
 literal|0x05711106
