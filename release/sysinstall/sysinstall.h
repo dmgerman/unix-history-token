@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.95 1996/12/17 00:00:15 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.96 1996/12/29 05:51:39 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,18 @@ define|#
 directive|define
 name|_SYSINSTALL_H_INCLUDE
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
 
 begin_include
 include|#
@@ -48,13 +60,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<dialog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|"ui_objects.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"colors.h"
 end_include
 
 begin_include
@@ -777,6 +801,59 @@ name|value
 decl_stmt|;
 block|}
 name|Variable
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* A screen layout structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_layout
+block|{
+name|int
+name|y
+decl_stmt|;
+comment|/* x& Y co-ordinates */
+name|int
+name|x
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+comment|/* The size of the dialog on the screen */
+name|int
+name|maxlen
+decl_stmt|;
+comment|/* How much the user can type in ... */
+name|char
+modifier|*
+name|prompt
+decl_stmt|;
+comment|/* The string for the prompt */
+name|char
+modifier|*
+name|help
+decl_stmt|;
+comment|/* The display for the help line */
+name|void
+modifier|*
+name|var
+decl_stmt|;
+comment|/* The var to set when this changes */
+name|int
+name|type
+decl_stmt|;
+comment|/* The type of the dialog to create */
+name|void
+modifier|*
+name|obj
+decl_stmt|;
+comment|/* The obj pointer returned by libdialog */
+block|}
+name|Layout
 typedef|;
 end_typedef
 
@@ -1914,6 +1991,38 @@ end_decl_stmt
 begin_comment
 comment|/* Fixit floppy/CDROM/shell menu		*/
 end_comment
+
+begin_comment
+comment|/* Stuff from libdialog which isn't properly declared outside */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|display_helpfile
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|display_helpline
+parameter_list|(
+name|WINDOW
+modifier|*
+name|w
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+name|width
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*** Prototypes ***/
@@ -4215,6 +4324,98 @@ parameter_list|,
 name|void
 modifier|*
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|WINDOW
+modifier|*
+name|openLayoutDialog
+parameter_list|(
+name|char
+modifier|*
+name|helpfile
+parameter_list|,
+name|char
+modifier|*
+name|title
+parameter_list|,
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+name|width
+parameter_list|,
+name|int
+name|height
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ComposeObj
+modifier|*
+name|initLayoutDialog
+parameter_list|(
+name|WINDOW
+modifier|*
+name|win
+parameter_list|,
+name|Layout
+modifier|*
+name|layout
+parameter_list|,
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+modifier|*
+name|max
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|layoutDialogLoop
+parameter_list|(
+name|WINDOW
+modifier|*
+name|win
+parameter_list|,
+name|Layout
+modifier|*
+name|layout
+parameter_list|,
+name|ComposeObj
+modifier|*
+modifier|*
+name|obj
+parameter_list|,
+name|int
+modifier|*
+name|n
+parameter_list|,
+name|int
+name|max
+parameter_list|,
+name|int
+modifier|*
+name|cbutton
+parameter_list|,
+name|int
+modifier|*
+name|cancel
 parameter_list|)
 function_decl|;
 end_function_decl
