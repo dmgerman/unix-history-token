@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.11 1998/10/17 10:35:15 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.12 1998/10/17 11:25:05 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -3225,8 +3225,7 @@ expr_stmt|;
 name|dsk
 operator|.
 name|meta
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -4180,9 +4179,21 @@ name|s
 operator|>
 name|str
 condition|)
+block|{
 name|s
 operator|--
 expr_stmt|;
+name|putchar
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|c
 operator|=
