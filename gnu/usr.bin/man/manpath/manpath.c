@@ -397,7 +397,7 @@ comment|/* MAIN */
 end_comment
 
 begin_comment
-comment|/*  * If the environment variable MANPATH is set, return it.  * If the environment variable PATH is set and has a nonzero length,  * try to determine the corresponding manpath, otherwise, return the  * default manpath.  *  * The manpath.config file is used to map system wide /bin directories  * to top level man page directories.  *  * For directories which are in the user's path but not in the  * manpath.config file, see if there is a subdirectory `man' or `MAN'.  * If so, add that directory to the path.  Example:  user has  * $HOME/bin in his path and the directory $HOME/bin/man exists -- the  * directory $HOME/bin/man will be added to the manpath.  */
+comment|/*  * If the environment variable MANPATH is set, return it.  * If the environment variable PATH is set and has a nonzero length,  * try to determine the corresponding manpath, otherwise, return the  * default manpath.  *  * The manpath.config file is used to map system wide /bin directories  * to top level man page directories.  *  * For directories which are in the user's path but not in the  * manpath.config file, see if there is a subdirectory `man' or `MAN'.  * If so, add that directory to the path.  Example:  user has  * $HOME/bin in his path and the directory $HOME/bin/man exists -- the  * directory $HOME/bin/man will be added to the manpath.  *  * Also search for a `man' directory next to the directory on the path.  * Example: $HOME/bin will look for $HOME/man  */
 end_comment
 
 begin_function
@@ -2015,6 +2015,53 @@ condition|)
 return|return
 name|t
 return|;
+comment|/* If the path ends in `bin' then replace with `man' and see if that works. */
+if|if
+condition|(
+name|len
+operator|>
+literal|3
+operator|&&
+name|strncmp
+argument_list|(
+name|t
+operator|+
+name|len
+operator|-
+literal|4
+argument_list|,
+literal|"/bin"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|t
+operator|+
+name|len
+operator|-
+literal|4
+argument_list|,
+literal|"/man"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is_directory
+argument_list|(
+name|t
+argument_list|)
+operator|==
+literal|1
+condition|)
+return|return
+name|t
+return|;
+block|}
 return|return
 name|NULL
 return|;
