@@ -608,12 +608,13 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|linesw
-index|[
+name|ldisc_register
+argument_list|(
 name|SLIPDISC
-index|]
-operator|=
+argument_list|,
+operator|&
 name|slipdisc
+argument_list|)
 expr_stmt|;
 name|LIST_INIT
 argument_list|(
@@ -625,6 +626,11 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+name|ldisc_deregister
+argument_list|(
+name|SLIPDISC
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"if_sl module unload - not possible for this module type\n"
