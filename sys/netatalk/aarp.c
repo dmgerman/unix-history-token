@@ -194,7 +194,7 @@ name|aat
 parameter_list|,
 name|addr
 parameter_list|)
-value|{ \     int		n; \     aat =&aarptab[ AARPTAB_HASH(addr) * AARPTAB_BSIZ ]; \     for (n = 0; n< AARPTAB_BSIZ; n++, aat++) \ 	if (aat->aat_ataddr.s_net == (addr).s_net&& \ 	     aat->aat_ataddr.s_node == (addr).s_node) \ 	    break; \ 	if (n>= AARPTAB_BSIZ) \ 	    aat = 0; \ }
+value|{ \     int		n; \     aat =&aarptab[ AARPTAB_HASH(addr) * AARPTAB_BSIZ ]; \     for (n = 0; n< AARPTAB_BSIZ; n++, aat++) \ 	if (aat->aat_ataddr.s_net == (addr).s_net&& \ 	     aat->aat_ataddr.s_node == (addr).s_node) \ 	    break; \ 	if (n>= AARPTAB_BSIZ) \ 	    aat = NULL; \ }
 end_define
 
 begin_define
@@ -1283,7 +1283,7 @@ if|if
 condition|(
 name|aat
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* No entry */
@@ -1301,7 +1301,7 @@ if|if
 condition|(
 name|aat
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|panic
@@ -2078,6 +2078,8 @@ expr_stmt|;
 if|if
 condition|(
 name|aat
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if

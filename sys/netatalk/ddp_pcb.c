@@ -1295,6 +1295,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ddpcb
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ddpcb

@@ -347,6 +347,8 @@ comment|/*      * If we have an ifp, then find the matching at_ifaddr if it exis
 if|if
 condition|(
 name|ifp
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for
@@ -2228,6 +2230,8 @@ condition|(
 name|ifp
 operator|->
 name|if_ioctl
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|error

@@ -720,6 +720,8 @@ block|}
 if|if
 condition|(
 name|addr
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -809,6 +811,8 @@ expr_stmt|;
 if|if
 condition|(
 name|addr
+operator|!=
+name|NULL
 condition|)
 block|{
 name|at_pcbdisconnect

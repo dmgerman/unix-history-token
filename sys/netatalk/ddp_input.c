@@ -446,6 +446,8 @@ expr_stmt|;
 if|if
 condition|(
 name|elh
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 	 * Extract the information in the short header. 	 * netowrk information is defaulted to ATADDR_ANYNET 	 * and node information comes from the elh info. 	 * We must be phase 1. 	 */
@@ -1516,6 +1518,8 @@ comment|/*       * We are no longer interested in the link layer.      * so cut 
 if|if
 condition|(
 name|elh
+operator|!=
+name|NULL
 condition|)
 block|{
 name|m_adj
