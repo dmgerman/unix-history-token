@@ -59,7 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../apilib/asc_ebc.h"
+file|"../api/asc_ebc.h"
 end_include
 
 begin_include
@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../apilib/astosc.h"
+file|"../api/astosc.h"
 end_include
 
 begin_include

@@ -79,13 +79,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../apilib/dctype.h"
+file|"../api/dctype.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../apilib/ebc_disp.h"
+file|"../api/ebc_disp.h"
 end_include
 
 begin_include

@@ -53,13 +53,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../apilib/asc_ebc.h"
+file|"../api/asc_ebc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../apilib/ebc_disp.h"
+file|"../api/ebc_disp.h"
 end_include
 
 begin_function

@@ -14,7 +14,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../api/api.h"
+file|"../ctlr/api.h"
 end_include
 
 begin_include

@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<apilib/apilib.h>
+file|<api/apilib.h>
 end_include
 
 begin_include
@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../api/api.h"
+file|"../ctlr/api.h"
 end_include
 
 begin_include
@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../apilib/disp_asc.h"
+file|"../api/disp_asc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../apilib/astosc.h"
+file|"../api/astosc.h"
 end_include
 
 begin_include

@@ -87,7 +87,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../apilib/disp_asc.h"
+file|"../api/disp_asc.h"
 end_include
 
 begin_include
