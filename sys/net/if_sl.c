@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.7 1994/09/13 16:05:50 davidg Exp $  */
+comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.8 1994/10/05 21:22:45 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -726,8 +726,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -741,6 +739,10 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -859,15 +861,20 @@ comment|/*  * Line specific close routine.  * Detach the tty from the sl unit.  
 end_comment
 
 begin_function
-name|void
+name|int
 name|slclose
 parameter_list|(
 name|tp
+parameter_list|,
+name|flag
 parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
+decl_stmt|;
+name|int
+name|flag
 decl_stmt|;
 block|{
 specifier|register
@@ -977,6 +984,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -999,6 +1009,8 @@ parameter_list|,
 name|data
 parameter_list|,
 name|flag
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|tty
@@ -1013,6 +1025,11 @@ name|data
 decl_stmt|;
 name|int
 name|flag
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -1393,7 +1410,7 @@ comment|/*  * Start output on interface.  Get another datagram  * to send from t
 end_comment
 
 begin_function
-name|void
+name|int
 name|slstart
 parameter_list|(
 name|tp
@@ -1508,7 +1525,9 @@ name|c_cc
 operator|>
 name|SLIP_HIWAT
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* 		 * This happens briefly when the line shuts down. 		 */
 if|if
@@ -1517,7 +1536,9 @@ name|sc
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* 		 * Get a packet and send it to the interface. 		 */
 name|s
 operator|=
@@ -1570,7 +1591,9 @@ name|m
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* 		 * We do the header compression here rather than in sloutput 		 * because the packets will be out of order if we are using TOS 		 * queueing, and the connection id compression will get 		 * munged when this happens. 		 */
 if|#
 directive|if
@@ -2078,6 +2101,9 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2281,7 +2307,7 @@ comment|/*  * tty interface receiver interrupt.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|slinput
 parameter_list|(
 name|c
@@ -2351,7 +2377,9 @@ name|sc
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|c
@@ -2387,7 +2415,9 @@ name|sc_flags
 operator||=
 name|SC_ERROR
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|c
 operator|&=
@@ -2484,9 +2514,13 @@ block|{
 name|slclose
 argument_list|(
 name|tp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 block|}
 block|}
@@ -2548,7 +2582,9 @@ name|sc_escape
 operator|=
 literal|1
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 case|case
 name|FRAME_END
 case|:
@@ -2960,7 +2996,9 @@ name|sc_escape
 operator|=
 literal|0
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* can't put lower; would miss an extra frame */
 name|sc
@@ -3000,6 +3038,9 @@ name|sc_escape
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

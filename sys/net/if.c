@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if.c	8.3 (Berkeley) 1/4/94  * $Id: if.c,v 1.7 1994/09/16 05:47:03 phk Exp $  */
+comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if.c	8.3 (Berkeley) 1/4/94  * $Id: if.c,v 1.8 1994/10/05 20:11:23 wollman Exp $  */
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/radix.h>
 end_include
 
 begin_include
@@ -546,8 +552,6 @@ literal|2
 operator|*
 name|socksize
 expr_stmt|;
-if|if
-condition|(
 name|ifa
 operator|=
 operator|(
@@ -563,6 +567,10 @@ name|M_IFADDR
 argument_list|,
 name|M_WAITOK
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifa
 condition|)
 block|{
 name|bzero
@@ -1715,8 +1723,6 @@ literal|0
 operator|)
 condition|)
 return|return;
-if|if
-condition|(
 name|ifa
 operator|=
 name|ifaof_ifpforaddr
@@ -1725,6 +1731,10 @@ name|dst
 argument_list|,
 name|ifp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifa
 condition|)
 block|{
 name|IFAFREE
@@ -1860,12 +1870,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
-specifier|register
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -1875,6 +1879,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notyet
+specifier|register
+name|struct
+name|ifaddr
+modifier|*
+name|ifa
+decl_stmt|;
 comment|/* this has no effect on IP, and will kill all iso connections XXX */
 for|for
 control|(
@@ -1945,9 +1955,13 @@ name|ifq_head
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|m
 operator|=
 name|n
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|n
@@ -2423,8 +2437,6 @@ break|break;
 case|case
 name|SIOCSIFFLAGS
 case|:
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -2438,6 +2450,10 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2564,8 +2580,6 @@ break|break;
 case|case
 name|SIOCSIFMETRIC
 case|:
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -2579,6 +2593,10 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2597,8 +2615,6 @@ break|break;
 case|case
 name|SIOCSIFMTU
 case|:
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -2612,6 +2628,10 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2674,8 +2694,6 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -2689,6 +2707,10 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3017,9 +3039,6 @@ name|ifa
 decl_stmt|;
 specifier|register
 name|char
-modifier|*
-name|cp
-decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
