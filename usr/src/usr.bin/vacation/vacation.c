@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vacation.c	5.15 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,12 +210,15 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
 name|VIT
-value|"__VACATION__INTERVAL__TIMER__"
-end_define
+init|=
+literal|"__VACATION__INTERVAL__TIMER__"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
