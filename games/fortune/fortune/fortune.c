@@ -1761,10 +1761,16 @@ name|ignore_case
 operator|=
 name|FALSE
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_REGEX
 name|pat
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* NO_REGEX */
 ifdef|#
 directive|ifdef
 name|DEBUG
