@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.2 (Berkeley) %G%"
+literal|"@(#)command.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,12 +189,6 @@ name|current_file
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|EDITOR
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -202,11 +196,6 @@ modifier|*
 name|editor
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1815,9 +1804,6 @@ case|case
 name|A_VISUAL
 case|:
 comment|/* 			 * Invoke an editor on the input file. 			 */
-if|#
-directive|if
-name|EDITOR
 if|if
 condition|(
 name|ispipe
@@ -1888,16 +1874,6 @@ name|clr_linenum
 argument_list|()
 expr_stmt|;
 break|break;
-else|#
-directive|else
-name|error
-argument_list|(
-literal|"Command not available"
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 name|A_NEXT_FILE
 case|:

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,12 +240,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|EDITOR
-end_if
-
 begin_decl_stmt
 name|public
 name|char
@@ -253,11 +247,6 @@ modifier|*
 name|editor
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1183,9 +1172,6 @@ name|argv
 operator|++
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|EDITOR
 name|editor
 operator|=
 name|getenv
@@ -1208,8 +1194,6 @@ name|editor
 operator|=
 name|EDIT_PGM
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Set up list of files to be examined. 	 */
 name|ac
 operator|=
