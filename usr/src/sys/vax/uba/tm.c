@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.20	%G%	*/
+comment|/*	tm.c	4.21	%G%	*/
 end_comment
 
 begin_include
@@ -3630,19 +3630,11 @@ index|]
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dna\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
-block|}
 name|ui
 operator|=
 name|phys
@@ -3769,6 +3761,19 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|->
+name|tmcs
+operator|&
+name|TM_ERR
+condition|)
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 name|addr
 operator|->
 name|tmcs
