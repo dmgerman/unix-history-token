@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.16	%G%	*/
+comment|/*	kern_proc.c	3.17	%G%	*/
 end_comment
 
 begin_include
@@ -3635,11 +3635,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ctob
+argument_list|(
 name|u
 operator|.
 name|u_dsize
 operator|+
 name|d
+argument_list|)
 operator|>
 name|u
 operator|.
