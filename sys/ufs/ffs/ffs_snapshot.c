@@ -3111,13 +3111,18 @@ name|i_snaplistsize
 condition|)
 name|printf
 argument_list|(
-literal|"Snaplist mismatch, got %d should be %jd\n"
+literal|"Snaplist mismatch, got %jd should be %jd\n"
 argument_list|,
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|ip
 operator|->
 name|i_snapblklist
 operator|-
 name|listhd
+argument_list|)
 argument_list|,
 operator|(
 name|intmax_t
