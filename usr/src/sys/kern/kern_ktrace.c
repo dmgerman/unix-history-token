@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"namei.h"
 end_include
 
 begin_include
@@ -56,16 +50,6 @@ include|#
 directive|include
 file|"syslog.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
-end_include
-
-begin_comment
-comment|/* XXX for curproc */
-end_comment
 
 begin_function
 name|struct
