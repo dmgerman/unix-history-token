@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	5.1 (Berkeley) %G%"
+literal|"@(#)swap.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1117,7 +1117,11 @@ argument_list|(
 literal|"namelist on /vmunix failed"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 if|if
@@ -1333,7 +1337,11 @@ name|usrpt
 operator|!=
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|usrpt
 operator|=
 operator|(
@@ -1386,6 +1394,11 @@ name|p_times
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -1614,12 +1627,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 specifier|register
 name|int
 name|row

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.1 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,9 +278,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|i
-expr_stmt|;
 if|if
 condition|(
 name|nlst
@@ -317,12 +314,24 @@ argument_list|(
 literal|"Disk init information isn't in namelist"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
 name|dkinit
 argument_list|()
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|dk_ndrive
@@ -374,6 +383,11 @@ undef|#
 directive|undef
 name|allocate
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -1463,9 +1477,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|i
-expr_stmt|;
 name|double
 name|atime
 decl_stmt|,
@@ -1948,9 +1959,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|prefix

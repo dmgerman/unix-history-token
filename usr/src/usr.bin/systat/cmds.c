@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.3 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,10 +72,6 @@ name|int
 name|interval
 decl_stmt|,
 name|omask
-decl_stmt|;
-name|char
-modifier|*
-name|arg
 decl_stmt|;
 specifier|extern
 function_decl|(
@@ -520,10 +516,6 @@ operator|=
 name|curcmd
 expr_stmt|;
 block|}
-name|curcmd
-operator|=
-name|p
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -537,6 +529,8 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 call|(
 modifier|*
 name|p
@@ -544,14 +538,22 @@ operator|->
 name|c_init
 call|)
 argument_list|()
-expr_stmt|;
+condition|)
 name|p
 operator|->
 name|c_flags
 operator||=
 name|CF_INIT
 expr_stmt|;
+else|else
+goto|goto
+name|done
+goto|;
 block|}
+name|curcmd
+operator|=
+name|p
+expr_stmt|;
 name|labels
 argument_list|()
 expr_stmt|;

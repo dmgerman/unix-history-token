@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	5.3 (Berkeley) %G%"
+literal|"@(#)pigs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -864,7 +864,11 @@ argument_list|(
 literal|"namelist on /vmunix failed"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 if|if
@@ -929,7 +933,11 @@ name|usrpt
 operator|!=
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|usrpt
 operator|=
 operator|(
@@ -1009,6 +1017,11 @@ sizeof|sizeof
 name|stime
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -1043,12 +1056,6 @@ name|long
 name|ctime
 index|[
 name|CPUSTATES
-index|]
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|25
 index|]
 decl_stmt|;
 name|double

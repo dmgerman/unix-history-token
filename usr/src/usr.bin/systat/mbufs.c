@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbufs.c	5.1 (Berkeley) %G%"
+literal|"@(#)mbufs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,7 +504,11 @@ argument_list|(
 literal|"namelist on /vmunix failed"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 if|if
@@ -531,6 +535,11 @@ name|mb
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 

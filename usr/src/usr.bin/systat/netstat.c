@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netstat.c	5.1 (Berkeley) %G%"
+literal|"@(#)netstat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -368,9 +368,6 @@ name|struct
 name|netinfo
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|q
 decl_stmt|;
 name|endhostent
 argument_list|()
@@ -487,9 +484,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|i
-expr_stmt|;
 name|nlist
 argument_list|(
 literal|"/vmunix"
@@ -514,7 +508,11 @@ argument_list|(
 literal|"No symbols in namelist"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|netcb
 operator|.
@@ -538,6 +536,11 @@ name|TCP
 operator||
 name|UDP
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 

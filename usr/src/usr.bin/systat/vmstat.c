@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.3 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -745,6 +745,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+specifier|static
+name|int
+name|once
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|name
@@ -781,7 +787,11 @@ argument_list|(
 literal|"No namelist"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 name|hertz
@@ -792,12 +802,23 @@ name|phz
 else|:
 name|hz
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|dkinit
 argument_list|()
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|dk_ndrive
+operator|&&
+operator|!
+name|once
 condition|)
 block|{
 define|#
@@ -845,6 +866,10 @@ name|dk_xfer
 argument_list|,
 name|long
 argument_list|)
+expr_stmt|;
+name|once
+operator|=
+literal|1
 expr_stmt|;
 undef|#
 directive|undef
@@ -952,7 +977,42 @@ argument_list|(
 literal|"Out of memory\n"
 argument_list|)
 expr_stmt|;
-return|return;
+if|if
+condition|(
+name|intrnamebuf
+condition|)
+name|free
+argument_list|(
+name|intrnamebuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|intrname
+condition|)
+name|free
+argument_list|(
+name|intrname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|intrloc
+condition|)
+name|free
+argument_list|(
+name|intrloc
+argument_list|)
+expr_stmt|;
+name|nintr
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|lseek
 argument_list|(
@@ -1075,6 +1135,11 @@ operator|&
 name|s1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -1756,10 +1821,6 @@ name|f2
 decl_stmt|;
 name|int
 name|psiz
-decl_stmt|,
-name|interv
-decl_stmt|,
-name|hits
 decl_stmt|,
 name|inttotal
 decl_stmt|;
@@ -3395,11 +3456,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|static
-name|enum
-name|state
-name|oldstate
-decl_stmt|;
 if|if
 condition|(
 name|prefix
@@ -4391,7 +4447,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"vsta: out of memory\n"
+literal|"systat: out of memory\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4437,7 +4493,7 @@ decl_stmt|,
 modifier|*
 name|xfer
 decl_stmt|;
-name|int
+name|long
 modifier|*
 name|intrcnt
 decl_stmt|;

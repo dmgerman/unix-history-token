@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netcmds.c	5.1 (Berkeley) %G%"
+literal|"@(#)netcmds.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,10 +338,6 @@ specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 name|struct
 name|servent
@@ -730,9 +726,6 @@ name|struct
 name|pitem
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|open
 decl_stmt|;
 if|if
 condition|(
@@ -776,10 +769,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|open
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|p

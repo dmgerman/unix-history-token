@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.1 (Berkeley) %G%"
+literal|"@(#)disks.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,11 +141,11 @@ if|if
 condition|(
 name|once
 condition|)
-return|return;
-name|once
-operator|=
+return|return
+operator|(
 literal|1
-expr_stmt|;
+operator|)
+return|;
 name|nlist
 argument_list|(
 literal|"/vmunix"
@@ -170,7 +170,11 @@ argument_list|(
 literal|"dk_ndrive undefined in kernel"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|dk_ndrive
 operator|=
@@ -198,7 +202,11 @@ argument_list|,
 name|dk_ndrive
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|dk_mspw
 operator|=
@@ -344,9 +352,43 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
 name|read_names
 argument_list|()
+condition|)
+block|{
+name|free
+argument_list|(
+name|dr_name
+argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|dk_select
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|dk_mspw
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|once
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -543,12 +585,6 @@ end_macro
 
 begin_block
 block|{
-specifier|static
-name|int
-name|once
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|mba_device
 name|mdev
@@ -635,7 +671,11 @@ argument_list|(
 literal|"Disk init info not in namelist\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -811,6 +851,11 @@ name|ui_unit
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -898,7 +943,11 @@ argument_list|(
 literal|"Disk init info not in namelist\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 for|for
 control|(
@@ -983,6 +1032,11 @@ name|md_unit
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
