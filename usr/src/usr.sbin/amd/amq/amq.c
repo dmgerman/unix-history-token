@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amq.c	5.4 (Berkeley) %G%  *  * $Id: amq.c,v 5.2.2.1 1992/02/09 15:09:16 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amq.c	5.5 (Berkeley) %G%  *  * $Id: amq.c,v 5.2.2.1 1992/02/09 15:09:16 jsp beta $  *  */
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)amq.c	5.4 (Berkeley) %G%"
+literal|"@(#)amq.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -994,6 +994,23 @@ operator|>
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAS_STRERROR
+name|printf
+argument_list|(
+literal|" (%s)"
+argument_list|,
+name|strerror
+argument_list|(
+name|mi
+operator|->
+name|mi_error
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 specifier|extern
 name|char
 modifier|*
@@ -1034,6 +1051,8 @@ operator|->
 name|mi_error
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
