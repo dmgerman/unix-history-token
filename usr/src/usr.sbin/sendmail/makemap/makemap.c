@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.4 (Berkeley) %G%"
+literal|"@(#)makemap.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +213,7 @@ decl_stmt|;
 name|bool
 name|foldcase
 init|=
-name|FALSE
+name|TRUE
 decl_stmt|;
 name|int
 name|exitstat
@@ -343,7 +343,7 @@ literal|'f'
 case|:
 name|foldcase
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
