@@ -1307,6 +1307,19 @@ name|harvest
 modifier|*
 name|event
 decl_stmt|;
+comment|/* Lockless read to avoid lock operations if fifo is full. */
+if|if
+condition|(
+name|harvestfifo
+index|[
+name|origin
+index|]
+operator|.
+name|count
+operator|>=
+name|RANDOM_FIFO_MAX
+condition|)
+return|return;
 comment|/* Lock the particular fifo */
 name|mtx_lock_spin
 argument_list|(
