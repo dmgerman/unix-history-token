@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.3 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,16 +182,25 @@ name|krb_get_lrealm
 argument_list|(
 name|realm
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"couldn't get local Kerberos realm"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 comment|/* 	 * get TGT for local realm 	 * tickets are stored in a file determined by calling tkt_string() 	 */
 operator|(
 name|void
