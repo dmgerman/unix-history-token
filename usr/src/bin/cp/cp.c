@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cp.c	4.8 83/07/01"
+literal|"@(#)cp.c	4.9 85/06/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,13 +47,6 @@ include|#
 directive|include
 file|<sys/dir.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|BSIZE
-value|8192
-end_define
 
 begin_decl_stmt
 name|int
@@ -153,6 +146,9 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'R'
+case|:
+case|case
 literal|'r'
 case|:
 name|rflag
@@ -185,8 +181,6 @@ condition|(
 name|argc
 operator|>
 literal|2
-operator|||
-name|rflag
 condition|)
 block|{
 if|if
@@ -317,12 +311,14 @@ name|last
 decl_stmt|,
 name|destname
 index|[
-name|BSIZE
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|,
 name|buf
 index|[
-name|BSIZE
+name|MAXBSIZE
 index|]
 decl_stmt|;
 name|struct
@@ -446,7 +442,8 @@ argument_list|(
 name|last
 argument_list|)
 operator|>=
-name|BSIZE
+sizeof|sizeof
+name|destname
 operator|-
 literal|1
 condition|)
@@ -537,12 +534,11 @@ name|mkdir
 argument_list|(
 name|to
 argument_list|,
-operator|(
-name|int
-operator|)
 name|stfrom
 operator|.
 name|st_mode
+operator|&
+literal|07777
 argument_list|)
 operator|<
 literal|0
@@ -602,6 +598,27 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|stfrom
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFDIR
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cp: %s: Is a directory (copying as plain file).\n"
+argument_list|,
+name|from
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|stat
 argument_list|(
 name|to
@@ -636,7 +653,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: Cannot copy file to itself.\n"
+literal|"cp: %s and %s are identical (not copied).\n"
+argument_list|,
+name|from
+argument_list|,
+name|to
 argument_list|)
 expr_stmt|;
 operator|(
@@ -656,6 +677,14 @@ block|}
 if|if
 condition|(
 name|iflag
+operator|&&
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
 condition|)
 block|{
 name|int
@@ -723,12 +752,11 @@ name|creat
 argument_list|(
 name|to
 argument_list|,
-operator|(
-name|int
-operator|)
 name|stfrom
 operator|.
 name|st_mode
+operator|&
+literal|07777
 argument_list|)
 expr_stmt|;
 if|if
@@ -771,7 +799,8 @@ name|fold
 argument_list|,
 name|buf
 argument_list|,
-name|BSIZE
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 if|if
@@ -924,7 +953,9 @@ decl_stmt|;
 name|char
 name|fromname
 index|[
-name|BUFSIZ
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -1024,7 +1055,8 @@ operator|->
 name|d_name
 argument_list|)
 operator|>=
-name|BUFSIZ
+sizeof|sizeof
+name|fromname
 operator|-
 literal|1
 condition|)
