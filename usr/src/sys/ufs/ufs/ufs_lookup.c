@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.21	82/08/03	*/
+comment|/*	ufs_lookup.c	4.22	82/08/14	*/
 end_comment
 
 begin_include
@@ -1499,37 +1499,27 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|.
-name|u_segflg
+name|u_error
 operator|=
-literal|1
-expr_stmt|;
-name|u
-operator|.
-name|u_base
-operator|=
+name|readip1
+argument_list|(
+name|dp
+argument_list|,
 name|nbp
 operator|->
 name|b_un
 operator|.
 name|b_addr
-expr_stmt|;
-name|u
-operator|.
-name|u_count
-operator|=
+argument_list|,
 name|dp
 operator|->
 name|i_size
-expr_stmt|;
-name|u
-operator|.
-name|u_offset
-operator|=
+argument_list|,
 literal|0
-expr_stmt|;
-name|readi
-argument_list|(
-name|dp
+argument_list|,
+literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
