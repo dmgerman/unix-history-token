@@ -34,7 +34,7 @@ file|<sys/signal.h>
 end_include
 
 begin_comment
-comment|/*  * Returned by aio_cancel:  *  (Note that FreeBSD's aio is not cancellable -- yet.)  */
+comment|/*  * Returned by aio_cancel:  */
 end_comment
 
 begin_define
@@ -309,7 +309,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel I/O -- implemented only to return AIO_NOTCANCELLED or  *	AIO_ALLDONE.  No cancellation operation will occur.  */
+comment|/*  * Cancel I/O  */
 end_comment
 
 begin_function_decl
@@ -349,22 +349,6 @@ operator|*
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Retrieve the status of the specified I/O request.  */
-end_comment
-
-begin_function_decl
-name|int
-name|aio_error
-parameter_list|(
-specifier|const
-name|struct
-name|aiocb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
