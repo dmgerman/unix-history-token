@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.25 1995/04/26 15:06:58 jkh Exp $"
+literal|"$Id: perform.c,v 1.26 1995/05/10 20:46:06 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -795,7 +795,7 @@ begin_define
 define|#
 directive|define
 name|MAX_NUM_ARGS
-value|4096
+value|16384
 end_define
 
 begin_function
