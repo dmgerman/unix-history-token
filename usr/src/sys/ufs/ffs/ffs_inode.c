@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.53 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.54 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -640,6 +640,16 @@ name|IMOD
 expr_stmt|;
 block|}
 comment|/* 	 * Ensure that uid and gid are correct. This is a temporary 	 * fix until fsck has been changed to do the update. 	 */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_inodefmt
+operator|<
+name|FS_44INODEFMT
+condition|)
+block|{
+comment|/* XXX */
 name|ip
 operator|->
 name|i_uid
@@ -650,6 +660,7 @@ name|i_din
 operator|.
 name|di_ouid
 expr_stmt|;
+comment|/* XXX */
 name|ip
 operator|->
 name|i_gid
@@ -660,6 +671,9 @@ name|i_din
 operator|.
 name|di_ogid
 expr_stmt|;
+comment|/* XXX */
+block|}
+comment|/* XXX */
 operator|*
 name|ap
 operator|->
@@ -845,7 +859,23 @@ operator||
 name|IMOD
 operator|)
 expr_stmt|;
+name|fs
+operator|=
+name|ip
+operator|->
+name|i_fs
+expr_stmt|;
 comment|/* 	 * Ensure that uid and gid are correct. This is a temporary 	 * fix until fsck has been changed to do the update. 	 */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_inodefmt
+operator|<
+name|FS_44INODEFMT
+condition|)
+block|{
+comment|/* XXX */
 name|ip
 operator|->
 name|i_din
@@ -856,6 +886,7 @@ name|ip
 operator|->
 name|i_uid
 expr_stmt|;
+comment|/* XXX */
 name|ip
 operator|->
 name|i_din
@@ -866,12 +897,9 @@ name|ip
 operator|->
 name|i_gid
 expr_stmt|;
-name|fs
-operator|=
-name|ip
-operator|->
-name|i_fs
-expr_stmt|;
+comment|/* XXX */
+block|}
+comment|/* XXX */
 if|if
 condition|(
 name|error
