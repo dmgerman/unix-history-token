@@ -2622,7 +2622,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a Floppy drive"
 block|,
-literal|"You have more than one floppy drive.  Please chose which drive\n"
+literal|"You have more than one floppy drive.  Please choose which drive\n"
 literal|"you would like to use."
 block|,
 name|NULL
@@ -4409,7 +4409,7 @@ literal|"These select what we consider to be the most reasonable defaults for th
 literal|"type of system in question.  If you would prefer to pick and choose the\n"
 literal|"list of distributions yourself, simply select \"Custom\".  You can also\n"
 literal|"pick a canned distribution set and then fine-tune it with the Custom item.\n\n"
-literal|"Choose an item by pressing [SPACE]. When you are finished, chose the Exit\n"
+literal|"Choose an item by pressing [SPACE]. When you are finished, choose the Exit\n"
 literal|"item or press [ENTER]."
 block|,
 literal|"Press F1 for more information on these options."
@@ -7329,7 +7329,7 @@ block|,
 literal|"Select HTML Documentation pointer"
 block|,
 literal|"Please select the body of documentation you're interested in, the main\n"
-literal|"ones right now being the FAQ and the Handbook.  You can also chose \"other\"\n"
+literal|"ones right now being the FAQ and the Handbook.  You can also choose \"other\"\n"
 literal|"to enter an arbitrary URL for browsing."
 block|,
 literal|"Press F1 for more help on what you see here."

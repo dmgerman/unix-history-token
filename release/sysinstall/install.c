@@ -2137,7 +2137,7 @@ name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
 literal|"scroll through the debugging messages on VTY1 with the\n"
-literal|"scroll-lock feature.  You can also chose \"No\" at the next\n"
+literal|"scroll-lock feature.  You can also choose \"No\" at the next\n"
 literal|"prompt and go back into the installation menus to try and retry\n"
 literal|"whichever operations have failed."
 argument_list|)
