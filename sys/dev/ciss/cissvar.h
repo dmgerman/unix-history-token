@@ -631,7 +631,7 @@ name|debug_struct
 parameter_list|(
 name|s
 parameter_list|)
-value|printf("  SIZE %s: %d\n", #s, sizeof(struct s))
+value|printf("  SIZE %s: %zu\n", #s, sizeof(struct s))
 end_define
 
 begin_define
@@ -641,7 +641,7 @@ name|debug_union
 parameter_list|(
 name|s
 parameter_list|)
-value|printf("  SIZE %s: %d\n", #s, sizeof(union s))
+value|printf("  SIZE %s: %zu\n", #s, sizeof(union s))
 end_define
 
 begin_define
@@ -651,7 +651,7 @@ name|debug_type
 parameter_list|(
 name|s
 parameter_list|)
-value|printf("  SIZE %s: %d\n", #s, sizeof(s))
+value|printf("  SIZE %s: %zu\n", #s, sizeof(s))
 end_define
 
 begin_define
@@ -673,7 +673,7 @@ name|debug_const
 parameter_list|(
 name|c
 parameter_list|)
-value|printf("  CONST %s %d/0x%x\n", #c, c, c);
+value|printf("  CONST %s %jd/0x%jx\n", #c, (intmax_t)c, (intmax_t)c);
 end_define
 
 begin_else
