@@ -1013,7 +1013,7 @@ operator|&
 name|fs
 argument_list|)
 expr_stmt|;
-name|VM_WAIT
+name|VM_WAITPFAULT
 expr_stmt|;
 goto|goto
 name|RetryFault
@@ -1166,7 +1166,7 @@ operator|&
 name|fs
 argument_list|)
 expr_stmt|;
-name|VM_WAIT
+name|VM_WAITPFAULT
 expr_stmt|;
 goto|goto
 name|RetryFault
