@@ -148,10 +148,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*static int ata_command(struct ata_device *, u_int8_t, u_int64_t, u_int16_t, u_int16_t);*/
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
