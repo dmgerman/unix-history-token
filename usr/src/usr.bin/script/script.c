@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)script.c	5.10 (Berkeley) %G%"
+literal|"@(#)script.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -815,7 +815,7 @@ name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TCSADFLUSH
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|rtt
@@ -920,7 +920,7 @@ name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TCSADFLUSH
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|tt
@@ -1199,7 +1199,7 @@ name|tcsetattr
 argument_list|(
 name|slave
 argument_list|,
-name|TCSADFLUSH
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|tt
