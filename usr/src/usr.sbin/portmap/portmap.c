@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984 by Sun Microsystems, Inc.  *  *	@(#)portmap.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984 by Sun Microsystems, Inc.  *  *	@(#)portmap.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -109,7 +115,7 @@ file|<sys/resource.h>
 end_include
 
 begin_function_decl
-name|int
+name|void
 name|reg_service
 parameter_list|()
 function_decl|;
@@ -118,6 +124,14 @@ end_function_decl
 begin_function_decl
 name|void
 name|reap
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|callit
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -691,6 +705,7 @@ name|perror
 parameter_list|(
 name|what
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|what
@@ -816,31 +831,23 @@ begin_comment
 comment|/*   * 1 OK, 0 not  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|reg_service
-argument_list|(
-argument|rqstp
-argument_list|,
-argument|xprt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rqstp
+parameter_list|,
+name|xprt
+parameter_list|)
 name|struct
 name|svc_req
 modifier|*
 name|rqstp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|SVCXPRT
 modifier|*
 name|xprt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|pmap
@@ -1458,7 +1465,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Stuff for the rmtcall service  */
@@ -1471,8 +1478,7 @@ name|ARGSIZE
 value|9000
 end_define
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|encap_parms
 block|{
@@ -1484,8 +1490,8 @@ modifier|*
 name|args
 decl_stmt|;
 block|}
-empty_stmt|;
-end_typedef
+struct|;
+end_struct
 
 begin_function
 specifier|static
@@ -1533,8 +1539,7 @@ return|;
 block|}
 end_function
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|rmtcallargs
 block|{
@@ -1555,8 +1560,8 @@ name|encap_parms
 name|rmt_args
 decl_stmt|;
 block|}
-empty_stmt|;
-end_typedef
+struct|;
+end_struct
 
 begin_function
 specifier|static
@@ -1889,29 +1894,24 @@ begin_comment
 comment|/*  * Call a remote procedure service  * This procedure is very quiet when things go wrong.  * The proc is written to support broadcast rpc.  In the broadcast case,  * a machine should shut-up instead of complain, less the requestor be  * overrun with complaints at the expense of not hearing a valid reply ...  *  * This now forks so that the program& process that it calls can call   * back to the portmapper.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|callit
-argument_list|(
-argument|rqstp
-argument_list|,
-argument|xprt
-argument_list|)
-expr|struct
-name|svc_req
-operator|*
+parameter_list|(
 name|rqstp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|xprt
+parameter_list|)
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
+decl_stmt|;
 name|SVCXPRT
 modifier|*
 name|xprt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|rmtcallargs
@@ -2226,7 +2226,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
