@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.36 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.35		%G%"
+literal|"@(#)sendmail.h	5.36		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2751,7 +2751,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|uid_t
 name|RealUid
 decl_stmt|;
 end_decl_stmt
@@ -2762,7 +2762,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|gid_t
 name|RealGid
 decl_stmt|;
 end_decl_stmt
@@ -2773,13 +2773,24 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|uid_t
 name|DefUid
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* default uid to run as */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|gid_t
+name|DefGid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default gid to run as */
 end_comment
 
 begin_decl_stmt
@@ -2792,17 +2803,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* default user to run as (from DefUid) */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|DefGid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default gid to run as */
 end_comment
 
 begin_decl_stmt
@@ -2981,6 +2981,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of SMTP help file */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|ErrMsgFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file to prepend to all error messages */
 end_comment
 
 begin_decl_stmt
