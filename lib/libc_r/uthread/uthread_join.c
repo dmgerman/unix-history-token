@@ -330,6 +330,10 @@ name|join_status
 operator|.
 name|ret
 expr_stmt|;
+comment|/* Undefer and handle pending signals, yielding if necessary: */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
