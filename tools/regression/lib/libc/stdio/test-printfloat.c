@@ -603,6 +603,36 @@ argument_list|,
 literal|3.1415
 argument_list|)
 expr_stmt|;
+comment|/* thousands=. decimalpoint=, grouping=3;3 */
+name|assert
+argument_list|(
+name|setlocale
+argument_list|(
+name|LC_NUMERIC
+argument_list|,
+literal|"el_GR.ISO8859-7"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* decimalpoint==, */
+name|testfmt
+argument_list|(
+literal|"1.234,00"
+argument_list|,
+literal|"%'.2f"
+argument_list|,
+literal|1234.00
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|"123.456,789"
+argument_list|,
+literal|"%'.3f"
+argument_list|,
+literal|123456.789
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|setlocale
