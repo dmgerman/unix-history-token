@@ -64,7 +64,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * clnt_raw.c  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * Memory based rpc for simple testing and timing.  * Interface to create an rpc client and server in the same process.  * This lets us similate rpc and get round trip overhead, without  * any interference from the kernal.  */
+comment|/*  * clnt_raw.c  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * Memory based rpc for simple testing and timing.  * Interface to create an rpc client and server in the same process.  * This lets us similate rpc and get round trip overhead, without  * any interference from the kernel.  */
 end_comment
 
 begin_include
