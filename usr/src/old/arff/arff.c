@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arff.c	4.16 (Berkeley) 83/07/10"
+literal|"@(#)arff.c	4.17 (Berkeley) 83/11/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -1458,6 +1458,7 @@ name|de
 operator|+=
 name|rt_entsiz
 control|)
+block|{
 switch|switch
 condition|(
 name|rt
@@ -1471,7 +1472,8 @@ block|{
 case|case
 name|RT_ESEG
 case|:
-return|return;
+break|break;
+comment|/* exit loop and try next segment */
 case|case
 name|RT_TEMP
 case|:
@@ -1498,6 +1500,9 @@ expr_stmt|;
 case|case
 name|RT_NULL
 case|:
+default|default:
+continue|continue;
+block|}
 break|break;
 block|}
 block|}
