@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.1 90/07/09$  *  *	@(#)cons.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.1 90/07/09$  *  *	@(#)cons.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -90,17 +90,54 @@ modifier|*
 name|f
 function_decl|)
 parameter_list|()
-init|=
+function_decl|;
+include|#
+directive|include
+file|"dc.h"
+if|#
+directive|if
+name|NDC
+operator|>
+literal|0
+include|#
+directive|include
+file|"machine/dc7085cons.h"
+include|#
+directive|include
+file|"../dev/pdma.h"
+specifier|extern
+name|struct
+name|pdma
+name|dcpdma
+index|[]
+decl_stmt|;
+comment|/* check to be sure device has been initialized */
+if|if
+condition|(
+name|dcpdma
+index|[
+literal|0
+index|]
+operator|.
+name|p_addr
+condition|)
+return|return
+operator|(
+name|dcKBDGetc
+argument_list|()
+operator|)
+return|;
+name|f
+operator|=
 operator|(
 name|int
 argument_list|(
 operator|*
 argument_list|)
-operator|(
-operator|)
+argument_list|()
 operator|)
 name|MACH_MON_GETCHAR
-function_decl|;
+expr_stmt|;
 return|return
 call|(
 modifier|*
@@ -108,14 +145,30 @@ name|f
 call|)
 argument_list|()
 return|;
+else|#
+directive|else
+name|f
+operator|=
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|MACH_MON_GETCHAR
+expr_stmt|;
+return|return
+call|(
+modifier|*
+name|f
+call|)
+argument_list|()
+return|;
+endif|#
+directive|endif
 block|}
 end_block
-
-begin_include
-include|#
-directive|include
-file|"pm.h"
-end_include
 
 begin_comment
 comment|/*  * Print a character on console.  */
@@ -134,6 +187,9 @@ end_expr_stmt
 
 begin_block
 block|{
+include|#
+directive|include
+file|"pm.h"
 if|#
 directive|if
 name|NPM
