@@ -1358,5 +1358,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|PAL_VM_SUMMARY
+argument_list|,
+name|PAL_VM_SUMMARY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
