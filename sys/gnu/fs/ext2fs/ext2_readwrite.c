@@ -1103,10 +1103,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ioflag
 operator|&
 name|IO_VMIO
+operator|)
+operator|&&
+operator|(
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|bp
+operator|->
+name|b_dep
+argument_list|)
+operator|==
+name|NULL
+operator|)
 condition|)
+comment|/* in ext2fs? */
 name|bp
 operator|->
 name|b_flags

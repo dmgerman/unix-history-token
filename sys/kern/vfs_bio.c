@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.164 1998/05/01 15:10:59 peter Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.165 1998/07/04 20:45:31 julian Exp $  */
 end_comment
 
 begin_comment
@@ -6525,11 +6525,25 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_VMIO
+operator|)
+operator|&&
+operator|(
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|bp
+operator|->
+name|b_dep
+argument_list|)
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|bp
@@ -7028,6 +7042,7 @@ name|b_flags
 operator||=
 name|B_INVAL
 expr_stmt|;
+comment|/* b_dep cleared by getnewbuf() */
 return|return
 operator|(
 name|bp
