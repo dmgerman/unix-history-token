@@ -4532,7 +4532,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|archive_entry_copy_fflags_w
+name|archive_entry_copy_fflags_text_w
 argument_list|(
 name|entry
 argument_list|,

@@ -2386,6 +2386,32 @@ name|need_extension
 operator|=
 literal|1
 expr_stmt|;
+comment|/* I use a star-compatible file flag attribute. */
+name|p
+operator|=
+name|archive_entry_fflags_text
+argument_list|(
+name|entry_main
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|need_extension
+operator|&&
+name|p
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|need_extension
+operator|=
+literal|1
+expr_stmt|;
 comment|/* If there are non-trivial ACL entries, we need an extension. */
 if|if
 condition|(
@@ -2553,7 +2579,7 @@ expr_stmt|;
 comment|/* I use a star-compatible file flag attribute. */
 name|p
 operator|=
-name|archive_entry_fflags
+name|archive_entry_fflags_text
 argument_list|(
 name|entry_main
 argument_list|)

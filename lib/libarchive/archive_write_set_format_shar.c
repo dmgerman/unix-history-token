@@ -2138,7 +2138,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|archive_entry_fflags
+name|archive_entry_fflags_text
 argument_list|(
 name|shar
 operator|->
