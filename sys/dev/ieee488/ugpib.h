@@ -526,6 +526,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GTL
+value|0x01
+end_define
+
+begin_comment
+comment|/* Go To Local				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDC
+value|0x04
+end_define
+
+begin_comment
+comment|/* Selected Device Clear		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET
+value|0x08
+end_define
+
+begin_comment
+comment|/* Group Execute Trigger		*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LAD
 value|0x20
 end_define
@@ -895,7 +928,7 @@ name|int
 name|handle
 parameter_list|,
 name|int
-name|v
+name|pad
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1066,7 +1099,7 @@ name|int
 name|handle
 parameter_list|,
 name|int
-name|v
+name|sad
 parameter_list|)
 function_decl|;
 end_function_decl

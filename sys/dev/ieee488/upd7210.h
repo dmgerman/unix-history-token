@@ -73,7 +73,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int
+name|int
 name|dmachan
 decl_stmt|;
 comment|/* private stuff */
