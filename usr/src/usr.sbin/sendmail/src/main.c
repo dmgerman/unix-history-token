@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.136
+literal|3.137
 operator|%
 name|G
 operator|%
@@ -1813,7 +1813,7 @@ operator|!=
 name|MD_DAEMON
 operator|&&
 name|QueueIntvl
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
