@@ -830,6 +830,8 @@ block|,
 name|METEOR_PIXTYPE_YUV
 block|,
 name|METEOR_PIXTYPE_YUV_PACKED
+block|,
+name|METEOR_PIXTYPE_YUV_12
 block|}
 name|METEOR_PIXTYPE
 typedef|;
