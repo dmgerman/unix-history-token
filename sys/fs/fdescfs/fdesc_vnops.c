@@ -1341,7 +1341,7 @@ block|{
 comment|/* 				 * directories can cause loops in the namespace, 				 * so turn off the 'r' and 'x' bits to avoid 				 * trouble. 				 */
 define|#
 directive|define
-name|VRXEC
+name|FDRX
 value|(VREAD|VEXEC)
 name|vap
 operator|->
@@ -1350,17 +1350,17 @@ operator|&=
 operator|~
 operator|(
 operator|(
-name|VRXEC
+name|FDRX
 operator|)
 operator||
 operator|(
-name|VRXEC
+name|FDRX
 operator|>>
 literal|3
 operator|)
 operator||
 operator|(
-name|VRXEC
+name|FDRX
 operator|>>
 literal|6
 operator|)
@@ -1368,7 +1368,7 @@ operator|)
 expr_stmt|;
 undef|#
 directive|undef
-name|VRXEC
+name|FDRX
 block|}
 comment|/* 			 * Make sure these nodes reflect data as it pertains 			 * to fdesc and not the original file system. 			 */
 name|vap
