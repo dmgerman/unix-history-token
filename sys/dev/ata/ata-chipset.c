@@ -1041,6 +1041,17 @@ parameter_list|)
 block|{
 name|mode
 operator|=
+name|ata_limit_mode
+argument_list|(
+name|atadev
+argument_list|,
+name|mode
+argument_list|,
+name|ATA_UDMA2
+argument_list|)
+expr_stmt|;
+name|mode
+operator|=
 name|ata_check_80pin
 argument_list|(
 name|atadev
