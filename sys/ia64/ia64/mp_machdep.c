@@ -1316,13 +1316,13 @@ name|cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ia64_mf
+argument_list|()
+expr_stmt|;
 operator|*
 name|pipi
 operator|=
 name|vector
-expr_stmt|;
-name|ia64_mf_a
-argument_list|()
 expr_stmt|;
 block|}
 end_function
