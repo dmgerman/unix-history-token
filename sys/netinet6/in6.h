@@ -2063,7 +2063,7 @@ name|sockaddr_in6
 name|ip6m_addr
 decl_stmt|;
 comment|/* or sockaddr_storage? */
-name|u_int32_t
+name|uint32_t
 name|ip6m_mtu
 decl_stmt|;
 block|}
