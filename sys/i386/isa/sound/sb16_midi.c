@@ -761,11 +761,23 @@ return|return
 name|mem_start
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|printk
 argument_list|(
-literal|"<SoundBlaster MPU-401>"
+literal|"sbmidi0:<SoundBlaster 16 MPU-401>"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printk
+argument_list|(
+literal|"<SoundBlaster 16 MPU-401>"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|std_midi_synth
 operator|.
 name|midi_dev
