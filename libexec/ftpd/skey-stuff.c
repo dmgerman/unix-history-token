@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Author: Wietse Venema, Eindhoven University of Technology.   *  *	$Id$  */
+comment|/* Author: Wietse Venema, Eindhoven University of Technology.   *  *	$Id: skey-stuff.c,v 1.3 1996/09/22 21:53:34 wosch Exp $  */
 end_comment
 
 begin_include
@@ -35,6 +35,8 @@ parameter_list|,
 name|pwd
 parameter_list|,
 name|pwok
+parameter_list|,
+name|sflag
 parameter_list|)
 name|char
 modifier|*
@@ -48,6 +50,10 @@ decl_stmt|;
 name|int
 name|pwok
 decl_stmt|;
+name|int
+modifier|*
+name|sflag
+decl_stmt|;
 block|{
 specifier|static
 name|char
@@ -60,27 +66,32 @@ name|struct
 name|skey
 name|skey
 decl_stmt|;
-comment|/* Display s/key challenge where appropriate. */
-if|if
-condition|(
+name|char
+modifier|*
+name|username
+init|=
 name|pwd
-operator|==
-literal|0
-operator|||
+condition|?
+name|pwd
+operator|->
+name|pw_name
+else|:
+literal|":"
+decl_stmt|;
+comment|/* Display s/key challenge where appropriate. */
+operator|*
+name|sflag
+operator|=
 name|skeychallenge
 argument_list|(
 operator|&
 name|skey
 argument_list|,
-name|pwd
-operator|->
-name|pw_name
+name|username
 argument_list|,
 name|buf
 argument_list|)
-operator|!=
-literal|0
-condition|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf
