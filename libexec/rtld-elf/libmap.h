@@ -7,7 +7,8 @@ begin_function_decl
 name|int
 name|lm_init
 parameter_list|(
-name|void
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
