@@ -27,26 +27,11 @@ directive|include
 file|<machine/frame.h>
 end_include
 
-begin_comment
-comment|/*  * XXX: MAXWIN should probably be done dynamically, pcb_wscratch is therefore  * at the end of the pcb.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|MAXWIN
 value|8
-end_define
-
-begin_comment
-comment|/* Used in pcb_fcwp to mark the wscratch stack as empty. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCB_CWP_EMPTY
-value|0xff
 end_define
 
 begin_comment
@@ -60,9 +45,6 @@ block|{
 name|struct
 name|fpstate
 name|pcb_fpstate
-decl_stmt|;
-name|u_long
-name|pcb_cwp
 decl_stmt|;
 name|u_long
 name|pcb_fp
