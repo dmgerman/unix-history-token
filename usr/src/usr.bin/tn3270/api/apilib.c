@@ -194,6 +194,12 @@ argument_list|(
 name|ourseg
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
 name|int86x
 argument_list|(
 name|API_INTERRUPT_NUMBER
@@ -205,6 +211,25 @@ argument_list|,
 name|sregs
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(MSDOS) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+name|api_exch_api
+argument_list|(
+name|regs
+argument_list|,
+name|sregs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(unix) */
 if|if
 condition|(
 name|regs
@@ -1408,6 +1433,12 @@ name|struct
 name|SREGS
 name|sregs
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
 name|regs
 operator|.
 name|h
@@ -1462,6 +1493,33 @@ literal|0
 return|;
 comment|/* Interrupt not being handled */
 block|}
+endif|#
+directive|endif
+endif|defined(MSDOS)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+if|if
+condition|(
+name|api_open_api
+argument_list|(
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* defined(unix) */
 name|gate_sessmgr
 operator|=
 name|api_name_resolve
