@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.15 1999/04/07 23:01:43 gibbs Exp $  */
+comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.16 1999/04/18 15:50:32 peter Exp $  */
 end_comment
 
 begin_comment
@@ -3647,6 +3647,9 @@ name|cam_devq
 modifier|*
 name|devq
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * We reserve 1 ccb for error recovery, so don't 	 * tell the XPT about it. 	 */
 if|if
 condition|(
@@ -3822,6 +3825,8 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Setup interrupt. 	 */
+name|error
+operator|=
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -3840,6 +3845,26 @@ operator|->
 name|ih
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"bus_setup_intr() failed: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
