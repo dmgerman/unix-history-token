@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$Id: xdr.c,v 1.4 1996/12/30 14:07:07 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
