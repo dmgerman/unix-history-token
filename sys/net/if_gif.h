@@ -131,7 +131,7 @@ modifier|*
 name|r_unit
 decl_stmt|;
 comment|/* resource allocated for this unit */
-name|TAILQ_ENTRY
+name|LIST_ENTRY
 argument_list|(
 argument|gif_softc
 argument_list|)

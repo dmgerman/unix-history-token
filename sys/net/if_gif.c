@@ -340,21 +340,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|TAILQ_HEAD
+name|LIST_HEAD
 argument_list|(
-argument|gifhead
 argument_list|,
 argument|gif_softc
 argument_list|)
 end_macro
 
 begin_expr_stmt
-name|gifs
-operator|=
-name|TAILQ_HEAD_INITIALIZER
-argument_list|(
-name|gifs
-argument_list|)
+name|gif_softc_list
 expr_stmt|;
 end_expr_stmt
 
@@ -1141,10 +1135,10 @@ name|u_int
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|gifs
+name|gif_softc_list
 argument_list|,
 name|sc
 argument_list|,
@@ -1188,11 +1182,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|TAILQ_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|gifs
-argument_list|,
 name|sc
 argument_list|,
 name|gif_link
@@ -1399,6 +1390,12 @@ name|err
 operator|)
 return|;
 block|}
+name|LIST_INIT
+argument_list|(
+operator|&
+name|gif_softc_list
+argument_list|)
+expr_stmt|;
 name|if_clone_attach
 argument_list|(
 operator|&
@@ -1427,19 +1424,19 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|LIST_EMPTY
 argument_list|(
 operator|&
-name|gifs
+name|gif_softc_list
 argument_list|)
 condition|)
 name|gif_clone_destroy
 argument_list|(
 operator|&
-name|TAILQ_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
-name|gifs
+name|gif_softc_list
 argument_list|)
 operator|->
 name|gif_if
