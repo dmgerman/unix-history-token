@@ -118,7 +118,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Compatibility  */
+comment|/*  * Compatibility.  */
 end_comment
 
 begin_typedef
@@ -211,13 +211,20 @@ typedef|));
 end_typedef
 
 begin_comment
-comment|/*  * additional signal action values, used only temporarily/internally  * NOTE: SIG_HOLD was previously internal only, but has been moved to  *       sys/signal.h  */
+comment|/* additional signal action values, used only temporarily/internally */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIG_CATCH
+value|((__sighandler_t *)2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_HOLD
 value|((__sighandler_t *)3)
 end_define
 
@@ -627,6 +634,18 @@ end_comment
 
 begin_decl_stmt
 name|void
+name|check_sigacts
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|execsigs
 name|__P
 argument_list|(
@@ -817,32 +836,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|check_sigacts
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|__sig_ffs
-name|__P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-name|set
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|__cursig
 name|__P
@@ -879,29 +872,6 @@ name|retmask
 operator|,
 name|u_long
 name|code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|md_sigreturn
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
-name|void
-operator|*
-name|sigcntxp
-operator|,
-name|sigset_t
-operator|*
-name|mask
 operator|)
 argument_list|)
 decl_stmt|;

@@ -528,13 +528,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIG_HOLD
-value|((__sighandler_t *)2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SIG_ERR
 value|((__sighandler_t *)-1)
 end_define
@@ -582,7 +575,7 @@ name|int
 name|si_errno
 decl_stmt|;
 comment|/* errno association */
-comment|/*  	 * Cause of signal, one of the SI_ macros or signal-specific 	 * values, i.e. one of the FPE_... values for SIGFPE. This 	 * value is equivalent to the second argument to an old-style 	 * FreeBSD signal handler. 	 */
+comment|/* 	 * Cause of signal, one of the SI_ macros or signal-specific 	 * values, i.e. one of the FPE_... values for SIGFPE. This 	 * value is equivalent to the second argument to an old-style 	 * FreeBSD signal handler. 	 */
 name|int
 name|si_code
 decl_stmt|;
@@ -653,7 +646,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * XXX - there are some nasty dependencies.  * Now that sigset_t has been defined we can  * include the MD structures.  */
+comment|/*  * XXX - there are some nasty dependencies on include file order. Now that  * sigset_t has been defined we can include the MD header.  */
 end_comment
 
 begin_include
