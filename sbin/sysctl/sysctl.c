@@ -271,7 +271,7 @@ name|void
 modifier|*
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2016,7 +2016,7 @@ modifier|*
 modifier|*
 name|val
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|size
 parameter_list|)
