@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mv.c	5.9 (Berkeley) %G%"
+literal|"@(#)mv.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,19 +79,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -105,13 +117,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -164,7 +169,7 @@ name|endp
 decl_stmt|;
 name|struct
 name|stat
-name|sbuf
+name|sb
 decl_stmt|;
 name|int
 name|ch
@@ -207,15 +212,17 @@ block|{
 case|case
 literal|'i'
 case|:
-operator|++
 name|iflg
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
 literal|'f'
 case|:
-operator|++
 name|fflg
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -252,7 +259,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* 	 * if stat fails on target, it doesn't exist (or can't be accessed 	 * by the user, doesn't matter which) try the move.  If target exists, 	 * and isn't a directory, try the move.  More than 2 arguments is an 	 * error. 	 */
+comment|/* 	 * If the stat on the target fails or the target isn't a directory, 	 * try the move.  More than 2 arguments is an error in this case. 	 */
 if|if
 condition|(
 name|stat
@@ -265,13 +272,13 @@ literal|1
 index|]
 argument_list|,
 operator|&
-name|sbuf
+name|sb
 argument_list|)
 operator|||
 operator|!
 name|S_ISDIR
 argument_list|(
-name|sbuf
+name|sb
 operator|.
 name|st_mode
 argument_list|)
@@ -303,7 +310,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* got a directory, move each file into it */
+comment|/* It's a directory, move each file into it. */
 operator|(
 name|void
 operator|)
@@ -467,14 +474,14 @@ begin_block
 block|{
 name|struct
 name|stat
-name|sbuf
+name|sb
 decl_stmt|;
 name|int
 name|ask
 decl_stmt|,
 name|ch
 decl_stmt|;
-comment|/* 	 * Check access.  If interactive and file exists ask user if it 	 * should be replaced.  Otherwise if file exists but isn't writable 	 * make sure the user wants to clobber it. 	 */
+comment|/* 	 * Check access.  If interactive and file exists, ask user if it 	 * should be replaced.  Otherwise if file exists but isn't writable 	 * make sure the user wants to clobber it. 	 */
 if|if
 condition|(
 operator|!
@@ -531,7 +538,7 @@ argument_list|(
 name|to
 argument_list|,
 operator|&
-name|sbuf
+name|sb
 argument_list|)
 condition|)
 block|{
@@ -544,7 +551,7 @@ name|stderr
 argument_list|,
 literal|"override mode %o on %s? "
 argument_list|,
-name|sbuf
+name|sb
 operator|.
 name|st_mode
 operator|&
@@ -646,7 +653,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * if rename fails, and it's a regular file, do the copy 	 * internally; otherwise, use cp and rm. 	 */
+comment|/* 	 * If rename fails, and it's a regular file, do the copy internally; 	 * otherwise, use cp and rm. 	 */
 if|if
 condition|(
 name|stat
@@ -654,7 +661,7 @@ argument_list|(
 name|from
 argument_list|,
 operator|&
-name|sbuf
+name|sb
 argument_list|)
 condition|)
 block|{
@@ -685,7 +692,7 @@ return|return
 operator|(
 name|S_ISREG
 argument_list|(
-name|sbuf
+name|sb
 operator|.
 name|st_mode
 argument_list|)
@@ -697,7 +704,7 @@ argument_list|,
 name|to
 argument_list|,
 operator|&
-name|sbuf
+name|sb
 argument_list|)
 else|:
 name|copy
@@ -766,11 +773,6 @@ name|from_fd
 decl_stmt|,
 name|to_fd
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
@@ -789,21 +791,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mv: %s: %s\n"
-argument_list|,
 name|from
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -821,11 +811,11 @@ name|open
 argument_list|(
 name|to
 argument_list|,
-name|O_WRONLY
-operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
+operator||
+name|O_WRONLY
 argument_list|,
 name|sbp
 operator|->
@@ -836,21 +826,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mv: %s: %s\n"
-argument_list|,
 name|to
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -887,16 +865,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mv: %s: out of memory.\n"
-argument_list|,
-name|from
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -936,21 +907,9 @@ operator|!=
 name|nread
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mv: %s: %s\n"
-argument_list|,
 name|to
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -964,21 +923,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mv: %s: %s\n"
-argument_list|,
 name|from
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|err
@@ -1171,15 +1118,8 @@ argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mv: can't exec %s.\n"
-argument_list|,
 name|_PATH_CP
 argument_list|)
 expr_stmt|;
@@ -1242,15 +1182,8 @@ argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mv: can't exec %s.\n"
-argument_list|,
 name|_PATH_RM
 argument_list|)
 expr_stmt|;
@@ -1287,6 +1220,62 @@ name|status
 argument_list|)
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|error
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|s
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mv: %s: %s\n"
+argument_list|,
+name|s
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mv: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
