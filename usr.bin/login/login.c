@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.32 1998/02/13 21:02:53 ache Exp $"
+literal|"$Id: login.c,v 1.33 1998/04/30 16:48:20 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,7 +721,7 @@ decl_stmt|;
 name|uid_t
 name|uid
 decl_stmt|,
-name|eiud
+name|euid
 decl_stmt|;
 name|char
 modifier|*
