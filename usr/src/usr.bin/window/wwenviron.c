@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwenviron.c	3.2 83/08/18"
+literal|"@(#)wwenviron.c	3.3 83/08/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,10 @@ modifier|*
 name|environ
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Set up the environment of this process to run in window 'wp'.  * Can't report errors in any intelligent way, so don't.  */
+end_comment
 
 begin_expr_stmt
 name|wwenviron
@@ -143,11 +147,26 @@ operator|=
 name|open
 argument_list|(
 literal|"/dev/tty"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"/dev/tty"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|i
@@ -163,7 +182,17 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"ioctl(TIOCNOTTY)"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 operator|(
 name|void
 operator|)
@@ -172,9 +201,8 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|open
 argument_list|(
 name|wp
@@ -183,7 +211,19 @@ name|ww_ttyname
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|wp
+operator|->
+name|ww_ttyname
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 for|for
 control|(
 name|i
@@ -236,7 +276,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* can't report error */
 if|if
 condition|(
 operator|(
@@ -254,7 +293,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* can't report error */
 for|for
 control|(
 name|p
