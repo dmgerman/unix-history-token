@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: kftxxreg.h,v 1.4 1997/06/04 01:47:15 cgd Exp $ */
+comment|/* $NetBSD: kftxxreg.h,v 1.5 1998/07/08 00:45:08 mjacob Exp $ */
 end_comment
 
 begin_comment
