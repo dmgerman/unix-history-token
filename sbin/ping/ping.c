@@ -2522,7 +2522,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" time=%g ms"
+literal|" time=%.3f ms"
 argument_list|,
 name|triptime
 argument_list|)
@@ -3565,7 +3565,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"round-trip min/avg/max = %g/%g/%g ms\n"
+literal|"round-trip min/avg/max = %.3f/%.3f/%.3f ms\n"
 argument_list|,
 name|tmin
 argument_list|,
