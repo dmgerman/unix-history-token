@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)param.h	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)param.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -21,11 +21,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ALIGNBYTES
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((u_int)(p) + 3)&~ 3)
+value|(((u_int)(p) + ALIGNBYTES)&~ ALIGNBYTES)
 end_define
 
 begin_define
