@@ -7954,7 +7954,7 @@ operator|(
 name|vp
 operator|->
 name|v_iflag
-operator||
+operator|&
 name|VI_ONWORKLST
 operator|)
 operator|!=
