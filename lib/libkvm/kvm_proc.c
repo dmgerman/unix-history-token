@@ -4786,11 +4786,6 @@ argument_list|,
 name|procfile
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
