@@ -28,6 +28,16 @@ literal|"@(#)getusershell.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -58,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -145,7 +155,9 @@ begin_function
 name|char
 modifier|*
 name|getusershell
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -187,7 +199,9 @@ end_function
 begin_function
 name|void
 name|endusershell
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -229,7 +243,9 @@ end_function
 begin_function
 name|void
 name|setusershell
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|curshell
 operator|=
@@ -247,7 +263,6 @@ modifier|*
 name|initshells
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -256,7 +271,6 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|fp
