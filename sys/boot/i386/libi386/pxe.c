@@ -1609,8 +1609,13 @@ argument_list|(
 name|PXENV_UNDI_SHUTDOWN
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PXE_DEBUG
 if|if
 condition|(
+name|debug
+operator|&&
 name|undi_shutdown_p
 operator|->
 name|Status
@@ -1626,13 +1631,20 @@ operator|->
 name|Status
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pxe_call
 argument_list|(
 name|PXENV_UNLOAD_STACK
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PXE_DEBUG
 if|if
 condition|(
+name|debug
+operator|&&
 name|unload_stack_p
 operator|->
 name|Status
@@ -1648,6 +1660,8 @@ operator|->
 name|Status
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
