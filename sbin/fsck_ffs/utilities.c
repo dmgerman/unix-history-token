@@ -281,7 +281,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Can't resolve %s to character special device"
+literal|"Can't resolve %s to character special device.\n"
 argument_list|,
 name|origname
 argument_list|)
