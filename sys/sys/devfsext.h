@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.5 1995/12/09 09:11:25 julian Exp $  */
+comment|/*  * $Id: devfsext.h,v 1.6 1996/01/21 09:03:04 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,39 @@ name|gid
 parameter_list|,
 name|int
 name|perms
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|devfs_add_devswf
+parameter_list|(
+name|void
+modifier|*
+name|devsw
+parameter_list|,
+name|int
+name|minor
+parameter_list|,
+name|int
+name|chrblk
+parameter_list|,
+name|uid_t
+name|uid
+parameter_list|,
+name|gid_t
+name|gid
+parameter_list|,
+name|int
+name|perms
+parameter_list|,
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
