@@ -612,13 +612,11 @@ name|IPSEC
 comment|/* check AH/ESP integrity. */
 if|if
 condition|(
-name|ipsec4_in_reject_so
+name|ipsec4_in_reject
 argument_list|(
 name|n
 argument_list|,
 name|last
-operator|->
-name|inp_socket
 argument_list|)
 condition|)
 block|{

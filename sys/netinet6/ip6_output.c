@@ -784,35 +784,12 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|socket
-modifier|*
-name|so
-decl_stmt|;
-name|struct
 name|secpolicy
 modifier|*
 name|sp
 init|=
 name|NULL
 decl_stmt|;
-comment|/* for AH processing. stupid to have "socket" variable in IP layer... */
-name|so
-operator|=
-name|ipsec_getsocket
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ipsec_setsocket
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* IPSEC */
@@ -929,7 +906,7 @@ name|IPSEC
 comment|/* get a security policy for this packet */
 if|if
 condition|(
-name|so
+name|inp
 operator|==
 name|NULL
 condition|)
@@ -950,13 +927,13 @@ expr_stmt|;
 else|else
 name|sp
 operator|=
-name|ipsec6_getpolicybysock
+name|ipsec6_getpolicybypcb
 argument_list|(
 name|m
 argument_list|,
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
-name|so
+name|inp
 argument_list|,
 operator|&
 name|error

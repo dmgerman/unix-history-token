@@ -9627,23 +9627,6 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IPSEC
-comment|/* Don't lookup socket */
-operator|(
-name|void
-operator|)
-name|ipsec_setsocket
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPSEC */
-ifdef|#
-directive|ifdef
 name|COMPAT_RFC1885
 name|ip6_output
 argument_list|(
@@ -12339,23 +12322,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* send the packet to outside... */
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* Don't lookup socket */
-operator|(
-name|void
-operator|)
-name|ipsec_setsocket
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPSEC */
 name|ip6_output
 argument_list|(
 name|m
