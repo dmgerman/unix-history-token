@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.4 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,18 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
 end_include
 
 begin_include
@@ -777,6 +789,10 @@ name|tt
 argument_list|,
 name|TIOCNOTTY
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -860,10 +876,23 @@ argument_list|,
 operator|&
 name|readable
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|)
@@ -921,9 +950,7 @@ goto|goto
 name|found
 goto|;
 name|abort
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|found
 label|:
@@ -962,8 +989,17 @@ name|accept
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1011,6 +1047,9 @@ name|sep
 operator|->
 name|se_fd
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigblock
 argument_list|(
 name|sigmask
@@ -1284,6 +1323,9 @@ name|void
 operator|)
 name|setgid
 argument_list|(
+operator|(
+name|gid_t
+operator|)
 name|pwd
 operator|->
 name|pw_gid
@@ -1305,6 +1347,9 @@ name|void
 operator|)
 name|setuid
 argument_list|(
+operator|(
+name|uid_t
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -1437,6 +1482,11 @@ name|status
 argument_list|,
 name|WNOHANG
 argument_list|,
+operator|(
+expr|struct
+name|rusage
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1712,6 +1762,23 @@ if|if
 condition|(
 name|cp
 operator|->
+name|se_user
+condition|)
+name|SWAP
+argument_list|(
+name|sep
+operator|->
+name|se_user
+argument_list|,
+name|cp
+operator|->
+name|se_user
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
 name|se_server
 condition|)
 name|SWAP
@@ -1885,7 +1952,7 @@ parameter_list|,
 name|opt
 parameter_list|)
 define|\
-value|setsockopt(fd, SOL_SOCKET, opt,&on, sizeof (on))
+value|setsockopt(fd, SOL_SOCKET, opt, (char *)&on, sizeof (on))
 if|if
 condition|(
 name|strcmp
@@ -1965,8 +2032,6 @@ name|sep
 operator|->
 name|se_ctrladdr
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -2315,7 +2380,7 @@ name|fseek
 argument_list|(
 name|fconfig
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 name|L_SET
 argument_list|)
@@ -2821,6 +2886,19 @@ if|if
 condition|(
 name|cp
 operator|->
+name|se_user
+condition|)
+name|free
+argument_list|(
+name|cp
+operator|->
+name|se_user
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
 name|se_server
 condition|)
 name|free
@@ -3048,7 +3126,7 @@ argument_list|(
 name|line
 argument_list|)
 argument_list|,
-name|fconfig
+name|fd
 argument_list|)
 operator|==
 name|NULL
@@ -3118,12 +3196,17 @@ name|new
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|cp
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4170,12 +4253,6 @@ begin_comment
 comment|/*  * Return a machine readable date and time, in the form of the  * number of seconds since midnight, Jan 1, 1900.  Since gettimeofday  * returns the number of seconds since midnight, Jan 1, 1970,  * we must add 2208988800 seconds to this figure to make up for  * some seventy years Bell Labs was asleep.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
 begin_function
 name|long
 name|machtime
@@ -4192,6 +4269,11 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -4205,7 +4287,11 @@ argument_list|,
 literal|"Unable to get time of day\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0L
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -4337,6 +4423,10 @@ name|recvfrom
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|result
 argument_list|,
@@ -4469,6 +4559,9 @@ name|clock
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|s
