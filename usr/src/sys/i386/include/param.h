@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -421,6 +421,90 @@ parameter_list|(
 name|bn
 parameter_list|)
 value|((bn) / (BLKDEV_IOSIZE/DEV_BSIZE))
+end_define
+
+begin_comment
+comment|/*  * Mach derived conversion macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|i386_round_pdr
+parameter_list|(
+name|x
+parameter_list|)
+value|((((unsigned)(x)) + NBPDR - 1)& ~(NBPDR-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|i386_trunc_pdr
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned)(x)& ~(NBPDR-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|i386_round_page
+parameter_list|(
+name|x
+parameter_list|)
+value|((((unsigned)(x)) + NBPG - 1)& ~(NBPG-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|i386_trunc_page
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned)(x)& ~(NBPG-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|i386_btod
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned)(x)>> PDRSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|i386_dtob
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned)(x)<< PDRSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|i386_btop
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned)(x)>> PGSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|i386_ptob
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned)(x)<< PGSHIFT)
 end_define
 
 begin_ifdef
