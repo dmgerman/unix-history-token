@@ -280,9 +280,12 @@ begin_comment
 comment|/* Define if you have the insque function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_INSQUE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_INSQUE
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the memchr function.  */
