@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.18 $"
+empty|#ident "$Revision: 1.21 $"
 end_empty
 
 begin_include
@@ -105,7 +105,7 @@ name|ifp
 decl_stmt|;
 comment|/* usually output interface */
 name|struct
-name|auth_key
+name|auth
 modifier|*
 name|a
 decl_stmt|;
@@ -613,13 +613,26 @@ name|INADDR_RIP_GROUP
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
 case|case
 name|NO_OUT_MULTICAST
 case|:
 case|case
 name|NO_OUT_RIPV2
 case|:
-break|break;
+default|default:
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|abort
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|trace_rip
 argument_list|(
@@ -745,12 +758,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the first key that has not expired, but settle for  * the last key if they have all expired.  * If no key is ready yet, give up.  */
+comment|/* Find the first key for a packet to send.  * Try for a key that is eligable and has not expired, but settle for  * the last key if they have all expired.  * If no key is ready yet, give up.  */
 end_comment
 
 begin_function
 name|struct
-name|auth_key
+name|auth
 modifier|*
 name|find_auth
 parameter_list|(
@@ -761,7 +774,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|auth_key
+name|auth
 modifier|*
 name|ap
 decl_stmt|,
@@ -776,14 +789,6 @@ condition|(
 name|ifp
 operator|==
 literal|0
-operator|||
-name|ifp
-operator|->
-name|int_auth
-operator|.
-name|type
-operator|==
-name|RIP_AUTH_NONE
 condition|)
 return|return
 literal|0
@@ -797,8 +802,6 @@ operator|=
 name|ifp
 operator|->
 name|int_auth
-operator|.
-name|keys
 expr_stmt|;
 for|for
 control|(
@@ -817,6 +820,17 @@ name|ap
 operator|++
 control|)
 block|{
+comment|/* stop looking after the last key */
+if|if
+condition|(
+name|ap
+operator|->
+name|type
+operator|==
+name|RIP_AUTH_NONE
+condition|)
+break|break;
+comment|/* ignore keys that are not ready yet */
 if|if
 condition|(
 operator|(
@@ -825,7 +839,7 @@ operator|)
 name|ap
 operator|->
 name|start
-operator|<=
+operator|>
 operator|(
 name|u_long
 operator|)
@@ -833,7 +847,7 @@ name|clk
 operator|.
 name|tv_sec
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -842,7 +856,7 @@ operator|)
 name|ap
 operator|->
 name|end
-operator|>=
+operator|<
 operator|(
 name|u_long
 operator|)
@@ -850,14 +864,59 @@ name|clk
 operator|.
 name|tv_sec
 condition|)
-return|return
+block|{
+comment|/* note best expired password as a fall-back */
+if|if
+condition|(
+name|res
+operator|==
+literal|0
+operator|||
+operator|(
+name|u_long
+operator|)
 name|ap
-return|;
+operator|->
+name|end
+operator|>
+operator|(
+name|u_long
+operator|)
+name|res
+operator|->
+name|end
+condition|)
 name|res
 operator|=
 name|ap
 expr_stmt|;
+continue|continue;
 block|}
+comment|/* note key with the best future */
+if|if
+condition|(
+name|res
+operator|==
+literal|0
+operator|||
+operator|(
+name|u_long
+operator|)
+name|res
+operator|->
+name|end
+operator|<
+operator|(
+name|u_long
+operator|)
+name|ap
+operator|->
+name|end
+condition|)
+name|res
+operator|=
+name|ap
+expr_stmt|;
 block|}
 return|return
 name|res
@@ -875,14 +934,9 @@ modifier|*
 name|wb
 parameter_list|,
 name|struct
-name|auth_key
+name|auth
 modifier|*
 name|ap
-parameter_list|,
-name|struct
-name|interface
-modifier|*
-name|ifp
 parameter_list|)
 block|{
 name|struct
@@ -946,10 +1000,8 @@ name|n
 expr_stmt|;
 if|if
 condition|(
-name|ifp
+name|ap
 operator|->
-name|int_auth
-operator|.
 name|type
 operator|==
 name|RIP_AUTH_PW
@@ -998,10 +1050,8 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ifp
+name|ap
 operator|->
-name|int_auth
-operator|.
 name|type
 operator|==
 name|RIP_AUTH_MD5
@@ -1078,7 +1128,7 @@ modifier|*
 name|wb
 parameter_list|,
 name|struct
-name|auth_key
+name|auth
 modifier|*
 name|ap
 parameter_list|)
@@ -1280,10 +1330,14 @@ if|if
 condition|(
 name|ws
 operator|.
-name|ifp
-operator|->
-name|int_auth
+name|a
+operator|!=
+literal|0
+operator|&&
+name|ws
 operator|.
+name|a
+operator|->
 name|type
 operator|==
 name|RIP_AUTH_MD5
@@ -1366,10 +1420,6 @@ argument_list|,
 name|ws
 operator|.
 name|a
-argument_list|,
-name|ws
-operator|.
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1401,6 +1451,8 @@ decl_stmt|,
 name|dst_h
 decl_stmt|,
 name|ddst_h
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ws_buf
@@ -2234,7 +2286,7 @@ operator||=
 name|AGS_SUPPRESS
 expr_stmt|;
 block|}
-comment|/* Do not send a route back to where it came from, except in 	 * response to a query.  This is "split-horizon".  That means not 	 * advertising back to the same network	and so via the same interface. 	 * 	 * We want to suppress routes that might have been fragmented 	 * from this route by a RIPv1 router and sent back to us, and so we 	 * cannot forget this route here.  Let the split-horizon route 	 * aggregate (suppress) the fragmented routes and then itself be 	 * forgotten. 	 * 	 * Include the routes for both ends of point-to-point interfaces 	 * since the other side presumably knows them as well as we do. 	 */
+comment|/* Do not send a route back to where it came from, except in 	 * response to a query.  This is "split-horizon".  That means not 	 * advertising back to the same network	and so via the same interface. 	 * 	 * We want to suppress routes that might have been fragmented 	 * from this route by a RIPv1 router and sent back to us, and so we 	 * cannot forget this route here.  Let the split-horizon route 	 * aggregate (suppress) the fragmented routes and then itself be 	 * forgotten. 	 * 	 * Include the routes for both ends of point-to-point interfaces 	 * among those suppressed by split-horizon, since the other side 	 * should knows them as well as we do. 	 */
 if|if
 condition|(
 name|RT
@@ -2288,11 +2340,7 @@ name|IFF_POINTOPOINT
 operator|)
 condition|)
 block|{
-comment|/* Poison-reverse the route instead of only not advertising it 		 * it is recently changed from some other route. 		 * In almost all cases, if there is no spare for the route 		 * then it is either old or a brand new route, and if it 		 * is brand new, there is no need for poison-reverse. 		 */
-name|metric
-operator|=
-name|HOPCNT_INFINITY
-expr_stmt|;
+comment|/* If we do not mark the route with AGS_SPLIT_HZ here, 		 * it will be poisoned-reverse, or advertised back toward 		 * its source with an infinite metric.  If we have recently 		 * advertised the route with a better metric than we now 		 * have, then we should poison-reverse the route before 		 * suppressing it for split-horizon. 		 * 		 * In almost all cases, if there is no spare for the route 		 * then it is either old and dead or a brand new route. 		 * If it is brand new, there is no need for poison-reverse. 		 * If it is old and dead, it is already poisoned. 		 */
 if|if
 condition|(
 name|RT
@@ -2300,6 +2348,12 @@ operator|->
 name|rt_poison_time
 operator|<
 name|now_expire
+operator|||
+name|RT
+operator|->
+name|rt_poison_metric
+operator|>=
+name|metric
 operator|||
 name|RT
 operator|->
@@ -2327,6 +2381,10 @@ name|AGS_SUPPRESS
 operator|)
 expr_stmt|;
 block|}
+name|metric
+operator|=
+name|HOPCNT_INFINITY
+expr_stmt|;
 block|}
 comment|/* Adjust the outgoing metric by the cost of the link. 	 */
 name|pref
@@ -2993,19 +3051,19 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|passwd_ok
+operator|&&
 name|ws
 operator|.
 name|a
 operator|!=
 literal|0
 operator|&&
-operator|!
-name|passwd_ok
-operator|&&
-name|ifp
-operator|->
-name|int_auth
+name|ws
 operator|.
+name|a
+operator|->
 name|type
 operator|==
 name|RIP_AUTH_PW
@@ -3024,8 +3082,6 @@ argument_list|,
 name|ws
 operator|.
 name|a
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 name|clr_ws_buf
@@ -3036,8 +3092,6 @@ argument_list|,
 name|ws
 operator|.
 name|a
-argument_list|,
-name|ifp
 argument_list|)
 expr_stmt|;
 comment|/*  Fake a default route if asked and if there is not already 	 * a better, real default route. 	 */

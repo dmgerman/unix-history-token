@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.18 $"
+empty|#ident "$Revision: 1.21 $"
 end_empty
 
 begin_include
@@ -937,7 +937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find an interface from which the specified address  * should have come from.  Used for figuring out which  * interface a packet came in on -- for tracing.  */
+comment|/* Find an interface from which the specified address  * should have come from.  Used for figuring out which  * interface a packet came in on.  */
 end_comment
 
 begin_function
@@ -958,10 +958,21 @@ decl_stmt|,
 modifier|*
 name|maybe
 decl_stmt|;
+specifier|static
+name|struct
+name|timeval
+name|retried
+decl_stmt|;
 name|maybe
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 for|for
 control|(
 name|ifp
@@ -1013,7 +1024,7 @@ condition|)
 return|return
 name|ifp
 return|;
-comment|/* Look for the longest approximate match. 			 */
+comment|/* Look for the longest approximate match. 				 */
 if|if
 condition|(
 name|on_net
@@ -1049,9 +1060,42 @@ name|ifp
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|maybe
+operator|!=
+literal|0
+operator|||
+operator|(
+name|retried
+operator|.
+name|tv_sec
+operator|==
+name|now
+operator|.
+name|tv_sec
+operator|&&
+name|retried
+operator|.
+name|tv_usec
+operator|==
+name|now
+operator|.
+name|tv_usec
+operator|)
+condition|)
 return|return
 name|maybe
 return|;
+comment|/* If there is no known interface, maybe there is a 		 * new interface.  So just once look for new interfaces. 		 */
+name|ifinit
+argument_list|()
+expr_stmt|;
+name|retried
+operator|=
+name|now
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1061,12 +1105,13 @@ end_comment
 
 begin_function
 name|naddr
+comment|/* host byte order */
 name|std_mask
 parameter_list|(
 name|naddr
 name|addr
 parameter_list|)
-comment|/* in network order */
+comment|/* network byte order */
 block|{
 name|NTOHL
 argument_list|(
@@ -1374,12 +1419,15 @@ parameter_list|(
 name|naddr
 name|addr
 parameter_list|,
+comment|/* IP address, so network byte order */
 name|naddr
 name|dstaddr
 parameter_list|,
+comment|/* ditto */
 name|naddr
 name|mask
 parameter_list|,
+comment|/* mask, so host byte order */
 name|int
 name|if_flags
 parameter_list|)
@@ -3066,6 +3114,12 @@ name|IS_CHECKED
 expr_stmt|;
 name|ifs0
 operator|.
+name|int_query_time
+operator|=
+name|NEVER
+expr_stmt|;
+name|ifs0
+operator|.
 name|int_act_time
 operator|=
 name|now
@@ -4666,29 +4720,108 @@ name|COMP_DUP
 expr_stmt|;
 name|msglog
 argument_list|(
-literal|"%s is duplicated by %s at %s to %s"
+literal|"%s (%s%s%s) is duplicated by"
+literal|" %s (%s%s%s)"
 argument_list|,
 name|ifs
 operator|.
 name|int_name
 argument_list|,
+name|addrname
+argument_list|(
+name|ifs
+operator|.
+name|int_addr
+argument_list|,
+name|ifs
+operator|.
+name|int_mask
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+operator|(
+operator|(
+name|ifs
+operator|.
+name|int_if_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+condition|?
+literal|"-->"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+operator|(
+name|ifs
+operator|.
+name|int_if_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+condition|?
+name|naddr_ntoa
+argument_list|(
+name|ifs
+operator|.
+name|int_dstaddr
+argument_list|)
+else|:
+literal|""
+operator|)
+argument_list|,
 name|ifp
 operator|->
 name|int_name
 argument_list|,
-name|naddr_ntoa
+name|addrname
 argument_list|(
 name|ifp
 operator|->
 name|int_addr
+argument_list|,
+name|ifp
+operator|->
+name|int_mask
+argument_list|,
+literal|1
 argument_list|)
 argument_list|,
+operator|(
+operator|(
+name|ifp
+operator|->
+name|int_if_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+condition|?
+literal|"-->"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+operator|(
+name|ifp
+operator|->
+name|int_if_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+condition|?
 name|naddr_ntoa
 argument_list|(
 name|ifp
 operator|->
 name|int_dstaddr
 argument_list|)
+else|:
+literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5873,7 +6006,7 @@ operator|(
 name|ifp
 operator|->
 name|int_state
-operator|&&
+operator|&
 name|IS_EXTERNAL
 operator|)
 operator|&&
