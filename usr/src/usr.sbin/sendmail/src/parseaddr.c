@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.55 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7538,23 +7538,17 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* **  DEQUOTE_INIT -- initialize dequote map ** **	This is a no-op. ** **	Parameters: **		map -- the internal map structure. **		mapname -- the name of the mapl. **		args -- arguments. ** **	Returns: **		TRUE. */
+comment|/* **  DEQUOTE_INIT -- initialize dequote map ** **	This is a no-op. ** **	Parameters: **		map -- the internal map structure. **		args -- arguments. ** **	Returns: **		TRUE. */
 name|bool
 name|dequote_init
 parameter_list|(
 name|map
-parameter_list|,
-name|mapname
 parameter_list|,
 name|args
 parameter_list|)
 name|MAP
 modifier|*
 name|map
-decl_stmt|;
-name|char
-modifier|*
-name|mapname
 decl_stmt|;
 name|char
 modifier|*

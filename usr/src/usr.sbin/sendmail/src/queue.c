@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.56 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.57 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.56 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.57 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,12 +63,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -84,22 +78,11 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXNAMLEN
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<dirent.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2291,7 +2274,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|d
 decl_stmt|;

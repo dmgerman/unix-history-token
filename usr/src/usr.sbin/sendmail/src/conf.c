@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.59 (Berkeley) %G%"
+literal|"@(#)conf.c	6.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -592,17 +592,11 @@ name|host_map_init
 parameter_list|(
 name|map
 parameter_list|,
-name|mapname
-parameter_list|,
 name|args
 parameter_list|)
 name|MAP
 modifier|*
 name|map
-decl_stmt|;
-name|char
-modifier|*
-name|mapname
 decl_stmt|;
 name|char
 modifier|*
@@ -1716,6 +1710,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* now do the guesses based on general OS type */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -3176,6 +3174,31 @@ parameter_list|()
 block|{
 ifdef|#
 directive|ifdef
+name|WIFEXITED
+specifier|auto
+name|int
+name|status
+decl_stmt|;
+while|while
+condition|(
+name|waitpid
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|status
+argument_list|,
+name|WNOHANG
+argument_list|)
+operator|>
+literal|0
+condition|)
+continue|continue;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
 name|WNOHANG
 name|union
 name|wait
@@ -3216,10 +3239,6 @@ while|while
 condition|(
 name|wait
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|status
 argument_list|)
@@ -3230,6 +3249,8 @@ continue|continue;
 endif|#
 directive|endif
 comment|/* WNOHANG */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SYSTEM5

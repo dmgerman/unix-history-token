@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -222,28 +222,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FORK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FORK
-value|vfork
-end_define
-
-begin_comment
-comment|/* function to call to fork mailer */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* **  Compilation options. ** **	#define these if they are available; comment them out otherwise. */
 end_comment
@@ -429,6 +407,39 @@ directive|define
 name|SYSTEM5
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IBM_AIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCKF
+value|1
+end_define
+
+begin_comment
+comment|/* use System V lockf instead of flock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORK
+value|fork
+end_define
+
+begin_comment
+comment|/* no vfork primitive available */
+end_comment
 
 begin_endif
 endif|#
@@ -1059,6 +1070,32 @@ directive|define
 name|TOBUFSIZE
 value|(1024 - 256)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* fork routine -- set above using #ifdef _osname_ or in Makefile */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FORK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FORK
+value|vfork
+end_define
+
+begin_comment
+comment|/* function to call to fork mailer */
+end_comment
 
 begin_endif
 endif|#

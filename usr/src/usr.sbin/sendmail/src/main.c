@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.64 (Berkeley) %G%"
+literal|"@(#)main.c	6.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1511,12 +1511,6 @@ name|struct
 name|utsname
 name|utsname
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|strchr
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd
