@@ -1867,10 +1867,16 @@ operator|->
 name|sc_ref
 argument_list|)
 expr_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
 name|g_gate_release
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|g_topology_lock
+argument_list|()
 expr_stmt|;
 block|}
 end_function
