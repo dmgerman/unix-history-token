@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: interactive.c,v 1.5 1998/07/28 06:20:08 charnier Exp $"
+literal|"$Id: interactive.c,v 1.6 1998/09/17 20:18:11 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1413,12 +1413,23 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|name
 argument_list|,
 name|curdir
+argument_list|,
+name|size
 argument_list|)
+expr_stmt|;
+name|name
+index|[
+name|size
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return;
 block|}
@@ -1562,7 +1573,7 @@ name|gl_pathc
 expr_stmt|;
 name|retnext
 label|:
-name|strcpy
+name|strncpy
 argument_list|(
 name|name
 argument_list|,
@@ -1582,7 +1593,18 @@ name|ap
 operator|->
 name|argcnt
 index|]
+argument_list|,
+name|size
 argument_list|)
+expr_stmt|;
+name|name
+index|[
+name|size
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
