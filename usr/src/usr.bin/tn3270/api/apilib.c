@@ -64,6 +64,7 @@ comment|/*  * Issue an API request, with reg structures supplied by the caller. 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|api_issue_regs
 parameter_list|(
@@ -80,6 +81,8 @@ parameter_list|,
 name|dx
 parameter_list|,
 name|parms
+parameter_list|,
+name|length
 parameter_list|,
 name|regs
 parameter_list|,
@@ -101,6 +104,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|parms
+decl_stmt|;
+name|int
+name|length
 decl_stmt|;
 name|union
 name|REGS
@@ -225,6 +231,10 @@ argument_list|(
 name|regs
 argument_list|,
 name|sregs
+argument_list|,
+name|parms
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 endif|#
@@ -268,6 +278,7 @@ comment|/*  * Issue an API request without requiring caller to supply  * registe
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|api_issue
 parameter_list|(
@@ -284,6 +295,8 @@ parameter_list|,
 name|dx
 parameter_list|,
 name|parms
+parameter_list|,
+name|length
 parameter_list|)
 name|int
 name|ah
@@ -302,6 +315,10 @@ name|char
 modifier|*
 name|parms
 decl_stmt|;
+name|int
+name|length
+decl_stmt|;
+comment|/* Length of parms */
 block|{
 name|union
 name|REGS
@@ -327,6 +344,8 @@ argument_list|,
 name|dx
 argument_list|,
 name|parms
+argument_list|,
+name|length
 argument_list|,
 operator|&
 name|regs
@@ -437,6 +456,9 @@ argument_list|,
 operator|&
 name|parms
 argument_list|,
+sizeof|sizeof
+name|parms
+argument_list|,
 operator|&
 name|regs
 argument_list|,
@@ -509,6 +531,10 @@ operator|(
 name|char
 operator|*
 operator|)
+name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
 name|parms
 argument_list|)
 operator|==
@@ -602,6 +628,10 @@ name|char
 operator|*
 operator|)
 name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
+name|parms
 argument_list|)
 operator|==
 operator|-
@@ -693,6 +723,10 @@ operator|(
 name|char
 operator|*
 operator|)
+name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
 name|parms
 argument_list|)
 operator|==
@@ -793,6 +827,10 @@ name|char
 operator|*
 operator|)
 name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
+name|parms
 argument_list|)
 operator|==
 operator|-
@@ -884,6 +922,10 @@ operator|(
 name|char
 operator|*
 operator|)
+name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
 name|parms
 argument_list|)
 operator|==
@@ -977,6 +1019,10 @@ name|char
 operator|*
 operator|)
 name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
+name|parms
 argument_list|)
 operator|==
 operator|-
@@ -1069,6 +1115,10 @@ name|char
 operator|*
 operator|)
 name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
+name|parms
 argument_list|)
 operator|==
 operator|-
@@ -1160,6 +1210,10 @@ operator|(
 name|char
 operator|*
 operator|)
+name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
 name|parms
 argument_list|)
 operator|==
@@ -1260,6 +1314,10 @@ name|char
 operator|*
 operator|)
 name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
+name|parms
 argument_list|)
 operator|==
 operator|-
@@ -1355,6 +1413,10 @@ operator|(
 name|char
 operator|*
 operator|)
+name|parms
+argument_list|,
+sizeof|sizeof
+expr|*
 name|parms
 argument_list|)
 operator|==
