@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.64	83/02/10	*/
+comment|/*	ip_input.c	1.65	83/02/23	*/
 end_comment
 
 begin_include
@@ -420,7 +420,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+block|{
+name|ipstat
+operator|.
+name|ips_toosmall
+operator|++
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
 name|ip
 operator|=
 name|mtod
@@ -464,7 +473,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+block|{
+name|ipstat
+operator|.
+name|ips_badhlen
+operator|++
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
 name|ip
 operator|=
 name|mtod
@@ -519,6 +537,24 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_len
+operator|<
+name|hlen
+condition|)
+block|{
+name|ipstat
+operator|.
+name|ips_badlen
+operator|++
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|ip
 operator|->
 name|ip_id
@@ -3043,7 +3079,7 @@ if|if
 condition|(
 name|mopt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m_freem
