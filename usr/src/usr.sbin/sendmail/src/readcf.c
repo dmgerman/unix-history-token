@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.12 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -858,6 +858,9 @@ case|:
 case|case
 name|MATCHNCLASS
 case|:
+case|case
+name|CANONHOST
+case|:
 name|nfuzzy
 operator|++
 expr_stmt|;
@@ -876,14 +879,6 @@ case|:
 name|botch
 operator|=
 literal|"$#"
-expr_stmt|;
-break|break;
-case|case
-name|CANONHOST
-case|:
-name|botch
-operator|=
-literal|"$@"
 expr_stmt|;
 break|break;
 case|case

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.19 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3093,6 +3093,11 @@ expr_stmt|;
 name|mlp
 operator|++
 expr_stmt|;
+break|break;
+case|case
+name|CANONHOST
+case|:
+comment|/* match zero tokens */
 continue|continue;
 block|}
 comment|/* 			**  We now have a variable length item.  It could 			**  be $+ or $* in which case no special checking 			**  is needed.  But a class match such as $=x must 			**  be verified. 			** 			**  As a speedup, if a variable length item is 			**  followed by a plain character token, we initially 			**  extend the match to the first such token we find. 			**  If the required character token cannot be found, 			**  we fail the match at this point. 			*/
