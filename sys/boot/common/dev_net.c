@@ -489,11 +489,13 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|SUPPORT_BOOTP
-end_define
+begin_comment
+comment|/* BOOTP SUPPORT IS BROKEN */
+end_comment
+
+begin_comment
+comment|/* #define SUPPORT_BOOTP */
+end_comment
 
 begin_comment
 comment|/*  * Get info for NFS boot: our IP address, our hostname,  * server IP address, and our root path on the server.  * There are two ways to do this:  The old, Sun way,  * and the more modern, BOOTP way. (RFC951, RFC1048)  *  * The default is to use the Sun bootparams RPC  * (because that is what the kernel will do).  * MD code can make try_bootp initialied data,  * which will override this common definition.  */
