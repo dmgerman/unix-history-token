@@ -112,6 +112,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|IFP2AC
+parameter_list|(
+name|IFP
+parameter_list|)
+value|((struct arpcom *)IFP)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFP2NG
 parameter_list|(
 name|ifp
@@ -1944,6 +1954,11 @@ name|node
 operator|->
 name|private
 decl_stmt|;
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
 comment|/* Make sure header is fully pulled up */
 if|if
 condition|(
@@ -2014,6 +2029,38 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+comment|/* drop in the MAC address */
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|(
+name|IFP2AC
+argument_list|(
+name|priv
+operator|->
+name|ifp
+argument_list|)
+operator|)
+operator|->
+name|ac_enaddr
+argument_list|,
+name|eh
+operator|->
+name|ether_shost
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
 comment|/* Send it on its way */
 name|NG_FREE_META
 argument_list|(
