@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.25 (Berkeley) %G%"
+literal|"@(#)man.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -619,11 +619,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|res
-operator|||
+operator|&&
+operator|!
 name|f_where
 condition|)
-continue|continue;
 operator|(
 name|void
 operator|)
@@ -635,11 +636,6 @@ literal|"man: no entry for %s in the manual.\n"
 argument_list|,
 operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
