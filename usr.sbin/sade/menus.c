@@ -1446,6 +1446,20 @@ literal|"tzsetup"
 block|}
 block|,
 block|{
+literal|" TTYs"
+block|,
+literal|"Configure system ttys."
+block|,
+name|NULL
+block|,
+name|configTTYs
+block|,
+name|NULL
+block|,
+literal|"ttys"
+block|}
+block|,
+block|{
 literal|" Upgrade"
 block|,
 literal|"Upgrade an existing system."
@@ -7810,6 +7824,20 @@ name|NULL
 block|,
 operator|&
 name|MenuStartup
+block|}
+block|,
+block|{
+literal|" TTYs"
+block|,
+literal|"Configure system ttys."
+block|,
+name|NULL
+block|,
+name|configTTYs
+block|,
+name|NULL
+block|,
+literal|"ttys"
 block|}
 block|,
 block|{

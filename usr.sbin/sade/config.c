@@ -4781,5 +4781,76 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|configTTYs
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|char
+name|cmd
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+comment|/* Simply prompt for confirmation, then edit away. */
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Configuration of system TTYs requires editing the /etc/ttys file.\n"
+literal|"Typical configuration activities might include enabling getty(8)\n"
+literal|"on the first serial port to allow login via serial console after\n"
+literal|"reboot, or to enable xdm.  The default ttys file enables normal\n"
+literal|"virtual consoles, and most sites will not need to perform manual\n"
+literal|"configuration.\n\n"
+literal|"To load /etc/ttys in the editor, select [Yes], otherwise, [No]."
+argument_list|)
+condition|)
+block|{     }
+else|else
+block|{
+name|sprintf
+argument_list|(
+name|cmd
+argument_list|,
+literal|"%s /etc/ttys"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_EDITOR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemExecute
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
 end_unit
 
