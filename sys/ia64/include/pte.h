@@ -528,7 +528,7 @@ struct|struct
 name|ia64_rr
 block|{
 name|u_int64_t
-name|rr_ig1
+name|rr_ve
 range|:
 literal|1
 decl_stmt|;
@@ -540,7 +540,7 @@ literal|1
 decl_stmt|;
 comment|/* bits 1..1 */
 name|u_int64_t
-name|rr_ig2
+name|rr_ps
 range|:
 literal|6
 decl_stmt|;
