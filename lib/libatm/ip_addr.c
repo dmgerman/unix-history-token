@@ -273,7 +273,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Format an IP address  *  * Return a text-formatted string with an IP address and domain name  * given a sockaddr_in with an IP address.  *   * Arguments:  *	p	pointer to sockaddr_in with an IP address  *  * Returns:  *	char *	pointer to a text-formatted string  *  */
+comment|/*  * Format an IP address  *  * Return a text-formatted string with an IP address and domain name  * given a sockaddr_in with an IP address.  *   * Arguments:  *	addr	pointer to sockaddr_in with an IP address  *  * Returns:  *	char *	pointer to a text-formatted string  *  */
 end_comment
 
 begin_function
