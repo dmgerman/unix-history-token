@@ -131,7 +131,7 @@ name|PRVERB
 parameter_list|(
 name|a
 parameter_list|)
-value|printf a
+value|do {							\ 	if (bootverbose)						\ 		printf a ;						\ } while(0)
 end_define
 
 begin_decl_stmt
