@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.2 82/04/15"
+literal|"@(#)rwhod.c	4.3 82/04/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +759,7 @@ name|struct
 name|utmp
 name|utmp
 index|[
-literal|500
+literal|100
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -794,6 +794,9 @@ init|=
 name|mywd
 operator|.
 name|wd_we
+decl_stmt|,
+modifier|*
+name|wlast
 decl_stmt|;
 name|int
 name|cc
@@ -893,6 +896,26 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|wlast
+operator|=
+operator|&
+name|mywd
+operator|.
+name|wd_we
+index|[
+operator|(
+literal|1024
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|whoent
+argument_list|)
+operator|)
+operator|-
+literal|1
+index|]
+expr_stmt|;
 name|utmpent
 operator|=
 name|cc
@@ -938,6 +961,13 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|we
+operator|>=
+name|wlast
+condition|)
+break|break;
 name|we
 operator|++
 expr_stmt|;
