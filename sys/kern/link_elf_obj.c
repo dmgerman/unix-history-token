@@ -160,7 +160,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sus/nlist_aout.h>
+file|<sys/nlist_aout.h>
 end_include
 
 begin_endif
