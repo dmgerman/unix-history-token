@@ -1373,6 +1373,9 @@ argument_list|,
 operator|(
 name|int
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|arg
 argument_list|)
 expr_stmt|;

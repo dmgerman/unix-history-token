@@ -1896,7 +1896,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"Warning, using only %u of %u key cache slots\n"
+literal|"Warning, using only %zu of %u key cache slots\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -12729,7 +12729,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"hal qnum %u out of range, max %u!\n"
+literal|"hal qnum %u out of range, max %zu!\n"
 argument_list|,
 name|qnum
 argument_list|,
@@ -12890,7 +12890,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"AC %u out of range, max %u!\n"
+literal|"AC %u out of range, max %zu!\n"
 argument_list|,
 name|ac
 argument_list|,
@@ -16396,6 +16396,9 @@ name|axq_qnum
 argument_list|,
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ath_hal_gettxbuf
 argument_list|(
