@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.16 1996/01/25 07:17:31 phk Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.17 1996/01/28 10:07:55 phk Exp $  */
 end_comment
 
 begin_include
@@ -1824,7 +1824,7 @@ name|child
 operator|->
 name|name
 argument_list|,
-name|parent
+name|falias
 operator|->
 name|dnp
 argument_list|,
@@ -3190,7 +3190,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ * Add the named device entry into the given directory, and make it 	* * The appropriate type... (called (sometimes indirectly) by drivers..)	* * this function is exported.. see sys/devfsext.h			* \***********************************************************************/
+comment|/***********************************************************************\ * Add the named device entry into the given directory, and make it 	* * The appropriate type... (called (sometimes indirectly) by drivers..)	* * this function is exported.. see sys/devfsext.h			* * Has the capacity to take  printf type arguments to format the device 	* * names									* \***********************************************************************/
 end_comment
 
 begin_function
@@ -3386,7 +3386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************************************************************\ * Add the named device entry into the given directory, and make it 	* * The appropriate type... (called (sometimes indirectly) by drivers..)	* * this function is exported.. see sys/devfsext.h			* \***********************************************************************/
+comment|/***********************************************************************\ * Add the named device entry into the given directory, and make it 	* * The appropriate type... (called (sometimes indirectly) by drivers..)	* * this function is exported.. see sys/devfsext.h			* * Possibly this should be 'unexported' in the future..			* \***********************************************************************/
 end_comment
 
 begin_function
