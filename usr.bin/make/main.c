@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.14.2.1 1997/07/28 06:47:29 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3128,24 +3128,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|stream
-operator|=
-name|fopen
-argument_list|(
-name|fname
-argument_list|,
-literal|"r"
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-goto|goto
-name|found
-goto|;
 comment|/* if we've chdir'd, rebuild the path name */
 if|if
 condition|(
@@ -3198,6 +3180,25 @@ name|found
 goto|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|stream
+operator|=
+name|fopen
+argument_list|(
+name|fname
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|found
+goto|;
 comment|/* look in -I and system include directories. */
 name|name
 operator|=
