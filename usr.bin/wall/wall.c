@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: wall.c,v 1.9 1997/09/15 01:03:16 ache Exp $"
+literal|"$Id: wall.c,v 1.3.2.3 1998/01/29 12:36:07 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -580,32 +580,26 @@ index|]
 decl_stmt|,
 name|lbuf
 index|[
-literal|100
+literal|256
 index|]
 decl_stmt|,
 name|tmpname
 index|[
-literal|15
+literal|64
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
+name|printf
 argument_list|(
 name|tmpname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpname
+argument_list|)
+argument_list|,
+literal|"%s/wall.XXXXXX"
 argument_list|,
 name|_PATH_TMP
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|tmpname
-argument_list|,
-literal|"/wall.XXXXXX"
 argument_list|)
 expr_stmt|;
 if|if
@@ -727,9 +721,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|lbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lbuf
+argument_list|)
 argument_list|,
 literal|"Broadcast Message from %s@%s"
 argument_list|,
@@ -753,9 +752,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|lbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lbuf
+argument_list|)
 argument_list|,
 literal|"        (%s) at %d:%02d ..."
 argument_list|,
