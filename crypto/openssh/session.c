@@ -3679,15 +3679,18 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-name|u_int
-name|i
-decl_stmt|,
-name|namelen
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|env
+decl_stmt|;
+name|u_int
+name|envsize
+decl_stmt|;
+name|u_int
+name|i
+decl_stmt|,
+name|namelen
 decl_stmt|;
 comment|/* 	 * Find the slot where the value should be stored.  If the variable 	 * already exists, we reuse the slot; otherwise we append a new slot 	 * at the end of the array, expanding if necessary. 	 */
 name|env
@@ -3764,37 +3767,32 @@ block|}
 else|else
 block|{
 comment|/* New variable.  Expand if necessary. */
+name|envsize
+operator|=
+operator|*
+name|envsizep
+expr_stmt|;
 if|if
 condition|(
 name|i
 operator|>=
-operator|(
-operator|*
-name|envsizep
-operator|)
+name|envsize
 operator|-
 literal|1
 condition|)
 block|{
 if|if
 condition|(
-operator|*
-name|envsizep
+name|envsize
 operator|>=
 literal|1000
 condition|)
 name|fatal
 argument_list|(
-literal|"child_set_env: too many env vars,"
-literal|" skipping: %.100s"
-argument_list|,
-name|name
+literal|"child_set_env: too many env vars"
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|envsizep
-operator|)
+name|envsize
 operator|+=
 literal|50
 expr_stmt|;
@@ -3809,10 +3807,7 @@ name|xrealloc
 argument_list|(
 name|env
 argument_list|,
-operator|(
-operator|*
-name|envsizep
-operator|)
+name|envsize
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3820,6 +3815,11 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|envsizep
+operator|=
+name|envsize
 expr_stmt|;
 block|}
 comment|/* Need to set the NULL pointer at end of array beyond the new slot. */
