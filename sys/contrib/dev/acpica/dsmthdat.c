@@ -1329,8 +1329,6 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
-name|NewObjDesc
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
