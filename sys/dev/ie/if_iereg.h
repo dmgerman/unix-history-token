@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|NI5210_BOARD
-value|0x0055
+value|0x55
 end_define
 
 begin_define
