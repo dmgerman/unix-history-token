@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: bf_torek.c,v 8.19.18.4 2001/02/14 04:07:27 gshapiro Exp $"
+literal|"@(#)$Id: bf_torek.c,v 8.19.18.6 2001/05/08 06:52:19 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,15 +74,26 @@ file|<errno.h>
 include|#
 directive|include
 file|<stdio.h>
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|BF_STANDALONE
+define|#
+directive|define
+name|sm_free
+value|free
+define|#
+directive|define
+name|xalloc
+value|malloc
+else|#
+directive|else
+comment|/* BF_STANDALONE */
 include|#
 directive|include
 file|"sendmail.h"
 endif|#
 directive|endif
-comment|/* ! BF_STANDALONE */
+comment|/* BF_STANDALONE */
 include|#
 directive|include
 file|"bf_torek.h"
@@ -229,7 +240,7 @@ expr|struct
 name|bf
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -269,7 +280,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 name|bsize
 argument_list|)
@@ -283,7 +294,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 argument_list|)
@@ -358,7 +369,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 name|l
 argument_list|)
@@ -372,11 +383,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
-argument_list|(
-name|bfp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bfp
@@ -385,11 +391,16 @@ name|bf_buf
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 operator|->
 name|bf_buf
+argument_list|)
+expr_stmt|;
+name|sm_free
+argument_list|(
+name|bfp
 argument_list|)
 expr_stmt|;
 name|errno
@@ -482,12 +493,7 @@ name|save_errno
 operator|=
 name|errno
 expr_stmt|;
-name|free
-argument_list|(
-name|bfp
-argument_list|)
-expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 operator|->
@@ -502,11 +508,16 @@ name|bf_buf
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 operator|->
 name|bf_buf
+argument_list|)
+expr_stmt|;
+name|sm_free
+argument_list|(
+name|bfp
 argument_list|)
 expr_stmt|;
 name|errno
@@ -870,7 +881,7 @@ name|bf_bufsize
 operator|=
 literal|0
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 operator|->
@@ -1386,7 +1397,7 @@ name|bf_bufsize
 operator|>
 literal|0
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 operator|->
@@ -1394,7 +1405,7 @@ name|bf_buf
 argument_list|)
 expr_stmt|;
 comment|/* Finally, free the structure */
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 argument_list|)

@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: udb.c,v 8.111.16.1 2001/01/04 18:18:37 gshapiro Exp $ (with USERDB)"
+literal|"@(#)$Id: udb.c,v 8.111.16.2 2001/05/03 17:24:17 gshapiro Exp $ (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: udb.c,v 8.111.16.1 2001/01/04 18:18:37 gshapiro Exp $ (without USERDB)"
+literal|"@(#)$Id: udb.c,v 8.111.16.2 2001/05/03 17:24:17 gshapiro Exp $ (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1264,7 +1264,7 @@ name|user
 operator|!=
 name|userbuf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|user
 argument_list|)
@@ -2632,7 +2632,7 @@ name|user
 operator|!=
 name|userbuf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|user
 argument_list|)
@@ -4751,7 +4751,7 @@ argument|,
 endif|#
 directive|endif
 comment|/* DB_VERSION_MAJOR< 2 */
-argument|up->udb_dbname, 							  errstring(errno)); 					up->udb_type = UDB_EOLIST; 					if (up->udb_dbname != spec) 						free(up->udb_dbname); 					goto tempfail; 				} 				if (up->udb_dbname != spec) 					free(up->udb_dbname); 				break; 			} 			if (tTd(
+argument|up->udb_dbname, 							  errstring(errno)); 					up->udb_type = UDB_EOLIST; 					if (up->udb_dbname != spec) 						sm_free(up->udb_dbname); 					goto tempfail; 				} 				if (up->udb_dbname != spec) 					sm_free(up->udb_dbname); 				break; 			} 			if (tTd(
 literal|28
 argument|,
 literal|1

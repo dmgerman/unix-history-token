@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: util.c,v 8.225.2.1.2.19 2001/02/22 18:56:24 gshapiro Exp $"
+literal|"@(#)$Id: util.c,v 8.225.2.1.2.23 2001/05/17 18:10:18 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1008,6 +1008,9 @@ name|sz
 operator|=
 literal|1
 expr_stmt|;
+name|ENTER_CRITICAL
+argument_list|()
+expr_stmt|;
 name|p
 operator|=
 name|malloc
@@ -1017,6 +1020,9 @@ name|unsigned
 operator|)
 name|sz
 argument_list|)
+expr_stmt|;
+name|LEAVE_CRITICAL
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1030,11 +1036,226 @@ argument_list|(
 literal|"!Out of memory!!"
 argument_list|)
 expr_stmt|;
-comment|/* exit(EX_UNAVAILABLE); */
+comment|/* NOTREACHED */
+name|exit
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|p
 return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  XREALLOC -- Reallocate memory and bitch wildly on failure. ** **	THIS IS A CLUDGE.  This should be made to give a proper **	error -- but after all, what can we do? ** **	Parameters: **		ptr -- original area. **		sz -- size of new area to allocate. ** **	Returns: **		pointer to data region. ** **	Side Effects: **		Memory is allocated. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|xrealloc
+parameter_list|(
+name|ptr
+parameter_list|,
+name|sz
+parameter_list|)
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
+name|size_t
+name|sz
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+comment|/* some systems can't handle size zero mallocs */
+if|if
+condition|(
+name|sz
+operator|<=
+literal|0
+condition|)
+name|sz
+operator|=
+literal|1
+expr_stmt|;
+name|ENTER_CRITICAL
+argument_list|()
+expr_stmt|;
+name|p
+operator|=
+name|realloc
+argument_list|(
+name|ptr
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|sz
+argument_list|)
+expr_stmt|;
+name|LEAVE_CRITICAL
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"!Out of memory!!"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+name|exit
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|p
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  XCALLOC -- Allocate memory and bitch wildly on failure. ** **	THIS IS A CLUDGE.  This should be made to give a proper **	error -- but after all, what can we do? ** **	Parameters: **		num -- number of items to allocate **		sz -- size of new area to allocate. ** **	Returns: **		pointer to data region. ** **	Side Effects: **		Memory is allocated. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|xcalloc
+parameter_list|(
+name|num
+parameter_list|,
+name|sz
+parameter_list|)
+name|size_t
+name|num
+decl_stmt|;
+name|size_t
+name|sz
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+comment|/* some systems can't handle size zero mallocs */
+if|if
+condition|(
+name|num
+operator|<=
+literal|0
+condition|)
+name|num
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|<=
+literal|0
+condition|)
+name|sz
+operator|=
+literal|1
+expr_stmt|;
+name|ENTER_CRITICAL
+argument_list|()
+expr_stmt|;
+name|p
+operator|=
+name|calloc
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|num
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|sz
+argument_list|)
+expr_stmt|;
+name|LEAVE_CRITICAL
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"!Out of memory!!"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+name|exit
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|p
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SM_FREE -- Free memory safely. ** **	Parameters: **		ptr -- area to free ** **	Returns: **		none. ** **	Side Effects: **		Memory is freed. */
+end_comment
+
+begin_function
+name|void
+name|sm_free
+parameter_list|(
+name|ptr
+parameter_list|)
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
+block|{
+name|ENTER_CRITICAL
+argument_list|()
+expr_stmt|;
+name|free
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+name|LEAVE_CRITICAL
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1399,7 +1620,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|long
+name|pid_t
 name|pid
 decl_stmt|;
 specifier|extern
@@ -1409,9 +1630,6 @@ name|CommandLineArgs
 decl_stmt|;
 name|pid
 operator|=
-operator|(
-name|long
-operator|)
 name|getpid
 argument_list|()
 expr_stmt|;
@@ -1422,6 +1640,9 @@ name|pidf
 argument_list|,
 literal|"%ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pid
 argument_list|)
 expr_stmt|;
@@ -3895,6 +4116,11 @@ name|time_t
 name|timeout
 decl_stmt|;
 block|{
+comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
+name|errno
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|CtxReadTimeout
@@ -4086,7 +4312,7 @@ name|bp
 operator|!=
 name|buf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bp
 argument_list|)
@@ -6212,7 +6438,7 @@ comment|/* **  PROG_OPEN -- open a program for reading ** **	Parameters: **		arg
 end_comment
 
 begin_function
-name|int
+name|pid_t
 name|prog_open
 parameter_list|(
 name|argv
@@ -6235,7 +6461,7 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 name|int
@@ -6382,6 +6608,19 @@ name|close
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* Reset global flags */
+name|RestartRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|ShutdownRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|PendingSignal
+operator|=
+literal|0
 expr_stmt|;
 comment|/* stdout goes back to parent */
 operator|(
@@ -7431,7 +7670,7 @@ name|bp
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bp
 argument_list|)
@@ -7675,6 +7914,7 @@ specifier|static
 name|struct
 name|procs
 modifier|*
+specifier|volatile
 name|ProcListVec
 init|=
 name|NULL
@@ -7838,7 +8078,7 @@ name|procs
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|ProcListVec
 argument_list|)
@@ -7921,7 +8161,7 @@ name|proc_task
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|ProcListVec
 index|[
@@ -8029,7 +8269,7 @@ name|proc_task
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|ProcListVec
 index|[
@@ -8061,7 +8301,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PROC_LIST_DROP -- drop pid from process list ** **	Parameters: **		pid -- pid to drop ** **	Returns: **		type of process */
+comment|/* **  PROC_LIST_DROP -- drop pid from process list ** **	Parameters: **		pid -- pid to drop ** **	Returns: **		type of process ** **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
 end_comment
 
 begin_function

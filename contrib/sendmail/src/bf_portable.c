@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: bf_portable.c,v 8.25.4.5 2001/02/14 04:07:27 gshapiro Exp $"
+literal|"@(#)$Id: bf_portable.c,v 8.25.4.6 2001/05/03 17:24:01 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,11 +113,34 @@ begin_comment
 comment|/* !SFIO */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|BF_STANDALONE
-end_ifndef
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|sm_free
+value|free
+end_define
+
+begin_define
+define|#
+directive|define
+name|xalloc
+value|malloc
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* BF_STANDALONE */
+end_comment
 
 begin_include
 include|#
@@ -131,7 +154,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! BF_STANDALONE */
+comment|/* BF_STANDALONE */
 end_comment
 
 begin_include
@@ -324,7 +347,7 @@ expr|struct
 name|bf
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -407,7 +430,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 name|l
 argument_list|)
@@ -421,7 +444,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 argument_list|)
@@ -973,14 +996,14 @@ operator|->
 name|bf_filename
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 operator|->
 name|bf_filename
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|bfp
 argument_list|)

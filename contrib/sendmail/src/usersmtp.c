@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.24 2001/02/21 00:59:09 gshapiro Exp $ (with SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.33 2001/05/23 18:53:09 ca Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.24 2001/02/21 00:59:09 gshapiro Exp $ (without SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.33 2001/05/23 18:53:09 ca Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,7 +822,7 @@ name|EX_CONFIG
 argument_list|,
 literal|"5.3.5"
 argument_list|,
-literal|"system config error"
+literal|"553 5.3.5 system config error"
 argument_list|)
 expr_stmt|;
 name|mci
@@ -1234,33 +1234,13 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 name|rl
 operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|res
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|l1
-operator|>
-name|l2
-condition|)
-return|return
-name|s1
-return|;
-return|return
-name|s2
-return|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1276,6 +1256,8 @@ expr_stmt|;
 name|hr
 operator|=
 name|res
+operator|+
+name|l1
 expr_stmt|;
 name|h1
 operator|=
@@ -1469,7 +1451,7 @@ name|mci_saslcap
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|mci
 operator|->
@@ -1731,7 +1713,7 @@ name|mci
 operator|->
 name|mci_saslcap
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|h
 argument_list|)
@@ -1765,21 +1747,11 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-comment|/* XXX this may be leaked */
-if|if
-condition|(
-name|mci
-operator|->
-name|mci_saslcap
-operator|!=
-name|NULL
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1800,7 +1772,6 @@ name|mci_flags
 operator||=
 name|MCIF_AUTH
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -1990,7 +1961,7 @@ operator|<=
 name|len
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|mci
 operator|->
@@ -2049,7 +2020,7 @@ name|mci_sasl_string_len
 operator|=
 name|len
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|out
 argument_list|)
@@ -2927,7 +2898,7 @@ name|SASL
 operator|>
 literal|10522
 comment|/* 			**  digest-md5 prior to 1.5.23 doesn't copy the 			**  value it gets from the callback, but free()s 			**  it later on 			**  workaround: don't free() it here 			**  this can cause a memory leak! 			*/
-name|free
+name|sm_free
 argument_list|(
 name|authid
 argument_list|)
@@ -3245,7 +3216,7 @@ operator|(
 name|sasl_secret_t
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3257,16 +3228,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|psecret
-operator|==
-name|NULL
-condition|)
-return|return
-name|SASL_FAIL
-return|;
 operator|(
 name|void
 operator|)
@@ -4230,22 +4191,13 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 name|rl
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|res
-operator|==
-name|NULL
-condition|)
-return|return
-name|NULL
-return|;
 operator|*
 name|res
 operator|=
@@ -7328,6 +7280,17 @@ name|CtxDataTimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|EVENT
+modifier|*
+specifier|volatile
+name|DataTimeout
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|smtpdata
@@ -7356,11 +7319,6 @@ block|{
 specifier|register
 name|int
 name|r
-decl_stmt|;
-specifier|register
-name|EVENT
-modifier|*
-name|ev
 decl_stmt|;
 name|int
 name|rstat
@@ -7657,7 +7615,7 @@ name|timeout
 operator|=
 name|DATA_PROGRESS_TIMEOUT
 expr_stmt|;
-name|ev
+name|DataTimeout
 operator|=
 name|setevent
 argument_list|(
@@ -7668,26 +7626,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|18
-argument_list|,
-literal|101
-argument_list|)
-condition|)
-block|{
-comment|/* simulate a DATA timeout */
-operator|(
-name|void
-operator|)
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	**  Output the actual message. 	*/
 call|(
 modifier|*
@@ -7707,6 +7645,26 @@ argument_list|,
 name|M87F_OUTER
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|18
+argument_list|,
+literal|101
+argument_list|)
+condition|)
+block|{
+comment|/* simulate a DATA timeout */
+operator|(
+name|void
+operator|)
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 call|(
 modifier|*
 name|e
@@ -7722,9 +7680,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Cleanup after sending message. 	*/
+if|if
+condition|(
+name|DataTimeout
+operator|!=
+name|NULL
+condition|)
 name|clrevent
 argument_list|(
-name|ev
+name|DataTimeout
 argument_list|)
 expr_stmt|;
 if|#
@@ -8178,7 +8142,7 @@ name|e_statmsg
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|e
 operator|->
@@ -8305,6 +8269,12 @@ name|void
 name|datatimeout
 parameter_list|()
 block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
 if|if
 condition|(
 name|DataProgress
@@ -8312,11 +8282,6 @@ condition|)
 block|{
 name|time_t
 name|timeout
-decl_stmt|;
-specifier|register
-name|EVENT
-modifier|*
-name|ev
 decl_stmt|;
 comment|/* check back again later */
 if|if
@@ -8340,13 +8305,10 @@ name|timeout
 operator|=
 name|DATA_PROGRESS_TIMEOUT
 expr_stmt|;
-name|DataProgress
+comment|/* reset the timeout */
+name|DataTimeout
 operator|=
-name|FALSE
-expr_stmt|;
-name|ev
-operator|=
-name|setevent
+name|sigsafe_setevent
 argument_list|(
 name|timeout
 argument_list|,
@@ -8355,10 +8317,31 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|DataProgress
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* no progress, give up */
+comment|/* event is done */
+name|DataTimeout
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* if no progress was made or problem resetting event, die now */
+if|if
+condition|(
+name|DataTimeout
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|CtxDataTimeout
@@ -8367,6 +8350,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 block|}
 end_function
 
@@ -8523,7 +8510,7 @@ name|e_statmsg
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|e
 operator|->

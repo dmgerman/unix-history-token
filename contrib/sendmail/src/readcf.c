@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: readcf.c,v 8.382.4.38 2001/02/17 00:05:12 geir Exp $"
+literal|"@(#)$Id: readcf.c,v 8.382.4.40 2001/05/03 17:24:13 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -479,7 +479,7 @@ name|bp
 operator|!=
 name|buf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bp
 argument_list|)
@@ -2178,7 +2178,7 @@ name|bp
 operator|!=
 name|buf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bp
 argument_list|)
@@ -5145,7 +5145,7 @@ name|s_mailer
 operator|->
 name|m_mno
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|s
 operator|->
@@ -6259,9 +6259,6 @@ block|,
 name|OI_SAFE
 block|}
 block|,
-if|#
-directive|if
-name|MIME8TO7
 block|{
 literal|"EightBitMode"
 block|,
@@ -6270,9 +6267,6 @@ block|,
 name|OI_SAFE
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* MIME8TO7 */
 block|{
 literal|"AliasFile"
 block|,
@@ -8155,13 +8149,13 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|MIME8TO7
 case|case
 literal|'8'
 case|:
 comment|/* handling of 8-bit input */
+if|#
+directive|if
+name|MIME8TO7
 switch|switch
 condition|(
 operator|*
@@ -8231,10 +8225,18 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+else|#
+directive|else
+comment|/* MIME8TO7 */
+name|printf
+argument_list|(
+literal|"Warning: Option EightBitMode requires MIME8TO7 support\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* MIME8TO7 */
+break|break;
 case|case
 literal|'A'
 case|:
@@ -10882,7 +10884,7 @@ name|PidFile
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|PidFile
 argument_list|)
@@ -11094,7 +11096,7 @@ name|DeadLetterDrop
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|DeadLetterDrop
 argument_list|)
@@ -11447,7 +11449,7 @@ name|ControlSocketName
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|ControlSocketName
 argument_list|)
@@ -11505,7 +11507,7 @@ name|ProcTitlePrefix
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|ProcTitlePrefix
 argument_list|)
@@ -11583,7 +11585,7 @@ name|SASLInfo
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|SASLInfo
 argument_list|)
@@ -11605,7 +11607,7 @@ name|AuthMechanisms
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|AuthMechanisms
 argument_list|)
@@ -11820,7 +11822,7 @@ name|SrvCERTfile
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|SrvCERTfile
 argument_list|)
@@ -11842,7 +11844,7 @@ name|Srvkeyfile
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|Srvkeyfile
 argument_list|)
@@ -11864,7 +11866,7 @@ name|CltCERTfile
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CltCERTfile
 argument_list|)
@@ -11886,7 +11888,7 @@ name|Cltkeyfile
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|Cltkeyfile
 argument_list|)
@@ -11908,7 +11910,7 @@ name|CACERTfile
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CACERTfile
 argument_list|)
@@ -11930,7 +11932,7 @@ name|CACERTpath
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CACERTpath
 argument_list|)
@@ -11952,7 +11954,7 @@ name|DHParams
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|DHParams
 argument_list|)
@@ -11977,7 +11979,7 @@ name|DHParams5
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|DHParams5
 argument_list|)
@@ -11999,7 +12001,7 @@ name|CipherList
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CipherList
 argument_list|)
@@ -12024,7 +12026,7 @@ name|RandFile
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|RandFile
 argument_list|)
@@ -13397,7 +13399,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|RuleSetNames
 index|[

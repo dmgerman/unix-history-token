@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: parseaddr.c,v 8.234.4.11 2001/02/14 04:07:27 gshapiro Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.234.4.12 2001/05/03 17:24:11 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5499,7 +5499,7 @@ name|pvpb1
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|pvpb1
 argument_list|)
@@ -7198,7 +7198,7 @@ name|rwbuf
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|rwbuf
 argument_list|)
@@ -10711,7 +10711,7 @@ name|a1
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|a1
 argument_list|)
@@ -12022,7 +12022,7 @@ name|buf
 operator|!=
 name|buf0
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)

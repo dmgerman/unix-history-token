@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: alias.c,v 8.142.4.9 2000/11/08 20:58:42 geir Exp $"
+literal|"@(#)$Id: alias.c,v 8.142.4.11 2001/05/03 17:24:01 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1439,6 +1439,12 @@ argument_list|)
 expr_stmt|;
 name|map
 operator|->
+name|map_mflags
+operator||=
+name|MF_CLOSING
+expr_stmt|;
+name|map
+operator|->
 name|map_class
 operator|->
 name|map_close
@@ -1455,6 +1461,8 @@ operator|(
 name|MF_OPEN
 operator||
 name|MF_WRITABLE
+operator||
+name|MF_CLOSING
 operator|)
 expr_stmt|;
 operator|(
@@ -1687,6 +1695,12 @@ condition|)
 block|{
 name|map
 operator|->
+name|map_mflags
+operator||=
+name|MF_CLOSING
+expr_stmt|;
+name|map
+operator|->
 name|map_class
 operator|->
 name|map_close
@@ -1703,6 +1717,8 @@ operator|(
 name|MF_OPEN
 operator||
 name|MF_WRITABLE
+operator||
+name|MF_CLOSING
 operator|)
 expr_stmt|;
 block|}
@@ -2358,6 +2374,12 @@ condition|)
 block|{
 name|map
 operator|->
+name|map_mflags
+operator||=
+name|MF_CLOSING
+expr_stmt|;
+name|map
+operator|->
 name|map_class
 operator|->
 name|map_close
@@ -2374,6 +2396,8 @@ operator|(
 name|MF_OPEN
 operator||
 name|MF_WRITABLE
+operator||
+name|MF_CLOSING
 operator|)
 expr_stmt|;
 block|}
@@ -3201,7 +3225,7 @@ name|q_paddr
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|al
 operator|.
@@ -3216,7 +3240,7 @@ name|q_host
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|al
 operator|.
@@ -3231,7 +3255,7 @@ name|q_user
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|al
 operator|.
