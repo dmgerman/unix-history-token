@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: modeedit.c,v 1.1 1998/09/15 06:43:02 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,9 @@ literal|"Expecting an integer argument.\n"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -278,7 +280,9 @@ literal|"Expecting a character pointer argument.\n"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
