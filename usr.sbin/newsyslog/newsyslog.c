@@ -952,6 +952,9 @@ operator|->
 name|flags
 operator|&
 name|CE_TRIMAT
+operator|&&
+operator|!
+name|force
 condition|)
 block|{
 if|if
