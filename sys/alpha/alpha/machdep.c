@@ -274,12 +274,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ptrace.h>
 end_include
 
@@ -323,6 +317,12 @@ begin_include
 include|#
 directive|include
 file|<machine/bootinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include
@@ -417,14 +417,6 @@ begin_decl_stmt
 name|struct
 name|mtx
 name|icu_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|user
-modifier|*
-name|proc0uarea
 decl_stmt|;
 end_decl_stmt
 
@@ -3372,21 +3364,7 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Init mapping for u page(s) for proc 0 	 */
-name|proc0uarea
-operator|=
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
-name|pmap_steal_memory
-argument_list|(
-name|UAREA_PAGES
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Init mapping for kernel stack for proc 0 	 */
 name|proc0kstack
 operator|=
 name|pmap_steal_memory
@@ -3395,12 +3373,6 @@ name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 argument_list|)
-expr_stmt|;
-name|proc0
-operator|.
-name|p_uarea
-operator|=
-name|proc0uarea
 expr_stmt|;
 name|thread0
 operator|.
@@ -3431,7 +3403,6 @@ literal|1
 expr_stmt|;
 comment|/* 	 * Setup the per-CPU data for the bootstrap cpu. 	 */
 block|{
-comment|/* This is not a 'struct user' */
 name|size_t
 name|sz
 init|=

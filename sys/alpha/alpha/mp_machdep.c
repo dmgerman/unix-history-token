@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -141,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include
@@ -845,16 +845,9 @@ argument_list|)
 expr_stmt|;
 name|sz
 operator|=
-name|round_page
-argument_list|(
-operator|(
-name|UAREA_PAGES
-operator|+
 name|KSTACK_PAGES
-operator|)
 operator|*
 name|PAGE_SIZE
-argument_list|)
 expr_stmt|;
 name|pcpu
 operator|=
