@@ -89,6 +89,17 @@ begin_comment
 comment|/* error code */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OACK
+value|06
+end_define
+
+begin_comment
+comment|/* option acknowledgement */
+end_comment
+
 begin_struct
 struct|struct
 name|tftphdr
@@ -249,6 +260,17 @@ end_define
 
 begin_comment
 comment|/* no such user */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EOPTNEG
+value|8
+end_define
+
+begin_comment
+comment|/* option negotiation failed */
 end_comment
 
 begin_endif
