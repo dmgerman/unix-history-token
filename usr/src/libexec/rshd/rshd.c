@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	4.18 (Berkeley) %G%"
+literal|"@(#)rshd.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1307,22 +1307,22 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+name|pwd
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
 name|initgroups
 argument_list|(
 name|pwd
 operator|->
 name|pw_name
 argument_list|,
-name|pwd
-operator|->
-name|pw_gid
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setgid
-argument_list|(
 name|pwd
 operator|->
 name|pw_gid
