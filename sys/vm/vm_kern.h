@@ -104,6 +104,35 @@ name|kernel_vm_end
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX - elsewhere? */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|contigmalloc1
+parameter_list|(
+name|u_long
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|vm_map_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
