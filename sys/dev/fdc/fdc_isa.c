@@ -190,15 +190,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|fdc
-argument_list|,
-sizeof|sizeof
-expr|*
-name|fdc
-argument_list|)
-expr_stmt|;
 name|fdc
 operator|->
 name|fdc_dev
