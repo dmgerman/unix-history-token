@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/sysarch.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pthread_md.h"
 end_include
 
@@ -63,9 +69,16 @@ begin_decl_stmt
 name|struct
 name|arm_tp
 modifier|*
-name|_tp
+modifier|*
+name|arm_tp
 init|=
-name|NULL
+operator|(
+expr|struct
+name|arm_tp
+operator|*
+operator|*
+operator|)
+name|ARM_TP_ADDRESS
 decl_stmt|;
 end_decl_stmt
 

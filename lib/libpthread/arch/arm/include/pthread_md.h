@@ -215,9 +215,17 @@ specifier|extern
 name|struct
 name|arm_tp
 modifier|*
-name|_tp
+modifier|*
+name|arm_tp
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|_tp
+value|(*arm_tp)
+end_define
 
 begin_define
 define|#
@@ -918,8 +926,6 @@ name|uc_mcontext
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|&&
 name|_libkse_debug
 operator|==
 literal|0
