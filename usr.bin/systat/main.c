@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -594,7 +600,7 @@ name|clkinfo
 argument_list|)
 condition|)
 block|{
-name|perror
+name|error
 argument_list|(
 literal|"kern.clockrate"
 argument_list|)
@@ -610,14 +616,6 @@ operator|=
 name|clkinfo
 operator|.
 name|stathz
-condition|?
-name|clkinfo
-operator|.
-name|stathz
-else|:
-name|clkinfo
-operator|.
-name|hz
 expr_stmt|;
 call|(
 modifier|*
