@@ -79,8 +79,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|ROUNDPAGE
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)& ~pagemask)
+end_define
 
 begin_function
 name|void
@@ -148,6 +164,13 @@ name|line
 decl_stmt|;
 name|int
 name|dfound
+decl_stmt|;
+name|off_t
+name|pagemask
+decl_stmt|,
+name|off1
+decl_stmt|,
+name|off2
 decl_stmt|;
 if|if
 condition|(
