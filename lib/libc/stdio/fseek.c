@@ -1138,13 +1138,6 @@ operator|->
 name|_offset
 condition|)
 block|{
-name|fp
-operator|->
-name|_flags
-operator|&=
-operator|~
-name|__SOFF
-expr_stmt|;
 name|errno
 operator|=
 name|EOVERFLOW
