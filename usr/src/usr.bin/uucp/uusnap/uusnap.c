@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusnap.c	5.7 (Berkeley) %G%"
+literal|"@(#)uusnap.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * This file contains no ATT code and is not subject to the ATT  * license provisions regarding redistribution.  * 	Rick Adams 2/23/88  */
+end_comment
 
 begin_comment
 comment|/*  *	Uusnap - displays a snapshot of the uucp system.  *	originally by	RJKing WECo-MG6565 May 83  */
@@ -94,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|NSYSTEM
-value|100
+value|300
 end_define
 
 begin_comment
@@ -1320,9 +1324,28 @@ index|[
 name|type
 index|]
 expr_stmt|;
+if|if
+condition|(
 operator|++
 name|sndx
+operator|>=
+name|NSYSTEM
+condition|)
+block|{
+name|sndx
+operator|=
+name|NSYSTEM
+operator|-
+literal|1
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Too many system names.\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|closedir
