@@ -911,6 +911,7 @@ name|bpf_validate
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|bpf_insn
 operator|*
@@ -994,6 +995,7 @@ name|bpf_filter
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|bpf_insn
 operator|*

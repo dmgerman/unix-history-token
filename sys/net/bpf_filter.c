@@ -717,6 +717,7 @@ parameter_list|,
 name|buflen
 parameter_list|)
 specifier|register
+specifier|const
 name|struct
 name|bpf_insn
 modifier|*
@@ -2134,7 +2135,7 @@ name|KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Return true if the 'fcode' is a valid filter program.  * The constraints are that each jump be forward and to a valid  * code.  The code must terminate with either an accept or reject.  * 'valid' is an array for use by the routine (it must be at least  * 'len' bytes long).  *  * The kernel needs to be able to verify an application's filter code.  * Otherwise, a bogus program could easily crash the system.  */
+comment|/*  * Return true if the 'fcode' is a valid filter program.  * The constraints are that each jump be forward and to a valid  * code.  The code must terminate with either an accept or reject.  *  * The kernel needs to be able to verify an application's filter code.  * Otherwise, a bogus program could easily crash the system.  */
 end_comment
 
 begin_function
@@ -2145,6 +2146,7 @@ name|f
 parameter_list|,
 name|len
 parameter_list|)
+specifier|const
 name|struct
 name|bpf_insn
 modifier|*
@@ -2159,6 +2161,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
+specifier|const
 name|struct
 name|bpf_insn
 modifier|*
