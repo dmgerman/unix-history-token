@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
+file|<sys/ioccom.h>
 end_include
 
 begin_include
