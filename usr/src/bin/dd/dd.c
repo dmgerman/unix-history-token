@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.4 (Berkeley) %G%"
+literal|"@(#)dd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
