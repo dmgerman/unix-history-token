@@ -1344,7 +1344,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_SYS_TIMEX_H
+end_define
+
+begin_define
+define|#
+directive|define
 name|NTP_SYSCALLS_LIBC
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_PLL
 end_define
 
 begin_endif
