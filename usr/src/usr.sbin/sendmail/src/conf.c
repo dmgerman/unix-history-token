@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.28 (Berkeley) %G%"
+literal|"@(#)conf.c	8.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1597,7 +1597,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* read kmem for avenrun; interpret as int */
+comment|/* read kmem for avenrun; interpret as long */
 end_comment
 
 begin_define
@@ -1631,6 +1631,17 @@ end_define
 
 begin_comment
 comment|/* MACH load averages (as on NeXT boxes) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_SHORT
+value|6
+end_define
+
+begin_comment
+comment|/* read kmem for avenrun; interpret as short */
 end_comment
 
 begin_comment
@@ -1668,6 +1679,12 @@ operator|(
 name|LA_TYPE
 operator|==
 name|LA_FLOAT
+operator|)
+operator|||
+operator|(
+name|LA_TYPE
+operator|==
+name|LA_SHORT
 operator|)
 end_if
 
@@ -1844,6 +1861,12 @@ name|LA_TYPE
 operator|==
 name|LA_INT
 operator|)
+operator|||
+operator|(
+name|LA_TYPE
+operator|==
+name|LA_SHORT
+operator|)
 end_if
 
 begin_define
@@ -1867,9 +1890,17 @@ begin_if
 if|#
 directive|if
 operator|(
+operator|(
 name|LA_TYPE
 operator|==
 name|LA_INT
+operator|)
+operator|||
+operator|(
+name|LA_TYPE
+operator|==
+name|LA_SHORT
+operator|)
 operator|)
 operator|&&
 operator|!
@@ -1918,12 +1949,27 @@ index|]
 decl_stmt|;
 else|#
 directive|else
+if|#
+directive|if
+name|LA_TYPE
+operator|==
+name|LA_SHORT
+name|short
+name|avenrun
+index|[
+literal|3
+index|]
+decl_stmt|;
+else|#
+directive|else
 name|double
 name|avenrun
 index|[
 literal|3
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 specifier|extern
@@ -2170,9 +2216,17 @@ return|;
 block|}
 if|#
 directive|if
+operator|(
 name|LA_TYPE
 operator|==
 name|LA_INT
+operator|)
+operator|||
+operator|(
+name|LA_TYPE
+operator|==
+name|LA_SHORT
+operator|)
 if|if
 condition|(
 name|tTd
