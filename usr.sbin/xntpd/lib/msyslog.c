@@ -173,7 +173,9 @@ name|xerr
 index|[
 literal|50
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|err
 decl_stmt|;
@@ -197,12 +199,6 @@ decl_stmt|;
 specifier|extern
 name|int
 name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 name|int
 name|olderrno
@@ -335,6 +331,10 @@ name|sys_nerr
 condition|)
 name|sprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|(
 name|err
 operator|=
