@@ -6323,56 +6323,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|O_DIVERTED
-case|:
-switch|switch
-condition|(
-name|cmd
-operator|->
-name|arg1
-condition|)
-block|{
-case|case
-literal|3
-case|:
-name|printf
-argument_list|(
-literal|" diverted"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|printf
-argument_list|(
-literal|" diverted-loopback"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|printf
-argument_list|(
-literal|" diverted-output"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|" diverted-?<%u>"
-argument_list|,
-name|cmd
-operator|->
-name|arg1
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-break|break;
-case|case
 name|O_LAYER2
 case|:
 name|printf
