@@ -3440,6 +3440,13 @@ name|subdisks
 operator|--
 expr_stmt|;
 comment|/* one less subdisk */
+name|destroy_dev
+argument_list|(
+name|sd
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|sd
@@ -3824,6 +3831,13 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|plex
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|plex
@@ -4139,6 +4153,13 @@ name|VOL
 index|[
 name|volno
 index|]
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|vol
+operator|->
+name|dev
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -5689,6 +5710,37 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|sd
+operator|->
+name|dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|vinum_cdevsw
+argument_list|,
+name|VINUMRMINOR
+argument_list|(
+name|VINUM_SD_TYPE
+argument_list|,
+name|sdno
+argument_list|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IWUSR
+argument_list|,
+literal|"vinum/sd/%s"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|state
@@ -6398,6 +6450,37 @@ argument_list|(
 name|EINVAL
 argument_list|,
 literal|"No plex organization specified"
+argument_list|)
+expr_stmt|;
+name|plex
+operator|->
+name|dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|vinum_cdevsw
+argument_list|,
+name|VINUMRMINOR
+argument_list|(
+name|VINUM_PLEX_TYPE
+argument_list|,
+name|plexno
+argument_list|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IWUSR
+argument_list|,
+literal|"vinum/plex/%s"
+argument_list|,
+name|plex
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -7173,6 +7256,37 @@ name|volumes_used
 operator|++
 expr_stmt|;
 comment|/* one more in use */
+name|vol
+operator|->
+name|dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|vinum_cdevsw
+argument_list|,
+name|VINUMRMINOR
+argument_list|(
+name|VINUM_VOLUME_TYPE
+argument_list|,
+name|volno
+argument_list|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IWUSR
+argument_list|,
+literal|"vinum/vol/%s"
+argument_list|,
+name|vol
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7811,6 +7925,7 @@ argument_list|,
 literal|"No such subdisk"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -7845,10 +7960,22 @@ block|{
 comment|/* we have a plex */
 if|if
 condition|(
+operator|!
 name|force
 condition|)
 block|{
 comment|/* do it at any cost */
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+comment|/* can't do that */
+return|return;
+block|}
+else|else
+block|{
 name|struct
 name|plex
 modifier|*
@@ -7904,6 +8031,7 @@ name|plex
 operator|->
 name|subdisks
 condition|)
+block|{
 comment|/* didn't find it */
 name|log
 argument_list|(
@@ -7923,6 +8051,14 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return;
+block|}
 else|else
 block|{
 comment|/* remove the subdisk from plex */
@@ -8011,6 +8147,8 @@ name|setstate_force
 argument_list|)
 expr_stmt|;
 comment|/* need to reinitialize */
+block|}
+block|}
 name|log
 argument_list|(
 name|LOG_INFO
@@ -8027,35 +8165,6 @@ argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|ioctl_reply
-operator|->
-name|error
-operator|=
-name|EBUSY
-expr_stmt|;
-comment|/* can't do that */
-block|}
-else|else
-block|{
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"vinum: removing %s\n"
-argument_list|,
-name|sd
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|free_sd
-argument_list|(
-name|sdno
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 

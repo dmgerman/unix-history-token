@@ -393,5 +393,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cdevsw
+name|vinum_cdevsw
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
