@@ -3306,7 +3306,10 @@ name|devs
 operator|=
 name|deviceFind
 argument_list|(
-name|NULL
+name|variable_get
+argument_list|(
+name|VAR_NETWORK_DEVICE
+argument_list|)
 argument_list|,
 name|DEVICE_TYPE_NETWORK
 argument_list|)
