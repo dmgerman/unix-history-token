@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	1.8	89/04/25	*/
+comment|/*	boot.c	7.1	89/05/01	*/
 end_comment
 
 begin_include
@@ -108,6 +108,8 @@ decl_stmt|;
 comment|/* howto=r11, devtype=r10 */
 name|int
 name|io
+init|=
+literal|0
 decl_stmt|,
 name|retry
 decl_stmt|,
@@ -146,11 +148,6 @@ comment|/* unit, partition 0 */
 name|bootdev
 operator|=
 name|devtype
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nBoot\n"
-argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -226,6 +223,17 @@ init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
+name|io
+operator|>=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\nBoot"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|howto
@@ -377,8 +385,8 @@ name|struct
 name|exec
 name|x
 decl_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|read
 argument_list|(
 name|io
@@ -391,47 +399,32 @@ operator|&
 name|x
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|x
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+argument_list|)
 operator|!=
 sizeof|sizeof
+argument_list|(
 name|x
+argument_list|)
 operator|||
-operator|(
+name|N_BADMAG
+argument_list|(
 name|x
-operator|.
-name|a_magic
-operator|!=
-literal|0407
-operator|&&
-name|x
-operator|.
-name|a_magic
-operator|!=
-literal|0413
-operator|&&
-name|x
-operator|.
-name|a_magic
-operator|!=
-literal|0410
-operator|)
+argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad format\n"
+literal|"bad magic #\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|x
 operator|.
@@ -444,7 +437,7 @@ name|x
 operator|.
 name|a_magic
 operator|==
-literal|0413
+name|ZMAGIC
 operator|&&
 name|lseek
 argument_list|(
@@ -505,13 +498,13 @@ name|x
 operator|.
 name|a_magic
 operator|==
-literal|0413
+name|ZMAGIC
 operator|||
 name|x
 operator|.
 name|a_magic
 operator|==
-literal|0410
+name|NMAGIC
 condition|)
 while|while
 condition|(
@@ -530,7 +523,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"+%d"
+literal|"+%ld"
 argument_list|,
 name|x
 operator|.
@@ -565,7 +558,7 @@ name|a_data
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"+%d"
+literal|"+%ld"
 argument_list|,
 name|x
 operator|.
@@ -625,7 +618,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[+%d"
+literal|"[+%ld"
 argument_list|,
 name|x
 operator|.
@@ -795,7 +788,7 @@ literal|0x1fffffff
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" start 0x%x\n"
+literal|" start 0x%lx\n"
 argument_list|,
 name|x
 operator|.
@@ -849,7 +842,7 @@ name|shread
 label|:
 name|printf
 argument_list|(
-literal|"Short read\n"
+literal|"short read\n"
 argument_list|)
 expr_stmt|;
 return|return;
