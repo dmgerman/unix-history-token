@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)ndbm.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)ndbm.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ file|<db.h>
 end_include
 
 begin_comment
-comment|/* Map dbm interface onto hash(3). */
+comment|/* Map dbm interface onto db(3). */
 end_comment
 
 begin_define
@@ -42,6 +42,17 @@ define|#
 directive|define
 name|DBM_REPLACE
 value|1
+end_define
+
+begin_comment
+comment|/*  * The db(3) support for ndbm(3) always appends this suffix to the  * file name to avoid overwriting the user's original database.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBM_SUFFIX
+value|".db"
 end_define
 
 begin_typedef
