@@ -5563,6 +5563,18 @@ end_comment
 
 begin_function_decl
 name|int
+name|ng_rmtype
+parameter_list|(
+name|struct
+name|ng_type
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ng_snd_item
 parameter_list|(
 name|item_p

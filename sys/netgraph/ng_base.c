@@ -4303,6 +4303,67 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * unlink a netgraph type  * If no examples exist  */
+end_comment
+
+begin_function
+name|int
+name|ng_rmtype
+parameter_list|(
+name|struct
+name|ng_type
+modifier|*
+name|tp
+parameter_list|)
+block|{
+comment|/* Check for name collision */
+if|if
+condition|(
+name|tp
+operator|->
+name|refs
+operator|!=
+literal|1
+condition|)
+block|{
+name|TRAP_ERROR
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
+comment|/* Unlink type */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_typelist_mtx
+argument_list|)
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|tp
+argument_list|,
+name|types
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_typelist_mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Look for a type of the name given  */
 end_comment
 
