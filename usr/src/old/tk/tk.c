@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tk.c	4.1 (Berkeley) %G%"
+literal|"@(#)tk.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,15 +111,6 @@ name|yyll
 init|=
 operator|-
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|obuf
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -443,16 +434,6 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|ex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|obuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
