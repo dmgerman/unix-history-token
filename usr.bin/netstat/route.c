@@ -1049,6 +1049,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|wid_af
+operator|==
+name|AF_INET
+operator|||
 name|lflag
 condition|)
 name|printf
@@ -3058,6 +3062,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|addr
+operator|.
+name|u_sa
+operator|.
+name|sa_family
+operator|==
+name|AF_INET
+operator|||
 name|lflag
 condition|)
 name|printf
