@@ -1451,6 +1451,14 @@ operator|=
 name|clockinfo
 operator|.
 name|tick
+operator|>
+name|CLOCK_RES_USEC_MIN
+condition|?
+name|clockinfo
+operator|.
+name|tick
+else|:
+name|CLOCK_RES_USEC_MIN
 expr_stmt|;
 comment|/* Get the table size: */
 if|if
