@@ -8,7 +8,7 @@ comment|/*  Copyright 1988, 1989 by the Massachusetts Institute of Technology  P
 end_comment
 
 begin_comment
-comment|/*  *      newsyslog - roll over selected logs at the appropriate time,  *              keeping the a specified number of backup files around.  *  *      $Source: /home/ncvs/src/usr.sbin/newsyslog/newsyslog.c,v $  *      $Author: imp $  */
+comment|/*  *      newsyslog - roll over selected logs at the appropriate time,  *              keeping the a specified number of backup files around.  *  *      $Source: /home/ncvs/src/usr.sbin/newsyslog/newsyslog.c,v $  *      $Author: ache $  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.10 1997/03/31 05:10:25 imp Exp $"
+literal|"$Id: newsyslog.c,v 1.11 1997/05/04 01:53:53 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -735,10 +735,14 @@ argument_list|()
 expr_stmt|;
 name|syslog_pid
 operator|=
+name|needroot
+condition|?
 name|get_pid
 argument_list|(
 name|PIDFILE
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -2703,6 +2707,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|needroot
+operator|&&
 operator|!
 operator|(
 name|flags
