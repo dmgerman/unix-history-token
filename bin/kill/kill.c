@@ -282,7 +282,7 @@ literal|0
 operator|||
 name|numsig
 operator|>=
-name|NSIG
+name|sys_nsig
 condition|)
 name|nosig
 argument_list|(
@@ -502,7 +502,7 @@ literal|0
 operator|||
 name|numsig
 operator|>=
-name|NSIG
+name|sys_nsig
 condition|)
 name|nosig
 argument_list|(
@@ -685,7 +685,7 @@ literal|1
 init|;
 name|n
 operator|<
-name|NSIG
+name|sys_nsig
 condition|;
 name|n
 operator|++
@@ -768,7 +768,7 @@ literal|1
 init|;
 name|n
 operator|<
-name|NSIG
+name|sys_nsig
 condition|;
 name|n
 operator|++
@@ -794,7 +794,7 @@ condition|(
 name|n
 operator|==
 operator|(
-name|NSIG
+name|sys_nsig
 operator|/
 literal|2
 operator|)
@@ -802,7 +802,7 @@ operator|||
 name|n
 operator|==
 operator|(
-name|NSIG
+name|sys_nsig
 operator|-
 literal|1
 operator|)
