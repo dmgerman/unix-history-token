@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2001 Robert N M Watson  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999, 2001, 2002 Robert N M Watson  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -101,7 +101,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"getfacl [-d] [files ...]\n"
+literal|"getfacl [-dh] [files ...]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -606,6 +606,9 @@ name|path
 parameter_list|,
 name|acl_type_t
 name|type
+parameter_list|,
+name|int
+name|hflag
 parameter_list|)
 block|{
 name|struct
@@ -622,6 +625,21 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|hflag
+condition|)
+name|error
+operator|=
+name|lstat
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|stat
@@ -682,6 +700,20 @@ operator|.
 name|st_gid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hflag
+condition|)
+name|acl
+operator|=
+name|acl_get_link_np
+argument_list|(
+name|path
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+else|else
 name|acl
 operator|=
 name|acl_get_file
@@ -826,6 +858,9 @@ name|print_acl_from_stdin
 parameter_list|(
 name|acl_type_t
 name|type
+parameter_list|,
+name|int
+name|hflag
 parameter_list|)
 block|{
 name|char
@@ -887,6 +922,8 @@ argument_list|(
 name|pathname
 argument_list|,
 name|type
+argument_list|,
+name|hflag
 argument_list|)
 operator|==
 operator|-
@@ -938,6 +975,13 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+name|int
+name|hflag
+decl_stmt|;
+name|hflag
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -949,7 +993,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d"
+literal|"dh"
 argument_list|)
 operator|)
 operator|!=
@@ -967,6 +1011,14 @@ case|:
 name|type
 operator|=
 name|ACL_TYPE_DEFAULT
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|hflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -1000,6 +1052,8 @@ operator|=
 name|print_acl_from_stdin
 argument_list|(
 name|type
+argument_list|,
+name|hflag
 argument_list|)
 expr_stmt|;
 return|return
@@ -1045,6 +1099,8 @@ operator|=
 name|print_acl_from_stdin
 argument_list|(
 name|type
+argument_list|,
+name|hflag
 argument_list|)
 expr_stmt|;
 if|if
@@ -1072,6 +1128,8 @@ name|i
 index|]
 argument_list|,
 name|type
+argument_list|,
+name|hflag
 argument_list|)
 expr_stmt|;
 if|if

@@ -244,6 +244,23 @@ operator|*
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|h_flag
+condition|)
+name|acl
+index|[
+name|ACCESS_ACL
+index|]
+operator|=
+name|acl_get_link_np
+argument_list|(
+name|filename
+argument_list|,
+name|ACL_TYPE_ACCESS
+argument_list|)
+expr_stmt|;
+else|else
 name|acl
 index|[
 name|ACCESS_ACL
@@ -282,6 +299,23 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|h_flag
+condition|)
+name|acl
+index|[
+name|DEFAULT_ACL
+index|]
+operator|=
+name|acl_get_link_np
+argument_list|(
+name|filename
+argument_list|,
+name|ACL_TYPE_DEFAULT
+argument_list|)
+expr_stmt|;
+else|else
 name|acl
 index|[
 name|DEFAULT_ACL
@@ -339,7 +373,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: setfacl [-bdknv] [-m entries] [-M file1] "
+literal|"usage: setfacl [-bdhknv] [-m entries] [-M file1] "
 literal|"[-x entries] [-X file2] [file ...]\n"
 argument_list|)
 expr_stmt|;
@@ -405,6 +439,8 @@ name|local_error
 operator|=
 literal|0
 expr_stmt|;
+name|h_flag
+operator|=
 name|have_mask
 operator|=
 name|have_stdin
@@ -438,7 +474,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"M:X:bdkm:nx:"
+literal|"M:X:bdhkm:nx:"
 argument_list|)
 operator|)
 operator|!=
@@ -582,6 +618,14 @@ case|:
 name|acl_type
 operator|=
 name|ACL_TYPE_DEFAULT
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|h_flag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
