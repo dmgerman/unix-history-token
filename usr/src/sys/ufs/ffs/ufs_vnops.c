@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.77 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.78 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8243,48 +8243,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|JOHNH
-argument_list|)
-operator|&&
-literal|0
-end_if
-
-begin_comment
-comment|/*  * A hack to get the kernel to compile.  */
-end_comment
-
-begin_function
-name|int
-name|hang_addrlist
-parameter_list|()
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|free_addrlist
-parameter_list|()
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
