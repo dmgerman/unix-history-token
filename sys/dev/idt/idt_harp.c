@@ -494,6 +494,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|T_ATM_BUFQUEUE
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|CONNECTION
@@ -508,6 +514,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -756,6 +767,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|T_ATM_BUFQUEUE
+end_ifdef
+
 begin_comment
 comment|/*******************************************************************************  *  *  Get connection pointer from Cmn_unit and Cmn_vcc  *  *  in:  Cmn_unit and Cmn_vcc  * out:  connection (NULL=error)  *  *  Date first: 05/31/2001  last: 05/31/2001  */
 end_comment
@@ -872,6 +889,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* T_ATM_BUFQUEUE */
+end_comment
 
 begin_comment
 comment|/*******************************************************************************  *  *  Get CBR/VBR/UBR class from bearer attribute  *  *  in:  * out:  NICCBR/NICVBR/NICABR/NICUBR  *  *  Date first: 06/12/2001  last: 06/13/2001  */
@@ -2911,35 +2937,18 @@ comment|/* 	 * Schedule callback 	 */
 if|if
 condition|(
 operator|!
-name|_IF_QFULL
+name|netisr_queue
 argument_list|(
-operator|&
-name|atm_intrq
-argument_list|)
-condition|)
-block|{
-name|IF_ENQUEUE
-argument_list|(
-operator|&
-name|atm_intrq
+name|NETISR_ATM
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|schednetisr
-argument_list|(
-name|NETISR_ATM
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
+condition|)
 name|KB_FREEALL
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
