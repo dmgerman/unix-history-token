@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.11 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,15 +379,6 @@ comment|/* Space for capability strings */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|int
-name|destcol
-decl_stmt|,
-name|destline
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|ttytype
@@ -423,6 +414,11 @@ decl_stmt|;
 specifier|register
 name|int
 name|unknown
+decl_stmt|;
+name|int
+name|destcol
+decl_stmt|,
+name|destline
 decl_stmt|;
 name|struct
 name|winsize
