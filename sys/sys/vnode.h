@@ -1752,6 +1752,20 @@ begin_comment
 comment|/*  * Macros to aid in tracing VFS locking problems.  Not totally  * reliable since if the thread sleeps between changing the lock  * state and checking it with the assert, some other thread could  * change the state.  They are good enough for debugging a single  * filesystem using a single-threaded test.  I find that 'cvs co src'  * is a pretty good test.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|vfs_badlock_panic
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vfs_badlock_print
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * [dfr] Kludge until I get around to fixing all the vfs locking.  */
 end_comment
@@ -1776,7 +1790,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&& !VOP_ISLOCKED(_vp, NULL))	\ 		panic("%s: %p is not locked but should be", str, _vp);	\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&& !VOP_ISLOCKED(_vp, NULL)) {	\ 		if (vfs_badlock_print)					\ 			printf("%s: %p is not locked but should be",	\ 			    str, _vp);					\ 		if (vfs_badlock_panic)					\ 			Debugger("Lock violation.\n");			\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1789,7 +1803,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)) {				\ 		lockstate = VOP_ISLOCKED(_vp, curthread);		\ 		if (lockstate == LK_EXCLUSIVE)				\ 			panic("%s: %p is locked but should not be",	\ 			    str, _vp);					\ 	}								\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)) {				\ 		lockstate = VOP_ISLOCKED(_vp, curthread);		\ 		if (lockstate == LK_EXCLUSIVE) {			\ 			if (vfs_badlock_print)				\ 				printf("%s: %p is locked but should not be",	\ 				    str, _vp);				\ 			if (vfs_badlock_panic)				\ 				Debugger("Lock Violation.\n");		\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define

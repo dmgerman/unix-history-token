@@ -1084,6 +1084,41 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_VFS_LOCKS
+end_ifdef
+
+begin_comment
+comment|/* Print lock violations */
+end_comment
+
+begin_decl_stmt
+name|int
+name|vfs_badlock_print
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Panic on violation */
+end_comment
+
+begin_decl_stmt
+name|int
+name|vfs_badlock_panic
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|v_addpollinfo
