@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c 4.1 %G%"
+literal|"@(#)opendir.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -41,9 +47,14 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+specifier|register
 name|DIR
 modifier|*
 name|dirp
+decl_stmt|;
+name|struct
+name|stat
+name|sbuf
 decl_stmt|;
 name|dirp
 operator|=
@@ -78,6 +89,38 @@ name|dd_fd
 operator|==
 operator|-
 literal|1
+condition|)
+block|{
+name|free
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|fstat
+argument_list|(
+name|dirp
+operator|->
+name|dd_fd
+argument_list|,
+operator|&
+name|sbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sbuf
+operator|.
+name|st_mode
+operator|&
+name|S_IFDIR
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|free
