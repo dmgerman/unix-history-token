@@ -604,7 +604,7 @@ name|pcb2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create a new fresh stack for the new process. 	 * Copy the trap frame for the return to user mode as if from a 	 * syscall.  This copies most of the user mode register values. 	 */
+comment|/* 	 * Create a new fresh stack for the new process. 	 * Copy the trap frame for the return to user mode as if from a 	 * syscall.  This copies most of the user mode register values. 	 * The -16 is so we can expand the trapframe if we go to vm86. 	 */
 name|td2
 operator|->
 name|td_frame
@@ -614,9 +614,16 @@ expr|struct
 name|trapframe
 operator|*
 operator|)
+operator|(
+operator|(
+name|caddr_t
+operator|)
 name|td2
 operator|->
 name|td_pcb
+operator|-
+literal|16
+operator|)
 operator|-
 literal|1
 expr_stmt|;
