@@ -3984,12 +3984,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|msg
-operator|.
-name|msg_controllen
-operator|==
-literal|0
-operator|||
 operator|(
 name|msg
 operator|.
