@@ -511,7 +511,7 @@ comment|/* kernel generated message */
 end_comment
 
 begin_comment
-comment|/*  * This structure represents the files that will have log  * copies printed.  */
+comment|/*  * This structure represents the files that will have log  * copies printed.  * We require f_file to be valid if f_type is F_FILE, F_CONSOLE, F_TTY  * or if f_type if F_PIPE and f_pid> 0.  */
 end_comment
 
 begin_struct
@@ -6068,16 +6068,6 @@ argument_list|(
 literal|"removing entry\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|f
-operator|->
-name|f_file
-argument_list|)
-expr_stmt|;
 name|f
 operator|->
 name|f_type
@@ -7405,7 +7395,18 @@ operator|->
 name|f_type
 operator|==
 name|F_PIPE
+operator|&&
+name|f
+operator|->
+name|f_un
+operator|.
+name|f_pipe
+operator|.
+name|f_pid
+operator|>
+literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -7416,6 +7417,17 @@ operator|->
 name|f_file
 argument_list|)
 expr_stmt|;
+name|f
+operator|->
+name|f_un
+operator|.
+name|f_pipe
+operator|.
+name|f_pid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 name|Initialized
 operator|=
@@ -7738,16 +7750,6 @@ break|break;
 case|case
 name|F_PIPE
 case|:
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|f
-operator|->
-name|f_file
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|f
@@ -7760,6 +7762,17 @@ name|f_pid
 operator|>
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|f
+operator|->
+name|f_file
+argument_list|)
+expr_stmt|;
 name|deadq_enter
 argument_list|(
 name|f
@@ -7779,6 +7792,7 @@ operator|.
 name|f_pname
 argument_list|)
 expr_stmt|;
+block|}
 name|f
 operator|->
 name|f_un
@@ -12489,7 +12503,7 @@ name|prog
 parameter_list|,
 name|pid_t
 modifier|*
-name|pid
+name|rpid
 parameter_list|)
 block|{
 name|int
@@ -12501,6 +12515,9 @@ decl_stmt|,
 name|nulldesc
 decl_stmt|,
 name|i
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 name|sigset_t
 name|omask
@@ -12596,7 +12613,6 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|(
-operator|*
 name|pid
 operator|=
 name|fork
@@ -12890,7 +12906,6 @@ argument_list|,
 operator|(
 name|int
 operator|)
-operator|*
 name|pid
 argument_list|)
 expr_stmt|;
@@ -12900,6 +12915,11 @@ name|errmsg
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|rpid
+operator|=
+name|pid
+expr_stmt|;
 return|return
 operator|(
 name|pfd
