@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.6 (Berkeley) %G%"
+literal|"@(#)macro.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,20 +1142,20 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  WORDINCLASS -- tell if a word is in a specific class ** **	Parameters: **		word -- the name of the word to look up. **		cl -- the class name. ** **	Returns: **		TRUE if word can be found in cl. **		FALSE otherwise. */
+comment|/* **  WORDINCLASS -- tell if a word is in a specific class ** **	Parameters: **		str -- the name of the word to look up. **		cl -- the class name. ** **	Returns: **		TRUE if str can be found in cl. **		FALSE otherwise. */
 end_comment
 
 begin_function
 name|bool
 name|wordinclass
 parameter_list|(
-name|word
+name|str
 parameter_list|,
 name|cl
 parameter_list|)
 name|char
 modifier|*
-name|word
+name|str
 decl_stmt|;
 name|char
 name|cl
@@ -1170,7 +1170,7 @@ name|s
 operator|=
 name|stab
 argument_list|(
-name|word
+name|str
 argument_list|,
 name|ST_CLASS
 argument_list|,
