@@ -7,26 +7,6 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
-name|krb4_long_version
-init|=
-literal|"@(#)$Version: krb4-1.0.5fb1 (FreeBSD) $"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|krb4_version
-init|=
-literal|"krb4-1.0.5fb1"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
 name|heimdal_long_version
 init|=
 literal|"@(#)$Version: Heimdal 0.5.1 (FreeBSD) $"
