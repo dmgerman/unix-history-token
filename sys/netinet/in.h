@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $Id: in.h,v 1.27 1997/09/25 00:34:35 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $Id: in.h,v 1.28 1998/02/16 19:23:53 guido Exp $  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ comment|/*  * Constants and structures defined by the internet system,  * Per RF
 end_comment
 
 begin_comment
-comment|/*  * Protocols  */
+comment|/*  * Protocols (RFC 1700)  */
 end_comment
 
 begin_define
@@ -92,12 +92,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_ST
+value|7
+end_define
+
+begin_comment
+comment|/* Stream protocol II */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_EGP
 value|8
 end_define
 
 begin_comment
 comment|/* exterior gateway protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_PIGP
+value|9
+end_define
+
+begin_comment
+comment|/* private interior gateway */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_RCCMON
+value|10
+end_define
+
+begin_comment
+comment|/* BBN RCC Monitoring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_NVPII
+value|11
+end_define
+
+begin_comment
+comment|/* network voice protocol*/
 end_comment
 
 begin_define
@@ -114,12 +158,100 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_ARGUS
+value|13
+end_define
+
+begin_comment
+comment|/* Argus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_EMCON
+value|14
+end_define
+
+begin_comment
+comment|/* EMCON */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_XNET
+value|15
+end_define
+
+begin_comment
+comment|/* Cross Net Debugger */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_CHAOS
+value|16
+end_define
+
+begin_comment
+comment|/* Chaos*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_UDP
 value|17
 end_define
 
 begin_comment
 comment|/* user datagram protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_MUX
+value|18
+end_define
+
+begin_comment
+comment|/* Multiplexing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_MEAS
+value|19
+end_define
+
+begin_comment
+comment|/* DCN Measurement Subsystems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_HMP
+value|20
+end_define
+
+begin_comment
+comment|/* Host Monitoring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_PRM
+value|21
+end_define
+
+begin_comment
+comment|/* Packet Radio Measurement */
 end_comment
 
 begin_define
@@ -136,12 +268,254 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_TRUNK1
+value|23
+end_define
+
+begin_comment
+comment|/* Trunk-1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_TRUNK2
+value|24
+end_define
+
+begin_comment
+comment|/* Trunk-2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_LEAF1
+value|25
+end_define
+
+begin_comment
+comment|/* Leaf-1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_LEAF2
+value|26
+end_define
+
+begin_comment
+comment|/* Leaf-2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_RDP
+value|27
+end_define
+
+begin_comment
+comment|/* Reliable Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IRTP
+value|28
+end_define
+
+begin_comment
+comment|/* Reliable Transaction */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_TP
 value|29
 end_define
 
 begin_comment
 comment|/* tp-4 w/ class negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_BLT
+value|30
+end_define
+
+begin_comment
+comment|/* Bulk Data Transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_NSP
+value|31
+end_define
+
+begin_comment
+comment|/* Network Services */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_INP
+value|32
+end_define
+
+begin_comment
+comment|/* Merit Internodal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SEP
+value|33
+end_define
+
+begin_comment
+comment|/* Sequential Exchange */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_3PC
+value|34
+end_define
+
+begin_comment
+comment|/* Third Party Connect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IDPR
+value|35
+end_define
+
+begin_comment
+comment|/* InterDomain Policy Routing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_XTP
+value|36
+end_define
+
+begin_comment
+comment|/* XTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_DDP
+value|37
+end_define
+
+begin_comment
+comment|/* Datagram Delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_CMTP
+value|38
+end_define
+
+begin_comment
+comment|/* Control Message Transport */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_TPXX
+value|39
+end_define
+
+begin_comment
+comment|/* TP++ Transport */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IL
+value|40
+end_define
+
+begin_comment
+comment|/* IL transport protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SIP
+value|41
+end_define
+
+begin_comment
+comment|/* Simple Internet Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SDRP
+value|42
+end_define
+
+begin_comment
+comment|/* Source Demand Routing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SIPSR
+value|43
+end_define
+
+begin_comment
+comment|/* SIP Source Route */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SIPFRAG
+value|44
+end_define
+
+begin_comment
+comment|/* SIP Fragment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IDRP
+value|45
+end_define
+
+begin_comment
+comment|/* InterDomain Routing*/
 end_comment
 
 begin_define
@@ -158,6 +532,307 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_GRE
+value|47
+end_define
+
+begin_comment
+comment|/* General Routing Encap. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_MHRP
+value|48
+end_define
+
+begin_comment
+comment|/* Mobile Host Routing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_BHA
+value|49
+end_define
+
+begin_comment
+comment|/* BHA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_ESP
+value|50
+end_define
+
+begin_comment
+comment|/* SIPP Encap Sec. Payload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_AH
+value|51
+end_define
+
+begin_comment
+comment|/* SIPP Auth Header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_INLSP
+value|52
+end_define
+
+begin_comment
+comment|/* Integ. Net Layer Security */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SWIPE
+value|53
+end_define
+
+begin_comment
+comment|/* IP with encryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_NHRP
+value|54
+end_define
+
+begin_comment
+comment|/* Next Hop Resolution */
+end_comment
+
+begin_comment
+comment|/* 55-60: Unassigned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_AHIP
+value|61
+end_define
+
+begin_comment
+comment|/* any host internal protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_CFTP
+value|62
+end_define
+
+begin_comment
+comment|/* CFTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_HELLO
+value|63
+end_define
+
+begin_comment
+comment|/* "hello" routing protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SATEXPAK
+value|64
+end_define
+
+begin_comment
+comment|/* SATNET/Backroom EXPAK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_KRYPTOLAN
+value|65
+end_define
+
+begin_comment
+comment|/* Kryptolan */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_RVD
+value|66
+end_define
+
+begin_comment
+comment|/* Remote Virtual Disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IPPC
+value|67
+end_define
+
+begin_comment
+comment|/* Pluribus Packet Core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_ADFS
+value|68
+end_define
+
+begin_comment
+comment|/* Any distributed FS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SATMON
+value|69
+end_define
+
+begin_comment
+comment|/* Satnet Monitoring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_VISA
+value|70
+end_define
+
+begin_comment
+comment|/* VISA Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IPCV
+value|71
+end_define
+
+begin_comment
+comment|/* Packet Core Utility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_CPNX
+value|72
+end_define
+
+begin_comment
+comment|/* Comp. Prot. Net. Executive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_CPHB
+value|73
+end_define
+
+begin_comment
+comment|/* Comp. Prot. HeartBeat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_WSN
+value|74
+end_define
+
+begin_comment
+comment|/* Wang Span Network */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_PVP
+value|75
+end_define
+
+begin_comment
+comment|/* Packet Video Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_BRSATMON
+value|76
+end_define
+
+begin_comment
+comment|/* BackRoom SATNET Monitoring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_ND
+value|77
+end_define
+
+begin_comment
+comment|/* Sun net disk proto (temp.) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_WBMON
+value|78
+end_define
+
+begin_comment
+comment|/* WIDEBAND Monitoring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_WBEXPAK
+value|79
+end_define
+
+begin_comment
+comment|/* WIDEBAND EXPAK */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_EON
 value|80
 end_define
@@ -169,12 +844,233 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_VMTP
+value|81
+end_define
+
+begin_comment
+comment|/* VMTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SVMTP
+value|82
+end_define
+
+begin_comment
+comment|/* Secure VMTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_VINES
+value|83
+end_define
+
+begin_comment
+comment|/* Banyon VINES */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_TTP
+value|84
+end_define
+
+begin_comment
+comment|/* TTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IGP
+value|85
+end_define
+
+begin_comment
+comment|/* NSFNET-IGP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_DGP
+value|86
+end_define
+
+begin_comment
+comment|/* dissimilar gateway prot. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_TCP
+value|87
+end_define
+
+begin_comment
+comment|/* TCF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IGRP
+value|88
+end_define
+
+begin_comment
+comment|/* Cisco/GXS IGRP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_OSPFIGP
+value|89
+end_define
+
+begin_comment
+comment|/* OSPFIGP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SRPC
+value|90
+end_define
+
+begin_comment
+comment|/* Strite RPC protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_LARP
+value|91
+end_define
+
+begin_comment
+comment|/* Locus Address Resoloution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_MTP
+value|92
+end_define
+
+begin_comment
+comment|/* Multicast Transport */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_AX25
+value|93
+end_define
+
+begin_comment
+comment|/* AX.25 Frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IPEIP
+value|94
+end_define
+
+begin_comment
+comment|/* IP encapsulated in IP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_MICP
+value|95
+end_define
+
+begin_comment
+comment|/* Mobile Int.ing control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SCCSP
+value|96
+end_define
+
+begin_comment
+comment|/* Semaphore Comm. security */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_ETHERIP
+value|97
+end_define
+
+begin_comment
+comment|/* Ethernet IP encapsulation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_ENCAP
 value|98
 end_define
 
 begin_comment
 comment|/* encapsulation header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_APES
+value|99
+end_define
+
+begin_comment
+comment|/* any private encr. scheme */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_GMTP
+value|100
+end_define
+
+begin_comment
+comment|/* GMTP*/
+end_comment
+
+begin_comment
+comment|/* 101-254: Unassigned */
+end_comment
+
+begin_comment
+comment|/* 255: Reserved */
+end_comment
+
+begin_comment
+comment|/* BSD Private, local use, namespace incursion */
 end_comment
 
 begin_define
