@@ -365,6 +365,31 @@ comment|/*  * Standard system event queues.  */
 end_comment
 
 begin_comment
+comment|/* Generic priority levels */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVENTHANDLER_PRI_FIRST
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVENTHANDLER_PRI_ANY
+value|10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVENTHANDLER_PRI_LAST
+value|20000
+end_define
+
+begin_comment
 comment|/* Shutdown events */
 end_comment
 
@@ -388,21 +413,21 @@ begin_define
 define|#
 directive|define
 name|SHUTDOWN_PRI_FIRST
-value|0
+value|EVENTHANDLER_PRI_FIRST
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHUTDOWN_PRI_DEFAULT
-value|10000
+value|EVENTHANDLER_PRI_ANY
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHUTDOWN_PRI_LAST
-value|20000
+value|EVENTHANDLER_PRI_FIRST
 end_define
 
 begin_expr_stmt
@@ -467,14 +492,14 @@ begin_define
 define|#
 directive|define
 name|IDLE_PRI_FIRST
-value|10000
+value|EVENTHANDLER_PRI_FIRST
 end_define
 
 begin_define
 define|#
 directive|define
 name|IDLE_PRI_LAST
-value|20000
+value|EVENTHANDLER_PRI_LAST
 end_define
 
 begin_expr_stmt
@@ -511,7 +536,7 @@ begin_define
 define|#
 directive|define
 name|LOWMEM_PRI_DEFAULT
-value|0
+value|EVENTHANDLER_PRI_FIRST
 end_define
 
 begin_expr_stmt
