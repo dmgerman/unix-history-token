@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcibus.c,v 1.19 1995/10/17 23:30:11 se Exp $ ** **  pci bus subroutines for i386 architecture. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcibus.c,v 1.20 1995/12/10 13:39:04 phk Exp $ ** **  pci bus subroutines for i386 architecture. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -161,19 +161,16 @@ parameter_list|(
 name|int
 name|irq
 parameter_list|,
-name|void
-function_decl|(
+name|inthand2_t
 modifier|*
-name|ihandler
-function_decl|)
-parameter_list|()
+name|func
 parameter_list|,
 name|int
 name|arg
 parameter_list|,
 name|unsigned
 modifier|*
-name|maskp
+name|maskptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -186,12 +183,9 @@ parameter_list|(
 name|int
 name|irq
 parameter_list|,
-name|void
-function_decl|(
+name|inthand2_t
 modifier|*
-name|handler
-function_decl|)
-parameter_list|()
+name|func
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1332,12 +1326,9 @@ parameter_list|(
 name|int
 name|irq
 parameter_list|,
-name|void
-function_decl|(
+name|inthand2_t
 modifier|*
 name|func
-function_decl|)
-parameter_list|()
 parameter_list|,
 name|int
 name|arg
@@ -1363,10 +1354,6 @@ comment|/* deviced??    */
 literal|0
 argument_list|,
 comment|/* flags?	    */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
 name|func
 argument_list|,
 comment|/* handler	    */
@@ -1424,12 +1411,9 @@ parameter_list|(
 name|int
 name|irq
 parameter_list|,
-name|void
-function_decl|(
+name|inthand2_t
 modifier|*
 name|func
-function_decl|)
-parameter_list|()
 parameter_list|)
 block|{
 name|int
@@ -1450,10 +1434,6 @@ name|unregister_intr
 argument_list|(
 name|irq
 argument_list|,
-operator|(
-name|inthand2_t
-operator|*
-operator|)
 name|func
 argument_list|)
 expr_stmt|;

@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pci.c,v 1.37 1995/12/14 09:54:08 phk Exp $ ** **  General subroutines for the PCI bus. **  pci_configure () ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pci.c,v 1.38 1995/12/15 13:40:20 se Exp $ ** **  General subroutines for the PCI bus. **  pci_configure () ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<pci.h>
+file|"pci.h"
 end_include
 
 begin_if
@@ -4308,12 +4308,9 @@ parameter_list|(
 name|pcici_t
 name|tag
 parameter_list|,
-name|int
-function_decl|(
+name|pci_inthand_t
 modifier|*
 name|func
-function_decl|)
-parameter_list|()
 parameter_list|,
 name|void
 modifier|*
@@ -4535,15 +4532,13 @@ operator|=
 name|pcibus
 operator|->
 name|pb_iattach
+comment|/* 			 * XXX if we get here, then `func' must be pci_int 			 * so the bogus casts are almost OK since they just 			 * undo the bogus casts that were needed to pass 			 * pci_int and its arg to pci_map_int(). 			 */
 argument_list|(
 name|irq
 argument_list|,
 operator|(
-name|void
-argument_list|(
+name|inthand2_t
 operator|*
-argument_list|)
-argument_list|()
 operator|)
 name|func
 argument_list|,
@@ -4607,11 +4602,8 @@ argument_list|(
 name|irq
 argument_list|,
 operator|(
-name|void
-argument_list|(
+name|inthand2_t
 operator|*
-argument_list|)
-argument_list|()
 operator|)
 name|tail
 operator|->
@@ -4962,11 +4954,8 @@ argument_list|(
 name|irq
 argument_list|,
 operator|(
-name|void
-argument_list|(
+name|inthand2_t
 operator|*
-argument_list|)
-argument_list|()
 operator|)
 name|this
 operator|->
@@ -5036,11 +5025,8 @@ argument_list|(
 name|irq
 argument_list|,
 operator|(
-name|void
-argument_list|(
+name|inthand2_t
 operator|*
-argument_list|)
-argument_list|()
 operator|)
 name|tail
 operator|->
