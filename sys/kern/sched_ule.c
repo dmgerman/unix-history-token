@@ -1657,6 +1657,8 @@ block|}
 if|if
 condition|(
 name|load
+operator|>
+literal|1
 condition|)
 return|return
 operator|(
