@@ -1937,6 +1937,9 @@ name|struct
 name|scsi_sense
 name|cam_scsi_test_unit_ready
 decl_stmt|;
+name|usb_callout_t
+name|cam_scsi_rescan_ch
+decl_stmt|;
 name|int
 name|timeout
 decl_stmt|;
@@ -3521,6 +3524,13 @@ name|uaa
 operator|->
 name|ifaceno
 expr_stmt|;
+name|usb_callout_init
+argument_list|(
+name|sc
+operator|->
+name|cam_scsi_rescan_ch
+argument_list|)
+expr_stmt|;
 comment|/* initialise the proto and drive values in the umass_softc (again) */
 operator|(
 name|void
@@ -4668,6 +4678,17 @@ operator|->
 name|flags
 operator||=
 name|UMASS_FLAGS_GONE
+expr_stmt|;
+name|usb_uncallout_drain
+argument_list|(
+name|sc
+operator|->
+name|cam_scsi_rescan_ch
+argument_list|,
+name|umass_cam_rescan
+argument_list|,
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9465,18 +9486,21 @@ operator|!
 name|cold
 condition|)
 block|{
-comment|/* Notify CAM of the new device after 1 second delay. Any 		 * failure is benign, as the user can still do it by hand 		 * (camcontrol rescan<busno>). Only do this if we are not 		 * booting, because CAM does a scan after booting has 		 * completed, when interrupts have been enabled. 		 */
-comment|/* XXX This will bomb if the driver is unloaded between attach 		 * and execution of umass_cam_rescan. 		 */
-name|timeout
+comment|/* Notify CAM of the new device after a short delay. Any 		 * failure is benign, as the user can still do it by hand 		 * (camcontrol rescan<busno>). Only do this if we are not 		 * booting, because CAM does a scan after booting has 		 * completed, when interrupts have been enabled. 		 */
+name|usb_callout
 argument_list|(
-name|umass_cam_rescan
-argument_list|,
 name|sc
+operator|->
+name|cam_scsi_rescan_ch
 argument_list|,
 name|MS_TO_TICKS
 argument_list|(
 literal|200
 argument_list|)
+argument_list|,
+name|umass_cam_rescan
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
