@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.64 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.65 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1383,9 +1383,9 @@ operator|->
 name|ufid_gen
 condition|)
 block|{
-name|ufs_iput
+name|vput
 argument_list|(
-name|ip
+name|nvp
 argument_list|)
 expr_stmt|;
 operator|*
