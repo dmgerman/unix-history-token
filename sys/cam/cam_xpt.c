@@ -1499,6 +1499,31 @@ literal|255
 block|}
 block|,
 block|{
+comment|/* 		 * Would respond to all LUNs.  Device type and removable 		 * flag are jumper-selectable. 		 */
+block|{
+name|T_ANY
+block|,
+name|SIP_MEDIA_REMOVABLE
+operator||
+name|SIP_MEDIA_FIXED
+block|,
+literal|"MaxOptix"
+block|,
+literal|"Tahiti 1"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_NOLUNS
+block|,
+comment|/*mintags*/
+literal|0
+block|,
+comment|/*maxtags*/
+literal|0
+block|}
+block|,
+block|{
 comment|/* Default tagged queuing parameters for all devices */
 block|{
 name|T_ANY
