@@ -3555,7 +3555,7 @@ name|cred
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PRISON_ROOT
 argument_list|)
 operator|&&
 operator|(
