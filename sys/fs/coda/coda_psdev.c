@@ -1962,7 +1962,7 @@ operator|)
 return|;
 name|selrecord
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 operator|&
 operator|(
