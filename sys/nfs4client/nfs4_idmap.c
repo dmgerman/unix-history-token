@@ -98,10 +98,9 @@ define|#
 directive|define
 name|IDMAP_DEBUG
 parameter_list|(
-name|X
 modifier|...
 parameter_list|)
-value|printf(X);
+value|printf(__VA_ARGS__);
 end_define
 
 begin_else
@@ -114,7 +113,6 @@ define|#
 directive|define
 name|IDMAP_DEBUG
 parameter_list|(
-name|X
 modifier|...
 parameter_list|)
 end_define
@@ -1854,9 +1852,6 @@ name|idmap_upcall_id
 argument_list|(
 name|IDMAP_TYPE_GID
 argument_list|,
-operator|(
-name|ident_t
-operator|)
 name|id
 argument_list|,
 operator|&
