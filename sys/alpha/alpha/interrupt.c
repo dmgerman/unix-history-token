@@ -412,7 +412,13 @@ case|case
 name|ALPHA_INTR_CLOCK
 case|:
 comment|/* clock interrupt */
-comment|/* CTR0(KTR_INTR, "clock interrupt"); */
+name|CTR0
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"clock interrupt"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PCPU_GET
