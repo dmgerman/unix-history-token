@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)libpc.h 1.6 %G%"; */
+comment|/* static char sccsid[] = "@(#)libpc.h 1.7 %G%"; */
 end_comment
 
 begin_function_decl
@@ -21,6 +21,14 @@ specifier|extern
 name|long
 modifier|*
 name|ADDT
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|double
+name|ATAN
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -51,6 +59,14 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|double
+name|COS
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|long
 modifier|*
 name|CTTOT
@@ -70,6 +86,14 @@ begin_function_decl
 specifier|extern
 name|int
 name|EXCEPT
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|double
+name|EXP
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -334,6 +358,14 @@ begin_function_decl
 specifier|extern
 name|long
 name|SEED
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|double
+name|SIN
 parameter_list|()
 function_decl|;
 end_function_decl
