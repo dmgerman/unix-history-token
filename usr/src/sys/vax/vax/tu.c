@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.21	83/07/07	*/
+comment|/*	tu.c	4.22	83/07/18	*/
 end_comment
 
 begin_if
@@ -3117,11 +3117,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|tu_restart
 argument_list|()
@@ -3149,6 +3144,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
