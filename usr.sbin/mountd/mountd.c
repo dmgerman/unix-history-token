@@ -1312,7 +1312,7 @@ name|xucred
 name|def_anon
 init|=
 block|{
-literal|0
+name|XUCRED_VERSION
 block|,
 operator|(
 name|uid_t
@@ -10609,6 +10609,12 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|cr
+operator|->
+name|cr_version
+operator|=
+name|XUCRED_VERSION
+expr_stmt|;
 comment|/* 	 * Set up the unprivileged user. 	 */
 name|cr
 operator|->

@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -106,6 +112,19 @@ condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+if|if
+condition|(
+name|xuc
+operator|.
+name|cr_version
+operator|!=
+name|XUCRED_VERSION
+condition|)
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 operator|*

@@ -2911,6 +2911,12 @@ condition|(
 name|getcredfail
 operator|!=
 literal|0
+operator|||
+name|uc
+operator|.
+name|cr_version
+operator|!=
+name|XUCRED_VERSION
 condition|)
 block|{
 if|if

@@ -149,10 +149,10 @@ begin_struct
 struct|struct
 name|xucred
 block|{
-name|u_short
-name|_cr_unused0
+name|u_int
+name|cr_version
 decl_stmt|;
-comment|/* compatibility with old ucred */
+comment|/* structure layout version */
 name|uid_t
 name|cr_uid
 decl_stmt|;
@@ -176,6 +176,13 @@ comment|/* compatibility with old ucred */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|XUCRED_VERSION
+value|0
+end_define
 
 begin_ifdef
 ifdef|#
@@ -361,6 +368,23 @@ name|struct
 name|ucred
 modifier|*
 name|cr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cru2x
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cr
+parameter_list|,
+name|struct
+name|xucred
+modifier|*
+name|xcr
 parameter_list|)
 function_decl|;
 end_function_decl
