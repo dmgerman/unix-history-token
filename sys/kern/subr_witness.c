@@ -1152,6 +1152,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"ALD Queue"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
