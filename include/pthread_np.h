@@ -89,7 +89,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|pthread_resume_all_np
 parameter_list|(
 name|void
@@ -129,7 +129,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|pthread_suspend_all_np
 parameter_list|(
 name|void
