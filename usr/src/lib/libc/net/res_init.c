@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	5.3 (Berkeley) %G%"
+literal|"@(#)res_init.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,44 @@ include|#
 directive|include
 file|<arpa/resolv.h>
 end_include
+
+begin_comment
+comment|/*  * Resolver configuration file. Contains the address of the  * inital name server to query and the default domain for  * non fully qualified domain names.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFFILE
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|conffile
+init|=
+name|CONFFILE
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|conffile
+init|=
+literal|"/usr/local/lib/resolv.conf"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Resolver state default settings  */
@@ -167,7 +205,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|CONFFILE
+name|conffile
 argument_list|,
 literal|"r"
 argument_list|)
