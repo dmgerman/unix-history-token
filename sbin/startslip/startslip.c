@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: startslip.c,v 1.16 1995/09/19 03:37:05 ache Exp $  */
+comment|/*-  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: startslip.c,v 1.17 1995/09/20 04:56:09 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -253,6 +253,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|username
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|hup
 decl_stmt|;
@@ -307,6 +314,14 @@ end_decl_stmt
 begin_comment
 comment|/* connect script default timeout */
 end_comment
+
+begin_decl_stmt
+name|time_t
+name|conn_time
+decl_stmt|,
+name|start_time
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -542,9 +557,6 @@ literal|32
 index|]
 decl_stmt|;
 name|char
-modifier|*
-name|username
-decl_stmt|,
 modifier|*
 name|password
 decl_stmt|;
@@ -1024,9 +1036,123 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|wfd
+condition|)
+block|{
+name|printd
+argument_list|(
+literal|"fclose, "
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|wfd
+argument_list|)
+expr_stmt|;
+name|conn_time
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|-
+name|start_time
+expr_stmt|;
+if|if
+condition|(
+name|uucp_lock
+condition|)
+name|uu_unlock
+argument_list|(
+name|dvname
+argument_list|)
+expr_stmt|;
+name|locked
+operator|=
+literal|0
+expr_stmt|;
+name|wfd
+operator|=
+name|NULL
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+name|printd
+argument_list|(
+literal|"close, "
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|conn_time
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|-
+name|start_time
+expr_stmt|;
+if|if
+condition|(
+name|uucp_lock
+condition|)
+name|uu_unlock
+argument_list|(
+name|dvname
+argument_list|)
+expr_stmt|;
+name|locked
+operator|=
+literal|0
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|logged_in
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: connection time elapsed: %ld secs"
+argument_list|,
+name|username
+argument_list|,
+name|conn_time
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf
@@ -1094,7 +1220,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"exiting login after %d tries\n"
+literal|"%s: exiting login after %d tries"
+argument_list|,
+name|username
 argument_list|,
 name|tries
 argument_list|)
@@ -1108,98 +1236,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|wfd
-condition|)
-block|{
-name|printd
-argument_list|(
-literal|"fclose, "
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|wfd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|uucp_lock
-condition|)
-name|uu_unlock
-argument_list|(
-name|dvname
-argument_list|)
-expr_stmt|;
-name|locked
-operator|=
-literal|0
-expr_stmt|;
-name|wfd
-operator|=
-name|NULL
-expr_stmt|;
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|fd
-operator|>=
-literal|0
-condition|)
-block|{
-name|printd
-argument_list|(
-literal|"close, "
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|uucp_lock
-condition|)
-name|uu_unlock
-argument_list|(
-name|dvname
-argument_list|)
-expr_stmt|;
-name|locked
-operator|=
-literal|0
-expr_stmt|;
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|terminate
-condition|)
-goto|goto
-name|restart
-goto|;
-if|if
-condition|(
 name|tries
 operator|>
 literal|1
@@ -1209,7 +1245,9 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"sleeping %d seconds (%d tries)"
+literal|"%s: sleeping %d seconds (%d tries)"
+argument_list|,
+name|username
 argument_list|,
 name|wait_time
 operator|*
@@ -1257,7 +1295,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"daemon: %m"
+literal|"%s: daemon: %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|down
@@ -1331,7 +1371,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't lock %s"
+literal|"%s: can't lock %s"
+argument_list|,
+name|username
 argument_list|,
 name|devicename
 argument_list|)
@@ -1367,7 +1409,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"open %s: %m\n"
+literal|"%s: open %s: %m"
+argument_list|,
+name|username
 argument_list|,
 name|devicename
 argument_list|)
@@ -1433,7 +1477,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (TIOCSCTTY): %m"
+literal|"%s: ioctl (TIOCSCTTY): %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|down
@@ -1459,7 +1505,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"tcsetpgrp failed: %m"
+literal|"%s: tcsetpgrp failed: %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|down
@@ -1490,7 +1538,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: tcgetattr: %m\n"
+literal|"%s: tcgetattr(%s): %m"
+argument_list|,
+name|username
 argument_list|,
 name|devicename
 argument_list|)
@@ -1569,7 +1619,15 @@ operator||=
 name|CLOCAL
 expr_stmt|;
 comment|/* until modem commands passes */
-name|cfsetspeed
+name|cfsetispeed
+argument_list|(
+operator|&
+name|t
+argument_list|,
+name|speed
+argument_list|)
+expr_stmt|;
+name|cfsetospeed
 argument_list|(
 operator|&
 name|t
@@ -1596,7 +1654,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: tcsetattr: %m\n"
+literal|"%s: tcsetattr(%s): %m"
+argument_list|,
+name|username
 argument_list|,
 name|devicename
 argument_list|)
@@ -1642,7 +1702,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't fdopen %s: %m"
+literal|"%s: can't fdopen %s: %m"
+argument_list|,
+name|username
 argument_list|,
 name|devicename
 argument_list|)
@@ -1681,9 +1743,13 @@ condition|(
 name|dialerstring
 condition|)
 block|{
-name|printd
+name|syslog
 argument_list|(
-literal|"send dialstring: %s\\r"
+name|LOG_INFO
+argument_list|,
+literal|"%s: dialer string: %s\\r"
+argument_list|,
+name|username
 argument_list|,
 name|dialerstring
 argument_list|)
@@ -1788,7 +1854,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: tcsetattr: %m"
+literal|"%s: tcsetattr(%s): %m"
+argument_list|,
+name|username
 argument_list|,
 name|devicename
 argument_list|)
@@ -2031,6 +2099,13 @@ condition|)
 goto|goto
 name|restart
 goto|;
+name|start_time
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Attach 	 */
 name|printd
 argument_list|(
@@ -2060,7 +2135,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: ioctl (TIOCSETD SLIP): %m\n"
+literal|"%s: ioctl (%s, TIOCSETD): %m"
+argument_list|,
+name|username
 argument_list|,
 name|devicename
 argument_list|)
@@ -2094,7 +2171,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(SLIOCSUNIT): %m"
+literal|"%s: ioctl(SLIOCSUNIT): %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|down
@@ -2122,7 +2201,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(SLIOCGUNIT): %m"
+literal|"%s: ioctl(SLIOCGUNIT): %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|down
@@ -2173,7 +2254,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(SLIOCSKEEPAL): %m"
+literal|"%s: ioctl(SLIOCSKEEPAL): %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|down
@@ -2206,7 +2289,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(SLIOCSOUTFILL): %m"
+literal|"%s: ioctl(SLIOCSOUTFILL): %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|down
@@ -2264,11 +2349,25 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"reconnected on %s (%d tries).\n"
+literal|"%s: reconnected on %s (%d tries)"
+argument_list|,
+name|username
 argument_list|,
 name|unitname
 argument_list|,
 name|tries
+argument_list|)
+expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: connected on %s"
+argument_list|,
+name|username
+argument_list|,
+name|unitname
 argument_list|)
 expr_stmt|;
 name|first
@@ -2333,7 +2432,9 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"hangup signal\n"
+literal|"%s: got hangup signal"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|hup
@@ -2365,7 +2466,9 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"dead line signal\n"
+literal|"%s: got dead line signal"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|hup
@@ -2397,7 +2500,9 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"terminate signal\n"
+literal|"%s: got terminate signal"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|terminate
@@ -2568,7 +2673,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"getline: select: %m"
+literal|"%s: getline: select: %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 block|}
@@ -2707,7 +2814,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"getline: read: %m"
+literal|"%s: getline: read: %m"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 block|}
@@ -2716,7 +2825,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"read returned 0"
+literal|"%s: read returned 0"
+argument_list|,
+name|username
 argument_list|)
 expr_stmt|;
 name|buf
@@ -2782,7 +2893,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: ioctl (TIOCMGET): %m"
+literal|"%s: ioctl (%s, TIOCMGET): %m"
+argument_list|,
+name|username
 argument_list|,
 name|devicename
 argument_list|)
