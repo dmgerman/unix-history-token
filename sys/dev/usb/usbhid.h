@@ -100,6 +100,13 @@ name|UR_SET_PROTOCOL
 value|0x0b
 end_define
 
+begin_define
+define|#
+directive|define
+name|UPACKED
+value|__attribute__ ((packed))
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
