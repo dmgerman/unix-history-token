@@ -31,34 +31,28 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * idlok:  *	Turn on and off using insert/deleteln sequences for the given  *	window.  *  */
+comment|/*  * idlok --  *	Turn on and off using insert/deleteln sequences for the  *	given window.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|idlok
-argument_list|(
+parameter_list|(
 name|win
-argument_list|,
+parameter_list|,
 name|bf
-argument_list|)
-specifier|register
+parameter_list|)
 name|WINDOW
-operator|*
+modifier|*
 name|win
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|bool
+decl_stmt|;
+name|int
 name|bf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -79,7 +73,7 @@ operator|~
 name|_IDLINE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

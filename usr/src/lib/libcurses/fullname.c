@@ -28,15 +28,8 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|reg
-value|register
-end_define
-
 begin_comment
-comment|/*  *	This routine fills in "def" with the full name of the terminal.  * This is assumed to be the last name in the list of aliases.  *  */
+comment|/*  * fullname --  *	This routine fills in "def" with the full name of the terminal.  *	This is assumed to be the last name in the list of aliases.  */
 end_comment
 
 begin_function
@@ -48,7 +41,7 @@ name|bp
 parameter_list|,
 name|def
 parameter_list|)
-name|reg
+specifier|register
 name|char
 modifier|*
 name|bp
@@ -60,7 +53,7 @@ end_function
 
 begin_block
 block|{
-name|reg
+specifier|register
 name|char
 modifier|*
 name|cp
@@ -68,9 +61,9 @@ decl_stmt|;
 operator|*
 name|def
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
-comment|/* in case no name */
+comment|/* In case no name. */
 while|while
 condition|(
 operator|*
@@ -86,7 +79,7 @@ name|cp
 operator|=
 name|def
 expr_stmt|;
-comment|/* start of answer */
+comment|/* Start of answer. */
 while|while
 condition|(
 operator|*
@@ -102,7 +95,6 @@ name|bp
 operator|!=
 literal|'|'
 condition|)
-block|{
 operator|*
 name|cp
 operator|++
@@ -111,14 +103,13 @@ operator|*
 name|bp
 operator|++
 expr_stmt|;
-comment|/* copy name over */
-block|}
+comment|/* Copy name over. */
 operator|*
 name|cp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
-comment|/* zero end of name */
+comment|/* Zero end of name. */
 if|if
 condition|(
 operator|*
@@ -126,12 +117,10 @@ name|bp
 operator|==
 literal|'|'
 condition|)
-block|{
 name|bp
 operator|++
 expr_stmt|;
-comment|/* skip over '|' if that is case */
-block|}
+comment|/* Skip over '|' if that is case. */
 block|}
 return|return
 operator|(

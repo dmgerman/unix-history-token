@@ -31,39 +31,30 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  *	This routine reads in a character from the window.  *  */
+comment|/*  * wgetch --  *	Read in a character from the window.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|wgetch
-argument_list|(
-argument|win
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|reg
-name|bool
-name|weset
-init|=
-name|FALSE
-decl_stmt|;
-name|reg
-name|char
+specifier|register
+name|int
 name|inp
+decl_stmt|,
+name|weset
 decl_stmt|;
 if|if
 condition|(
@@ -101,47 +92,45 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
+literal|"wgetch: __echoit = %d, __rawmode = %d\n"
 argument_list|,
-literal|"WGETCH: _echoit = %c, _rawmode = %c\n"
+name|__echoit
 argument_list|,
-name|_echoit
-condition|?
-literal|'T'
-else|:
-literal|'F'
-argument_list|,
-name|_rawmode
-condition|?
-literal|'T'
-else|:
-literal|'F'
+name|__rawmode
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 if|if
 condition|(
-name|_echoit
+name|__echoit
 operator|&&
 operator|!
-name|_rawmode
+name|__rawmode
 condition|)
 block|{
 name|cbreak
 argument_list|()
 expr_stmt|;
 name|weset
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
+else|else
+name|weset
+operator|=
+literal|0
+expr_stmt|;
 name|inp
 operator|=
 name|getchar
@@ -150,11 +139,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"WGETCH got '%s'\n"
+literal|"wgetch got '%s'\n"
 argument_list|,
 name|unctrl
 argument_list|(
@@ -166,7 +153,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|_echoit
+name|__echoit
 condition|)
 block|{
 name|mvwaddch
@@ -208,10 +195,12 @@ name|nocbreak
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|inp
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -31,26 +31,24 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * _id_subwins:  *	Re-sync the pointers to _y for all the subwindows.  *  */
+comment|/*  * __id_subwins --  *	Re-sync the pointers to _y for all the subwindows.  */
 end_comment
 
-begin_expr_stmt
-name|_id_subwins
-argument_list|(
+begin_function
+name|void
+name|__id_subwins
+parameter_list|(
 name|orig
-argument_list|)
+parameter_list|)
 specifier|register
 name|WINDOW
-operator|*
+modifier|*
 name|orig
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|WINDOW
@@ -59,15 +57,13 @@ name|win
 decl_stmt|;
 specifier|register
 name|int
-name|realy
-decl_stmt|;
-specifier|register
-name|int
-name|y
-decl_stmt|,
 name|oy
 decl_stmt|,
+name|realy
+decl_stmt|,
 name|x
+decl_stmt|,
+name|y
 decl_stmt|;
 name|realy
 operator|=
@@ -98,7 +94,7 @@ operator|->
 name|_nextp
 control|)
 block|{
-comment|/* 		 * If the window ends before our current position, 		 * don't need to do anything. 		 */
+comment|/* 		 * If the window ends before our current position, don't need 		 * to do anything. 		 */
 if|if
 condition|(
 name|win
@@ -162,7 +158,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

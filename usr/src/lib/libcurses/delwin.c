@@ -31,41 +31,36 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  *	This routine deletes a window and releases it back to the system.  *  */
+comment|/*  * delwin --  *	Delete a window and release it back to the system.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|delwin
-argument_list|(
-argument|win
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|reg
-name|int
-name|i
-decl_stmt|;
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|wp
 decl_stmt|,
 modifier|*
 name|np
+decl_stmt|;
+specifier|register
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -76,7 +71,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If we are the original window, delete the space for 		 * all the subwindows, and the array of space as well. 		 */
+comment|/* 		 * If we are the original window, delete the space for all 		 * the subwindows, and the array of space as well. 		 */
 for|for
 control|(
 name|i
@@ -155,7 +150,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * If we are a subwindow, take ourselves out of the 		 * list.  NOTE: if we are a subwindow, the minimum list 		 * is orig followed by this subwindow, so there are 		 * always at least two windows in the list. 		 */
+comment|/* 		 * If we are a subwindow, take ourselves out of the list. 		 * NOTE: if we are a subwindow, the minimum list is orig 		 * followed by this subwindow, so there are always at least 		 * two windows in the list. 		 */
 for|for
 control|(
 name|wp
@@ -198,8 +193,13 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 
