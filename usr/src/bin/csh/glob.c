@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.38 (Berkeley) %G%"
+literal|"@(#)glob.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4640,6 +4640,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
 name|a
 condition|)
 comment|/* check for NULL */
