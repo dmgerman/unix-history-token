@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsm_subs.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsm_subs.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -221,7 +221,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|nfsm_disect(p,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*p))> (m)) { \ 			m_freem(mrep); \ 			error = EBADRPC; \ 			goto nfsmout; \ 		}
+value|nfsm_disect(tl,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*tl))> (m)) { \ 			m_freem(mrep); \ 			error = EBADRPC; \ 			goto nfsmout; \ 		}
 end_define
 
 begin_define
@@ -234,7 +234,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|nfsm_disect(p,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*p))> (m) || (s)<= 0) { \ 			error = EBADRPC; \ 			nfsm_reply(0); \ 		}
+value|nfsm_disect(tl,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*tl))> (m) || (s)<= 0) { \ 			error = EBADRPC; \ 			nfsm_reply(0); \ 		}
 end_define
 
 begin_define
@@ -324,7 +324,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|if ((s)> (m)) { \ 			m_freem(mreq); \ 			error = ENAMETOOLONG; \ 			goto nfsmout; \ 		} \ 		t2 = nfsm_rndup(s)+NFSX_UNSIGNED; \ 		if(t2<=(NFSMSIZ(mb)-mb->m_len)){ \ 			nfsm_build(p,u_long *,t2); \ 			*p++ = txdr_unsigned(s); \ 			*(p+((t2>>2)-2)) = 0; \ 			bcopy((caddr_t)(a), (caddr_t)p, (s)); \ 		} else if (error = nfsm_strtmbuf(&mb,&bpos, (a), (s))) { \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
+value|if ((s)> (m)) { \ 			m_freem(mreq); \ 			error = ENAMETOOLONG; \ 			goto nfsmout; \ 		} \ 		t2 = nfsm_rndup(s)+NFSX_UNSIGNED; \ 		if(t2<=(NFSMSIZ(mb)-mb->m_len)){ \ 			nfsm_build(tl,u_long *,t2); \ 			*tl++ = txdr_unsigned(s); \ 			*(tl+((t2>>2)-2)) = 0; \ 			bcopy((caddr_t)(a), (caddr_t)tl, (s)); \ 		} else if (error = nfsm_strtmbuf(&mb,&bpos, (a), (s))) { \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
 end_define
 
 begin_define
@@ -400,7 +400,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|nfsm_disecton(p, u_long *, NFSX_FH); \ 		bcopy((caddr_t)p, (caddr_t)f, NFSX_FH)
+value|nfsm_disecton(tl, u_long *, NFSX_FH); \ 		bcopy((caddr_t)tl, (caddr_t)f, NFSX_FH)
 end_define
 
 begin_define
@@ -408,7 +408,7 @@ define|#
 directive|define
 name|nfsm_clget
 define|\
-value|if (bp>= be) { \ 			MGET(mp, M_WAIT, MT_DATA); \ 			MCLGET(mp, M_WAIT); \ 			mp->m_len = NFSMSIZ(mp); \ 			if (mp3 == NULL) \ 				mp3 = mp2 = mp; \ 			else { \ 				mp2->m_next = mp; \ 				mp2 = mp; \ 			} \ 			bp = mtod(mp, caddr_t); \ 			be = bp+mp->m_len; \ 		} \ 		p = (u_long *)bp
+value|if (bp>= be) { \ 			MGET(mp, M_WAIT, MT_DATA); \ 			MCLGET(mp, M_WAIT); \ 			mp->m_len = NFSMSIZ(mp); \ 			if (mp3 == NULL) \ 				mp3 = mp2 = mp; \ 			else { \ 				mp2->m_next = mp; \ 				mp2 = mp; \ 			} \ 			bp = mtod(mp, caddr_t); \ 			be = bp+mp->m_len; \ 		} \ 		tl = (u_long *)bp
 end_define
 
 begin_define
