@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.54
+literal|3.55
 operator|%
 name|G
 operator|%
@@ -382,9 +382,9 @@ name|bitset
 argument_list|(
 name|H_RESENT
 argument_list|,
-name|h
+name|hi
 operator|->
-name|h_flags
+name|hi_flags
 argument_list|)
 condition|)
 name|CurEnv
