@@ -862,7 +862,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|u_int32_t
-name|bge_crc
+name|bge_mchash
 parameter_list|(
 name|caddr_t
 parameter_list|)
@@ -5296,7 +5296,7 @@ end_define
 begin_function
 specifier|static
 name|u_int32_t
-name|bge_crc
+name|bge_mchash
 parameter_list|(
 name|addr
 parameter_list|)
@@ -5305,13 +5305,15 @@ name|addr
 decl_stmt|;
 block|{
 name|u_int32_t
+name|crc
+decl_stmt|;
+name|int
 name|idx
 decl_stmt|,
 name|bit
-decl_stmt|,
+decl_stmt|;
+name|u_int8_t
 name|data
-decl_stmt|,
-name|crc
 decl_stmt|;
 comment|/* Compute CRC for the address value. */
 name|crc
@@ -5546,7 +5548,7 @@ condition|)
 continue|continue;
 name|h
 operator|=
-name|bge_crc
+name|bge_mchash
 argument_list|(
 name|LLADDR
 argument_list|(

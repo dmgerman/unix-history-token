@@ -828,8 +828,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|tl_calchash
+name|u_int32_t
+name|tl_mchash
 parameter_list|(
 name|caddr_t
 parameter_list|)
@@ -3450,8 +3450,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
-name|tl_calchash
+name|u_int32_t
+name|tl_mchash
 parameter_list|(
 name|addr
 parameter_list|)
@@ -3811,7 +3811,7 @@ continue|continue;
 block|}
 name|h
 operator|=
-name|tl_calchash
+name|tl_mchash
 argument_list|(
 name|LLADDR
 argument_list|(

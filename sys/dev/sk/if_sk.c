@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: if_sk.c,v 1.33 2003/08/12 05:23:06 nate Exp $	*/
+comment|/*	$OpenBSD: if_sk.c,v 2.33 2003/08/12 05:23:06 nate Exp $	*/
 end_comment
 
 begin_comment
@@ -1027,7 +1027,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|u_int32_t
-name|sk_calchash
+name|sk_mchash
 parameter_list|(
 name|caddr_t
 parameter_list|)
@@ -3251,7 +3251,7 @@ end_define
 begin_function
 specifier|static
 name|u_int32_t
-name|sk_calchash
+name|sk_mchash
 parameter_list|(
 name|addr
 parameter_list|)
@@ -3260,13 +3260,15 @@ name|addr
 decl_stmt|;
 block|{
 name|u_int32_t
+name|crc
+decl_stmt|;
+name|int
 name|idx
 decl_stmt|,
 name|bit
-decl_stmt|,
+decl_stmt|;
+name|u_int8_t
 name|data
-decl_stmt|,
-name|crc
 decl_stmt|;
 comment|/* Compute CRC for the address value. */
 name|crc
@@ -3726,7 +3728,7 @@ continue|continue;
 block|}
 name|h
 operator|=
-name|sk_calchash
+name|sk_mchash
 argument_list|(
 name|LLADDR
 argument_list|(

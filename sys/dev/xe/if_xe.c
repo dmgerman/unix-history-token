@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999, 2003  Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xe.c,v 1.20 1999/06/13 19:17:40 scott Exp $  */
+comment|/*-  * Copyright (c) 1998, 1999, 2003  Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions of this software were derived from Werner Koch's xirc2ps driver  * for Linux under the terms of the following license (from v1.30 of the  * xirc2ps driver):  *  * Copyright (c) 1997 by Werner Koch (dd9jn)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -16,10 +20,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Portions of this software were derived from Werner Koch's xirc2ps driver  * for Linux under the terms of the following license (from v1.30 of the  * xirc2ps driver):  *  * Copyright (c) 1997 by Werner Koch (dd9jn)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
 
 begin_comment
 comment|/*		  * FreeBSD device driver for Xircom CreditCard PCMCIA Ethernet adapters.  The  * following cards are currently known to work with the driver:  *   Xircom CreditCard 10/100 (CE3)  *   Xircom CreditCard Ethernet + Modem 28 (CEM28)  *   Xircom CreditCard Ethernet 10/100 + Modem 56 (CEM56)  *   Xircom RealPort Ethernet 10  *   Xircom RealPort Ethernet 10/100  *   Xircom RealPort Ethernet 10/100 + Modem 56 (REM56, REM56G)  *   Intel EtherExpress Pro/100 PC Card Mobile Adapter 16 (Pro/100 M16A)  *   Compaq Netelligent 10/100 PC Card (CPQ-10/100)  *  * Some other cards *should* work, but support for them is either broken or in   * an unknown state at the moment.  I'm always interested in hearing from  * people who own any of these cards:  *   Xircom CreditCard 10Base-T (PS-CE2-10)  *   Xircom CreditCard Ethernet + ModemII (CEM2)  *   Xircom CEM28 and CEM33 Ethernet/Modem cards (may be variants of CEM2?)  *  * Thanks to all who assisted with the development and testing of the driver,  * especially: Werner Koch, Duke Kamstra, Duncan Barclay, Jason George, Dru  * Nelson, Mike Kephart, Bill Rainey and Douglas Rand.  Apologies if I've left  * out anyone who deserves a mention here.  *  * Special thanks to Ade Lovett for both hosting the mailing list and doing  * the CEM56/REM56 support code; and the FreeBSD UK Users' Group for hosting  * the web pages.  *  * Author email:<scott@uk.freebsd.org>  * Driver web page: http://ukug.uk.freebsd.org/~scott/xe_drv/  */
@@ -456,15 +456,14 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|xe_set_hash
+name|xe_mchash
 parameter_list|(
 name|struct
 name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
-modifier|*
+name|caddr_t
 name|addr
 parameter_list|)
 function_decl|;
@@ -5198,7 +5197,7 @@ operator|->
 name|mohawk
 condition|)
 comment|/* Use hash filter on Mohawk and Dingo */
-name|xe_set_hash
+name|xe_mchash
 argument_list|(
 name|scp
 argument_list|,
@@ -5741,15 +5740,14 @@ block|}
 comment|/*  * Set the appropriate bit in the multicast hash table for the supplied  * Ethernet multicast address addr.  Assumes that addr is really a multicast  * address.  */
 specifier|static
 name|void
-name|xe_set_hash
+name|xe_mchash
 parameter_list|(
 name|struct
 name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
-modifier|*
+name|caddr_t
 name|addr
 parameter_list|)
 block|{
@@ -5758,53 +5756,58 @@ name|crc
 init|=
 literal|0xffffffff
 decl_stmt|;
-name|u_int8_t
+name|int
+name|idx
+decl_stmt|,
 name|bit
+decl_stmt|;
+name|u_int8_t
+name|carry
 decl_stmt|,
 name|byte
 decl_stmt|,
+name|data
+decl_stmt|,
 name|crc31
 decl_stmt|,
-name|idx
-decl_stmt|;
-name|unsigned
-name|i
-decl_stmt|,
-name|j
+name|hash
 decl_stmt|;
 comment|/* Compute CRC of the address -- standard Ethernet CRC function */
 for|for
 control|(
-name|i
+name|data
+operator|=
+operator|*
+name|addr
+operator|++
+operator|,
+name|idx
 operator|=
 literal|0
 init|;
-name|i
+name|idx
 operator|<
 literal|6
 condition|;
-name|i
+name|idx
 operator|++
+operator|,
+name|data
+operator|>>=
+literal|1
 control|)
 block|{
-name|byte
-operator|=
-name|addr
-index|[
-name|i
-index|]
-expr_stmt|;
 for|for
 control|(
-name|j
+name|bit
 operator|=
 literal|1
 init|;
-name|j
+name|bit
 operator|<=
 literal|8
 condition|;
-name|j
+name|bit
 operator|++
 control|)
 block|{
@@ -5823,12 +5826,12 @@ name|crc31
 operator|=
 literal|0
 expr_stmt|;
-name|bit
+name|carry
 operator|=
 name|crc31
 operator|^
 operator|(
-name|byte
+name|data
 operator|&
 literal|0x01
 operator|)
@@ -5837,14 +5840,10 @@ name|crc
 operator|<<=
 literal|1
 expr_stmt|;
-name|byte
+name|data
 operator|>>=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|bit
-condition|)
 name|crc
 operator|=
 operator|(
@@ -5853,7 +5852,11 @@ operator|^
 name|XE_CRC_POLY
 operator|)
 operator||
-literal|1
+operator|(
+name|carry
+operator||
+literal|0x1
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -5872,26 +5875,26 @@ name|crc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Hash table index = 6 msbs of CRC, reversed */
+comment|/*    * Convert a CRC into an index into the multicast hash table.  What we do is    * take the most-significant 6 bits of the CRC, reverse them, and use that as    * the bit number in the hash table.  Bits 5:3 of the result give the byte    * within the table (0-7); bits 2:0 give the bit number within that byte (also    * 0-7), ie. the number of shifts needed to get it into the lsb position.    */
 for|for
 control|(
-name|i
+name|idx
 operator|=
 literal|0
 operator|,
-name|idx
+name|hash
 operator|=
 literal|0
 init|;
-name|i
+name|idx
 operator|<
 literal|6
 condition|;
-name|i
+name|idx
 operator|++
 control|)
 block|{
-name|idx
+name|hash
 operator|>>=
 literal|1
 expr_stmt|;
@@ -5902,7 +5905,7 @@ operator|&
 literal|0x80000000
 condition|)
 block|{
-name|idx
+name|hash
 operator||=
 literal|0x20
 expr_stmt|;
@@ -5912,21 +5915,21 @@ operator|<<=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Top 3 bits of idx give register - 8, bottom 3 give bit within register */
+comment|/* Top 3 bits of hash give register - 8, bottom 3 give bit within register */
 name|byte
 operator|=
-name|idx
+name|hash
 operator|>>
 literal|3
 operator||
 literal|0x08
 expr_stmt|;
-name|bit
+name|carry
 operator|=
 literal|0x01
 operator|<<
 operator|(
-name|idx
+name|hash
 operator|&
 literal|0x07
 operator|)
@@ -5940,13 +5943,13 @@ name|scp
 operator|->
 name|dev
 operator|,
-literal|"set_hash: idx = 0x%02x, byte = 0x%02x, bit = 0x%02x\n"
+literal|"set_hash: hash = 0x%02x, byte = 0x%02x, carry = 0x%02x\n"
 operator|,
-name|idx
+name|hash
 operator|,
 name|byte
 operator|,
-name|bit
+name|carry
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5964,7 +5967,7 @@ argument_list|(
 name|byte
 argument_list|)
 operator||
-name|bit
+name|carry
 argument_list|)
 expr_stmt|;
 block|}
