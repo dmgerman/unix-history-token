@@ -21,6 +21,12 @@ directive|include
 file|<machine/ansi.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_posix.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -144,6 +150,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* XXX I'm not sure if _ANSI_SOURCE is playing properly  *     with the setups in _posix.h:  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -153,10 +163,9 @@ argument_list|(
 name|_ANSI_SOURCE
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|_POSIX_SOURCE
+name|_P1003_1B_VISIBLE_HISTORICALLY
 argument_list|)
 end_if
 
@@ -667,6 +676,30 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* neither ANSI nor POSIX */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_P1003_1B_VISIBLE_HISTORICALLY
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Introduced in POSIX 1003.1b-1993, not part of 1003.1-1990. */

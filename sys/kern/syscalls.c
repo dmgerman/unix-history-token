@@ -991,6 +991,30 @@ comment|/* 325 = munlockall */
 literal|"__getcwd"
 block|,
 comment|/* 326 = __getcwd */
+literal|"sched_setparam"
+block|,
+comment|/* 327 = sched_setparam */
+literal|"sched_getparam"
+block|,
+comment|/* 328 = sched_getparam */
+literal|"sched_setscheduler"
+block|,
+comment|/* 329 = sched_setscheduler */
+literal|"sched_getscheduler"
+block|,
+comment|/* 330 = sched_getscheduler */
+literal|"sched_yield"
+block|,
+comment|/* 331 = sched_yield */
+literal|"sched_get_priority_max"
+block|,
+comment|/* 332 = sched_get_priority_max */
+literal|"sched_get_priority_min"
+block|,
+comment|/* 333 = sched_get_priority_min */
+literal|"sched_rr_get_interval"
+block|,
+comment|/* 334 = sched_rr_get_interval */
 block|}
 decl_stmt|;
 end_decl_stmt

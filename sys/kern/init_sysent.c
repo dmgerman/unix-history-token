@@ -3643,6 +3643,94 @@ name|__getcwd
 block|}
 block|,
 comment|/* 326 = __getcwd */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_setparam
+block|}
+block|,
+comment|/* 327 = sched_setparam */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_getparam
+block|}
+block|,
+comment|/* 328 = sched_getparam */
+block|{
+literal|3
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_setscheduler
+block|}
+block|,
+comment|/* 329 = sched_setscheduler */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_getscheduler
+block|}
+block|,
+comment|/* 330 = sched_getscheduler */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_yield
+block|}
+block|,
+comment|/* 331 = sched_yield */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_get_priority_max
+block|}
+block|,
+comment|/* 332 = sched_get_priority_max */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_get_priority_min
+block|}
+block|,
+comment|/* 333 = sched_get_priority_min */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_rr_get_interval
+block|}
+block|,
+comment|/* 334 = sched_rr_get_interval */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -44,49 +44,60 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/posix4.h>
+file|<posix4/posix4.h>
 end_include
 
 begin_comment
 comment|/* ksched: Real-time extension to support POSIX priority scheduling.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
+begin_struct
+struct|struct
+name|ksched
+block|{
 name|struct
 name|timespec
 name|rr_interval
 decl_stmt|;
-end_decl_stmt
+block|}
+struct|;
+end_struct
 
 begin_function
 name|int
 name|ksched_attach
 parameter_list|(
-name|int
-name|p4_instance
-parameter_list|,
-name|int
-name|fac_code
-parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
 modifier|*
 name|p
 parameter_list|)
 block|{
+name|struct
+name|ksched
+modifier|*
+name|ksched
+init|=
+name|p31b_malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ksched
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|ksched
+operator|->
 name|rr_interval
 operator|.
 name|tv_sec
 operator|=
 literal|0
 expr_stmt|;
+name|ksched
+operator|->
 name|rr_interval
 operator|.
 name|tv_nsec
@@ -99,7 +110,7 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-literal|0
+name|ksched
 expr_stmt|;
 return|return
 literal|0
@@ -111,11 +122,17 @@ begin_function
 name|int
 name|ksched_detach
 parameter_list|(
-name|void
+name|struct
+name|ksched
 modifier|*
 name|p
 parameter_list|)
 block|{
+name|p31b_free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -123,11 +140,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX About priorities  *  *	POSIX4 requires that numerically higher priorities be of  *	higher priority.  It also permits sched_setparam to be  *	implementation defined for SCHED_OTHER.  I don't like  *	the notion of inverted priorites for normal processes when  *  you can use "setpriority" for that.  *  *	I'm rejecting sched_setparam for SCHED_OTHER with EINVAL.  */
+comment|/*  * XXX About priorities  *  *	POSIX 1003.1b requires that numerically higher priorities be of  *	higher priority.  It also permits sched_setparam to be  *	implementation defined for SCHED_OTHER.  I don't like  *	the notion of inverted priorites for normal processes when  *  you can use "setpriority" for that.  *  *	I'm rejecting sched_setparam for SCHED_OTHER with EINVAL.  */
 end_comment
 
 begin_comment
-comment|/* Macros to convert between the unix (lower numerically is higher priority)  * and POSIX4 (higher numerically is higher priority)  */
+comment|/* Macros to convert between the unix (lower numerically is higher priority)  * and POSIX 1003.1b (higher numerically is higher priority)  */
 end_comment
 
 begin_define
@@ -160,9 +177,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|,
 name|struct
 name|proc
@@ -224,9 +242,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|,
 name|struct
 name|proc
@@ -252,7 +271,7 @@ argument_list|(
 operator|&
 name|policy
 argument_list|,
-name|hook
+name|ksched
 argument_list|,
 name|p
 argument_list|)
@@ -281,7 +300,7 @@ name|ksched_setscheduler
 argument_list|(
 name|ret
 argument_list|,
-name|hook
+name|ksched
 argument_list|,
 name|p
 argument_list|,
@@ -305,9 +324,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|,
 name|struct
 name|proc
@@ -351,7 +371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX The priority and scheduler modifications should  *     be moved into published interfaces in kern/kern_sync.  *  * The permissions to modify process p were checked in "posix4proc()".  *  */
+comment|/*  * XXX The priority and scheduler modifications should  *     be moved into published interfaces in kern/kern_sync.  *  * The permissions to modify process p were checked in "p31b_proc()".  *  */
 end_comment
 
 begin_function
@@ -362,9 +382,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|,
 name|struct
 name|proc
@@ -511,9 +532,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|,
 name|struct
 name|proc
@@ -526,7 +548,7 @@ name|getscheduler
 argument_list|(
 name|ret
 argument_list|,
-name|hook
+name|ksched
 argument_list|,
 name|p
 argument_list|)
@@ -546,9 +568,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|)
 block|{
 name|need_resched
@@ -568,9 +591,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|,
 name|int
 name|policy
@@ -627,9 +651,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|,
 name|int
 name|policy
@@ -686,9 +711,10 @@ name|int
 modifier|*
 name|ret
 parameter_list|,
-name|void
+name|struct
+name|ksched
 modifier|*
-name|hook
+name|ksched
 parameter_list|,
 name|struct
 name|proc
@@ -704,6 +730,8 @@ block|{
 operator|*
 name|timespec
 operator|=
+name|ksched
+operator|->
 name|rr_interval
 expr_stmt|;
 return|return

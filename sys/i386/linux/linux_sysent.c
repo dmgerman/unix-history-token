@@ -1707,6 +1707,182 @@ name|writev
 block|}
 block|,
 comment|/* 146 = writev */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 147 = getsid */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 148 = fdatasync */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 149 = _sysctl */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|mlock
+block|}
+block|,
+comment|/* 150 = mlock */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|munlock
+block|}
+block|,
+comment|/* 151 = munlock */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|mlockall
+block|}
+block|,
+comment|/* 152 = mlockall */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|munlockall
+block|}
+block|,
+comment|/* 153 = munlockall */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_setparam
+block|}
+block|,
+comment|/* 154 = sched_setparam */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_getparam
+block|}
+block|,
+comment|/* 155 = sched_getparam */
+block|{
+literal|3
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_setscheduler
+block|}
+block|,
+comment|/* 156 = sched_setscheduler */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_getscheduler
+block|}
+block|,
+comment|/* 157 = sched_getscheduler */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_yield
+block|}
+block|,
+comment|/* 158 = sched_yield */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_get_priority_max
+block|}
+block|,
+comment|/* 159 = sched_get_priority_max */
+block|{
+literal|1
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_get_priority_min
+block|}
+block|,
+comment|/* 160 = sched_get_priority_min */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|sched_rr_get_interval
+block|}
+block|,
+comment|/* 161 = sched_rr_get_interval */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nanosleep
+block|}
+block|,
+comment|/* 162 = nanosleep */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sysctl.h	8.1 (Berkeley) 6/2/93  * $Id: sysctl.h,v 1.57 1997/09/07 16:53:52 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sysctl.h	8.1 (Berkeley) 6/2/93  * $Id: sysctl.h,v 1.58 1998/03/04 10:26:42 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|_SYS_SYSCTL_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/_posix.h>
+end_include
 
 begin_comment
 comment|/*  * Definitions for sysctl call.  The sysctl call uses a hierarchical name  * for objects that can be examined or modified.  The name is expressed as  * a sequence of integers.  Like a file path name, the meaning of each  * component depends on its place in the hierarchy.  The top-level and kern  * identifiers are defined here, and other identifiers are defined in the  * respective subsystem header files.  */
@@ -180,7 +186,7 @@ comment|/* All users can set this var */
 end_comment
 
 begin_comment
-comment|/*  * USE THIS instead of a hardwired number from the categories below  * to get dynamically assigned sysctl entries using the linker-set  * technology. This is the way nearly all new sysctl variables should  * be implimented.  * e.g. SYSCTL_INT(_parent, OID_AUTO, name, CTLFLAG_RW,&variable, 0, "");  */
+comment|/*  * USE THIS instead of a hardwired number from the categories below  * to get dynamically assigned sysctl entries using the linker-set  * technology. This is the way nearly all new sysctl variables should  * be implemented.  * e.g. SYSCTL_INT(_parent, OID_AUTO, name, CTLFLAG_RW,&variable, 0, "");  */
 end_comment
 
 begin_define
@@ -675,21 +681,15 @@ begin_comment
 comment|/* user-level */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|POSIX4
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|CTL_POSIX4
+name|CTL_P1003_1B
 value|9
 end_define
 
 begin_comment
-comment|/* user-level */
+comment|/* POSIX 1003.1B */
 end_comment
 
 begin_define
@@ -706,46 +706,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTL_POSIX4_NAME
-value|{ "posix4", CTLTYPE_NODE },
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CTL_MAXID
-value|9
-end_define
-
-begin_comment
-comment|/* number of valid top-level ids */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_POSIX4_NAME
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* POSIX4 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "kern", CTLTYPE_NODE }, \ 	{ "vm", CTLTYPE_NODE }, \ 	{ "vfs", CTLTYPE_NODE }, \ 	{ "net", CTLTYPE_NODE }, \ 	{ "debug", CTLTYPE_NODE }, \ 	{ "hw", CTLTYPE_NODE }, \ 	{ "machdep", CTLTYPE_NODE }, \ 	{ "user", CTLTYPE_NODE }, \ 	CTL_POSIX4_NAME \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "kern", CTLTYPE_NODE }, \ 	{ "vm", CTLTYPE_NODE }, \ 	{ "vfs", CTLTYPE_NODE }, \ 	{ "net", CTLTYPE_NODE }, \ 	{ "debug", CTLTYPE_NODE }, \ 	{ "hw", CTLTYPE_NODE }, \ 	{ "machdep", CTLTYPE_NODE }, \ 	{ "user", CTLTYPE_NODE }, \ 	{ "p1003_1b", CTLTYPE_NODE }, \ }
 end_define
 
 begin_comment
@@ -1702,6 +1664,295 @@ define|#
 directive|define
 name|CTL_USER_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "cs_path", CTLTYPE_STRING }, \ 	{ "bc_base_max", CTLTYPE_INT }, \ 	{ "bc_dim_max", CTLTYPE_INT }, \ 	{ "bc_scale_max", CTLTYPE_INT }, \ 	{ "bc_string_max", CTLTYPE_INT }, \ 	{ "coll_weights_max", CTLTYPE_INT }, \ 	{ "expr_nest_max", CTLTYPE_INT }, \ 	{ "line_max", CTLTYPE_INT }, \ 	{ "re_dup_max", CTLTYPE_INT }, \ 	{ "posix2_version", CTLTYPE_INT }, \ 	{ "posix2_c_bind", CTLTYPE_INT }, \ 	{ "posix2_c_dev", CTLTYPE_INT }, \ 	{ "posix2_char_term", CTLTYPE_INT }, \ 	{ "posix2_fort_dev", CTLTYPE_INT }, \ 	{ "posix2_fort_run", CTLTYPE_INT }, \ 	{ "posix2_localedef", CTLTYPE_INT }, \ 	{ "posix2_sw_dev", CTLTYPE_INT }, \ 	{ "posix2_upe", CTLTYPE_INT }, \ 	{ "stream_max", CTLTYPE_INT }, \ 	{ "tzname_max", CTLTYPE_INT }, \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_ASYNCHRONOUS_IO
+value|1
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_MAPPED_FILES
+value|2
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_MEMLOCK
+value|3
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_MEMLOCK_RANGE
+value|4
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_MEMORY_PROTECTION
+value|5
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_MESSAGE_PASSING
+value|6
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_PRIORITIZED_IO
+value|7
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_PRIORITY_SCHEDULING
+value|8
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_REALTIME_SIGNALS
+value|9
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_SEMAPHORES
+value|10
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_FSYNC
+value|11
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_SHARED_MEMORY_OBJECTS
+value|12
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_SYNCHRONIZED_IO
+value|13
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_TIMERS
+value|14
+end_define
+
+begin_comment
+comment|/* boolean */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_AIO_LISTIO_MAX
+value|15
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_AIO_MAX
+value|16
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_AIO_PRIO_DELTA_MAX
+value|17
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_DELAYTIMER_MAX
+value|18
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_MQ_OPEN_MAX
+value|19
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_PAGESIZE
+value|20
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_RTSIG_MAX
+value|21
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_SEM_NSEMS_MAX
+value|22
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_SEM_VALUE_MAX
+value|23
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_SIGQUEUE_MAX
+value|24
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_TIMER_MAX
+value|25
+end_define
+
+begin_comment
+comment|/* int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_MAXID
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_P1003_1B_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "asynchronous_io", CTLTYPE_INT }, \ 	{ "mapped_files", CTLTYPE_INT }, \ 	{ "memlock", CTLTYPE_INT }, \ 	{ "memlock_range", CTLTYPE_INT }, \ 	{ "memory_protection", CTLTYPE_INT }, \ 	{ "message_passing", CTLTYPE_INT }, \ 	{ "prioritized_io", CTLTYPE_INT }, \ 	{ "priority_scheduling", CTLTYPE_INT }, \ 	{ "realtime_signals", CTLTYPE_INT }, \ 	{ "semaphores", CTLTYPE_INT }, \ 	{ "fsync", CTLTYPE_INT }, \ 	{ "shared_memory_objects", CTLTYPE_INT }, \ 	{ "synchronized_io", CTLTYPE_INT }, \ 	{ "timers", CTLTYPE_INT }, \ 	{ "aio_listio_max", CTLTYPE_INT }, \ 	{ "aio_max", CTLTYPE_INT }, \ 	{ "aio_prio_delta_max", CTLTYPE_INT }, \ 	{ "delaytimer_max", CTLTYPE_INT }, \ 	{ "mq_open_max", CTLTYPE_INT }, \ 	{ "pagesize", CTLTYPE_INT }, \ 	{ "rtsig_max", CTLTYPE_INT }, \ 	{ "nsems_max", CTLTYPE_INT }, \ 	{ "sem_value_max", CTLTYPE_INT }, \ 	{ "sigqueue_max", CTLTYPE_INT }, \ 	{ "timer_max", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef

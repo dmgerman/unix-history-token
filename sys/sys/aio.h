@@ -12,7 +12,7 @@ name|_AIO_H_
 end_define
 
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: aio.h,v 1.5 1998/03/08 22:21:12 dufault Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: aio.h,v 1.6 1998/03/09 00:15:08 dufault Exp $  */
 end_comment
 
 begin_include
@@ -21,87 +21,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Additions to signal.h -- hack alert.                                   */
-end_comment
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * sigval structure:  */
-end_comment
-
-begin_union
-union|union
-name|sigval
-block|{
-name|int
-name|sival_int
-decl_stmt|;
-name|void
-modifier|*
-name|sival_ptr
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_comment
-comment|/*  * this is the sigevent structure:  */
-end_comment
-
-begin_struct
-struct|struct
-name|sigevent
-block|{
-name|int
-name|sigev_notify
-decl_stmt|;
-comment|/* Notification */
-name|int
-name|sigev_signo
-decl_stmt|;
-comment|/* Signal number */
-name|union
-name|sigval
-name|sigev_value
-decl_stmt|;
-comment|/* Not used yet in FreeBSD */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * values for sigev_notify:  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGEV_NONE
-value|0
-end_define
-
-begin_comment
-comment|/* Don't post a signal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGEV_SIGNAL
-value|1
-end_define
-
-begin_comment
-comment|/* Post specified signal */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
 
 begin_comment
 comment|/*  * Returned by aio_cancel:  *  (Note that FreeBSD's aio is not cancellable -- yet.)  */

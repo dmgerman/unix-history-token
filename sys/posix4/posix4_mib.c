@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/unistd.h>
+file|<posix4/posix4.h>
 end_include
 
 begin_decl_stmt
@@ -32,28 +32,81 @@ specifier|static
 name|int
 name|facility
 index|[
-name|CTL_POSIX4_N_CTLS
+name|CTL_P1003_1B_MAXID
+operator|-
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* OID_AUTO isn't working with sysconf(3).  I guess I'd have to  * modify it to do a lookup by name from the index.  * For now I've left it a top-level sysctl.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
 begin_define
 define|#
 directive|define
-name|P4_SYSCTL
+name|P1B_SYSCTL
 parameter_list|(
 name|num
 parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|SYSCTL_INT(_posix4, num, name, CTLFLAG_RD, facility + num - 1, 0, "");
+value|SYSCTL_INT(_p1003_1b, num, \ 	name, CTLFLAG_RD, facility + num - 1, 0, "");
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|P1B_SYSCTL
+parameter_list|(
+name|num
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|SYSCTL_INT(_kern_p1003_1b, OID_AUTO, \ 	name, CTLFLAG_RD, facility + num - 1, 0, "");
 end_define
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|SYSCTL_NODE
 argument_list|(
-name|CTL_POSIX4_ASYNCHRONOUS_IO
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|p1003_1b
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"P1003.1B"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|P1B_SYSCTL
+argument_list|(
+name|CTL_P1003_1B_ASYNCHRONOUS_IO
 argument_list|,
 name|asynchronous_io
 argument_list|)
@@ -61,9 +114,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_MAPPED_FILES
+name|CTL_P1003_1B_MAPPED_FILES
 argument_list|,
 name|mapped_files
 argument_list|)
@@ -71,9 +124,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_MEMLOCK
+name|CTL_P1003_1B_MEMLOCK
 argument_list|,
 name|memlock
 argument_list|)
@@ -81,9 +134,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_MEMLOCK_RANGE
+name|CTL_P1003_1B_MEMLOCK_RANGE
 argument_list|,
 name|memlock_range
 argument_list|)
@@ -91,9 +144,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_MEMORY_PROTECTION
+name|CTL_P1003_1B_MEMORY_PROTECTION
 argument_list|,
 name|memory_protection
 argument_list|)
@@ -101,9 +154,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_MESSAGE_PASSING
+name|CTL_P1003_1B_MESSAGE_PASSING
 argument_list|,
 name|message_passing
 argument_list|)
@@ -111,9 +164,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_PRIORITIZED_IO
+name|CTL_P1003_1B_PRIORITIZED_IO
 argument_list|,
 name|prioritized_io
 argument_list|)
@@ -121,9 +174,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_PRIORITY_SCHEDULING
+name|CTL_P1003_1B_PRIORITY_SCHEDULING
 argument_list|,
 name|priority_scheduling
 argument_list|)
@@ -131,9 +184,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_REALTIME_SIGNALS
+name|CTL_P1003_1B_REALTIME_SIGNALS
 argument_list|,
 name|realtime_signals
 argument_list|)
@@ -141,9 +194,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_SEMAPHORES
+name|CTL_P1003_1B_SEMAPHORES
 argument_list|,
 name|semaphores
 argument_list|)
@@ -151,9 +204,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_FSYNC
+name|CTL_P1003_1B_FSYNC
 argument_list|,
 name|fsync
 argument_list|)
@@ -161,9 +214,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_SHARED_MEMORY_OBJECTS
+name|CTL_P1003_1B_SHARED_MEMORY_OBJECTS
 argument_list|,
 name|shared_memory_objects
 argument_list|)
@@ -171,9 +224,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_SYNCHRONIZED_IO
+name|CTL_P1003_1B_SYNCHRONIZED_IO
 argument_list|,
 name|synchronized_io
 argument_list|)
@@ -181,9 +234,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_TIMERS
+name|CTL_P1003_1B_TIMERS
 argument_list|,
 name|timers
 argument_list|)
@@ -191,9 +244,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_AIO_LISTIO_MAX
+name|CTL_P1003_1B_AIO_LISTIO_MAX
 argument_list|,
 name|aio_listio_max
 argument_list|)
@@ -201,9 +254,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_AIO_MAX
+name|CTL_P1003_1B_AIO_MAX
 argument_list|,
 name|aio_max
 argument_list|)
@@ -211,9 +264,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_AIO_PRIO_DELTA_MAX
+name|CTL_P1003_1B_AIO_PRIO_DELTA_MAX
 argument_list|,
 name|aio_prio_delta_max
 argument_list|)
@@ -221,9 +274,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_DELAYTIMER_MAX
+name|CTL_P1003_1B_DELAYTIMER_MAX
 argument_list|,
 name|delaytimer_max
 argument_list|)
@@ -231,9 +284,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_MQ_OPEN_MAX
+name|CTL_P1003_1B_MQ_OPEN_MAX
 argument_list|,
 name|mq_open_max
 argument_list|)
@@ -241,9 +294,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_PAGESIZE
+name|CTL_P1003_1B_PAGESIZE
 argument_list|,
 name|pagesize
 argument_list|)
@@ -251,9 +304,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_RTSIG_MAX
+name|CTL_P1003_1B_RTSIG_MAX
 argument_list|,
 name|rtsig_max
 argument_list|)
@@ -261,9 +314,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_SEM_NSEMS_MAX
+name|CTL_P1003_1B_SEM_NSEMS_MAX
 argument_list|,
 name|sem_nsems_max
 argument_list|)
@@ -271,9 +324,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_SEM_VALUE_MAX
+name|CTL_P1003_1B_SEM_VALUE_MAX
 argument_list|,
 name|sem_value_max
 argument_list|)
@@ -281,9 +334,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_SIGQUEUE_MAX
+name|CTL_P1003_1B_SIGQUEUE_MAX
 argument_list|,
 name|sigqueue_max
 argument_list|)
@@ -291,9 +344,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P4_SYSCTL
+name|P1B_SYSCTL
 argument_list|(
-name|CTL_POSIX4_TIMER_MAX
+name|CTL_P1003_1B_TIMER_MAX
 argument_list|,
 name|timer_max
 argument_list|)
@@ -301,12 +354,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* posix4_facility: Set a facility to a value.  This is  * probably a temporary measure until the LKM code is combined with this.  */
+comment|/* p31b_setcfg: Set the configuration  */
 end_comment
 
 begin_function
 name|void
-name|posix4_facility
+name|p31b_setcfg
 parameter_list|(
 name|int
 name|num
@@ -322,8 +375,8 @@ operator|>=
 literal|1
 operator|&&
 name|num
-operator|<=
-name|CTL_POSIX4_N_CTLS
+operator|<
+name|CTL_P1003_1B_MAXID
 condition|)
 name|facility
 index|[

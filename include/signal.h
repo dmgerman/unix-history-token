@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_posix.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signal.h>
 end_include
 
@@ -31,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<machine/ansi.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_posix.h>
 end_include
 
 begin_if
@@ -300,31 +300,8 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_POSIX4_VISIBLE
+name|_P1003_1B_VISIBLE
 end_ifdef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|siginfo
-block|{
-name|int
-name|si_signo
-decl_stmt|;
-comment|/* Signal number */
-name|int
-name|si_code
-decl_stmt|;
-comment|/* Cause of the signal */
-name|union
-name|sigval
-name|si_value
-decl_stmt|;
-comment|/* Signal value */
-block|}
-name|siginfo_t
-typedef|;
-end_typedef
 
 begin_decl_stmt
 name|__BEGIN_DECLS
