@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* !lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lock.c	5.3 (Berkeley) %G%"
+literal|"@(#)lock.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* !lint */
+end_comment
 
 begin_comment
 comment|/*  * Lock a terminal up until the given key is entered, until the root  * password is entered, or the given interval times out.  *  * Timeout interval is by default TIMEOUT, it can be changed with  * an argument of the form -time where time is in minutes  */
@@ -90,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_define
@@ -293,6 +305,41 @@ name|use_mine
 operator|=
 name|YES
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|isdigit
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"lock: illegal option -- %c\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -932,9 +979,11 @@ specifier|static
 name|usage
 argument_list|()
 block|{
-name|puts
+name|fputs
 argument_list|(
-literal|"Usage: lock [-p] [-timeout]"
+literal|"usage: lock [-p] [-timeout]\n"
+argument_list|,
+name|stderr
 argument_list|)
 block|;
 name|exit
