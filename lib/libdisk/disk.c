@@ -4068,6 +4068,20 @@ operator|->
 name|bootmgr
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* Should be: error "Debug_Disk: unknown arch"; */
 endif|#
 directive|endif
 name|Debug_Chunk
@@ -4147,6 +4161,13 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 if|if
 condition|(
 name|d
@@ -4162,6 +4183,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 if|if
 condition|(
 name|d
@@ -4175,6 +4205,8 @@ operator|->
 name|boot1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -4553,6 +4585,13 @@ argument_list|)
 endif|#
 directive|endif
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4782,6 +4821,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
 block|}
 end_decl_stmt
 
@@ -4957,6 +4998,16 @@ operator|*
 literal|512
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+comment|/* nothing */
+else|#
+directive|else
+comment|/* Should be: #error "Set_Boot_Blocks: unknown arch"; */
 endif|#
 directive|endif
 return|return

@@ -188,6 +188,13 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 if|if
 condition|(
 name|new
@@ -226,6 +233,8 @@ operator|-
 literal|512
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|dl
 operator|=
 operator|(
@@ -374,6 +383,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Special install-time configuration for the i386 boot0 boot manager.  */
 end_comment
@@ -432,6 +451,11 @@ comment|/* Packet mode off */
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -1183,6 +1207,13 @@ operator|->
 name|sector_size
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 if|if
 condition|(
 name|d1
@@ -1209,6 +1240,8 @@ name|need_edd
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|memcpy
 argument_list|(
 name|mbr
@@ -1255,6 +1288,13 @@ operator|->
 name|sector_size
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 if|if
 condition|(
 name|d1
@@ -1311,6 +1351,8 @@ operator|->
 name|sector_size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|fd
