@@ -175,7 +175,7 @@ name|uc
 operator|.
 name|uc_mcontext
 argument_list|,
-literal|1
+name|GET_MC_CLEAR_RET
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -389,7 +389,7 @@ name|uc
 operator|.
 name|uc_mcontext
 argument_list|,
-literal|1
+name|GET_MC_CLEAR_RET
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK

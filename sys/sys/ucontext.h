@@ -256,6 +256,17 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/*  * Flags for get_mcontext().  The low order 4 bits (i.e a mask of 0x0f) are  * reserved for use by machine independent code.  All other bits are for use  * by machine dependent code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_MC_CLEAR_RET
+value|1
+end_define
+
+begin_comment
 comment|/* Machine-dependent functions: */
 end_comment
 
@@ -266,14 +277,11 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 name|mcontext_t
 modifier|*
-name|mcp
 parameter_list|,
 name|int
-name|clear_ret
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -285,12 +293,10 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 specifier|const
 name|mcontext_t
 modifier|*
-name|mcp
 parameter_list|)
 function_decl|;
 end_function_decl

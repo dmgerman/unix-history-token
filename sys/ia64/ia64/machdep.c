@@ -4680,7 +4680,7 @@ modifier|*
 name|mc
 parameter_list|,
 name|int
-name|clear_ret
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -4859,8 +4859,13 @@ name|_MC_FLAGS_RETURN_VALID
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|clear_ret
+operator|(
+name|flags
+operator|&
+name|GET_MC_CLEAR_RET
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|mc

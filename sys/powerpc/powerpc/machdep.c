@@ -2679,7 +2679,7 @@ modifier|*
 name|mcp
 parameter_list|,
 name|int
-name|clear_ret
+name|flags
 parameter_list|)
 block|{
 return|return

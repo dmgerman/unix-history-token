@@ -11562,7 +11562,7 @@ modifier|*
 name|mcp
 parameter_list|,
 name|int
-name|clear_ret
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -11677,9 +11677,9 @@ name|tf_ebx
 expr_stmt|;
 if|if
 condition|(
-name|clear_ret
-operator|!=
-literal|0
+name|flags
+operator|&
+name|GET_MC_CLEAR_RET
 condition|)
 block|{
 name|mcp

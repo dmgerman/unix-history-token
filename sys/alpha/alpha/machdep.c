@@ -9362,7 +9362,7 @@ modifier|*
 name|mcp
 parameter_list|,
 name|int
-name|clear_ret
+name|flags
 parameter_list|)
 block|{
 comment|/* 	 * Use a trapframe for getsetcontext, so just copy the 	 * threads trapframe. 	 */
@@ -9386,9 +9386,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|clear_ret
-operator|!=
-literal|0
+name|flags
+operator|&
+name|GET_MC_CLEAR_RET
 condition|)
 block|{
 name|mcp
