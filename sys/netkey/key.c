@@ -18669,6 +18669,7 @@ return|return
 literal|1
 return|;
 block|}
+break|break;
 default|default:
 if|if
 condition|(
