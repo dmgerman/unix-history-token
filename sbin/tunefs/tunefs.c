@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -241,6 +247,10 @@ name|Aflag
 init|=
 literal|0
 decl_stmt|,
+name|Lflag
+init|=
+literal|0
+decl_stmt|,
 name|active
 init|=
 literal|0
@@ -307,6 +317,11 @@ literal|0
 decl_stmt|;
 name|char
 modifier|*
+name|Lvalue
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
 name|avalue
 init|=
 name|NULL
@@ -341,6 +356,8 @@ name|int
 name|found_arg
 decl_stmt|,
 name|ch
+decl_stmt|,
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -367,7 +384,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aa:e:f:l:m:n:o:ps:"
+literal|"AL:a:e:f:l:m:n:o:ps:"
 argument_list|)
 operator|)
 operator|!=
@@ -388,6 +405,87 @@ literal|1
 expr_stmt|;
 name|Aflag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+name|found_arg
+operator|=
+literal|1
+expr_stmt|;
+name|name
+operator|=
+literal|"volume label"
+expr_stmt|;
+name|Lvalue
+operator|=
+name|optarg
+expr_stmt|;
+name|i
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|isalnum
+argument_list|(
+name|Lvalue
+index|[
+operator|++
+name|i
+index|]
+argument_list|)
+condition|)
+empty_stmt|;
+if|if
+condition|(
+name|Lvalue
+index|[
+name|i
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|10
+argument_list|,
+literal|"bad %s. Valid characters are alphanumerics."
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|Lvalue
+argument_list|)
+operator|>=
+name|MAXVOLLEN
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|10
+argument_list|,
+literal|"bad %s. Length is longer than %d."
+argument_list|,
+name|name
+argument_list|,
+name|MAXVOLLEN
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|Lflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -895,6 +993,27 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Lflag
+condition|)
+block|{
+name|name
+operator|=
+literal|"volume label"
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|sblock
+operator|.
+name|fs_volname
+argument_list|,
+name|Lvalue
+argument_list|,
+name|MAXVOLLEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -1740,13 +1859,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: tunefs [-A] [-a enable | disable] [-e maxbpg] [-f avgfilesize]"
+literal|"usage: tunefs [-A] [-L volname] [-a enable | disable] [-e maxbpg]"
 argument_list|,
-literal|"              [-l enable | disable] [-m minfree] [-n enable | disable]"
+literal|"              [-f avgfilesize] [-l enable | disable] [-m minfree]"
 argument_list|,
-literal|"              [-o space | time] [-p] [-s avgfpdir] special | filesystem"
+literal|"              [-n enable | disable] [-o space | time] [-p]"
+argument_list|,
+literal|"              [-s avgfpdir] special | filesystem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1914,6 +2035,15 @@ argument_list|,
 literal|"<"
 argument_list|,
 name|MINFREE
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"volume label: (-L)                                 %s"
+argument_list|,
+name|sblock
+operator|.
+name|fs_volname
 argument_list|)
 expr_stmt|;
 block|}

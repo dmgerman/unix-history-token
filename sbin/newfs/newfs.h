@@ -10,6 +10,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|Lflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* add a volume label */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|Nflag
 decl_stmt|;
 end_decl_stmt
@@ -214,6 +225,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* filedescriptor to device */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+modifier|*
+name|volumelabel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* volume label for filesystem */
 end_comment
 
 begin_function_decl

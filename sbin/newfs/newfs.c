@@ -257,6 +257,16 @@ end_define
 
 begin_decl_stmt
 name|int
+name|Lflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* add a volume label */
+end_comment
+
+begin_decl_stmt
+name|int
 name|Nflag
 decl_stmt|;
 end_decl_stmt
@@ -466,6 +476,19 @@ comment|/* filedescriptor to device */
 end_comment
 
 begin_decl_stmt
+name|u_char
+modifier|*
+name|volumelabel
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* volume label for filesystem */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|char
 name|device
@@ -571,6 +594,8 @@ name|special
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|i
 decl_stmt|;
 name|off_t
 name|mediasize
@@ -586,7 +611,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"NO:RS:T:Ua:b:c:d:e:f:g:h:i:m:o:s:"
+literal|"L:NO:RS:T:Ua:b:c:d:e:f:g:h:i:m:o:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -598,6 +623,73 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'L'
+case|:
+name|volumelabel
+operator|=
+name|optarg
+expr_stmt|;
+name|i
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|isalnum
+argument_list|(
+name|volumelabel
+index|[
+operator|++
+name|i
+index|]
+argument_list|)
+condition|)
+empty_stmt|;
+if|if
+condition|(
+name|volumelabel
+index|[
+name|i
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"bad volume label. Valid characters are alphanumerics."
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|volumelabel
+argument_list|)
+operator|>=
+name|MAXVOLLEN
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"bad volume label. Length is longer than %d."
+argument_list|,
+name|MAXVOLLEN
+argument_list|)
+expr_stmt|;
+block|}
+name|Lflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'N'
 case|:
@@ -1864,6 +1956,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"where fsoptions are:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-L volume label to add to superblock\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
