@@ -1203,7 +1203,7 @@ literal|"TM:N:fiknstv"
 expr_stmt|;
 name|usagestr
 operator|=
-literal|"pstat [-Tfknstv] [-M core] [-N system]"
+literal|"pstat [-Tfknst] [-M core] [-N system]"
 expr_stmt|;
 block|}
 while|while
