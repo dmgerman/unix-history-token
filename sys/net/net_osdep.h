@@ -50,12 +50,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_OLD_BPF
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_NEW_BPFATTACH
 end_define
 
