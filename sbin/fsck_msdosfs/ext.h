@@ -118,19 +118,15 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__attribute__
+function_decl|__printflike
 parameter_list|(
-function_decl|(__format__
-parameter_list|(
-name|__printf__
-parameter_list|,
 function_decl|2
 operator|,
 function_decl|3
 end_function_decl
 
 begin_empty_stmt
-unit|)))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
