@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.4 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_PMAP_MACHINE_
 end_define
 
 begin_comment
-comment|/*  * TLB hash table values.  * SHIFT2 should shift virtual address bit 22 to the high bit of the index.  *			address:	index:  *	USRTEXT		0x00400000	10xxxxxxx  *	USRDATA		0x10000000	00xxxxxxx  *	USRSTACK	0x7FFFFFFF	11xxxxxxx  * This gives 1/2 the table to data, 1/4 for text and 1/4 for stack.  * Note: the current process has its hash table mapped at PMAP_HASH_UADDR.  *	the kernel's hash table is mapped at PMAP_HASH_KADDR.  *	The size of the hash table is known in locore.s.  * The wired entries in the TLB will contain the following:  *	UPAGES			(for curproc)  *	PMAP_HASH_UPAGES	(for curproc)  *	PMAP_HASH_KPAGES	(for kernel)  * The kernel doesn't actual use a pmap_hash_t, the pm_hash field is NULL and  * all the PTE entries are stored in a single array at PMAP_HASH_KADDR.  * If we need more KPAGES that the TLB has wired entries, then we can switch  * to a global pointer for the kernel TLB table.  * If we try to use a hash table for the kernel, wired TLB entries become a  * problem.  * Note: PMAP_HASH_UPAGES should be a multiple of MACH pages (see pmap_enter()).  */
+comment|/*  * TLB hash table values.  * SHIFT2 should shift virtual address bit 22 to the high bit of the index.  *			address:	index:  *	USRTEXT		0x00400000	10xxxxxxx  *	USRDATA		0x10000000	00xxxxxxx  *	USRSTACK	0x7FFFFFFF	11xxxxxxx  * This gives 1/2 the table to data, 1/4 for text and 1/4 for stack.  * Note: the current process has its hash table mapped at PMAP_HASH_UADDR.  *	the kernel's hash table is mapped at PMAP_HASH_KADDR.  *	The size of the hash table is known in locore.s.  * The wired entries in the TLB will contain the following:  *	UPAGES			(for curproc)  *	PMAP_HASH_UPAGES	(for curproc)  *	PMAP_HASH_KPAGES	(for kernel)  * The kernel doesn't actually use a pmap_hash_t, the pm_hash field is NULL and  * all the PTE entries are stored in a single array at PMAP_HASH_KADDR.  * If we need more KPAGES that the TLB has wired entries, then we can switch  * to a global pointer for the kernel TLB table.  * If we try to use a hash table for the kernel, wired TLB entries become a  * problem.  * Note: PMAP_HASH_UPAGES should be a multiple of MACH pages (see pmap_enter()).  */
 end_comment
 
 begin_define
@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_HASH_KPAGES
-value|3
+value|4
 end_define
 
 begin_define
