@@ -30,6 +30,39 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_acpica.h"
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SKI
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|DEV_ACPICA
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"You need the SKI option and/or the acpica device"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1078,12 +1111,32 @@ expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SKI
+ifdef|#
+directive|ifdef
+name|DEV_ACPICA
 comment|/* 	 * Traverse the MADT to discover IOSAPIC and Local SAPIC 	 * information. 	 */
+if|if
+condition|(
+operator|!
+name|ia64_running_in_simulator
+argument_list|()
+condition|)
 name|ia64_probe_sapics
 argument_list|()
+expr_stmt|;
+else|#
+directive|else
+comment|/* 	 * It is an error to boot a SKI-only kernel on hardware. 	 */
+if|if
+condition|(
+operator|!
+name|ia64_running_in_simulator
+argument_list|()
+condition|)
+name|panic
+argument_list|(
+literal|"Mandatory 'device acpica' is missing"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
