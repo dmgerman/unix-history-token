@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.18 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,6 +193,10 @@ name|char
 modifier|*
 name|to_name
 decl_stmt|;
+name|mode_t
+name|setmode
+parameter_list|()
+function_decl|;
 while|while
 condition|(
 operator|(
