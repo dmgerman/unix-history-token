@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/i386/isa/isa.c,v 1.1.1.1 1993/06/12 14:58:01 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/isa.c,v 1.2 1993/06/18 22:18:57 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2723,14 +2723,14 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Wait "n" microseconds.  * Relies on timer 1 counting down from (TIMER_FREQ / hz) at  * (2 * TIMER_FREQ) Hz.  * Note: timer had better have been programmed before this is first used!  * (The standard programming causes the timer to generate a square wave and  * the counter is decremented twice every cycle.)  */
+comment|/*  * Wait "n" microseconds.  * Relies on timer 1 counting down from (TIMER_FREQ / hz) at  * (1 * TIMER_FREQ) Hz.  * Note: timer had better have been programmed before this is first used!  * (The standard programming causes the timer to generate a square wave and  * the counter is decremented twice every cycle.)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CF
-value|(2 * TIMER_FREQ)
+value|(1 * TIMER_FREQ)
 end_define
 
 begin_define
