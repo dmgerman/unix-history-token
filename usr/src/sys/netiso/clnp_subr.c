@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_subr.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_subr.c	7.9 (Berkeley) %G% */
+comment|/*	@(#)clnp_subr.c	7.10 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -111,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if_dl.h"
 end_include
 
 begin_include
@@ -1041,35 +1047,37 @@ name|snh_ifp
 operator|)
 condition|)
 block|{
+specifier|register
 name|struct
-name|snpa_cache
+name|sockaddr_dl
 modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
-name|snpac_look
-argument_list|(
-operator|&
-operator|(
+name|sdl
+init|=
 operator|(
 expr|struct
-name|sockaddr_iso
+name|sockaddr_dl
 operator|*
 operator|)
-name|next_hop
-operator|)
+name|route
+operator|.
+name|ro_rt
 operator|->
-name|siso_addr
-argument_list|)
-expr_stmt|;
+name|rt_gateway
+decl_stmt|;
 if|if
 condition|(
-name|sc
+name|sdl
+operator|->
+name|sdl_family
+operator|==
+name|AF_LINK
+operator|&&
+name|sdl
+operator|->
+name|sdl_alen
 operator|!=
-name|NULL
+literal|0
 condition|)
-block|{
 name|esis_rdoutput
 argument_list|(
 name|inbound_shp
@@ -1080,10 +1088,11 @@ name|oidx
 argument_list|,
 name|dst
 argument_list|,
-name|sc
+name|route
+operator|.
+name|ro_rt
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 *	If options are present, update them 	 */
 if|if

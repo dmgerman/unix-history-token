@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.h	7.4 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.h	7.5 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -143,6 +143,71 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|esis_req
+block|{
+name|short
+name|er_ht
+decl_stmt|;
+comment|/* holding time */
+name|u_char
+name|er_flags
+decl_stmt|;
+comment|/* type and validity */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Space for this structure gets added onto the end of a route  * going to an ethernet or other 802.[45x] device.  */
+end_comment
+
+begin_struct
+struct|struct
+name|llinfo_llc
+block|{
+name|struct
+name|llinfo_llc
+modifier|*
+name|lc_next
+decl_stmt|;
+comment|/* keep all llc routes linked */
+name|struct
+name|llinfo_llc
+modifier|*
+name|lc_prev
+decl_stmt|;
+comment|/* keep all llc routes linked */
+name|struct
+name|rtentry
+modifier|*
+name|lc_rt
+decl_stmt|;
+comment|/* backpointer to route */
+name|struct
+name|rtentry
+modifier|*
+name|lc_rtgate
+decl_stmt|;
+comment|/* route to (RTF_GATEWAY ? ll : iface) */
+name|struct
+name|esis_req
+name|lc_er
+decl_stmt|;
+comment|/* holding time, etc */
+define|#
+directive|define
+name|lc_ht
+value|lc_er.er_ht
+define|#
+directive|define
+name|lc_flags
+value|lc_er.er_flags
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ISO arp IOCTL data structures */
 end_comment
@@ -218,6 +283,17 @@ comment|/* struct iso_addr *isoa */
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|llinfo_llc
+name|llinfo_llc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head for linked lists */
+end_comment
 
 begin_endif
 endif|#
