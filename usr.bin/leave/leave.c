@@ -172,16 +172,9 @@ name|struct
 name|tm
 modifier|*
 name|t
-decl_stmt|,
-modifier|*
-name|localtime
-argument_list|()
 decl_stmt|;
 name|time_t
 name|now
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
 name|int
 name|plusnow
@@ -539,9 +532,6 @@ name|bother
 decl_stmt|;
 name|time_t
 name|daytime
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
 name|char
 name|tb
