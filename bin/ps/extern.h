@@ -183,7 +183,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|lattr
+name|label
 parameter_list|(
 name|KINFO
 modifier|*
@@ -391,6 +391,16 @@ name|KINFO
 modifier|*
 parameter_list|,
 name|VARENT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|s_label
+parameter_list|(
+name|KINFO
 modifier|*
 parameter_list|)
 function_decl|;

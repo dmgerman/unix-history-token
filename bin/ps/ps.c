@@ -175,12 +175,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lomac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ps.h"
 end_include
 
@@ -554,7 +548,7 @@ name|char
 name|Zfmt
 index|[]
 init|=
-literal|"lvl"
+literal|"label"
 decl_stmt|;
 end_decl_stmt
 
@@ -2039,9 +2033,6 @@ argument_list|(
 name|uids
 argument_list|)
 expr_stmt|;
-name|lomac_stop
-argument_list|()
-expr_stmt|;
 name|exit
 argument_list|(
 name|eval
@@ -3251,7 +3242,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ps [-aChjlmrSTuvwx] [-O|o fmt] [-p pid] [-t tty] [-U user]"
+literal|"usage: ps [-aChjlmrSTuvwxZ] [-O|o fmt] [-p pid] [-t tty] [-U user]"
 argument_list|,
 literal|"          [-M core] [-N system]"
 argument_list|,
