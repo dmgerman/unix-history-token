@@ -187,7 +187,7 @@ name|EXCA_MEMINFO
 parameter_list|(
 name|NUM
 parameter_list|)
-value|{						\ 	EXCA_SYSMEM_ADDR ## NUM ## _START_LSB,				\ 	EXCA_SYSMEM_ADDR ## NUM ## _START_MSB,				\ 	EXCA_SYSMEM_ADDR ## NUM ## _STOP_LSB,				\ 	EXCA_SYSMEM_ADDR ## NUM ## _STOP_MSB,				\ 	EXCA_SYSMEM_ADDR ## NUM ## _WIN,				\ 	EXCA_CARDMEM_ADDR ## NUM ## _LSB,				\ 	EXCA_CARDMEM_ADDR ## NUM ## _MSB,				\ 	EXCA_ADDRWIN_ENABLE_MEM ## NUM ##,				\ }
+value|{						\ 	EXCA_SYSMEM_ADDR ## NUM ## _START_LSB,				\ 	EXCA_SYSMEM_ADDR ## NUM ## _START_MSB,				\ 	EXCA_SYSMEM_ADDR ## NUM ## _STOP_LSB,				\ 	EXCA_SYSMEM_ADDR ## NUM ## _STOP_MSB,				\ 	EXCA_SYSMEM_ADDR ## NUM ## _WIN,				\ 	EXCA_CARDMEM_ADDR ## NUM ## _LSB,				\ 	EXCA_CARDMEM_ADDR ## NUM ## _MSB,				\ 	EXCA_ADDRWIN_ENABLE_MEM ## NUM,					\ }
 end_define
 
 begin_struct
@@ -1443,7 +1443,7 @@ name|EXCA_IOINFO
 parameter_list|(
 name|NUM
 parameter_list|)
-value|{						\ 	EXCA_IOADDR ## NUM ## _START_LSB,				\ 	EXCA_IOADDR ## NUM ## _START_MSB,				\ 	EXCA_IOADDR ## NUM ## _STOP_LSB,				\ 	EXCA_IOADDR ## NUM ## _STOP_MSB,				\ 	EXCA_ADDRWIN_ENABLE_IO ## NUM ##,				\ 	EXCA_IOCTL_IO ## NUM ## _WAITSTATE				\ 	| EXCA_IOCTL_IO ## NUM ## _ZEROWAIT				\ 	| EXCA_IOCTL_IO ## NUM ## _IOCS16SRC_MASK			\ 	| EXCA_IOCTL_IO ## NUM ## _DATASIZE_MASK,			\ 	{								\ 		EXCA_IOCTL_IO ## NUM ## _IOCS16SRC_CARD,		\ 		EXCA_IOCTL_IO ## NUM ## _IOCS16SRC_DATASIZE		\ 		| EXCA_IOCTL_IO ## NUM ## _DATASIZE_8BIT,		\ 		EXCA_IOCTL_IO ## NUM ## _IOCS16SRC_DATASIZE		\ 		| EXCA_IOCTL_IO ## NUM ## _DATASIZE_16BIT,		\ 	}								\ }
+value|{						\ 	EXCA_IOADDR ## NUM ## _START_LSB,				\ 	EXCA_IOADDR ## NUM ## _START_MSB,				\ 	EXCA_IOADDR ## NUM ## _STOP_LSB,				\ 	EXCA_IOADDR ## NUM ## _STOP_MSB,				\ 	EXCA_ADDRWIN_ENABLE_IO ## NUM,					\ 	EXCA_IOCTL_IO ## NUM ## _WAITSTATE				\ 	| EXCA_IOCTL_IO ## NUM ## _ZEROWAIT				\ 	| EXCA_IOCTL_IO ## NUM ## _IOCS16SRC_MASK			\ 	| EXCA_IOCTL_IO ## NUM ## _DATASIZE_MASK,			\ 	{								\ 		EXCA_IOCTL_IO ## NUM ## _IOCS16SRC_CARD,		\ 		EXCA_IOCTL_IO ## NUM ## _IOCS16SRC_DATASIZE		\ 		| EXCA_IOCTL_IO ## NUM ## _DATASIZE_8BIT,		\ 		EXCA_IOCTL_IO ## NUM ## _IOCS16SRC_DATASIZE		\ 		| EXCA_IOCTL_IO ## NUM ## _DATASIZE_16BIT,		\ 	}								\ }
 end_define
 
 begin_struct
