@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	2.14 (Berkeley) %G%"
+literal|"@(#)lex.c	2.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"rcv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_comment
@@ -68,6 +74,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|stat
+name|stb
+decl_stmt|;
 specifier|static
 name|int
 name|shudclob
@@ -105,6 +115,54 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|edit
+condition|)
+block|{
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|ibuf
+argument_list|)
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|stb
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * Looks like all will be well.  We must now relinquish our 	 * hold on the current set of stuff.  Must hold signals 	 * while we are reading the new file, else we will ruin 	 * the message[] data structure. 	 */
 name|holdsigs
 argument_list|()
