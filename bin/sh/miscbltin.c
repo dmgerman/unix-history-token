@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: miscbltin.c,v 1.16 1998/08/24 10:20:36 cracauer Exp $"
+literal|"$Id: miscbltin.c,v 1.17 1998/08/25 09:33:34 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1236,6 +1236,11 @@ operator|~
 name|mask
 operator|&
 literal|0777
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|set
 argument_list|)
 expr_stmt|;
 block|}
