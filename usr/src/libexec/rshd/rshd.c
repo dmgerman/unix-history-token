@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.7 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1144,7 +1144,7 @@ name|ioctl
 argument_list|(
 name|pv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|FIONBIO
