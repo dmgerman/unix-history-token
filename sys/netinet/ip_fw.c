@@ -6,13 +6,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STATEFUL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEB
 parameter_list|(
 name|x
@@ -4859,10 +4852,11 @@ operator|&&
 name|BRIDGED
 condition|)
 block|{
+comment|/* not yet... */
 name|offset
 operator|=
 operator|(
-name|NTOHS
+name|ntohs
 argument_list|(
 name|ip
 operator|->
@@ -4874,7 +4868,7 @@ operator|)
 expr_stmt|;
 name|ip_len
 operator|=
-name|NTOHS
+name|ntohs
 argument_list|(
 name|ip
 operator|->

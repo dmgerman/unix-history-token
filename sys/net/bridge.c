@@ -1342,7 +1342,7 @@ parameter_list|,
 name|comment
 parameter_list|)
 define|\
-value|int var ;                               \ 	SYSCTL_INT(parent, OID_AUTO, var, CTLFLAG_RW,&(var), 0, comment);
+value|static int var ;				\ 	SYSCTL_INT(parent, OID_AUTO, var, CTLFLAG_RW,&(var), 0, comment);
 end_define
 
 begin_decl_stmt
@@ -1436,84 +1436,36 @@ begin_comment
 comment|/* diagnostic vars */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|bdg_split_pkts
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SY
 argument_list|(
 name|_net_link_ether
 argument_list|,
-name|OID_AUTO
-argument_list|,
 name|bdg_split_pkts
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|bdg_split_pkts
-argument_list|,
-literal|0
 argument_list|,
 literal|"Packets split in bdg_forward"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|bdg_thru
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SY
 argument_list|(
 name|_net_link_ether
 argument_list|,
-name|OID_AUTO
-argument_list|,
 name|bdg_thru
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|bdg_thru
-argument_list|,
-literal|0
 argument_list|,
 literal|"Packets through bridge"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|bdg_copied
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SY
 argument_list|(
 name|_net_link_ether
 argument_list|,
-name|OID_AUTO
-argument_list|,
 name|bdg_copied
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|bdg_copied
-argument_list|,
-literal|0
 argument_list|,
 literal|"Packets copied in bdg_forward"
 argument_list|)
@@ -1537,33 +1489,9 @@ name|SY
 argument_list|(
 name|_net_link_ether
 argument_list|,
-name|bdg_nopredict
-argument_list|,
-literal|"Disable predicted header location"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SY
-argument_list|(
-name|_net_link_ether
-argument_list|,
 name|bdg_predict
 argument_list|,
 literal|"Correctly predicted header location"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SY
-argument_list|(
-name|_net_link_ether
-argument_list|,
-name|bdg_null_eh
-argument_list|,
-literal|"bdg_forward called with null_eh"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2677,12 +2605,9 @@ init|=
 operator|*
 name|eh
 decl_stmt|;
-name|quad_t
-name|ticks
-decl_stmt|;
-name|DDB
+name|DEB
 argument_list|(
-argument|ticks = rdtsc();
+argument|quad_t ticks; ticks = rdtsc();
 argument_list|)
 name|bdg_thru
 operator|++
@@ -3111,6 +3036,7 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+comment|/* cookie */
 argument_list|,
 operator|&
 name|m
@@ -3206,10 +3132,6 @@ comment|/* 	     * pass the pkt to dummynet. Need to include m, dst, rule. 	    
 comment|/* 	     * check the common case of eh pointing already into the mbuf 	     */
 if|if
 condition|(
-name|bdg_nopredict
-operator|==
-literal|0
-operator|&&
 operator|(
 name|void
 operator|*
@@ -3518,10 +3440,6 @@ comment|/* 	     * Last part of ether_output: add header, queue pkt and start 	 
 comment|/* 	     * check the common case of eh pointing already into the mbuf 	     */
 if|if
 condition|(
-name|bdg_nopredict
-operator|==
-literal|0
-operator|&&
 operator|(
 name|void
 operator|*
@@ -3729,7 +3647,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|DDB
+name|DEB
 argument_list|(
 argument|bdg_fw_ticks += (u_long)(rdtsc() - ticks) ; bdg_fw_count++ ; 	if (bdg_fw_count !=
 literal|0

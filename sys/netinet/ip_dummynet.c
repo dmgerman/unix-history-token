@@ -2069,15 +2069,16 @@ block|}
 comment|/* 	     * same as ether_input, make eh be a pointer into the mbuf 	     */
 name|eh
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|mtod
+argument_list|(
 name|pkt
 operator|->
 name|dn_m
-operator|->
-name|m_data
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
 expr_stmt|;
 name|m_adj
 argument_list|(
@@ -2881,15 +2882,6 @@ name|key
 argument_list|)
 expr_stmt|;
 comment|/* move from not_eligible_heap to scheduler_heap */
-name|neh
-operator|=
-operator|&
-operator|(
-name|p
-operator|->
-name|not_eligible_heap
-operator|)
-expr_stmt|;
 while|while
 condition|(
 name|neh
@@ -8356,7 +8348,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* this is a dummynet queue (dn_flow_set) */
+comment|/* this is a WF2Q queue (dn_flow_set) */
 name|struct
 name|dn_flow_set
 modifier|*
