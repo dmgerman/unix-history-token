@@ -1198,6 +1198,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|double
+name|trunc
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -1338,6 +1347,17 @@ argument_list|)
 name|__pure2
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|double
+name|scalbln
+parameter_list|(
+name|double
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|double
@@ -1869,11 +1889,31 @@ end_function_decl
 
 begin_function_decl
 name|float
+name|scalblnf
+parameter_list|(
+name|float
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
 name|scalbnf
 parameter_list|(
 name|float
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
+name|truncf
+parameter_list|(
+name|float
 parameter_list|)
 function_decl|;
 end_function_decl
