@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.8	%G%	*/
+comment|/*	rk.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NRK11
+name|NHK
 operator|>
 literal|0
 end_if
@@ -146,7 +146,7 @@ decl_stmt|;
 block|}
 name|rk_softc
 index|[
-name|NRK11
+name|NHK
 index|]
 struct|;
 end_struct
@@ -238,7 +238,7 @@ name|uba_minfo
 modifier|*
 name|rkminfo
 index|[
-name|NRK11
+name|NHK
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -249,7 +249,7 @@ name|uba_dinfo
 modifier|*
 name|rkdinfo
 index|[
-name|NRK07
+name|NRK
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -260,7 +260,7 @@ name|uba_dinfo
 modifier|*
 name|rkip
 index|[
-name|NRK11
+name|NHK
 index|]
 index|[
 literal|4
@@ -315,7 +315,7 @@ name|struct
 name|buf
 name|rkutab
 index|[
-name|NRK07
+name|NRK
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -324,7 +324,7 @@ begin_decl_stmt
 name|short
 name|rkcyl
 index|[
-name|NRK07
+name|NRK
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -418,7 +418,7 @@ name|struct
 name|buf
 name|rrkbuf
 index|[
-name|NRK07
+name|NRK
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -805,7 +805,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NRK07
+name|NRK
 condition|)
 goto|goto
 name|bad
@@ -2546,7 +2546,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NRK07
+name|NRK
 condition|)
 name|u
 operator|.
@@ -2605,7 +2605,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NRK07
+name|NRK
 condition|)
 name|u
 operator|.
@@ -3198,7 +3198,7 @@ literal|0
 init|;
 name|rk11
 operator|<
-name|NRK11
+name|NHK
 condition|;
 name|rk11
 operator|++
@@ -3307,39 +3307,6 @@ name|um
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-operator|(
-expr|struct
-name|rkdevice
-operator|*
-operator|)
-operator|(
-name|um
-operator|->
-name|um_addr
-operator|)
-operator|)
-operator|->
-name|rkcs1
-operator|=
-name|RK_CDT
-operator||
-name|RK_CCLR
-expr_stmt|;
-name|rkwait
-argument_list|(
-operator|(
-expr|struct
-name|rkdevice
-operator|*
-operator|)
-operator|(
-name|um
-operator|->
-name|um_addr
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|unit
@@ -3348,7 +3315,7 @@ literal|0
 init|;
 name|unit
 operator|<
-name|NRK11
+name|NHK
 condition|;
 name|unit
 operator|++
@@ -3451,7 +3418,7 @@ literal|0
 init|;
 name|rk11
 operator|<
-name|NRK11
+name|NHK
 condition|;
 name|rk11
 operator|++
@@ -3504,7 +3471,7 @@ literal|0
 init|;
 name|unit
 operator|<
-name|NRK07
+name|NRK
 condition|;
 name|unit
 operator|++
@@ -3562,20 +3529,14 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LOST INTERRUPT RESET"
+literal|"LOST rkintr "
 argument_list|)
 expr_stmt|;
-comment|/* SHOULD JUST RESET ONE CTLR, NOT ALL ON UBA */
-name|rkreset
+name|ubareset
 argument_list|(
 name|um
 operator|->
 name|um_ubanum
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3661,7 +3622,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NRK07
+name|NRK
 condition|)
 block|{
 name|printf
