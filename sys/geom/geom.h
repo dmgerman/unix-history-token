@@ -1412,6 +1412,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct
+struct|struct
+name|g_ioctl
+block|{
+name|u_long
+name|cmd
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+name|int
+name|fflag
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1521,7 +1544,7 @@ define|#
 directive|define
 name|g_topology_lock
 parameter_list|()
-value|sx_xlock(&topology_lock)
+value|do { mtx_assert(&Giant, MA_NOTOWNED); sx_xlock(&topology_lock); } while (0)
 end_define
 
 begin_define
