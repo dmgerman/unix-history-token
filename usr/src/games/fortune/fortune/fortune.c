@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortune.c	5.10 (Berkeley) %G%"
+literal|"@(#)fortune.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3487,11 +3487,14 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune:%s:No fortune files in directory\n"
+literal|"fortune: %s: No fortune files in directory.\n"
 argument_list|,
 name|fp
 operator|->
@@ -4070,11 +4073,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune:Out of space\n"
+literal|"fortune: out of memory.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4225,11 +4231,14 @@ operator|>
 literal|100
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune:Probabilities sum to %d%%!\n"
+literal|"fortune: probabilities sum to %d%%!\n"
 argument_list|,
 name|percent
 argument_list|)
@@ -4252,11 +4261,14 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune:No place to put residual probability (%d%%)\n"
+literal|"fortune: no place to put residual probability (%d%%)\n"
 argument_list|,
 name|percent
 argument_list|)
@@ -4279,11 +4291,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune:No probability left to put in residual files\n"
+literal|"fortune: no probability left to put in residual files\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5570,11 +5585,14 @@ operator|->
 name|tbl
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune:%s corrupted\n"
+literal|"fortune: %s corrupted\n"
 argument_list|,
 name|fp
 operator|->
