@@ -17817,6 +17817,7 @@ operator||
 name|HAL_INT_BMISS
 operator|)
 expr_stmt|;
+comment|/* 		 * NB: disable interrupts so we don't rx frames. 		 */
 name|ath_hal_intrset
 argument_list|(
 name|ah
@@ -17824,6 +17825,10 @@ argument_list|,
 name|sc
 operator|->
 name|sc_imask
+operator|&
+operator|~
+operator|~
+name|HAL_INT_GLOBAL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Notify the rate control algorithm. 		 */
