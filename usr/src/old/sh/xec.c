@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	xec.c	4.1	82/05/07	*/
+comment|/*	xec.c	4.2	83/02/09	*/
 end_comment
 
 begin_empty
@@ -185,15 +185,15 @@ operator|=
 name|schain
 expr_stmt|;
 name|IF
+name|argn
+operator|==
+literal|0
+name|ORF
 argument_list|(
 argument|internal=syslook(com[
 literal|0
 argument|],commands)
 argument_list|)
-name|ORF
-name|argn
-operator|==
-literal|0
 name|THEN
 name|setlist
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	macro.c	4.1	82/05/07	*/
+comment|/*	macro.c	4.2	83/02/09	*/
 end_comment
 
 begin_empty
@@ -937,6 +937,9 @@ init|=
 name|readc
 argument_list|()
 name|DO
+name|locstak
+argument_list|()
+decl_stmt|;
 name|pushstak
 argument_list|(
 argument|d|quote
