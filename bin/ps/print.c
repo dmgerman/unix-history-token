@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.32 1998/09/14 08:32:20 dfr Exp $"
+literal|"$Id: print.c,v 1.33 1998/11/25 09:34:00 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -996,15 +996,17 @@ literal|'V'
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|flag
 operator|&
-operator|(
 name|P_SYSTEM
-operator||
-name|P_NOSWAP
-operator||
-name|P_PHYSIO
 operator|)
+operator|||
+name|p
+operator|->
+name|p_lock
+operator|>
+literal|0
 condition|)
 operator|*
 name|cp
@@ -2134,6 +2136,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|pgtok
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -2143,6 +2151,11 @@ name|a
 parameter_list|)
 value|(((a)*getpagesize())/1024)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
