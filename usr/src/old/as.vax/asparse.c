@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.4 %G%"
+literal|"@(#)asparse.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1196,18 +1196,11 @@ argument|); 		return(
 literal|0
 argument|); 	} 	*regnoback = locxp->e_xvalue; 	return(val); }
 comment|/*VARARGS1*/
-argument|yyerror(s, a1, a2,a3,a4,a5) 	char	*s; { 	FILE		*sink;
-ifdef|#
-directive|ifdef
-name|DEBUG
-argument|sink = stdout;
-else|#
-directive|else
-else|not DEBUG
-argument|sink = stderr;
-endif|#
-directive|endif
-endif|DEBUG
+argument|yyerror(s, a1, a2,a3,a4,a5) 	char	*s; {
+define|#
+directive|define
+name|sink
+value|stdout
 argument|if (anyerrs ==
 literal|0
 argument|&& ! silent)  		fprintf(sink,
