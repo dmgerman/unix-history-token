@@ -4044,7 +4044,9 @@ operator|->
 name|ui_mtxp
 operator|=
 name|mtx_pool_alloc
-argument_list|()
+argument_list|(
+name|mtxpool_sleep
+argument_list|)
 expr_stmt|;
 name|uip
 operator|->

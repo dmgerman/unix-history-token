@@ -259,11 +259,11 @@ init|=
 literal|0x0800001
 block|,
 comment|/* first use of console*/
-name|SI_SUB_MTX_POOL
+name|SI_SUB_MTX_POOL_STATIC
 init|=
 literal|0x0900000
 block|,
-comment|/* mutex pool */
+comment|/* static mutex pool */
 name|SI_SUB_VM
 init|=
 literal|0x1000000
@@ -284,6 +284,11 @@ init|=
 literal|0x1A80000
 block|,
 comment|/* witness initialization */
+name|SI_SUB_MTX_POOL_DYNAMIC
+init|=
+literal|0x1AC0000
+block|,
+comment|/* dynamic mutex pool */
 name|SI_SUB_LOCK
 init|=
 literal|0x1B00000

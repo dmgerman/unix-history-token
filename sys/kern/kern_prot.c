@@ -7039,6 +7039,8 @@ name|cr_mtxp
 operator|=
 name|mtx_pool_find
 argument_list|(
+name|mtxpool_sleep
+argument_list|,
 name|cr
 argument_list|)
 expr_stmt|;

@@ -2252,7 +2252,9 @@ block|}
 comment|/* 	 * XXX cleanup - make sure mtxpool is always initialized before 	 * this is ever called. 	 */
 if|if
 condition|(
-name|mtx_pool_valid
+name|mtxpool_lockbuilder
+operator|!=
+name|NULL
 condition|)
 block|{
 name|mtx_lock
@@ -2266,7 +2268,9 @@ operator|->
 name|lk_interlock
 operator|=
 name|mtx_pool_alloc
-argument_list|()
+argument_list|(
+name|mtxpool_lockbuilder
+argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(

@@ -232,6 +232,8 @@ name|sx_lock
 operator|=
 name|mtx_pool_find
 argument_list|(
+name|mtxpool_lockbuilder
+argument_list|,
 name|sx
 argument_list|)
 expr_stmt|;
