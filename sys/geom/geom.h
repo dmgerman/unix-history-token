@@ -570,6 +570,13 @@ name|g_stat
 modifier|*
 name|stat
 decl_stmt|;
+name|u_int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|G_PF_CANDELETE
+value|0x1
 block|}
 struct|;
 end_struct
