@@ -2641,7 +2641,8 @@ operator|*
 name|ndp
 operator|,
 name|int
-name|fmode
+operator|*
+name|flagp
 operator|,
 name|int
 name|cmode

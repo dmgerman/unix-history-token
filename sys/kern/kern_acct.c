@@ -314,6 +314,8 @@ name|nd
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|flags
 decl_stmt|;
 comment|/* Make sure that the caller is root. */
 name|error
@@ -366,6 +368,10 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
+name|FWRITE
+expr_stmt|;
 name|error
 operator|=
 name|vn_open
@@ -373,7 +379,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
-name|FWRITE
+operator|&
+name|flags
 argument_list|,
 literal|0
 argument_list|)

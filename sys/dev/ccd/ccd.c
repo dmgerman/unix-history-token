@@ -6492,6 +6492,8 @@ name|vp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|flags
 decl_stmt|;
 name|NDINIT
 argument_list|(
@@ -6509,6 +6511,12 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
+name|FREAD
+operator||
+name|FWRITE
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6519,9 +6527,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
-name|FREAD
-operator||
-name|FWRITE
+operator|&
+name|flags
 argument_list|,
 literal|0
 argument_list|)

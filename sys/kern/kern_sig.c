@@ -7170,6 +7170,8 @@ name|int
 name|error
 decl_stmt|,
 name|error1
+decl_stmt|,
+name|flags
 decl_stmt|;
 name|char
 modifier|*
@@ -7269,6 +7271,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
+name|O_CREAT
+operator||
+name|FWRITE
+operator||
+name|O_NOFOLLOW
+expr_stmt|;
 name|error
 operator|=
 name|vn_open
@@ -7276,11 +7286,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
-name|O_CREAT
-operator||
-name|FWRITE
-operator||
-name|O_NOFOLLOW
+operator|&
+name|flags
 argument_list|,
 name|S_IRUSR
 operator||

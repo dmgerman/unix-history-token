@@ -1229,6 +1229,8 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|flags
+decl_stmt|,
 name|error
 init|=
 literal|0
@@ -1269,6 +1271,14 @@ argument_list|,
 name|curp
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
+name|FREAD
+operator||
+name|FWRITE
+operator||
+name|O_NOFOLLOW
+expr_stmt|;
 name|error
 operator|=
 name|vn_open
@@ -1276,11 +1286,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-operator||
-name|O_NOFOLLOW
+operator|&
+name|flags
 argument_list|,
 literal|0
 argument_list|)
