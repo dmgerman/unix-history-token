@@ -32,10 +32,6 @@ name|int
 name|tss_esp0
 decl_stmt|;
 comment|/* kernel stack pointer privilege level 0 */
-define|#
-directive|define
-name|tss_ksp
-value|tss_esp0
 name|int
 name|tss_ss0
 decl_stmt|;
@@ -60,26 +56,14 @@ name|int
 name|tss_cr3
 decl_stmt|;
 comment|/* page table directory */
-define|#
-directive|define
-name|tss_ptd
-value|tss_cr3
 name|int
 name|tss_eip
 decl_stmt|;
 comment|/* program counter */
-define|#
-directive|define
-name|tss_pc
-value|tss_eip
 name|int
 name|tss_eflags
 decl_stmt|;
 comment|/* program status longword */
-define|#
-directive|define
-name|tss_psl
-value|tss_eflags
 name|int
 name|tss_eax
 decl_stmt|;
@@ -96,18 +80,10 @@ name|int
 name|tss_esp
 decl_stmt|;
 comment|/* user stack pointer */
-define|#
-directive|define
-name|tss_usp
-value|tss_esp
 name|int
 name|tss_ebp
 decl_stmt|;
 comment|/* user frame pointer */
-define|#
-directive|define
-name|tss_fp
-value|tss_ebp
 name|int
 name|tss_esi
 decl_stmt|;
