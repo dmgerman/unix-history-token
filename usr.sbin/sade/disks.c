@@ -1588,6 +1588,10 @@ break|break;
 case|case
 literal|'A'
 case|:
+case|case
+literal|'F'
+case|:
+comment|/* Undocumented magic Dangerously Dedicated mode */
 ifdef|#
 directive|ifdef
 name|__alpha__
@@ -1621,11 +1625,45 @@ name|rv
 operator|=
 literal|1
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|toupper
+argument_list|(
+name|key
+argument_list|)
+operator|==
+literal|'A'
+condition|)
 name|rv
 operator|=
 literal|0
 expr_stmt|;
+else|else
+block|{
+name|rv
+operator|=
+name|msgYesNo
+argument_list|(
+literal|"Do you want to do this with a true partition entry\n"
+literal|"so as to remain cooperative with any future possible\n"
+literal|"operating systems on the drive(s)?\n"
+literal|"(See also the section about ``dangerously dedicated''\n"
+literal|"disks in the FreeBSD FAQ.)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|==
+operator|-
+literal|1
+condition|)
+name|rv
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|All_FreeBSD
