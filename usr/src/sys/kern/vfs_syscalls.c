@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.94 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.95 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -10483,24 +10483,32 @@ name|BYTE_ORDER
 operator|==
 name|LITTLE_ENDIAN
 operator|)
-comment|/* 					 * The expected dp->d_namlen field 					 * is in our dp->d_type. 					 */
+comment|/* 					 * The expected low byte of 					 * dp->d_namlen is our dp->d_type. 					 * The high MBZ byte of dp->d_namlen 					 * is our dp->d_namlen. 					 */
+name|dp
+operator|->
+name|d_type
+operator|=
+name|dp
+operator|->
+name|d_namlen
+expr_stmt|;
 name|dp
 operator|->
 name|d_namlen
 operator|=
-name|dp
-operator|->
-name|d_type
+literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* 				 * The dp->d_type is the high byte 				 * of the expected dp->d_namlen, 				 * so must be zero'ed. 				 */
+else|#
+directive|else
+comment|/* 					 * The dp->d_type is the high byte 					 * of the expected dp->d_namlen, 					 * so must be zero'ed. 					 */
 name|dp
 operator|->
 name|d_type
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dp
