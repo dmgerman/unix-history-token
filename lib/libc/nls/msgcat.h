@@ -265,8 +265,9 @@ name|long
 name|loadType
 decl_stmt|;
 comment|/* How to load the messages (see MSLoadType) */
-name|int
-name|fd
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 comment|/* File descriptor of catalog (if load-on-demand) */
 name|long
