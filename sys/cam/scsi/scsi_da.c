@@ -885,6 +885,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
+block|,
+block|{
+comment|/* 		 * Minolta Dimage 2330 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"MINOLTA"
+block|,
+literal|"DIMAGE 2330*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
