@@ -4919,9 +4919,15 @@ operator|->
 name|a_cnp
 argument_list|)
 expr_stmt|;
-comment|/* Why wait to the very end to decide that this is a read-only fs? */
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|ISLASTCN
+operator|)
+operator|&&
+operator|(
 name|nameiop
 operator|==
 name|CREATE
@@ -4929,6 +4935,7 @@ operator|||
 name|nameiop
 operator|==
 name|RENAME
+operator|)
 condition|)
 return|return
 operator|(
