@@ -4,10 +4,6 @@ comment|/* te-freebsd.h -- FreeBSD target environment declarations.    Copyright
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* Target environment for FreeBSD.  It is the same as the generic    target, except that it arranges via the TE_FreeBSD define to    suppress the use of "/" as a comment character.  Some code in the    FreeBSD kernel uses "/" to mean division.  (What a concept!)  */
 end_comment
 

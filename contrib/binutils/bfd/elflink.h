@@ -4,10 +4,6 @@ comment|/* ELF linker support.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* ELF linker code.  */
 end_comment
 

@@ -4,10 +4,6 @@ comment|/* i386.c -- Assemble code for the Intel 80386    Copyright 1989, 1991, 
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* Intel 80386 machine specific gas.    Written by Eliot Dresselhaus (eliot@mgm.mit.edu).    x86_64 support by Jan Hubicka (jh@suse.cz)    Bugs& suggestions are completely welcome.  This is free software.    Please help us make it better.  */
 end_comment
 
