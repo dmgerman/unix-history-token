@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)copy.c	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)copy.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -33,6 +33,10 @@ decl_stmt|,
 name|rcc
 decl_stmt|,
 name|wcc
+decl_stmt|,
+name|bsize
+init|=
+name|BSIZE
 decl_stmt|;
 name|char
 name|buf
@@ -81,7 +85,7 @@ name|from
 argument_list|,
 name|buf
 argument_list|,
-name|BSIZE
+name|bsize
 argument_list|)
 operator|)
 condition|)
@@ -106,43 +110,43 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
-name|record
-operator|&&
 name|rcc
 operator|!=
-name|BSIZE
+name|bsize
 condition|)
 block|{
-name|rcc
+if|if
+condition|(
+name|record
+operator|==
+literal|0
+condition|)
+block|{
+name|bsize
 operator|=
-name|BSIZE
+name|rcc
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"Block size set from input; %d bytes\n"
 argument_list|,
-name|BSIZE
+name|bsize
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|rcc
-operator|<
-name|BSIZE
-condition|)
+else|else
 name|printf
 argument_list|(
 literal|"Record %d: read short; expected %d, got %d\n"
 argument_list|,
 name|record
 argument_list|,
-name|BSIZE
+name|bsize
 argument_list|,
 name|rcc
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|vax
@@ -151,11 +155,11 @@ if|if
 condition|(
 name|rcc
 operator|>
-name|BSIZE
+name|bsize
 condition|)
 name|rcc
 operator|=
-name|BSIZE
+name|bsize
 expr_stmt|;
 endif|#
 directive|endif
