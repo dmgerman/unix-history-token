@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -33,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)uudecode.c	8.2 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)uudecode.c	8.2 (Berkeley) 4/2/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -83,13 +104,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -108,6 +135,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -143,13 +171,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -167,10 +188,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|int
 name|rval
 decl_stmt|,
@@ -218,9 +235,6 @@ expr_stmt|;
 comment|/* print output to stdout */
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|usage
 argument_list|()
 expr_stmt|;
@@ -262,22 +276,12 @@ name|stdin
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode: %s: %s\n"
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|rval
@@ -392,10 +396,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|struct
 name|passwd
 modifier|*
@@ -452,14 +452,9 @@ operator|(
 literal|0
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode: %s: no \"begin\" line\n"
+literal|"%s: no \"begin\" line"
 argument_list|,
 name|filename
 argument_list|)
@@ -524,14 +519,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode: %s: illegal ~user.\n"
+literal|"%s: illegal ~user"
 argument_list|,
 name|filename
 argument_list|)
@@ -563,14 +553,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode: %s: no user %s.\n"
+literal|"%s: no user %s"
 argument_list|,
 name|filename
 argument_list|,
@@ -610,14 +595,9 @@ operator|>
 name|MAXPATHLEN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode: %s: path too long.\n"
+literal|"%s: path too long"
 argument_list|,
 name|filename
 argument_list|)
@@ -695,23 +675,13 @@ literal|0666
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode: %s: %s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|buf
 argument_list|,
 name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -745,14 +715,9 @@ name|stdin
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode: %s: short file.\n"
+literal|"%s: short file"
 argument_list|,
 name|filename
 argument_list|)
@@ -1037,14 +1002,9 @@ literal|'\n'
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode: %s: no \"end\" line.\n"
+literal|"%s: no \"end\" line"
 argument_list|,
 name|filename
 argument_list|)
@@ -1064,6 +1024,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
