@@ -1813,6 +1813,11 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
+name|INP_LOCK_DESTROY
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|ipi
