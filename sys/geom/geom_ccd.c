@@ -2308,6 +2308,7 @@ argument_list|(
 name|cbp
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
@@ -2348,6 +2349,11 @@ operator|=
 name|cbp
 operator|->
 name|bio_error
+expr_stmt|;
+name|g_destroy_bio
+argument_list|(
+name|cbp
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
