@@ -4060,13 +4060,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"cannot insert Linux elf brand handler\n"
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 name|linux_ioctl_register_handlers
 argument_list|(
@@ -4080,20 +4076,20 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Linux-ELF exec handler installed\n"
+literal|"Linux ELF exec handler installed\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|printf
+argument_list|(
+literal|"cannot insert Linux ELF brand handler\n"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|linux_ioctl_unregister_handlers
-argument_list|(
-operator|&
-name|linux_ioctl_handler_set
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|brandinfo
@@ -4167,20 +4163,30 @@ block|}
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-name|printf
+block|{
+name|linux_ioctl_unregister_handlers
 argument_list|(
-literal|"Could not deinstall ELF interpreter entry\n"
+operator|&
+name|linux_ioctl_handler_set
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Linux-elf exec handler removed\n"
+literal|"Linux ELF exec handler removed\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"Could not deinstall ELF interpreter entry\n"
 argument_list|)
 expr_stmt|;
 break|break;
