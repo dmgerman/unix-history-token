@@ -3320,7 +3320,7 @@ name|acpi_cpu_history_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"count of full sleeps for Cx state / short sleeps"
 argument_list|)
 expr_stmt|;
 ifdef|#
