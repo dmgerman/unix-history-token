@@ -32,11 +32,6 @@ directive|include
 file|<stand.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -48,6 +43,11 @@ include|#
 directive|include
 file|<machine/cpufunc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -276,12 +276,12 @@ name|__i386__
 end_ifdef
 
 begin_comment
-comment|/*   * pc! ( port# c -- )  * Store a byte to I/O port number port#  */
+comment|/*   * outb ( port# c -- )  * Store a byte to I/O port number port#  */
 end_comment
 
 begin_function
 name|void
-name|pc_store
+name|ficlOutb
 parameter_list|(
 name|FICL_VM
 modifier|*
@@ -326,12 +326,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pc@ ( port# -- c )  * Fetch a byte from I/O port number port#  */
+comment|/*  * inb ( port# -- c )  * Fetch a byte from I/O port number port#  */
 end_comment
 
 begin_function
 name|void
-name|pc_fetch
+name|ficlInb
 parameter_list|(
 name|FICL_VM
 modifier|*
