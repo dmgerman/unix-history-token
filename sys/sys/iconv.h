@@ -525,9 +525,10 @@ name|ICDEBUG
 parameter_list|(
 name|format
 parameter_list|,
+name|args
 modifier|...
 parameter_list|)
-value|printf("%s: "format, __func__ , __VA_ARGS__)
+value|printf("%s: "format, __func__ ,## args)
 end_define
 
 begin_else
@@ -542,6 +543,7 @@ name|ICDEBUG
 parameter_list|(
 name|format
 parameter_list|,
+name|args
 modifier|...
 parameter_list|)
 end_define
