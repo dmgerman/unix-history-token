@@ -188,7 +188,7 @@ begin_define
 define|#
 directive|define
 name|LESSKEYFILE_SYS
-value|SYSDIR "/sysless"
+value|"/etc/lesskey"
 end_define
 
 begin_define
