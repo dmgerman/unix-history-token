@@ -5186,12 +5186,6 @@ name|buf_block
 modifier|*
 name|blkp
 decl_stmt|;
-name|hc
-operator|=
-name|sc
-operator|->
-name|hc
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NETGRAPH
@@ -5231,6 +5225,12 @@ return|return;
 endif|#
 directive|endif
 comment|/* NETGRAPH */
+name|hc
+operator|=
+name|sc
+operator|->
+name|hc
+expr_stmt|;
 comment|/* 	 * It is OK to set the memory window outside the loop because all tx 	 * buffers and descriptors are assumed to be in the same 16K window. 	 */
 if|if
 condition|(
