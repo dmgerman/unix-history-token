@@ -4,11 +4,11 @@ comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All r
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	Send updates to sendmail@Sendmail.ORG so they will be **	included in the next release. */
 end_comment
 
 begin_comment
-comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	Send updates to sendmail@Sendmail.ORG so they will be **	included in the next release. */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

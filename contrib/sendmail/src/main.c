@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.887 2002/06/17 22:25:52 gshapiro Exp $"
+literal|"@(#)$Id: main.c,v 8.887.2.1 2002/08/04 17:36:06 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -12925,6 +12925,10 @@ name|envp
 operator|=
 name|ExternalEnviron
 init|;
+name|envp
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|envp
 operator|!=

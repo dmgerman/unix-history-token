@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.85 2002/05/28 18:17:41 gshapiro Exp $"
+literal|"@(#)$Id: listener.c,v 8.85.2.1 2002/08/09 22:13:36 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2112,7 +2112,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|{									\ 	int rs = 0;							\ 	struct timeval st;						\ 									\ 	st.tv_sec = (s);						\ 	st.tv_usec = 0;							\ 	if (st.tv_sec> 0)						\ 		rs = select(0, NULL, NULL, NULL,&st);			\ 	if (rs != 0)							\ 	{								\ 		smi_log(SMI_LOG_ERR,					\ 			"MI_SLEEP(): select() returned non-zero result %d, errno = %d",								\ 			rs, errno);					\ 	}								\ }
+value|{									\ 	int rs = 0;							\ 	struct timeval st;						\ 									\ 	st.tv_sec = (s);						\ 	st.tv_usec = 0;							\ 	if (st.tv_sec> 0)						\ 	{								\ 		for (;;)						\ 		{							\ 			rs = select(0, NULL, NULL, NULL,&st);		\ 			if (rs< 0&& errno == EINTR)			\ 				continue;				\ 			if (rs != 0)					\ 			{						\ 				smi_log(SMI_LOG_ERR,			\ 					"MI_SLEEP(): select() returned non-zero result %d, errno = %d",						\ 					rs, errno);			\ 			}						\ 		}							\ 	}								\ }
 end_define
 
 begin_else

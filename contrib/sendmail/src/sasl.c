@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sasl.c,v 8.19 2002/06/12 15:06:12 ca Exp $"
+literal|"@(#)$Id: sasl.c,v 8.19.2.1 2002/07/13 18:04:56 ca Exp $"
 argument_list|)
 end_macro
 
@@ -562,7 +562,7 @@ literal|20000
 end_if
 
 begin_comment
-comment|/* **  IPTOSTRING -- create string for SASL_IP*PORT property **                (borrowed from lib/iptostring.c in Cyrus-IMAP) ** **	Parameters: **		addr -- (pointer to) socket address **		addrlen -- length of socket address **		out -- output string (result) **		outlen -- maximum length of output string ** **	Returns: **		true iff successful. ** **	Side Effects: **		creates output string if successful. **		sets errno if unsuccessful. */
+comment|/* **  IPTOSTRING -- create string for SASL_IP*PORT property **		(borrowed from lib/iptostring.c in Cyrus-IMAP) ** **	Parameters: **		addr -- (pointer to) socket address **		addrlen -- length of socket address **		out -- output string (result) **		outlen -- maximum length of output string ** **	Returns: **		true iff successful. ** **	Side Effects: **		creates output string if successful. **		sets errno if unsuccessful. */
 end_comment
 
 begin_include
