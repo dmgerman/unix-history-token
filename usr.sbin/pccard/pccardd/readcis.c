@@ -1423,7 +1423,7 @@ block|{
 if|if
 condition|(
 name|len
-operator|>
+operator|>=
 literal|4
 condition|)
 block|{
