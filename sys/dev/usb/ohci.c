@@ -5277,6 +5277,15 @@ decl_stmt|;
 name|ohci_physaddr_t
 name|done
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|14
+argument_list|,
+operator|(
+literal|"ohci_intr1: enter\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* In case the interrupt occurs before initialization has completed. */
 if|if
 condition|(
@@ -6079,6 +6088,15 @@ name|cc
 decl_stmt|,
 name|s
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|10
+argument_list|,
+operator|(
+literal|"ohci_softintr: enter\n:"
+operator|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_bus
@@ -6125,7 +6143,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"ohci_process_done: sdone=%p sidone=%p\n"
+literal|"ohci_softintr: sdone=%p sidone=%p\n"
 operator|,
 name|sdone
 operator|,
@@ -6565,7 +6583,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ohci_process_done: ITD done:\n"
+literal|"ohci_softintr: ITD done:\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6777,6 +6795,15 @@ name|sc_bus
 operator|.
 name|intr_context
 operator|--
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|10
+argument_list|,
+operator|(
+literal|"ohci_softintr: done:\n"
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -7552,6 +7579,50 @@ operator|*
 operator|)
 name|bus
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
+specifier|static
+name|int
+name|last
+decl_stmt|;
+name|int
+name|new
+decl_stmt|;
+name|new
+operator|=
+name|OREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_INTERRUPT_STATUS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new
+operator|!=
+name|last
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|10
+argument_list|,
+operator|(
+literal|"ohci_poll: intrs=0x%04x\n"
+operator|,
+name|new
+operator|)
+argument_list|)
+expr_stmt|;
+name|last
+operator|=
+name|new
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|OREAD4
