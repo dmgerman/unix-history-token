@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.13 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2394,25 +2394,6 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-if|if
-condition|(
-name|totime
-operator|==
-literal|0.0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No time accumulated\n"
-argument_list|)
-expr_stmt|;
-name|totime
-operator|=
-literal|1.0
-expr_stmt|;
-block|}
 block|}
 end_block
 

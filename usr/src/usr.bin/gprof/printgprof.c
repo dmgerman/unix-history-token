@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.10 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,13 @@ name|UNIT
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|totime
+operator|>
+literal|0.0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|" for %.2f%% of %.2f seconds\n\n"
@@ -75,6 +82,20 @@ operator|/
 name|HZ
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" no time accumulated\n\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	     *	this doesn't hurt sinc eall the numerators will be zero. 	     */
+name|totime
+operator|=
+literal|1.0
+expr_stmt|;
+block|}
 name|actime
 operator|=
 literal|0.0
@@ -498,6 +519,13 @@ name|UNIT
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|printtime
+operator|>
+literal|0.0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|" for %.2f%% of %.2f seconds\n\n"
@@ -511,6 +539,20 @@ operator|/
 name|HZ
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" no time propagated\n\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	     *	this doesn't hurt, since all the numerators will be 0.0 	     */
+name|printtime
+operator|=
+literal|1.0
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%6.6s %5.5s %7.7s %11.11s %7.7s/%-7.7s     %-8.8s\n"
