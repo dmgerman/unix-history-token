@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.8 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.9 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -1018,14 +1018,14 @@ begin_define
 define|#
 directive|define
 name|procfs_lock
-value|((int (*) __P((struct vop_lock_args *))) nullop)
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|procfs_unlock
-value|((int (*) __P((struct vop_unlock_args *))) nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_decl_stmt
@@ -1067,7 +1067,8 @@ begin_define
 define|#
 directive|define
 name|procfs_islocked
-value|((int (*) __P((struct vop_islocked_args *))) nullop)
+define|\
+value|((int (*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
