@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996, 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.81.2.5 1997/02/03 16:29:29 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996, 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -842,7 +842,7 @@ parameter_list|,
 name|sc_link
 parameter_list|)
 define|\
-value|(((u_int32_t)(sc_link)->fordriver)& SELBUSB)
+value|(((u_int32_t)((sc_link)->fordriver)& SELBUSB) != 0)
 end_define
 
 begin_else
@@ -1093,7 +1093,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ahc_search_qinfo
+name|ahc_search_qinfifo
 name|__P
 argument_list|(
 operator|(
@@ -2565,7 +2565,7 @@ operator|)
 expr_stmt|;
 name|sxfrctl0
 operator||=
-name|ULTRAEN
+name|FAST20
 expr_stmt|;
 block|}
 else|else
@@ -2586,7 +2586,7 @@ expr_stmt|;
 name|sxfrctl0
 operator|&=
 operator|~
-name|ULTRAEN
+name|FAST20
 expr_stmt|;
 block|}
 name|ahc_outb
@@ -3410,6 +3410,11 @@ argument_list|,
 name|SCB_LIST_NULL
 argument_list|,
 name|XS_DRIVER_STUFFUP
+argument_list|)
+expr_stmt|;
+name|ahc_run_done_queue
+argument_list|(
+name|ahc
 argument_list|)
 expr_stmt|;
 block|}
@@ -5120,6 +5125,14 @@ argument_list|)
 expr_stmt|;
 name|scb
 operator|->
+name|sg_count
+operator|=
+name|hscb
+operator|->
+name|SG_segment_count
+expr_stmt|;
+name|scb
+operator|->
 name|flags
 operator||=
 name|SCB_SENSE
@@ -5662,8 +5675,21 @@ argument_list|,
 name|SCB_TAG
 argument_list|)
 decl_stmt|;
+name|u_int8_t
+name|lastphase
+init|=
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|LASTPHASE
+argument_list|)
+decl_stmt|;
 name|u_int32_t
 name|overrun
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|scb
 operator|=
@@ -5724,12 +5750,105 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"data overrun of %d bytes detected."
-literal|"  Forcing a retry.\n"
+literal|"data overrun of %d bytes detected in %s phase."
+literal|"  Tag == 0x%x.  Forcing a retry.\n"
 argument_list|,
 name|overrun
+argument_list|,
+name|lastphase
+operator|==
+name|P_DATAIN
+condition|?
+literal|"Data-In"
+else|:
+literal|"Data-Out"
+argument_list|,
+name|scb
+operator|->
+name|hscb
+operator|->
+name|tag
 argument_list|)
 expr_stmt|;
+name|sc_print_addr
+argument_list|(
+name|scb
+operator|->
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s seen Data Phase.  Length = %d.  NumSGs = %d.\n"
+argument_list|,
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|FLAGS
+argument_list|)
+operator|&
+name|DPHASE
+condition|?
+literal|"Have"
+else|:
+literal|"Haven't"
+argument_list|,
+name|scb
+operator|->
+name|xs
+operator|->
+name|datalen
+argument_list|,
+name|scb
+operator|->
+name|sg_count
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|scb
+operator|->
+name|sg_count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"sg[%d] - Addr 0x%x : Length %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|scb
+operator|->
+name|ahc_dma
+index|[
+name|i
+index|]
+operator|.
+name|addr
+argument_list|,
+name|scb
+operator|->
+name|ahc_dma
+index|[
+name|i
+index|]
+operator|.
+name|len
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Set this and it will take affect when the 		 * target does a command complete. 		 */
 name|scb
 operator|->
@@ -6394,6 +6513,11 @@ argument_list|,
 name|CLRBUSFREE
 argument_list|)
 expr_stmt|;
+name|restart_sequencer
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 name|ahc_outb
 argument_list|(
 name|ahc
@@ -6401,11 +6525,6 @@ argument_list|,
 name|CLRINT
 argument_list|,
 name|CLRSCSIINT
-argument_list|)
-expr_stmt|;
-name|restart_sequencer
-argument_list|(
-name|ahc
 argument_list|)
 expr_stmt|;
 block|}
@@ -8358,7 +8477,7 @@ name|DFON
 operator||
 name|SPIOEN
 operator||
-name|ULTRAEN
+name|FAST20
 argument_list|)
 expr_stmt|;
 else|else
@@ -8518,7 +8637,7 @@ name|DFON
 operator||
 name|SPIOEN
 operator||
-name|ULTRAEN
+name|FAST20
 argument_list|)
 expr_stmt|;
 else|else
@@ -9755,6 +9874,35 @@ name|control
 operator||=
 name|TAG_ENB
 expr_stmt|;
+if|if
+condition|(
+name|ahc
+operator|->
+name|orderedtag
+operator|&
+name|mask
+condition|)
+block|{
+comment|/* XXX this should be handled by the upper SCSI layer */
+name|printf
+argument_list|(
+literal|"Ordered Tag sent\n"
+argument_list|)
+expr_stmt|;
+name|hscb
+operator|->
+name|control
+operator||=
+name|MSG_ORDERED_Q_TAG
+expr_stmt|;
+name|ahc
+operator|->
+name|orderedtag
+operator|&=
+operator|~
+name|mask
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -9856,36 +10004,6 @@ operator|->
 name|flags
 operator||=
 name|SCB_MSGOUT_SDTR
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ahc
-operator|->
-name|orderedtag
-operator|&
-name|mask
-condition|)
-block|{
-comment|/* XXX this should be handled by the upper SCSI layer */
-name|printf
-argument_list|(
-literal|"Ordered Tag sent\n"
-argument_list|)
-expr_stmt|;
-name|hscb
-operator|->
-name|control
-operator||=
-name|MSG_ORDERED_Q_TAG
-expr_stmt|;
-name|ahc
-operator|->
-name|orderedtag
-operator|&=
-operator|~
-name|mask
 expr_stmt|;
 block|}
 if|#
@@ -10163,6 +10281,14 @@ name|SG_segment_count
 operator|=
 name|seg
 expr_stmt|;
+name|scb
+operator|->
+name|sg_count
+operator|=
+name|hscb
+operator|->
+name|SG_segment_count
+expr_stmt|;
 comment|/* Copy the first SG into the data pointer area */
 name|hscb
 operator|->
@@ -10248,6 +10374,14 @@ operator|->
 name|SG_segment_count
 operator|=
 literal|0
+expr_stmt|;
+name|scb
+operator|->
+name|sg_count
+operator|=
+name|hscb
+operator|->
+name|SG_segment_count
 expr_stmt|;
 name|hscb
 operator|->
@@ -11882,6 +12016,42 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * We could be starving this command 		 * try sending an ordered tag command 		 * to the target we come from. 		 */
+name|u_int16_t
+name|mask
+decl_stmt|;
+name|mask
+operator|=
+operator|(
+literal|0x01
+operator|<<
+operator|(
+name|scb
+operator|->
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|target
+operator||
+operator|(
+name|IS_SCSIBUS_B
+argument_list|(
+name|ahc
+argument_list|,
+name|scb
+operator|->
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+condition|?
+name|SELBUSB
+else|:
+literal|0
+operator|)
+operator|)
+operator|)
+expr_stmt|;
 name|scb
 operator|->
 name|flags
@@ -11892,7 +12062,7 @@ name|ahc
 operator|->
 name|orderedtag
 operator||=
-literal|0xFF
+name|mask
 expr_stmt|;
 name|timeout
 argument_list|(
@@ -11904,7 +12074,7 @@ operator|)
 name|scb
 argument_list|,
 operator|(
-literal|5
+literal|1
 operator|*
 name|hz
 operator|)
@@ -12273,7 +12443,7 @@ argument_list|,
 name|channel
 argument_list|)
 expr_stmt|;
-name|ahc_search_qinfo
+name|ahc_search_qinfifo
 argument_list|(
 name|ahc
 argument_list|,
@@ -12492,7 +12662,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ahc_search_qinfo
+name|ahc_search_qinfifo
 parameter_list|(
 name|ahc
 parameter_list|,
@@ -12538,7 +12708,7 @@ index|[
 name|AHC_SCB_MAX
 index|]
 decl_stmt|;
-name|u_int8_t
+name|int
 name|queued
 init|=
 name|ahc_inb
@@ -12573,6 +12743,12 @@ expr_stmt|;
 name|found
 operator|=
 literal|0
+expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|removed_scbs
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -12822,7 +12998,7 @@ expr_stmt|;
 comment|/* 	 * Remove any entries from the Queue-In FIFO. 	 */
 name|found
 operator|=
-name|ahc_search_qinfo
+name|ahc_search_qinfifo
 argument_list|(
 name|ahc
 argument_list|,
@@ -14052,9 +14228,6 @@ decl_stmt|;
 name|int
 name|target
 decl_stmt|;
-name|int
-name|maxtarget
-decl_stmt|;
 name|u_int8_t
 name|sblkctl
 decl_stmt|;
@@ -14065,10 +14238,6 @@ name|pause_sequencer
 argument_list|(
 name|ahc
 argument_list|)
-expr_stmt|;
-name|maxtarget
-operator|=
-literal|8
 expr_stmt|;
 comment|/* 	 * Clean up all the state information for the 	 * pending transactions on this bus. 	 */
 name|found
@@ -14161,10 +14330,6 @@ operator|->
 name|wdtrpending
 operator|=
 literal|0
-expr_stmt|;
-name|maxtarget
-operator|=
-literal|16
 expr_stmt|;
 name|offset
 operator|=
@@ -14890,6 +15055,8 @@ expr_stmt|;
 comment|/* 		 * Add up the contents of all residual 		 * SG segments that are after the SG where 		 * the transfer stopped. 		 */
 name|resid_sgs
 operator|=
+name|scb
+operator|->
 name|hscb
 operator|->
 name|residual_SG_segment_count
@@ -14908,9 +15075,9 @@ name|sg
 decl_stmt|;
 name|sg
 operator|=
-name|hscb
+name|scb
 operator|->
-name|SG_segment_count
+name|sg_count
 operator|-
 name|resid_sgs
 expr_stmt|;
