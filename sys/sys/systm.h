@@ -1480,6 +1480,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|testenv
+value|getenv
+end_define
+
+begin_define
+define|#
+directive|define
+name|freeenv
+end_define
+
 begin_decl_stmt
 name|int
 name|getenv_int
