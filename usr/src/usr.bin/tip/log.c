@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	5.1 (Berkeley) %G%"
+literal|"@(#)log.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ include|#
 directive|include
 file|"tip.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACULOG
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -206,6 +212,9 @@ argument_list|,
 name|message
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|flog
@@ -234,9 +243,6 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|ACULOG
 name|flog
 operator|=
 name|fopen
@@ -259,13 +265,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't open log file\r\n"
+literal|"can't open log file %s.\r\n"
+argument_list|,
+name|value
+argument_list|(
+name|LOG
+argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
