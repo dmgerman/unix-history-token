@@ -3088,6 +3088,24 @@ argument_list|(
 literal|"/sbin/ldconfig /usr/lib /usr/X11R6/lib /usr/local/lib /usr/lib/compat"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/var/run/ld.so.hints"
+argument_list|)
+condition|)
+name|vsystem
+argument_list|(
+literal|"ldconfig -m -aout /usr/lib/aout /usr/lib/compat/aout /usr/local/lib/aout /usr/X11R6/lib/aout"
+argument_list|)
+expr_stmt|;
+else|else
+name|vsystem
+argument_list|(
+literal|"ldconfig -aout /usr/lib/aout /usr/lib/compat/aout /usr/local/lib/aout /usr/X11R6/lib/aout"
+argument_list|)
+expr_stmt|;
 name|vsystem
 argument_list|(
 literal|"/sbin/ifconfig lo0 127.0.0.1"
