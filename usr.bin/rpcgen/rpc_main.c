@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rpc_main.c,v 1.6 1997/08/06 06:47:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,11 +293,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_function_decl
 name|char
@@ -485,6 +495,22 @@ define|#
 directive|define
 name|SUNOS_CPP
 value|"/usr/libexec/cpp"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SUNOS_CPP
+value|"/usr/bin/cpp"
 end_define
 
 begin_else
@@ -6461,11 +6487,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_function
 name|char
