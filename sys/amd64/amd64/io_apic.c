@@ -1799,17 +1799,38 @@ name|VECTOR_EXTINT
 condition|)
 name|printf
 argument_list|(
-literal|"ExtINT\n"
+literal|"ExtINT"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"irq %u\n"
+literal|"irq %u"
 argument_list|,
 name|intpin
 operator|->
 name|io_vector
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" (%s, active%s)\n"
+argument_list|,
+name|intpin
+operator|->
+name|io_edgetrigger
+condition|?
+literal|"edge"
+else|:
+literal|"level"
+argument_list|,
+name|intpin
+operator|->
+name|io_activehi
+condition|?
+literal|"hi"
+else|:
+literal|"lo"
 argument_list|)
 expr_stmt|;
 block|}
