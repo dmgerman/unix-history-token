@@ -2158,7 +2158,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%8ld %6ld "
+literal|" %7ld %6ld "
 argument_list|,
 operator|(
 name|long
