@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.14	%G%	(with DBM)"
+literal|"@(#)alias.c	3.15	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.14	%G%	(without DBM)"
+literal|"@(#)alias.c	3.15	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1179,20 +1179,16 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|fp
-operator|=
-name|fopen
+if|if
+condition|(
+name|access
 argument_list|(
 name|buf
 argument_list|,
-literal|"r"
+literal|4
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 return|return;
 comment|/* we do have an address to forward to -- do it */
@@ -1202,84 +1198,13 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fgets
+name|include
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|,
-name|fp
+literal|"forwarding"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|p
-operator|=
-name|index
-argument_list|(
-name|buf
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|buf
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-return|return;
-if|if
-condition|(
-name|Verbose
-condition|)
-name|message
-argument_list|(
-name|Arpa_Info
-argument_list|,
-literal|"forwarded to %s"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|AliasLevel
-operator|++
-expr_stmt|;
-name|sendto
-argument_list|(
-name|buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|AliasLevel
-operator|--
-expr_stmt|;
-return|return;
 block|}
 end_block
 

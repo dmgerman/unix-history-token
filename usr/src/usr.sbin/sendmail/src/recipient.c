@@ -59,7 +59,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.1	%G%"
+literal|"@(#)recipient.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -516,6 +516,25 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"including file %s"
+argument_list|,
+operator|&
+name|a
+operator|->
+name|q_user
+index|[
+literal|9
+index|]
+argument_list|)
+expr_stmt|;
 name|include
 argument_list|(
 operator|&
@@ -525,6 +544,8 @@ name|q_user
 index|[
 literal|9
 index|]
+argument_list|,
+literal|" sending"
 argument_list|)
 expr_stmt|;
 block|}
@@ -705,13 +726,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
+comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		msg -- message to print in verbose mode. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
 end_comment
 
 begin_macro
 name|include
 argument_list|(
 argument|fname
+argument_list|,
+argument|msg
 argument_list|)
 end_macro
 
@@ -719,6 +742,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msg
 decl_stmt|;
 end_decl_stmt
 
@@ -735,19 +765,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
-name|message
-argument_list|(
-name|Arpa_Info
-argument_list|,
-literal|"Including file %s"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -834,10 +851,15 @@ name|message
 argument_list|(
 name|Arpa_Info
 argument_list|,
-literal|">> %s"
+literal|"%s to %s"
+argument_list|,
+name|msg
 argument_list|,
 name|buf
 argument_list|)
+expr_stmt|;
+name|AliasLevel
+operator|++
 expr_stmt|;
 name|sendto
 argument_list|(
@@ -845,6 +867,9 @@ name|buf
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|AliasLevel
+operator|--
 expr_stmt|;
 block|}
 name|fclose
