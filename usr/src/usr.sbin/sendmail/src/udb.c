@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.10 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.11 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.10 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.11 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3415,6 +3415,38 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|28
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|int
+name|saveerrno
+init|=
+name|errno
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"dbopen(%s): %s"
+argument_list|,
+name|spec
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saveerrno
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|errno
