@@ -89,6 +89,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_FTPUSERS
+value|"/etc/ftpusers"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_KMEM
 value|"/dev/kmem"
 end_define
