@@ -3306,6 +3306,16 @@ name|ETHER_ADDR_LEN
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_ipending
+operator|&
+name|IFF_PPROMISC
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|m_freem

@@ -491,6 +491,17 @@ begin_comment
 comment|/* Interface is in polling mode. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_PPROMISC
+value|0x20000
+end_define
+
+begin_comment
+comment|/* user-requested promisc mode */
+end_comment
+
 begin_comment
 comment|/* flags set internally only: */
 end_comment
@@ -500,7 +511,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_POLLING)
 end_define
 
 begin_comment
@@ -821,12 +832,12 @@ define|#
 directive|define
 name|ifr_flags
 value|ifr_ifru.ifru_flags[0]
-comment|/* flags */
+comment|/* flags (low 16 bits) */
 define|#
 directive|define
-name|ifr_prevflags
+name|ifr_flagshigh
 value|ifr_ifru.ifru_flags[1]
-comment|/* flags */
+comment|/* flags (high 16 bits) */
 define|#
 directive|define
 name|ifr_metric
