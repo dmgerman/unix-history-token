@@ -21,12 +21,6 @@ directive|include
 file|"opt_posix.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|P1003_1B
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -392,15 +386,6 @@ end_endif
 
 begin_comment
 comment|/* _KPOSIX_PRIORITY_SCHEDULING */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* P1003_1B */
 end_comment
 
 begin_endif
