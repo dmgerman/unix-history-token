@@ -765,7 +765,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|( ((addr) + ((1<<(align))-1))& (-1<< (align)))
+value|(((addr) + ((bfd_vma) 1<< (align)) - 1)& ((bfd_vma) -1<< (align)))
 typedef|typedef
 name|struct
 name|sec
@@ -1575,6 +1575,13 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->section_count)
+define|#
+directive|define
+name|bfd_get_dynamic_symcount
+parameter_list|(
+name|abfd
+parameter_list|)
+value|((abfd)->dynsymcount)
 define|#
 directive|define
 name|bfd_get_symbol_leading_char
@@ -6557,6 +6564,12 @@ name|BFD_RELOC_386_GOTOFF
 block|,
 name|BFD_RELOC_386_GOTPC
 block|,
+name|BFD_RELOC_386_TLS_TPOFF
+block|,
+name|BFD_RELOC_386_TLS_IE
+block|,
+name|BFD_RELOC_386_TLS_GOTIE
+block|,
 name|BFD_RELOC_386_TLS_LE
 block|,
 name|BFD_RELOC_386_TLS_GD
@@ -8145,6 +8158,11 @@ name|symbol_cache_entry
 modifier|*
 modifier|*
 name|outsymbols
+decl_stmt|;
+comment|/* Used for slurped dynamic symbol tables.  */
+name|unsigned
+name|int
+name|dynsymcount
 decl_stmt|;
 comment|/* Pointer to structure which contains architecture information.  */
 specifier|const
