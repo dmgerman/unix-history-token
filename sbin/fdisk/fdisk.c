@@ -2721,6 +2721,16 @@ name|dp_flag
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|active
+operator|>=
+literal|0
+operator|&&
+name|active
+operator|<
+name|NDOSPART
+condition|)
 name|partp
 index|[
 name|active
