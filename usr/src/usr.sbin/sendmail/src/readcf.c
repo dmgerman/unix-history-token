@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.77 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.78 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,6 +765,8 @@ sizeof|sizeof
 name|pvpbuf
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|nfuzzy
@@ -1022,6 +1024,8 @@ name|pvpbuf
 argument_list|,
 sizeof|sizeof
 name|pvpbuf
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.95 (Berkeley) %G%"
+literal|"@(#)main.c	8.96 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4905,6 +4905,8 @@ name|pvpbuf
 argument_list|,
 operator|&
 name|delimptr
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

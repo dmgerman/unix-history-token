@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.12 (Berkeley) %G%"
+literal|"@(#)mime.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +252,13 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+specifier|extern
+name|char
+name|MimeTokenTab
+index|[
+literal|256
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -299,7 +306,12 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tboundaries[i]\n"
+literal|"\t%s\n"
+argument_list|,
+name|boundaries
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -339,6 +351,8 @@ sizeof|sizeof
 name|pvpbuf
 argument_list|,
 name|NULL
+argument_list|,
+name|MimeTokenTab
 argument_list|)
 operator|)
 operator|!=
@@ -591,6 +605,7 @@ name|q
 operator|=
 name|strchr
 argument_list|(
+operator|++
 name|p
 argument_list|,
 literal|'"'
@@ -2675,19 +2690,22 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+for|for
+control|(
 name|i
 operator|=
 literal|0
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|boundaries
 index|[
 name|i
 index|]
 operator|!=
 name|NULL
-condition|)
+condition|;
+name|i
+operator|++
+control|)
 block|{
 if|if
 condition|(
