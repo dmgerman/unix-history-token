@@ -1274,6 +1274,13 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|nblks
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|VOP_IOCTL
@@ -1309,11 +1316,7 @@ name|mediasize
 operator|/
 name|DEV_BSIZE
 expr_stmt|;
-else|else
-name|nblks
-operator|=
-literal|0
-expr_stmt|;
+block|}
 comment|/* 	 * XXX: We should also check that the sectorsize makes sense 	 * XXX: it should be a power of two, no larger than the page size. 	 */
 if|if
 condition|(
