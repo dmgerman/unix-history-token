@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.2 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,6 +757,16 @@ operator|!=
 literal|' '
 condition|)
 break|break;
+comment|/* 			 * host name has been authenticated, we use our 			 * view of the host name since we may be passed 			 * something different than what gethostbyaddr() 			 * returns 			 */
+name|strcpy
+argument_list|(
+name|cp
+operator|+
+literal|6
+argument_list|,
+name|from
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|tfname
