@@ -3109,7 +3109,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ds1: setmap %lx, %lx; "
+literal|"ds1: setmap (%lx, %lx), nseg=%d, error=%d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -3126,6 +3126,10 @@ operator|)
 name|segs
 operator|->
 name|ds_len
+argument_list|,
+name|nseg
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -3502,22 +3506,37 @@ name|sc
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
+operator|||
 operator|!
 name|sc
 operator|->
 name|ctrlbase
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"pcs=%d, rcs=%d, ecs=%d, ws=%d, memsz=%d\n"
+argument_list|,
+name|pcs
+argument_list|,
+name|rcs
+argument_list|,
+name|ecs
+argument_list|,
+name|ws
+argument_list|,
+name|memsz
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|cb
 operator|=
 literal|0
