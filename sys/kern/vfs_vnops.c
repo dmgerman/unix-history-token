@@ -3241,6 +3241,22 @@ operator|(
 name|EBADF
 operator|)
 return|;
+comment|/* 	 * XXX 	 * this is a hack simply to cause the filter attach to fail 	 * for non-ufs filesystems, until the support for them is done. 	 */
+if|if
+condition|(
+operator|(
+name|vp
+operator|)
+operator|->
+name|v_tag
+operator|!=
+name|VT_UFS
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 name|vp
 operator|=
 operator|(
