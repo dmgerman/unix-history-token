@@ -899,7 +899,7 @@ name|isvisible
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)> 32)&& ((c)< 255))
+value|(((c)>= 32)&& ((c)< 255))
 if|if
 condition|(
 operator|!
