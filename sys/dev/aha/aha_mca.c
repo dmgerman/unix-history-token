@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa_dma.h>
+file|<isa/isavar.h>
 end_include
 
 begin_include
