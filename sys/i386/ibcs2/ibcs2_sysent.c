@@ -499,6 +499,9 @@ name|ibcs2_utime
 block|}
 block|,
 comment|/* 30 = ibcs2_utime */
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 block|{
 name|AS
 argument_list|(
@@ -527,6 +530,38 @@ name|ibcs2_gtty
 block|}
 block|,
 comment|/* 32 = ibcs2_gtty */
+else|#
+directive|else
+block|{
+name|AS
+argument_list|(
+name|ibcs2_stty_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 31 = ibcs2_stty */
+block|{
+name|AS
+argument_list|(
+name|ibcs2_gtty_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 32 = ibcs2_gtty */
+endif|#
+directive|endif
 block|{
 name|AS
 argument_list|(

@@ -527,6 +527,9 @@ operator|&
 literal|0xff00
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 case|case
 name|SVR4_tIOC
 case|:
@@ -542,6 +545,8 @@ operator|=
 name|svr4_ttold_ioctl
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|SVR4_TIOC
 case|:

@@ -75,6 +75,12 @@ directive|include
 file|<sys/sx.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -89,6 +95,11 @@ include|#
 directive|include
 file|<sys/ioctl_compat.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4293,6 +4304,9 @@ case|:
 case|case
 name|TIOCSWINSZ
 case|:
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 if|#
 directive|if
 name|defined
@@ -4323,6 +4337,8 @@ case|:
 case|case
 name|TIOCSLTC
 case|:
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|sx_slock
@@ -6310,6 +6326,9 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 return|return
 operator|(
 name|ttcompat
@@ -6324,6 +6343,15 @@ name|flag
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|ENOIOCTL
+operator|)
+return|;
+endif|#
+directive|endif
 else|#
 directive|else
 return|return

@@ -6628,6 +6628,9 @@ name|termios
 modifier|*
 name|t
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 if|#
 directive|if
 name|defined
@@ -6641,6 +6644,8 @@ name|struct
 name|termios
 name|term
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|umynor
@@ -6889,6 +6894,9 @@ name|rp
 operator|->
 name|rp_channel
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 if|#
 directive|if
 name|defined
@@ -6947,6 +6955,8 @@ operator|&
 name|term
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if

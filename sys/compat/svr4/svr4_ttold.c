@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -1787,6 +1793,15 @@ comment|/* ENOSYS really */
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BURN_BRIDGES */
+end_comment
 
 end_unit
 

@@ -31,6 +31,12 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -45,6 +51,11 @@ include|#
 directive|include
 file|<sys/ioctl_compat.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -3339,6 +3350,9 @@ name|blocked
 init|=
 literal|0
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 if|#
 directive|if
 name|defined
@@ -3352,6 +3366,8 @@ name|struct
 name|termios
 name|term
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|pp
@@ -3566,6 +3582,9 @@ return|;
 block|}
 block|}
 comment|/* 	 * Do the old-style ioctl compat routines... 	 */
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 if|#
 directive|if
 name|defined
@@ -3622,6 +3641,8 @@ operator|)
 operator|&
 name|term
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* 	 * Do the initial / lock state business 	 */
@@ -3860,12 +3881,17 @@ case|:
 case|case
 name|TIOCDRAIN
 case|:
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 ifdef|#
 directive|ifdef
 name|COMPAT_43
 case|case
 name|TIOCSETP
 case|:
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|blocked

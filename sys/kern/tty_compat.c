@@ -23,6 +23,12 @@ directive|include
 file|"opt_compat.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_comment
 comment|/*  * mapping routines for old line discipline (yuck)  */
 end_comment
@@ -2574,6 +2580,15 @@ end_endif
 
 begin_comment
 comment|/* COMPAT_43 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BURN_BRIDGES */
 end_comment
 
 end_unit

@@ -15,6 +15,12 @@ directive|define
 name|_SYS_IOCTL_COMPAT_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -953,6 +959,15 @@ directive|define
 name|NTTYDISC
 value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BURN_BRIDGES */
+end_comment
 
 begin_endif
 endif|#

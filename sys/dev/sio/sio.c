@@ -9449,6 +9449,9 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 if|#
 directive|if
 name|defined
@@ -9462,6 +9465,8 @@ name|struct
 name|termios
 name|term
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|mynor
@@ -9498,6 +9503,9 @@ name|com
 operator|->
 name|tp
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 if|#
 directive|if
 name|defined
@@ -9554,6 +9562,8 @@ operator|)
 operator|&
 name|term
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if
