@@ -90,7 +90,7 @@ file|<dev/acpica/acpivar.h>
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -145,6 +145,10 @@ name|TZ_NOTIFY_LEVELS
 value|0x82
 end_define
 
+begin_comment
+comment|/* Check for temperature changes every 30 seconds by default */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -153,7 +157,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* every 30 seconds by default */
+comment|/* ACPI spec defines this */
 end_comment
 
 begin_define
@@ -162,10 +166,6 @@ directive|define
 name|TZ_NUMLEVELS
 value|10
 end_define
-
-begin_comment
-comment|/* defined by ACPI spec */
-end_comment
 
 begin_struct
 struct|struct
@@ -218,19 +218,18 @@ block|{
 name|device_t
 name|tz_dev
 decl_stmt|;
-comment|/* device handle */
 name|ACPI_HANDLE
 name|tz_handle
 decl_stmt|;
-comment|/* thermal zone handle */
+comment|/*Thermal zone handle*/
 name|int
 name|tz_temperature
 decl_stmt|;
-comment|/* current temperature */
+comment|/*Current temperature*/
 name|int
 name|tz_active
 decl_stmt|;
-comment|/* current active cooling */
+comment|/*Current active cooling*/
 define|#
 directive|define
 name|TZ_ACTIVE_NONE
@@ -238,11 +237,11 @@ value|-1
 name|int
 name|tz_requested
 decl_stmt|;
-comment|/* user-requested minimum active cooling */
+comment|/*Minimum active cooling*/
 name|int
 name|tz_thflags
 decl_stmt|;
-comment|/* current temperature-related flags */
+comment|/*Current temp-related flags*/
 define|#
 directive|define
 name|TZ_THFLAG_NONE
@@ -266,22 +265,21 @@ define|#
 directive|define
 name|TZ_FLAG_NO_SCP
 value|(1<<0)
-comment|/* no _SCP method */
+comment|/*No _SCP method*/
 define|#
 directive|define
 name|TZ_FLAG_GETPROFILE
 value|(1<<1)
-comment|/* fetch power_profile in timeout */
+comment|/*Get power_profile in timeout*/
 name|struct
 name|timespec
 name|tz_cooling_started
 decl_stmt|;
-comment|/* current cooling starting time */
+comment|/*Current cooling starting time*/
 name|struct
 name|sysctl_ctx_list
 name|tz_sysctl_ctx
 decl_stmt|;
-comment|/* sysctl tree */
 name|struct
 name|sysctl_oid
 modifier|*
@@ -291,7 +289,7 @@ name|struct
 name|acpi_tz_zone
 name|tz_zone
 decl_stmt|;
-comment|/* thermal zone parameters */
+comment|/*Thermal zone parameters*/
 name|int
 name|tz_tmp_updating
 decl_stmt|;
@@ -339,10 +337,9 @@ specifier|static
 name|void
 name|acpi_tz_monitor
 parameter_list|(
-name|struct
-name|acpi_tz_softc
+name|void
 modifier|*
-name|sc
+name|Context
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -501,15 +498,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|proc
-modifier|*
-name|acpi_tz_proc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|device_method_t
 name|acpi_tz_methods
 index|[]
@@ -600,6 +588,10 @@ name|acpi_tz_sysctl_tree
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Minimum cooling run time */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -609,16 +601,25 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* minimum cooling run time */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
 name|acpi_tz_polling_rate
 init|=
 name|TZ_POLLRATE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Timezone polling thread */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|proc
+modifier|*
+name|acpi_tz_proc
 decl_stmt|;
 end_decl_stmt
 
@@ -642,17 +643,15 @@ name|ACPI_LOCK_DECL
 expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
-comment|/* no FUNCTION_TRACE - too noisy */
+comment|/* No FUNCTION_TRACE - too noisy */
 if|if
 condition|(
-operator|(
 name|acpi_get_type
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|ACPI_TYPE_THERMAL
-operator|)
 operator|&&
 operator|!
 name|acpi_disabled
@@ -1305,7 +1304,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
-comment|/*      * Power everything off and erase any existing state.      */
+comment|/* Power everything off and erase any existing state. */
 name|acpi_tz_all_off
 argument_list|(
 name|sc
@@ -1391,7 +1390,7 @@ name|tz_zone
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Evaluate thermal zone parameters.      */
+comment|/* Evaluate thermal zone parameters. */
 for|for
 control|(
 name|i
@@ -1512,7 +1511,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* should be a package containing a list of power objects */
+comment|/* Should be a package containing a list of power objects */
 if|if
 condition|(
 name|obj
@@ -1528,7 +1527,7 @@ name|sc
 operator|->
 name|tz_dev
 argument_list|,
-literal|"%s has unknown object type %d, rejecting\n"
+literal|"%s has unknown type %d, rejecting\n"
 argument_list|,
 name|nbuf
 argument_list|,
@@ -1824,7 +1823,6 @@ name|active
 operator|>=
 name|TZ_NUMLEVELS
 condition|)
-block|{
 return|return
 operator|(
 name|aclevel_string
@@ -1833,7 +1831,6 @@ literal|0
 index|]
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|aclevel_string
@@ -1856,12 +1853,20 @@ specifier|static
 name|void
 name|acpi_tz_monitor
 parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
 name|struct
 name|acpi_tz_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+decl_stmt|;
+name|struct
+name|timespec
+name|curtime
+decl_stmt|;
 name|int
 name|temp
 decl_stmt|;
@@ -1872,10 +1877,6 @@ name|int
 name|newactive
 decl_stmt|,
 name|newflags
-decl_stmt|;
-name|struct
-name|timespec
-name|curtime
 decl_stmt|;
 name|ACPI_STATUS
 name|status
@@ -1894,28 +1895,31 @@ argument_list|)
 expr_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|acpi_tz_softc
+operator|*
+operator|)
+name|Context
+expr_stmt|;
 if|if
 condition|(
 name|sc
 operator|->
 name|tz_tmp_updating
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 name|sc
 operator|->
 name|tz_tmp_updating
 operator|=
 literal|1
 expr_stmt|;
-comment|/*      * Get the current temperature.      */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+comment|/* Get the current temperature. */
 name|status
 operator|=
 name|acpi_EvaluateInteger
@@ -1929,6 +1933,12 @@ argument_list|,
 operator|&
 name|temp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -2139,7 +2149,6 @@ name|tv_sec
 operator|<
 name|acpi_tz_min_runtime
 condition|)
-block|{
 name|newactive
 operator|=
 name|sc
@@ -2147,8 +2156,7 @@ operator|->
 name|tz_active
 expr_stmt|;
 block|}
-block|}
-comment|/* handle user override of active mode */
+comment|/* Handle user override of active mode */
 if|if
 condition|(
 name|sc
@@ -2249,7 +2257,7 @@ name|newflags
 operator||=
 name|TZ_THFLAG_CRT
 expr_stmt|;
-comment|/*      * If the active cooling state has changed, we have to switch things.      */
+comment|/* If the active cooling state has changed, we have to switch things. */
 if|if
 condition|(
 name|newactive
@@ -2259,7 +2267,7 @@ operator|->
 name|tz_active
 condition|)
 block|{
-comment|/* turn off the cooling devices that are on, if any are */
+comment|/* Turn off the cooling devices that are on, if any are */
 if|if
 condition|(
 name|sc
@@ -2292,13 +2300,14 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* turn on cooling devices that are required, if any are */
+comment|/* Turn on cooling devices that are required, if any are */
 if|if
 condition|(
 name|newactive
 operator|!=
 name|TZ_ACTIVE_NONE
 condition|)
+block|{
 name|acpi_ForeachPackageObject
 argument_list|(
 operator|(
@@ -2321,6 +2330,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -2361,7 +2371,7 @@ operator|=
 name|newactive
 expr_stmt|;
 block|}
-comment|/*      * XXX (de)activate any passive cooling that may be required.      */
+comment|/* XXX (de)activate any passive cooling that may be required. */
 comment|/*      * If we have just become _HOT or _CRT, warn the user.      *      * We should actually shut down at this point, but it's not clear      * that some systems don't actually map _CRT to the same value as _AC0.      */
 if|if
 condition|(
@@ -2374,8 +2384,9 @@ operator||
 name|TZ_THFLAG_CRT
 operator|)
 operator|)
+operator|!=
+literal|0
 operator|&&
-operator|!
 operator|(
 name|sc
 operator|->
@@ -2387,6 +2398,8 @@ operator||
 name|TZ_THFLAG_CRT
 operator|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -2458,7 +2471,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
-comment|/*      * Scan all the _ALx objects, and turn them all off.      */
+comment|/* Scan all the _ALx objects and turn them all off. */
 for|for
 control|(
 name|i
@@ -2750,10 +2763,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|acpi_pwr_switch_consumer
@@ -2766,6 +2775,12 @@ name|Handle
 argument_list|,
 name|ACPI_STATE_D0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -2840,10 +2855,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|acpi_pwr_switch_consumer
@@ -2852,6 +2863,12 @@ name|cooler
 argument_list|,
 name|ACPI_STATE_D0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -2916,7 +2933,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OBJECTS
 operator|,
-literal|"called to handle unsupported object type %d\n"
+literal|"unsupported object type %d\n"
 operator|,
 name|obj
 operator|->
@@ -3046,32 +3063,24 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 operator|*
 name|val
 operator|!=
 operator|-
 literal|1
-operator|)
 operator|&&
-operator|(
 operator|(
 operator|*
 name|val
 operator|<
 name|TZ_ZEROC
-operator|)
 operator|||
-operator|(
 operator|*
 name|val
 operator|>
-operator|(
 name|TZ_ZEROC
 operator|+
 literal|1500
-operator|)
-operator|)
 operator|)
 condition|)
 block|{
@@ -3160,41 +3169,32 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-comment|/* error or no new value */
+comment|/* Error or no new value */
 if|if
 condition|(
-operator|(
 name|error
 operator|!=
 literal|0
-operator|)
 operator|||
-operator|(
 name|req
 operator|->
 name|newptr
 operator|==
 name|NULL
-operator|)
 condition|)
 goto|goto
 name|out
 goto|;
-comment|/* range check */
 if|if
 condition|(
-operator|(
 name|active
 operator|<
 operator|-
 literal|1
-operator|)
 operator|||
-operator|(
 name|active
 operator|>=
 name|TZ_NUMLEVELS
-operator|)
 condition|)
 block|{
 name|error
@@ -3205,7 +3205,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* set new preferred level and re-switch */
+comment|/* Set new preferred level and re-switch */
 name|sc
 operator|->
 name|tz_requested
@@ -3283,14 +3283,11 @@ block|{
 case|case
 name|TZ_NOTIFY_TEMPERATURE
 case|:
-comment|/* temperature change occurred */
+comment|/* Temperature change occurred */
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_HIGH
 argument_list|,
-operator|(
-name|OSD_EXECUTION_CALLBACK
-operator|)
 name|acpi_tz_monitor
 argument_list|,
 name|sc
@@ -3303,7 +3300,7 @@ case|:
 case|case
 name|TZ_NOTIFY_LEVELS
 case|:
-comment|/* zone devices/setpoints changed */
+comment|/* Zone devices/setpoints changed */
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_HIGH
@@ -3358,7 +3355,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* do we need to get the power profile settings? */
+comment|/* Do we need to get the power profile settings? */
 if|if
 condition|(
 name|sc
@@ -3387,7 +3384,7 @@ expr_stmt|;
 block|}
 name|ACPI_ASSERTLOCK
 expr_stmt|;
-comment|/* check the current temperature and take action based on it */
+comment|/* Check the current temperature and take action based on it */
 name|acpi_tz_monitor
 argument_list|(
 name|sc
@@ -3452,15 +3449,12 @@ name|state
 operator|!=
 name|POWER_PROFILE_ECONOMY
 condition|)
-block|{
 return|return;
-block|}
 name|ACPI_LOCK
 expr_stmt|;
 comment|/* check that we haven't decided there's no _SCP method */
 if|if
 condition|(
-operator|!
 operator|(
 name|sc
 operator|->
@@ -3468,9 +3462,11 @@ name|tz_flags
 operator|&
 name|TZ_FLAG_NO_SCP
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* call _SCP to set the new profile */
+comment|/* Call _SCP to set the new profile */
 name|obj
 operator|.
 name|Type
@@ -3506,10 +3502,6 @@ operator|=
 operator|&
 name|obj
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEvaluateObject
@@ -3525,6 +3517,12 @@ name|args
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -3571,7 +3569,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* we have to re-evaluate the entire zone now */
+comment|/* We have to re-evaluate the entire zone now */
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_HIGH
@@ -3649,7 +3647,7 @@ name|acpi_tz_proc
 argument_list|,
 name|PZERO
 argument_list|,
-literal|"nothing"
+literal|"tzpoll"
 argument_list|,
 name|hz
 operator|*

@@ -104,7 +104,7 @@ comment|/*  * A timecounter based on the free-running ACPI timer.  *  * Based on
 end_comment
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -232,7 +232,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|read_counter
 parameter_list|(
 name|void
@@ -249,10 +249,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Driver hung off ACPI.  */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -331,10 +327,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Timecounter.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -359,7 +351,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|read_counter
 parameter_list|()
 block|{
@@ -431,6 +423,11 @@ name|int
 name|test_counter
 parameter_list|()
 block|{
+name|u_int
+name|last
+decl_stmt|,
+name|this
+decl_stmt|;
 name|int
 name|min
 decl_stmt|,
@@ -439,11 +436,6 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|delta
-decl_stmt|;
-name|unsigned
-name|last
-decl_stmt|,
-name|this
 decl_stmt|;
 name|min
 operator|=
@@ -549,6 +541,7 @@ if|if
 condition|(
 name|bootverbose
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ACPI timer looks %s min = %d, max = %d, width = %d\n"
@@ -568,6 +561,7 @@ operator|-
 name|min
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|n
@@ -575,6 +569,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|N
+end_undef
 
 begin_comment
 comment|/*  * Locate the ACPI timer using the FADT, set up and allocate the I/O resources  * we will be using.  */
@@ -634,11 +634,7 @@ name|acpi_disabled
 argument_list|(
 literal|"timer"
 argument_list|)
-condition|)
-name|return_VOID
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|AcpiGbl_FADT
 operator|==
 name|NULL
@@ -758,11 +754,9 @@ name|dev
 argument_list|,
 literal|"couldn't allocate I/O resource (%s 0x%lx)\n"
 argument_list|,
-operator|(
 name|rtype
 operator|==
 name|SYS_RES_IOPORT
-operator|)
 condition|?
 literal|"port"
 else|:
@@ -859,11 +853,9 @@ name|desc
 argument_list|,
 literal|"%d-bit timer at 3.579545MHz"
 argument_list|,
-operator|(
 name|AcpiGbl_FADT
 operator|->
 name|TmrValExt
-operator|)
 condition|?
 literal|32
 else|:
@@ -1009,11 +1001,9 @@ name|u2
 operator|>
 name|u3
 operator|||
-operator|(
 name|u3
 operator|-
 name|u1
-operator|)
 operator|>
 literal|15
 condition|)
@@ -1186,7 +1176,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 	 * The failure case is where u3> u1, but u2 does not fall between the two, 	 * ie. it contains garbage. 	 */
+comment|/* 	 * The failure case is where u3> u1, but u2 does not fall between 	 * the two, ie. it contains garbage. 	 */
 if|if
 condition|(
 name|u3
@@ -1196,17 +1186,13 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|u2
 operator|<
 name|u1
-operator|)
 operator|||
-operator|(
 name|u2
 operator|>
 name|u3
-operator|)
 condition|)
 name|device_printf
 argument_list|(
@@ -1250,27 +1236,22 @@ literal|0
 end_if
 
 begin_comment
-unit|static int	acpi_timer_pci_probe(device_t dev);  static device_method_t acpi_timer_pci_methods[] = {     DEVMETHOD(device_probe,	acpi_timer_pci_probe),     {0, 0} };  static driver_t acpi_timer_pci_driver = {     "acpi_timer_pci",     acpi_timer_pci_methods,     0, };  devclass_t acpi_timer_pci_devclass; DRIVER_MODULE(acpi_timer_pci, pci, acpi_timer_pci_driver, acpi_timer_pci_devclass, 0, 0);
+unit|static int	acpi_timer_pci_probe(device_t dev);  static device_method_t acpi_timer_pci_methods[] = {     DEVMETHOD(device_probe,	acpi_timer_pci_probe),     {0, 0} };  static driver_t acpi_timer_pci_driver = {     "acpi_timer_pci",     acpi_timer_pci_methods,     0, };  devclass_t acpi_timer_pci_devclass; DRIVER_MODULE(acpi_timer_pci, pci, acpi_timer_pci_driver, 	      acpi_timer_pci_devclass, 0, 0);
 comment|/*  * Look at PCI devices going past; if we detect one we know contains  * a functional ACPI timer device, enable the faster timecounter read  * routine.  */
 end_comment
 
 begin_comment
-unit|static int acpi_timer_pci_probe(device_t dev) {     int vendor, device, revid;          vendor = pci_get_vendor(dev);     device = pci_get_device(dev);     revid  = pci_get_revid(dev);          if (((vendor == 0x8086)&& (device == 0x7113)&& (revid>= 0x03))	||
-comment|/* PIIX4M */
+unit|static int acpi_timer_pci_probe(device_t dev) {     int vendor, device, revid;          vendor = pci_get_vendor(dev);     device = pci_get_device(dev);     revid  = pci_get_revid(dev);
+comment|/* Detect the PIIX4M and i440MX, respectively */
 end_comment
 
 begin_comment
-unit|((vendor == 0x8086)&& (device == 0x719b)) 			||
-comment|/* i440MX */
-end_comment
-
-begin_comment
-unit|0) {  	acpi_timer_timecounter.tc_get_timecount = acpi_timer_get_timecount; 	acpi_timer_timecounter.tc_name = "ACPI-fast"; 	if (bootverbose) 	    device_printf(acpi_timer_dev, "functional ACPI timer detected, enabling fast timecount interface\n");     }      return(ENXIO);
-comment|/* we never match anything */
+unit|if ((vendor == 0x8086&& device == 0x7113&& revid>= 0x03)	|| 	(vendor == 0x8086&& device == 0x719b)) {  	acpi_timer_timecounter.tc_get_timecount = acpi_timer_get_timecount; 	acpi_timer_timecounter.tc_name = "ACPI-fast"; 	if (bootverbose) { 	    device_printf(acpi_timer_dev,"functional ACPI timer detected, " 			  "enabling fast timecount interface\n"); 	}     }
+comment|/* We never match anything */
 end_comment
 
 begin_endif
-unit|}
+unit|return (ENXIO); }
 endif|#
 directive|endif
 end_endif

@@ -72,7 +72,7 @@ file|<dev/acpica/acpivar.h>
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -143,7 +143,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/*      * Special-case some devices that abuse _PRS/_CRS to mean      * something other than "I consume this resource".      *      * XXX do we really need this?  It's only relevant once      *     we start always-allocating these resources, and even      *     then, the only special-cased device is likely to be      *     the PCI interrupt link.      */
-comment|/*      * Fetch the device's current resources.      */
+comment|/* Fetch the device's current resources. */
 name|buf
 operator|.
 name|Length
@@ -226,7 +226,7 @@ operator|&
 name|context
 argument_list|)
 expr_stmt|;
-comment|/*      * Iterate through the resources      */
+comment|/* Iterate through the resources */
 name|curr
 operator|=
 name|buf
@@ -268,7 +268,7 @@ name|res
 operator|->
 name|Length
 expr_stmt|;
-comment|/* 	 * Handle the individual resource types 	 */
+comment|/* Handle the individual resource types */
 switch|switch
 condition|(
 name|res
@@ -1067,7 +1067,6 @@ name|ACPI_DB_RESOURCES
 operator|,
 literal|"ignored Address32 %s producer\n"
 operator|,
-operator|(
 name|res
 operator|->
 name|Data
@@ -1077,7 +1076,6 @@ operator|.
 name|ResourceType
 operator|==
 name|ACPI_IO_RANGE
-operator|)
 condition|?
 literal|"IO"
 else|:
@@ -1123,7 +1121,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
 name|res
 operator|->
 name|Data
@@ -1133,9 +1130,7 @@ operator|.
 name|MinAddressFixed
 operator|==
 name|ACPI_ADDRESS_FIXED
-operator|)
 operator|&&
-operator|(
 name|res
 operator|->
 name|Data
@@ -1145,7 +1140,6 @@ operator|.
 name|MaxAddressFixed
 operator|==
 name|ACPI_ADDRESS_FIXED
-operator|)
 condition|)
 block|{
 if|if
@@ -1471,7 +1465,6 @@ name|ACPI_DB_RESOURCES
 operator|,
 literal|"ignored Address16 %s producer\n"
 operator|,
-operator|(
 name|res
 operator|->
 name|Data
@@ -1481,7 +1474,6 @@ operator|.
 name|ResourceType
 operator|==
 name|ACPI_IO_RANGE
-operator|)
 condition|?
 literal|"IO"
 else|:
@@ -1527,7 +1519,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
 name|res
 operator|->
 name|Data
@@ -1537,9 +1528,7 @@ operator|.
 name|MinAddressFixed
 operator|==
 name|ACPI_ADDRESS_FIXED
-operator|)
 operator|&&
-operator|(
 name|res
 operator|->
 name|Data
@@ -1549,7 +1538,6 @@ operator|.
 name|MaxAddressFixed
 operator|==
 name|ACPI_ADDRESS_FIXED
-operator|)
 condition|)
 block|{
 if|if
@@ -2536,16 +2524,13 @@ condition|(
 name|cp
 operator|==
 name|NULL
-condition|)
-return|return;
-if|if
-condition|(
+operator|||
 name|irq
 operator|==
 name|NULL
 condition|)
 return|return;
-comment|/*This implements no resource relocation.*/
+comment|/* This implements no resource relocation. */
 if|if
 condition|(
 name|count
@@ -2610,16 +2595,13 @@ condition|(
 name|cp
 operator|==
 name|NULL
-condition|)
-return|return;
-if|if
-condition|(
+operator|||
 name|drq
 operator|==
 name|NULL
 condition|)
 return|return;
-comment|/*This implements no resource relocation.*/
+comment|/* This implements no resource relocation. */
 if|if
 condition|(
 name|count
@@ -2724,6 +2706,13 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"dependant functions not supported\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2835,18 +2824,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|acpi_disabled
 argument_list|(
 literal|"sysresource"
 argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-if|if
-condition|(
+operator|&&
 name|acpi_MatchHid
 argument_list|(
 name|dev
@@ -2854,7 +2837,6 @@ argument_list|,
 literal|"PNP0C02"
 argument_list|)
 condition|)
-block|{
 name|device_set_desc
 argument_list|(
 name|dev
@@ -2862,15 +2844,12 @@ argument_list|,
 literal|"system resource"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|device_quiet
 argument_list|(
 name|dev

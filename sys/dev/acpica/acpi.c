@@ -142,7 +142,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -158,10 +158,6 @@ argument_list|(
 literal|"ACPI"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/*  * Character device   */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1004,7 +1000,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * ACPI can only be loaded as a module by the loader; activating it after  * system bootstrap time is not useful, and can be fatal to the system.  * It also cannot be unloaded, since the entire system bus heirarchy hangs off it.  */
+comment|/*  * ACPI can only be loaded as a module by the loader; activating it after  * system bootstrap time is not useful, and can be fatal to the system.  * It also cannot be unloaded, since the entire system bus heirarchy hangs  * off it.  */
 end_comment
 
 begin_function
@@ -1132,7 +1128,7 @@ name|cold
 condition|)
 name|return_VOID
 expr_stmt|;
-comment|/*      * Check that we haven't been disabled with a hint.      */
+comment|/* Check that we haven't been disabled with a hint. */
 if|if
 condition|(
 name|resource_disabled
@@ -1144,7 +1140,7 @@ argument_list|)
 condition|)
 name|return_VOID
 expr_stmt|;
-comment|/*      * Make sure we're not being doubly invoked.      */
+comment|/* Make sure we're not being doubly invoked. */
 if|if
 condition|(
 name|device_find_child
@@ -1165,7 +1161,7 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|500000
-comment|/* initialise the ACPI mutex */
+comment|/* Initialise the ACPI mutex */
 name|mtx_init
 argument_list|(
 operator|&
@@ -1180,7 +1176,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * Start up the ACPI CA subsystem.      */
+comment|/* Start up the ACPI CA subsystem. */
 ifdef|#
 directive|ifdef
 name|ACPI_DEBUGGER
@@ -1301,7 +1297,7 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/*      * Attach the actual ACPI device.      */
+comment|/* Attach the actual ACPI device. */
 if|if
 condition|(
 operator|(
@@ -1591,15 +1587,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/*      * Install the default address space handlers.      */
+comment|/* Install the default address space handlers. */
 name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiInstallAddressSpaceHandler
@@ -1614,6 +1606,12 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -1621,7 +1619,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not initialise SystemMemory handler: %s\n"
+literal|"Could not initialise SystemMemory handler: %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1633,10 +1631,6 @@ goto|goto
 name|out
 goto|;
 block|}
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiInstallAddressSpaceHandler
@@ -1651,6 +1645,12 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -1658,7 +1658,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not initialise SystemIO handler: %s\n"
+literal|"Could not initialise SystemIO handler: %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1670,10 +1670,6 @@ goto|goto
 name|out
 goto|;
 block|}
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiInstallAddressSpaceHandler
@@ -1688,6 +1684,12 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -1707,7 +1709,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Bring ACPI fully online.      *      * Note that some systems (specifically, those with namespace evaluation issues      * that require the avoidance of parts of the namespace) must avoid running _INI      * and _STA on everything, as well as dodging the final object init pass.      *      * For these devices, we set ACPI_NO_DEVICE_INIT and ACPI_NO_OBJECT_INIT).      *      * XXX We should arrange for the object init pass after we have attached all our       *     child devices, but on many systems it works here.      */
+comment|/*      * Bring ACPI fully online.      *      * Note that some systems (specifically, those with namespace evaluation      * issues that require the avoidance of parts of the namespace) must      * avoid running _INI and _STA on everything, as well as dodging the final      * object init pass.      *      * For these devices, we set ACPI_NO_DEVICE_INIT and ACPI_NO_OBJECT_INIT).      *      * XXX We should arrange for the object init pass after we have attached      *     all our child devices, but on many systems it works here.      */
 ifdef|#
 directive|ifdef
 name|ACPI_DEBUGGER
@@ -1778,7 +1780,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not enable ACPI: %s\n"
+literal|"Could not enable ACPI: %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1813,7 +1815,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not initialize ACPI objects: %s\n"
+literal|"Could not initialize ACPI objects: %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -2338,7 +2340,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/*      * Register our shutdown handlers      */
+comment|/* Register our shutdown handlers */
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_pre_sync
@@ -2384,7 +2386,7 @@ argument_list|,
 name|ACPI_EVENT_PRI_LAST
 argument_list|)
 expr_stmt|;
-comment|/*      * Flag our initial states.      */
+comment|/* Flag our initial states. */
 name|sc
 operator|->
 name|acpi_enabled
@@ -2403,7 +2405,7 @@ name|acpi_sleep_disabled
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Create the control device      */
+comment|/* Create the control device */
 name|sc
 operator|->
 name|acpi_dev_t
@@ -2449,13 +2451,14 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|debugpoint
 argument_list|,
 literal|"running"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|acpi_EnterDebugger
 argument_list|()
@@ -2480,11 +2483,9 @@ name|acpi_task_thread_init
 argument_list|()
 operator|)
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -2498,11 +2499,9 @@ name|dev
 argument_list|)
 operator|)
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 comment|/* Register ACPI again to pass the correct argument of pm_func. */
 name|power_pm_register
 argument_list|(
@@ -2590,6 +2589,8 @@ argument_list|,
 name|M_ACPIDEV
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -2600,17 +2601,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|ad
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ad
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|resource_list_init
 argument_list|(
 operator|&
@@ -2821,12 +2811,12 @@ name|ENOENT
 operator|)
 return|;
 block|}
+comment|/* ACPI and ISA compatibility ivars */
 switch|switch
 condition|(
 name|index
 condition|)
 block|{
-comment|/* ACPI ivars */
 case|case
 name|ACPI_IVAR_HANDLE
 case|:
@@ -2873,7 +2863,6 @@ operator|->
 name|ad_private
 expr_stmt|;
 break|break;
-comment|/* ISA compatibility */
 case|case
 name|ISA_IVAR_VENDORID
 case|:
@@ -2978,7 +2967,6 @@ condition|(
 name|index
 condition|)
 block|{
-comment|/* ACPI ivars */
 case|case
 name|ACPI_IVAR_HANDLE
 case|:
@@ -3036,6 +3024,343 @@ block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_HANDLE
+name|acpi_get_handle
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|uintptr_t
+name|up
+decl_stmt|;
+name|ACPI_HANDLE
+name|h
+decl_stmt|;
+if|if
+condition|(
+name|BUS_READ_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ACPI_IVAR_HANDLE
+argument_list|,
+operator|&
+name|up
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|h
+operator|=
+operator|(
+name|ACPI_HANDLE
+operator|)
+name|up
+expr_stmt|;
+return|return
+operator|(
+name|h
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|acpi_set_handle
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|ACPI_HANDLE
+name|h
+parameter_list|)
+block|{
+name|uintptr_t
+name|up
+decl_stmt|;
+name|up
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|h
+expr_stmt|;
+return|return
+operator|(
+name|BUS_WRITE_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ACPI_IVAR_HANDLE
+argument_list|,
+name|up
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|acpi_get_magic
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|uintptr_t
+name|up
+decl_stmt|;
+name|int
+name|m
+decl_stmt|;
+if|if
+condition|(
+name|BUS_READ_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ACPI_IVAR_MAGIC
+argument_list|,
+operator|&
+name|up
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|m
+operator|=
+operator|(
+name|int
+operator|)
+name|up
+expr_stmt|;
+return|return
+operator|(
+name|m
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|acpi_set_magic
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|m
+parameter_list|)
+block|{
+name|uintptr_t
+name|up
+decl_stmt|;
+name|up
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|m
+expr_stmt|;
+return|return
+operator|(
+name|BUS_WRITE_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ACPI_IVAR_MAGIC
+argument_list|,
+name|up
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|acpi_get_private
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|uintptr_t
+name|up
+decl_stmt|;
+name|void
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+name|BUS_READ_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ACPI_IVAR_PRIVATE
+argument_list|,
+operator|&
+name|up
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|p
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|up
+expr_stmt|;
+return|return
+operator|(
+name|p
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|acpi_set_private
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|uintptr_t
+name|up
+decl_stmt|;
+name|up
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|p
+expr_stmt|;
+return|return
+operator|(
+name|BUS_WRITE_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ACPI_IVAR_PRIVATE
+argument_list|,
+name|up
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_OBJECT_TYPE
+name|acpi_get_type
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|ACPI_HANDLE
+name|h
+decl_stmt|;
+name|ACPI_OBJECT_TYPE
+name|t
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|h
+operator|=
+name|acpi_get_handle
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ACPI_TYPE_NOT_FOUND
+operator|)
+return|;
+if|if
+condition|(
+name|AcpiGetType
+argument_list|(
+name|h
+argument_list|,
+operator|&
+name|t
+argument_list|)
+operator|!=
+name|AE_OK
+condition|)
+return|return
+operator|(
+name|ACPI_TYPE_NOT_FOUND
+operator|)
+return|;
+return|return
+operator|(
+name|t
 operator|)
 return|;
 block|}
@@ -3544,7 +3869,7 @@ literal|0
 expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
-comment|/* fetch and validate the HID */
+comment|/* Fetch and validate the HID */
 if|if
 condition|(
 operator|(
@@ -3635,7 +3960,7 @@ name|result
 operator|=
 name|ENXIO
 expr_stmt|;
-comment|/* scan the supplied IDs for a match */
+comment|/* Scan the supplied IDs for a match */
 name|lid
 operator|=
 name|acpi_isa_get_logicalid
@@ -3697,7 +4022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Scan relevant portions of the ACPI namespace and attach child devices.  *  * Note that we only expect to find devices in the \_PR_, \_TZ_, \_SI_ and \_SB_ scopes,   * and \_PR_ and \_TZ_ become obsolete in the ACPI 2.0 spec.  */
+comment|/*  * Scan relevant portions of the ACPI namespace and attach child devices.  *  * Note that we only expect to find devices in the \_PR_, \_TZ_, \_SI_ and  * \_SB_ scopes, and \_PR_ and \_TZ_ become obsolete in the ACPI 2.0 spec.  */
 end_comment
 
 begin_function
@@ -3711,6 +4036,9 @@ parameter_list|)
 block|{
 name|ACPI_HANDLE
 name|parent
+decl_stmt|;
+name|ACPI_STATUS
+name|status
 decl_stmt|;
 specifier|static
 name|char
@@ -3747,7 +4075,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
-comment|/*      * Create any static children by calling device identify methods.      */
+comment|/* Create any static children by calling device identify methods. */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -3762,7 +4090,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/*      * Scan the namespace and insert placeholders for all the devices that      * we find.      *      * Note that we use AcpiWalkNamespace rather than AcpiGetDevices because      * we want to create nodes for all devices, not just those that are currently      * present. (This assumes that we don't want to create/remove devices as they      * appear, which might be smarter.)      */
+comment|/*      * Scan the namespace and insert placeholders for all the devices that      * we find.      *      * Note that we use AcpiWalkNamespace rather than AcpiGetDevices because      * we want to create nodes for all devices, not just those that are      * currently present. (This assumes that we don't want to create/remove      * devices as they appear, which might be smarter.)      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -3788,10 +4116,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
+block|{
+name|status
+operator|=
 name|AcpiGetHandle
 argument_list|(
 name|ACPI_ROOT_OBJECT
@@ -3804,8 +4131,15 @@ argument_list|,
 operator|&
 name|parent
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
 argument_list|)
 condition|)
+block|{
 name|AcpiWalkNamespace
 argument_list|(
 name|ACPI_TYPE_ANY
@@ -3821,6 +4155,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 comment|/*      * Scan all of the child devices we have created and let them probe/attach.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -3915,7 +4251,7 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/*      * Skip this device if we think we'll have trouble with it.      */
+comment|/* Skip this device if we think we'll have trouble with it. */
 if|if
 condition|(
 name|acpi_avoid
@@ -4015,19 +4351,15 @@ expr_stmt|;
 comment|/* 	     * Check that the device is present.  If it's not present, 	     * leave it disabled (so that we have a device_t attached to 	     * the handle, but we don't probe it). 	     */
 if|if
 condition|(
-operator|(
 name|type
 operator|==
 name|ACPI_TYPE_DEVICE
-operator|)
 operator|&&
-operator|(
 operator|!
 name|acpi_DeviceIsPresent
 argument_list|(
 name|child
 argument_list|)
-operator|)
 condition|)
 block|{
 name|device_disable
@@ -4048,7 +4380,7 @@ operator|&
 name|acpi_res_parse_set
 argument_list|)
 expr_stmt|;
-comment|/* if we're debugging, probe/attach now rather than later */
+comment|/* If we're debugging, probe/attach now rather than later */
 name|ACPI_DEBUG_EXEC
 argument_list|(
 name|device_probe_and_attach
@@ -4125,9 +4457,13 @@ name|ACPI_ASSERTLOCK
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|howto
 operator|&
 name|RB_POWEROFF
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -4135,16 +4471,18 @@ argument_list|(
 literal|"Powering system off using ACPI\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEnterSleepStatePrep
 argument_list|(
 name|acpi_off_state
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -4160,16 +4498,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|acpi_off_state
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -4238,19 +4578,15 @@ expr_stmt|;
 comment|/* Enable and clear fixed events and install handlers. */
 if|if
 condition|(
-operator|(
 name|AcpiGbl_FADT
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|AcpiGbl_FADT
 operator|->
 name|PwrButton
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|AcpiEnableEvent
@@ -4278,7 +4614,6 @@ if|if
 condition|(
 name|first_time
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -4291,22 +4626,17 @@ literal|"power"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
-operator|(
 name|AcpiGbl_FADT
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|AcpiGbl_FADT
 operator|->
 name|SleepButton
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|AcpiEnableEvent
@@ -4334,7 +4664,6 @@ if|if
 condition|(
 name|first_time
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -4346,7 +4675,6 @@ argument_list|,
 literal|"sleep"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|first_time
 operator|=
@@ -4431,7 +4759,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* if no _STA method, must be present */
+comment|/* If no _STA method, must be present */
 if|if
 condition|(
 operator|(
@@ -4449,7 +4777,7 @@ operator|(
 name|TRUE
 operator|)
 return|;
-comment|/* return true for 'present' and 'functioning' */
+comment|/* Return true for 'present' and 'functioning' */
 if|if
 condition|(
 operator|(
@@ -4551,7 +4879,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* if no _STA method, must be present */
+comment|/* If no _STA method, must be present */
 if|if
 condition|(
 operator|(
@@ -4569,7 +4897,7 @@ operator|(
 name|TRUE
 operator|)
 return|;
-comment|/* return true for 'present' and 'functioning' */
+comment|/* Return true for 'present' and 'functioning' */
 if|if
 condition|(
 operator|(
@@ -4791,17 +5119,13 @@ name|status
 decl_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
-comment|/* walk back up the tree to the root */
+comment|/* Walk back up the tree to the root */
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
 name|status
 operator|=
 name|AcpiGetHandle
@@ -4813,6 +5137,12 @@ argument_list|,
 operator|&
 name|r
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -4958,7 +5288,7 @@ name|number
 parameter_list|)
 block|{
 name|ACPI_STATUS
-name|error
+name|status
 decl_stmt|;
 name|ACPI_BUFFER
 name|buf
@@ -4995,11 +5325,7 @@ argument_list|(
 name|param
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|error
+name|status
 operator|=
 name|AcpiEvaluateObject
 argument_list|(
@@ -5012,6 +5338,12 @@ argument_list|,
 operator|&
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -5023,7 +5355,6 @@ name|Type
 operator|==
 name|ACPI_TYPE_INTEGER
 condition|)
-block|{
 operator|*
 name|number
 operator|=
@@ -5033,19 +5364,16 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-block|}
 else|else
-block|{
-name|error
+name|status
 operator|=
 name|AE_TYPE
 expr_stmt|;
 block|}
-block|}
 comment|/*       * In some applications, a method that's expected to return an Integer      * may instead return a Buffer (probably to simplify some internal      * arithmetic).  We'll try to fetch whatever it is, and if it's a Buffer,      * convert it into an Integer as best we can.      *      * This is a hack.      */
 if|if
 condition|(
-name|error
+name|status
 operator|==
 name|AE_BUFFER_OVERFLOW
 condition|)
@@ -5068,18 +5396,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
+name|status
 operator|=
 name|AE_NO_MEMORY
 expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|error
+name|status
 operator|=
 name|AcpiEvaluateObject
 argument_list|(
@@ -5092,10 +5416,15 @@ argument_list|,
 operator|&
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
 argument_list|)
 condition|)
-block|{
-name|error
+name|status
 operator|=
 name|acpi_ConvertBufferToInteger
 argument_list|(
@@ -5105,7 +5434,6 @@ argument_list|,
 name|number
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|AcpiOsFree
 argument_list|(
@@ -5117,7 +5445,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|error
+name|status
 operator|)
 return|;
 block|}
@@ -5301,32 +5629,26 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|pkg
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|pkg
 operator|->
 name|Type
 operator|!=
 name|ACPI_TYPE_PACKAGE
-operator|)
 condition|)
 return|return
 operator|(
 name|AE_BAD_PARAMETER
 operator|)
 return|;
-comment|/* iterate over components */
-for|for
-control|(
+comment|/* Iterate over components */
 name|i
 operator|=
 literal|0
-operator|,
+expr_stmt|;
 name|comp
 operator|=
 name|pkg
@@ -5334,6 +5656,9 @@ operator|->
 name|Package
 operator|.
 name|Elements
+expr_stmt|;
+for|for
+control|(
 init|;
 name|i
 operator|<
@@ -5414,7 +5739,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* range check */
+comment|/* Range check */
 if|if
 condition|(
 name|rp
@@ -5442,24 +5767,20 @@ operator|(
 name|AE_BAD_PARAMETER
 operator|)
 return|;
-comment|/* check for terminator */
+comment|/* Check for terminator */
 if|if
 condition|(
-operator|(
 name|rp
 operator|->
 name|Id
 operator|==
 name|ACPI_RSTYPE_END_TAG
-operator|)
 operator|||
-operator|(
 name|rp
 operator|->
 name|Length
 operator|==
 literal|0
-operator|)
 condition|)
 return|return
 operator|(
@@ -5525,7 +5846,7 @@ name|void
 modifier|*
 name|newp
 decl_stmt|;
-comment|/*      * Initialise the buffer if necessary.      */
+comment|/* Initialise the buffer if necessary. */
 if|if
 condition|(
 name|buf
@@ -5614,7 +5935,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* range check, don't go outside the buffer */
+comment|/* Range check, don't go outside the buffer */
 if|if
 condition|(
 name|rp
@@ -5644,25 +5965,19 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
 name|rp
 operator|->
 name|Id
 operator|==
 name|ACPI_RSTYPE_END_TAG
-operator|)
 operator|||
-operator|(
 name|rp
 operator|->
 name|Length
 operator|==
 literal|0
-operator|)
 condition|)
-block|{
 break|break;
-block|}
 name|rp
 operator|=
 name|ACPI_RESOURCE_NEXT
@@ -5792,7 +6107,7 @@ operator|->
 name|Length
 expr_stmt|;
 block|}
-comment|/*      * Insert the new resource.      */
+comment|/* Insert the new resource. */
 name|bcopy
 argument_list|(
 name|res
@@ -5806,7 +6121,7 @@ operator|+
 name|ACPI_RESOURCE_LENGTH_NO_DATA
 argument_list|)
 expr_stmt|;
-comment|/*      * And add the terminator.      */
+comment|/* And add the terminator. */
 name|rp
 operator|=
 name|ACPI_RESOURCE_NEXT
@@ -5931,7 +6246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the system sleep state  *  * Currently we only support S1 and S5  */
+comment|/*  * Set the system sleep state  *  * Currently we support S1-S5 but S4 is only S4BIOS  */
 end_comment
 
 begin_function
@@ -6008,10 +6323,6 @@ case|case
 name|ACPI_STATE_S0
 case|:
 comment|/* XXX only for testing */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEnterSleepState
@@ -6021,6 +6332,12 @@ name|UINT8
 operator|)
 name|state
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -6052,10 +6369,6 @@ case|:
 case|case
 name|ACPI_STATE_S4
 case|:
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiGetSleepTypeData
@@ -6071,6 +6384,12 @@ argument_list|,
 operator|&
 name|TypeB
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -6102,7 +6421,7 @@ name|acpi_sleep_disabled
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Inform all devices that we are going to sleep. 	 */
+comment|/* Inform all devices that we are going to sleep. */
 if|if
 condition|(
 name|DEVICE_SUSPEND
@@ -6125,16 +6444,18 @@ name|AE_ERROR
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEnterSleepStatePrep
 argument_list|(
 name|state
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -6162,7 +6483,6 @@ name|acpi_sleep_delay
 operator|>
 literal|0
 condition|)
-block|{
 name|DELAY
 argument_list|(
 name|sc
@@ -6172,7 +6492,6 @@ operator|*
 literal|1000000
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|state
@@ -6187,7 +6506,7 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-comment|/* AcpiEnterSleepState() maybe incompleted, unlock here if locked. */
+comment|/* AcpiEnterSleepState() may be incomplete, unlock if locked. */
 if|if
 condition|(
 name|AcpiGbl_MutexInfo
@@ -6213,18 +6532,12 @@ name|state
 operator|==
 name|ACPI_STATE_S4
 condition|)
-block|{
 name|AcpiEnable
 argument_list|()
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEnterSleepState
@@ -6234,6 +6547,12 @@ name|UINT8
 operator|)
 name|state
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -6375,7 +6694,6 @@ name|sc
 operator|->
 name|acpi_enabled
 condition|)
-block|{
 name|status
 operator|=
 name|AcpiEnableSubsystem
@@ -6383,14 +6701,11 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|status
 operator|=
 name|AE_OK
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
@@ -6444,20 +6759,16 @@ name|sc
 operator|->
 name|acpi_enabled
 condition|)
-block|{
 name|status
 operator|=
 name|AcpiDisable
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
 name|status
 operator|=
 name|AE_OK
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
@@ -6942,7 +7253,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* scan the avoid list checking for a match */
+comment|/* Scan the avoid list checking for a match */
 name|cp
 operator|=
 name|env
@@ -7239,7 +7550,6 @@ name|ACPI_OBJECT
 name|Arg
 decl_stmt|;
 comment|/*      * TBD: All Power Resources referenced by elements 2 through N      *      of the _PRW object are put into the ON state.      */
-comment|/*      * enable/disable device wake function.      */
 name|ArgList
 operator|.
 name|Count
@@ -7320,9 +7630,6 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|sc
 operator|=
 name|devclass_get_softc
@@ -7331,13 +7638,14 @@ name|acpi_devclass
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 comment|/*      * _PRW object is only required for devices that have the ability      * to wake the system from a system sleeping state.      */
 name|prw_buffer
 operator|.
@@ -7366,9 +7674,7 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-block|{
 return|return;
-block|}
 name|res
 operator|=
 operator|(
@@ -7385,9 +7691,7 @@ name|res
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 if|if
 condition|(
 operator|(
@@ -7429,11 +7733,9 @@ name|Type
 operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 if|if
 condition|(
 name|sc
@@ -7453,11 +7755,9 @@ name|Integer
 operator|.
 name|Value
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 comment|/*      * The element 0 of the _PRW object:      */
 switch|switch
 condition|(
@@ -7517,8 +7817,7 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/* XXX TBD */
-comment|/* 	 * If the data type of this package element is a package, then this 	 * _PRW package element is itself a package containing two 	 * elements. The first is an object reference to the GPE Block 	 * device that contains the GPE that will be triggered by the wake 	 * event. The second element is numeric and it contains the bit 	 * index in the GPEx_EN, in the GPE Block referenced by the 	 * first element in the package, of the enable bit that is enabled for 	 * the wake event. 	 * For example, if this field is a package then it is of the form: 	 * Package() {\_SB.PCI0.ISA.GPE, 2} 	 */
+comment|/* 	 * XXX TBD 	 * 	 * If the data type of this package element is a package, then this 	 * _PRW package element is itself a package containing two 	 * elements. The first is an object reference to the GPE Block 	 * device that contains the GPE that will be triggered by the wake 	 * event. The second element is numeric and it contains the bit 	 * index in the GPEx_EN, in the GPE Block referenced by the 	 * first element in the package, of the enable bit that is enabled for 	 * the wake event. 	 * For example, if this field is a package then it is of the form: 	 * Package() {\_SB.PCI0.ISA.GPE, 2} 	 */
 break|break;
 default|default:
 break|break;
@@ -7540,12 +7839,11 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Control interface.  *  * We multiplex ioctls for all participating ACPI devices here.  Individual   * drivers wanting to be accessible via /dev/acpi should use the register/deregister  * interface to make their handlers visible.  */
+comment|/*  * Control interface.  *  * We multiplex ioctls for all participating ACPI devices here.  Individual   * drivers wanting to be accessible via /dev/acpi should use the  * register/deregister interface to make their handlers visible.  */
 end_comment
 
 begin_struct
@@ -7561,23 +7859,9 @@ expr_stmt|;
 name|u_long
 name|cmd
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|acpi_ioctl_fn
 name|fn
-function_decl|)
-parameter_list|(
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
+decl_stmt|;
 name|void
 modifier|*
 name|arg
@@ -7615,22 +7899,8 @@ parameter_list|(
 name|u_long
 name|cmd
 parameter_list|,
-name|int
-function_decl|(
-modifier|*
+name|acpi_ioctl_fn
 name|fn
-function_decl|)
-parameter_list|(
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
 parameter_list|,
 name|void
 modifier|*
@@ -7733,22 +8003,8 @@ parameter_list|(
 name|u_long
 name|cmd
 parameter_list|,
-name|int
-function_decl|(
-modifier|*
+name|acpi_ioctl_fn
 name|fn
-function_decl|)
-parameter_list|(
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
 parameter_list|)
 block|{
 name|struct
@@ -7975,22 +8231,23 @@ goto|;
 block|}
 block|}
 block|}
-comment|/*      * Core ioctls are  not permitted for non-writable user.      * Currently, other ioctls just fetch information.      * Not changing system behavior.      */
+comment|/*      * Core ioctls are not permitted for non-writable user.      * Currently, other ioctls just fetch information.      * Not changing system behavior.      */
 if|if
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|FWRITE
 operator|)
+operator|==
+literal|0
 condition|)
-block|{
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
-block|}
-comment|/*      * Core system ioctls.      */
+comment|/* Core system ioctls. */
 switch|switch
 condition|(
 name|cmd
@@ -8068,7 +8325,6 @@ name|state
 operator|<=
 name|ACPI_S_STATES_MAX
 condition|)
-block|{
 name|acpi_SetSleepState
 argument_list|(
 name|sc
@@ -8076,14 +8332,11 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 break|break;
 default|default:
 if|if
@@ -8332,11 +8585,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-for|for
-control|(
 name|new_state
 operator|=
 name|ACPI_STATE_S0
+expr_stmt|;
+for|for
+control|(
 init|;
 name|new_state
 operator|<=
@@ -8384,7 +8638,6 @@ name|new_state
 operator|!=
 name|old_state
 condition|)
-block|{
 operator|*
 operator|(
 name|u_int
@@ -8396,7 +8649,6 @@ name|oid_arg1
 operator|=
 name|new_state
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -8984,7 +9236,6 @@ if|if
 condition|(
 name|set
 condition|)
-block|{
 operator|*
 name|flag
 operator||=
@@ -8995,9 +9246,7 @@ index|]
 operator|.
 name|value
 expr_stmt|;
-block|}
 else|else
-block|{
 operator|*
 name|flag
 operator|&=
@@ -9009,7 +9258,6 @@ index|]
 operator|.
 name|value
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"ACPI_DEBUG: set '%s'\n"
@@ -9130,7 +9378,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"ACPI debug layer 0x%x  debug level 0x%x\n"
+literal|"ACPI debug layer 0x%x debug level 0x%x\n"
 argument_list|,
 name|AcpiDbgLayer
 argument_list|,
@@ -9332,10 +9580,7 @@ if|if
 condition|(
 operator|!
 name|cold
-condition|)
-return|return;
-if|if
-condition|(
+operator|||
 name|resource_disabled
 argument_list|(
 literal|"acpi"

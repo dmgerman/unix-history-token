@@ -88,7 +88,7 @@ comment|/*  * Support for ACPI Processor devices.  *  * Note that this only prov
 end_comment
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -126,11 +126,24 @@ name|cpu_p_blk
 decl_stmt|;
 define|#
 directive|define
+name|CPU_P_CNT_THT_EN
+value|(1<<4)
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
 name|CPU_GET_P_CNT
 parameter_list|(
 name|sc
 parameter_list|)
-value|(bus_space_read_4(rman_get_bustag((sc)->cpu_p_blk), 	\ 						  rman_get_bushandle((sc)->cpu_p_blk),	\ 						  0))
+define|\
+value|(bus_space_read_4(rman_get_bustag((sc)->cpu_p_blk), 	\ 		      rman_get_bushandle((sc)->cpu_p_blk), 0))
+end_define
+
+begin_define
 define|#
 directive|define
 name|CPU_SET_P_CNT
@@ -139,14 +152,9 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|(bus_space_write_4(rman_get_bustag((sc)->cpu_p_blk), 	\ 						  rman_get_bushandle((sc)->cpu_p_blk),	\ 						  0, (val)))
-define|#
-directive|define
-name|CPU_P_CNT_THT_EN
-value|(1<<4)
-block|}
-struct|;
-end_struct
+define|\
+value|(bus_space_write_4(rman_get_bustag((sc)->cpu_p_blk), 	\ 		       rman_get_bushandle((sc)->cpu_p_blk), 0, (val)))
+end_define
 
 begin_comment
 comment|/*   * Speeds are stored in counts, from 1 - CPU_MAX_SPEED, and  * reported to the user in tenths of a percent.  */
@@ -193,16 +201,16 @@ parameter_list|)
 value|(CPU_SPEED_PERCENT(x) / 10),(CPU_SPEED_PERCENT(x) % 10)
 end_define
 
+begin_comment
+comment|/* XXX Should be a generic way to do this */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|cpu_smi_cmd
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* should be a generic way to do this */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -430,16 +438,15 @@ argument_list|(
 literal|"cpu"
 argument_list|)
 operator|&&
-operator|(
 name|acpi_get_type
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|ACPI_TYPE_PROCESSOR
-operator|)
 condition|)
 block|{
+comment|/* XXX get more verbose description? */
 name|device_set_desc
 argument_list|(
 name|dev
@@ -447,7 +454,6 @@ argument_list|,
 literal|"CPU"
 argument_list|)
 expr_stmt|;
-comment|/* XXX get more verbose description? */
 return|return
 operator|(
 literal|0
@@ -538,7 +544,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/*      * Get global parameters from the FADT.      */
+comment|/* Get global parameters from the FADT. */
 if|if
 condition|(
 name|device_get_unit
@@ -575,7 +581,7 @@ name|AcpiGbl_FADT
 operator|->
 name|PstateCnt
 expr_stmt|;
-comment|/* validate the offset/width */
+comment|/* Validate the offset/width */
 if|if
 condition|(
 name|cpu_duty_width
@@ -591,7 +597,7 @@ name|cpu_duty_width
 operator|-
 literal|1
 expr_stmt|;
-comment|/* check that it fits */
+comment|/* Check that it fits */
 if|if
 condition|(
 name|duty_end
@@ -609,20 +615,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* check for overlap with the THT_EN bit */
+comment|/* Check for overlap with the THT_EN bit */
 if|if
 condition|(
-operator|(
 name|cpu_duty_offset
 operator|<=
 literal|4
-operator|)
 operator|&&
-operator|(
 name|duty_end
 operator|>=
 literal|4
-operator|)
 condition|)
 block|{
 name|printf
@@ -636,7 +638,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * Start the throttling process once the probe phase completes, if we think that 	 * it's going to be useful.  If the duty width value is zero, there are no significant 	 * bits in the register and thus no throttled states. 	 */
+comment|/*  	 * Start the throttling process once the probe phase completes, if we 	 * think that it's going to be useful.  If the duty width value is 	 * zero, there are no significant bits in the register and thus no 	 * throttled states. 	 */
 if|if
 condition|(
 name|cpu_duty_width
@@ -801,7 +803,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Get the processor object.      */
+comment|/* Get the processor object. */
 name|buf
 operator|.
 name|Pointer
@@ -818,10 +820,6 @@ argument_list|(
 name|processor
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEvaluateObject
@@ -837,6 +835,12 @@ argument_list|,
 operator|&
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -925,17 +929,13 @@ expr_stmt|;
 comment|/* allocate bus space if possible */
 if|if
 condition|(
-operator|(
 name|p_blk
 operator|>
 literal|0
-operator|)
 operator|&&
-operator|(
 name|p_blk_length
 operator|==
 literal|6
-operator|)
 condition|)
 block|{
 name|rid
@@ -987,7 +987,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"acpi_cpu%d: throttling with P_BLK at 0x%x/%d%s\n"
+literal|"acpi_cpu%d: throttling with P_BLK "
+literal|"at 0x%x/%d%s\n"
 operator|,
 name|device_get_unit
 argument_list|(
@@ -1041,7 +1042,7 @@ name|ACPI_LOCK_DECL
 expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
-comment|/* get set of CPU devices */
+comment|/* Get set of CPU devices */
 name|devclass_get_devices
 argument_list|(
 name|acpi_cpu_devclass
@@ -1053,7 +1054,7 @@ operator|&
 name|cpu_ndevices
 argument_list|)
 expr_stmt|;
-comment|/* initialise throttling states */
+comment|/* Initialise throttling states */
 name|cpu_max_state
 operator|=
 name|CPU_MAX_SPEED
@@ -1068,13 +1069,13 @@ name|cpu_performance_state
 operator|/
 literal|2
 expr_stmt|;
+comment|/* 0 is 'reserved' */
 if|if
 condition|(
 name|cpu_economy_state
 operator|==
 literal|0
 condition|)
-comment|/* 0 is 'reserved' */
 name|cpu_economy_state
 operator|++
 expr_stmt|;
@@ -1096,10 +1097,12 @@ name|cpu_temp_speed
 operator|<=
 name|cpu_max_state
 condition|)
+block|{
 name|cpu_performance_state
 operator|=
 name|cpu_temp_speed
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|TUNABLE_INT_FETCH
@@ -1118,11 +1121,13 @@ name|cpu_temp_speed
 operator|<=
 name|cpu_max_state
 condition|)
+block|{
 name|cpu_economy_state
 operator|=
 name|cpu_temp_speed
 expr_stmt|;
-comment|/* register performance profile change handler */
+block|}
+comment|/* Register performance profile change handler */
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|power_profile_change
@@ -1134,15 +1139,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* if ACPI 2.0+, signal platform that we are taking over throttling */
+comment|/*      * If ACPI 2.0+, signal platform that we are taking over throttling      * XXX should be a generic interface for this      */
 if|if
 condition|(
 name|cpu_pstate_cnt
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* XXX should be a generic interface for this */
 name|AcpiOsWritePort
 argument_list|(
 name|cpu_smi_cmd
@@ -1152,10 +1155,9 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-block|}
 name|ACPI_UNLOCK
 expr_stmt|;
-comment|/* set initial speed */
+comment|/* Set initial speed */
 name|acpi_cpu_power_profile
 argument_list|(
 name|NULL
@@ -1210,7 +1212,7 @@ name|clk_val
 decl_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
-comment|/* iterate over processors */
+comment|/* Iterate over processors */
 for|for
 control|(
 name|i
@@ -1244,7 +1246,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* get the current P_CNT value and disable throttling */
+comment|/* Get the current P_CNT value and disable throttling */
 name|p_cnt
 operator|=
 name|CPU_GET_P_CNT
@@ -1264,7 +1266,7 @@ argument_list|,
 name|p_cnt
 argument_list|)
 expr_stmt|;
-comment|/* if we're at maximum speed, that's all */
+comment|/* If we're at maximum speed, that's all */
 if|if
 condition|(
 name|speed
@@ -1272,7 +1274,7 @@ operator|<
 name|CPU_MAX_SPEED
 condition|)
 block|{
-comment|/* mask the old CLK_VAL off and or-in the new value */
+comment|/* Mask the old CLK_VAL off and or-in the new value */
 name|clk_val
 operator|=
 name|CPU_MAX_SPEED
@@ -1292,7 +1294,7 @@ operator|<<
 name|cpu_duty_offset
 operator|)
 expr_stmt|;
-comment|/* write the new P_CNT value and then enable throttling */
+comment|/* Write the new P_CNT value and then enable throttling */
 name|CPU_SET_P_CNT
 argument_list|(
 name|sc
@@ -1378,9 +1380,7 @@ name|state
 operator|!=
 name|POWER_PROFILE_ECONOMY
 condition|)
-block|{
 return|return;
-block|}
 name|ACPI_LOCK
 expr_stmt|;
 switch|switch
@@ -1478,49 +1478,40 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-comment|/* error or no new value */
+comment|/* Error or no new value */
 if|if
 condition|(
-operator|(
 name|error
 operator|!=
 literal|0
-operator|)
 operator|||
-operator|(
 name|req
 operator|->
 name|newptr
 operator|==
 name|NULL
-operator|)
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-comment|/* range check */
 if|if
 condition|(
-operator|(
 name|arg
 operator|<
 literal|1
-operator|)
 operator|||
-operator|(
 name|arg
 operator|>
 name|cpu_max_state
-operator|)
 condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* set new value and possibly switch */
+comment|/* Set new value and possibly switch */
 operator|*
 name|argp
 operator|=

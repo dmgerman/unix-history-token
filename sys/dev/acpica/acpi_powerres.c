@@ -23,10 +23,6 @@ directive|include
 file|"opt_acpi.h"
 end_include
 
-begin_comment
-comment|/* XXX trim includes */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -37,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -60,54 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/reboot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acpi.h"
 end_include
 
@@ -115,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<dev/acpica/acpivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/acpica/acpiio.h>
 end_include
 
 begin_comment
@@ -140,7 +76,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -158,7 +94,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* return values from _STA on a power resource */
+comment|/* Return values from _STA on a power resource */
 end_comment
 
 begin_define
@@ -176,7 +112,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * A relationship between a power resource and a consumer.  */
+comment|/* A relationship between a power resource and a consumer. */
 end_comment
 
 begin_struct
@@ -212,17 +148,17 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A power-managed device.  */
+comment|/* A power-managed device. */
 end_comment
 
 begin_struct
 struct|struct
 name|acpi_powerconsumer
 block|{
+comment|/* Device which is powered */
 name|ACPI_HANDLE
 name|ac_consumer
 decl_stmt|;
-comment|/* device which is powered */
 name|int
 name|ac_state
 decl_stmt|;
@@ -244,7 +180,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A power resource.  */
+comment|/* A power resource. */
 end_comment
 
 begin_struct
@@ -267,7 +203,6 @@ expr_stmt|;
 name|ACPI_HANDLE
 name|ap_resource
 decl_stmt|;
-comment|/* the resource's handle */
 name|ACPI_INTEGER
 name|ap_systemlevel
 decl_stmt|;
@@ -399,7 +334,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialise our lists.  */
+comment|/* Initialise our lists. */
 end_comment
 
 begin_function
@@ -496,7 +431,7 @@ name|Pointer
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* look to see if we know about this resource */
+comment|/* Look to see if we know about this resource */
 if|if
 condition|(
 name|acpi_pwr_find_resource
@@ -512,7 +447,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 comment|/* already know about it */
-comment|/* allocate a new resource */
+comment|/* Allocate a new resource */
 if|if
 condition|(
 operator|(
@@ -559,7 +494,7 @@ name|ap_resource
 operator|=
 name|res
 expr_stmt|;
-comment|/* get the Power Resource object */
+comment|/* Get the Power Resource object */
 name|buf
 operator|.
 name|Length
@@ -656,7 +591,7 @@ name|PowerResource
 operator|.
 name|ResourceOrder
 expr_stmt|;
-comment|/* sort the resource into the list */
+comment|/* Sort the resource into the list */
 name|status
 operator|=
 name|AE_OK
@@ -671,13 +606,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|srp
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|rp
 operator|->
 name|ap_order
@@ -685,7 +617,6 @@ operator|<
 name|srp
 operator|->
 name|ap_order
-operator|)
 condition|)
 block|{
 name|TAILQ_INSERT_HEAD
@@ -710,6 +641,7 @@ argument|&acpi_powerresources
 argument_list|,
 argument|ap_link
 argument_list|)
+block|{
 if|if
 condition|(
 name|rp
@@ -733,6 +665,7 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -784,11 +717,9 @@ argument_list|(
 name|status
 argument_list|)
 operator|&&
-operator|(
 name|rp
 operator|!=
 name|NULL
-operator|)
 condition|)
 name|free
 argument_list|(
@@ -839,7 +770,7 @@ name|rp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* find the resource */
+comment|/* Find the resource */
 if|if
 condition|(
 operator|(
@@ -858,7 +789,7 @@ argument_list|(
 name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
-comment|/* check that there are no consumers referencing this resource */
+comment|/* Check that there are no consumers referencing this resource */
 if|if
 condition|(
 name|TAILQ_FIRST
@@ -876,7 +807,7 @@ argument_list|(
 name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
-comment|/* pull it off the list and free it */
+comment|/* Pull it off the list and free it */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -946,7 +877,7 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* check to see whether we know about this consumer already */
+comment|/* Check to see whether we know about this consumer already */
 if|if
 condition|(
 operator|(
@@ -965,7 +896,7 @@ argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
-comment|/* allocate a new power consumer */
+comment|/* Allocate a new power consumer */
 if|if
 condition|(
 operator|(
@@ -1016,13 +947,13 @@ name|ac_consumer
 operator|=
 name|consumer
 expr_stmt|;
+comment|/* XXX we should try to find its current state */
 name|pc
 operator|->
 name|ac_state
 operator|=
 name|ACPI_STATE_UNKNOWN
 expr_stmt|;
-comment|/* XXX we should try to find its current state */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1075,7 +1006,7 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* find the consumer */
+comment|/* Find the consumer */
 if|if
 condition|(
 operator|(
@@ -1094,7 +1025,7 @@ argument_list|(
 name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
-comment|/* make sure the consumer's not referencing anything right now */
+comment|/* Make sure the consumer's not referencing anything right now */
 if|if
 condition|(
 name|TAILQ_FIRST
@@ -1112,7 +1043,7 @@ argument_list|(
 name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
-comment|/* pull the consumer off the list and free it */
+comment|/* Pull the consumer off the list and free it */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1209,7 +1140,7 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* find the consumer */
+comment|/* Find the consumer */
 if|if
 condition|(
 operator|(
@@ -1263,22 +1194,18 @@ expr_stmt|;
 comment|/* something very wrong */
 block|}
 block|}
-comment|/* check for valid transitions */
+comment|/* Check for valid transitions */
 if|if
 condition|(
-operator|(
 name|pc
 operator|->
 name|ac_state
 operator|==
 name|ACPI_STATE_D3
-operator|)
 operator|&&
-operator|(
 name|state
 operator|!=
 name|ACPI_STATE_D0
-operator|)
 condition|)
 name|return_ACPI_STATUS
 argument_list|(
@@ -1286,7 +1213,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 comment|/* can only go to D0 from D3 */
-comment|/* find transition mechanism(s) */
+comment|/* Find transition mechanism(s) */
 switch|switch
 condition|(
 name|state
@@ -1418,17 +1345,13 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|reslist_handle
 operator|==
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|method_handle
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 if|if
@@ -1456,12 +1379,10 @@ name|state
 operator|!=
 name|ACPI_STATE_D3
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
-comment|/* turn off the resources listed in _PR0 to go to D3. */
+comment|/* Turn off the resources listed in _PR0 to go to D3. */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1477,21 +1398,15 @@ name|pr0_handle
 argument_list|)
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 name|reslist_buffer
 operator|.
 name|Length
 operator|=
 name|ACPI_ALLOCATE_BUFFER
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEvaluateObject
@@ -1505,13 +1420,17 @@ argument_list|,
 operator|&
 name|reslist_buffer
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 name|reslist_object
 operator|=
 operator|(
@@ -1524,15 +1443,12 @@ name|Pointer
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|reslist_object
 operator|->
 name|Type
 operator|!=
 name|ACPI_TYPE_PACKAGE
-operator|)
 operator|||
-operator|(
 name|reslist_object
 operator|->
 name|Package
@@ -1540,7 +1456,6 @@ operator|.
 name|Count
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 goto|goto
@@ -1579,10 +1494,6 @@ name|Length
 operator|=
 name|ACPI_ALLOCATE_BUFFER
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEvaluateObject
@@ -1596,6 +1507,12 @@ argument_list|,
 operator|&
 name|reslist_buffer
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -1658,7 +1575,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/*      * Now we are ready to switch, so  kill off any current power resource references.      */
+comment|/*      * Now we are ready to switch, so  kill off any current power      * resource references.      */
 name|res_changed
 operator|=
 literal|0
@@ -1790,7 +1707,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OBJECTS
 operator|,
-literal|"failed to correctly switch resources to move %s to D%d\n"
+literal|"failed to switch resources from %s to D%d\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -1801,12 +1718,12 @@ name|state
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX is this appropriate?  Should we return to previous state? */
 goto|goto
 name|out
 goto|;
-comment|/* XXX is this appropriate?  Should we return to previous state? */
 block|}
-comment|/* invoke power state switch method (if present) */
+comment|/* Invoke power state switch method (if present) */
 if|if
 condition|(
 name|method_handle
@@ -1828,10 +1745,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEvaluateObject
@@ -1844,6 +1757,12 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -1867,13 +1786,13 @@ name|ac_state
 operator|=
 name|ACPI_STATE_UNKNOWN
 expr_stmt|;
+comment|/* XXX Should we return to previous state? */
 goto|goto
 name|out
 goto|;
-comment|/* XXX Should we return to previous state? */
 block|}
 block|}
-comment|/* transition was successful */
+comment|/* Transition was successful */
 name|pc
 operator|->
 name|ac_state
@@ -2055,11 +1974,7 @@ name|Pointer
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* get the handle of the resource */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+comment|/* Get the handle of the resource */
 name|status
 operator|=
 name|AcpiGetHandle
@@ -2075,6 +1990,12 @@ argument_list|,
 operator|&
 name|res
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -2103,7 +2024,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OBJECTS
 operator|,
-literal|"don't know how to create a power reference to object type %d\n"
+literal|"can't create a power reference for object type %d\n"
 operator|,
 name|obj
 operator|->
@@ -2114,7 +2035,7 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/* create/look up the resource */
+comment|/* Create/look up the resource */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -2193,7 +2114,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* create a reference between the consumer and resource */
+comment|/* Create a reference between the consumer and resource */
 if|if
 condition|(
 operator|(
@@ -2223,7 +2144,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OBJECTS
 operator|,
-literal|"couldn't allocate memory for a power consumer reference\n"
+literal|"allocation failed for a power consumer reference\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2347,11 +2268,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* we could cache this if we trusted it not to change under us */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+comment|/* We could cache this if we trusted it not to change under us */
 name|status
 operator|=
 name|acpi_EvaluateInteger
@@ -2365,6 +2282,12 @@ argument_list|,
 operator|&
 name|cur
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -2386,8 +2309,8 @@ name|status
 operator|)
 argument_list|)
 expr_stmt|;
-continue|continue;
 comment|/* XXX is this correct?  Always switch if in doubt? */
+continue|continue;
 block|}
 comment|/* 	 * Switch if required.  Note that we ignore the result of the switch 	 * effort; we don't know what to do if it fails, so checking wouldn't 	 * help much. 	 */
 if|if
@@ -2397,10 +2320,6 @@ operator|!=
 name|ACPI_PWR_ON
 condition|)
 block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEvaluateObject
@@ -2415,6 +2334,12 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -2480,7 +2405,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Sweep the list backwards turning things off.      */
+comment|/* Sweep the list backwards turning things off. */
 name|TAILQ_FOREACH_REVERSE
 argument_list|(
 argument|rp
@@ -2523,11 +2448,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* we could cache this if we trusted it not to change under us */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+comment|/* We could cache this if we trusted it not to change under us */
 name|status
 operator|=
 name|acpi_EvaluateInteger
@@ -2541,6 +2462,12 @@ argument_list|,
 operator|&
 name|cur
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -2562,8 +2489,8 @@ name|status
 operator|)
 argument_list|)
 expr_stmt|;
-continue|continue;
 comment|/* XXX is this correct?  Always switch if in doubt? */
+continue|continue;
 block|}
 comment|/* 	 * Switch if required.  Note that we ignore the result of the switch 	 * effort; we don't know what to do if it fails, so checking wouldn't 	 * help much. 	 */
 if|if
@@ -2573,10 +2500,6 @@ operator|!=
 name|ACPI_PWR_OFF
 condition|)
 block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|status
 operator|=
 name|AcpiEvaluateObject
@@ -2591,6 +2514,12 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 block|{
@@ -2704,6 +2633,7 @@ argument|&acpi_powerresources
 argument_list|,
 argument|ap_link
 argument_list|)
+block|{
 if|if
 condition|(
 name|rp
@@ -2713,6 +2643,7 @@ operator|==
 name|res
 condition|)
 break|break;
+block|}
 name|return_PTR
 argument_list|(
 name|rp
@@ -2761,6 +2692,7 @@ argument|&acpi_powerconsumers
 argument_list|,
 argument|ac_link
 argument_list|)
+block|{
 if|if
 condition|(
 name|pc
@@ -2770,6 +2702,7 @@ operator|==
 name|consumer
 condition|)
 break|break;
+block|}
 name|return_PTR
 argument_list|(
 name|pc

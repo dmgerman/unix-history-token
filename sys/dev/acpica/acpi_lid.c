@@ -60,7 +60,7 @@ file|<dev/acpica/acpivar.h>
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -269,14 +269,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|acpi_get_type
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|ACPI_TYPE_DEVICE
-operator|)
 operator|&&
 operator|!
 name|acpi_disabled
@@ -361,7 +359,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/*      * Install notification handler      */
+comment|/* Install notification handler */
 name|AcpiInstallNotifyHandler
 argument_list|(
 name|sc
@@ -465,6 +463,9 @@ name|acpi_softc
 modifier|*
 name|acpi_sc
 decl_stmt|;
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -487,10 +488,8 @@ operator|)
 name|arg
 expr_stmt|;
 comment|/*      * Evaluate _LID and check the return value, update lid status.      *	Zero:		The lid is closed      *	Non-zero:	The lid is open      */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+name|status
+operator|=
 name|acpi_EvaluateInteger
 argument_list|(
 name|sc
@@ -504,6 +503,12 @@ name|sc
 operator|->
 name|lid_status
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
 argument_list|)
 condition|)
 name|return_VOID
@@ -523,10 +528,8 @@ name|acpi_sc
 operator|==
 name|NULL
 condition|)
-block|{
 name|return_VOID
 expr_stmt|;
-block|}
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -554,7 +557,6 @@ name|lid_status
 operator|==
 literal|0
 condition|)
-block|{
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|acpi_sleep_event
@@ -564,9 +566,7 @@ operator|->
 name|acpi_lid_switch_sx
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|acpi_wakeup_event
@@ -576,7 +576,6 @@ operator|->
 name|acpi_lid_switch_sx
 argument_list|)
 expr_stmt|;
-block|}
 name|return_VOID
 expr_stmt|;
 block|}
@@ -655,7 +654,6 @@ expr_stmt|;
 break|break;
 default|default:
 break|break;
-comment|/* unknown notification value */
 block|}
 name|return_VOID
 expr_stmt|;

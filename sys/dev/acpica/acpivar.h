@@ -451,62 +451,19 @@ name|ACPI_IVAR_PRIVATE
 value|0x102
 end_define
 
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
+specifier|extern
 name|ACPI_HANDLE
 name|acpi_get_handle
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
-block|{
-name|uintptr_t
-name|up
-decl_stmt|;
-name|ACPI_HANDLE
-name|h
-decl_stmt|;
-if|if
-condition|(
-name|BUS_READ_IVAR
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|ACPI_IVAR_HANDLE
-argument_list|,
-operator|&
-name|up
-argument_list|)
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-name|h
-operator|=
-operator|(
-name|ACPI_HANDLE
-operator|)
-name|up
-expr_stmt|;
-return|return
-operator|(
-name|h
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
+specifier|extern
 name|int
 name|acpi_set_handle
 parameter_list|(
@@ -516,93 +473,22 @@ parameter_list|,
 name|ACPI_HANDLE
 name|h
 parameter_list|)
-block|{
-name|uintptr_t
-name|up
-decl_stmt|;
-name|up
-operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|h
-expr_stmt|;
-return|return
-operator|(
-name|BUS_WRITE_IVAR
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|ACPI_IVAR_HANDLE
-argument_list|,
-name|up
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
+specifier|extern
 name|int
 name|acpi_get_magic
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
-block|{
-name|uintptr_t
-name|up
-decl_stmt|;
-name|int
-name|m
-decl_stmt|;
-if|if
-condition|(
-name|BUS_READ_IVAR
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|ACPI_IVAR_MAGIC
-argument_list|,
-operator|&
-name|up
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|m
-operator|=
-operator|(
-name|int
-operator|)
-name|up
-expr_stmt|;
-return|return
-operator|(
-name|m
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
+specifier|extern
 name|int
 name|acpi_set_magic
 parameter_list|(
@@ -612,40 +498,11 @@ parameter_list|,
 name|int
 name|m
 parameter_list|)
-block|{
-name|uintptr_t
-name|up
-decl_stmt|;
-name|up
-operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|m
-expr_stmt|;
-return|return
-operator|(
-name|BUS_WRITE_IVAR
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|ACPI_IVAR_MAGIC
-argument_list|,
-name|up
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
+specifier|extern
 name|void
 modifier|*
 name|acpi_get_private
@@ -653,55 +510,11 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
-block|{
-name|uintptr_t
-name|up
-decl_stmt|;
-name|void
-modifier|*
-name|p
-decl_stmt|;
-if|if
-condition|(
-name|BUS_READ_IVAR
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|ACPI_IVAR_PRIVATE
-argument_list|,
-operator|&
-name|up
-argument_list|)
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-name|p
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|up
-expr_stmt|;
-return|return
-operator|(
-name|p
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
+specifier|extern
 name|int
 name|acpi_set_private
 parameter_list|(
@@ -712,95 +525,19 @@ name|void
 modifier|*
 name|p
 parameter_list|)
-block|{
-name|uintptr_t
-name|up
-decl_stmt|;
-name|up
-operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|p
-expr_stmt|;
-return|return
-operator|(
-name|BUS_WRITE_IVAR
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|ACPI_IVAR_PRIVATE
-argument_list|,
-name|up
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
+specifier|extern
 name|ACPI_OBJECT_TYPE
 name|acpi_get_type
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
-block|{
-name|ACPI_HANDLE
-name|h
-decl_stmt|;
-name|ACPI_OBJECT_TYPE
-name|t
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|h
-operator|=
-name|acpi_get_handle
-argument_list|(
-name|dev
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ACPI_TYPE_NOT_FOUND
-operator|)
-return|;
-if|if
-condition|(
-name|AcpiGetType
-argument_list|(
-name|h
-argument_list|,
-operator|&
-name|t
-argument_list|)
-operator|!=
-name|AE_OK
-condition|)
-return|return
-operator|(
-name|ACPI_TYPE_NOT_FOUND
-operator|)
-return|;
-return|return
-operator|(
-name|t
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -876,7 +613,7 @@ parameter_list|,
 name|x
 modifier|...
 parameter_list|)
-value|do {				\ 	if (acpi_get_verbose(acpi_sc))					\ 		device_printf(dev, x);					\ } while (0)
+value|do {			\     if (acpi_get_verbose(acpi_sc))				\ 	device_printf(dev, x);					\ } while (0)
 end_define
 
 begin_define
@@ -1352,11 +1089,11 @@ name|ACPI_RESOURCE_NEXT
 parameter_list|(
 name|Res
 parameter_list|)
-value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->Length)
+value|(ACPI_RESOURCE *)((UINT8 *)Res + Res->Length)
 end_define
 
 begin_comment
-comment|/*   * ACPI event handling  */
+comment|/* ACPI event handling */
 end_comment
 
 begin_function_decl
@@ -1465,7 +1202,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Device power control.  */
+comment|/* Device power control. */
 end_comment
 
 begin_function_decl
@@ -1483,7 +1220,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * Misc.   */
+comment|/* Misc. */
 end_comment
 
 begin_expr_stmt
@@ -1513,13 +1250,11 @@ name|parent
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 end_expr_stmt
 
 begin_return
@@ -1665,7 +1400,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Battery Abstraction.  */
+comment|/* Battery Abstraction. */
 end_comment
 
 begin_struct_decl
@@ -1755,7 +1490,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Embedded controller.  */
+comment|/* Embedded controller. */
 end_comment
 
 begin_function_decl
@@ -1769,7 +1504,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * AC adapter interface.  */
+comment|/* AC adapter interface. */
 end_comment
 
 begin_function_decl
@@ -1840,7 +1575,7 @@ name|ACPI_USE_THREADS
 end_ifdef
 
 begin_comment
-comment|/*  * ACPI task kernel thread initialization.  */
+comment|/* ACPI task kernel thread initialization. */
 end_comment
 
 begin_function_decl
