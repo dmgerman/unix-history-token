@@ -182,6 +182,14 @@ directive|include
 file|<dev/usb/uhcivar.h>
 end_include
 
+begin_comment
+comment|/* Use bandwidth reclamation for control transfers. Some devices choke on it. */
+end_comment
+
+begin_comment
+comment|/*#define UHCI_CTL_LOOP */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -4672,6 +4680,16 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
+if|if
+condition|(
+name|uhcinoloop
+condition|)
+return|return;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|++
@@ -4684,7 +4702,7 @@ condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|10
+literal|5
 argument_list|,
 operator|(
 literal|"uhci_start_loop: add\n"
@@ -4724,6 +4742,16 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
+if|if
+condition|(
+name|uhcinoloop
+condition|)
+return|return;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|--
@@ -4847,11 +4875,16 @@ name|sc_hctl_end
 operator|=
 name|sqh
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UHCI_CTL_LOOP
 name|uhci_add_loop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4889,11 +4922,16 @@ name|sqh
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UHCI_CTL_LOOP
 name|uhci_rem_loop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * The T bit should be set in the elink of the QH so that the HC 	 * doesn't follow the pointer.  This condition may fail if the 	 * the transferred packet was short so that the QH still points 	 * at the last used TD. 	 * In this case we set the T bit and wait a little for the HC 	 * to stop looking at the TD. 	 */
 if|if
 condition|(
