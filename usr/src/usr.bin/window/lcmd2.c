@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.16 (Berkeley) %G%"
+literal|"@(#)lcmd2.c	3.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ name|w
 operator|=
 name|openiwin
 argument_list|(
-literal|14
+literal|16
 argument_list|,
 literal|"IO Statistics"
 argument_list|)
@@ -150,6 +150,58 @@ argument_list|,
 name|wwnwrz
 argument_list|,
 name|wwnwrc
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"token\tuse\tsaving\ttotal\tbaud\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"%d\t%d\t%d\t%d\t%d/%d\n"
+argument_list|,
+name|wwzc0
+argument_list|,
+name|wwzc1
+argument_list|,
+name|wwzcsave
+argument_list|,
+name|wwzctotal
+argument_list|,
+name|wwzctotal
+operator|-
+name|wwzcsave
+condition|?
+name|wwbaud
+operator|*
+name|wwzctotal
+operator|/
+operator|(
+name|wwzctotal
+operator|-
+name|wwzcsave
+operator|)
+else|:
+name|wwbaud
+argument_list|,
+name|wwnwrc
+condition|?
+name|wwbaud
+operator|*
+operator|(
+name|wwnwrc
+operator|+
+name|wwzcsave
+operator|)
+operator|/
+name|wwnwrc
+else|:
+name|wwbaud
 argument_list|)
 expr_stmt|;
 name|wwprintf

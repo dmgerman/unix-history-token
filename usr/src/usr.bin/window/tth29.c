@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tth29.c	3.6 (Berkeley) %G%"
+literal|"@(#)tth29.c	3.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|pc
 parameter_list|(
 name|c
 parameter_list|)
-value|ttputc('c')
+value|ttputc(c)
 end_define
 
 begin_define
@@ -59,7 +59,7 @@ define|#
 directive|define
 name|esc
 parameter_list|()
-value|pc(\033)
+value|pc('\033')
 end_define
 
 begin_expr_stmt
@@ -134,10 +134,10 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|s
+literal|'s'
 argument_list|)
 expr_stmt|;
-name|ttputc
+name|pc
 argument_list|(
 name|modes
 argument_list|)
@@ -166,7 +166,7 @@ argument_list|()
 operator|,
 name|pc
 argument_list|(
-name|F
+literal|'F'
 argument_list|)
 expr_stmt|;
 block|}
@@ -184,7 +184,7 @@ argument_list|()
 operator|,
 name|pc
 argument_list|(
-name|G
+literal|'G'
 argument_list|)
 expr_stmt|;
 name|tt

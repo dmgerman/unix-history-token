@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwend.c	3.11 (Berkeley) %G%"
+literal|"@(#)wwend.c	3.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,7 +129,9 @@ name|tt
 operator|.
 name|tt_scroll_down
 call|)
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 call|(
 modifier|*

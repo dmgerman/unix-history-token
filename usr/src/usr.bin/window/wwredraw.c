@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwredraw.c	3.9 (Berkeley) %G%"
+literal|"@(#)wwredraw.c	3.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,9 @@ name|ww_char
 modifier|*
 name|os
 decl_stmt|;
+name|xxreset
+argument_list|()
+expr_stmt|;
 call|(
 modifier|*
 name|tt

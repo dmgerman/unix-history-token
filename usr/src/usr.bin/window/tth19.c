@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tth19.c	3.19 (Berkeley) %G%"
+literal|"@(#)tth19.c	3.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +169,7 @@ name|pc
 parameter_list|(
 name|c
 parameter_list|)
-value|ttputc('c')
+value|ttputc(c)
 end_define
 
 begin_define
@@ -177,7 +177,7 @@ define|#
 directive|define
 name|esc
 parameter_list|()
-value|pc(\033)
+value|pc('\033')
 end_define
 
 begin_define
@@ -187,7 +187,7 @@ name|PAD
 parameter_list|(
 name|ms10
 parameter_list|)
-value|{ \ 	register i; \ 	for (i = ((ms10) + 5) / h19_msp10c; --i>= 0;) \ 		pc(\0); \ }
+value|{ \ 	register i; \ 	for (i = ((ms10) + 5) / h19_msp10c; --i>= 0;) \ 		pc('\0'); \ }
 end_define
 
 begin_define
@@ -221,7 +221,7 @@ name|H19_SETINSERT
 parameter_list|(
 name|m
 parameter_list|)
-value|(esc(), (tt.tt_insert = (m)) ? pc(@) : pc(O))
+value|(esc(), (tt.tt_insert = (m)) ? pc('@') : pc('O'))
 end_define
 
 begin_macro
@@ -282,13 +282,13 @@ name|WWM_REV
 condition|)
 name|pc
 argument_list|(
-name|p
+literal|'p'
 argument_list|)
 expr_stmt|;
 else|else
 name|pc
 argument_list|(
-name|q
+literal|'q'
 argument_list|)
 expr_stmt|;
 block|}
@@ -310,13 +310,13 @@ name|WWM_GRP
 condition|)
 name|pc
 argument_list|(
-name|F
+literal|'F'
 argument_list|)
 expr_stmt|;
 else|else
 name|pc
 argument_list|(
-name|G
+literal|'G'
 argument_list|)
 expr_stmt|;
 block|}
@@ -331,43 +331,65 @@ end_block
 
 begin_macro
 name|h19_insline
-argument_list|()
+argument_list|(
+argument|n
+argument_list|)
 end_macro
 
 begin_block
+block|{
+while|while
+condition|(
+operator|--
+name|n
+operator|>=
+literal|0
+condition|)
 block|{
 name|esc
 argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|L
+literal|'L'
 argument_list|)
 expr_stmt|;
 name|ILPAD
 argument_list|()
 expr_stmt|;
 block|}
+block|}
 end_block
 
 begin_macro
 name|h19_delline
-argument_list|()
+argument_list|(
+argument|n
+argument_list|)
 end_macro
 
 begin_block
+block|{
+while|while
+condition|(
+operator|--
+name|n
+operator|>=
+literal|0
+condition|)
 block|{
 name|esc
 argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|M
+literal|'M'
 argument_list|)
 expr_stmt|;
 name|ILPAD
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -423,7 +445,7 @@ operator|.
 name|tt_ninsert
 argument_list|)
 expr_stmt|;
-name|ttputc
+name|pc
 argument_list|(
 name|c
 argument_list|)
@@ -533,7 +555,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|ttputc
+name|pc
 argument_list|(
 operator|*
 name|p
@@ -629,8 +651,7 @@ condition|)
 block|{
 name|pc
 argument_list|(
-operator|\
-name|r
+literal|'\r'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -653,7 +674,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|C
+literal|'C'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -673,8 +694,7 @@ condition|)
 block|{
 name|pc
 argument_list|(
-operator|\
-name|b
+literal|'\b'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -707,7 +727,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|A
+literal|'A'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -727,8 +747,7 @@ condition|)
 block|{
 name|pc
 argument_list|(
-operator|\
-name|n
+literal|'\n'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -752,7 +771,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|H
+literal|'H'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -764,17 +783,17 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|Y
+literal|'Y'
 argument_list|)
 expr_stmt|;
-name|ttputc
+name|pc
 argument_list|(
 literal|' '
 operator|+
 name|row
 argument_list|)
 expr_stmt|;
-name|ttputc
+name|pc
 argument_list|(
 literal|' '
 operator|+
@@ -819,7 +838,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|w
+literal|'w'
 argument_list|)
 expr_stmt|;
 name|esc
@@ -827,7 +846,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|E
+literal|'E'
 argument_list|)
 expr_stmt|;
 name|tt
@@ -884,7 +903,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|v
+literal|'v'
 argument_list|)
 expr_stmt|;
 block|}
@@ -902,7 +921,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|K
+literal|'K'
 argument_list|)
 expr_stmt|;
 block|}
@@ -920,7 +939,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|J
+literal|'J'
 argument_list|)
 expr_stmt|;
 block|}
@@ -938,7 +957,7 @@ argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|E
+literal|'E'
 argument_list|)
 expr_stmt|;
 block|}
@@ -946,25 +965,38 @@ end_block
 
 begin_macro
 name|h19_delchar
-argument_list|()
+argument_list|(
+argument|n
+argument_list|)
 end_macro
 
 begin_block
+block|{
+while|while
+condition|(
+operator|--
+name|n
+operator|>=
+literal|0
+condition|)
 block|{
 name|esc
 argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|N
+literal|'N'
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
 begin_macro
 name|h19_scroll_down
-argument_list|()
+argument_list|(
+argument|n
+argument_list|)
 end_macro
 
 begin_block
@@ -978,10 +1010,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|--
+name|n
+operator|>=
+literal|0
+condition|)
 name|pc
 argument_list|(
-operator|\
-name|n
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
@@ -989,7 +1027,9 @@ end_block
 
 begin_macro
 name|h19_scroll_up
-argument_list|()
+argument_list|(
+argument|n
+argument_list|)
 end_macro
 
 begin_block
@@ -1001,14 +1041,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|--
+name|n
+operator|>=
+literal|0
+condition|)
+block|{
 name|esc
 argument_list|()
 expr_stmt|;
 name|pc
 argument_list|(
-name|I
+literal|'I'
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1152,12 +1201,6 @@ operator|.
 name|tt_nrow
 operator|=
 name|NROW
-expr_stmt|;
-name|tt
-operator|.
-name|tt_hasinsert
-operator|=
-literal|1
 expr_stmt|;
 name|tt
 operator|.

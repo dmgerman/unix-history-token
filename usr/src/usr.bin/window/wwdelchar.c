@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwdelchar.c	3.13 (Berkeley) %G%"
+literal|"@(#)wwdelchar.c	3.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,25 +420,12 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_move
-call|)
+name|xxdelchar
 argument_list|(
 name|row
 argument_list|,
 name|col
 argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_delchar
-call|)
-argument_list|()
 expr_stmt|;
 name|p
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	3.32 (Berkeley) %G%"
+literal|"@(#)wwinit.c	3.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,6 +438,17 @@ name|tt
 operator|.
 name|tt_wrap
 expr_stmt|;
+if|if
+condition|(
+name|xxinit
+argument_list|()
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 call|(
 modifier|*
 name|tt
@@ -916,7 +927,11 @@ if|if
 condition|(
 name|tt
 operator|.
-name|tt_hasinsert
+name|tt_inschar
+operator|||
+name|tt
+operator|.
+name|tt_setinsert
 condition|)
 name|wwaddcap1
 argument_list|(

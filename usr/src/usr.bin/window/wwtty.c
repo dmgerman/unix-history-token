@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwtty.c	3.12 (Berkeley) %G%"
+literal|"@(#)wwtty.c	3.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,7 +242,7 @@ name|ioctl
 argument_list|(
 name|d
 argument_list|,
-name|TIOCSETN
+name|TIOCSETP
 argument_list|,
 operator|(
 name|char
