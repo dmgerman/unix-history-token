@@ -6191,6 +6191,14 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|PMAP_LOCK_ASSERT
 argument_list|(
 name|pmap
@@ -6362,6 +6370,14 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|PMAP_LOCK_ASSERT
 argument_list|(
 name|pmap
@@ -6374,7 +6390,7 @@ condition|(
 operator|(
 name|pte
 operator|=
-name|pmap_pte
+name|pmap_pte_quick
 argument_list|(
 name|pmap
 argument_list|,
@@ -6639,7 +6655,7 @@ condition|(
 operator|(
 name|pte
 operator|=
-name|pmap_pte
+name|pmap_pte_quick
 argument_list|(
 name|pmap
 argument_list|,
