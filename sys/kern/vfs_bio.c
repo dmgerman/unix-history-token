@@ -14620,7 +14620,7 @@ expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"b_error = %d, b_bufsize = %ld, b_bcount = %ld, b_resid = %ld\n"
-literal|"b_dev = (%d,%d), b_data = %p, b_blkno = %jd, b_pblkno = %jd\n"
+literal|"b_dev = (%d,%d), b_data = %p, b_blkno = %jd\n"
 argument_list|,
 name|bp
 operator|->
@@ -14662,13 +14662,6 @@ operator|)
 name|bp
 operator|->
 name|b_blkno
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|bp
-operator|->
-name|b_pblkno
 argument_list|)
 expr_stmt|;
 if|if
