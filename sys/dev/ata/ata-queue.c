@@ -134,7 +134,7 @@ begin_function_decl
 specifier|static
 name|char
 modifier|*
-name|ata_sensekey2str
+name|ata_skey2str
 parameter_list|(
 name|u_int8_t
 parameter_list|)
@@ -1236,7 +1236,7 @@ comment|/* ATAPI errors */
 case|case
 name|ATA_R_ATAPI
 case|:
-comment|/* is result already set return */
+comment|/* skip if result already set */
 if|if
 condition|(
 name|request
@@ -1258,7 +1258,7 @@ condition|(
 operator|(
 name|request
 operator|->
-name|result
+name|error
 operator|&
 name|ATA_SK_MASK
 operator|)
@@ -1321,19 +1321,8 @@ name|EIO
 expr_stmt|;
 break|break;
 default|default:
-name|request
-operator|->
-name|result
-operator|=
-name|EIO
-expr_stmt|;
-block|}
 if|if
 condition|(
-name|request
-operator|->
-name|result
-operator|&&
 operator|!
 operator|(
 name|request
@@ -1363,7 +1352,7 @@ argument_list|,
 literal|"\20\10BUSY\7READY\6DMA"
 literal|"\5DSC\4DRQ\3CORRECTABLE\2INDEX\1ERROR"
 argument_list|,
-name|ata_sensekey2str
+name|ata_skey2str
 argument_list|(
 operator|(
 name|request
@@ -1388,6 +1377,13 @@ literal|"\20\4MEDIA_CHANGE_REQUEST\3ABORTED"
 literal|"\2NO_MEDIA\1ILLEGAL_LENGTH"
 argument_list|)
 expr_stmt|;
+name|request
+operator|->
+name|result
+operator|=
+name|EIO
+expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
@@ -2355,7 +2351,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|ata_sensekey2str
+name|ata_skey2str
 parameter_list|(
 name|u_int8_t
 name|skey
