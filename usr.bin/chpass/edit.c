@@ -352,6 +352,7 @@ name|pw
 operator|->
 name|pw_name
 block|)
+empty_stmt|;
 if|if
 condition|(
 operator|!
