@@ -131,27 +131,6 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|int
-name|donice
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|chgp
-parameter_list|,
-name|int
-name|n
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -219,6 +198,27 @@ end_decl_stmt
 begin_comment
 comment|/* size of hash table - 1 */
 end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|donice
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|chgp
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -291,6 +291,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|pgrp
+modifier|*
+name|pg
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -361,14 +366,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|low
 operator|=
 name|p
 operator|->
 name|p_nice
 expr_stmt|;
-block|}
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -379,13 +382,6 @@ break|break;
 case|case
 name|PRIO_PGRP
 case|:
-block|{
-specifier|register
-name|struct
-name|pgrp
-modifier|*
-name|pg
-decl_stmt|;
 name|sx_slock
 argument_list|(
 operator|&
@@ -500,7 +496,6 @@ name|pg
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|PRIO_USER
 case|:
@@ -676,7 +671,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|setpriority_args
 modifier|*
@@ -687,12 +681,14 @@ name|struct
 name|proc
 modifier|*
 name|curp
-decl_stmt|;
-specifier|register
-name|struct
-name|proc
+decl_stmt|,
 modifier|*
 name|p
+decl_stmt|;
+name|struct
+name|pgrp
+modifier|*
+name|pg
 decl_stmt|;
 name|int
 name|found
@@ -807,13 +803,6 @@ break|break;
 case|case
 name|PRIO_PGRP
 case|:
-block|{
-specifier|register
-name|struct
-name|pgrp
-modifier|*
-name|pg
-decl_stmt|;
 name|sx_slock
 argument_list|(
 operator|&
@@ -928,7 +917,6 @@ name|pg
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|PRIO_USER
 case|:
@@ -1047,7 +1035,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Set "nice" for a (whole) process.  */
+comment|/*  * Set "nice" for a (whole) process.  */
 end_comment
 
 begin_function
@@ -1165,7 +1153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set realtime priority  *  * MPSAFE  */
+comment|/*  * Set realtime priority.  *  * MPSAFE  */
 end_comment
 
 begin_ifndef
@@ -1353,7 +1341,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Return OUR priority if no pid specified, 		 * or if one is, report the highest priority 		 * in the process. There isn't much more you can do as  		 * there is only room to return a single priority. 		 * XXXKSE  Maybe need a new interface to report  		 * priorities of multiple system scope threads. 		 * Note: specifying our own pid is not the same 		 * as leaving it zero. 		 */
+comment|/* 		 * Return OUR priority if no pid specified, 		 * or if one is, report the highest priority 		 * in the process.  There isn't much more you can do as  		 * there is only room to return a single priority. 		 * XXXKSE: maybe need a new interface to report  		 * priorities of multiple system scope threads. 		 * Note: specifying our own pid is not the same 		 * as leaving it zero. 		 */
 if|if
 condition|(
 name|uap
@@ -1409,7 +1397,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|rtp2
 operator|.
 name|type
@@ -1417,9 +1404,7 @@ operator|<
 name|rtp
 operator|.
 name|type
-operator|)
 operator|||
-operator|(
 operator|(
 name|rtp2
 operator|.
@@ -1428,9 +1413,7 @@ operator|==
 name|rtp
 operator|.
 name|type
-operator|)
 operator|&&
-operator|(
 name|rtp2
 operator|.
 name|prio
@@ -1438,7 +1421,6 @@ operator|<
 name|rtp
 operator|.
 name|prio
-operator|)
 operator|)
 condition|)
 block|{
@@ -1514,7 +1496,7 @@ name|cierror
 operator|)
 condition|)
 break|break;
-comment|/* disallow setting rtprio in most cases if not superuser */
+comment|/* Disallow setting rtprio in most cases if not superuser. */
 if|if
 condition|(
 name|suser
@@ -1540,13 +1522,13 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* can't set realtime priority */
-comment|/*  * Realtime priority has to be restricted for reasons which should be  * obvious. However, for idle priority, there is a potential for  * system deadlock if an idleprio process gains a lock on a resource  * that other processes need (and the idleprio process can't run  * due to a CPU-bound normal process). Fix me! XXX  */
+comment|/*  * Realtime priority has to be restricted for reasons which should be  * obvious.  However, for idle priority, there is a potential for  * system deadlock if an idleprio process gains a lock on a resource  * that other processes need (and the idleprio process can't run  * due to a CPU-bound normal process).  Fix me!  XXX  */
 if|#
 directive|if
 literal|0
-block|if (RTP_PRIO_IS_REALTIME(rtp.type))
-endif|#
-directive|endif
+block|if (RTP_PRIO_IS_REALTIME(rtp.type)) {
+else|#
+directive|else
 if|if
 condition|(
 name|rtp
@@ -1556,6 +1538,8 @@ operator|!=
 name|RTP_PRIO_NORMAL
 condition|)
 block|{
+endif|#
+directive|endif
 name|error
 operator|=
 name|EPERM
@@ -1563,13 +1547,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 		 * If we are setting our own priority, set just our 		 * KSEGRP but if we are doing another process, 		 * do all the groups on that process. If we 		 * specify our own pid we do the latter. 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If we are setting our own priority, set just our 		 * KSEGRP but if we are doing another process, 		 * do all the groups on that process. If we 		 * specify our own pid we do the latter. 		 */
 if|if
 condition|(
 name|uap
@@ -3917,11 +3901,6 @@ name|limp
 decl_stmt|;
 name|limp
 operator|=
-operator|(
-expr|struct
-name|plimit
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -4857,7 +4836,7 @@ operator|-
 operator|*
 name|hiwat
 expr_stmt|;
-comment|/* Don't allow them to exceed max, but allow subtraction */
+comment|/* Don't allow them to exceed max, but allow subtraction. */
 if|if
 condition|(
 name|to

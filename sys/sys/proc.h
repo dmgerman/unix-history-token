@@ -253,16 +253,16 @@ comment|/* (m) List of sigio sources. */
 name|pid_t
 name|pg_id
 decl_stmt|;
-comment|/* (c) Pgrp id. */
+comment|/* (c) Process group id. */
 name|int
 name|pg_jobc
 decl_stmt|;
-comment|/* (m) job cntl proc count */
+comment|/* (m) Job control process count. */
 name|struct
 name|mtx
 name|pg_mtx
 decl_stmt|;
-comment|/*  Mutex to protect members */
+comment|/* Mutex to protect members */
 block|}
 struct|;
 end_struct
@@ -347,7 +347,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Here we define the three structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *  * It is important to remember that a particular thread structure may only  * exist as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance. (basically to save freeing and then re-allocating it) The existing  * thread keeps a cached spare thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  */
+comment|/*  * Here we define the three structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *  * It is important to remember that a particular thread structure may only  * exist as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance (basically to save freeing and then re-allocating it).  The existing  * thread keeps a cached spare thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  */
 end_comment
 
 begin_struct_decl
@@ -381,7 +381,7 @@ comment|/***************  * In pictures:  With a single run queue used by all pr
 end_comment
 
 begin_comment
-comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When waiting to be run, threads are hung off the KSEGRP in priority order.  * with N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  */
+comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When waiting to be run, threads are hung off the KSEGRP in priority order.  * With N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  */
 end_comment
 
 begin_struct
@@ -575,11 +575,11 @@ comment|/* (k) Statclock hits in system mode. */
 name|u_int
 name|td_uuticks
 decl_stmt|;
-comment|/* (k) Statclock in user, for UTS. */
+comment|/* (k) Statclock hits (usr), for UTS. */
 name|u_int
 name|td_usticks
 decl_stmt|;
-comment|/* (k) Statclock in kernel, for UTS. */
+comment|/* (k) Statclock hits (sys), for UTS. */
 name|int
 name|td_intrval
 decl_stmt|;
@@ -612,7 +612,7 @@ specifier|volatile
 name|u_int
 name|td_generation
 decl_stmt|;
-comment|/* (k) Enable detection of preemption */
+comment|/* (k) For detection of preemption */
 name|stack_t
 name|td_sigstk
 decl_stmt|;
@@ -654,7 +654,7 @@ define|#
 directive|define
 name|td_endcopy
 value|td_pcb
-comment|/*  * fields that must be manually set in fork1() or thread_sched_upcall()  * or already have been set in the allocator, contstructor, etc..  */
+comment|/*  * Fields that must be manually set in fork1() or thread_sched_upcall()  * or already have been set in the allocator, constructor, etc.  */
 name|struct
 name|pcb
 modifier|*
@@ -1257,7 +1257,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* Stack not in mem.. bad juju if run. */
+comment|/* Stack not in mem.  Bad juju if run. */
 end_comment
 
 begin_define
@@ -1595,7 +1595,7 @@ value|(td)->td_state = TDS_CAN_RUN
 end_define
 
 begin_comment
-comment|/*  * The upcall management structure.  * The upcall is used when returning to userland.  If a thread does not have  * an upcall on return to userland the thread exports its context and exits.  */
+comment|/*  * An upcall is used when returning to userland.  If a thread does not have  * an upcall on return to userland the thread exports its context and exits.  */
 end_comment
 
 begin_struct
@@ -1620,7 +1620,7 @@ name|thread
 modifier|*
 name|ku_owner
 decl_stmt|;
-comment|/* owning thread */
+comment|/* Owning thread. */
 name|int
 name|ku_flags
 decl_stmt|;
@@ -1630,21 +1630,21 @@ name|kse_mailbox
 modifier|*
 name|ku_mailbox
 decl_stmt|;
-comment|/* userland mailbox address. */
+comment|/* Userland mailbox address. */
 name|stack_t
 name|ku_stack
 decl_stmt|;
-comment|/* userland upcall stack. */
+comment|/* Userland upcall stack. */
 name|void
 modifier|*
 name|ku_func
 decl_stmt|;
-comment|/* userland upcall function. */
+comment|/* Userland upcall function. */
 name|unsigned
 name|int
 name|ku_mflags
 decl_stmt|;
-comment|/* cached upcall mailbox flags */
+comment|/* Cached upcall mbox flags. */
 block|}
 struct|;
 end_struct
@@ -1657,7 +1657,7 @@ value|0x00001
 end_define
 
 begin_comment
-comment|/* Do upcall now, don't wait. */
+comment|/* Do upcall now; don't wait. */
 end_comment
 
 begin_define
@@ -1684,7 +1684,7 @@ name|proc
 modifier|*
 name|kg_proc
 decl_stmt|;
-comment|/* (*) Process that contains this KSEG. */
+comment|/* (*) Proc that contains this KSEG. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ksegrp
@@ -1846,13 +1846,13 @@ name|filedesc
 modifier|*
 name|p_fd
 decl_stmt|;
-comment|/* (b) Ptr to open files structure. */
+comment|/* (b) Open files. */
 name|struct
 name|filedesc_to_leader
 modifier|*
 name|p_fdtol
 decl_stmt|;
-comment|/* (b) Ptr to tracking node */
+comment|/* (b) Tracking node */
 comment|/* Accumulated stats for all threads? */
 name|struct
 name|pstats
@@ -1878,7 +1878,7 @@ modifier|*
 name|p_sigacts
 decl_stmt|;
 comment|/* (x) Signal actions, state (CPU). */
-comment|/* 	 * The following don't make too much sense.. 	 * See the td_ or ke_ versions of the same flags 	 */
+comment|/* 	 * The following don't make too much sense. 	 * See the td_ or ke_ versions of the same flags. 	 */
 name|int
 name|p_flag
 decl_stmt|;
@@ -2090,7 +2090,7 @@ comment|/* (c + j) If single threading this is it */
 name|int
 name|p_suspcount
 decl_stmt|;
-comment|/* (c) # threads in suspended mode */
+comment|/* (c) Num threads in suspended mode. */
 name|struct
 name|thread
 modifier|*
@@ -2168,7 +2168,7 @@ comment|/* (j) Number of threads. */
 name|int
 name|p_numksegrps
 decl_stmt|;
-comment|/* (c) number of ksegrps */
+comment|/* (c) Number of ksegrps. */
 name|struct
 name|mdproc
 name|p_md
@@ -2250,11 +2250,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* For when we aren't on a CPU. (SMP) */
-end_comment
-
-begin_comment
-comment|/* Status values (p_stat). */
+comment|/* For when we aren't on a CPU. */
 end_comment
 
 begin_comment
@@ -2291,7 +2287,7 @@ value|0x00004
 end_define
 
 begin_comment
-comment|/* Kernel thread. (*)*/
+comment|/* Kernel thread (*). */
 end_comment
 
 begin_define
@@ -2335,7 +2331,7 @@ value|0x00040
 end_define
 
 begin_comment
-comment|/* Has thread in requesting to stop prof */
+comment|/* Has thread requesting to stop profiling. */
 end_comment
 
 begin_define
@@ -2478,11 +2474,7 @@ value|0x80000
 end_define
 
 begin_comment
-comment|/* Only one thread can continue */
-end_comment
-
-begin_comment
-comment|/* (not to user) */
+comment|/* Only 1 thread can continue (not to user). */
 end_comment
 
 begin_define
@@ -2635,11 +2627,11 @@ value|0x08000
 end_define
 
 begin_comment
-comment|/* Ast()-based MAC event pending. */
+comment|/* AST-based MAC event pending. */
 end_comment
 
 begin_comment
-comment|/* used only in legacy conversion code */
+comment|/*  * These were process status values (p_stat), now they are only used in  * legacy conversion code.  */
 end_comment
 
 begin_define
@@ -2759,7 +2751,7 @@ comment|/* Involuntary switch. */
 end_comment
 
 begin_comment
-comment|/* flags for setrunqueue(). Why are we setting this thread on the run queue? */
+comment|/* Flags for setrunqueue().  Why are we setting this thread on the run queue? */
 end_comment
 
 begin_define
@@ -2770,7 +2762,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* No special circumstances */
+comment|/* No special circumstances. */
 end_comment
 
 begin_define
@@ -2781,7 +2773,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* we are yielding (from mi_switch) */
+comment|/* We are yielding (from mi_switch). */
 end_comment
 
 begin_define
@@ -2792,7 +2784,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* it is ourself (from mi_switch) */
+comment|/* It is ourself (from mi_switch). */
 end_comment
 
 begin_define
@@ -2803,7 +2795,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* it is probably urgent */
+comment|/* It is probably urgent. */
 end_comment
 
 begin_comment
@@ -2943,7 +2935,7 @@ value|TAILQ_FOREACH((td),&(p)->p_threads, td_plist)
 end_define
 
 begin_comment
-comment|/* XXXKSE the lines below should probably only be used in 1:1 code */
+comment|/* XXXKSE the following lines should probably only be used in 1:1 code: */
 end_comment
 
 begin_define
@@ -3387,6 +3379,18 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
+name|ksegrp
+name|ksegrp0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Primary ksegrp in proc0. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|proc
 name|proc0
 decl_stmt|;
@@ -3411,18 +3415,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ksegrp
-name|ksegrp0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Primary ksegrp in proc0. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|vmspace
 name|vmspace0
 decl_stmt|;
@@ -3442,6 +3434,13 @@ end_decl_stmt
 begin_comment
 comment|/* Limit on kernel cpu hogs. */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lastpid
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -3574,13 +3573,6 @@ name|struct
 name|uma_zone
 modifier|*
 name|proc_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|lastpid
 decl_stmt|;
 end_decl_stmt
 
@@ -4003,15 +3995,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|threadinit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|proc_linkup
 parameter_list|(
 name|struct
@@ -4146,6 +4129,15 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|threadinit
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4502,27 +4494,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|thread_signal_add
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|sig
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|thread
 modifier|*
 name|thread_alloc
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_continued
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4610,6 +4599,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|thread_signal_add
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|thread_single
 parameter_list|(
@@ -4654,6 +4658,28 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|thread_statclock
+parameter_list|(
+name|int
+name|user
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_stopped
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|thread_suspend_check
 parameter_list|(
 name|int
@@ -4670,6 +4696,28 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|thread
+modifier|*
+name|thread_switchout
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|newtd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4712,6 +4760,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|thread_upcall_check
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|thread_userret
 parameter_list|(
 name|struct
@@ -4723,18 +4783,6 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|thread_upcall_check
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4764,11 +4812,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|thread_statclock
+name|void
+name|thr_exit1
 parameter_list|(
-name|int
-name|user
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4845,76 +4892,6 @@ name|struct
 name|kse_upcall
 modifier|*
 name|ke
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|thread_sanity_check
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|thread_stopped
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|thread
-modifier|*
-name|thread_switchout
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|newtd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|thread_continued
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|thr_exit1
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
