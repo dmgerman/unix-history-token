@@ -833,6 +833,13 @@ name|hh
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|g_free
+argument_list|(
+name|hh
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
