@@ -835,6 +835,7 @@ name|output
 modifier|*
 name|file
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -873,6 +874,7 @@ begin_function
 name|void
 name|out1fmt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -911,6 +913,7 @@ begin_function
 name|void
 name|dprintf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -961,6 +964,7 @@ parameter_list|,
 name|int
 name|length
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1069,6 +1073,7 @@ name|output
 modifier|*
 name|file
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1127,6 +1132,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1174,6 +1180,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1237,6 +1244,7 @@ decl_stmt|;
 name|int
 name|length
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1383,6 +1391,7 @@ name|output
 modifier|*
 name|dest
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|f

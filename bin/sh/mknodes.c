@@ -531,6 +531,12 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|__printf0like
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2444,6 +2450,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+specifier|const
 name|char
 modifier|*
 name|msg

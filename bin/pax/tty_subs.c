@@ -302,31 +302,43 @@ directive|if
 name|__STDC__
 end_if
 
-begin_function
+begin_decl_stmt
 name|void
 name|tty_prnt
-parameter_list|(
+argument_list|(
+specifier|const
 name|char
-modifier|*
+operator|*
 name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|,
+operator|...
+argument_list|)
 else|#
 directive|else
-function|void tty_prnt
-parameter_list|(
+name|void
+name|tty_prnt
+argument_list|(
 name|fmt
-parameter_list|,
+argument_list|,
 name|va_alist
-parameter_list|)
+argument_list|)
+decl|const
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-function|va_dcl
+end_decl_stmt
+
+begin_macro
+name|va_dcl
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|va_list
 name|ap
@@ -383,7 +395,7 @@ name|ttyoutf
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * tty_read()  *	read a string from the controlling terminal if it is open into the  *	supplied buffer  * Return:  *	0 if data was read, -1 otherwise.  */
@@ -518,6 +530,7 @@ parameter_list|(
 name|int
 name|set
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -537,6 +550,7 @@ parameter_list|)
 name|int
 name|set
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -660,6 +674,7 @@ parameter_list|,
 name|int
 name|errnum
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -684,6 +699,7 @@ decl_stmt|;
 name|int
 name|errnum
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
