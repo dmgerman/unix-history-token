@@ -2271,9 +2271,6 @@ argument_list|,
 name|URL
 argument_list|)
 expr_stmt|;
-goto|goto
-name|failure
-goto|;
 block|}
 elseif|else
 if|if
