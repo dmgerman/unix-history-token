@@ -1019,6 +1019,12 @@ operator|-=
 name|request
 expr_stmt|;
 block|}
+name|a
+operator|->
+name|file_position
+operator|+=
+name|request
+expr_stmt|;
 return|return
 operator|(
 name|request

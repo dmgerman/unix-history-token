@@ -168,7 +168,6 @@ name|read_file_data
 modifier|*
 name|mine
 decl_stmt|;
-comment|/* XXX detect and report malloc failure XXX */
 if|if
 condition|(
 name|filename
@@ -187,6 +186,28 @@ name|mine
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mine
+operator|==
+name|NULL
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"No memory"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|mine
 operator|->
 name|filename
@@ -215,6 +236,28 @@ name|filename
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mine
+operator|==
+name|NULL
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"No memory"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|strcpy
 argument_list|(
 name|mine

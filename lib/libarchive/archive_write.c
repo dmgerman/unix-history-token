@@ -593,6 +593,12 @@ operator|.
 name|s
 argument_list|)
 expr_stmt|;
+name|a
+operator|->
+name|magic
+operator|=
+literal|0
+expr_stmt|;
 name|free
 argument_list|(
 name|a
