@@ -147,7 +147,7 @@ name|defined
 argument_list|(
 name|ISP_DISABLE_1080_SUPPORT
 argument_list|)
-operator|&&
+operator|||
 operator|!
 name|defined
 argument_list|(
@@ -2113,7 +2113,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|ISP_DISABLE_1080_SUPPORT
+name|ISP_DISABLE_12160_SUPPORT
 if|if
 condition|(
 name|pci_get_devid
@@ -3640,7 +3640,7 @@ name|defined
 argument_list|(
 name|ISP_DISABLE_1080_SUPPORT
 argument_list|)
-operator|&&
+operator|||
 operator|!
 name|defined
 argument_list|(
