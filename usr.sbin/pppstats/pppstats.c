@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pppstats.c,v 1.10 1997/08/22 15:39:04 peter Exp $"
+literal|"$Id: pppstats.c,v 1.11 1997/09/10 08:43:17 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,33 +130,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_linux_
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<net/if_ppp.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<net/if_ppp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
