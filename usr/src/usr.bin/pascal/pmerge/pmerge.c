@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pmerge.c 1.1 %G%"
+literal|"@(#)pmerge.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,6 +330,10 @@ modifier|*
 name|fp
 decl_stmt|;
 comment|/* char ptrs */
+name|char
+name|quote
+decl_stmt|;
+comment|/* include quote character */
 name|int
 name|i
 decl_stmt|;
@@ -718,19 +722,21 @@ name|fp
 operator|=
 name|next
 operator|,
+name|quote
+operator|=
+operator|*
 name|cp
 operator|++
 init|;
-name|isalnum
-argument_list|(
 operator|*
 name|cp
-argument_list|)
-operator|||
+operator|!=
+literal|'\0'
+operator|&&
 operator|*
 name|cp
-operator|==
-literal|'.'
+operator|!=
+name|quote
 condition|;
 control|)
 operator|*
@@ -743,17 +749,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
 operator|*
 name|cp
 operator|!=
-literal|'\''
-operator|||
-operator|*
-name|cp
-operator|!=
-literal|'"'
-operator|)
+name|quote
 operator|&&
 operator|(
 name|fp
