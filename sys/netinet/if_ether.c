@@ -3132,6 +3132,10 @@ operator|->
 name|ac_if
 condition|)
 block|{
+if|if
+condition|(
+name|log_arp_wrong_iface
+condition|)
 name|log
 argument_list|(
 name|LOG_ERR
