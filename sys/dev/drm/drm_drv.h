@@ -4512,7 +4512,7 @@ block|{
 name|DRM_UNLOCK
 argument_list|()
 expr_stmt|;
-name|DRM_ERROR
+name|DRM_DEBUG
 argument_list|(
 literal|"can't find authenticator\n"
 argument_list|)
