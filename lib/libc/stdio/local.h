@@ -361,6 +361,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|wint_t
+name|__ungetwc
+parameter_list|(
+name|wchar_t
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|__vfprintf
 parameter_list|(
