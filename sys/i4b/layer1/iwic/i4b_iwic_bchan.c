@@ -1954,7 +1954,7 @@ literal|4
 if|if
 condition|(
 operator|!
-name|mtx_initqialized
+name|mtx_initialized
 argument_list|(
 operator|&
 name|chan

@@ -728,7 +728,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mtx_initiallized
+name|mtx_initialized
 argument_list|(
 operator|&
 name|sc
