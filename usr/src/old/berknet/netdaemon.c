@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netdaemon.c	4.3	(Berkeley)	%G%"
+literal|"@(#)netdaemon.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1358,6 +1358,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
+name|ignoreit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|send
 argument_list|(
 argument|jname
@@ -2341,6 +2358,11 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|extern
+name|char
+modifier|*
+name|logfile
+decl_stmt|;
 name|RENICE0
 argument_list|()
 expr_stmt|;
@@ -2351,9 +2373,31 @@ comment|/* make sure the spawned child has it's own 					group process to avoid 
 name|setpgrp
 argument_list|()
 expr_stmt|;
+comment|/* 				 * log error messages on unit 2 from subprocess 				 * though this may not sync very well 				 */
 endif|#
 directive|endif
 endif|CCV7
+name|dup2
+argument_list|(
+name|open
+argument_list|(
+literal|"/logit"
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|lseek
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|execl
 argument_list|(
 name|netcmd
@@ -2396,10 +2440,19 @@ name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
 block|}
+while|while
+condition|(
+name|pid
+operator|!=
 name|wait
 argument_list|(
 operator|&
 name|rcode
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"netdaemon: wait returned with wrong pid\n"
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -2419,7 +2472,9 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"pass-thru rcode %d"
+literal|"%s: pass-thru rcode %d"
+argument_list|,
+name|netcmd
 argument_list|,
 name|rcode
 argument_list|)
@@ -2498,9 +2553,24 @@ if|if
 condition|(
 operator|++
 name|subs
-operator|>
+operator|<
 literal|10
 condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|ignoreit
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * Note: we expect the alarm to cause a system 		 * call aborted error thus to fall out of the wait() 		 * if no processes need to be recovered after 5 seconds 		 * 		 * This patch is intended to limit the number of 		 * processes the network can create at anytime 		 * to keep from running out of processes per uid 		 */
 while|while
 condition|(
 name|wait
@@ -2511,6 +2581,10 @@ argument_list|)
 operator|!=
 operator|-
 literal|1
+condition|)
+if|if
+condition|(
+name|subs
 condition|)
 operator|--
 name|subs
@@ -2733,10 +2807,19 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* parent */
+while|while
+condition|(
+name|pid
+operator|!=
 name|wait
 argument_list|(
 operator|&
 name|rcode
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"netdaemon:  returned wrong pid\n"
 argument_list|)
 expr_stmt|;
 name|rcode
