@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.15 (Berkeley) %G%"
+literal|"@(#)main.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -661,10 +661,16 @@ argument_list|(
 name|PREFIX
 argument_list|)
 operator|+
+operator|(
+name|file
+condition|?
 name|strlen
 argument_list|(
 name|file
 argument_list|)
+else|:
+literal|0
+operator|)
 operator|+
 literal|2
 argument_list|)
