@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sliplogin.c	8.1 (Berkeley) %G%"
+literal|"@(#)sliplogin.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,19 +155,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_slvar.h>
+file|<net/slip.h>
 end_include
 
 begin_include
