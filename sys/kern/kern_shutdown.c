@@ -990,6 +990,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|DROP_GIANT_NOSWITCH
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|subiter
@@ -1037,6 +1040,9 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+name|PICKUP_GIANT
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 name|DELAY
