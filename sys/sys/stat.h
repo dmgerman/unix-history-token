@@ -27,6 +27,10 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_comment
+comment|/* XXX missing blkcnt_t, blksize_t, dev_t. */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -40,14 +44,178 @@ name|fflags_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* file flags */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|_FFLAGS_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__gid_t
+name|gid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_GID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_INO_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__ino_t
+name|ino_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_INO_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MODE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__mode_t
+name|mode_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_MODE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NLINK_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__nlink_t
+name|nlink_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_NLINK_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OFF_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__off_t
+name|off_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_OFF_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIME_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__time_t
+name|time_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_TIME_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__uid_t
+name|uid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UID_T_DECLARED
 end_define
 
 begin_endif
@@ -109,6 +277,10 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/* XXX __dev_t should be in<sys/_types.h>. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -133,17 +305,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_struct
 struct|struct
 name|ostat
 block|{
-name|u_int16_t
+name|__uint16_t
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
@@ -159,19 +331,19 @@ name|nlink_t
 name|st_nlink
 decl_stmt|;
 comment|/* number of hard links */
-name|u_int16_t
+name|__uint16_t
 name|st_uid
 decl_stmt|;
 comment|/* user ID of the file's owner */
-name|u_int16_t
+name|__uint16_t
 name|st_gid
 decl_stmt|;
 comment|/* group ID of the file's group */
-name|u_int16_t
+name|__uint16_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
-name|int32_t
+name|__int32_t
 name|st_size
 decl_stmt|;
 comment|/* file size, in bytes */
@@ -190,11 +362,11 @@ name|timespec
 name|st_ctimespec
 decl_stmt|;
 comment|/* time of last file status change */
-name|int32_t
+name|__int32_t
 name|st_blksize
 decl_stmt|;
 comment|/* optimal blocksize for I/O */
-name|int32_t
+name|__int32_t
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
@@ -202,7 +374,7 @@ name|fflags_t
 name|st_flags
 decl_stmt|;
 comment|/* user defined flags for file */
-name|u_int32_t
+name|__uint32_t
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
@@ -216,7 +388,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_POSIX_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_struct
@@ -251,9 +423,9 @@ name|__dev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
+if|#
+directive|if
+name|__BSD_VISIBLE
 name|struct
 name|timespec
 name|st_atimespec
@@ -301,11 +473,11 @@ name|off_t
 name|st_size
 decl_stmt|;
 comment|/* file size, in bytes */
-name|int64_t
+name|__int64_t
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
-name|u_int32_t
+name|__uint32_t
 name|st_blksize
 decl_stmt|;
 comment|/* optimal blocksize for I/O */
@@ -313,16 +485,16 @@ name|fflags_t
 name|st_flags
 decl_stmt|;
 comment|/* user defined flags for file */
-name|u_int32_t
+name|__uint32_t
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
-name|int32_t
+name|__int32_t
 name|st_lspare
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
+if|#
+directive|if
+name|__BSD_VISIBLE
 name|struct
 name|timespec
 name|st_birthtimespec
@@ -433,11 +605,11 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_struct
 struct|struct
@@ -451,11 +623,11 @@ name|ino_t
 name|st_ino
 decl_stmt|;
 comment|/* inode's number */
-name|u_int32_t
+name|__uint32_t
 name|st_mode
 decl_stmt|;
 comment|/* inode protection mode */
-name|u_int32_t
+name|__uint32_t
 name|st_nlink
 decl_stmt|;
 comment|/* number of hard links */
@@ -490,11 +662,11 @@ name|off_t
 name|st_size
 decl_stmt|;
 comment|/* file size, in bytes */
-name|int64_t
+name|__int64_t
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
-name|u_int32_t
+name|__uint32_t
 name|st_blksize
 decl_stmt|;
 comment|/* optimal blocksize for I/O */
@@ -502,7 +674,7 @@ name|fflags_t
 name|st_flags
 decl_stmt|;
 comment|/* user defined flags for file */
-name|u_int32_t
+name|__uint32_t
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
@@ -571,11 +743,11 @@ directive|undef
 name|__dev_t
 end_undef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -632,11 +804,11 @@ begin_comment
 comment|/* set group id on execution */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -698,11 +870,11 @@ begin_comment
 comment|/* X for owner */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -818,11 +990,11 @@ begin_comment
 comment|/* X for other */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -915,23 +1087,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|S_IFWHT
-value|0160000
-end_define
-
-begin_comment
-comment|/* whiteout */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|S_ISVTX
 value|0001000
 end_define
 
 begin_comment
 comment|/* save swapped text even after use */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|S_IFWHT
+value|0160000
+end_define
+
+begin_comment
+comment|/* whiteout */
 end_comment
 
 begin_endif
@@ -1009,11 +1192,13 @@ begin_comment
 comment|/* fifo or socket */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
 
 begin_define
 define|#
@@ -1043,6 +1228,17 @@ begin_comment
 comment|/* socket */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1062,11 +1258,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -1301,7 +1497,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_POSIX_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_ifndef
@@ -1312,6 +1508,28 @@ end_ifndef
 
 begin_function_decl
 name|__BEGIN_DECLS
+if|#
+directive|if
+name|__BSD_VISIBLE
+name|int
+name|chflags
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
 name|int
 name|chmod
 parameter_list|(
@@ -1323,6 +1541,40 @@ name|mode_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_function_decl
+name|int
+name|fchflags
+parameter_list|(
+name|int
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fchmod
+parameter_list|(
+name|int
+parameter_list|,
+name|mode_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -1336,6 +1588,71 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_function_decl
+name|int
+name|lchflags
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lchmod
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|mode_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_function_decl
+name|int
+name|lstat
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|stat
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -1386,95 +1703,6 @@ name|mode_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
-begin_function_decl
-name|int
-name|chflags
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|unsigned
-name|long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|lchflags
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|fchflags
-parameter_list|(
-name|int
-parameter_list|,
-name|unsigned
-name|long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|fchmod
-parameter_list|(
-name|int
-parameter_list|,
-name|mode_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|lchmod
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|mode_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|lstat
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|stat
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|__END_DECLS
