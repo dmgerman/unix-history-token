@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sdmail.c	5.1 (Berkeley) %G%"
+literal|"@(#)sdmail.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,16 +180,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|extern
-name|FILE
-modifier|*
-name|popen
-argument_list|()
-decl_stmt|,
-modifier|*
-name|pclose
-argument_list|()
-decl_stmt|;
 name|char
 name|cmd
 index|[
@@ -210,7 +200,7 @@ condition|(
 operator|(
 name|fp
 operator|=
-name|popen
+name|rpopen
 argument_list|(
 name|cmd
 argument_list|,

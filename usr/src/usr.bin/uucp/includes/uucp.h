@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.1	83/07/02	*/
+comment|/*	uucp.h	5.2	83/07/19	*/
 end_comment
 
 begin_include
@@ -1201,6 +1201,15 @@ begin_function_decl
 specifier|extern
 name|long
 name|lseek
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|FILE
+modifier|*
+name|rpopen
 parameter_list|()
 function_decl|;
 end_function_decl
