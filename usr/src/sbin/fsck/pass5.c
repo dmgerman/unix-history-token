@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.16 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,6 +500,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|idesc
 index|[
 name|i
@@ -509,6 +510,20 @@ name|id_type
 operator|=
 name|ADDR
 expr_stmt|;
+if|if
+condition|(
+name|doinglevel2
+condition|)
+name|idesc
+index|[
+name|i
+index|]
+operator|.
+name|id_fix
+operator|=
+name|FIX
+expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 operator|(
@@ -1315,7 +1330,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cvtflag
+name|doinglevel1
 condition|)
 block|{
 name|bcopy
