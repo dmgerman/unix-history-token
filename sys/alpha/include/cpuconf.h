@@ -427,8 +427,24 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|cpuinit
+name|api_cpuinit
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|ncpuinit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|napi_cpuinit
 decl_stmt|;
 end_decl_stmt
 

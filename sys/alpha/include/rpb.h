@@ -222,6 +222,16 @@ directive|define
 name|ST_DEC_6600
 value|34
 comment|/* "Monet/Goldrush" */
+comment|/*  * System types for Alpha Processor Inc. machines  */
+define|#
+directive|define
+name|API_ST_BASE
+value|200
+define|#
+directive|define
+name|ST_API_UP1000
+value|201
+comment|/* "Nautilus" */
 name|u_int64_t
 name|rpb_type
 decl_stmt|;
