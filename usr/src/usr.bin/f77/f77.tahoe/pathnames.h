@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)pathnames.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)pathnames.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -56,15 +56,15 @@ directive|endif
 define|#
 directive|define
 name|PASS2OPT
-value|"/usr/libexec/c2"
+value|"/usr/old/libexec/c2"
 define|#
 directive|define
 name|ASMNAME
-value|"/usr/bin/as"
+value|"/usr/old/bin/as"
 define|#
 directive|define
 name|LDNAME
-value|"/usr/bin/ld"
+value|"/usr/old/bin/ld"
 define|#
 directive|define
 name|CATNAME
