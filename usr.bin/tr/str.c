@@ -1130,6 +1130,12 @@ argument_list|,
 literal|"misplaced equivalence equals sign"
 argument_list|)
 expr_stmt|;
+name|s
+operator|->
+name|str
+operator|+=
+literal|2
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1164,6 +1170,12 @@ literal|1
 argument_list|,
 literal|"misplaced equivalence equals sign"
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|str
+operator|+=
+literal|3
 expr_stmt|;
 block|}
 comment|/* 	 * Calculate the set of all characters in the same equivalence class 	 * as the specified character (they will have the same primary 	 * collation weights). 	 * XXX Knows too much about how strxfrm() is implemented. Assumes 	 * it fills the string with primary collation weight bytes. Only one- 	 * to-one mappings are supported. 	 */
@@ -1283,12 +1295,6 @@ operator|=
 name|OOBCH
 expr_stmt|;
 block|}
-name|s
-operator|->
-name|str
-operator|+=
-literal|2
-expr_stmt|;
 name|s
 operator|->
 name|cnt
