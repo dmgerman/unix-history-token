@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_hp300.c	5.15 (Berkeley) %G%"
+literal|"@(#)kvm_hp300.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
 end_include
 
 begin_include
@@ -82,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kvm.h>
+file|<nlist.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nlist.h>
+file|<kvm.h>
 end_include
 
 begin_include
@@ -188,10 +194,31 @@ directive|include
 file|<sys/kinfo_proc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<hp300/hp300/pte.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* NEWVM */
+end_comment
 
 begin_include
 include|#
@@ -217,11 +244,16 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* NEWVM */
+end_comment
+
+begin_comment
 comment|/*  * files  */
 end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|unixf
@@ -340,6 +372,12 @@ begin_comment
 comment|/*  * random other stuff  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -349,15 +387,6 @@ name|Usrptmap
 decl_stmt|,
 modifier|*
 name|usrpt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|dmmin
-decl_stmt|,
-name|dmmax
 decl_stmt|;
 end_decl_stmt
 
@@ -374,6 +403,20 @@ begin_decl_stmt
 specifier|static
 name|int
 name|Syssize
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dmmin
+decl_stmt|,
+name|dmmax
 decl_stmt|;
 end_decl_stmt
 
@@ -723,6 +766,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|uf
@@ -1212,6 +1256,9 @@ name|deadkernel
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEWVM
 if|if
 condition|(
 name|Sysmap
@@ -1227,6 +1274,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1648,7 +1697,7 @@ condition|)
 block|{
 name|seterr
 argument_list|(
-literal|"kvm_nlist: symbol too large"
+literal|"symbol too large"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1778,17 +1827,32 @@ name|NULL
 expr_stmt|;
 name|hard2
 label|:
-return|return
-operator|(
+name|num
+operator|=
 name|nlist
 argument_list|(
 name|unixf
 argument_list|,
 name|nl
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num
+operator|==
+operator|-
+literal|1
+condition|)
+name|seterr
+argument_list|(
+literal|"nlist (hard way) failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|num
 operator|)
 return|;
-comment|/* XXX seterr if -1 */
 block|}
 end_block
 
@@ -2000,6 +2064,10 @@ if|if
 condition|(
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_NPROC
@@ -2201,6 +2269,10 @@ if|if
 condition|(
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_ALLPROC
@@ -2977,6 +3049,10 @@ if|if
 condition|(
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_ZOMBPROC
@@ -3191,6 +3267,7 @@ name|kvm_getu
 parameter_list|(
 name|p
 parameter_list|)
+specifier|const
 name|struct
 name|proc
 modifier|*
@@ -3218,15 +3295,6 @@ specifier|register
 name|char
 modifier|*
 name|up
-decl_stmt|;
-name|struct
-name|pte
-name|pte
-index|[
-name|CLSIZE
-operator|*
-literal|2
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -3407,6 +3475,15 @@ operator|.
 name|pm_ptab
 condition|)
 block|{
+name|struct
+name|pte
+name|pte
+index|[
+name|CLSIZE
+operator|*
+literal|2
+index|]
+decl_stmt|;
 name|klseek
 argument_list|(
 name|kmem
@@ -3463,6 +3540,11 @@ name|pte
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|CLBYTES
+operator|<
+literal|2048
 name|argaddr0
 operator|=
 name|ctob
@@ -3480,6 +3562,8 @@ name|pg_pfnum
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|argaddr1
 operator|=
 name|ctob
@@ -4205,7 +4289,7 @@ name|hp300
 argument_list|)
 name|stkoff
 operator|=
-literal|24
+literal|20
 expr_stmt|;
 comment|/* XXX for sigcode */
 endif|#
@@ -4491,6 +4575,10 @@ name|bad
 goto|;
 name|file
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|memf
 expr_stmt|;
 block|}
@@ -5266,7 +5354,8 @@ condition|(
 name|kvm_read
 argument_list|(
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|nl
 index|[
@@ -5310,7 +5399,8 @@ condition|(
 name|kvm_read
 argument_list|(
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|nl
 index|[
@@ -5354,7 +5444,8 @@ condition|(
 name|kvm_read
 argument_list|(
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|nl
 index|[
@@ -5409,14 +5500,14 @@ name|buf
 operator|,
 name|len
 operator|)
-name|unsigned
-name|long
+name|void
+operator|*
 name|loc
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|char
+name|void
 modifier|*
 name|buf
 decl_stmt|;
@@ -6287,9 +6378,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|errbuf
+argument_list|,
+name|_POSIX2_LINE_MAX
 argument_list|,
 name|fmt
 argument_list|,
@@ -6345,9 +6438,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|errbuf
+argument_list|,
+name|_POSIX2_LINE_MAX
 argument_list|,
 name|fmt
 argument_list|,
@@ -6367,9 +6462,17 @@ name|cp
 operator|++
 control|)
 empty_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cp
+argument_list|,
+name|_POSIX2_LINE_MAX
+operator|-
+operator|(
+name|cp
+operator|-
+name|errbuf
+operator|)
 argument_list|,
 literal|": %s"
 argument_list|,
