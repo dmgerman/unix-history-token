@@ -535,6 +535,9 @@ name|char
 operator|>
 name|fstream
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_GLIBCPP_USE_WCHAR_T
 typedef|typedef
 name|basic_ios
 operator|<
@@ -626,6 +629,8 @@ name|wchar_t
 operator|>
 name|wfstream
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_decl_stmt
 

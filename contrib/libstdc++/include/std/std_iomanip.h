@@ -1049,72 +1049,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_extern
-extern|extern template wostream& operator<<(wostream&
-operator|,
-extern|_Setfill<wchar_t>
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern template wostream& operator<<(wostream&
-operator|,
-extern|_Setiosflags
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern template wostream& operator<<(wostream&
-operator|,
-extern|_Resetiosflags
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern template wostream& operator<<(wostream&
-operator|,
-extern|_Setbase
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern template wostream& operator<<(wostream&
-operator|,
-extern|_Setprecision
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern template wostream& operator<<(wostream&
-operator|,
-extern|_Setw
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
 extern|extern template istream& operator>>(istream&
 operator|,
 extern|_Setfill<char>
@@ -1180,6 +1114,78 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCPP_USE_WCHAR_T
+end_ifdef
+
+begin_extern
+extern|extern template wostream& operator<<(wostream&
+operator|,
+extern|_Setfill<wchar_t>
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template wostream& operator<<(wostream&
+operator|,
+extern|_Setiosflags
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template wostream& operator<<(wostream&
+operator|,
+extern|_Resetiosflags
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template wostream& operator<<(wostream&
+operator|,
+extern|_Setbase
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template wostream& operator<<(wostream&
+operator|,
+extern|_Setprecision
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template wostream& operator<<(wostream&
+operator|,
+extern|_Setw
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_extern
 extern|extern template wistream& operator>>(wistream&
 operator|,
@@ -1245,6 +1251,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 unit|}

@@ -864,15 +864,15 @@ name|category
 name|all
 init|=
 operator|(
-name|collate
-operator||
 name|ctype
-operator||
-name|monetary
 operator||
 name|numeric
 operator||
+name|collate
+operator||
 name|time
+operator||
+name|monetary
 operator||
 name|messages
 operator|)
@@ -1089,12 +1089,44 @@ name|_Impl
 modifier|*
 name|_S_global
 decl_stmt|;
+comment|// Number of standard categories. For C++, these categories are
+comment|// collate, ctype, monetary, numeric, time, and messages. These
+comment|// directly correspond to ISO C99 macros LC_COLLATE, LC_CTYPE,
+comment|// LC_MONETARY, LC_NUMERIC, and LC_TIME. In addition, POSIX (IEEE
+comment|// 1003.1-2001) specifies LC_MESSAGES.
 specifier|static
 specifier|const
 name|size_t
-name|_S_num_categories
+name|_S_categories_size
 init|=
 literal|6
+decl_stmt|;
+comment|// In addition to the standard categories, the underlying
+comment|// operating system is allowed to define extra LC_*
+comment|// macros. For GNU systems, the following are also valid:
+comment|// LC_PAPER, LC_NAME, LC_ADDRESS, LC_TELEPHONE, LC_MEASUREMENT,
+comment|// and LC_IDENTIFICATION.
+specifier|static
+specifier|const
+name|size_t
+name|_S_extra_categories_size
+init|=
+name|_GLIBCPP_NUM_CATEGORIES
+decl_stmt|;
+comment|// Names of underlying locale categories.
+comment|// NB: locale::global() has to know how to modify all the
+comment|// underlying categories, not just the ones required by the C++
+comment|// standard.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|_S_categories
+index|[
+name|_S_categories_size
+operator|+
+name|_S_extra_categories_size
+index|]
 decl_stmt|;
 name|explicit
 name|locale
@@ -1209,12 +1241,13 @@ block|;
 name|size_t
 name|_M_facets_size
 block|;
-specifier|const
 name|char
 operator|*
 name|_M_names
 index|[
-name|_S_num_categories
+name|_S_categories_size
+operator|+
+name|_S_extra_categories_size
 index|]
 block|;
 specifier|static
@@ -1405,20 +1438,22 @@ decl_stmt|;
 for|for
 control|(
 name|size_t
-name|i
+name|__i
 init|=
 literal|0
 init|;
 name|__ret
 operator|&&
-name|i
+name|__i
 operator|<
-name|_S_num_categories
+name|_S_categories_size
+operator|+
+name|_S_extra_categories_size
 operator|-
 literal|1
 condition|;
 operator|++
-name|i
+name|__i
 control|)
 name|__ret
 operator|&=
@@ -1427,12 +1462,12 @@ name|strcmp
 argument_list|(
 name|_M_names
 index|[
-name|i
+name|__i
 index|]
 argument_list|,
 name|_M_names
 index|[
-name|i
+name|__i
 operator|+
 literal|1
 index|]
@@ -1576,11 +1611,40 @@ literal|0
 init|;
 name|__i
 operator|<
-name|_S_num_categories
+name|_S_categories_size
+operator|+
+name|_S_extra_categories_size
 condition|;
 operator|++
 name|__i
 control|)
+block|{
+name|delete
+index|[]
+name|_M_impl
+operator|->
+name|_M_names
+index|[
+name|__i
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|__new
+init|=
+name|new
+name|char
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|__new
+argument_list|,
+literal|"*"
+argument_list|)
+expr_stmt|;
 name|_M_impl
 operator|->
 name|_M_names
@@ -1588,17 +1652,18 @@ index|[
 name|__i
 index|]
 operator|=
-literal|"*"
+name|__new
 expr_stmt|;
 block|}
 end_expr_stmt
 
 begin_comment
+unit|}
 comment|// 22.1.1.1.2  Class locale::facet
 end_comment
 
 begin_expr_stmt
-name|class
+unit|class
 name|locale
 operator|::
 name|facet

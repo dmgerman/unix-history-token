@@ -1606,7 +1606,7 @@ begin_define
 define|#
 directive|define
 name|__glibcpp_char_digits10
-value|__glibcpp_signed_char_digits
+value|__glibcpp_signed_char_digits10
 end_define
 
 begin_else
@@ -1639,7 +1639,7 @@ begin_define
 define|#
 directive|define
 name|__glibcpp_char_digits10
-value|__glibcpp_unsigned_char_digits
+value|__glibcpp_unsigned_char_digits10
 end_define
 
 begin_endif

@@ -168,6 +168,76 @@ name|_GLIBCPP_HAVE_COPYSIGNF
 end_undef
 
 begin_comment
+comment|// Define to use symbol versioning in the shared library.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_GLIBCPP_SYMVER
+end_undef
+
+begin_comment
+comment|// Define symbol versioning in assember directives. If symbol
+end_comment
+
+begin_comment
+comment|// versioning is beigng used, and the assembler supports this kind of
+end_comment
+
+begin_comment
+comment|// thing, then use it.
+end_comment
+
+begin_comment
+comment|// NB: _GLIBCPP_AT_AT is a hack to work around quoting issues in m4.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_GLIBCPP_SYMVER
+end_if
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_ASM_SYMVER
+parameter_list|(
+name|cur
+parameter_list|,
+name|old
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|asm (".symver " #cur "," #old _GLIBCPP_AT_AT #version);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_ASM_SYMVER
+parameter_list|(
+name|cur
+parameter_list|,
+name|old
+parameter_list|,
+name|version
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// Define if mbstate_t exists in wchar.h.
 end_comment
 

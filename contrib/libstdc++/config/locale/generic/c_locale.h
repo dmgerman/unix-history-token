@@ -117,6 +117,13 @@ directive|include
 file|<clocale>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_NUM_CATEGORIES
+value|0
+end_define
+
 begin_decl_stmt
 name|namespace
 name|std
