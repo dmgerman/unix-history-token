@@ -1,28 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)conf.c	7.1 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*#include "../machine/pte.h"*/
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/fs.h"
+file|"param.h"
 end_include
 
 begin_include
@@ -30,6 +14,28 @@ include|#
 directive|include
 file|"saio.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOT
+end_ifdef
+
+begin_extern
+extern|extern exception;
+end_extern
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|debugflag
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|devread
@@ -49,6 +55,9 @@ block|{
 name|int
 name|cc
 decl_stmt|;
+name|char
+name|c
+decl_stmt|;
 name|io
 operator|->
 name|i_flgs
@@ -67,14 +76,9 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|major
-argument_list|(
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
-argument_list|)
 index|]
 operator|.
 name|dv_strategy
@@ -92,6 +96,29 @@ operator|&=
 operator|~
 name|F_TYPEMASK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BOOT
+if|if
+condition|(
+comment|/*io->i_error || */
+operator|(
+name|c
+operator|=
+name|scankbd
+argument_list|()
+operator|)
+condition|)
+name|_longjmp
+argument_list|(
+operator|&
+name|exception
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|cc
@@ -118,6 +145,9 @@ block|{
 name|int
 name|cc
 decl_stmt|;
+name|char
+name|c
+decl_stmt|;
 name|io
 operator|->
 name|i_flgs
@@ -136,14 +166,9 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|major
-argument_list|(
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
-argument_list|)
 index|]
 operator|.
 name|dv_strategy
@@ -161,6 +186,29 @@ operator|&=
 operator|~
 name|F_TYPEMASK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BOOT
+if|if
+condition|(
+comment|/* io->i_error || */
+operator|(
+name|c
+operator|=
+name|scankbd
+argument_list|()
+operator|)
+condition|)
+name|_longjmp
+argument_list|(
+operator|&
+name|exception
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|cc
@@ -188,14 +236,9 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|major
-argument_list|(
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
-argument_list|)
 index|]
 operator|.
 name|dv_open
@@ -226,14 +269,9 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|major
-argument_list|(
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
-argument_list|)
 index|]
 operator|.
 name|dv_close
@@ -282,14 +320,9 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|major
-argument_list|(
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
-argument_list|)
 index|]
 operator|.
 name|dv_ioctl
@@ -398,6 +431,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|fdstrategy
+argument_list|()
+decl_stmt|,
+name|fdopen
+argument_list|()
+comment|/*, fdioctl()*/
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|devsw
 name|devsw
@@ -415,6 +459,32 @@ block|,
 name|nullsys
 block|,
 comment|/*wdioctl*/
+name|nullioctl
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* swapdev place holder */
+block|{
+literal|"fd"
+block|,
+name|fdstrategy
+block|,
+name|fdopen
+block|,
+name|nullsys
+block|,
+comment|/*fdioctl*/
 name|nullioctl
 block|}
 block|,
@@ -437,7 +507,7 @@ begin_decl_stmt
 name|int
 name|ndevs
 init|=
-literal|2
+literal|3
 decl_stmt|;
 end_decl_stmt
 
