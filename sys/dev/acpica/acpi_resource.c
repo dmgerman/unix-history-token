@@ -3032,7 +3032,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
 block|}
