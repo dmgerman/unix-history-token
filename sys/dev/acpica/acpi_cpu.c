@@ -1254,20 +1254,6 @@ index|]
 operator|=
 name|sc
 expr_stmt|;
-comment|/*      * XXX Temporarily call any _INI function under the processor.      * ACPI-CA will do this after Nov. 2003.  The spec doesn't      * suggest processors have _INI methods but my Thinkpad T23 does.      */
-name|AcpiEvaluateObject
-argument_list|(
-name|sc
-operator|->
-name|cpu_handle
-argument_list|,
-literal|"_INI"
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Get various global values from the Processor object. */
 name|sc
 operator|->
