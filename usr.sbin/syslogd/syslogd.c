@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.12.2.9 1997/11/07 07:30:40 charnier Exp $"
+literal|"$Id: syslogd.c,v 1.12.2.10 1998/03/01 11:09:02 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1448,6 +1448,14 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'d'
+case|:
+comment|/* debug */
+name|Debug
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'a'
 case|:
 comment|/* allow specific network addresses only */
@@ -1463,14 +1471,6 @@ literal|1
 condition|)
 name|usage
 argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|'d'
-case|:
-comment|/* debug */
-name|Debug
-operator|++
 expr_stmt|;
 break|break;
 case|case
