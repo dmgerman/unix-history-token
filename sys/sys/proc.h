@@ -1432,6 +1432,12 @@ name|int
 name|kg_runq_kses
 decl_stmt|;
 comment|/* Num KSEs on runq. */
+name|struct
+name|kse_thr_mailbox
+modifier|*
+name|kg_completed
+decl_stmt|;
+comment|/* (c) completed thread mboxes */
 define|#
 directive|define
 name|kg_endzero
@@ -1452,12 +1458,6 @@ name|char
 name|kg_nice
 decl_stmt|;
 comment|/* (j?/k?) Process "nice" value. */
-name|struct
-name|kse_thr_mailbox
-modifier|*
-name|kg_completed
-decl_stmt|;
-comment|/* (c) completed thread mboxes */
 define|#
 directive|define
 name|kg_endcopy
