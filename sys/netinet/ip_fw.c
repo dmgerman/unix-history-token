@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.45 1996/07/10 19:44:23 julian Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.46 1996/07/14 21:12:52 alex Exp $  */
 end_comment
 
 begin_comment
@@ -612,6 +612,16 @@ operator|*
 name|mm
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|err_prefix
+index|[]
+init|=
+literal|"ip_fw_ctl:"
 decl_stmt|;
 end_decl_stmt
 
@@ -2128,9 +2138,55 @@ name|f_prt
 operator|==
 name|IP_FW_F_ALL
 condition|)
+block|{
+name|int
+name|pnum
+decl_stmt|;
+if|if
+condition|(
+name|f
+operator|->
+name|fw_nsp
+operator|==
+literal|0
+condition|)
 goto|goto
 name|got_match
 goto|;
+comment|/* Look for a matching IP protocol */
+for|for
+control|(
+name|pnum
+operator|=
+literal|0
+init|;
+name|pnum
+operator|<
+name|f
+operator|->
+name|fw_nsp
+condition|;
+name|pnum
+operator|++
+control|)
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_p
+operator|==
+name|f
+operator|->
+name|fw_pts
+index|[
+name|pnum
+index|]
+condition|)
+goto|goto
+name|got_match
+goto|;
+continue|continue;
+block|}
 comment|/* If different, dont match */
 if|if
 condition|(
@@ -2530,7 +2586,7 @@ operator|==
 name|IP_FW_F_DENY
 operator|&&
 operator|(
-name|f_prt
+name|prt
 operator|!=
 name|IP_FW_F_ICMP
 operator|)
@@ -2681,7 +2737,9 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl:  malloc said no\n"
+literal|"%s malloc said no\n"
+operator|,
+name|err_prefix
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3287,7 +3345,9 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl: len=%d, want %d\n"
+literal|"%s len=%d, want %d\n"
+operator|,
+name|err_prefix
 operator|,
 name|m
 operator|->
@@ -3335,7 +3395,9 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl: undefined flag bits set (flags=%x)\n"
+literal|"%s undefined flag bits set (flags=%x)\n"
+operator|,
+name|err_prefix
 operator|,
 name|frwl
 operator|->
@@ -3393,7 +3455,9 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl: src range set but n_src_p=%d\n"
+literal|"%s src range set but n_src_p=%d\n"
+operator|,
+name|err_prefix
 operator|,
 name|frwl
 operator|->
@@ -3427,7 +3491,9 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl: dst range set but n_dst_p=%d\n"
+literal|"%s dst range set but n_dst_p=%d\n"
+operator|,
+name|err_prefix
 operator|,
 name|frwl
 operator|->
@@ -3457,7 +3523,9 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl: too many ports (%d+%d)\n"
+literal|"%s too many ports (%d+%d)\n"
+operator|,
+name|err_prefix
 operator|,
 name|frwl
 operator|->
@@ -3475,7 +3543,40 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 *	ICMP and ALL protocols don't check port ranges 	 */
+if|if
+condition|(
+operator|(
+name|frwl
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_ALL
+operator|)
+operator|&&
+operator|(
+name|frwl
+operator|->
+name|fw_flg
+operator|&
+operator|(
+name|IP_FW_F_SRNG
+operator||
+name|IP_FW_F_DRNG
+operator|)
+operator|)
+condition|)
+block|{
+name|dprintf
+argument_list|(
+operator|(
+literal|"%s proto ranges not allowed"
+operator|,
+name|err_prefix
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 *	ICMP protocol doesn't use port range 	 */
 if|if
 condition|(
 operator|(
@@ -3485,18 +3586,8 @@ name|fw_flg
 operator|&
 name|IP_FW_F_KIND
 operator|)
-operator|!=
-name|IP_FW_F_TCP
-operator|&&
-operator|(
-name|frwl
-operator|->
-name|fw_flg
-operator|&
-name|IP_FW_F_KIND
-operator|)
-operator|!=
-name|IP_FW_F_UDP
+operator|==
+name|IP_FW_F_ICMP
 operator|&&
 operator|(
 name|frwl
@@ -3512,7 +3603,9 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl: invalid protocol/port combination\n"
+literal|"%s port(s) specified for ICMP rule\n"
+operator|,
+name|err_prefix
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3563,7 +3656,9 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl: rule never matches\n"
+literal|"%s rule never matches\n"
+operator|,
+name|err_prefix
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3904,7 +3999,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_fw_ctl:  NULL mbuf ptr\n"
+literal|"%s NULL mbuf ptr\n"
+argument_list|,
+name|err_prefix
 argument_list|)
 expr_stmt|;
 return|return
@@ -4004,7 +4101,9 @@ block|}
 name|dprintf
 argument_list|(
 operator|(
-literal|"ip_fw_ctl:  unknown request %d\n"
+literal|"%s unknown request %d\n"
+operator|,
+name|err_prefix
 operator|,
 name|stage
 operator|)
