@@ -10756,7 +10756,7 @@ name|MNT_WAIT
 condition|?
 name|OBJPC_SYNC
 else|:
-literal|0
+name|OBJPC_NOSYNC
 argument_list|)
 expr_stmt|;
 name|anyio

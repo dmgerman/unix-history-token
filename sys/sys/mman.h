@@ -187,6 +187,17 @@ begin_comment
 comment|/* region grows down, like a stack */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAP_NOSYNC
+value|0x0800
+end_define
+
+begin_comment
+comment|/* page to but do not sync underlying file */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -370,6 +381,28 @@ end_define
 
 begin_comment
 comment|/* dont need these pages, and junk contents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MADV_NOSYNC
+value|6
+end_define
+
+begin_comment
+comment|/* try to avoid flushes to physical media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MADV_AUTOSYNC
+value|7
+end_define
+
+begin_comment
+comment|/* revert to default flushing strategy */
 end_comment
 
 begin_comment

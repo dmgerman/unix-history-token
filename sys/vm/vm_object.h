@@ -341,6 +341,17 @@ begin_comment
 comment|/* invalidate */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OBJPC_NOSYNC
+value|0x4
+end_define
+
+begin_comment
+comment|/* skip if PG_NOSYNC */
+end_comment
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(

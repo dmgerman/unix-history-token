@@ -735,6 +735,17 @@ begin_comment
 comment|/* swap I/O in progress on page	     */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PG_NOSYNC
+value|0x0400
+end_define
+
+begin_comment
+comment|/* do not collect for syncer */
+end_comment
+
 begin_comment
 comment|/*  * Misc constants.  */
 end_comment
@@ -1646,7 +1657,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 	vm_page_protect:  *  *	Reduce the protection of a page.  This routine never  *	raises the protection and therefore can be safely  *	called if the page is already at VM_PROT_NONE ( it  *	will be a NOP effectively ).  */
+comment|/*  * 	vm_page_protect:  *  *	Reduce the protection of a page.  This routine never raises the   *	protection and therefore can be safely called if the page is already  *	at VM_PROT_NONE (it will be a NOP effectively ).  */
 end_comment
 
 begin_function

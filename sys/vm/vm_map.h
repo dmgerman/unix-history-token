@@ -120,7 +120,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|MAP_ENTRY_UNUSED_01
+name|MAP_ENTRY_NOSYNC
 value|0x1
 end_define
 
@@ -857,6 +857,13 @@ define|#
 directive|define
 name|MAP_PREFAULT_PARTIAL
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_DISABLE_SYNCER
+value|0x20
 end_define
 
 begin_comment

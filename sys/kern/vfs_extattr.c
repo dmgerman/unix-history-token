@@ -6918,6 +6918,12 @@ argument_list|,
 literal|"symlink"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|ASSERT_VOP_UNLOCKED
 argument_list|(
 name|nd

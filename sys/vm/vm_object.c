@@ -1491,7 +1491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  *	Leaves page on whatever queue it is currently on.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
+comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  Leaves page   * 	on whatever queue it is currently on.   If NOSYNC is set then do not  *	write out pages with PG_NOSYNC set (originally comes from MAP_NOSYNC),  *	leaving the object dirty.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -1556,6 +1556,9 @@ name|maxb
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|clearobjflags
 decl_stmt|;
 name|int
 name|pagerflags
@@ -1666,6 +1669,11 @@ operator|=
 name|end
 expr_stmt|;
 block|}
+comment|/* 	 * Generally set CLEANCHK interlock and make the page read-only so 	 * we can then clear the object flags. 	 * 	 * However, if this is a nosync mmap then the object is likely to  	 * stay dirty so do not mess with the page and do not clear the 	 * object flags. 	 */
+name|clearobjflags
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -1697,6 +1705,27 @@ argument_list|,
 name|PG_CLEANCHK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|OBJPC_NOSYNC
+operator|)
+operator|&&
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|PG_NOSYNC
+operator|)
+condition|)
+name|clearobjflags
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|vm_page_protect
 argument_list|(
 name|p
@@ -1707,6 +1736,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|clearobjflags
+operator|&&
 operator|(
 name|tstart
 operator|==
@@ -1850,6 +1881,33 @@ name|valid
 operator|)
 operator|==
 literal|0
+condition|)
+block|{
+name|vm_page_flag_clear
+argument_list|(
+name|p
+argument_list|,
+name|PG_CLEANCHK
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * If we have been asked to skip nosync pages and this is a 		 * nosync page, skip it.  Note that the object flags were 		 * not cleared in this case so we do not have to set them. 		 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|OBJPC_NOSYNC
+operator|)
+operator|&&
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|PG_NOSYNC
+operator|)
 condition|)
 block|{
 name|vm_page_flag_clear
