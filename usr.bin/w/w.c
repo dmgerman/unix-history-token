@@ -1786,6 +1786,13 @@ if|if
 condition|(
 name|nflag
 operator|&&
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"-"
+argument_list|)
+operator|&&
 name|inet_addr
 argument_list|(
 name|p
