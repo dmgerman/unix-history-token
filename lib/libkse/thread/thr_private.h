@@ -658,7 +658,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {									\ 	if ((kse)->k_locklevel>= MAX_KSE_LOCKLEVEL)			\ 		PANIC("Exceeded maximum lock level");			\ 	else {								\ 		(kse)->k_locklevel++;					\ 		_lock_acquire((lck),					\&(kse)->k_lockusers[(kse)->k_locklevel - 1], 0);	\ 	}								\ } while (0)
+value|do {									\ 	if ((kse)->k_locklevel< MAX_KSE_LOCKLEVEL) {			\ 		(kse)->k_locklevel++;					\ 		_lock_acquire((lck),					\&(kse)->k_lockusers[(kse)->k_locklevel - 1], 0);	\ 	}								\ 	else 								\ 		PANIC("Exceeded maximum lock level");			\ } while (0)
 end_define
 
 begin_define
@@ -1764,10 +1764,8 @@ modifier|*
 name|curframe
 decl_stmt|;
 name|siginfo_t
+modifier|*
 name|siginfo
-index|[
-name|_SIG_MAXSIG
-index|]
 decl_stmt|;
 comment|/* 	 * Cancelability flags - the lower 2 bits are used by cancel 	 * definitions in pthread.h 	 */
 define|#
@@ -2015,7 +2013,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {								\ 	if ((thrd)->locklevel>= MAX_THR_LOCKLEVEL)		\ 		PANIC("Exceeded maximum lock level");		\ 	else {							\ 		THR_DEACTIVATE_LAST_LOCK(thrd);			\ 		(thrd)->locklevel++;				\ 		_lock_acquire((lck),				\&(thrd)->lockusers[(thrd)->locklevel - 1],	\ 		    (thrd)->active_priority);			\ 	}							\ } while (0)
+value|do {								\ 	if ((thrd)->locklevel< MAX_THR_LOCKLEVEL) {		\ 		THR_DEACTIVATE_LAST_LOCK(thrd);			\ 		(thrd)->locklevel++;				\ 		_lock_acquire((lck),				\&(thrd)->lockusers[(thrd)->locklevel - 1],	\ 		    (thrd)->active_priority);			\ 	} else 							\ 		PANIC("Exceeded maximum lock level");		\ } while (0)
 end_define
 
 begin_define
