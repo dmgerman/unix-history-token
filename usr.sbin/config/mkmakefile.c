@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.35 1999/04/07 09:27:56 grog Exp $"
+literal|"$Id: mkmakefile.c,v 1.36 1999/04/11 03:40:10 grog Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4224,31 +4224,11 @@ name|int
 name|first
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|debugging
-condition|)
-block|{
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"KERNEL=\t\t%s\n"
-literal|"FULLKERNEL=\t%s.debug\n"
-literal|"INSTALL=\tinstall.debug\n\n"
-literal|"%s: %s.debug\n"
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|,
-name|fl
-operator|->
-name|f_needs
+literal|"KERNEL=\t%s\n"
 argument_list|,
 name|fl
 operator|->
@@ -4259,68 +4239,13 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\tobjcopy --strip-debug %s.debug %s\n\n"
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"%s.debug: ${SYSTEM_DEP} swap%s.o"
-argument_list|,
-name|fl
-operator|->
-name|f_needs
+literal|"${FULLKERNEL}: ${SYSTEM_DEP} swap%s.o"
 argument_list|,
 name|fl
 operator|->
 name|f_fn
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"KERNEL=\t\t%s\n"
-literal|"FULLKERNEL=\t%s\n\n"
-literal|"INSTALL=\tinstall\n\n"
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"%s: ${SYSTEM_DEP} swap%s.o"
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|,
-name|fl
-operator|->
-name|f_fn
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|first
