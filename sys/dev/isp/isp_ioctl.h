@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_SDBLEV
-value|_IOWR(ISP_IOC, 0, int)
+value|_IOWR(ISP_IOC, 1, int)
 end_define
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|ISP_RESETHBA
-value|_IO(ISP_IOC, 1)
+value|_IO(ISP_IOC, 2)
 end_define
 
 begin_comment
@@ -51,52 +51,76 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_FC_RESCAN
-value|_IO(ISP_IOC, 2)
-end_define
-
-begin_comment
-comment|/*  * Initiate a LIP  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_FC_LIP
+name|ISP_RESCAN
 value|_IO(ISP_IOC, 3)
 end_define
 
 begin_comment
-comment|/*  * Return the Port Database structure for the named device, or ENODEV if none.  * Caller fills in virtual loopid (0..255), aka 'target'. The driver returns  * ENODEV (if nothing valid there) or the actual loopid (for local loop devices  * only), 24 bit Port ID and Node and Port WWNs.  */
+comment|/*  * This ioctl performs a reset and then will set the adapter to the  * role that was passed in (the old role will be returned). It almost  * goes w/o saying: use with caution.  */
 end_comment
-
-begin_struct
-struct|struct
-name|isp_fc_device
-block|{
-name|u_int32_t
-name|loopid
-decl_stmt|;
-comment|/* 0..255 */
-name|u_int32_t
-name|portid
-decl_stmt|;
-comment|/* 24 bit Port ID */
-name|u_int64_t
-name|node_wwn
-decl_stmt|;
-name|u_int64_t
-name|port_wwn
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
 directive|define
-name|ISP_FC_GETDINFO
-value|_IOWR(ISP_IOC, 4, struct isp_fc_device)
+name|ISP_SETROLE
+value|_IOWR(ISP_IOC, 4, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_INITIATOR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_TARGET
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_BOTH
+value|(ISP_ROLE_TARGET|ISP_ROLE_INITIATOR)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISP_DEFAULT_ROLES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISP_DEFAULT_ROLES
+value|ISP_ROLE_BOTH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Get the current adapter role  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_GETROLE
+value|_IOR(ISP_IOC, 5), int
 end_define
 
 begin_comment
@@ -191,6 +215,50 @@ define|#
 directive|define
 name|ISP_CLR_STATS
 value|_IO(ISP_IOC, 7)
+end_define
+
+begin_comment
+comment|/*  * Initiate a LIP  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_FC_LIP
+value|_IO(ISP_IOC, 8)
+end_define
+
+begin_comment
+comment|/*  * Return the Port Database structure for the named device, or ENODEV if none.  * Caller fills in virtual loopid (0..255), aka 'target'. The driver returns  * ENODEV (if nothing valid there) or the actual loopid (for local loop devices  * only), 24 bit Port ID and Node and Port WWNs.  */
+end_comment
+
+begin_struct
+struct|struct
+name|isp_fc_device
+block|{
+name|u_int32_t
+name|loopid
+decl_stmt|;
+comment|/* 0..255 */
+name|u_int32_t
+name|portid
+decl_stmt|;
+comment|/* 24 bit Port ID */
+name|u_int64_t
+name|node_wwn
+decl_stmt|;
+name|u_int64_t
+name|port_wwn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISP_FC_GETDINFO
+value|_IOWR(ISP_IOC, 9, struct isp_fc_device)
 end_define
 
 begin_comment

@@ -1416,7 +1416,7 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-name|ISP_FC_RESCAN
+name|ISP_RESCAN
 case|:
 if|if
 condition|(
