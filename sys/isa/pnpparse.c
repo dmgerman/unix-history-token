@@ -340,12 +340,21 @@ name|PNP_TAG_IRQ_FORMAT
 case|:
 if|if
 condition|(
+operator|!
+name|I16
+argument_list|(
+name|resinfo
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
 name|bootverbose
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: adding irq mask %#04x\n"
+literal|"%s: adding irq mask %#02x\n"
 argument_list|,
 name|pnp_eisaformat
 argument_list|(
