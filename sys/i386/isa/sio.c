@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.8 1993/09/10 16:59:16 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.9 1993/09/28 00:01:10 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6493,6 +6493,14 @@ name|com
 operator|->
 name|ihighwater
 condition|)
+block|{
+name|tp
+operator|->
+name|t_state
+operator|&=
+operator|~
+name|TS_RTSBLOCK
+expr_stmt|;
 name|outb
 argument_list|(
 name|com
@@ -6506,6 +6514,7 @@ operator||=
 name|MCR_RTS
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|enable_intr
 argument_list|()
