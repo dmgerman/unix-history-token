@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  *      form: @(#)lptreg.h	1.1 (Berkeley) 12/19/90  *	$Id: lptreg.h,v 1.2 1993/10/16 13:46:12 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  *      form: @(#)lptreg.h	1.1 (Berkeley) 12/19/90  *	$Id: lptreg.h,v 1.2.16.1 1996/11/09 21:08:45 phk Exp $  */
 end_comment
 
 begin_comment
@@ -290,11 +290,6 @@ begin_comment
 comment|/* printer selected */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -303,8 +298,13 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* printer out of paper */
+comment|/* enable IRQ */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
