@@ -561,15 +561,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|key
 operator|<
 name|PTHREAD_KEYS_MAX
-operator|)
-operator|&&
-operator|(
-name|key_table
-operator|)
 condition|)
 block|{
 comment|/* Lock the key table entry: */
