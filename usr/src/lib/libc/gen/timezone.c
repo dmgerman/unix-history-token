@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timezone.c	5.5 (Berkeley) %G%"
+literal|"@(#)timezone.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,7 +113,7 @@ name|strncpy
 argument_list|()
 decl_stmt|,
 modifier|*
-name|tztab
+name|_tztab
 argument_list|()
 decl_stmt|;
 if|if
@@ -203,7 +203,7 @@ return|;
 block|}
 return|return
 operator|(
-name|tztab
+name|_tztab
 argument_list|(
 name|zone
 argument_list|,
@@ -362,7 +362,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * tztab --  *	check static tables or create a new zone name; broken out so that  *	we can make a guess as to what the zone is if the standard tables  *	aren't in place in /etc.  DO NOT USE THIS ROUTINE OUTSIDE OF THE  *	STANDARD LIBRARY.  */
+comment|/*  * _tztab --  *	check static tables or create a new zone name; broken out so that  *	we can make a guess as to what the zone is if the standard tables  *	aren't in place in /etc.  DO NOT USE THIS ROUTINE OUTSIDE OF THE  *	STANDARD LIBRARY.  */
 end_comment
 
 begin_function
