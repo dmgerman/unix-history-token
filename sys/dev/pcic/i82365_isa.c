@@ -330,6 +330,13 @@ block|}
 block|,
 comment|/* AEI0218 */
 block|{
+name|PCIC_PNP_SCM_SWAPBOX
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SCM0469 */
+block|{
 literal|0
 block|}
 block|}
