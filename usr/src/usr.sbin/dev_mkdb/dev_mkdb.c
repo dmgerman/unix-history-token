@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.11 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,9 +362,9 @@ name|O_CREAT
 operator||
 name|O_EXLOCK
 operator||
-name|O_TRUNC
+name|O_RDWR
 operator||
-name|O_WRONLY
+name|O_TRUNC
 argument_list|,
 name|S_IRUSR
 operator||
