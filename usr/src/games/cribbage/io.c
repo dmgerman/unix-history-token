@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.4 (Berkeley) %G%"
+literal|"@(#)io.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2470,11 +2470,18 @@ operator|++
 operator|>
 literal|100
 condition|)
+block|{
 comment|/* if we are getting infinite EOFs */
 name|bye
 argument_list|()
 expr_stmt|;
 comment|/* quit the game */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -2756,6 +2763,24 @@ return|;
 block|}
 end_function
 
+begin_macro
+name|rint
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|bye
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * bye:  *	Leave the program, cleaning things up as we go.  */
 end_comment
@@ -2800,11 +2825,6 @@ expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
