@@ -11093,7 +11093,7 @@ operator|+
 literal|1
 index|]
 argument_list|,
-literal|"statefull"
+literal|"stateful"
 argument_list|)
 condition|)
 name|l
@@ -14720,7 +14720,7 @@ name|LOCAL_CX_OPT
 block|,
 literal|"MPPE key size and state"
 block|,
-literal|"set mppe [40|56|128|* [statefull|stateless|*]]"
+literal|"set mppe [40|56|128|* [stateful|stateless|*]]"
 block|,
 operator|(
 specifier|const

@@ -1088,7 +1088,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"statefull"
+literal|"stateful"
 argument_list|)
 expr_stmt|;
 break|break;
