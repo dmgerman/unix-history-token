@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gprof.c,v 1.7 1998/08/08 17:48:26 jdp Exp $"
+literal|"$Id: gprof.c,v 1.8 1998/09/07 23:31:59 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -519,7 +519,33 @@ else|else
 block|{
 name|gmonname
 operator|=
-name|GMONNAME
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|a_outname
+argument_list|)
+operator|+
+literal|6
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|gmonname
+argument_list|,
+name|a_outname
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|gmonname
+argument_list|,
+literal|".gmon"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 *	get information from the executable file. 	 */

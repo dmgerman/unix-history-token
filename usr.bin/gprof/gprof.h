@@ -245,13 +245,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|GMONNAME
-value|"gmon.out"
-end_define
-
-begin_define
-define|#
-directive|define
 name|GMONSUM
 value|"gmon.sum"
 end_define
