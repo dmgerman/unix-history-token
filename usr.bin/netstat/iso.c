@@ -1140,7 +1140,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-5.5s %6d %6d "
+literal|"%-5.5s %6u %6u "
 argument_list|,
 literal|"tp"
 argument_list|,
@@ -1688,7 +1688,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-5.5s %6d %6d "
+literal|"%-5.5s %6u %6u "
 argument_list|,
 literal|"tpip"
 argument_list|,
@@ -2454,7 +2454,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%-5.5s %6d %6d "
+literal|"%-5.5s %6u %6u "
 argument_list|,
 name|name
 argument_list|,

@@ -533,7 +533,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-5.5s %6ld %6ld "
+literal|"%-5.5s %6u %6u "
 argument_list|,
 name|name
 argument_list|,

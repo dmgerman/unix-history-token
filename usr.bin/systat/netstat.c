@@ -469,11 +469,11 @@ name|long
 name|ni_fport
 decl_stmt|;
 comment|/* foreign port */
-name|long
+name|u_int
 name|ni_rcvcc
 decl_stmt|;
 comment|/* rcv buffer character count */
-name|long
+name|u_int
 name|ni_sndcc
 decl_stmt|;
 comment|/* snd buffer character count */
@@ -2195,7 +2195,7 @@ name|ni_line
 argument_list|,
 name|RCVCC
 argument_list|,
-literal|"%6d"
+literal|"%6u"
 argument_list|,
 name|p
 operator|->
@@ -2212,7 +2212,7 @@ name|ni_line
 argument_list|,
 name|SNDCC
 argument_list|,
-literal|"%6d"
+literal|"%6u"
 argument_list|,
 name|p
 operator|->

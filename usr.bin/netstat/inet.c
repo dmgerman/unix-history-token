@@ -1167,7 +1167,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%6ld %6ld  "
+literal|"%6u %6u  "
 argument_list|,
 name|so
 operator|->

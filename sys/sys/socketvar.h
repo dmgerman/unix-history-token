@@ -157,45 +157,45 @@ comment|/*  * Variables for socket buffering.  */
 struct|struct
 name|sockbuf
 block|{
-name|u_long
-name|sb_cc
+name|struct
+name|selinfo
+name|sb_sel
 decl_stmt|;
-comment|/* actual chars in buffer */
-name|u_long
-name|sb_hiwat
-decl_stmt|;
-comment|/* max actual char count */
-name|u_long
-name|sb_mbcnt
-decl_stmt|;
-comment|/* chars of mbufs used */
-name|u_long
-name|sb_mbmax
-decl_stmt|;
-comment|/* max chars of mbufs to use */
-name|long
-name|sb_lowat
-decl_stmt|;
-comment|/* low water mark */
+comment|/* process selecting read/write */
 name|struct
 name|mbuf
 modifier|*
 name|sb_mb
 decl_stmt|;
 comment|/* the mbuf chain */
-name|struct
-name|selinfo
-name|sb_sel
+name|u_int
+name|sb_cc
 decl_stmt|;
-comment|/* process selecting read/write */
+comment|/* actual chars in buffer */
+name|u_int
+name|sb_hiwat
+decl_stmt|;
+comment|/* max actual char count */
+name|u_int
+name|sb_mbcnt
+decl_stmt|;
+comment|/* chars of mbufs used */
+name|u_int
+name|sb_mbmax
+decl_stmt|;
+comment|/* max chars of mbufs to use */
+name|int
+name|sb_lowat
+decl_stmt|;
+comment|/* low water mark */
+name|int
+name|sb_timeo
+decl_stmt|;
+comment|/* timeout for read/write */
 name|short
 name|sb_flags
 decl_stmt|;
 comment|/* flags, see below */
-name|short
-name|sb_timeo
-decl_stmt|;
-comment|/* timeout for read/write */
 block|}
 name|so_rcv
 struct|,
@@ -524,26 +524,26 @@ decl_stmt|;
 struct|struct
 name|xsockbuf
 block|{
-name|u_long
+name|u_int
 name|sb_cc
 decl_stmt|;
-name|u_long
+name|u_int
 name|sb_hiwat
 decl_stmt|;
-name|u_long
+name|u_int
 name|sb_mbcnt
 decl_stmt|;
-name|u_long
+name|u_int
 name|sb_mbmax
 decl_stmt|;
-name|long
+name|int
 name|sb_lowat
+decl_stmt|;
+name|int
+name|sb_timeo
 decl_stmt|;
 name|short
 name|sb_flags
-decl_stmt|;
-name|short
-name|sb_timeo
 decl_stmt|;
 block|}
 name|so_rcv

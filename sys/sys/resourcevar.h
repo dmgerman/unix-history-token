@@ -341,11 +341,11 @@ name|uidinfo
 modifier|*
 name|uip
 parameter_list|,
-name|u_long
+name|u_int
 modifier|*
 name|hiwat
 parameter_list|,
-name|u_long
+name|u_int
 name|to
 parameter_list|,
 name|rlim_t

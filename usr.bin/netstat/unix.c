@@ -635,7 +635,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%8lx %-6.6s %6ld %6ld %8lx %8lx %8lx %8lx"
+literal|"%8lx %-6.6s %6u %6u %8lx %8lx %8lx %8lx"
 argument_list|,
 operator|(
 name|long

@@ -4406,11 +4406,11 @@ name|uidinfo
 modifier|*
 name|uip
 decl_stmt|;
-name|u_long
+name|u_int
 modifier|*
 name|hiwat
 decl_stmt|;
-name|u_long
+name|u_int
 name|to
 decl_stmt|;
 name|rlim_t
