@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)eval.c	8.2 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1053,6 +1053,9 @@ case|case
 name|EXITTYPE
 case|:
 comment|/* 	 * doexit - immediate exit from m4. 	 */
+name|killdiv
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 operator|(
