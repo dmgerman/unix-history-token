@@ -705,7 +705,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"net%d: cannot start interface (status=%d)\n"
+literal|"net%d: cannot start interface (status=%ld)\n"
 argument_list|,
 name|nif
 operator|->
@@ -750,7 +750,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"net%d: cannot init. interface (status=%d)\n"
+literal|"net%d: cannot init. interface (status=%ld)\n"
 argument_list|,
 name|nif
 operator|->
@@ -808,7 +808,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"net%d: cannot set rx. filters (status=%d)\n"
+literal|"net%d: cannot set rx. filters (status=%ld)\n"
 argument_list|,
 name|nif
 operator|->
