@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.3 1998/12/31 07:35:49 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.4 1999/01/11 11:08:07 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -121,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_dummynet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
 end_include
 
 begin_ifdef
@@ -323,6 +329,7 @@ name|void
 name|dummynet
 parameter_list|(
 name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -349,6 +356,16 @@ name|pipe
 parameter_list|,
 name|int
 name|immediate
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|dummynet_flush
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -435,9 +452,6 @@ name|timeout
 argument_list|(
 name|dummynet
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|NULL
 argument_list|,
 literal|1
@@ -792,7 +806,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"-- Warning, pipe head %x len %d\n"
+literal|"-- Warning, pipe head %p len %d\n"
 argument_list|,
 name|pkt
 argument_list|,
@@ -1001,10 +1015,18 @@ begin_comment
 comment|/*  * this is the periodic task that moves packets between the R-  * and the P- queue  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
 name|dummynet
-parameter_list|()
+argument_list|(
+name|void
+operator|*
+name|__attribute__
+argument_list|(
+argument|(unused)
+argument_list|)
+name|unused
+argument_list|)
 block|{
 name|struct
 name|dn_pipe
@@ -1087,7 +1109,7 @@ name|dn_restart
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * dummynet hook for packets.  * input and output use the same code, so i use bit 16 in the pipe  * number to chose the direction: 1 for output packets, 0 for input.  * for input, only m is significant. For output, also the others.  */
@@ -1910,7 +1932,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"dn_rule_delete, r 0x%x, default 0x%x%s, %d matches\n"
+literal|"dn_rule_delete, r %p, default %p%s, %d matches\n"
 argument_list|,
 name|r
 argument_list|,
