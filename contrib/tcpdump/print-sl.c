@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sl.c,v 1.56 2000/10/10 05:06:10 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sl.c,v 1.57 2001/07/05 18:54:17 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +235,9 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+operator|++
+name|infodelay
+expr_stmt|;
 name|ts_print
 argument_list|(
 operator|&
@@ -379,6 +382,18 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+operator|--
+name|infodelay
+expr_stmt|;
+if|if
+condition|(
+name|infoprint
+condition|)
+name|info
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -425,6 +440,9 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+operator|++
+name|infodelay
+expr_stmt|;
 name|ts_print
 argument_list|(
 operator|&
@@ -528,6 +546,18 @@ label|:
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+operator|--
+name|infodelay
+expr_stmt|;
+if|if
+condition|(
+name|infoprint
+condition|)
+name|info
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-udp.c,v 1.90 2000/12/23 20:55:22 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-udp.c,v 1.101 2001/10/08 21:25:24 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,48 +142,6 @@ include|#
 directive|include
 file|"ip6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOERROR
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|NOERROR
-end_undef
-
-begin_comment
-comment|/* Solaris sucks */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|T_UNSPEC
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|T_UNSPEC
-end_undef
-
-begin_comment
-comment|/* SINIX does too */
-end_comment
 
 begin_endif
 endif|#
@@ -453,7 +411,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" udp/vt %u %d / %d"
+literal|"udp/vt %u %d / %d"
 argument_list|,
 call|(
 name|u_int32_t
@@ -528,7 +486,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" udp/vat %u c%d %u%s"
+literal|"udp/vat %u c%d %u%s"
 argument_list|,
 call|(
 name|u_int32_t
@@ -815,7 +773,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" udp/%s %d c%d %s%s %d %u"
+literal|"udp/%s %d c%d %s%s %d %u"
 argument_list|,
 name|ptype
 argument_list|,
@@ -1653,11 +1611,6 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|tlen
-decl_stmt|;
 union|union
 name|phu
 block|{
@@ -1697,34 +1650,6 @@ name|u_int16_t
 modifier|*
 name|sp
 decl_stmt|;
-name|u_int32_t
-name|sum
-decl_stmt|;
-name|tlen
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-operator|-
-operator|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|up
-operator|-
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|ip
-operator|)
-expr_stmt|;
 comment|/* pseudo-header.. */
 name|phu
 operator|.
@@ -1734,7 +1659,7 @@ name|len
 operator|=
 name|htons
 argument_list|(
-name|tlen
+name|len
 argument_list|)
 expr_stmt|;
 name|phu
@@ -1807,8 +1732,17 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|sum
-operator|=
+return|return
+name|in_cksum
+argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|)
+name|up
+argument_list|,
+name|len
+argument_list|,
 name|sp
 index|[
 literal|0
@@ -1838,97 +1772,7 @@ name|sp
 index|[
 literal|5
 index|]
-expr_stmt|;
-name|sp
-operator|=
-operator|(
-specifier|const
-name|u_int16_t
-operator|*
-operator|)
-name|up
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-operator|(
-name|tlen
-operator|&
-operator|~
-literal|1
-operator|)
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
-name|sum
-operator|+=
-operator|*
-name|sp
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|tlen
-operator|&
-literal|1
-condition|)
-block|{
-name|sum
-operator|+=
-name|htons
-argument_list|(
-operator|(
-operator|*
-operator|(
-specifier|const
-name|u_int8_t
-operator|*
-operator|)
-name|sp
-operator|)
-operator|<<
-literal|8
 argument_list|)
-expr_stmt|;
-block|}
-while|while
-condition|(
-name|sum
-operator|>
-literal|0xffff
-condition|)
-name|sum
-operator|=
-operator|(
-name|sum
-operator|&
-literal|0xffff
-operator|)
-operator|+
-operator|(
-name|sum
-operator|>>
-literal|16
-operator|)
-expr_stmt|;
-name|sum
-operator|=
-operator|~
-name|sum
-operator|&
-literal|0xffff
-expr_stmt|;
-return|return
-operator|(
-name|sum
-operator|)
 return|;
 block|}
 end_function
@@ -2365,7 +2209,7 @@ value|7500
 end_define
 
 begin_comment
-comment|/*??? - nonstandard*/
+comment|/*XXX - nonstandard*/
 end_comment
 
 begin_define
@@ -2376,7 +2220,7 @@ value|8500
 end_define
 
 begin_comment
-comment|/*??? - nonstandard*/
+comment|/*XXX - nonstandard*/
 end_comment
 
 begin_define
@@ -2452,6 +2296,38 @@ define|#
 directive|define
 name|RADIUS_NEW_ACCOUNTING_PORT
 value|1813
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSRP_PORT
+value|1985
+end_define
+
+begin_comment
+comment|/*XXX*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LWRES_PORT
+value|921
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZEPHYR_SRV_PORT
+value|2103
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZEPHYR_CLT_PORT
+value|2104
 end_define
 
 begin_ifdef
@@ -2809,7 +2685,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%s> %s.%s:"
+literal|"%s.%s> %s.%s: "
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -2864,7 +2740,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%s> %s.%s:"
+literal|"%s.%s> %s.%s: "
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -2989,7 +2865,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s.%s> %s.%s:"
+literal|"%s.%s> %s.%s: "
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -3409,12 +3285,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-block|(void)printf("%s.%s> %s.%s:", 		ipaddr_string(&ip->ip_src), udpport_string(sport), 		ipaddr_string(&ip->ip_dst), udpport_string(dport));
-else|#
-directive|else
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3560,8 +3430,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|IP_V
@@ -3596,7 +3464,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [no cksum]"
+literal|"[no cksum] "
 argument_list|)
 expr_stmt|;
 block|}
@@ -3623,6 +3491,12 @@ argument_list|,
 name|up
 argument_list|,
 name|length
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3636,7 +3510,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [bad udp cksum %x!]"
+literal|"[bad udp cksum %x!] "
 argument_list|,
 name|sum
 argument_list|)
@@ -3647,7 +3521,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [udp sum ok]"
+literal|"[udp sum ok] "
 argument_list|)
 expr_stmt|;
 block|}
@@ -3717,7 +3591,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [bad udp cksum %x!]"
+literal|"[bad udp cksum %x!] "
 argument_list|,
 name|sum
 argument_list|)
@@ -3728,7 +3602,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [udp sum ok]"
+literal|"[udp sum ok] "
 argument_list|)
 expr_stmt|;
 block|}
@@ -4045,6 +3919,9 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPDUMP_DO_SMB
 elseif|else
 if|if
 condition|(
@@ -4053,7 +3930,6 @@ argument_list|(
 name|NETBIOS_NS_PORT
 argument_list|)
 condition|)
-block|{
 name|nbt_udp137_print
 argument_list|(
 operator|(
@@ -4070,7 +3946,6 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4079,7 +3954,6 @@ argument_list|(
 name|NETBIOS_DGRAM_PORT
 argument_list|)
 condition|)
-block|{
 name|nbt_udp138_print
 argument_list|(
 operator|(
@@ -4096,7 +3970,8 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -4120,6 +3995,35 @@ argument_list|,
 name|length
 argument_list|,
 name|up
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ISPORT
+argument_list|(
+name|ZEPHYR_SRV_PORT
+argument_list|)
+operator|||
+name|ISPORT
+argument_list|(
+name|ZEPHYR_CLT_PORT
+argument_list|)
+condition|)
+name|zephyr_print
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 comment|/*  		 * Since there are 10 possible ports to check, I think  		 * a<> test would be more efficient  		 */
@@ -4324,13 +4228,60 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dport
+operator|==
+name|HSRP_PORT
+condition|)
+name|hsrp_print
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ISPORT
+argument_list|(
+name|LWRES_PORT
+argument_list|)
+condition|)
+name|lwres_print
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 else|else
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" udp %u"
+literal|"udp %u"
 argument_list|,
 call|(
 name|u_int32_t
@@ -4356,7 +4307,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" udp %u"
+literal|"udp %u"
 argument_list|,
 call|(
 name|u_int32_t

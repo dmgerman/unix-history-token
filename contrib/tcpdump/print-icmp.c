@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp.c,v 1.57 2000/10/10 05:03:32 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp.c,v 1.62 2001/07/24 16:56:11 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1200,7 +1200,7 @@ block|,
 block|{
 name|ICMP_REDIRECT_TOSHOST
 block|,
-literal|"redirect-tos %s to net %s"
+literal|"redirect-tos %s to host %s"
 block|}
 block|,
 block|{
@@ -1269,7 +1269,6 @@ begin_function
 name|void
 name|icmp_print
 parameter_list|(
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -1278,33 +1277,28 @@ parameter_list|,
 name|u_int
 name|plen
 parameter_list|,
-specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|bp2
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 specifier|const
 name|struct
 name|icmp
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 specifier|const
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -1313,21 +1307,18 @@ decl_stmt|,
 modifier|*
 name|fmt
 decl_stmt|;
-specifier|register
 specifier|const
 name|struct
 name|ip
 modifier|*
 name|oip
 decl_stmt|;
-specifier|register
 specifier|const
 name|struct
 name|udphdr
 modifier|*
 name|ouh
 decl_stmt|;
-specifier|register
 name|u_int
 name|hlen
 decl_stmt|,
@@ -1365,12 +1356,6 @@ name|str
 operator|=
 name|buf
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|(void)printf("%s> %s: ", 		ipaddr_string(&ip->ip_src), 		ipaddr_string(&ip->ip_dst));
-endif|#
-directive|endif
 name|TCHECK
 argument_list|(
 name|dp

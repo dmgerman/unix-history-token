@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-fddi.c,v 1.50 2000/12/23 20:48:13 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-fddi.c,v 1.53 2001/11/14 16:46:34 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,11 @@ operator|||
 name|defined
 argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux__
 argument_list|)
 end_if
 
@@ -1006,6 +1011,7 @@ argument_list|(
 name|fdst
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1021,6 +1027,7 @@ argument_list|(
 name|fsrc
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1069,6 +1076,7 @@ modifier|*
 name|fdst
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|srcname
@@ -1227,6 +1235,7 @@ modifier|*
 name|fddip
 init|=
 operator|(
+specifier|const
 expr|struct
 name|fddi_header
 operator|*
@@ -1240,6 +1249,9 @@ decl_stmt|;
 name|u_short
 name|extracted_ethertype
 decl_stmt|;
+operator|++
+name|infodelay
+expr_stmt|;
 name|ts_print
 argument_list|(
 operator|&
@@ -1535,6 +1547,18 @@ label|:
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+operator|--
+name|infodelay
+expr_stmt|;
+if|if
+condition|(
+name|infoprint
+condition|)
+name|info
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

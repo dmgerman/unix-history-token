@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-nfs.c,v 1.87 2000/10/07 05:53:12 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-nfs.c,v 1.89 2001/07/08 08:01:43 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -6210,7 +6210,7 @@ if|if
 condition|(
 name|dp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|er
 condition|)
@@ -7695,6 +7695,10 @@ argument_list|(
 literal|" access"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|dp
 operator|=
 name|parserep
@@ -7703,7 +7707,9 @@ name|rp
 argument_list|,
 name|length
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+break|break;
 if|if
 condition|(
 operator|!
