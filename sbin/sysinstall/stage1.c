@@ -1898,6 +1898,9 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|clear
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
