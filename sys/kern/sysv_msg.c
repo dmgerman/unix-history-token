@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.3 1994/10/02 17:35:26 phk Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.4 1995/05/30 08:06:01 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -122,6 +122,53 @@ end_decl_stmt
 
 begin_comment
 comment|/* list of free msg headers */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msgpool
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MSGMAX byte long msg buffer pool */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|msgmap
+modifier|*
+name|msgmaps
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MSGSEG msgmap structures */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|msg
+modifier|*
+name|msghdrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MSGTQL msg headers */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|msqid_ds
+modifier|*
+name|msqids
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MSGMNI msqid_ds struct's */
 end_comment
 
 begin_function

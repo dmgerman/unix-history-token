@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: msg.h,v 1.2 1994/09/17 13:24:27 davidg Exp $ */
+comment|/* $Id: msg.h,v 1.3 1995/03/28 07:57:34 bde Exp $ */
 end_comment
 
 begin_comment
@@ -390,6 +390,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|msgpool
@@ -401,6 +402,7 @@ comment|/* MSGMAX byte long msg buffer pool */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|msgmap
 modifier|*
@@ -413,6 +415,7 @@ comment|/* MSGSEG msgmap structures */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|msg
 modifier|*
@@ -425,6 +428,7 @@ comment|/* MSGTQL msg headers */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|msqid_ds
 modifier|*

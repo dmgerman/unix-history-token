@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.3 1995/03/28 07:57:35 bde Exp $ */
+comment|/* $Id: sem.h,v 1.4 1995/07/08 16:36:28 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -609,11 +609,8 @@ name|SEMUSZ
 value|(sizeof(struct sem_undo)+sizeof(struct undo)*SEMUME)
 end_define
 
-begin_comment
-comment|/*  * Structures allocated in machdep.c  */
-end_comment
-
 begin_decl_stmt
+specifier|extern
 name|struct
 name|semid_ds
 modifier|*
@@ -626,6 +623,7 @@ comment|/* semaphore id pool */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|sem
 modifier|*
@@ -638,6 +636,7 @@ comment|/* semaphore pool */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|map
 modifier|*
@@ -650,6 +649,7 @@ comment|/* semaphore allocation map */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|sem_undo
 modifier|*
@@ -662,6 +662,7 @@ comment|/* list of active undo structures */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 modifier|*
 name|semu

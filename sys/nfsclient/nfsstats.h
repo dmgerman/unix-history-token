@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.1 (Berkeley) 6/10/93  * $Id: nfs.h,v 1.9 1995/02/14 06:22:18 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.1 (Berkeley) 6/10/93  * $Id: nfs.h,v 1.10 1995/06/27 11:06:33 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1080,15 +1080,14 @@ begin_comment
 comment|/*  * Queue head for nfsreq's  */
 end_comment
 
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|nfsreq
-argument_list|)
-end_macro
+begin_extern
+extern|extern TAILQ_HEAD(nfs_reqq
+operator|,
+extern|nfsreq
+end_extern
 
 begin_expr_stmt
+unit|)
 name|nfs_reqq
 expr_stmt|;
 end_expr_stmt
@@ -1582,20 +1581,20 @@ name|SLP_ALLFLAGS
 value|0xff
 end_define
 
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|nfssvc_sock
-argument_list|)
-end_macro
+begin_extern
+extern|extern TAILQ_HEAD(nfssvc_sockhead
+operator|,
+extern|nfssvc_sock
+end_extern
 
 begin_expr_stmt
+unit|)
 name|nfssvc_sockhead
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nfssvc_sockhead_flag
 decl_stmt|;
@@ -1898,20 +1897,20 @@ name|ND_KERBAUTH
 value|(ND_KERBNICK | ND_KERBFULL)
 end_define
 
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|nfsd
-argument_list|)
-end_macro
+begin_extern
+extern|extern TAILQ_HEAD(nfsd_head
+operator|,
+extern|nfsd
+end_extern
 
 begin_expr_stmt
+unit|)
 name|nfsd_head
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nfsd_head_flag
 decl_stmt|;

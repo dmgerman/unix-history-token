@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.4 1994/10/06 21:06:32 davidg Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.5 1995/05/30 08:06:02 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -87,6 +87,65 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|semid_ds
+modifier|*
+name|sema
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* semaphore id pool */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|sem
+modifier|*
+name|sem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* semaphore pool */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|map
+modifier|*
+name|semmap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* semaphore allocation map */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|sem_undo
+modifier|*
+name|semu_list
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of active undo structures */
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|semu
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* undo structure pool */
+end_comment
 
 begin_decl_stmt
 specifier|static

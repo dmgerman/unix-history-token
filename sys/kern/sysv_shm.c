@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.4 1995/02/20 22:23:13 davidg Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.5 1995/05/30 08:06:04 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -191,6 +191,14 @@ decl_stmt|,
 name|shm_nused
 decl_stmt|,
 name|shm_committed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|shmid_ds
+modifier|*
+name|shmsegs
 decl_stmt|;
 end_decl_stmt
 
