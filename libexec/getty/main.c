@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.1.1.2 1996/04/13 15:33:11 joerg Exp $"
+literal|"$Id: main.c,v 1.9 1996/05/05 19:01:10 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1487,15 +1487,21 @@ name|timeout
 argument_list|)
 condition|)
 block|{
+name|cfsetispeed
+argument_list|(
+operator|&
 name|tmode
-operator|.
-name|c_ispeed
-operator|=
+argument_list|,
+name|B0
+argument_list|)
+expr_stmt|;
+name|cfsetospeed
+argument_list|(
+operator|&
 name|tmode
-operator|.
-name|c_ospeed
-operator|=
-literal|0
+argument_list|,
+name|B0
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
