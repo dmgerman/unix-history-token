@@ -88,6 +88,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_CMD_MWRICEN
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIM_CMD_BUSMASTEREN
 value|0x0004
 end_define
