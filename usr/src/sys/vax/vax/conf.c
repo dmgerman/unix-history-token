@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	3.4	%G%	*/
+comment|/*	conf.c	3.5	%G%	*/
 end_comment
 
 begin_include
@@ -152,16 +152,16 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|urpopen
+name|upstrategy
 argument_list|()
 decl_stmt|,
-name|urpstrategy
+name|upread
 argument_list|()
 decl_stmt|,
-name|urpread
+name|upwrite
 argument_list|()
 decl_stmt|,
-name|urpwrite
+name|upreset
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -169,7 +169,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|buf
-name|urptab
+name|uptab
 decl_stmt|;
 end_decl_stmt
 
@@ -209,23 +209,14 @@ ifdef|#
 directive|ifdef
 name|ERNIE
 comment|/* 2 */
-name|nodev
-block|,
-name|nodev
-block|,
-name|nodev
-block|,
-literal|0
-block|,
-comment|/* 3 */
-name|urpopen
+name|nulldev
 block|,
 name|nulldev
 block|,
-name|urpstrategy
+name|upstrategy
 block|,
 operator|&
-name|urptab
+name|uptab
 block|,
 endif|#
 directive|endif
@@ -278,6 +269,9 @@ argument_list|()
 decl_stmt|,
 name|dhstop
 argument_list|()
+decl_stmt|,
+name|dhreset
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -328,6 +322,9 @@ name|dzioctl
 argument_list|()
 decl_stmt|,
 name|dzstop
+argument_list|()
+decl_stmt|,
+name|dzreset
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -385,6 +382,9 @@ argument_list|()
 decl_stmt|,
 name|vpioctl
 argument_list|()
+decl_stmt|,
+name|vpreset
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -400,6 +400,9 @@ name|vawrite
 argument_list|()
 decl_stmt|,
 name|vaioctl
+argument_list|()
+decl_stmt|,
+name|vareset
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -450,7 +453,7 @@ name|cdevsw
 index|[]
 init|=
 block|{
-comment|/* 0 */
+comment|/*0*/
 name|cnopen
 block|,
 name|cnclose
@@ -463,9 +466,11 @@ name|cnioctl
 block|,
 name|nulldev
 block|,
+name|nulldev
+block|,
 literal|0
 block|,
-comment|/* 1 */
+comment|/*1*/
 name|dzopen
 block|,
 name|dzclose
@@ -478,9 +483,11 @@ name|dzioctl
 block|,
 name|dzstop
 block|,
+name|dzreset
+block|,
 name|dz_tty
 block|,
-comment|/* 2 */
+comment|/*2*/
 name|syopen
 block|,
 name|nulldev
@@ -493,9 +500,11 @@ name|syioctl
 block|,
 name|nulldev
 block|,
+name|nulldev
+block|,
 literal|0
 block|,
-comment|/* 3 */
+comment|/*3*/
 name|nulldev
 block|,
 name|nulldev
@@ -508,9 +517,11 @@ name|nodev
 block|,
 name|nulldev
 block|,
+name|nulldev
+block|,
 literal|0
 block|,
-comment|/* 4 */
+comment|/*4*/
 name|nulldev
 block|,
 name|nulldev
@@ -523,9 +534,11 @@ name|nodev
 block|,
 name|nodev
 block|,
+name|nulldev
+block|,
 literal|0
 block|,
-comment|/* 5 */
+comment|/*5*/
 name|htopen
 block|,
 name|htclose
@@ -538,12 +551,14 @@ name|nodev
 block|,
 name|nodev
 block|,
+name|nulldev
+block|,
 literal|0
 block|,
 ifdef|#
 directive|ifdef
 name|ERNIE
-comment|/* 6 */
+comment|/*6*/
 name|vpopen
 block|,
 name|vpclose
@@ -556,11 +571,13 @@ name|vpioctl
 block|,
 name|nulldev
 block|,
+name|vpreset
+block|,
 literal|0
 block|,
 else|#
 directive|else
-comment|/* 6 */
+comment|/*6*/
 name|nodev
 block|,
 name|nodev
@@ -572,12 +589,14 @@ block|,
 name|nodev
 block|,
 name|nodev
+block|,
+name|nulldev
 block|,
 literal|0
 block|,
 endif|#
 directive|endif
-comment|/* 7 */
+comment|/*7*/
 name|nodev
 block|,
 name|nodev
@@ -589,10 +608,12 @@ block|,
 name|nodev
 block|,
 name|nodev
+block|,
+name|nulldev
 block|,
 literal|0
 block|,
-comment|/* 8 */
+comment|/*8*/
 name|flopen
 block|,
 name|flclose
@@ -605,9 +626,11 @@ name|nodev
 block|,
 name|nodev
 block|,
+name|nulldev
+block|,
 literal|0
 block|,
-comment|/* 9 */
+comment|/*9*/
 name|mxopen
 block|,
 name|mxclose
@@ -620,12 +643,14 @@ name|mxioctl
 block|,
 name|nulldev
 block|,
+name|nulldev
+block|,
 literal|0
 block|,
 ifdef|#
 directive|ifdef
 name|ERNIE
-comment|/* 10 */
+comment|/*10*/
 name|vaopen
 block|,
 name|vaclose
@@ -638,24 +663,28 @@ name|vaioctl
 block|,
 name|nulldev
 block|,
+name|vareset
+block|,
 literal|0
 block|,
-comment|/* 11 */
-name|urpopen
+comment|/*11*/
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
 block|,
 name|nulldev
 block|,
-name|urpread
-block|,
-name|urpwrite
-block|,
-name|nodev
-block|,
-name|nodev
-block|,
 literal|0
 block|,
-comment|/* 12 */
+comment|/*12*/
 name|dhopen
 block|,
 name|dhclose
@@ -668,12 +697,31 @@ name|dhioctl
 block|,
 name|dhstop
 block|,
+name|dhreset
+block|,
 name|dh11
+block|,
+comment|/*13*/
+name|nulldev
+block|,
+name|nulldev
+block|,
+name|upread
+block|,
+name|upwrite
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|upreset
+block|,
+literal|0
 block|,
 endif|#
 directive|endif
 literal|0
-block|, }
+block|,	 }
 decl_stmt|;
 end_decl_stmt
 
