@@ -269,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|SVR4_NSIG
-value|128
+value|32
 end_define
 
 begin_define
