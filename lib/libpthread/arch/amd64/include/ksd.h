@@ -95,7 +95,7 @@ name|KSD_GET64
 parameter_list|(
 name|name
 parameter_list|)
-value|({					\ 	__ksd_type(name) __result;				\ 								\ 	u_long __i;						\ 	__asm __volatile("movq %%gs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_long *)(__ksd_offset(name))));		\ 	__result = *(__ksd_type(name) *)&__i;			\ 								\ 	__result;						\ })
+value|({					\ 	__ksd_type(name) __result;				\ 								\ 	u_long __i;						\ 	__asm __volatile("movq %%fs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_long *)(__ksd_offset(name))));		\ 	__result = *(__ksd_type(name) *)&__i;			\ 								\ 	__result;						\ })
 end_define
 
 begin_comment
@@ -111,7 +111,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|({					\ 	__ksd_type(name) __val = (val);				\ 								\ 	u_long __i;						\ 	__i = *(u_long *)&__val;					\ 	__asm __volatile("movq %1,%%gs:%0"			\ 	    : "=m" (*(u_long *)(__ksd_offset(name)))		\ 	    : "r" (__i));					\ })
+value|({					\ 	__ksd_type(name) __val = (val);				\ 								\ 	u_long __i;						\ 	__i = *(u_long *)&__val;					\ 	__asm __volatile("movq %1,%%fs:%0"			\ 	    : "=m" (*(u_long *)(__ksd_offset(name)))		\ 	    : "r" (__i));					\ })
 end_define
 
 begin_function
@@ -131,7 +131,7 @@ name|result
 decl_stmt|;
 asm|__asm __volatile (
 literal|"	xorq	%0, %0;"
-literal|"	xchgq	%%gs:%1, %0;"
+literal|"	xchgq	%%fs:%1, %0;"
 literal|"# __ksd_readandclear64"
 operator|:
 literal|"=&r"
@@ -291,7 +291,7 @@ return|return
 operator|(
 name|sysarch
 argument_list|(
-name|AMD64_SET_GSBASE
+name|AMD64_SET_FSBASE
 argument_list|,
 operator|&
 name|ksd
