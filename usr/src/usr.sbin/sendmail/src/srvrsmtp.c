@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.42 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.43 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.42 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.43 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,28 +468,31 @@ name|FALSE
 expr_stmt|;
 if|if
 condition|(
+name|fileno
+argument_list|(
 name|OutChannel
+argument_list|)
 operator|!=
+name|fileno
+argument_list|(
 name|stdout
+argument_list|)
 condition|)
 block|{
 comment|/* arrange for debugging output to go to remote host */
 operator|(
 name|void
 operator|)
-name|close
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|dup
+name|dup2
 argument_list|(
 name|fileno
 argument_list|(
 name|OutChannel
+argument_list|)
+argument_list|,
+name|fileno
+argument_list|(
+name|stdout
 argument_list|)
 argument_list|)
 expr_stmt|;
