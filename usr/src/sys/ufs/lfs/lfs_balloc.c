@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -368,12 +368,6 @@ operator|=
 operator|*
 name|nump
 expr_stmt|;
-name|fs
-operator|=
-name|ip
-operator|->
-name|i_lfs
-expr_stmt|;
 if|if
 condition|(
 name|num
@@ -409,10 +403,24 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Fetch through the indirect blocks. */
-name|bp
+comment|/* Get disk address out of indirect block array */
+name|daddr
 operator|=
-name|NULL
+name|ip
+operator|->
+name|i_ib
+index|[
+name|xap
+operator|->
+name|in_off
+index|]
+expr_stmt|;
+comment|/* Fetch through the indirect blocks. */
+name|fs
+operator|=
+name|ip
+operator|->
+name|i_lfs
 expr_stmt|;
 name|devvp
 operator|=
@@ -427,59 +435,29 @@ name|um_devvp
 expr_stmt|;
 for|for
 control|(
-name|bap
+name|bp
 operator|=
-name|ip
-operator|->
-name|i_ib
-init|;
-name|num
-operator|--
-condition|;
-name|off
-operator|=
-name|xap
-operator|->
-name|in_off
+name|NULL
 operator|,
+operator|++
+name|xap
+init|;
+name|daddr
+operator|&&
+operator|--
+name|num
+condition|;
 operator|++
 name|xap
 control|)
 block|{
-name|off
-operator|=
-name|xap
-operator|->
-name|in_off
-expr_stmt|;
+comment|/* If looking for a meta-block, break out when we find it. */
 name|metalbn
 operator|=
 name|xap
 operator|->
 name|in_lbn
 expr_stmt|;
-comment|/* 		 * In LFS, it's possible to have a block appended to a file 		 * for which the meta-blocks have not yet been allocated. 		 * This is a win if the file never gets written or if the 		 * file's growing. 		 */
-if|if
-condition|(
-operator|(
-name|daddr
-operator|=
-name|bap
-index|[
-name|off
-index|]
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|daddr
-operator|=
-name|UNASSIGNED
-expr_stmt|;
-break|break;
-block|}
-comment|/* If searching for a meta-data block, quit when found. */
 if|if
 condition|(
 name|metalbn
@@ -617,13 +595,18 @@ operator|)
 return|;
 block|}
 block|}
-name|bap
+name|daddr
 operator|=
 name|bp
 operator|->
 name|b_un
 operator|.
 name|b_daddr
+index|[
+name|xap
+operator|->
+name|in_off
+index|]
 expr_stmt|;
 block|}
 if|if
@@ -638,6 +621,12 @@ expr_stmt|;
 operator|*
 name|bnp
 operator|=
+name|daddr
+operator|==
+literal|0
+condition|?
+name|UNASSIGNED
+else|:
 name|daddr
 expr_stmt|;
 return|return
