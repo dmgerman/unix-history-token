@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.19 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.20 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.19 (Berkeley) %G%"
+literal|"@(#)queue.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -650,6 +650,18 @@ operator|->
 name|q_next
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
 name|fprintf
 argument_list|(
 name|tfp
@@ -2667,6 +2679,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"+++++ %s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 switch|switch
 condition|(
 name|buf
