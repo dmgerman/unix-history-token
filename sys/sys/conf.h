@@ -1781,6 +1781,12 @@ comment|/* D_TTY related functions */
 end_comment
 
 begin_decl_stmt
+name|d_ioctl_t
+name|ttyioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|d_kqfilter_t
 name|ttykqfilter
 decl_stmt|;
