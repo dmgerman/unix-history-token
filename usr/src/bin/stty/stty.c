@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.4 (Berkeley) %G%"
+literal|"@(#)stty.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1609,19 +1609,13 @@ name|mode
 operator|.
 name|sg_kill
 operator|=
-name|CTRL
-argument_list|(
-name|u
-argument_list|)
+name|CKILL
 expr_stmt|;
 name|tc
 operator|.
 name|t_intrc
 operator|=
-name|CTRL
-argument_list|(
-name|c
-argument_list|)
+name|CINTR
 expr_stmt|;
 name|ldisc
 operator|=
