@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.30 1998/12/24 18:20:58 steve Exp $"
+literal|"$Id: w.c,v 1.31 1998/12/24 23:27:33 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,7 +358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sort bu idle time */
+comment|/* sort by idle time */
 end_comment
 
 begin_decl_stmt
@@ -2189,13 +2189,6 @@ operator|->
 name|idle
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|longidle
-condition|)
-name|argwidth
-operator|--
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2204,6 +2197,8 @@ argument_list|(
 literal|"%.*s\n"
 argument_list|,
 name|argwidth
+operator|-
+name|longidle
 argument_list|,
 name|ep
 operator|->
