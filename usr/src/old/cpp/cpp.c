@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.18 %G%"
+literal|"@(#)cpp.c	1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,7 +1050,7 @@ begin_define
 define|#
 directive|define
 name|NPREDEF
-value|20
+value|30
 end_define
 
 begin_decl_stmt
