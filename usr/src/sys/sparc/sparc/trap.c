@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	8.1 (Berkeley) %G%  *  * from: $Header: trap.c,v 1.34 93/05/28 04:34:50 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.6 (Berkeley) %G%  *  * from: $Header: trap.c,v 1.34 93/05/28 04:34:50 torek Exp $  */
 end_comment
 
 begin_include
@@ -2776,7 +2776,7 @@ name|nsys
 operator|=
 name|nsysent
 expr_stmt|;
-comment|/* 	 * The first six system call arguments are in the six %o registers. 	 * Any arguments beyond that are in the `argument extension' area 	 * of the user's stack frame (see<machine/frame.h>). 	 * 	 * Check for ``special'' codes that alter this, namely indir and 	 * __indir.  The latter takes a quad syscall number, so that other 	 * arguments are at their natural alignments.  Adjust the number 	 * of ``easy'' arguments as appropriate; we will copy the hard 	 * ones later as needed. 	 */
+comment|/* 	 * The first six system call arguments are in the six %o registers. 	 * Any arguments beyond that are in the `argument extension' area 	 * of the user's stack frame (see<machine/frame.h>). 	 * 	 * Check for ``special'' codes that alter this, namely syscall and 	 * __syscall.  The latter takes a quad syscall number, so that other 	 * arguments are at their natural alignments.  Adjust the number 	 * of ``easy'' arguments as appropriate; we will copy the hard 	 * ones later as needed. 	 */
 name|ap
 operator|=
 operator|&
@@ -2797,7 +2797,7 @@ name|code
 condition|)
 block|{
 case|case
-name|SYS_indir
+name|SYS_syscall
 case|:
 name|code
 operator|=
@@ -2810,7 +2810,7 @@ operator|--
 expr_stmt|;
 break|break;
 case|case
-name|SYS___indir
+name|SYS___syscall
 case|:
 ifdef|#
 directive|ifdef
@@ -2839,7 +2839,7 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* Callp currently points to indir, which returns ENOSYS. */
+comment|/* Callp currently points to syscall, which returns ENOSYS. */
 if|if
 condition|(
 name|code
