@@ -9505,6 +9505,13 @@ block|{
 name|device_t
 name|child
 decl_stmt|;
+name|DEVICE_IDENTIFY
+argument_list|(
+name|driver
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|child
