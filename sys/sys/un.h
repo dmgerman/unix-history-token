@@ -178,7 +178,13 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
-name|rights
+name|mbuf
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+name|controlp
 operator|)
 argument_list|)
 decl_stmt|;

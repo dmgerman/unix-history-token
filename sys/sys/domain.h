@@ -64,6 +64,11 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
