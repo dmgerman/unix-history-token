@@ -150,22 +150,11 @@ directive|include
 file|"opt_bdg.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BRIDGE
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<net/bridge.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -9793,9 +9782,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BRIDGE
 comment|/* 	 * Don't read in the entire packet if we know we're going to drop it 	 * and no bpf is active. 	 */
 if|if
 condition|(
@@ -9906,9 +9892,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* 	 * Get packet, including link layer address, from interface. 	 */
+comment|/* 		 * Get packet, including link layer address, from interface. 		 */
 name|ed_ring_copy
 argument_list|(
 name|sc
