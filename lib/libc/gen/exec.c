@@ -789,6 +789,12 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|eacces
+operator|=
+name|etxtbsy
+operator|=
+literal|0
+expr_stmt|;
 comment|/* If it's an absolute or relative path name, it's easy. */
 if|if
 condition|(
@@ -847,12 +853,6 @@ name|strdup
 argument_list|(
 name|path
 argument_list|)
-expr_stmt|;
-name|eacces
-operator|=
-name|etxtbsy
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
