@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.8.2.1 1996/12/21 18:27:28 bde Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.8.2.2 1997/02/13 12:32:37 kato Exp $  */
 end_comment
 
 begin_comment
@@ -284,19 +284,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -708,17 +700,9 @@ name|eva
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -736,17 +720,9 @@ name|frame
 operator|.
 name|tf_err
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
 comment|/* XXX: 	 * CYRIX 486 CPU FIX. 	 * If you use cyrix cpu, you often encouter strange signal 11's? 	 * I think this is due to cyrix cpu bugs. 	 * In any way, the following trick is effective for the problem. 	 * As soon as possible, we must get the fault page address. 	 */
 name|va
 operator|=
@@ -775,7 +751,7 @@ condition|)
 asm|asm("sti");
 endif|#
 directive|endif
-comment|/* CYRIX_486DLC || CYRIX_5X86 */
+comment|/* CPU_BUGGY_CYRIX */
 if|if
 condition|(
 name|ISPL
@@ -948,17 +924,9 @@ case|case
 name|T_PAGEFLT
 case|:
 comment|/* page fault */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
 name|i
 operator|=
 name|trap_pfault
@@ -1214,17 +1182,9 @@ case|case
 name|T_PAGEFLT
 case|:
 comment|/* page fault */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
 operator|(
 name|void
 operator|)
@@ -1650,17 +1610,9 @@ end_comment
 begin_function
 specifier|static
 name|int
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
 name|trap_pfault
 parameter_list|(
 name|frame
@@ -1751,17 +1703,9 @@ name|ftype
 operator|=
 name|VM_PROT_READ
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
 name|eva
 operator|=
 name|faultva
@@ -2055,17 +1999,9 @@ end_endif
 
 begin_function
 name|int
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
 name|trap_pfault
 parameter_list|(
 name|frame
@@ -2137,17 +2073,9 @@ name|p
 init|=
 name|curproc
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CYRIX_5X86
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CPU_BUGGY_CYRIX
 name|eva
 operator|=
 name|faultva
