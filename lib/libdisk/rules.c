@@ -870,9 +870,6 @@ name|chunk
 modifier|*
 name|c1
 decl_stmt|;
-name|u_long
-name|l
-decl_stmt|;
 if|if
 condition|(
 name|c
