@@ -12203,6 +12203,8 @@ operator|)
 operator|(
 name|pa
 operator|+
+name|offset
+operator|+
 name|KERNBASE
 operator|)
 return|;
