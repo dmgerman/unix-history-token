@@ -122,6 +122,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|change_ruid
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|uid_t
+name|ruid
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
