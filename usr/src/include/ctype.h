@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ctype.h	4.1	83/05/03	*/
+comment|/*	ctype.h	4.2	85/09/04	*/
 end_comment
 
 begin_define
@@ -50,6 +50,13 @@ define|#
 directive|define
 name|_X
 value|0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|_B
+value|0200
 end_define
 
 begin_decl_stmt
@@ -144,6 +151,16 @@ begin_define
 define|#
 directive|define
 name|isprint
+parameter_list|(
+name|c
+parameter_list|)
+value|((_ctype_+1)[c]&(_P|_U|_L|_N|_B))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isgraph
 parameter_list|(
 name|c
 parameter_list|)
