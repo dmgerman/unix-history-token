@@ -1574,6 +1574,12 @@ name|slot
 operator|++
 control|)
 block|{
+name|probe
+operator|.
+name|func
+operator|=
+literal|0
+expr_stmt|;
 name|hdrtype
 operator|=
 name|pci_cfgread
