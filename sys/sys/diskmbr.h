@@ -1798,9 +1798,6 @@ operator|*
 name|what
 operator|,
 name|int
-name|pri
-operator|,
-name|int
 name|blkdone
 operator|,
 expr|struct

@@ -1216,7 +1216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Disk error is the preface to plaintive error messages  * about failing disk transfers.  It prints messages of the form  hp0g: hard error reading fsbn 12345 of 12344-12347 (hp0 bn %d cn %d tn %d sn %d)   * if the offset of the error in the transfer and a disk label  * are both available.  blkdone should be -1 if the position of the error  * is unknown; the disklabel pointer may be null from drivers that have not  * been converted to use them.  The message is printed with printf  * if pri is LOG_PRINTF, otherwise it uses log at the specified priority.  * The message should be completed (with at least a newline) with printf  * or addlog, respectively.  There is no trailing space.  */
+comment|/*  * Disk error is the preface to plaintive error messages  * about failing disk transfers.  It prints messages of the form  hp0g: hard error reading fsbn 12345 of 12344-12347 (hp0 bn %d cn %d tn %d sn %d)   * if the offset of the error in the transfer and a disk label  * are both available.  blkdone should be -1 if the position of the error  * is unknown; the disklabel pointer may be null from drivers that have not  * been converted to use them.  The message is printed with printf.  * The message should be completed with at least a newline. There is no  * trailing space.  */
 end_comment
 
 begin_function
@@ -1226,8 +1226,6 @@ parameter_list|(
 name|bp
 parameter_list|,
 name|what
-parameter_list|,
-name|pri
 parameter_list|,
 name|blkdone
 parameter_list|,
@@ -1243,8 +1241,6 @@ modifier|*
 name|what
 decl_stmt|;
 name|int
-name|pri
-decl_stmt|,
 name|blkdone
 decl_stmt|;
 specifier|register
@@ -1284,22 +1280,6 @@ operator|->
 name|bio_dev
 argument_list|)
 decl_stmt|;
-specifier|register
-name|int
-argument_list|(
-argument|*pr
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-expr_stmt|;
 name|char
 name|partname
 index|[
@@ -1313,32 +1293,6 @@ decl_stmt|;
 name|daddr_t
 name|sn
 decl_stmt|;
-if|if
-condition|(
-name|pri
-operator|!=
-name|LOG_PRINTF
-condition|)
-block|{
-name|log
-argument_list|(
-name|pri
-argument_list|,
-literal|"%s"
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|pr
-operator|=
-name|addlog
-expr_stmt|;
-block|}
-else|else
-name|pr
-operator|=
-name|printf
-expr_stmt|;
 name|sname
 operator|=
 name|dsname
@@ -1356,10 +1310,7 @@ argument_list|,
 name|partname
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|"%s%s: %s %sing fsbn "
 argument_list|,
@@ -1394,10 +1345,7 @@ name|bio_bcount
 operator|<=
 name|DEV_BSIZE
 condition|)
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|"%ld"
 argument_list|,
@@ -1420,10 +1368,7 @@ name|sn
 operator|+=
 name|blkdone
 expr_stmt|;
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|"%ld of "
 argument_list|,
@@ -1434,10 +1379,7 @@ name|sn
 argument_list|)
 expr_stmt|;
 block|}
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|"%ld-%ld"
 argument_list|,
@@ -1514,10 +1456,7 @@ operator|.
 name|p_offset
 expr_stmt|;
 comment|/* 		 * XXX should add slice offset and not print the slice, 		 * but we don't know the slice pointer. 		 * XXX should print bp->b_pblkno so that this will work 		 * independent of slices, labels and bad sector remapping, 		 * but some drivers don't set bp->b_pblkno. 		 */
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|" (%s bn %ld; cn %ld"
 argument_list|,
@@ -1549,10 +1488,7 @@ name|lp
 operator|->
 name|d_secpercyl
 expr_stmt|;
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|" tn %ld sn %ld)"
 argument_list|,

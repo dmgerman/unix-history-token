@@ -1253,8 +1253,6 @@ name|b_io
 argument_list|,
 literal|"reading primary partition table: error"
 argument_list|,
-name|LOG_PRINTF
-argument_list|,
 literal|0
 argument_list|,
 operator|(
@@ -2797,8 +2795,6 @@ argument_list|(
 name|bp
 argument_list|,
 literal|"reading extended partition table: error"
-argument_list|,
-name|LOG_PRINTF
 argument_list|,
 literal|0
 argument_list|,

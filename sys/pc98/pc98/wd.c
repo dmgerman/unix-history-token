@@ -4398,7 +4398,7 @@ argument|return (
 literal|0
 argument|); }  static void wderror(struct bio *bp, struct softc *du, char *mesg) { 	if (bp == NULL) 		printf(
 literal|"wd%d: %s"
-argument|, du->dk_lunit, mesg); 	else 		diskerr(bp, mesg, LOG_PRINTF, du->dk_skip, 			dsgetlabel(bp->bio_dev, du->dk_slices)); 	printf(
+argument|, du->dk_lunit, mesg); 	else 		diskerr(bp, mesg, du->dk_skip, 			dsgetlabel(bp->bio_dev, du->dk_slices)); 	printf(
 literal|" (status %b error %b)\n"
 argument|, 	       du->dk_status, WDCS_BITS, du->dk_error, WDERR_BITS); }
 comment|/*  * Discard any interrupts that were latched by the interrupt system while  * we were doing polled i/o.  */

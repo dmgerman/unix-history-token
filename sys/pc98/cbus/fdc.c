@@ -12899,8 +12899,6 @@ name|bp
 argument_list|,
 literal|"hard error"
 argument_list|,
-name|LOG_PRINTF
-argument_list|,
 name|fdc
 operator|->
 name|fd
