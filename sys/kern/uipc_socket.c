@@ -440,12 +440,6 @@ operator|=
 operator|++
 name|so_gencnt
 expr_stmt|;
-name|so
-operator|->
-name|so_zone
-operator|=
-name|socket_zone
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -962,9 +956,7 @@ argument_list|)
 expr_stmt|;
 name|zfreei
 argument_list|(
-name|so
-operator|->
-name|so_zone
+name|socket_zone
 argument_list|,
 name|so
 argument_list|)

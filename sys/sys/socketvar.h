@@ -56,12 +56,6 @@ begin_struct
 struct|struct
 name|socket
 block|{
-name|struct
-name|vm_zone
-modifier|*
-name|so_zone
-decl_stmt|;
-comment|/* zone we were allocated from */
 name|short
 name|so_type
 decl_stmt|;
