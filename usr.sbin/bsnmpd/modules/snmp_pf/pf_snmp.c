@@ -5394,10 +5394,10 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pfi_table_age = %ju"
+literal|"Dump: pfi_table_age = %jd"
 argument_list|,
 operator|(
-name|uintmax_t
+name|intmax_t
 operator|)
 name|pfi_table_age
 argument_list|)
@@ -5415,10 +5415,10 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pfq_table_age = %ju"
+literal|"Dump: pfq_table_age = %jd"
 argument_list|,
 operator|(
-name|uintmax_t
+name|intmax_t
 operator|)
 name|pfq_table_age
 argument_list|)
@@ -5436,10 +5436,10 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pft_table_age = %ju"
+literal|"Dump: pft_table_age = %jd"
 argument_list|,
 operator|(
-name|uintmax_t
+name|intmax_t
 operator|)
 name|pft_table_age
 argument_list|)
