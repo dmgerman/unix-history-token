@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.10 (Berkeley) %G%"
+literal|"@(#)input.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1040,7 +1040,7 @@ operator|&&
 name|rt
 operator|->
 name|rt_metric
-operator|==
+operator|<=
 name|n
 operator|->
 name|rip_metric

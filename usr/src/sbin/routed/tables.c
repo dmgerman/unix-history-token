@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.8 (Berkeley) %G%"
+literal|"@(#)tables.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1144,13 +1144,17 @@ name|doioctl
 operator|||
 name|delete
 condition|)
-block|{
 name|oldroute
 operator|=
 name|rt
 operator|->
 name|rt_rt
 expr_stmt|;
+if|if
+condition|(
+name|doioctl
+condition|)
+block|{
 name|rt
 operator|->
 name|rt_router
