@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb.c,v 1.11 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usb.c,v 1.5 1999/01/07 23:31:37 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -220,19 +220,23 @@ begin_decl_stmt
 name|int
 name|usbdebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|uhcidebug
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ohcidebug
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 

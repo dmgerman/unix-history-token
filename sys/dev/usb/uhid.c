@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhid.c,v 1.14 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: uhid.c,v 1.5 1999/01/07 23:31:34 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ begin_decl_stmt
 name|int
 name|uhiddebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 

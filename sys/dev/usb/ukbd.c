@@ -4,7 +4,7 @@ comment|/*      $NetBSD: ukbd.c,v 1.22 1999/01/09 12:10:36 drochner Exp $       
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: ukbd.c,v 1.5 1999/01/07 23:31:34 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -283,7 +283,7 @@ begin_decl_stmt
 name|int
 name|ukbddebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ucom.c,v 1.6 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: ucom.c,v 1.6 1999/01/08 17:25:37 eivind Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -210,7 +210,7 @@ begin_decl_stmt
 name|int
 name|ucomdebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
