@@ -2079,6 +2079,15 @@ operator|!
 name|sb
 operator|->
 name|drq2
+operator|&&
+operator|!
+operator|(
+name|sb
+operator|->
+name|bd_flags
+operator|&
+name|BD_F_ESS
+operator|)
 condition|)
 name|sb
 operator|->
@@ -3911,7 +3920,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* normal DMA mode */
+comment|/* auto-init DMA mode */
 name|ess_write
 argument_list|(
 name|sb
@@ -3920,9 +3929,9 @@ literal|0xb8
 argument_list|,
 name|play
 condition|?
-literal|0x00
+literal|0x04
 else|:
-literal|0x0a
+literal|0x0e
 argument_list|)
 expr_stmt|;
 comment|/* mono/stereo */
@@ -4291,9 +4300,9 @@ name|c1
 operator|=
 name|play
 condition|?
-literal|0x00
+literal|0x04
 else|:
-literal|0x0a
+literal|0x0e
 expr_stmt|;
 name|ess_write
 argument_list|(
