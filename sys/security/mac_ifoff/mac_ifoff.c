@@ -558,15 +558,11 @@ modifier|*
 name|mbuflabel
 parameter_list|)
 block|{
-if|if
-condition|(
+name|M_ASSERTPKTHDR
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-condition|)
-block|{
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -591,7 +587,6 @@ literal|0
 argument_list|)
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
