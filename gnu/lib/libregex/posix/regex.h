@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.    Copyright (C) 1985,89,90,91,92,93,95,96,97,98 Free Software Foundation, Inc.     This file is part of the GNU C Library.  Its master source is NOT part of    the C library, however.  The master source lives in /gd/gnu/lib.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.    Copyright (C) 1985,1989-1993,1995-1998, 2000 Free Software Foundation, Inc.     This file is part of the GNU C Library.  Its master source is NOT part of    the C library, however.  The master source lives in /gd/gnu/lib.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -175,6 +175,11 @@ define|#
 directive|define
 name|RE_DEBUG
 value|(RE_NO_GNU_OPS<< 1)
+comment|/* If this bit is set, a syntactically invalid interval is treated as    a string of ordinary characters.  For example, the ERE 'a{1' is    treated as 'a\{1'.  */
+define|#
+directive|define
+name|RE_INVALID_INTERVAL_ORD
+value|(RE_DEBUG<< 1)
 comment|/* This global variable defines the particular regexp syntax to use (for    some interfaces).  When a regexp is compiled, the syntax used is    stored in the pattern buffer, so changing this does not affect    already-compiled regexps.  */
 specifier|extern
 name|reg_syntax_t
@@ -215,7 +220,7 @@ define|#
 directive|define
 name|RE_SYNTAX_POSIX_EGREP
 define|\
-value|(RE_SYNTAX_EGREP | RE_INTERVALS | RE_NO_BK_BRACES)
+value|(RE_SYNTAX_EGREP | RE_INTERVALS | RE_NO_BK_BRACES			\    | RE_INVALID_INTERVAL_ORD)
 comment|/* P1003.2/D11.2, section 4.20.7.1, lines 5078ff.  */
 define|#
 directive|define
@@ -246,8 +251,8 @@ define|#
 directive|define
 name|RE_SYNTAX_POSIX_EXTENDED
 define|\
-value|(_RE_SYNTAX_POSIX_COMMON | RE_CONTEXT_INDEP_ANCHORS			\    | RE_CONTEXT_INDEP_OPS  | RE_NO_BK_BRACES				\    | RE_NO_BK_PARENS       | RE_NO_BK_VBAR				\    | RE_UNMATCHED_RIGHT_PAREN_ORD)
-comment|/* Differs from ..._POSIX_EXTENDED in that RE_CONTEXT_INVALID_OPS    replaces RE_CONTEXT_INDEP_OPS and RE_NO_BK_REFS is added.  */
+value|(_RE_SYNTAX_POSIX_COMMON  | RE_CONTEXT_INDEP_ANCHORS			\    | RE_CONTEXT_INDEP_OPS   | RE_NO_BK_BRACES				\    | RE_NO_BK_PARENS        | RE_NO_BK_VBAR				\    | RE_CONTEXT_INVALID_OPS | RE_UNMATCHED_RIGHT_PAREN_ORD)
+comment|/* Differs from ..._POSIX_EXTENDED in that RE_CONTEXT_INDEP_OPS is    removed and RE_NO_BK_REFS is added.  */
 define|#
 directive|define
 name|RE_SYNTAX_POSIX_MINIMAL_EXTENDED
@@ -823,6 +828,55 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* GCC 2.95 and later have "__restrict"; C99 compilers have    "restrict", and "configure" may have defined "restrict".  */
+ifndef|#
+directive|ifndef
+name|__restrict
+if|#
+directive|if
+operator|!
+operator|(
+literal|2
+operator|<
+name|__GNUC__
+operator|||
+operator|(
+literal|2
+operator|==
+name|__GNUC__
+operator|&&
+literal|95
+operator|<=
+name|__GNUC_MINOR__
+operator|)
+operator|)
+if|#
+directive|if
+name|defined
+specifier|restrict
+operator|||
+literal|199901L
+operator|<=
+name|__STDC_VERSION__
+define|#
+directive|define
+name|__restrict
+value|restrict
+else|#
+directive|else
+define|#
+directive|define
+name|__restrict
+endif|#
+directive|endif
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* For now unconditionally define __restrict_arr to expand to nothing.    Ideally we would have a test for the compiler which allows defining    it to restrict.  */
+define|#
+directive|define
+name|__restrict_arr
 comment|/* POSIX compatibility.  */
 specifier|extern
 name|int
@@ -832,11 +886,13 @@ argument_list|(
 operator|(
 name|regex_t
 operator|*
+name|__restrict
 name|__preg
 operator|,
 specifier|const
 name|char
 operator|*
+name|__restrict
 name|__pattern
 operator|,
 name|int
@@ -853,11 +909,13 @@ operator|(
 specifier|const
 name|regex_t
 operator|*
+name|__restrict
 name|__preg
 operator|,
 specifier|const
 name|char
 operator|*
+name|__restrict
 name|__string
 operator|,
 name|size_t
@@ -865,7 +923,9 @@ name|__nmatch
 operator|,
 name|regmatch_t
 name|__pmatch
-index|[]
+index|[
+name|__restrict_arr
+index|]
 operator|,
 name|int
 name|__eflags
