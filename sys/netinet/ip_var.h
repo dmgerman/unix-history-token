@@ -944,15 +944,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sockaddr_in
-modifier|*
-name|ip_fw_fwd_addr
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|in_delayed_cksum
