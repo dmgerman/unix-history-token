@@ -90,14 +90,6 @@ decl_stmt|;
 name|report_desc_t
 name|r
 decl_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|fd
-operator|!=
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 name|rep
 operator|.
 name|size
