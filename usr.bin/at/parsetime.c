@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   *  parsetime.c - parse time for at(1)  *  Copyright (C) 1993, 1994  Thomas Koenig  *  *  modifications for english-language times  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  at [NOW] PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS  *     /NUMBER [DOT NUMBER] [AM|PM]\ /[MONTH NUMBER [NUMBER]]             \  *     |NOON                       | |[TOMORROW]                          |  *     |MIDNIGHT                   | |[DAY OF WEEK]                       |  *     \TEATIME                    / |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *                                   \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
+comment|/*   *  parsetime.c - parse time for at(1)  *  Copyright (C) 1993, 1994  Thomas Koenig  *  *  modifications for english-language times  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  at [NOW] PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS  *     /NUMBER [DOT NUMBER] [AM|PM]\ /[MONTH NUMBER [NUMBER]]             \  *     |NOON                       | |[TOMORROW]                          |  *     |MIDNIGHT                   | |[DAY OF WEEK]                       |  *     \TEATIME                    / |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *                                   \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  *  *	$Id$  */
 end_comment
 
 begin_comment
@@ -71,6 +71,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_comment
 comment|/* Local headers */
@@ -655,7 +661,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: parsetime.c,v 1.9 1997/02/22 19:54:07 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,11 +1367,9 @@ name|expectplur
 operator|!=
 name|sc_tokplur
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"at: pluralization is wrong\n"
+literal|"pluralization is wrong"
 argument_list|)
 expr_stmt|;
 name|dateadd
@@ -1548,8 +1552,8 @@ literal|12
 condition|)
 comment|/* 12:xx AM is 00:xx, not 12:xx */
 name|hour
-operator|-=
-literal|12
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|token
