@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1985, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socket.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socket.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -498,6 +498,40 @@ begin_comment
 comment|/*  * Structure used by kernel to store most  * addresses.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_struct
+struct|struct
+name|sockaddr
+block|{
+name|u_char
+name|sa_len
+decl_stmt|;
+comment|/* total length */
+name|u_char
+name|sa_family
+decl_stmt|;
+comment|/* address family */
+name|char
+name|sa_addr
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* actually longer; address value */
+block|}
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_struct
 struct|struct
 name|sockaddr
@@ -516,6 +550,11 @@ comment|/* up to 14 bytes of direct address */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Structure used by kernel to pass protocol  * information in raw sockets.  */
@@ -679,7 +718,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * Message header for recvmsg and sendmsg calls.  */
+comment|/*  * Message header for recvmsg and sendmsg calls.  * Used value-result for recvmsg, value only for sendmsg.  */
 end_comment
 
 begin_struct
@@ -711,6 +750,17 @@ comment|/* access rights sent/received */
 name|int
 name|msg_accrightslen
 decl_stmt|;
+name|caddr_t
+name|msg_control
+decl_stmt|;
+comment|/* ancillary data not conveyable 					 * by flags; msgs of the form 					 *	u_short type; 					 *	u_short count; 					 *	u_char  data[count]; 					 */
+name|int
+name|msg_controllen
+decl_stmt|;
+name|int
+name|msg_flags
+decl_stmt|;
+comment|/* flags on received message */
 block|}
 struct|;
 end_struct
@@ -747,6 +797,76 @@ end_define
 begin_comment
 comment|/* send without using routing tables */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_EOR
+value|0x8
+end_define
+
+begin_comment
+comment|/* data completes record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_TRUNC
+value|0x10
+end_define
+
+begin_comment
+comment|/* data discarded before delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_CTRUNC
+value|0x20
+end_define
+
+begin_comment
+comment|/* control data lost before delivery */
+end_comment
+
+begin_comment
+comment|/*  * 4.3-compat message header (move to compat file later).  */
+end_comment
+
+begin_struct
+struct|struct
+name|omsghdr
+block|{
+name|caddr_t
+name|msg_name
+decl_stmt|;
+comment|/* optional address */
+name|int
+name|msg_namelen
+decl_stmt|;
+comment|/* size of address */
+name|struct
+name|iovec
+modifier|*
+name|msg_iov
+decl_stmt|;
+comment|/* scatter/gather array */
+name|int
+name|msg_iovlen
+decl_stmt|;
+comment|/* # elements in msg_iov */
+name|caddr_t
+name|msg_accrights
+decl_stmt|;
+comment|/* access rights sent/received */
+name|int
+name|msg_accrightslen
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
