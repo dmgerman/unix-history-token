@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.3 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.4 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1196,6 +1196,22 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|VAX630
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_630
+condition|)
+name|br
+operator|=
+literal|0x15
+expr_stmt|;
+comment|/* screwy interrupt structure */
+endif|#
+directive|endif
 return|return
 operator|(
 sizeof|sizeof
