@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* rst.h	1.1	(Berkeley)	83/08/17  *  *	Definitions for imagen RST files.  */
+comment|/* rst.h	1.2	(Berkeley)	83/10/09  *  *	Definitions for imagen RST files.  */
 end_comment
 
 begin_define
@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|DIRSIZ
-value|256
+value|128
 end_define
 
 begin_comment
