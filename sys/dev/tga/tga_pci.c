@@ -334,14 +334,6 @@ literal|"DEC TGA (21030) 2D Graphics Accelerator"
 block|}
 block|,
 block|{
-name|DEC_VENDORID
-block|,
-name|DEC_DEVICEID_TGA2
-block|,
-literal|"DEC TGA2 (21130) 3D Graphics Accelerator"
-block|}
-block|,
-block|{
 literal|0
 block|,
 literal|0
