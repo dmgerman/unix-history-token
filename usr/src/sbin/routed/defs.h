@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.8	82/06/09	*/
+comment|/*	defs.h	4.9	82/06/09	*/
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ name|rtu_ifp
 decl_stmt|;
 name|struct
 name|sockaddr
-name|rtu_newrouter
+name|rtu_oldrouter
 decl_stmt|;
 block|}
 name|rtu_entry
@@ -201,8 +201,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|rt_newrouter
-value|rt_rtu.rtu_entry.rtu_newrouter
+name|rt_oldrouter
+value|rt_rtu.rtu_entry.rtu_oldrouter
 end_define
 
 begin_comment
@@ -261,29 +261,40 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* don't send to router */
+comment|/* don't time out route */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RTS_INTERFACE
+name|RTS_DONTDELETE
 value|0x10
 end_define
 
 begin_comment
-comment|/* route is for an interface */
+comment|/* don't remove route if timed out */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RTS_GLOBAL
+name|RTS_DONTROUTE
 value|0x20
 end_define
 
 begin_comment
-comment|/* entry is non-local, don't lose it */
+comment|/* don't route outgoing packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTS_HIDDEN
+value|0x40
+end_define
+
+begin_comment
+comment|/* deleted but still reclaimable */
 end_comment
 
 begin_decl_stmt
