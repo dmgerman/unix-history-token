@@ -614,6 +614,7 @@ argument_list|)
 name|td_umtx
 expr_stmt|;
 comment|/* (c?) Link for when we're blocked. */
+specifier|volatile
 name|u_int
 name|td_generation
 decl_stmt|;
