@@ -1148,7 +1148,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t%s\tcd9660\tro,noauto\t0\t0\n"
+literal|"/dev/%s\t\t%s\t\tcd9660\tro,noauto\t0\t0\n"
 argument_list|,
 name|devs
 index|[
