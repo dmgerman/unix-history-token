@@ -375,12 +375,6 @@ end_ifdef
 
 begin_struct_decl
 struct_decl|struct
-name|buf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|bio
 struct_decl|;
 end_struct_decl
@@ -474,6 +468,7 @@ parameter_list|,
 name|struct
 name|bio
 modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
