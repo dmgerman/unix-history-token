@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.3 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/mtpr.h"
+end_include
 
 begin_include
 include|#
@@ -86,23 +92,6 @@ include|#
 directive|include
 file|"syslog.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../vax/mtpr.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -193,6 +182,26 @@ begin_comment
 comment|/*  * Scaled down version of C Library printf.  * Used to print diagnostic information directly on console tty.  * Since it is not interrupt driven, all system activities are  * suspended.  Printf should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Usage is:  *	printf("reg=%b\n", regval, "<base><arg>*");  * Where<base> is the output base expressed as a control character,  * e.g. \10 gives octal; \20 gives hex.  Each arg is a sequence of  * characters, the first of which gives the bit number to be inspected  * (origin 1), and the next characters (up to a control character, i.e.  * a character<= 32), give the name of the register.  Thus  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  * would produce output:  *	reg=3<BITTWO,BITONE>  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|int
+name|consintr
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*VARARGS1*/
 end_comment
@@ -221,6 +230,27 @@ end_decl_stmt
 
 begin_block
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+specifier|register
+name|int
+name|savintr
+decl_stmt|;
+name|savintr
+operator|=
+name|consintr
+operator|,
+name|consintr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* disable interrupts */
+endif|#
+directive|endif
 name|prf
 argument_list|(
 name|fmt
@@ -243,6 +273,19 @@ expr_stmt|;
 name|logwakeup
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+name|consintr
+operator|=
+name|savintr
+expr_stmt|;
+comment|/* reenable interrupts */
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -740,7 +783,7 @@ operator|*
 name|fmt
 operator|++
 expr_stmt|;
-comment|/* THIS CODE IS VAX DEPENDENT IN HANDLING %l? AND %c */
+comment|/* THIS CODE IS MACHINE DEPENDENT IN HANDLING %l? AND %c */
 switch|switch
 condition|(
 name|c
@@ -771,10 +814,17 @@ case|:
 case|case
 literal|'D'
 case|:
+name|b
+operator|=
+operator|-
+literal|10
+expr_stmt|;
+goto|goto
+name|number
+goto|;
 case|case
 literal|'u'
 case|:
-comment|/* what a joke */
 name|b
 operator|=
 literal|10
@@ -818,6 +868,11 @@ operator|=
 operator|*
 name|adx
 expr_stmt|;
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|LITTLE
 for|for
 control|(
 name|i
@@ -853,6 +908,34 @@ argument_list|,
 name|ttyp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|BIG
+if|if
+condition|(
+name|c
+operator|=
+operator|(
+name|b
+operator|&
+literal|0x7f
+operator|)
+condition|)
+name|putchar
+argument_list|(
+name|c
+argument_list|,
+name|flags
+argument_list|,
+name|ttyp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'b'
@@ -1093,8 +1176,12 @@ if|if
 condition|(
 name|b
 operator|==
+operator|-
 literal|10
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|int
 operator|)
@@ -1124,6 +1211,12 @@ name|int
 operator|)
 name|n
 argument_list|)
+expr_stmt|;
+block|}
+name|b
+operator|=
+operator|-
+name|b
 expr_stmt|;
 block|}
 name|cp
@@ -1487,6 +1580,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Can send to log only after memory management enabled: 	 * this has happened by the time maxmem is set. 	 */
 if|if
 condition|(
 operator|(
@@ -1506,16 +1600,8 @@ operator|&&
 name|c
 operator|!=
 literal|0177
-ifdef|#
-directive|ifdef
-name|vax
 operator|&&
-name|mfpr
-argument_list|(
-name|MAPEN
-argument_list|)
-endif|#
-directive|endif
+name|maxmem
 condition|)
 block|{
 if|if

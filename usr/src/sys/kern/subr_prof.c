@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prof.c	7.1 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/* last integrated from: gmon.c	4.10 (Berkeley) 1/14/83 */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prof.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -68,11 +64,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|char
@@ -84,6 +83,33 @@ name|char
 operator|*
 operator|)
 literal|0x80000000
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s_lowpc
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0xc0000000
 decl_stmt|;
 end_decl_stmt
 
@@ -149,7 +175,7 @@ name|fromssize
 decl_stmt|,
 name|tossize
 decl_stmt|;
-comment|/* 	 *	round lowpc and highpc to multiples of the density we're using 	 *	so the rest of the scaling (here and in gprof) stays in ints. 	 */
+comment|/* 	 * Round lowpc and highpc to multiples of the density we're using 	 * so the rest of the scaling (here and in gprof) stays in ints. 	 */
 name|s_lowpc
 operator|=
 operator|(
@@ -248,16 +274,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|blkclr
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|sbuf
-argument_list|,
-name|ssiz
-argument_list|)
-expr_stmt|;
 name|fromssize
 operator|=
 name|s_textsize
@@ -300,16 +316,6 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-name|blkclr
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|froms
-argument_list|,
-name|fromssize
-argument_list|)
-expr_stmt|;
 name|tolimit
 operator|=
 name|s_textsize
@@ -324,25 +330,27 @@ name|tolimit
 operator|<
 name|MINARCS
 condition|)
-block|{
 name|tolimit
 operator|=
 name|MINARCS
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
 name|tolimit
 operator|>
-literal|65534
+operator|(
+literal|0xffff
+operator|-
+literal|1
+operator|)
 condition|)
-block|{
 name|tolimit
 operator|=
-literal|65534
+literal|0xffff
+operator|-
+literal|1
 expr_stmt|;
-block|}
 name|tossize
 operator|=
 name|tolimit
@@ -383,7 +391,7 @@ name|sbuf
 argument_list|,
 name|ssiz
 argument_list|)
-expr_stmt|;
+operator|,
 name|sbuf
 operator|=
 literal|0
@@ -394,23 +402,13 @@ name|froms
 argument_list|,
 name|fromssize
 argument_list|)
-expr_stmt|;
+operator|,
 name|froms
 operator|=
 literal|0
 expr_stmt|;
 return|return;
 block|}
-name|blkclr
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|tos
-argument_list|,
-name|tossize
-argument_list|)
-expr_stmt|;
 name|tos
 index|[
 literal|0
@@ -483,7 +481,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
-comment|/* 	 *	profiling is what mcount checks to see if 	 *	all the data structures are ready!!! 	 */
+comment|/* 	 * Profiling is what mcount checks to see if 	 * all the data structures are ready!!! 	 */
 name|profiling
 operator|=
 literal|0
@@ -494,14 +492,8 @@ directive|endif
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
 begin_comment
-comment|/*  * This routine is massaged so that it may be jsb'ed to  */
+comment|/*  * This routine is massaged so that it may be jsb'ed to on vax.  */
 end_comment
 
 begin_asm
@@ -530,8 +522,7 @@ name|selfpc
 decl_stmt|;
 comment|/* r11 => r5 */
 specifier|register
-name|unsigned
-name|short
+name|u_short
 modifier|*
 name|frompcindex
 decl_stmt|;
@@ -559,6 +550,17 @@ specifier|static
 name|int
 name|s
 decl_stmt|;
+asm|asm("	.text");
+comment|/* make sure we're in text space */
+comment|/* 	 * Check that we are profiling. 	 */
+if|if
+condition|(
+name|profiling
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* 	 * Find the return address for mcount, 	 * and the return address for mcount's caller. 	 */
 ifdef|#
 directive|ifdef
 name|lint
@@ -576,39 +578,46 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-else|not lint
-comment|/* 	 *	find the return address for mcount, 	 *	and the return address for mcount's caller. 	 */
-asm|asm("	.text");
-comment|/* make sure we're in text space */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
 asm|asm("	movl (sp), r11");
 comment|/* selfpc = ... (jsb frame) */
 asm|asm("	movl 16(fp), r10");
 comment|/* frompcindex =     (calls frame) */
 endif|#
 directive|endif
-endif|not lint
-comment|/* 	 *	check that we are profiling 	 */
-if|if
-condition|(
-name|profiling
-condition|)
-block|{
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* 	 *	insure that we cannot be recursively invoked. 	 *	this requires that splhigh() and splx() below 	 *	do NOT call mcount! 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+empty_stmt|;
+comment|/* avoid label botch */
+asm|asm("	movl -8(fp),r12");
+comment|/* selfpc = callf frame */
+asm|asm("	movl (fp),r11");
+asm|asm("	movl -8(r11),r11");
+comment|/* frompcindex = 1 callf frame back */
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* 	 * Insure that we cannot be recursively invoked. 	 * this requires that splhigh() and splx() below 	 * do NOT call mcount! 	 */
 name|s
 operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-comment|/* 	 *	check that frompcindex is a reasonable pc value. 	 *	for example:	signal catchers get called from the stack, 	 *			not from text space.  too bad. 	 */
+comment|/* 	 * Check that frompcindex is a reasonable pc value. 	 * For example:	signal catchers get called from the stack, 	 *	not from text space.  too bad. 	 */
 name|frompcindex
 operator|=
 operator|(
-name|unsigned
-name|short
+name|u_short
 operator|*
 operator|)
 operator|(
@@ -626,18 +635,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|frompcindex
 operator|>
 name|s_textsize
 condition|)
-block|{
 goto|goto
 name|done
 goto|;
-block|}
 name|frompcindex
 operator|=
 operator|&
@@ -673,7 +679,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 *	first time traversing this arc 		 */
+comment|/* 		 * First time traversing this arc 		 */
 name|toindex
 operator|=
 operator|++
@@ -690,11 +696,9 @@ name|toindex
 operator|>=
 name|tolimit
 condition|)
-block|{
 goto|goto
 name|overflow
 goto|;
-block|}
 operator|*
 name|frompcindex
 operator|=
@@ -747,7 +751,7 @@ operator|==
 name|selfpc
 condition|)
 block|{
-comment|/* 		 *	arc at front of chain; usual case. 		 */
+comment|/* 		 * Arc at front of chain; usual case. 		 */
 name|top
 operator|->
 name|count
@@ -757,7 +761,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 	 *	have to go looking down chain for it. 	 *	top points to what we are looking at, 	 *	prevtop points to previous top. 	 *	we know it is not at the head of the chain. 	 */
+comment|/* 	 * Have to go looking down chain for it. 	 * Top points to what we are looking at, 	 * prevtop points to previous top. 	 * We know it is not at the head of the chain. 	 */
 for|for
 control|(
 init|;
@@ -774,7 +778,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 *	top is end of the chain and none of the chain 			 *	had top->selfpc == selfpc. 			 *	so we allocate a new tostruct 			 *	and link it to the head of the chain. 			 */
+comment|/* 			 * Top is end of the chain and none of the chain 			 * had top->selfpc == selfpc. 			 * So we allocate a new tostruct 			 * and link it to the head of the chain. 			 */
 name|toindex
 operator|=
 operator|++
@@ -791,11 +795,9 @@ name|toindex
 operator|>=
 name|tolimit
 condition|)
-block|{
 goto|goto
 name|overflow
 goto|;
-block|}
 name|top
 operator|=
 operator|&
@@ -832,7 +834,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 		 *	otherwise, check the next arc on the chain. 		 */
+comment|/* 		 * Otherwise, check the next arc on the chain. 		 */
 name|prevtop
 operator|=
 name|top
@@ -856,7 +858,7 @@ operator|==
 name|selfpc
 condition|)
 block|{
-comment|/* 			 *	there it is. 			 *	increment its count 			 *	move it to the head of the chain. 			 */
+comment|/* 			 * There it is, increment its count and 			 * move it to the head of the chain. 			 */
 name|top
 operator|->
 name|count
@@ -903,7 +905,16 @@ expr_stmt|;
 comment|/* and fall through */
 name|out
 label|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
 asm|asm("	rsb");
+endif|#
+directive|endif
+return|return;
 name|overflow
 label|:
 name|profiling
@@ -936,13 +947,6 @@ end_asm
 begin_endif
 endif|#
 directive|endif
-endif|vax
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|GPROF
 end_endif
 
 end_unit

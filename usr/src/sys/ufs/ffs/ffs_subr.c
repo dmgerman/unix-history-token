@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_subr.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_subr.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1845,11 +1845,19 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 operator|!
 name|defined
 argument_list|(
 name|vax
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+operator|)
 operator|||
 name|defined
 argument_list|(
@@ -1858,7 +1866,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * C definitions of special vax instructions.  */
+comment|/*  * C definitions of special instructions.  * Normally expanded with inline.  */
 end_comment
 
 begin_macro
@@ -1954,6 +1962,12 @@ operator|!
 name|defined
 argument_list|(
 name|vax
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|tahoe
 argument_list|)
 end_if
 
@@ -2092,7 +2106,6 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|vax
 end_endif
 
 end_unit

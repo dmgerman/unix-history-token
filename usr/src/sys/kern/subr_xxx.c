@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -119,11 +119,25 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
+begin_comment
+comment|/*  * Definitions of various trivial functions;  * usually expanded inline rather than being defined here.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_macro
 name|imin
@@ -234,7 +248,6 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|notdef
 end_endif
 
 begin_extern
@@ -464,11 +477,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|vax
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|ffs
@@ -524,6 +547,21 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|bcmp

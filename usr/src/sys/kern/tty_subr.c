@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_subr.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_subr.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2124,7 +2124,7 @@ name|unneeded
 end_ifdef
 
 begin_comment
-comment|/*  * Integer (short) get/put using clists.  * Note dependency on byte order.  */
+comment|/*  * Integer (short) get/put using clists.  */
 end_comment
 
 begin_typedef
@@ -2193,10 +2193,9 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
+name|ENDIAN
+operator|==
+name|LITTLE
 return|return
 operator|(
 name|c
@@ -2237,22 +2236,40 @@ argument_list|()
 expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
+name|ENDIAN
+operator|==
+name|LITTLE
 name|c
 operator|=
-operator|*
 operator|(
 operator|(
-name|word_t
+operator|(
+name|u_char
 operator|*
 operator|)
 name|p
 operator|->
 name|c_cf
 operator|)
+index|[
+literal|0
+index|]
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+operator|(
+name|u_char
+operator|*
+operator|)
+name|p
+operator|->
+name|c_cf
+operator|)
+index|[
+literal|1
+index|]
 expr_stmt|;
 else|#
 directive|else
@@ -2551,10 +2568,9 @@ condition|)
 block|{
 if|#
 directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
+name|ENDIAN
+operator|==
+name|LITTLE
 operator|(
 name|void
 operator|)
