@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	4.1	85/03/19	*/
+comment|/*	config.h	4.2	85/04/08	*/
 end_comment
 
 begin_ifndef
@@ -22,28 +22,6 @@ end_comment
 begin_comment
 comment|/*  * These flags control global compiler operation.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FORT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ONEPASS
-value|1
-end_define
-
-begin_comment
-comment|/* one-pass compiler */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -88,6 +66,28 @@ end_define
 begin_comment
 comment|/* arbitrary length identifiers */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NOMAIN
+value|1
+end_define
+
+begin_comment
+comment|/* use f1 main routine */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Table sizes.  */

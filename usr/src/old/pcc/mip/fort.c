@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fort.c	4.5 (Berkeley) %G%"
+literal|"@(#)fort.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,6 +21,12 @@ directive|endif
 endif|lint
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FORT
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -28,8 +34,13 @@ name|FORT
 end_define
 
 begin_comment
-comment|/* this forces larger trees, etc. */
+comment|/* this may force larger trees, etc. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
