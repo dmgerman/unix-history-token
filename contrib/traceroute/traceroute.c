@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.5 1996/10/08 19:16:24 sef Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.5.2.1 1999/02/15 08:24:08 des Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1167,13 +1167,21 @@ condition|(
 name|waittime
 operator|<=
 literal|1
+operator|||
+name|waittime
+operator|>=
+literal|24L
+operator|*
+literal|60
+operator|*
+literal|60
 condition|)
 block|{
 name|Fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: wait must be> 1 sec\n"
+literal|"%s: wait must be> 1 sec and< 1 day\n"
 argument_list|,
 name|prog
 argument_list|)
@@ -2794,6 +2802,10 @@ name|cc
 init|=
 literal|0
 decl_stmt|;
+specifier|register
+name|int
+name|error
+decl_stmt|;
 name|int
 name|fromlen
 init|=
@@ -2847,28 +2859,6 @@ operator|&
 name|tz
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|wait
-operator|.
-name|tv_sec
-operator|<
-name|now
-operator|.
-name|tv_sec
-operator|+
-literal|1
-condition|)
-name|wait
-operator|.
-name|tv_sec
-operator|=
-name|now
-operator|.
-name|tv_sec
-operator|+
-literal|1
-expr_stmt|;
 name|tvsub
 argument_list|(
 operator|&
@@ -2880,6 +2870,28 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|wait
+operator|.
+name|tv_sec
+operator|<
+literal|0
+condition|)
+block|{
+name|wait
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|wait
+operator|.
+name|tv_usec
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|error
+operator|=
 name|select
 argument_list|(
 name|sock
@@ -2904,6 +2916,37 @@ argument_list|,
 operator|&
 name|wait
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINVAL
+condition|)
+block|{
+name|Fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: botched select() args\n"
+argument_list|,
+name|prog
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|error
 operator|>
 literal|0
 condition|)
@@ -3815,7 +3858,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Subtract 2 timeval structs:  out = out - in.  * Out is assumed to be>= in.  */
+comment|/*  * Subtract 2 timeval structs:  out = out - in.  * Out is assumed to be within about LONG_MAX seconds of in.  */
 end_comment
 
 begin_function
