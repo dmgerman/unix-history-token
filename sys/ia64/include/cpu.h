@@ -388,15 +388,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ia64_pa_access
-parameter_list|(
-name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|init_prom_interface
 parameter_list|(
