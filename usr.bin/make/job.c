@@ -4555,6 +4555,10 @@ name|flags
 operator||=
 name|JOB_CONTINUING
 expr_stmt|;
+name|status
+operator|=
+literal|0
+expr_stmt|;
 name|W_SETTERMSIG
 argument_list|(
 operator|&
