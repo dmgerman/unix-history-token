@@ -16,7 +16,7 @@ file|<uuid.h>
 end_include
 
 begin_comment
-comment|/*  * uuid_equal() - compare for equality.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_equal.htm  *	http://www.transarc.ibm.com/Library/documentation/dce/1.1/uuid_equal.html  */
+comment|/*  * uuid_equal() - compare for equality.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_equal.htm  */
 end_comment
 
 begin_function

@@ -10,7 +10,7 @@ file|<uuid.h>
 end_include
 
 begin_comment
-comment|/*  * uuid_is_nil() - return whether the UUID is a nil UUID.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_is_nil.htm  *	http://www.transarc.ibm.com/Library/documentation/dce/1.1/uuid_is_nil.html  */
+comment|/*  * uuid_is_nil() - return whether the UUID is a nil UUID.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_is_nil.htm  */
 end_comment
 
 begin_function

@@ -22,7 +22,7 @@ file|<uuid.h>
 end_include
 
 begin_comment
-comment|/*  * uuid_to_string() - Convert a binary UUID into a string representation.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_to_string.htm  *	http://www.transarc.ibm.com/Library/documentation/dce/1.1/uuid_to_string.html  *  * NOTE: The references given above do not have a status code for when  *	 the string could not be allocated. The status code has been  *	 taken from the Hewlett-Packard implementation.  */
+comment|/*  * uuid_to_string() - Convert a binary UUID into a string representation.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_to_string.htm  *  * NOTE: The references given above do not have a status code for when  *	 the string could not be allocated. The status code has been  *	 taken from the Hewlett-Packard implementation.  */
 end_comment
 
 begin_function

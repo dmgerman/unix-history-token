@@ -10,7 +10,7 @@ file|<uuid.h>
 end_include
 
 begin_comment
-comment|/*  * uuid_create() - create an UUID.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_create.htm  *	http://www.transarc.ibm.com/Library/documentation/dce/1.1/uuid_create.html  */
+comment|/*  * uuid_create() - create an UUID.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_create.htm  */
 end_comment
 
 begin_function

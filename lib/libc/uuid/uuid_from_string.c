@@ -22,7 +22,7 @@ file|<uuid.h>
 end_include
 
 begin_comment
-comment|/*  * uuid_from_string() - convert a string representation of an UUID into  *			a binary representation.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_from_string.htm  *	http://www.transarc.ibm.com/Library/documentation/dce/1.1/uuid_from_string.html  *  * NOTE: The sequence field is in big-endian, while the time fields are in  *	 native byte order.  */
+comment|/*  * uuid_from_string() - convert a string representation of an UUID into  *			a binary representation.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_from_string.htm  *  * NOTE: The sequence field is in big-endian, while the time fields are in  *	 native byte order.  */
 end_comment
 
 begin_function

@@ -16,7 +16,7 @@ file|<uuid.h>
 end_include
 
 begin_comment
-comment|/*  * uuid_create_nil() - create a nil UUID.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_create_nil.htm  *	http://www.transarc.ibm.com/Library/documentation/dce/1.1/uuid_create_nil.html  */
+comment|/*  * uuid_create_nil() - create a nil UUID.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_create_nil.htm  */
 end_comment
 
 begin_function

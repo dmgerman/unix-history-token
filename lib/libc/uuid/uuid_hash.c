@@ -10,7 +10,7 @@ file|<uuid.h>
 end_include
 
 begin_comment
-comment|/*  * uuid_hash() - generate a hash value.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_hash.htm  *	http://www.transarc.ibm.com/Library/documentation/dce/1.1/uuid_hash.html  */
+comment|/*  * uuid_hash() - generate a hash value.  * See also:  *	http://www.opengroup.org/onlinepubs/009629399/uuid_hash.htm  */
 end_comment
 
 begin_function
