@@ -3681,6 +3681,10 @@ name|len
 argument_list|,
 literal|"&0x%08lx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|range

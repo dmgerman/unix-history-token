@@ -1799,6 +1799,9 @@ name|sin6
 operator|->
 name|sin6_len
 operator|=
+operator|(
+name|u_int8_t
+operator|)
 sizeof|sizeof
 name|ss
 expr_stmt|;
@@ -1843,6 +1846,9 @@ name|sin
 operator|->
 name|sin_len
 operator|=
+operator|(
+name|u_int8_t
+operator|)
 sizeof|sizeof
 name|ss
 expr_stmt|;
