@@ -450,6 +450,16 @@ parameter_list|)
 value|{ error = (e); goto bad;}
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFP2AC
+parameter_list|(
+name|IFP
+parameter_list|)
+value|((struct arpcom *)IFP)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3803,6 +3813,17 @@ operator|->
 name|if_addrlen
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETGRAPH
+name|ngether_init
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETGRAPH */
 block|}
 end_function
 
