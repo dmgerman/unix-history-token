@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_UCONTEXT_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
-end_include
-
 begin_typedef
 typedef|typedef
 struct|struct

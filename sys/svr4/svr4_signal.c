@@ -3072,9 +3072,7 @@ name|p_sigmask
 argument_list|,
 name|p
 operator|->
-name|p_sigacts
-operator|->
-name|ps_sigstk
+name|p_sigstk
 operator|.
 name|ss_flags
 operator|&

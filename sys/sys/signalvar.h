@@ -109,47 +109,13 @@ name|sigset_t
 name|ps_siginfo
 decl_stmt|;
 comment|/* signals that want SA_SIGINFO args */
-name|int
-name|ps_flags
-decl_stmt|;
-comment|/* signal flags, below */
-name|stack_t
-name|ps_sigstk
-decl_stmt|;
-comment|/* sp& on stack state variable */
 name|sigset_t
-name|ps_usertramp
+name|ps_osigset
 decl_stmt|;
-comment|/* SunOS compat; libc sigtramp XXX */
+comment|/* signals that use osigset_t */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* signal flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAS_OLDMASK
-value|0x01
-end_define
-
-begin_comment
-comment|/* need to restore mask before pause */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAS_ALTSTACK
-value|0x02
-end_define
-
-begin_comment
-comment|/* have alternate signal stack */
-end_comment
 
 begin_comment
 comment|/*  * Compatibility  */
@@ -417,6 +383,30 @@ name|set2
 parameter_list|)
 define|\
 value|do {								\ 		int __i;						\ 		for (__i = 0; __i< _SIG_WORDS; __i++)			\ 			(set1).__bits[__i]&= ~(set2).__bits[__i];	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGSETLO
+parameter_list|(
+name|set1
+parameter_list|,
+name|set2
+parameter_list|)
+value|((set1).__bits[0] = (set2).__bits[0])
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGSETOLD
+parameter_list|(
+name|set
+parameter_list|,
+name|oset
+parameter_list|)
+value|((set).__bits[0] = (oset))
 end_define
 
 begin_define

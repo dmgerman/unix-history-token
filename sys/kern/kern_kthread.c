@@ -210,8 +210,14 @@ operator||=
 name|P_INMEM
 operator||
 name|P_SYSTEM
-operator||
-name|P_NOCLDWAIT
+expr_stmt|;
+name|p2
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator||=
+name|PS_NOCLDWAIT
 expr_stmt|;
 name|PHOLD
 argument_list|(

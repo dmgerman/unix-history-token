@@ -216,6 +216,28 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|PS_NOCLDWAIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* No zombies if child dies */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_NOCLDSTOP
+value|0x0002
+end_define
+
+begin_comment
+comment|/* No SIGCHLD when children stop. */
+end_comment
+
 begin_comment
 comment|/*  * pasleep structure, used by asleep() syscall to hold requested priority  * and timeout values for await().  */
 end_comment
@@ -562,6 +584,10 @@ name|sigset_t
 name|p_sigmask
 decl_stmt|;
 comment|/* Current signal mask. */
+name|stack_t
+name|p_sigstk
+decl_stmt|;
+comment|/* sp& on stack state variable */
 name|u_char
 name|p_priority
 decl_stmt|;
@@ -784,17 +810,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_NOCLDSTOP
-value|0x00008
-end_define
-
-begin_comment
-comment|/* No SIGCHLD when children stop. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|P_PPWAIT
 value|0x00010
 end_define
@@ -991,17 +1006,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_NOCLDWAIT
-value|0x400000
-end_define
-
-begin_comment
-comment|/* No zombies if child dies */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|P_DEADLKTREAT
 value|0x800000
 end_define
@@ -1024,12 +1028,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_NEWSIGSET
+name|P_OLDMASK
 value|0x2000000
 end_define
 
 begin_comment
-comment|/* Process uses new sigset_t */
+comment|/* need to restore mask before pause */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_ALTSTACK
+value|0x4000000
+end_define
+
+begin_comment
+comment|/* have alternate signal stack */
 end_comment
 
 begin_comment

@@ -1058,7 +1058,7 @@ name|switchticks
 operator|=
 name|ticks
 expr_stmt|;
-comment|/* 	 * Notify parent that we're gone.  If parent has the P_NOCLDWAIT 	 * flag set, notify process 1 instead (and hope it will handle 	 * this situation). 	 */
+comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, notify process 1 instead (and hope it will handle 	 * this situation). 	 */
 if|if
 condition|(
 name|p
@@ -1069,7 +1069,7 @@ name|p_procsig
 operator|->
 name|ps_flag
 operator|&
-name|P_NOCLDWAIT
+name|PS_NOCLDWAIT
 condition|)
 block|{
 name|struct

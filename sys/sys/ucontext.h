@@ -34,7 +34,7 @@ name|mcontext_t
 name|uc_mcontext
 decl_stmt|;
 name|struct
-name|__ucontext_t
+name|__ucontext
 modifier|*
 name|uc_link
 decl_stmt|;

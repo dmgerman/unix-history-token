@@ -247,6 +247,8 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|szsigcode
+decl_stmt|,
+name|oszsigcode
 decl_stmt|;
 end_decl_stmt
 
@@ -648,19 +650,6 @@ operator|(
 name|void
 operator|*
 name|addr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|load_gs_param
-name|__P
-argument_list|(
-operator|(
-name|u_int
-name|sel
 operator|)
 argument_list|)
 decl_stmt|;

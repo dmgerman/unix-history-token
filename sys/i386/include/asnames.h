@@ -1470,6 +1470,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_oszsigcode
+value|oszsigcode
+end_define
+
+begin_define
+define|#
+directive|define
 name|_ovbcopy_vector
 value|ovbcopy_vector
 end_define
