@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -673,6 +679,7 @@ name|pagesperblock
 decl_stmt|,
 name|blocksperpage
 decl_stmt|;
+comment|/* 	 * If no vp or vp is doomed or marked transparent to VM, we do not 	 * have the page. 	 */
 if|if
 condition|(
 operator|(
@@ -2864,7 +2871,7 @@ name|vnp_size
 operator|-
 name|foff
 expr_stmt|;
-comment|/* 	 * round up physical size for real devices 	 */
+comment|/* 	 * round up physical size for real devices. 	 */
 if|if
 condition|(
 name|dp
@@ -2879,23 +2886,45 @@ name|v_type
 operator|==
 name|VCHR
 condition|)
+block|{
+name|int
+name|secmask
+init|=
+name|dp
+operator|->
+name|v_rdev
+operator|->
+name|si_bsize_phys
+operator|-
+literal|1
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|secmask
+operator|<
+name|PAGE_SIZE
+argument_list|,
+operator|(
+literal|"vnode_pager_generic_getpages: sector size %d too large\n"
+operator|,
+name|secmask
+operator|+
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
 name|size
 operator|=
 operator|(
 name|size
 operator|+
-name|DEV_BSIZE
-operator|-
-literal|1
+name|secmask
 operator|)
 operator|&
 operator|~
-operator|(
-name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
+name|secmask
 expr_stmt|;
+block|}
 name|bp
 operator|=
 name|getpbuf
