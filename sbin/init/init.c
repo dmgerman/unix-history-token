@@ -790,6 +790,15 @@ condition|)
 name|pause
 argument_list|()
 expr_stmt|;
+name|logwtmp
+argument_list|(
+literal|"~"
+argument_list|,
+literal|"reboot"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
