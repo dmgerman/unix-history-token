@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sys/i386/stand/as.c  *  * Standalone driver for Adaptech 1542 SCSI  *   * Pace Willisson        pace@blitz.com       April 8, 1992  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00088  * --------------------         -----   ----------------------  *  * 23 Oct 92	Joerg Lohse		changed ccb opcode for compatibility  *					with Adaptec AHA-1542A  */
+comment|/*  * sys/i386/stand/as.c  *  *	from: 386BSD 0.1  *	$Id$  * Standalone driver for Adaptech 1542 SCSI  *   * Pace Willisson        pace@blitz.com       April 8, 1992  */
 end_comment
 
 begin_include
