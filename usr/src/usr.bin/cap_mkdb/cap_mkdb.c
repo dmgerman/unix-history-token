@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	5.5 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -591,7 +591,48 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* First byte of stored record indicates error. */
+comment|/* Find the end of the name field. */
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|bp
+argument_list|,
+literal|':'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"no name field: %.*s"
+argument_list|,
+name|MIN
+argument_list|(
+name|len
+argument_list|,
+literal|20
+argument_list|)
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* First byte of stored record indicates status. */
+switch|switch
+condition|(
+name|st
+condition|)
+block|{
+case|case
+literal|1
+case|:
 operator|(
 operator|(
 name|char
@@ -607,14 +648,42 @@ index|[
 literal|0
 index|]
 operator|=
-name|st
-operator|==
-literal|2
-condition|?
-name|TCERR
-else|:
 name|RECOK
 expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|data
+operator|.
+name|data
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+operator|=
+name|TCERR
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"Record not tc expanded: %.*s"
+argument_list|,
+name|p
+operator|-
+name|bp
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* Create the stored record. */
 name|memmove
 argument_list|(
@@ -649,39 +718,7 @@ name|len
 operator|+
 literal|2
 expr_stmt|;
-comment|/* Store record under name field. */
-if|if
-condition|(
-operator|(
-name|p
-operator|=
-name|strchr
-argument_list|(
-name|bp
-argument_list|,
-literal|':'
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|"no name field: %.*s"
-argument_list|,
-name|MIN
-argument_list|(
-name|len
-argument_list|,
-literal|20
-argument_list|)
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
+comment|/* Store the record under the name field. */
 name|key
 operator|.
 name|data
