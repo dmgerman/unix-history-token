@@ -1216,7 +1216,7 @@ end_function_decl
 
 begin_function_decl
 name|long
-name|strtoul
+name|strtol
 parameter_list|(
 specifier|const
 name|char
