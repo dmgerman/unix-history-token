@@ -1348,11 +1348,6 @@ argument_list|)
 expr_stmt|;
 name|shmmap_s
 operator|=
-operator|(
-expr|struct
-name|shmmap_state
-operator|*
-operator|)
 name|p
 operator|->
 name|p_vmspace
@@ -1584,11 +1579,6 @@ argument_list|)
 expr_stmt|;
 name|shmmap_s
 operator|=
-operator|(
-expr|struct
-name|shmmap_state
-operator|*
-operator|)
 name|p
 operator|->
 name|p_vmspace
@@ -4027,11 +4017,6 @@ name|GIANT_REQUIRED
 expr_stmt|;
 name|shmmap_s
 operator|=
-operator|(
-expr|struct
-name|shmmap_state
-operator|*
-operator|)
 name|p
 operator|->
 name|p_vmspace

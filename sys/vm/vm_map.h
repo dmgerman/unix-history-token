@@ -473,7 +473,8 @@ name|int
 name|vm_refcnt
 decl_stmt|;
 comment|/* number of references */
-name|void
+name|struct
+name|shmmap_state
 modifier|*
 name|vm_shm
 decl_stmt|;
