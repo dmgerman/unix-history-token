@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dofio[] = "@(#)dofio.c	1.7";  *  * fortran format executer  */
+comment|/* char id_dofio[] = "@(#)dofio.c	1.8";  *  * fortran format executer  */
 end_comment
 
 begin_include
@@ -23,6 +23,30 @@ parameter_list|(
 name|x
 parameter_list|)
 value|if(n=x) err(n>0?errflag:endflag,n,dfio)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_F
+parameter_list|(
+name|x
+parameter_list|)
+value|if(n=x) err_f(n>0?errflag:endflag,n,dfio)
+end_define
+
+begin_define
+define|#
+directive|define
+name|err_f
+parameter_list|(
+name|f
+parameter_list|,
+name|n
+parameter_list|,
+name|s
+parameter_list|)
+value|{if(f) return(dof_err(n)); else fatal(n,s);}
 end_define
 
 begin_define
@@ -198,7 +222,7 @@ operator|)
 operator|>
 name|LAST_TERM
 condition|)
-name|err
+name|err_f
 argument_list|(
 name|errflag
 argument_list|,
@@ -249,7 +273,7 @@ block|{
 case|case
 name|NED
 case|:
-name|DO
+name|DO_F
 argument_list|(
 argument|(*doned)(p,ptr)
 argument_list|)
@@ -316,7 +340,7 @@ name|used_data
 operator|=
 name|YES
 expr_stmt|;
-name|DO
+name|DO_F
 argument_list|(
 argument|(*doed)(p,ptr,len)
 argument_list|)
@@ -350,7 +374,7 @@ name|cp
 operator|==
 name|STKSZ
 condition|)
-name|err
+name|err_f
 argument_list|(
 argument|errflag
 argument_list|,
@@ -382,7 +406,7 @@ name|rp
 operator|==
 name|STKSZ
 condition|)
-name|err
+name|err_f
 argument_list|(
 argument|errflag
 argument_list|,
@@ -479,7 +503,7 @@ name|used_data
 operator|==
 name|NO
 condition|)
-name|err
+name|err_f
 argument_list|(
 name|errflag
 argument_list|,
@@ -656,7 +680,7 @@ operator|++
 expr_stmt|;
 break|break;
 default|default:
-name|err
+name|err_f
 argument_list|(
 argument|errflag
 argument_list|,
@@ -709,5 +733,42 @@ expr_stmt|;
 block|}
 end_block
 
+begin_expr_stmt
+specifier|static
+name|dof_err
+argument_list|(
+argument|n
+argument_list|)
+block|{
+if|if
+condition|(
+name|reading
+operator|==
+name|YES
+operator|&&
+name|external
+operator|==
+name|YES
+operator|&&
+name|sequential
+operator|==
+name|YES
+condition|)
+name|donewrec
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|errno
+operator|=
+name|n
+operator|)
+return|;
+end_return
+
+unit|}
 end_unit
 

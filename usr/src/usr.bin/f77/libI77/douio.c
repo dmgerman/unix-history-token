@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_douio[] = "@(#)douio.c	1.2";  *  * unformatted external i/o  */
+comment|/* char id_douio[] = "@(#)douio.c	1.3";  *  * unformatted external i/o  */
 end_comment
 
 begin_include
@@ -82,6 +82,18 @@ name|recpos
 operator|>
 name|reclen
 condition|)
+block|{
+name|recpos
+operator|-=
+operator|*
+name|number
+operator|*
+name|len
+expr_stmt|;
+name|e_rsue
+argument_list|()
+expr_stmt|;
+comment|/* in case tries another read */
 name|err
 argument_list|(
 name|errflag
@@ -91,6 +103,7 @@ argument_list|,
 name|eor
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fread
