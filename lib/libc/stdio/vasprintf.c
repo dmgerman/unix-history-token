@@ -75,6 +75,10 @@ decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
+name|struct
+name|__sFILEX
+name|ext
+decl_stmt|;
 name|f
 operator|.
 name|_file
@@ -152,6 +156,19 @@ operator|=
 literal|127
 expr_stmt|;
 comment|/* Leave room for the NULL */
+name|f
+operator|.
+name|_extra
+operator|=
+operator|&
+name|ext
+expr_stmt|;
+name|INITEXTRA
+argument_list|(
+operator|&
+name|f
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|__vfprintf

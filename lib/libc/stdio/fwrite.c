@@ -171,6 +171,14 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|ORIENT
+argument_list|(
+name|fp
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The usual case is success (__sfvwrite returns 0); 	 * skip the divide if this happens, since divides are 	 * generally slow and since this occurs whenever size==0. 	 */
 if|if
 condition|(

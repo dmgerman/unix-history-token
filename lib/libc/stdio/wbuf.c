@@ -115,6 +115,14 @@ name|char
 operator|)
 name|c
 expr_stmt|;
+name|ORIENT
+argument_list|(
+name|fp
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If it is completely full, flush it out.  Then, in any case, 	 * stuff c into the buffer.  If this causes the buffer to fill 	 * completely, or if c is '\n' and the file is line buffered, 	 * flush it (perhaps a second time).  The second flush will always 	 * happen on unbuffered streams, where _bf._size==1; fflush() 	 * guarantees that putc() will always call wbuf() by setting _w 	 * to 0, so we need not do anything else. 	 */
 name|n
 operator|=

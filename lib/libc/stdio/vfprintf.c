@@ -586,6 +586,14 @@ name|fp
 operator|->
 name|_write
 expr_stmt|;
+name|fake
+operator|.
+name|_extra
+operator|=
+name|fp
+operator|->
+name|_extra
+expr_stmt|;
 comment|/* set up the buffer */
 name|fake
 operator|.

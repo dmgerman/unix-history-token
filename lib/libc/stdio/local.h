@@ -19,6 +19,18 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<wchar.h>
+end_include
+
 begin_comment
 comment|/*  * Information local to this implementation of stdio,  * in particular, macros and private variables.  */
 end_comment
@@ -373,6 +385,24 @@ name|int
 name|fl_count
 decl_stmt|;
 comment|/* recursive lock count */
+name|int
+name|orientation
+decl_stmt|;
+comment|/* orientation for fwide() */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* 	 * XXX These are not used yet -- they will be used to store the 	 * multibyte conversion state for writing and reading when 	 * stateful encodings are supported by the locale framework. 	 */
+name|mbstate_t
+name|wstate
+decl_stmt|;
+comment|/* write conversion state */
+name|mbstate_t
+name|rstate
+decl_stmt|;
+comment|/* read conversion state */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -447,8 +477,51 @@ name|INITEXTRA
 parameter_list|(
 name|fp
 parameter_list|)
-value|{ \ 	(fp)->_extra->_up = NULL; \ 	(fp)->_extra->fl_mutex = PTHREAD_MUTEX_INITIALIZER; \ 	(fp)->_extra->fl_owner = NULL; \ 	(fp)->_extra->fl_count = 0; \ }
+value|{ \ 	(fp)->_extra->_up = NULL; \ 	(fp)->_extra->fl_mutex = PTHREAD_MUTEX_INITIALIZER; \ 	(fp)->_extra->fl_owner = NULL; \ 	(fp)->_extra->fl_count = 0; \ 	(fp)->_extra->orientation = 0; \
+comment|/* memset(&(fp)->_extra->wstate, 0, sizeof(mbstate_t)); */
+value|\
+comment|/* memset(&(fp)->_extra->rstate, 0, sizeof(mbstate_t)); */
+value|\ }
 end_define
+
+begin_comment
+comment|/*  * Set the orientation for a stream. If o> 0, the stream has wide-  * orientation. If o< 0, the stream has byte-orientation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ORIENT
+parameter_list|(
+name|fp
+parameter_list|,
+name|o
+parameter_list|)
+value|do {				\ 	if ((fp)->_extra->orientation == 0)		\ 		(fp)->_extra->orientation = (o);	\ } while (0)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLOCKFILE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ORIENTLOCK
+parameter_list|(
+name|fp
+parameter_list|,
+name|o
+parameter_list|)
+value|do {			\ 	FLOCKFILE(fp);					\ 	ORIENT(fp, o);					\ 	FUNLOCKFILE(fp);				\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

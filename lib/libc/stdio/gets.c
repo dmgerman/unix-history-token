@@ -121,6 +121,7 @@ index|[]
 init|=
 literal|"warning: this program uses gets(), which is unsafe.\n"
 decl_stmt|;
+comment|/* Orientation set by getchar(). */
 if|if
 condition|(
 operator|!

@@ -63,6 +63,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -141,6 +147,10 @@ block|{
 name|FILE
 name|f
 decl_stmt|;
+name|struct
+name|__sFILEX
+name|ext
+decl_stmt|;
 name|f
 operator|.
 name|_file
@@ -207,6 +217,19 @@ operator|.
 name|_base
 operator|=
 name|NULL
+expr_stmt|;
+name|f
+operator|.
+name|_extra
+operator|=
+operator|&
+name|ext
+expr_stmt|;
+name|INITEXTRA
+argument_list|(
+operator|&
+name|f
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
