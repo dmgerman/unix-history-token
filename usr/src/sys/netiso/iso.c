@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1285,7 +1285,7 @@ argument|D_ROUTE
 argument_list|)
 name|printf
 argument_list|(
-literal|"in_netof: isoa "
+literal|"iso_netof: isoa "
 argument_list|)
 expr_stmt|;
 name|dump_buf
@@ -1297,7 +1297,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"in_netof: net "
+literal|"iso_netof: net "
 argument_list|)
 expr_stmt|;
 name|dump_buf
