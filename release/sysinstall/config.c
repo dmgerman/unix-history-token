@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.44 1996/07/05 08:35:50 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.45 1996/07/08 08:54:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -78,6 +78,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nchunks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cdromMounted
 decl_stmt|;
 end_decl_stmt
 
@@ -2402,6 +2409,15 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* Shut up compiler */
+name|int
+name|status
+init|=
+name|DITEM_SUCCESS
+decl_stmt|,
+name|tries
+init|=
+literal|0
+decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -2422,6 +2438,9 @@ operator|=
 literal|"/cdrom/ports"
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -2431,29 +2450,71 @@ name|dist
 argument_list|)
 condition|)
 block|{
-name|dist
-operator|=
-name|variable_get_value
+if|if
+condition|(
+operator|++
+name|tries
+operator|>
+literal|2
+condition|)
+block|{
+name|msgConfirm
 argument_list|(
-name|VAR_PORTS_PATH
-argument_list|,
-literal|"Unable to locate a ports tree on CDROM.  Please specify the\n"
-literal|"location of the master ports directory you wish to create the\n"
-literal|"link tree to."
+literal|"You appear to be having some problems with your CD drive\n"
+literal|"or perhaps cannot find the second CD.  This step will now\n"
+literal|"therefore be skipped."
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|DITEM_FAILURE
+expr_stmt|;
+goto|goto
+name|fixup
+goto|;
+block|}
+comment|/* Even if we're running multi-user, unmount it for this case */
+name|cdromMounted
+operator|=
+name|CD_WE_MOUNTED_IT
+expr_stmt|;
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"The ports collection is now on the second CDROM due to\n"
+literal|"space constraints.  Please remove the first CD from the\n"
+literal|"drive at this time and insert the second CDROM.  You will\n"
+literal|"also need to have the second CDROM in your drive any time\n"
+literal|"you wish to use the ports collection.  When you're ready,\n"
+literal|"please press [ENTER]."
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|dist
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|dist
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
 condition|)
 block|{
+name|msgConfirm
+argument_list|(
+literal|"Mount failed - either the CDROM isn't in the drive or\n"
+literal|"you did not allow sufficient time for the drive to become\n"
+literal|"ready before pressing [ENTER].  Please try again."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|cp
 operator|=
 name|msgGetInput
@@ -2475,9 +2536,15 @@ operator|!
 operator|*
 name|cp
 condition|)
-return|return
+block|{
+name|status
+operator|=
 name|DITEM_FAILURE
-return|;
+expr_stmt|;
+goto|goto
+name|fixup
+goto|;
+block|}
 if|if
 condition|(
 name|Mkdir
@@ -2485,11 +2552,15 @@ argument_list|(
 name|cp
 argument_list|)
 condition|)
-return|return
-name|DITEM_FAILURE
-return|;
-else|else
 block|{
+name|status
+operator|=
+name|DITEM_FAILURE
+expr_stmt|;
+goto|goto
+name|fixup
+goto|;
+block|}
 if|if
 condition|(
 name|strcmp
@@ -2526,9 +2597,13 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-return|return
+name|status
+operator|=
 name|DITEM_FAILURE
-return|;
+expr_stmt|;
+goto|goto
+name|fixup
+goto|;
 block|}
 else|else
 block|{
@@ -2589,14 +2664,58 @@ literal|"ports in the hierarchy."
 argument_list|)
 expr_stmt|;
 block|}
+name|fixup
+label|:
+name|tries
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|++
+name|tries
+operator|<
+literal|3
+condition|)
+block|{
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Done with the second CD.  Please remove it and reinsert the first\n"
+literal|"CDROM now.  It may be required for subsequence installation steps.\n\n"
+literal|"When you've done so, please press [ENTER]."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Mount failed - either the CDROM isn't in the drive or\n"
+literal|"you did not allow sufficient time for the drive to become\n"
+literal|"ready before pressing [ENTER].  Please try again."
+argument_list|)
+expr_stmt|;
 block|}
 block|}
-else|else
 return|return
-name|DITEM_FAILURE
-return|;
-return|return
-name|DITEM_SUCCESS
+name|status
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
