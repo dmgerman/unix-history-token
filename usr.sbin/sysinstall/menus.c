@@ -7580,26 +7580,6 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|" X.Org"
-block|,
-literal|"Configure X.Org Server"
-block|,
-name|NULL
-block|,
-name|configXSetup
-block|}
-block|,
-block|{
-literal|" Desktop"
-block|,
-literal|"Configure X Desktop"
-block|,
-name|NULL
-block|,
-name|configXDesktop
-block|}
-block|,
-block|{
 literal|" HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)"
