@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_inline.h#36 $  *  * $FreeBSD$  */
+comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_inline.h#39 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -457,7 +457,12 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"Setting mode 0x%x\n"
+literal|"%s: Setting mode 0x%x\n"
+argument_list|,
+name|ahd_name
+argument_list|(
+name|ahd
+argument_list|)
 argument_list|,
 name|ahd_build_mode_state
 argument_list|(
@@ -1212,6 +1217,12 @@ name|scb
 parameter_list|)
 block|{
 comment|/* XXX Handle target mode SCBs. */
+name|scb
+operator|->
+name|crc_retry_count
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4780,11 +4791,53 @@ name|CLRCMDINT
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Ensure that the chip sees that we've cleared 		 * this interrupt before we walk the output fifo. 		 * Otherwise, we may, due to posted bus writes, 		 * clear the interrupt after we finish the scan, 		 * and after the sequencer has added new entries 		 * and asserted the interrupt again. 		 */
+if|if
+condition|(
+operator|(
+name|ahd
+operator|->
+name|bugs
+operator|&
+name|AHD_INTCOLLISION_BUG
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|ahd_is_paused
+argument_list|(
+name|ahd
+argument_list|)
+condition|)
+block|{
+comment|/* 				 * Potentially lost SEQINT. 				 * If SEQINTCODE is non-zero, 				 * simulate the SEQINT. 				 */
+if|if
+condition|(
+name|ahd_inb
+argument_list|(
+name|ahd
+argument_list|,
+name|SEQINTCODE
+argument_list|)
+operator|!=
+name|NO_SEQINT
+condition|)
+name|intstat
+operator||=
+name|SEQINT
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|ahd_flush_device_writes
 argument_list|(
 name|ahd
 argument_list|)
 expr_stmt|;
+block|}
 name|ahd_run_qoutfifo
 argument_list|(
 name|ahd
