@@ -6764,9 +6764,6 @@ if|if
 condition|(
 name|setegid
 argument_list|(
-operator|(
-name|gid_t
-operator|)
 name|pw
 operator|->
 name|pw_gid
