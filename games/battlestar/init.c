@@ -418,6 +418,10 @@ name|clock
 operator|=
 literal|10
 expr_stmt|;
+name|location
+operator|=
+name|dayfile
+expr_stmt|;
 name|setbit
 argument_list|(
 name|location
