@@ -3156,13 +3156,6 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-comment|/* 	 * XXX: kern_select() currently requires that we acquire Giant 	 * even if none of the file descriptors we poll requires Giant. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
@@ -3744,12 +3737,6 @@ argument_list|,
 name|M_SELECT
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4128,13 +4115,6 @@ operator|=
 name|uap
 operator|->
 name|nfds
-expr_stmt|;
-comment|/* 	 * XXX: poll() currently requires that we acquire Giant even if 	 * none of the file descriptors we poll requires Giant. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 comment|/* 	 * This is kinda bogus.  We have fd limits, but that is not 	 * really related to the size of the pollfd array.  Make sure 	 * we let the process use at least FD_SETSIZE entries and at 	 * least enough for the current limits.  We want to be reasonably 	 * safe, but not overly restrictive. 	 */
 name|PROC_LOCK
@@ -4659,12 +4639,6 @@ argument_list|)
 expr_stmt|;
 name|done2
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error

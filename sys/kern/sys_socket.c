@@ -926,6 +926,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -948,6 +951,9 @@ name|f_cred
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

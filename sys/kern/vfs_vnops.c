@@ -3778,7 +3778,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|vp
 operator|=
@@ -3842,6 +3846,12 @@ operator|->
 name|f_cred
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
