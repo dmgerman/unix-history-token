@@ -1802,12 +1802,21 @@ name|td_state
 operator|==
 name|TDS_RUNQ
 condition|)
+block|{
 comment|/* XXXKSE */
+comment|/* XXXKSE TDS_RUNQ causes assertion failure. */
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_UNQUEUED
+expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 name|p
 operator|->
 name|p_sflag
