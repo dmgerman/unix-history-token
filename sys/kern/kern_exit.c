@@ -1180,6 +1180,12 @@ argument_list|,
 name|initproc
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_sigparent
+operator|=
+name|SIGCHLD
+expr_stmt|;
 comment|/* 		 * If this was the last child of our parent, notify 		 * parent, so in case he was wait(2)ing, he will 		 * continue. 		 */
 if|if
 condition|(
