@@ -1134,13 +1134,20 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX: tcp_reass() is rather inefficient with its data structures 	 * and should be rewritten (see NetBSD for optimizations).  While 	 * doing that it should move to its own file tcp_reass.c. 	 */
-comment|/* 	 * Call with th==0 after become established to 	 * force pre-ESTABLISHED data up to user socket. 	 */
+comment|/* 	 * Call with th==NULL after become established to 	 * force pre-ESTABLISHED data up to user socket. 	 */
 if|if
 condition|(
 name|th
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|present
@@ -2797,6 +2804,15 @@ literal|1
 expr_stmt|;
 name|findpcb
 label|:
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input: findpcb: head not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
@@ -4305,7 +4321,7 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input(): after_listen head is not locked"
+literal|"tcp_input: after_listen: head not locked"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6162,7 +6178,8 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input(): trimthenstep6 head is not locked"
+literal|"tcp_input: trimthenstep6: head not "
+literal|"locked"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8187,7 +8204,8 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input(): process_ACK head is not locked"
+literal|"tcp_input: process_ACK: head not "
+literal|"locked"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8780,7 +8798,8 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"headlocked"
+literal|"tcp_input: process_ACK: "
+literal|"head not locked"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8868,7 +8887,7 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input(): step6 head is not locked"
+literal|"tcp_input: step6: head not locked"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9247,7 +9266,7 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"tcp_input(): dodata head is not locked"
+literal|"tcp_input: dodata: head not locked"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9574,7 +9593,8 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"headlocked should be 1"
+literal|"tcp_input: dodata: "
+literal|"TCP_FIN_WAIT_2: head not locked"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9730,6 +9750,15 @@ expr_stmt|;
 return|return;
 name|dropafterack
 label|:
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input: dropafterack: head not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Generate an ACK dropping incoming segment if it occupies 	 * sequence space, where the ACK reflects our state. 	 * 	 * We can now skip the test for the RST flag since all 	 * paths to this code happen after packets containing 	 * RST have been dropped. 	 * 	 * In the SYN-RECEIVED state, don't send an ACK unless the 	 * segment we received passes the SYN-RECEIVED ACK test. 	 * If it fails send a RST.  This breaks the loop in the 	 * "LAND" DoS attack, and also prevents an ACK storm 	 * between two listening ports that have been sent forged 	 * SYN segments, each with the source address of the other. 	 */
 if|if
 condition|(
@@ -9853,6 +9882,15 @@ expr_stmt|;
 return|return;
 name|dropwithreset
 label|:
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input: dropwithreset: head not locked"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Generate a RST, dropping incoming segment. 	 * Make ACK acceptable to originator of segment. 	 * Don't bother to respond if destination was broadcast/multicast. 	 */
 if|if
 condition|(
