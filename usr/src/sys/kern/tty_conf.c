@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_conf.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_conf.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ name|int
 name|ttyopen
 argument_list|()
 decl_stmt|,
-name|ttyclose
+name|ttylclose
 argument_list|()
 decl_stmt|,
 name|ttread
@@ -75,12 +75,18 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
+name|ttymodem
+argument_list|()
+decl_stmt|,
+name|nullmodem
+argument_list|()
+decl_stmt|,
 name|ttyinput
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -167,7 +173,7 @@ init|=
 block|{
 name|ttyopen
 block|,
-name|nulldev
+name|ttylclose
 block|,
 name|ttread
 block|,
@@ -183,7 +189,7 @@ name|nulldev
 block|,
 name|ttstart
 block|,
-name|nulldev
+name|ttymodem
 block|,
 if|#
 directive|if
@@ -208,7 +214,7 @@ name|nulldev
 block|,
 name|ttstart
 block|,
-name|nulldev
+name|nullmodem
 block|,
 else|#
 directive|else
@@ -236,7 +242,7 @@ endif|#
 directive|endif
 name|ttyopen
 block|,
-name|ttyclose
+name|ttylclose
 block|,
 name|ttread
 block|,
@@ -252,7 +258,7 @@ name|nulldev
 block|,
 name|ttstart
 block|,
-name|nulldev
+name|ttymodem
 block|,
 if|#
 directive|if
@@ -277,7 +283,7 @@ name|nulldev
 block|,
 name|ttstart
 block|,
-name|nulldev
+name|nullmodem
 block|,
 comment|/* 3 */
 else|#
@@ -327,7 +333,7 @@ name|nulldev
 block|,
 name|ttstart
 block|,
-name|nulldev
+name|nullmodem
 block|,
 comment|/* 4 */
 else|#
@@ -442,6 +448,33 @@ return|return
 operator|(
 operator|-
 literal|1
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Default modem control routine.  * Return argument flag, to turn off device on carrier drop.  */
+end_comment
+
+begin_macro
+name|nullmodem
+argument_list|(
+argument|flag
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|flag
 operator|)
 return|;
 block|}
