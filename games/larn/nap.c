@@ -51,14 +51,20 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|BSD
 end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|SYSV
 end_endif
+
+begin_comment
+comment|/* SYSV */
+end_comment
 
 begin_comment
 comment|/*  *	routine to take a nap for n milliseconds  */
@@ -138,8 +144,11 @@ end_block
 begin_else
 else|#
 directive|else
-else|NONAP
 end_else
+
+begin_comment
+comment|/* NONAP */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -535,8 +544,11 @@ end_endif
 begin_else
 else|#
 directive|else
-else|not BSD
 end_else
+
+begin_comment
+comment|/* not BSD */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -560,20 +572,29 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|BSD
 end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|SYSV
 end_endif
+
+begin_comment
+comment|/* SYSV */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|NONAP
 end_endif
+
+begin_comment
+comment|/* NONAP */
+end_comment
 
 end_unit
 

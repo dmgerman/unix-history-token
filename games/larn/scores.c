@@ -3035,7 +3035,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|NOLOG
+comment|/* NOLOG */
 comment|/*	now for the scoreboard maintenance -- not for a suspended game 	*/
 if|if
 condition|(
@@ -3901,8 +3901,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|UIDSCORE
 end_endif
+
+begin_comment
+comment|/* UIDSCORE */
+end_comment
 
 end_unit
 

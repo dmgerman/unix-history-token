@@ -5122,7 +5122,7 @@ name|x
 expr_stmt|;
 endif|#
 directive|endif
-endif|lint
+comment|/* lint */
 block|}
 end_block
 

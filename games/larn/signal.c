@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -289,8 +293,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|SIGTSTP
 end_endif
+
+begin_comment
+comment|/* SIGTSTP */
+end_comment
 
 begin_comment
 comment|/*  *	subroutine to issue the needed signal traps  called from main()  */
@@ -568,7 +575,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SIGTSTP
+comment|/* SIGTSTP */
 block|}
 end_block
 
@@ -689,8 +696,11 @@ end_decl_stmt
 begin_else
 else|#
 directive|else
-else|BSD
 end_else
+
+begin_comment
+comment|/* BSD */
+end_comment
 
 begin_comment
 comment|/* for system V? */
@@ -795,8 +805,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|BSD
 end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
 
 begin_comment
 comment|/*  *	routine to process a fatal error signal  */

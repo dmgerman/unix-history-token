@@ -97,8 +97,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|not SYSV
 end_else
+
+begin_comment
+comment|/* not SYSV */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -151,8 +154,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|not SYSV
 end_endif
+
+begin_comment
+comment|/* not SYSV */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -173,8 +179,11 @@ end_include
 begin_else
 else|#
 directive|else
-else|NOVARARGS
 end_else
+
+begin_comment
+comment|/* NOVARARGS */
+end_comment
 
 begin_comment
 comment|/* if we don't have varargs */
@@ -229,8 +238,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|NOVARARGS
 end_endif
+
+begin_comment
+comment|/* NOVARARGS */
+end_comment
 
 begin_define
 define|#
@@ -620,8 +632,11 @@ end_block
 begin_else
 else|#
 directive|else
-else|lint
 end_else
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_comment
 comment|/*VARARGS*/
@@ -1137,8 +1152,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_comment
 comment|/*  *	lprint(long-integer)				send binary integer to output buffer  *		long integer;  *  *		+---------+---------+---------+---------+  *		|	high  |			|		  |	  low	|  *		|  order  |			|		  |  order	|  *		|   byte  |			|		  |	  byte	|  *		+---------+---------+---------+---------+  *	   31  ---  24 23 --- 16 15 ---  8 7  ---   0  *  *	The save order is low order first, to high order (4 bytes total)  *		and is written to be system independent.  *	No checking for output buffer overflow is done, but flushes if needed!  *	Returns nothing of value.  */
@@ -1295,7 +1313,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|VT100
+comment|/* VT100 */
 name|lflush
 argument_list|()
 expr_stmt|;
@@ -1310,7 +1328,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 block|}
 else|else
 while|while
@@ -2614,8 +2632,11 @@ end_block
 begin_else
 else|#
 directive|else
-else|VT100
 end_else
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_comment
 comment|/*  * cursor(x,y)	  Put cursor at specified coordinates staring at [1,1] (termcap)  */
@@ -2673,8 +2694,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|VT100
 end_endif
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_comment
 comment|/*  *	Routine to position cursor at beginning of 24th line  */
@@ -3148,8 +3172,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|VT100
 end_endif
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_comment
 comment|/*  * cl_line(x,y)  Clear the whole line indicated by 'y' and leave cursor at [x,y]  */
@@ -3191,7 +3218,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|VT100
+comment|/* VT100 */
 name|cursor
 argument_list|(
 literal|1
@@ -3214,7 +3241,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 block|}
 end_block
 
@@ -3258,7 +3285,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|VT100
+comment|/* VT100 */
 name|int
 name|i
 decl_stmt|;
@@ -3305,7 +3332,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 block|}
 end_block
 
@@ -3349,7 +3376,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|VT100
+comment|/* VT100 */
 name|int
 name|i
 decl_stmt|;
@@ -3429,7 +3456,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 block|}
 end_block
 
@@ -3477,7 +3504,7 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-else|VT100
+comment|/* VT100 */
 operator|*
 name|lpnt
 operator|++
@@ -3505,7 +3532,7 @@ name|ST_END
 expr_stmt|;
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 block|}
 end_block
 
@@ -3986,8 +4013,11 @@ end_block
 begin_else
 else|#
 directive|else
-else|VT100
 end_else
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_comment
 comment|/*  *	lflush()						flush the output buffer  *  *	Returns nothing of value.  */
@@ -4062,8 +4092,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|VT100
 end_endif
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -4345,8 +4378,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|VT100
 end_endif
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_comment
 comment|/*  *	beep()		Routine to emit a beep if enabled (see no-beep in .larnopts)  */

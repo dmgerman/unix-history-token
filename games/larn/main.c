@@ -187,8 +187,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|VT100
 end_endif
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_comment
 comment|/* 	************ 	MAIN PROGRAM 	************  */
@@ -246,7 +249,7 @@ expr_stmt|;
 comment|/* setup the terminal (find out what type) for termcap */
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 if|if
 condition|(
 operator|(
@@ -598,7 +601,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 comment|/*  *	now make scoreboard if it is not there (don't clear)  */
 if|if
 condition|(
@@ -922,7 +925,7 @@ expr_stmt|;
 comment|/* obtain the user's effective id number */
 else|#
 directive|else
-else|UIDSCORE
+comment|/* UIDSCORE */
 name|userid
 operator|=
 name|getplid
@@ -933,7 +936,7 @@ expr_stmt|;
 comment|/* obtain the players id number */
 endif|#
 directive|endif
-endif|UIDSCORE
+comment|/* UIDSCORE */
 if|if
 condition|(
 name|userid
@@ -1055,7 +1058,7 @@ comment|/* zero the argument to avoid ps snooping */
 block|}
 endif|#
 directive|endif
-endif|HIDEBYLINK
+comment|/* HIDEBYLINK */
 if|if
 condition|(
 name|access
@@ -5740,8 +5743,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|HIDEBYLINK
 end_endif
+
+begin_comment
+comment|/* HIDEBYLINK */
+end_comment
 
 end_unit
 

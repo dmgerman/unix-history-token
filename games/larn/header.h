@@ -3,6 +3,10 @@ begin_comment
 comment|/*	header.h		Larn is copyrighted 1986 by Noah Morgan. */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -2724,8 +2728,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|VT100
 end_else
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_comment
 comment|/* defines below are for use in the termcap mode only */
@@ -2862,8 +2869,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|VT100
 end_endif
+
+begin_comment
+comment|/* VT100 */
+end_comment
 
 begin_comment
 comment|/* macro to output one byte to the output buffer */
@@ -2934,8 +2944,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|MACRORND
 end_endif
+
+begin_comment
+comment|/* MACRORND */
+end_comment
 
 begin_comment
 comment|/* macros for miscellaneous data conversion */
@@ -3028,8 +3041,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|NODEFS
 end_endif
+
+begin_comment
+comment|/* NODEFS */
+end_comment
 
 end_unit
 

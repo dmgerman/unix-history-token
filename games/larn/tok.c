@@ -34,8 +34,11 @@ end_include
 begin_else
 else|#
 directive|else
-else|SYSV
 end_else
+
+begin_comment
+comment|/* SYSV */
+end_comment
 
 begin_include
 include|#
@@ -46,8 +49,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|SYSV
 end_endif
+
+begin_comment
+comment|/* SYSV */
+end_comment
 
 begin_include
 include|#
@@ -92,8 +98,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|FLUSHNO
 end_endif
+
+begin_comment
+comment|/* FLUSHNO */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -360,7 +369,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|TIMECHECK
+comment|/* TIMECHECK */
 block|}
 do|do
 comment|/* if keyboard input buffer is too big, flush some of it */

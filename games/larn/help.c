@@ -49,7 +49,7 @@ decl_stmt|;
 comment|/* intermediate translation buffer when not a VT100 */
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 if|if
 condition|(
 operator|(
@@ -119,7 +119,7 @@ expr_stmt|;
 comment|/* print out each line that we read in */
 else|#
 directive|else
-else|VT100
+comment|/* VT100 */
 block|{
 name|tmcapcnv
 argument_list|(
@@ -138,7 +138,7 @@ block|}
 comment|/* intercept \33's */
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 if|if
 condition|(
 name|j
@@ -266,7 +266,7 @@ decl_stmt|;
 comment|/* intermediate translation buffer when not a VT100 */
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 if|if
 condition|(
 name|openhelp
@@ -304,7 +304,7 @@ expr_stmt|;
 comment|/* print out each line that we read in */
 else|#
 directive|else
-else|VT100
+comment|/* VT100 */
 block|{
 name|tmcapcnv
 argument_list|(
@@ -323,7 +323,7 @@ block|}
 comment|/* intercept \33's */
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 name|lrclose
 argument_list|()
 expr_stmt|;

@@ -4002,8 +4002,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|MACRORND
 end_endif
+
+begin_comment
+comment|/* MACRORND */
+end_comment
 
 end_unit
 
