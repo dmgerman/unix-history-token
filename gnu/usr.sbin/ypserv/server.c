@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. ** ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.7 1995/07/02 18:48:21 wpaul Exp $ ** */
+comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. ** ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.11 1995/07/15 23:27:47 wpaul Exp $ ** */
 end_comment
 
 begin_include
@@ -1398,6 +1398,9 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|dummyval
@@ -1405,6 +1408,8 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|ckey
@@ -1458,6 +1463,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 comment|/* Free key, unless it comes from the caller! */
 if|if
 condition|(
@@ -1480,6 +1488,8 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ikey
@@ -1539,6 +1549,9 @@ name|okey
 operator|=
 name|ckey
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 elseif|else
 if|if
 condition|(
@@ -1561,11 +1574,16 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|YP_TRUE
 return|;
 block|}
 comment|/* Free old value */
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|dval
@@ -1573,6 +1591,8 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 call|(
@@ -1598,6 +1618,9 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|dummyval
@@ -1627,6 +1650,8 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ckey
@@ -1906,6 +1931,10 @@ operator|.
 name|valdat_val
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
+comment|/* 	 * In general, if you malloc() data in an RPC service 	 * routine, you have to free() it the next time that 	 * routine is called since the XDR routines won't free 	 * it for you. However, in this case, we don't have to 	 * do that because the DB routines do garbage collection 	 * for us. 	 */
 name|free
 argument_list|(
 name|result
@@ -1915,6 +1944,8 @@ operator|.
 name|valdat_val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|.
 name|val
@@ -2493,6 +2524,9 @@ operator|.
 name|keydat_val
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|result
@@ -2502,6 +2536,8 @@ operator|.
 name|keydat_val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|.
 name|key
@@ -2528,6 +2564,9 @@ operator|.
 name|valdat_val
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|result
@@ -2537,6 +2576,8 @@ operator|.
 name|valdat_val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|.
 name|val
@@ -2944,6 +2985,9 @@ operator|.
 name|keydat_val
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|result
@@ -2953,6 +2997,8 @@ operator|.
 name|keydat_val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|.
 name|key
@@ -2979,6 +3025,9 @@ operator|.
 name|valdat_val
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|result
@@ -2988,6 +3037,8 @@ operator|.
 name|valdat_val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|.
 name|val
@@ -4500,6 +4551,9 @@ operator|.
 name|peer
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|result
@@ -4507,6 +4561,8 @@ operator|.
 name|peer
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|.
 name|peer
@@ -4619,20 +4675,6 @@ name|val
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-name|val
-operator|.
-name|data
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|val
-operator|.
-name|data
-operator|==
-name|NULL
 condition|)
 block|{
 comment|/* No YP_MASTER_NAME record in map? Assume we are Master */
@@ -4990,6 +5032,8 @@ name|data
 operator|=
 literal|"YP_LAST_MODIFIED"
 expr_stmt|;
+if|if
+condition|(
 call|(
 name|dbp
 operator|->
@@ -5006,14 +5050,6 @@ name|val
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|val
-operator|.
-name|data
-operator|==
-name|NULL
 condition|)
 block|{
 comment|/* No YP_LAST_MODIFIED record in map? Use DTM timestamp.. */
@@ -5046,6 +5082,9 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_YPSERV_ARTIFACT
 name|free
 argument_list|(
 name|val
@@ -5053,6 +5092,8 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|result
 operator|.
