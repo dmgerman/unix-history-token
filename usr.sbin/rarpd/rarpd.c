@@ -890,7 +890,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adfsv"
+literal|"adfst:v"
 argument_list|)
 operator|)
 operator|!=
@@ -929,6 +929,14 @@ literal|'s'
 case|:
 operator|++
 name|sflag
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|tftp_dir
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
