@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.47 (Berkeley) %G%"
+literal|"@(#)alias.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|NAliasDBs
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -626,6 +628,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|map
+operator|==
+name|NULL
+operator|||
 operator|!
 name|bitset
 argument_list|(
