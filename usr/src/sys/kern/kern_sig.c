@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	6.15	85/05/22	*/
+comment|/*	kern_sig.c	6.16	85/05/22	*/
 end_comment
 
 begin_include
@@ -2903,6 +2903,32 @@ name|RLIMIT_CORE
 index|]
 operator|.
 name|rlim_cur
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_textp
+operator|&&
+name|access
+argument_list|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_textp
+operator|->
+name|x_iptr
+argument_list|,
+name|IREAD
+argument_list|)
 condition|)
 return|return
 operator|(
