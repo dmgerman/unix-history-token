@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Source: /mit/kerberos/ucb/mit/rlogind/RCS/rlogind.c,v $  *	$Header: rlogind.c,v 5.0 89/06/26 18:31:01 kfall Locked $  */
-end_comment
-
-begin_comment
 comment|/*  * Copyright (c) 1983, 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
@@ -43,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.35 (Berkeley) 4/2/89"
+literal|"@(#)rlogind.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +51,21 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERBEROS
+end_ifdef
+
+begin_comment
+comment|/* From:  *	$Source: /mit/kerberos/ucb/mit/rlogind/RCS/rlogind.c,v $  *	$Header: rlogind.c,v 5.0 89/06/26 18:31:01 kfall Locked $  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * remote login server:  *	\0  *	remuser\0  *	locuser\0  *	terminal_type/speed\0  *	data  *  * Automatic login protocol is done here, using login -f upon success,  * unless OLD_LOGIN is defined (then done in login, ala 4.2/4.3BSD).  */
@@ -240,6 +251,14 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|check_all
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -306,17 +325,10 @@ name|opterr
 decl_stmt|,
 name|optind
 decl_stmt|;
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
 specifier|extern
 name|int
 name|_check_rhosts_file
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|ch
 decl_stmt|;
@@ -368,11 +380,14 @@ condition|(
 name|ch
 condition|)
 block|{
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
+case|case
+literal|'a'
+case|:
+name|check_all
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'l'
 case|:
@@ -381,8 +396,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'n'
 case|:
