@@ -893,6 +893,10 @@ parameter_list|()
 block|{
 while|while
 condition|(
+name|curfile
+operator|.
+name|dip
+operator|&&
 operator|(
 name|curfile
 operator|.
