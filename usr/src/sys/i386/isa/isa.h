@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)isa.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)isa.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * AT bus specific definitions.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_define
 define|#
@@ -100,10 +106,15 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
-name|IO_KBD1
+name|IO_KBD
 value|0x60
 end_define
 
@@ -131,6 +142,50 @@ end_define
 
 begin_comment
 comment|/* secondary base i/o address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_FD0
+value|0x3f2
+end_define
+
+begin_comment
+comment|/* primary base i/o address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_FD1
+value|0x372
+end_define
+
+begin_comment
+comment|/* secondary base i/o address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_COM0
+value|0x3f8
+end_define
+
+begin_comment
+comment|/* COM1 i/o address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_COM1
+value|0x2f8
+end_define
+
+begin_comment
+comment|/* COM2 i/o address */
 end_comment
 
 end_unit
