@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  $Id: dist.h,v 1.36 1999/07/02 02:00:23 jkh Exp $  */
+comment|/*  $Id: dist.h,v 1.37 1999/07/16 22:03:26 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -455,6 +455,12 @@ name|DIST_XF86_SERVER
 value|0x8000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -552,6 +558,24 @@ directive|define
 name|DIST_XF86_SERVER_9WSN
 value|0x0002000
 end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__alpha__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_SERVER_TGA
+value|0x0000001
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
