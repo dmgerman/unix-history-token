@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.61 1995/09/15 08:31:19 davidg Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.62 1995/10/22 02:59:48 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2784,13 +2784,12 @@ operator|*
 name|NBPG
 operator|)
 operator|||
+operator|(
 name|sva
 operator|>=
 name|KERNBASE
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 name|sva
 operator|<
 name|clean_sva
@@ -2798,6 +2797,8 @@ operator|||
 name|sva
 operator|>=
 name|clean_eva
+operator|)
+operator|)
 condition|)
 block|{
 name|PHYS_TO_VM_PAGE
@@ -2809,7 +2810,6 @@ name|dirty
 operator||=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-block|}
 block|}
 block|}
 name|pv
@@ -3073,7 +3073,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|va
+name|sva
 operator|<
 name|USRSTACK
 operator|+
@@ -3083,20 +3083,21 @@ operator|*
 name|NBPG
 operator|)
 operator|||
-name|va
+operator|(
+name|sva
 operator|>=
 name|KERNBASE
-condition|)
-block|{
-if|if
-condition|(
-name|va
+operator|&&
+operator|(
+name|sva
 operator|<
 name|clean_sva
 operator|||
-name|va
+name|sva
 operator|>=
 name|clean_eva
+operator|)
+operator|)
 condition|)
 block|{
 name|PHYS_TO_VM_PAGE
@@ -3108,7 +3109,6 @@ name|dirty
 operator||=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-block|}
 block|}
 block|}
 name|pv
@@ -3319,13 +3319,12 @@ operator|*
 name|NBPG
 operator|)
 operator|||
+operator|(
 name|va
 operator|>=
 name|KERNBASE
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 name|va
 operator|<
 name|clean_sva
@@ -3333,6 +3332,8 @@ operator|||
 name|va
 operator|>=
 name|clean_eva
+operator|)
+operator|)
 condition|)
 block|{
 name|PHYS_TO_VM_PAGE
@@ -3344,7 +3345,6 @@ name|dirty
 operator||=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-block|}
 block|}
 block|}
 operator|*
@@ -5043,53 +5043,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * pmap_prefault provides a quick way of clustering  * pagefaults into a processes address space.  It is a "cousin"  * of pmap_object_init_pt, except it runs at page fault time instead  * of mmap time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PFBAK
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFFOR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PAGEORDER_SIZE
-value|(PFBAK+PFFOR)
-end_define
-
-begin_comment
-unit|static int pmap_prefault_pageorder[] = { 	-NBPG, NBPG, -2 * NBPG, 2 * NBPG };  void pmap_prefault(pmap, addra, entry, object) 	pmap_t pmap; 	vm_offset_t addra; 	vm_map_entry_t entry; 	vm_object_t object; { 	int i; 	vm_offset_t starta, enda; 	vm_offset_t offset, addr; 	vm_page_t m; 	int pageorder_index;  	if (entry->object.vm_object != object) 		return;  	if (pmap !=&curproc->p_vmspace->vm_pmap) 		return;  	starta = addra - PFBAK * NBPG; 	if (starta< entry->start) { 		starta = entry->start; 	} else if (starta> addra) 		starta = 0;  	enda = addra + PFFOR * NBPG; 	if (enda> entry->end) 		enda = entry->end;  	for (i = 0; i< PAGEORDER_SIZE; i++) { 		vm_object_t lobject; 		pt_entry_t *pte;  		addr = addra + pmap_prefault_pageorder[i]; 		if (addr< starta || addr>= enda) 			continue;  		pte = vtopte(addr); 		if (*pte) 			continue;  		offset = (addr - entry->start) + entry->offset; 		lobject = object; 		for (m = vm_page_lookup(lobject, offset); 		    (!m&& lobject->shadow&& !lobject->pager); 		    lobject = lobject->shadow) {  			offset += lobject->shadow_offset; 			m = vm_page_lookup(lobject->shadow, offset); 		}
-comment|/* 		 * give-up when a page is not in memory 		 */
-end_comment
-
-begin_comment
-unit|if (m == NULL) 			break;  		if (((m->flags& (PG_CACHE | PG_ACTIVE | PG_INACTIVE)) != 0)&& 		    ((m->valid& VM_PAGE_BITS_ALL) == VM_PAGE_BITS_ALL)&& 		    (m->busy == 0)&& 		    (m->bmapped == 0)&& 		    (m->flags& (PG_BUSY | PG_FICTITIOUS)) == 0) {
-comment|/* 			 * test results show that the system is faster when 			 * pages are activated. 			 */
-end_comment
-
-begin_endif
-unit|if ((m->flags& PG_ACTIVE) == 0) { 				if( m->flags& PG_CACHE) 					vm_page_deactivate(m); 				else 					vm_page_activate(m); 			} 			vm_page_hold(m); 			m->flags |= PG_MAPPED; 			pmap_enter_quick(pmap, addr, VM_PAGE_TO_PHYS(m)); 			vm_page_unhold(m); 		} 	} }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	Routine:	pmap_change_wiring  *	Function:	Change the wiring attribute for a map/virtual-address  *			pair.  *	In/out conditions:  *			The mapping must already exist in the pmap.  */
