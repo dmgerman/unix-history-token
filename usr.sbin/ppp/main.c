@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.5 1995/05/30 03:50:47 rgrimes Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.6 1995/07/06 02:58:57 asami Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -2234,6 +2234,9 @@ decl_stmt|;
 name|int
 name|dial_up
 decl_stmt|;
+name|int
+name|qlen
+decl_stmt|;
 if|if
 condition|(
 name|mode
@@ -2248,9 +2251,9 @@ argument_list|(
 name|mode
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LOG_PHASE
 argument_list|,
 literal|"Packet mode enabled\n"
 argument_list|)
@@ -2425,6 +2428,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|qlen
+operator|=
+name|ModemQlen
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|modem
@@ -2448,8 +2456,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ModemQlen
-argument_list|()
+name|qlen
 operator|>
 literal|0
 condition|)
@@ -2492,6 +2499,14 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|qlen
+operator|<
+literal|20
+condition|)
+block|{
+comment|/*        *  If there are many packets queued, wait until they are drained.        */
 name|FD_SET
 argument_list|(
 name|tun_in
@@ -2500,6 +2515,7 @@ operator|&
 name|rfds
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|netfd
@@ -3047,15 +3063,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* something to read from tun */
-comment|/*        *  If there are many packets queued, wait until they are drained.        */
-if|if
-condition|(
-name|ModemQlen
-argument_list|()
-operator|>
-literal|5
-condition|)
-continue|continue;
 name|n
 operator|=
 name|read

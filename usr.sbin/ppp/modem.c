@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.6 1995/05/30 03:50:51 rgrimes Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.7 1995/06/30 19:53:04 dfr Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -2851,9 +2851,9 @@ name|ModemQlen
 parameter_list|()
 block|{
 name|struct
-name|mbuf
+name|mqueue
 modifier|*
-name|bp
+name|queue
 decl_stmt|;
 name|int
 name|len
@@ -2877,27 +2877,19 @@ name|i
 operator|++
 control|)
 block|{
-for|for
-control|(
-name|bp
+name|queue
 operator|=
+operator|&
 name|OutputQueues
 index|[
 name|i
 index|]
-operator|.
-name|top
-init|;
-name|bp
-condition|;
-name|bp
-operator|=
-name|bp
-operator|->
-name|pnext
-control|)
+expr_stmt|;
 name|len
-operator|++
+operator|+=
+name|queue
+operator|->
+name|qlen
 expr_stmt|;
 block|}
 return|return
