@@ -1802,8 +1802,6 @@ name|data_buf
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|error
 operator|=
 literal|0
