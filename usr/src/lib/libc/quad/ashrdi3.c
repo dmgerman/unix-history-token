@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ashrdi3.c	5.1 (Berkeley) %G%"
+literal|"@(#)ashrdi3.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,7 @@ argument_list|(
 name|int
 argument_list|)
 operator|*
-name|BITS_PER_UNIT
+name|NBBY
 operator|)
 operator|-
 name|b
