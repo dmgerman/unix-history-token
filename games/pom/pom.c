@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,11 +37,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pom.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)pom.c       8.1 (Berkeley) 5/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<time.h>
 end_include
 
 begin_include
@@ -162,7 +164,7 @@ name|isleap
 parameter_list|(
 name|y
 parameter_list|)
-value|(((y) % 4) == 0&& ((y) % 100) != 0 || ((y) % 400) == 0)
+value|((((y) % 4) == 0&& ((y) % 100) != 0) || ((y) % 400) == 0)
 end_define
 
 begin_decl_stmt
@@ -172,36 +174,28 @@ argument_list|()
 decl_stmt|,
 name|potm
 argument_list|()
-decl_stmt|,
-name|adj360
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|adj360
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
+name|void
 name|main
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-name|struct
-name|timeval
-name|tp
-decl_stmt|;
-name|struct
-name|timezone
-name|tzp
+name|time_t
+name|tt
 decl_stmt|;
 name|struct
 name|tm
 modifier|*
 name|GMT
-decl_stmt|,
-modifier|*
-name|gmtime
-argument_list|()
 decl_stmt|;
 name|double
 name|days
@@ -213,52 +207,21 @@ decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
-if|if
-condition|(
-name|gettimeofday
-argument_list|(
-operator|&
-name|tp
-argument_list|,
-operator|&
-name|tzp
-argument_list|)
-condition|)
-block|{
 operator|(
 name|void
 operator|)
-name|fprintf
+name|time
 argument_list|(
-name|stderr
-argument_list|,
-literal|"pom: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+operator|&
+name|tt
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|GMT
 operator|=
 name|gmtime
 argument_list|(
 operator|&
-name|tp
-operator|.
-name|tv_sec
+name|tt
 argument_list|)
 expr_stmt|;
 name|days
@@ -810,7 +773,7 @@ comment|/*  * adj360 --  *	adjust value so 0<= deg<= 360  */
 end_comment
 
 begin_function
-name|double
+name|void
 name|adj360
 parameter_list|(
 name|deg
