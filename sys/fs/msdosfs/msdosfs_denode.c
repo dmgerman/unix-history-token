@@ -1872,40 +1872,6 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|bn
-operator|=
-name|de_blk
-argument_list|(
-name|pmp
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|bread
-argument_list|(
-name|DETOV
-argument_list|(
-name|dep
-argument_list|)
-argument_list|,
-name|bn
-argument_list|,
-name|pmp
-operator|->
-name|pm_bpcluster
-argument_list|,
-name|NOCRED
-argument_list|,
-operator|&
-name|bp
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -1934,7 +1900,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 		 * is this the right place for it? 		 */
 name|bzero
 argument_list|(
 name|bp
@@ -1967,6 +1932,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Write out the updated directory entry.  Even if the update fails 	 * we free the trailing clusters. 	 */
 name|dep
