@@ -4083,10 +4083,6 @@ argument_list|(
 name|dest
 argument_list|,
 name|O_RDWR
-operator||
-name|O_CREAT
-argument_list|,
-literal|0644
 argument_list|)
 expr_stmt|;
 if|if
@@ -4094,6 +4090,13 @@ condition|(
 name|dfd
 operator|<
 literal|0
+operator|&&
+name|dest
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
 condition|)
 block|{
 if|if
@@ -4134,10 +4137,6 @@ argument_list|(
 name|buf
 argument_list|,
 name|O_RDWR
-operator||
-name|O_CREAT
-argument_list|,
-literal|0644
 argument_list|)
 expr_stmt|;
 block|}
