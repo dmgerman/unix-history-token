@@ -1050,6 +1050,10 @@ decl_stmt|;
 name|sigset_t
 name|savedsig
 decl_stmt|;
+name|int
+name|crit_ref
+decl_stmt|;
+comment|/* crit. section netsting level */
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|spinlock_t
 name|lock

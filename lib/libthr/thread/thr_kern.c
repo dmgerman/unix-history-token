@@ -122,6 +122,30 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* If we are already in a critical section, just up the refcount */
+if|if
+condition|(
+operator|++
+name|curthread
+operator|->
+name|crit_ref
+operator|>
+literal|1
+condition|)
+return|return;
+name|PTHREAD_ASSERT
+argument_list|(
+name|curthread
+operator|->
+name|crit_ref
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"Critical section reference count must be 1!"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|__sys_sigprocmask
@@ -169,6 +193,30 @@ block|{
 name|sigset_t
 name|set
 decl_stmt|;
+comment|/* We might be in a nested critical section */
+if|if
+condition|(
+operator|--
+name|curthread
+operator|->
+name|crit_ref
+operator|>
+literal|0
+condition|)
+return|return;
+name|PTHREAD_ASSERT
+argument_list|(
+name|curthread
+operator|->
+name|crit_ref
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"Non-Zero critical section reference count."
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Restore signals. 	 */
 name|set
 operator|=
