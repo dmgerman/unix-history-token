@@ -376,7 +376,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|g_down_proc
+name|g_event_proc
 decl_stmt|;
 name|struct
 name|thread
