@@ -36,7 +36,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|i386_saved_state
+name|amd64_saved_state
 value|trapframe
 end_define
 
@@ -65,7 +65,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|i386_saved_state
+name|amd64_saved_state
 name|db_regs_t
 typedef|;
 end_typedef
@@ -134,14 +134,14 @@ begin_define
 define|#
 directive|define
 name|BKPT_SKIP
-value|ddb_regs.tf_eip += 1
+value|ddb_regs.tf_rip += 1
 end_define
 
 begin_define
 define|#
 directive|define
 name|FIXUP_PC_AFTER_BREAK
-value|ddb_regs.tf_eip -= 1;
+value|ddb_regs.tf_rip -= 1;
 end_define
 
 begin_define
@@ -151,7 +151,7 @@ name|db_clear_single_step
 parameter_list|(
 name|regs
 parameter_list|)
-value|((regs)->tf_eflags&= ~PSL_T)
+value|((regs)->tf_rflags&= ~PSL_T)
 end_define
 
 begin_define
@@ -161,7 +161,7 @@ name|db_set_single_step
 parameter_list|(
 name|regs
 parameter_list|)
-value|((regs)->tf_eflags |=  PSL_T)
+value|((regs)->tf_rflags |=  PSL_T)
 end_define
 
 begin_define
