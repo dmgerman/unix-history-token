@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.9	81/04/03  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.10	81/05/18  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -373,14 +373,19 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"hz not specified; 50hz assumed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|hz
 operator|=
-literal|50
+literal|60
 expr_stmt|;
 block|}
 if|if
