@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.10 1998/02/25 07:10:57 danny Exp $"
+literal|"$Id: popen.c,v 1.11 1998/04/27 10:51:26 dg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,6 +712,16 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* since FTP protocol have no way to tell zone offset */
+name|setenv
+argument_list|(
+literal|"TZ"
+argument_list|,
+literal|""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INTERNAL_LS
