@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fsdb.c,v 1.10 1998/06/15 07:12:19 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3122,13 +3122,13 @@ name|typenamemap
 index|[
 sizeof|sizeof
 argument_list|(
-name|typemap
+name|typenamemap
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
 operator|*
-name|typemap
+name|typenamemap
 argument_list|)
 index|]
 condition|;
@@ -3179,13 +3179,13 @@ name|typenamemap
 index|[
 sizeof|sizeof
 argument_list|(
-name|typemap
+name|typenamemap
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
 operator|*
-name|typemap
+name|typenamemap
 argument_list|)
 index|]
 condition|)
