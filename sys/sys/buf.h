@@ -2222,17 +2222,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|bufdonebio
-parameter_list|(
-name|struct
-name|bio
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|cluster_callback
 parameter_list|(
 name|struct

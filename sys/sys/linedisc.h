@@ -774,23 +774,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BIO_STRATEGY
-parameter_list|(
-name|bp
-parameter_list|)
-define|\
-value|do {								\ 	if ((!(bp)->bio_cmd) || ((bp)->bio_cmd& ((bp)->bio_cmd - 1)))	\ 		Debugger("bio_cmd botch");				\ 	(*devsw((bp)->bio_dev)->d_strategy)(bp);			\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEV_STRATEGY
 parameter_list|(
 name|bp
 parameter_list|)
-define|\
-value|do {								\ 	if ((bp)->b_flags& B_PHYS)					\ 		(bp)->b_io.bio_offset = (bp)->b_offset;			\ 	else								\ 		(bp)->b_io.bio_offset = dbtob((bp)->b_blkno);		\ 	(bp)->b_io.bio_done = bufdonebio;				\ 	(bp)->b_io.bio_caller2 = (bp);					\ 	BIO_STRATEGY(&(bp)->b_io);					\ 	} while (0)
+value|dev_strategy(bp)
 end_define
 
 begin_endif
@@ -1244,6 +1232,18 @@ name|_pdev
 parameter_list|,
 name|dev_t
 name|_cdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dev_strategy
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
