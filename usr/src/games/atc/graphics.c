@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)graphics.c	5.2 (Berkeley) %G%"
+literal|"@(#)graphics.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1745,7 +1745,7 @@ name|planes
 argument_list|,
 literal|"Time: %-4d Safe: %d"
 argument_list|,
-name|clock
+name|clck
 argument_list|,
 name|safe_planes
 argument_list|)

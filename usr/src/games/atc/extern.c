@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)extern.c	5.3 (Berkeley) %G%"
+literal|"@(#)extern.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|clock
+name|clck
 decl_stmt|,
 name|safe_planes
 decl_stmt|,

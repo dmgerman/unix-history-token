@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)update.c	5.4 (Berkeley) %G%"
+literal|"@(#)update.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|clock
+name|clck
 operator|++
 expr_stmt|;
 name|erase_all
@@ -195,7 +195,7 @@ name|plane_type
 operator|==
 literal|0
 operator|&&
-name|clock
+name|clck
 operator|&
 literal|1
 condition|)

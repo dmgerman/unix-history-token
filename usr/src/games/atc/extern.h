@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ed James.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ed James.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -21,7 +21,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|clock
+name|clck
 decl_stmt|,
 name|safe_planes
 decl_stmt|,

@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	5.6 (Berkeley) %G%"
+literal|"@(#)log.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -743,7 +743,7 @@ name|thisscore
 operator|.
 name|time
 operator|=
-name|clock
+name|clck
 expr_stmt|;
 name|thisscore
 operator|.
