@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -519,6 +519,8 @@ operator|&&
 name|bitset
 argument_list|(
 name|H_RCPT
+operator||
+name|H_FROM
 argument_list|,
 name|h
 operator|->
