@@ -201,7 +201,8 @@ comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */
-literal|33
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
