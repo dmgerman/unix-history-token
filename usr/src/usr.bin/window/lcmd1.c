@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd1.c	3.28 %G%"
+literal|"@(#)lcmd1.c	3.29 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,7 +793,7 @@ name|vtobool
 argument_list|(
 name|a
 argument_list|,
-literal|1
+name|debug
 argument_list|,
 name|debug
 argument_list|)
