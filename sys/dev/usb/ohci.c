@@ -2357,6 +2357,8 @@ name|std
 expr_stmt|;
 name|dataphysend
 operator|=
+name|OHCI_PAGE
+argument_list|(
 name|DMAADDR
 argument_list|(
 name|dma
@@ -2364,6 +2366,7 @@ argument_list|,
 name|len
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tdflags
@@ -2440,10 +2443,7 @@ argument_list|(
 name|dataphys
 argument_list|)
 operator|==
-name|OHCI_PAGE
-argument_list|(
 name|dataphysend
-argument_list|)
 operator|||
 name|OHCI_PAGE
 argument_list|(
@@ -2452,10 +2452,7 @@ argument_list|)
 operator|+
 name|OHCI_PAGE_SIZE
 operator|==
-name|OHCI_PAGE
-argument_list|(
 name|dataphysend
-argument_list|)
 condition|)
 elif|#
 directive|elif
@@ -2471,10 +2468,7 @@ argument_list|(
 name|dataphys
 argument_list|)
 operator|==
-name|OHCI_PAGE
-argument_list|(
 name|dataphysend
-argument_list|)
 condition|)
 endif|#
 directive|endif
@@ -2510,6 +2504,17 @@ name|OHCI_PAGE_MASK
 argument_list|(
 name|dataphys
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|curlen
+operator|>
+name|len
+condition|)
+comment|/* may have fit in one page */
+name|curlen
+operator|=
+name|len
 expr_stmt|;
 elif|#
 directive|elif
