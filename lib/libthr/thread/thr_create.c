@@ -541,12 +541,6 @@ name|new_thread
 operator|->
 name|base_priority
 expr_stmt|;
-name|new_thread
-operator|->
-name|inherited_priority
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Initialise the unique id which GDB uses to 	 * track threads. 	 */
 name|new_thread
 operator|->
