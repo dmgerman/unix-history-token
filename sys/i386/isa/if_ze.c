@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.8 1994/10/23 21:27:25 wollman Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.9 1994/11/24 14:29:26 davidg Exp $  */
 end_comment
 
 begin_include
@@ -5101,26 +5101,7 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 comment|/* before arpwhohas */
-comment|/* 			 * See if another station has *our* IP address. 			 * i.e.: There is an address conflict! If a 			 * conflict exists, a message is sent to the 			 * console. 			 */
-operator|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-name|ifp
-operator|)
-operator|->
-name|ac_ipaddr
-operator|=
-name|IA_SIN
-argument_list|(
-name|ifa
-argument_list|)
-operator|->
-name|sin_addr
-expr_stmt|;
-name|arpwhohas
+name|arp_ifinit
 argument_list|(
 operator|(
 expr|struct
@@ -5129,13 +5110,7 @@ operator|*
 operator|)
 name|ifp
 argument_list|,
-operator|&
-name|IA_SIN
-argument_list|(
 name|ifa
-argument_list|)
-operator|->
-name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;
