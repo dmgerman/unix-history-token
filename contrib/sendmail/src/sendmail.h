@@ -204,7 +204,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.902 2002/01/09 00:10:11 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.912 2002/04/02 16:43:26 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -2937,11 +2937,39 @@ name|runqueueevent
 name|__P
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUEUE_RUN_PARANOIA
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|checkqueuerunner
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUEUE_RUN_PARANOIA */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -3108,11 +3136,23 @@ name|int
 name|qg_maxrcpt
 decl_stmt|;
 comment|/* max recipients per envelope, 0==no limit */
+name|time_t
+name|qg_nextrun
+decl_stmt|;
+comment|/* time for next queue runs */
+if|#
+directive|if
+name|_FFR_QUEUE_GROUP_SORTORDER
+name|short
+name|qg_sortorder
+decl_stmt|;
+comment|/* how do we sort this queuerun */
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_GROUP_SORTORDER */
 if|#
 directive|if
 literal|0
-block|short	qg_sortorder;
-comment|/* how do we sort this queuerun */
 block|long	qg_wkrcptfact;
 comment|/* multiplier for # recipients -> priority */
 block|long	qg_qfactor;
@@ -4056,15 +4096,8 @@ begin_comment
 comment|/* strip this message to 7 bits */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MCIF_MULTSTAT
-value|0x00000100
-end_define
-
 begin_comment
-comment|/* MAIL11V3: handles MULT status */
+comment|/* 0x00000100 unused, was MCIF_MULTSTAT: MAIL11V3: handles MULT status */
 end_comment
 
 begin_define
@@ -9366,6 +9399,17 @@ begin_comment
 comment|/* map newlines in headers */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PXLF_NOADDEOL
+value|0x0008
+end_define
+
+begin_comment
+comment|/* if EOL not present, don't add one */
+end_comment
+
 begin_comment
 comment|/* **  Privacy flags **	These are bit values for the PrivacyFlags word. */
 end_comment
@@ -10040,15 +10084,26 @@ begin_comment
 comment|/* NETINET || NETINET6 || NETUNIX || NETISO || NETNS || NETX25 */
 end_comment
 
+begin_comment
+comment|/* **  Mail Filters (milter) */
+end_comment
+
+begin_comment
+comment|/* **  32-bit type used by milter **  (needed by libmilter even if MILTER isn't defined) */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|SM_INT32
+name|mi_int32
+typedef|;
+end_typedef
+
 begin_if
 if|#
 directive|if
 name|MILTER
 end_if
-
-begin_comment
-comment|/* **  Mail Filters (milter) */
-end_comment
 
 begin_define
 define|#
@@ -10118,18 +10173,15 @@ name|BITMAP256
 name|mf_flags
 decl_stmt|;
 comment|/* MTA flags */
-name|unsigned
-name|long
+name|mi_int32
 name|mf_fvers
 decl_stmt|;
 comment|/* filter version */
-name|unsigned
-name|long
+name|mi_int32
 name|mf_fflags
 decl_stmt|;
 comment|/* filter flags */
-name|unsigned
-name|long
+name|mi_int32
 name|mf_pflags
 decl_stmt|;
 comment|/* protocol flags */
@@ -10330,17 +10382,6 @@ end_endif
 begin_comment
 comment|/* MILTER */
 end_comment
-
-begin_comment
-comment|/* **  32-bit type used by milter **  (needed by libmilter even if MILTER isn't defined) */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|SM_INT32
-name|mi_int32
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* **  Vendor codes ** **	Vendors can customize sendmail to add special behaviour, **	generally for back compatibility.  Ideally, this should **	be set up in the .cf file using the "V" command.  However, **	it's quite reasonable for some vendors to want the default **	be their old version; this can be set using **		-DVENDOR_DEFAULT=VENDOR_xxx **	in the Makefile. ** **	Vendors should apply to sendmail@sendmail.org for **	unique vendor codes. */
@@ -13861,6 +13902,33 @@ begin_comment
 comment|/* shared memory key */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_SELECT_SHM
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|ShmKeyFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* shared memory key file */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SELECT_SHM */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -15608,6 +15676,13 @@ define|#
 directive|define
 name|STATS_REJECT
 value|'r'
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATS_CONNECT
+value|'c'
 end_define
 
 begin_decl_stmt

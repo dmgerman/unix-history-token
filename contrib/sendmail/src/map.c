@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.618 2002/01/11 22:06:52 gshapiro Exp $"
+literal|"@(#)$Id: map.c,v 8.641 2002/03/26 22:56:36 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -11516,7 +11516,7 @@ argument_list|)
 condition|)
 name|syserr
 argument_list|(
-literal|"421 4.3.5 NIS map %s specified, but NIS not running"
+literal|"451 4.3.5 NIS map %s specified, but NIS not running"
 argument_list|,
 name|map
 operator|->
@@ -11636,7 +11636,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"421 4.0.0 Cannot bind to map %s in domain %s: %s"
+literal|"451 4.3.5 Cannot bind to map %s in domain %s: %s"
 argument_list|,
 name|map
 operator|->
@@ -12817,7 +12817,7 @@ comment|/* all other nisplus errors */
 if|#
 directive|if
 literal|0
-block|if (!bitset(MF_OPTIONAL, map->map_mflags)) 				syserr("421 4.0.0 Cannot find table %s.%s: %s", 					map->map_file, map->map_domain, 					nis_sperrno(res->status));
+block|if (!bitset(MF_OPTIONAL, map->map_mflags)) 				syserr("451 4.3.5 Cannot find table %s.%s: %s", 					map->map_file, map->map_domain, 					nis_sperrno(res->status));
 endif|#
 directive|endif
 comment|/* 0 */
@@ -12872,7 +12872,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (!bitset(MF_OPTIONAL, map->map_mflags)) 			syserr("421 4.0.0 %s.%s: %s is not a table", 				map->map_file, map->map_domain, 				nis_sperrno(res->status));
+block|if (!bitset(MF_OPTIONAL, map->map_mflags)) 			syserr("451 4.3.5 %s.%s: %s is not a table", 				map->map_file, map->map_domain, 				nis_sperrno(res->status));
 endif|#
 directive|endif
 comment|/* 0 */
@@ -13876,7 +13876,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"\nnisplus_getcanoname(%s), qbuf=%s\n"
+literal|"\nnisplus_getcanonname(%s), qbuf=%s\n"
 argument_list|,
 name|name
 argument_list|,
@@ -13961,7 +13961,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"nisplus_getcanoname(%s), got %d entries, all but first ignored\n"
+literal|"nisplus_getcanonname(%s), got %d entries, all but first ignored\n"
 argument_list|,
 name|name
 argument_list|,
@@ -13980,7 +13980,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"nisplus_getcanoname(%s), found in directory \"%s\"\n"
+literal|"nisplus_getcanonname(%s), found in directory \"%s\"\n"
 argument_list|,
 name|name
 argument_list|,
@@ -14674,7 +14674,7 @@ literal|"timeout conning to LDAP server %.100s"
 argument_list|,
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 operator|==
 name|NULL
 condition|?
@@ -14682,7 +14682,7 @@ literal|"localhost"
 else|:
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 argument_list|)
 expr_stmt|;
 block|}
@@ -14729,7 +14729,7 @@ directive|endif
 comment|/* USE_LDAP_INIT */
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 operator|==
 name|NULL
 condition|?
@@ -14737,7 +14737,7 @@ literal|"localhost"
 else|:
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 argument_list|,
 name|map
 operator|->
@@ -14747,7 +14747,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.0.0 %s failed to %s in map %s"
+literal|"451 4.3.5 %s failed to %s in map %s"
 argument_list|,
 if|#
 directive|if
@@ -14764,7 +14764,7 @@ directive|endif
 comment|/* USE_LDAP_INIT */
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 operator|==
 name|NULL
 condition|?
@@ -14772,7 +14772,7 @@ literal|"localhost"
 else|:
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 argument_list|,
 name|map
 operator|->
@@ -15120,25 +15120,44 @@ modifier|*
 name|statp
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|_FFR_LDAP_RECURSION
 name|int
-name|i
+name|plen
+init|=
+literal|0
 decl_stmt|;
+name|int
+name|psize
+init|=
+literal|0
+decl_stmt|;
+else|#
+directive|else
+comment|/* _FFR_LDAP_RECURSION */
 name|int
 name|entries
 init|=
 literal|0
 decl_stmt|;
 name|int
-name|msgid
+name|i
 decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
 name|int
-name|save_errno
+name|vsize
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_RECURSION */
+name|int
+name|msgid
 decl_stmt|;
 name|int
-name|vsize
+name|save_errno
 decl_stmt|;
 name|char
 modifier|*
@@ -15323,7 +15342,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.0.0 Error in ldap_search using %s in map %s"
+literal|"451 4.3.5 Error in ldap_search using %s in map %s"
 argument_list|,
 name|keybuf
 argument_list|,
@@ -15462,6 +15481,12 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
+operator|&
+name|plen
+argument_list|,
+operator|&
+name|psize
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -15566,7 +15591,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.0.0 Error getting LDAP results in map %s"
+literal|"451 4.3.5 Error getting LDAP results in map %s"
 argument_list|,
 name|map
 operator|->
@@ -15582,12 +15607,9 @@ return|return
 name|NULL
 return|;
 block|}
-goto|goto
-name|finishlookup
-goto|;
 block|}
-endif|#
-directive|endif
+else|#
+directive|else
 comment|/* _FFR_LDAP_RECURSION */
 comment|/* Get results */
 while|while
@@ -15935,17 +15957,11 @@ operator|==
 name|LDAP_SUCCESS
 condition|)
 block|{
-if|#
-directive|if
-name|USING_NETSCAPE_LDAP
 name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 continue|continue;
 block|}
 comment|/* Must be an error */
@@ -15993,7 +16009,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.0.0 Error getting LDAP values in map %s"
+literal|"451 4.3.5 Error getting LDAP values in map %s"
 argument_list|,
 name|map
 operator|->
@@ -16006,17 +16022,11 @@ name|statp
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
-if|#
-directive|if
-name|USING_NETSCAPE_LDAP
 name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 if|if
 condition|(
 name|lmap
@@ -16129,17 +16139,11 @@ argument_list|(
 name|vals
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USING_NETSCAPE_LDAP
 name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 continue|continue;
 block|}
 comment|/* 				**  If we don't want multiple values, 				**  return first found. 				*/
@@ -16168,17 +16172,11 @@ argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USING_NETSCAPE_LDAP
 name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 break|break;
 block|}
 if|if
@@ -16196,17 +16194,11 @@ argument_list|(
 name|vals
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USING_NETSCAPE_LDAP
 name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 continue|continue;
 block|}
 name|vsize
@@ -16291,17 +16283,11 @@ argument_list|(
 name|vals
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USING_NETSCAPE_LDAP
 name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 break|break;
 block|}
 comment|/* attributes only */
@@ -16381,17 +16367,11 @@ operator|=
 name|tmp
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|USING_NETSCAPE_LDAP
 name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 continue|continue;
 block|}
 comment|/* 				**  If there is more than one, 				**  munge then into a map_coldelim 				**  separated string 				*/
@@ -16572,17 +16552,11 @@ argument_list|(
 name|vals
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USING_NETSCAPE_LDAP
 name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 if|if
 condition|(
 name|vp
@@ -16720,7 +16694,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.0.0 Error getting LDAP attributes in map %s"
+literal|"451 4.3.5 Error getting LDAP attributes in map %s"
 argument_list|,
 name|map
 operator|->
@@ -16868,7 +16842,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.0.0 Error getting LDAP entries in map %s"
+literal|"451 4.3.5 Error getting LDAP entries in map %s"
 argument_list|,
 name|map
 operator|->
@@ -17027,7 +17001,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.0.0 Error getting LDAP results in map %s"
+literal|"451 4.3.5 Error getting LDAP results in map %s"
 argument_list|,
 name|map
 operator|->
@@ -17090,11 +17064,6 @@ return|return
 name|NULL
 return|;
 block|}
-if|#
-directive|if
-name|_FFR_LDAP_RECURSION
-name|finishlookup
-label|:
 endif|#
 directive|endif
 comment|/* _FFR_LDAP_RECURSION */
@@ -17238,6 +17207,10 @@ decl_stmt|;
 block|{
 name|char
 modifier|*
+name|format
+decl_stmt|;
+name|char
+modifier|*
 name|nbuf
 decl_stmt|;
 name|STAB
@@ -17247,16 +17220,33 @@ name|s
 init|=
 name|NULL
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_LDAP_SETVERSION
+name|format
+operator|=
+literal|"%s%c%d%c%d%c%s%c%s%d"
+expr_stmt|;
+else|#
+directive|else
+comment|/* _FFR_LDAP_SETVERSION */
+name|format
+operator|=
+literal|"%s%c%d%c%s%c%s%d"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SETVERSION */
 name|nbuf
 operator|=
 name|sm_stringf_x
 argument_list|(
-literal|"%s%c%d%c%s%c%s%d"
+name|format
 argument_list|,
 operator|(
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 operator|==
 name|NULL
 condition|?
@@ -17264,7 +17254,7 @@ literal|"localhost"
 else|:
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 operator|)
 argument_list|,
 name|CONDELSE
@@ -17275,6 +17265,18 @@ name|ldap_port
 argument_list|,
 name|CONDELSE
 argument_list|,
+if|#
+directive|if
+name|_FFR_LDAP_SETVERSION
+name|lmap
+operator|->
+name|ldap_version
+argument_list|,
+name|CONDELSE
+argument_list|,
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SETVERSION */
 operator|(
 name|lmap
 operator|->
@@ -17479,6 +17481,17 @@ name|secretread
 init|=
 name|true
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_LDAP_URI
+name|bool
+name|ldaphost
+init|=
+name|false
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_URI */
 name|int
 name|i
 decl_stmt|;
@@ -18557,9 +18570,39 @@ name|p
 argument_list|)
 condition|)
 continue|continue;
+if|#
+directive|if
+name|_FFR_LDAP_URI
+if|if
+condition|(
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_uri
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Can not specify both an LDAP host and an LDAP URI in map %s"
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+name|ldaphost
+operator|=
+name|true
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_URI */
+name|lmap
+operator|->
+name|ldap_target
 operator|=
 name|p
 expr_stmt|;
@@ -18914,6 +18957,189 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_LDAP_URI
+case|case
+literal|'H'
+case|:
+comment|/* Use LDAP URI */
+if|#
+directive|if
+operator|!
+name|USE_LDAP_INIT
+name|syserr
+argument_list|(
+literal|"Must compile with -DUSE_LDAP_INIT to use LDAP URIs (-H) in map %s"
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+else|#
+directive|else
+comment|/* !USE_LDAP_INIT */
+if|if
+condition|(
+name|ldaphost
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Can not specify both an LDAP host and an LDAP URI in map %s"
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+operator|++
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+continue|continue;
+name|lmap
+operator|->
+name|ldap_target
+operator|=
+name|p
+expr_stmt|;
+name|lmap
+operator|->
+name|ldap_uri
+operator|=
+name|true
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* !USE_LDAP_INIT */
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_URI */
+if|#
+directive|if
+name|_FFR_LDAP_SETVERSION
+case|case
+literal|'w'
+case|:
+comment|/* -w should be for passwd, -P should be for version */
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+operator|++
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+continue|continue;
+name|lmap
+operator|->
+name|ldap_version
+operator|=
+name|atoi
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LDAP_VERSION_MAX
+if|if
+condition|(
+name|lmap
+operator|->
+name|ldap_version
+operator|>
+name|LDAP_VERSION_MAX
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"LDAP version %d exceeds max of %d in map %s"
+argument_list|,
+name|lmap
+operator|->
+name|ldap_version
+argument_list|,
+name|LDAP_VERSION_MAX
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* LDAP_VERSION_MAX */
+ifdef|#
+directive|ifdef
+name|LDAP_VERSION_MIN
+if|if
+condition|(
+name|lmap
+operator|->
+name|ldap_version
+operator|<
+name|LDAP_VERSION_MIN
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"LDAP version %d is lower than min of %d in map %s"
+argument_list|,
+name|lmap
+operator|->
+name|ldap_version
+argument_list|,
+name|LDAP_VERSION_MIN
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* LDAP_VERSION_MIN */
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SETVERSION */
 default|default:
 name|syserr
 argument_list|(
@@ -19054,7 +19280,7 @@ if|if
 condition|(
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 operator|!=
 name|NULL
 operator|&&
@@ -19069,16 +19295,16 @@ name|lmap
 operator|||
 name|LDAPDefaults
 operator|->
-name|ldap_host
+name|ldap_target
 operator|!=
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 operator|)
 condition|)
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 operator|=
 name|newstr
 argument_list|(
@@ -19086,7 +19312,7 @@ name|ldapmap_dequote
 argument_list|(
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -19096,7 +19322,7 @@ name|map_domain
 operator|=
 name|lmap
 operator|->
-name|ldap_host
+name|ldap_target
 expr_stmt|;
 if|if
 condition|(
@@ -19567,10 +19793,10 @@ name|recurse
 init|=
 name|false
 decl_stmt|;
-name|int
-name|final
+name|bool
+name|normalseen
 init|=
-literal|0
+name|false
 decl_stmt|;
 endif|#
 directive|endif
@@ -19600,6 +19826,43 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_LDAP_RECURSION
+comment|/* Prime the attr list with the objectClass attribute */
+name|lmap
+operator|->
+name|ldap_attr
+index|[
+name|i
+index|]
+operator|=
+literal|"objectClass"
+expr_stmt|;
+name|lmap
+operator|->
+name|ldap_attr_type
+index|[
+name|i
+index|]
+operator|=
+name|SM_LDAP_ATTR_OBJCLASS
+expr_stmt|;
+name|lmap
+operator|->
+name|ldap_attr_needobjclass
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_RECURSION */
 while|while
 condition|(
 name|p
@@ -19694,9 +19957,19 @@ block|{
 if|#
 directive|if
 name|_FFR_LDAP_RECURSION
+name|int
+name|j
+decl_stmt|;
+name|int
+name|use
+decl_stmt|;
 name|char
 modifier|*
 name|type
+decl_stmt|;
+name|char
+modifier|*
+name|needobjclass
 decl_stmt|;
 name|type
 operator|=
@@ -19713,20 +19986,128 @@ name|type
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|type
 operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_LDAP_RECURSION */
+name|needobjclass
+operator|=
+name|strchr
+argument_list|(
+name|type
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|needobjclass
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|needobjclass
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+else|else
+block|{
+name|needobjclass
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|use
+operator|=
+name|i
+expr_stmt|;
+comment|/* allow override on "objectClass" type */
+if|if
+condition|(
+name|sm_strcasecmp
+argument_list|(
+name|v
+argument_list|,
+literal|"objectClass"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|lmap
+operator|->
+name|ldap_attr_type
+index|[
+literal|0
+index|]
+operator|==
+name|SM_LDAP_ATTR_OBJCLASS
+condition|)
+block|{
+name|use
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 					**  Don't add something to attribute 					**  list twice. 					*/
+for|for
+control|(
+name|j
+operator|=
+literal|1
+init|;
+name|j
+operator|<
+name|i
+condition|;
+name|j
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|sm_strcasecmp
+argument_list|(
+name|v
+argument_list|,
 name|lmap
 operator|->
 name|ldap_attr
 index|[
-name|i
+name|j
+index|]
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Duplicate attribute (%s) in %s"
+argument_list|,
+name|v
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+block|}
+name|lmap
+operator|->
+name|ldap_attr
+index|[
+name|use
 index|]
 operator|=
 name|newstr
@@ -19734,39 +20115,61 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_LDAP_RECURSION
+if|if
+condition|(
+name|needobjclass
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|needobjclass
+operator|!=
+literal|'\0'
+operator|&&
+operator|*
+name|needobjclass
+operator|!=
+literal|'*'
+condition|)
+block|{
+name|lmap
+operator|->
+name|ldap_attr_needobjclass
+index|[
+name|use
+index|]
+operator|=
+name|newstr
+argument_list|(
+name|needobjclass
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|lmap
+operator|->
+name|ldap_attr_needobjclass
+index|[
+name|use
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|type
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|sm_strcasecmp
-argument_list|(
+operator|&&
+operator|*
 name|type
-argument_list|,
-literal|"normal"
-argument_list|)
-operator|==
-literal|0
+operator|!=
+literal|'\0'
 condition|)
 block|{
-name|lmap
-operator|->
-name|ldap_attr_type
-index|[
-name|i
-index|]
-operator|=
-name|LDAPMAP_ATTR_NORMAL
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|sm_strcasecmp
@@ -19787,10 +20190,10 @@ name|lmap
 operator|->
 name|ldap_attr_type
 index|[
-name|i
+name|use
 index|]
 operator|=
-name|LDAPMAP_ATTR_DN
+name|SM_LDAP_ATTR_DN
 expr_stmt|;
 block|}
 elseif|else
@@ -19814,10 +20217,10 @@ name|lmap
 operator|->
 name|ldap_attr_type
 index|[
-name|i
+name|use
 index|]
 operator|=
-name|LDAPMAP_ATTR_FILTER
+name|SM_LDAP_ATTR_FILTER
 expr_stmt|;
 block|}
 elseif|else
@@ -19841,10 +20244,10 @@ name|lmap
 operator|->
 name|ldap_attr_type
 index|[
-name|i
+name|use
 index|]
 operator|=
-name|LDAPMAP_ATTR_URL
+name|SM_LDAP_ATTR_URL
 expr_stmt|;
 block|}
 elseif|else
@@ -19854,7 +20257,7 @@ name|sm_strcasecmp
 argument_list|(
 name|type
 argument_list|,
-literal|"final"
+literal|"normal"
 argument_list|)
 operator|==
 literal|0
@@ -19864,47 +20267,14 @@ name|lmap
 operator|->
 name|ldap_attr_type
 index|[
-name|i
+name|use
 index|]
 operator|=
-name|LDAPMAP_ATTR_FINAL
+name|SM_LDAP_ATTR_NORMAL
 expr_stmt|;
-if|if
-condition|(
-name|final
-operator|>=
-name|LDAPMAP_MAX_ATTR
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"Too many FINAL attributes in %s (max %d)"
-argument_list|,
-name|map
-operator|->
-name|map_mname
-argument_list|,
-name|LDAPMAP_MAX_ATTR
-argument_list|)
-expr_stmt|;
-return|return
-name|false
-return|;
-block|}
-name|lmap
-operator|->
-name|ldap_attr_final
-index|[
-name|final
-operator|++
-index|]
+name|normalseen
 operator|=
-name|lmap
-operator|->
-name|ldap_attr
-index|[
-name|i
-index|]
+name|true
 expr_stmt|;
 block|}
 else|else
@@ -19926,14 +20296,35 @@ return|;
 block|}
 block|}
 else|else
+block|{
 name|lmap
 operator|->
 name|ldap_attr_type
 index|[
+name|use
+index|]
+operator|=
+name|SM_LDAP_ATTR_NORMAL
+expr_stmt|;
+name|normalseen
+operator|=
+name|true
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* _FFR_LDAP_RECURSION */
+name|lmap
+operator|->
+name|ldap_attr
+index|[
 name|i
 index|]
 operator|=
-name|LDAPMAP_ATTR_NORMAL
+name|newstr
+argument_list|(
+name|v
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -19955,32 +20346,17 @@ expr_stmt|;
 if|#
 directive|if
 name|_FFR_LDAP_RECURSION
-name|lmap
-operator|->
-name|ldap_attr_final
-index|[
-name|final
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|recurse
 operator|&&
-name|lmap
-operator|->
-name|ldap_attr_final
-index|[
-literal|0
-index|]
-operator|==
-name|NULL
+operator|!
+name|normalseen
 condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"LDAP recursion requested in %s but no FINAL attribute given"
+literal|"LDAP recursion requested in %s but no returnable attribute given"
 argument_list|,
 name|map
 operator|->
@@ -20939,7 +21315,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"ph_map_close(%s): pmap->ph_fastclose=%d"
+literal|"ph_map_close(%s): pmap->ph_fastclose=%d\n"
 argument_list|,
 name|map
 operator|->
@@ -22552,7 +22928,7 @@ argument_list|)
 condition|)
 name|syserr
 argument_list|(
-literal|"421 4.0.0 cannot initialize Hesiod map (%s)"
+literal|"451 4.3.5 cannot initialize Hesiod map (%s)"
 argument_list|,
 name|sm_errstring
 argument_list|(
@@ -22606,7 +22982,7 @@ argument_list|)
 condition|)
 name|syserr
 argument_list|(
-literal|"421 4.0.0 cannot initialize Hesiod map (%d)"
+literal|"451 4.3.5 cannot initialize Hesiod map (%d)"
 argument_list|,
 name|hes_error
 argument_list|()

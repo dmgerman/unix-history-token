@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.428 2002/01/08 00:56:23 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.431 2002/04/03 00:23:25 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -322,6 +322,9 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
+name|int
+name|state
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -392,6 +395,12 @@ name|SmtpNeedIntro
 operator|=
 name|true
 expr_stmt|;
+name|state
+operator|=
+name|mci
+operator|->
+name|mci_state
+expr_stmt|;
 switch|switch
 condition|(
 name|mci
@@ -454,7 +463,9 @@ name|MCIS_CLOSED
 case|:
 name|syserr
 argument_list|(
-literal|"451 4.4.0 smtpinit: state CLOSED"
+literal|"451 4.4.0 smtpinit: state CLOSED (was %d)"
+argument_list|,
+name|state
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7957,15 +7968,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|smtpquit
-argument_list|(
-name|m
-argument_list|,
-name|mci
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 return|return
 name|EX_TEMPFAIL
 return|;
@@ -7978,32 +7980,7 @@ operator|==
 name|SMTPCLOSING
 condition|)
 block|{
-comment|/* service shutting down */
-name|mci_setstat
-argument_list|(
-name|mci
-argument_list|,
-name|EX_TEMPFAIL
-argument_list|,
-name|ENHSCN
-argument_list|(
-name|enhsc
-argument_list|,
-literal|"4.5.0"
-argument_list|)
-argument_list|,
-name|SmtpReplyBuffer
-argument_list|)
-expr_stmt|;
-name|smtpquit
-argument_list|(
-name|m
-argument_list|,
-name|mci
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
+comment|/* service shutting down: handled by reply() */
 return|return
 name|EX_TEMPFAIL
 return|;
@@ -9600,6 +9577,12 @@ operator|==
 literal|4
 condition|)
 block|{
+if|if
+condition|(
+name|r
+operator|>=
+literal|0
+condition|)
 name|smtpquit
 argument_list|(
 name|m
@@ -10242,20 +10225,9 @@ name|r
 operator|<
 literal|0
 condition|)
-block|{
-name|smtpquit
-argument_list|(
-name|m
-argument_list|,
-name|mci
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 return|return
 name|EX_TEMPFAIL
 return|;
-block|}
 name|mci
 operator|->
 name|mci_state
@@ -10644,20 +10616,9 @@ name|r
 operator|<
 literal|0
 condition|)
-block|{
-name|smtpquit
-argument_list|(
-name|m
-argument_list|,
-name|mci
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 return|return
 name|EX_TEMPFAIL
 return|;
-block|}
 name|xstat
 operator|=
 name|EX_NOTSTICKY
@@ -10876,6 +10837,15 @@ name|char
 modifier|*
 name|oldcurhost
 decl_stmt|;
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|==
+name|MCIS_CLOSED
+condition|)
+return|return;
 name|oldcurhost
 operator|=
 name|CurHostName
@@ -10930,13 +10900,6 @@ operator|!=
 name|MCIS_QUITING
 condition|)
 block|{
-name|int
-name|origstate
-init|=
-name|mci
-operator|->
-name|mci_state
-decl_stmt|;
 name|SmtpPhase
 operator|=
 literal|"client QUIT"
@@ -10985,10 +10948,6 @@ condition|(
 name|mci
 operator|->
 name|mci_state
-operator|==
-name|MCIS_CLOSED
-operator|||
-name|origstate
 operator|==
 name|MCIS_CLOSED
 condition|)
@@ -11207,15 +11166,8 @@ name|r
 operator|<
 literal|0
 condition|)
-name|mci
-operator|->
-name|mci_state
-operator|=
-name|MCIS_ERROR
-expr_stmt|;
-else|else
-block|{
-comment|/* 		**  Any response is deemed to be acceptable. 		**  The standard does not state the proper action 		**  to take when a value other than 250 is received. 		** 		**  However, if 421 is returned for the RSET, leave 		**  mci_state as MCIS_SSD (set in reply()). 		*/
+return|return;
+comment|/* 	**  Any response is deemed to be acceptable. 	**  The standard does not state the proper action 	**  to take when a value other than 250 is received. 	** 	**  However, if 421 is returned for the RSET, leave 	**  mci_state as MCIS_SSD (set in reply()). 	*/
 if|if
 condition|(
 name|mci
@@ -11229,17 +11181,6 @@ operator|->
 name|mci_state
 operator|=
 name|MCIS_OPEN
-expr_stmt|;
-return|return;
-block|}
-name|smtpquit
-argument_list|(
-name|m
-argument_list|,
-name|mci
-argument_list|,
-name|e
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -11335,10 +11276,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|<
-literal|0
-operator|||
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -11566,6 +11503,47 @@ name|mci_errno
 operator|=
 name|EBADF
 expr_stmt|;
+comment|/* errors on QUIT should be ignored */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|SmtpMsgBuffer
+argument_list|,
+literal|"QUIT"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|mci
+operator|->
+name|mci_errno
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_ERROR
+expr_stmt|;
+name|smtpquit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|mci
@@ -11641,6 +11619,24 @@ name|char
 name|MsgBuf
 index|[]
 decl_stmt|;
+comment|/* errors on QUIT should be ignored */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|SmtpMsgBuffer
+argument_list|,
+literal|"QUIT"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 comment|/* if the remote end closed early, fake an error */
 name|errno
 operator|=
@@ -11707,20 +11703,6 @@ argument_list|,
 name|CURHOSTNAME
 argument_list|)
 expr_stmt|;
-comment|/* errors on QUIT should not be persistent */
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|SmtpMsgBuffer
-argument_list|,
-literal|"QUIT"
-argument_list|,
-literal|4
-argument_list|)
-operator|!=
-literal|0
-condition|)
 name|mci_setstat
 argument_list|(
 name|mci
@@ -12138,6 +12120,12 @@ operator|->
 name|mci_state
 operator|!=
 name|MCIS_SSD
+operator|&&
+name|mci
+operator|->
+name|mci_state
+operator|!=
+name|MCIS_QUITING
 condition|)
 block|{
 comment|/* send the quit protocol */

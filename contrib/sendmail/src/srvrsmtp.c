@@ -33,7 +33,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.814 2002/01/08 00:56:22 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.819 2002/04/02 03:51:02 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1023,6 +1023,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! MAXBADCOMMANDS */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1044,6 +1048,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! MAXNOOPCOMMANDS */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1067,6 +1075,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! MAXHELOCOMMANDS */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1088,6 +1100,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! MAXVRFYCOMMANDS */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1111,6 +1127,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! MAXETRNCOMMANDS */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1132,6 +1152,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! MAXTIMEOUT */
+end_comment
 
 begin_if
 if|#
@@ -2550,7 +2574,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Milter: inititalization failed, rejecting commands"
+literal|"Milter: initialization failed, rejecting commands"
 argument_list|)
 expr_stmt|;
 name|greetcode
@@ -2585,7 +2609,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Milter: inititalization failed, temp failing commands"
+literal|"Milter: initialization failed, temp failing commands"
 argument_list|)
 expr_stmt|;
 name|tempfail
@@ -7053,9 +7077,19 @@ expr_stmt|;
 comment|/* do the processing */
 name|SM_TRY
 block|{
+specifier|extern
+name|char
+modifier|*
+name|FullName
+decl_stmt|;
 name|QuickAbort
 operator|=
 name|true
+expr_stmt|;
+name|SM_FREE_CLR
+argument_list|(
+name|FullName
+argument_list|)
 expr_stmt|;
 comment|/* must parse sender first */
 name|delimptr

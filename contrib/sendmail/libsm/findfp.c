@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: findfp.c,v 1.62 2002/01/11 16:33:03 ca Exp $"
+literal|"@(#)$Id: findfp.c,v 1.66 2002/02/20 02:40:24 ca Exp $"
 argument_list|)
 end_macro
 
@@ -242,7 +242,7 @@ end_comment
 
 begin_decl_stmt
 name|SM_FILE_T
-name|_SmFtString_def
+name|SmFtString_def
 init|=
 block|{
 name|SmFileMagic
@@ -589,7 +589,7 @@ operator|*
 name|g
 argument_list|)
 operator|+
-name|ALIGNBYTES
+name|SM_ALIGN_BITS
 operator|+
 name|n
 operator|*
@@ -605,7 +605,7 @@ operator|(
 name|SM_FILE_T
 operator|*
 operator|)
-name|ALIGN
+name|SM_ALIGN
 argument_list|(
 name|g
 operator|+
@@ -961,13 +961,6 @@ expr_stmt|;
 comment|/* file type */
 name|fp
 operator|->
-name|f_self
-operator|=
-name|fp
-expr_stmt|;
-comment|/* self reference for future use */
-name|fp
-operator|->
 name|f_ub
 operator|.
 name|smb_base
@@ -984,24 +977,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* no size for no ungetc buffer */
-name|fp
-operator|->
-name|f_lb
-operator|.
-name|smb_base
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* no line buffer */
-name|fp
-operator|->
-name|f_lb
-operator|.
-name|smb_size
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no size for no line buffer */
 if|if
 condition|(
 name|fp

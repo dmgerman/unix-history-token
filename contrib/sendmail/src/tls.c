@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.75 2001/09/11 04:05:17 gshapiro Exp $"
+literal|"@(#)$Id: tls.c,v 8.79 2002/03/21 22:24:13 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -131,6 +131,20 @@ begin_comment
 comment|/* !TLS_NO_RSA */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_VERSION_NUMBER
+argument_list|)
+operator|||
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x00907000L
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -145,6 +159,86 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !defined() || OPENSSL_VERSION_NUMBER< 0x00907000L */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tls_verify_cb
+name|__P
+argument_list|(
+operator|(
+name|X509_STORE_CTX
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined() || OPENSSL_VERSION_NUMBER< 0x00907000L */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_VERSION_NUMBER
+argument_list|)
+operator|||
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x00907000L
+end_if
+
+begin_define
+define|#
+directive|define
+name|CONST097
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !defined() || OPENSSL_VERSION_NUMBER< 0x00907000L */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONST097
+value|const
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined() || OPENSSL_VERSION_NUMBER< 0x00907000L */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -152,6 +246,7 @@ name|apps_ssl_info_cb
 name|__P
 argument_list|(
 operator|(
+name|CONST097
 name|SSL
 operator|*
 operator|,
@@ -708,6 +803,14 @@ operator||
 name|SFF_ROOTOK
 operator||
 name|SFF_OPENASROOT
+expr_stmt|;
+if|if
+condition|(
+name|DontLockReadFiles
+condition|)
+name|sff
+operator||=
+name|SFF_NOLOCK
 expr_stmt|;
 if|if
 condition|(
@@ -4898,6 +5001,7 @@ name|where
 parameter_list|,
 name|ret
 parameter_list|)
+name|CONST097
 name|SSL
 modifier|*
 name|s
@@ -5298,6 +5402,17 @@ end_comment
 begin_function
 specifier|static
 name|int
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_VERSION_NUMBER
+argument_list|)
+operator|||
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x00907000L
 name|tls_verify_cb
 parameter_list|(
 name|ctx
@@ -5306,6 +5421,26 @@ name|X509_STORE_CTX
 modifier|*
 name|ctx
 decl_stmt|;
+else|#
+directive|else
+comment|/* !defined() || OPENSSL_VERSION_NUMBER< 0x00907000L */
+function|tls_verify_cb
+parameter_list|(
+name|ctx
+parameter_list|,
+name|unused
+parameter_list|)
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+decl_stmt|;
+name|void
+modifier|*
+name|unused
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* !defined() || OPENSSL_VERSION_NUMBER< 0x00907000L */
 block|{
 name|int
 name|ok

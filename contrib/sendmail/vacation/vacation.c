@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.131 2001/12/12 00:02:42 gshapiro Exp $"
+literal|"@(#)$Id: vacation.c,v 8.134 2002/03/01 20:45:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1335,7 +1335,7 @@ literal|0
 argument_list|,
 name|SM_GET_SENDMAIL_CF
 argument_list|,
-name|NULL
+name|cfpath
 argument_list|)
 expr_stmt|;
 name|mbdbname
@@ -1570,6 +1570,31 @@ expr_stmt|;
 name|sff
 operator||=
 name|SFF_OPENASROOT
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Allow root to initialize user's vacation databases */
+name|sff
+operator||=
+name|SFF_OPENASROOT
+operator||
+name|SFF_ROOTOK
+expr_stmt|;
+comment|/* ... safely */
+name|sff
+operator||=
+name|SFF_NOSLINK
+operator||
+name|SFF_NOHLINK
+operator||
+name|SFF_REGONLY
 expr_stmt|;
 block|}
 name|result

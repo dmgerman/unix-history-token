@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.237 2001/12/10 19:56:03 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.241 2002/03/15 01:32:47 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -284,26 +284,6 @@ condition|)
 name|usrerr
 argument_list|(
 literal|"No recipient addresses found in header"
-argument_list|)
-expr_stmt|;
-comment|/* collect statistics */
-if|if
-condition|(
-name|OpMode
-operator|!=
-name|MD_VERIFY
-condition|)
-name|markstats
-argument_list|(
-name|e
-argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|STATS_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* 	**  If we have a Return-Receipt-To:, turn it into a DSN. 	*/
@@ -1474,11 +1454,13 @@ block|}
 elseif|else
 if|if
 condition|(
+name|ignrdot
+operator|||
+operator|(
 name|c
 operator|!=
 literal|'.'
-operator|||
-operator|(
+operator|&&
 name|OpMode
 operator|!=
 name|MD_SMTP
@@ -1529,6 +1511,21 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+name|OpMode
+operator|!=
+name|MD_SMTP
+operator|&&
+name|OpMode
+operator|!=
+name|MD_DAEMON
+operator|&&
+name|OpMode
+operator|!=
+name|MD_ARPAFTP
+condition|)
+block|{
 operator|*
 name|pbp
 operator|++
@@ -1538,6 +1535,12 @@ expr_stmt|;
 name|c
 operator|=
 literal|'.'
+expr_stmt|;
+block|}
+else|else
+name|c
+operator|=
+literal|'\r'
 expr_stmt|;
 block|}
 break|break;
@@ -3173,6 +3176,26 @@ operator|->
 name|e_dfp
 operator|=
 name|df
+expr_stmt|;
+comment|/* collect statistics */
+if|if
+condition|(
+name|OpMode
+operator|!=
+name|MD_VERIFY
+condition|)
+name|markstats
+argument_list|(
+name|e
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|STATS_NORMAL
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.594 2001/12/14 00:43:17 gshapiro Exp $"
+literal|"@(#)$Id: readcf.c,v 8.604 2002/04/02 16:43:25 ca Exp $"
 argument_list|)
 end_macro
 
@@ -80,6 +80,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|bool
 operator|,
 name|bool
 operator|,
@@ -233,6 +235,9 @@ name|optional
 decl_stmt|;
 name|bool
 name|ok
+decl_stmt|;
+name|bool
+name|ismap
 decl_stmt|;
 name|int
 name|mid
@@ -1663,12 +1668,78 @@ name|optional
 operator|=
 name|false
 expr_stmt|;
+comment|/* check if [key]@map:spec */
+name|ismap
+operator|=
+name|false
+expr_stmt|;
 if|if
 condition|(
+operator|!
+name|SM_IS_DIR_DELIM
+argument_list|(
 operator|*
 name|p
-operator|==
+argument_list|)
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'|'
+operator|&&
+operator|(
+name|q
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
 literal|'@'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|q
+operator|++
+expr_stmt|;
+comment|/* look for @LDAP or @map: in string */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|q
+argument_list|,
+literal|"LDAP"
+argument_list|)
+operator|==
+literal|0
+operator|||
+operator|(
+operator|*
+name|q
+operator|!=
+literal|':'
+operator|&&
+name|strchr
+argument_list|(
+name|q
+argument_list|,
+literal|':'
+argument_list|)
+operator|!=
+name|NULL
+operator|)
+condition|)
+name|ismap
+operator|=
+name|true
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ismap
 condition|)
 block|{
 comment|/* use entire spec */
@@ -1717,10 +1788,7 @@ name|file
 operator|==
 literal|'|'
 operator|||
-operator|*
-name|file
-operator|==
-literal|'@'
+name|ismap
 condition|)
 name|p
 operator|=
@@ -1775,6 +1843,8 @@ argument_list|,
 name|file
 argument_list|,
 name|p
+argument_list|,
+name|ismap
 argument_list|,
 name|safe
 argument_list|,
@@ -2798,7 +2868,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  FILECLASS -- read members of a class from a file ** **	Parameters: **		class -- class to define. **		filename -- name of file to read. **		fmt -- scanf string to use for match. **		safe -- if set, this is a safe read. **		optional -- if set, it is not an error for the file to **			not exist. ** **	Returns: **		none ** **	Side Effects: **		puts all lines in filename that match a scanf into **			the named class. */
+comment|/* **  FILECLASS -- read members of a class from a file ** **	Parameters: **		class -- class to define. **		filename -- name of file to read. **		fmt -- scanf string to use for match. **		ismap -- if set, this is a map lookup. **		safe -- if set, this is a safe read. **		optional -- if set, it is not an error for the file to **			not exist. ** **	Returns: **		none ** **	Side Effects: **		puts all lines in filename that match a scanf into **			the named class. */
 end_comment
 
 begin_comment
@@ -2931,6 +3001,8 @@ name|filename
 parameter_list|,
 name|fmt
 parameter_list|,
+name|ismap
+parameter_list|,
 name|safe
 parameter_list|,
 name|optional
@@ -2945,6 +3017,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+name|bool
+name|ismap
 decl_stmt|;
 name|bool
 name|safe
@@ -3010,30 +3085,7 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|SM_IS_DIR_DELIM
-argument_list|(
-operator|*
-name|filename
-argument_list|)
-operator|&&
-operator|*
-name|filename
-operator|!=
-literal|'|'
-operator|&&
-operator|(
-name|p
-operator|=
-name|strchr
-argument_list|(
-name|filename
-argument_list|,
-literal|'@'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
+name|ismap
 condition|)
 block|{
 name|int
@@ -3077,6 +3129,36 @@ name|key
 operator|=
 name|filename
 expr_stmt|;
+comment|/* skip past key */
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|filename
+argument_list|,
+literal|'@'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* should not happen */
+name|syserr
+argument_list|(
+literal|"fileclass: bogus map specification"
+argument_list|)
+expr_stmt|;
+name|sm_free
+argument_list|(
+name|mn
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* skip past '@' */
 operator|*
 name|p
@@ -3353,6 +3435,28 @@ operator|.
 name|map_mflags
 operator||=
 name|MF_FILECLASS
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"fileclass: F{%s}: map class %s, key %s, spec %s\n"
+argument_list|,
+name|mn
+argument_list|,
+name|cl
+argument_list|,
+name|key
+argument_list|,
+name|spec
+argument_list|)
 expr_stmt|;
 comment|/* parse map spec */
 if|if
@@ -4037,6 +4141,12 @@ name|newstr
 argument_list|(
 name|line
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_qgrp
+operator|=
+name|NOQGRP
 expr_stmt|;
 comment|/* now scan through and assign info from the fields */
 while|while
@@ -8688,6 +8798,24 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SOFT_BOUNCE */
+if|#
+directive|if
+name|_FFR_SELECT_SHM
+define|#
+directive|define
+name|O_SHMKEYFILE
+value|0xd0
+block|{
+literal|"SharedMemoryKeyFile"
+block|,
+name|O_SHMKEYFILE
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SELECT_SHM */
 block|{
 name|NULL
 block|,
@@ -11225,6 +11353,13 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_QUEUE_GROUP_SORTORDER
+comment|/* coordinate this with makequeue() */
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_GROUP_SORTORDER */
 case|case
 name|O_QUEUESORTORD
 case|:
@@ -11646,6 +11781,51 @@ case|case
 name|O_SAFEFILEENV
 case|:
 comment|/* chroot() environ for writing to files */
+if|if
+condition|(
+operator|*
+name|val
+operator|==
+literal|'\0'
+condition|)
+break|break;
+comment|/* strip trailing slashes */
+name|p
+operator|=
+name|val
+operator|+
+name|strlen
+argument_list|(
+name|val
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|p
+operator|>=
+name|val
+operator|&&
+operator|*
+name|p
+operator|==
+literal|'/'
+condition|)
+operator|*
+name|p
+operator|--
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|val
+operator|==
+literal|'\0'
+condition|)
+break|break;
 name|SafeFileEnv
 operator|=
 name|newstr
@@ -11793,6 +11973,52 @@ endif|#
 directive|endif
 comment|/* SM_CONF_SHM */
 break|break;
+if|#
+directive|if
+name|_FFR_SELECT_SHM
+case|case
+name|O_SHMKEYFILE
+case|:
+comment|/* shared memory key file */
+if|#
+directive|if
+name|SM_CONF_SHM
+name|CANONIFY
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+name|ShmKeyFile
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* SM_CONF_SHM */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"Warning: Option: %s requires shared memory support (-DSM_CONF_SHM)\n"
+argument_list|,
+name|OPTNAME
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SM_CONF_SHM */
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_SELECT_SHM */
 if|#
 directive|if
 name|_FFR_MAX_FORWARD_ENTRIES
@@ -16478,6 +16704,16 @@ expr_stmt|;
 name|TimeOuts
 operator|.
 name|to_aconnect
+operator|=
+operator|(
+name|time_t
+operator|)
+literal|0
+name|SECONDS
+expr_stmt|;
+name|TimeOuts
+operator|.
+name|to_iconnect
 operator|=
 operator|(
 name|time_t

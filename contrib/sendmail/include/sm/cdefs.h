@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: cdefs.h,v 1.14 2001/06/07 20:04:53 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: cdefs.h,v 1.15 2002/01/16 18:30:11 ca Exp $  */
 end_comment
 
 begin_comment
@@ -128,6 +128,12 @@ name|__cplusplus
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__P
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -137,6 +143,15 @@ name|protos
 parameter_list|)
 value|protos
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __P */
+end_comment
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_define
@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.868 2001/12/29 04:54:38 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.876 2002/02/27 23:49:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1216,6 +1216,7 @@ name|SIGUSR1
 comment|/* Only allow root (or non-set-*-ID binaries) to use SIGUSR1 */
 if|if
 condition|(
+operator|!
 name|extraprivs
 condition|)
 block|{
@@ -1228,6 +1229,20 @@ argument_list|(
 name|SIGUSR1
 argument_list|,
 name|sigusr1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* ignore user-1 signal */
+operator|(
+name|void
+operator|)
+name|sm_signal
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 block|}
@@ -1484,12 +1499,22 @@ case|case
 literal|'b'
 case|:
 comment|/* operations mode */
+name|j
+operator|=
+operator|(
+name|optarg
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|' '
+else|:
+operator|*
+name|optarg
+expr_stmt|;
 switch|switch
 condition|(
 name|j
-operator|=
-operator|*
-name|optarg
 condition|)
 block|{
 case|case
@@ -2106,27 +2131,6 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|j
-operator|<
-literal|0
-operator|||
-name|j
-operator|>
-name|SM_ARG_MAX
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"!Arguments too long"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-return|return
-name|EX_USAGE
-return|;
-block|}
 name|SaveArgv
 operator|=
 operator|(
@@ -8787,10 +8791,47 @@ name|NOQGRP
 condition|)
 block|{
 comment|/* 				**  To run a specific queue group mark it to 				**  be run, select the work group it's in and 				**  increment the work counter. 				*/
-name|runqueueevent
-argument_list|(
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NumQueue
+operator|&&
+name|Queue
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+name|Queue
+index|[
+name|i
+index|]
+operator|->
+name|qg_nextrun
+operator|=
+operator|(
+name|time_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|Queue
+index|[
 name|qgrp
-argument_list|)
+index|]
+operator|->
+name|qg_nextrun
+operator|=
+literal|0
 expr_stmt|;
 operator|(
 name|void
@@ -13485,6 +13526,10 @@ name|RunAsGid
 operator|=
 name|RealGid
 expr_stmt|;
+name|EffGid
+operator|=
+name|RunAsGid
+expr_stmt|;
 block|}
 comment|/* make sure no one can grab open descriptors for secret files */
 name|endpwent
@@ -13777,11 +13822,8 @@ condition|)
 block|{
 name|uid_t
 name|euid
-init|=
-name|geteuid
-argument_list|()
 decl_stmt|;
-comment|/* 		**  Try to setuid(RunAsUid). 		**  euid must be RunAsUid, 		**  ruid must be RunAsUid unless it's the MSP and the euid 		**  wasn't 0 and we didn't have to drop privileges to the 		**  real uid. 		*/
+comment|/* 		**  Try to setuid(RunAsUid). 		**  euid must be RunAsUid, 		**  ruid must be RunAsUid unless (e|r)uid wasn't 0 		**	and we didn't have to drop privileges to the real uid. 		*/
 if|if
 condition|(
 name|setuid
@@ -13791,6 +13833,11 @@ argument_list|)
 operator|<
 literal|0
 operator|||
+name|geteuid
+argument_list|()
+operator|!=
+name|RunAsUid
+operator|||
 operator|(
 name|getuid
 argument_list|()
@@ -13798,21 +13845,19 @@ operator|!=
 name|RunAsUid
 operator|&&
 operator|(
-operator|!
-name|UseMSP
-operator|||
-name|euid
-operator|==
-literal|0
-operator|||
 name|to_real_uid
-operator|)
-operator|)
 operator|||
 name|geteuid
 argument_list|()
-operator|!=
-name|RunAsUid
+operator|==
+literal|0
+operator|||
+name|getuid
+argument_list|()
+operator|==
+literal|0
+operator|)
+operator|)
 condition|)
 block|{
 if|#
@@ -13821,7 +13866,8 @@ name|HASSETREUID
 comment|/* 			**  if ruid != RunAsUid, euid == RunAsUid, then 			**  try resetting just the real uid, then using 			**  setuid() to drop the saved-uid as well. 			*/
 if|if
 condition|(
-name|euid
+name|geteuid
+argument_list|()
 operator|==
 name|RunAsUid
 condition|)
@@ -13901,6 +13947,11 @@ name|EX_OSERR
 expr_stmt|;
 block|}
 block|}
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|RunAsUid

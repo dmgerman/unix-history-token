@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stats.c,v 8.52 2001/11/21 13:39:14 gshapiro Exp $"
+literal|"@(#)$Id: stats.c,v 8.54 2002/03/19 00:23:28 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -197,6 +197,27 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+name|STATS_CONNECT
+case|:
+if|if
+condition|(
+name|to
+operator|==
+name|NULL
+condition|)
+name|Stat
+operator|.
+name|stat_cf
+operator|++
+expr_stmt|;
+else|else
+name|Stat
+operator|.
+name|stat_ct
+operator|++
+expr_stmt|;
+break|break;
+case|case
 name|STATS_NORMAL
 case|:
 if|if
@@ -206,11 +227,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|Stat
-operator|.
-name|stat_cf
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|e
@@ -260,11 +276,6 @@ block|}
 block|}
 else|else
 block|{
-name|Stat
-operator|.
-name|stat_ct
-operator|++
-expr_stmt|;
 name|Stat
 operator|.
 name|stat_nt

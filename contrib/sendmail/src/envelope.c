@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: envelope.c,v 8.279 2001/12/10 19:56:04 ca Exp $"
+literal|"@(#)$Id: envelope.c,v 8.281 2002/02/06 19:54:54 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4163,7 +4163,10 @@ condition|(
 name|FullName
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|FullName
 index|[
 literal|0
@@ -4175,6 +4178,15 @@ name|FullName
 operator|=
 name|NULL
 expr_stmt|;
+else|else
+name|FullName
+operator|=
+name|newstr
+argument_list|(
+name|FullName
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

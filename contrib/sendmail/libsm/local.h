@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: local.h,v 1.48 2001/05/14 20:42:29 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: local.h,v 1.51 2002/02/20 02:40:24 ca Exp $  */
 end_comment
 
 begin_comment
@@ -935,42 +935,6 @@ define|\
 value|{							\ 	if ((fp)->f_ub.smb_base != (fp)->f_ubuf)	\ 		sm_free((char *)(fp)->f_ub.smb_base);	\ 	(fp)->f_ub.smb_base = NULL;			\ }
 end_define
 
-begin_comment
-comment|/* Test for an fgetln() buffer. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASLB
-parameter_list|(
-name|fp
-parameter_list|)
-value|((fp)->f_lb.smb_base != NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREELB
-parameter_list|(
-name|fp
-parameter_list|)
-define|\
-value|{						\ 	sm_free((char *)(fp)->f_lb.smb_base);	\ 	(fp)->f_lb.smb_base = NULL;		\ }
-end_define
-
-begin_struct
-struct|struct
-name|sm_io_obj
-block|{
-name|int
-name|file
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -980,37 +944,15 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ALIGNBYTES
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|ALIGNBYTES
-value|(sizeof(long) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALIGN
+name|SM_ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((unsigned long)(p) + ALIGNBYTES)& ~ALIGNBYTES)
+value|(((unsigned long)(p) + SM_ALIGN_BITS)& ~SM_ALIGN_BITS)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ALIGNBYTES */
-end_comment
 
 begin_define
 define|#

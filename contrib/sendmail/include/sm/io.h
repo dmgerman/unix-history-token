@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990  * 	 The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: io.h,v 1.19 2001/07/10 21:56:46 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990  * 	 The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: io.h,v 1.23 2002/02/23 19:32:17 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -183,6 +183,13 @@ define|#
 directive|define
 name|SM_IO_WHAT_TIMEOUT
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_IO_WHAT_SIZE
+value|8
 end_define
 
 begin_comment
@@ -437,11 +444,6 @@ modifier|*
 name|f_type
 decl_stmt|;
 comment|/* for by-type lookups */
-name|void
-modifier|*
-name|f_self
-decl_stmt|;
-comment|/* self for reference */
 name|struct
 name|sm_file
 modifier|*
@@ -487,12 +489,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* guarantee a getc() buffer */
-comment|/* separate buffer for fgetln() when line crosses buffer boundary */
-name|struct
-name|smbuf
-name|f_lb
-decl_stmt|;
-comment|/* buffer for fgetln() */
 comment|/* Unix stdio files get aligned to block boundaries on fseek() */
 name|int
 name|f_blksize
@@ -909,12 +905,9 @@ value|0x010000
 comment|/* allocate string space dynamically */
 define|#
 directive|define
-name|SMACCESSMASK
-value|0x0070
-define|#
-directive|define
 name|SMMODEMASK
-value|0x011C
+value|0x0070
+comment|/* read/write mode */
 comment|/* defines for timeout constants */
 define|#
 directive|define

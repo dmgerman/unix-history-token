@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: bf.c,v 8.48 2001/11/04 17:10:49 ca Exp $"
+literal|"@(#)$Id: bf.c,v 8.51 2002/03/04 21:51:25 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -276,10 +276,6 @@ name|int
 name|bf_size
 decl_stmt|;
 comment|/* Total current size of file */
-name|int
-name|bf_refcount
-decl_stmt|;
-comment|/* Reference count */
 block|}
 struct|;
 end_struct
@@ -362,7 +358,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* **  SM_BFOPEN -- the "base" open function called by sm_io_open() for the **		internal, file-type-specific info setup. ** **	Parameters: **		fp -- file pointer being filled-in for file being open'd **		filename -- name of the file being open'd **		flags -- ignored **		fmode -- file mode (stored for use later) **		sflags -- "safeopen" flags (stored for use later) **		rpool -- ignored (currently) ** **	Returns: **		Failure: -1 and sets errno **		Success: 0 (zero) */
+comment|/* **  SM_BFOPEN -- the "base" open function called by sm_io_open() for the **		internal, file-type-specific info setup. ** **	Parameters: **		fp -- file pointer being filled-in for file being open'd **		info -- information about file being opened **		flags -- ignored **		rpool -- ignored (currently) ** **	Returns: **		Failure: -1 and sets errno **		Success: 0 (zero) */
 end_comment
 
 begin_function
@@ -622,12 +618,6 @@ name|false
 expr_stmt|;
 name|bfp
 operator|->
-name|bf_refcount
-operator|=
-literal|1
-expr_stmt|;
-name|bfp
-operator|->
 name|bf_flags
 operator|=
 name|sflags
@@ -734,7 +724,7 @@ name|bfp
 operator|->
 name|bf_size
 operator|=
-name|bsize
+literal|0
 expr_stmt|;
 name|bfp
 operator|->
@@ -975,6 +965,14 @@ return|return
 name|bfp
 operator|->
 name|bf_disk_fd
+return|;
+case|case
+name|SM_IO_WHAT_SIZE
+case|:
+return|return
+name|bfp
+operator|->
+name|bf_size
 return|;
 default|default:
 return|return

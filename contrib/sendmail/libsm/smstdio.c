@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: smstdio.c,v 1.29 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: smstdio.c,v 1.32 2002/02/23 20:18:36 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -604,6 +610,76 @@ condition|(
 name|what
 condition|)
 block|{
+case|case
+name|SM_IO_WHAT_SIZE
+case|:
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|f_cookie
+operator|==
+name|NULL
+condition|)
+name|setup
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|fileno
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+name|fp
+operator|->
+name|f_cookie
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|st
+operator|.
+name|st_size
+return|;
+else|else
+return|return
+operator|-
+literal|1
+return|;
+block|}
 case|case
 name|SM_IO_WHAT_MODE
 case|:

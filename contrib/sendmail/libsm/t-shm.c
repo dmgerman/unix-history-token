@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: t-shm.c,v 1.17 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: t-shm.c,v 1.18 2002/01/31 04:11:41 ca Exp $"
 argument_list|)
 end_macro
 
@@ -841,6 +841,10 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
+specifier|extern
+name|int
+name|SmTestNumErrors
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -917,6 +921,17 @@ argument_list|(
 name|r
 operator|==
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SmTestNumErrors
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"add -DSM_CONF_SHM=0 to confENVDEF in devtools/Site/site.config.m4\nand start over.\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: t-fopen.c,v 1.8 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: t-fopen.c,v 1.9 2002/02/06 23:57:45 ca Exp $"
 argument_list|)
 end_macro
 
@@ -57,6 +57,11 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+name|int
+name|m
+decl_stmt|,
+name|r
+decl_stmt|;
 name|SM_FILE_T
 modifier|*
 name|out
@@ -109,6 +114,32 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
 literal|"foo\n"
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+name|sm_io_getinfo
+argument_list|(
+name|out
+argument_list|,
+name|SM_IO_WHAT_MODE
+argument_list|,
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+name|SM_TEST
+argument_list|(
+name|r
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|SM_TEST
+argument_list|(
+name|m
+operator|==
+name|SM_IO_WRONLY
 argument_list|)
 expr_stmt|;
 name|sm_io_close

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sm_os_freebsd.h,v 1.9 2001/06/27 21:46:48 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sm_os_freebsd.h,v 1.10 2002/03/10 22:41:03 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -117,12 +117,43 @@ directive|ifndef
 name|SM_CONF_SHM
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SM_CONF_SHM
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __sparc64__ */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SM_CONF_SHM
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __sparc64__ */
+end_comment
 
 begin_endif
 endif|#

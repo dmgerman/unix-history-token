@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb.c,v 8.53 2001/11/19 19:31:14 gshapiro Exp $"
+literal|"@(#)$Id: smdb.c,v 8.54 2002/04/04 21:32:14 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -304,42 +304,17 @@ name|EAGAIN
 operator|)
 condition|)
 block|{
-name|int
-name|omode
-init|=
-operator|-
-literal|1
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|F_GETFL
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_GETFL
-argument_list|,
-operator|&
-name|omode
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|int omode = fcntl(fd, F_GETFL, NULL); 		int euid = (int) geteuid();  		syslog(LOG_ERR, "cannot lockf(%s%s, fd=%d, type=%o, omode=%o, euid=%d)", 		       filename, ext, fd, type, omode, euid);
+endif|#
+directive|endif
+comment|/* 0 */
 name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* F_GETFL */
-if|#
-directive|if
-literal|0
-block|syslog(LOG_ERR, "cannot lockf(%s%s, fd=%d, type=%o, omode=%o, euid=%d)", 		       filename, ext, fd, type, omode, (int) geteuid());
-endif|#
-directive|endif
-comment|/* 0 */
 return|return
 name|false
 return|;
@@ -395,42 +370,17 @@ operator|!=
 name|EWOULDBLOCK
 condition|)
 block|{
-name|int
-name|omode
-init|=
-operator|-
-literal|1
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|F_GETFL
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_GETFL
-argument_list|,
-operator|&
-name|omode
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|int omode = fcntl(fd, F_GETFL, NULL); 		int euid = (int) geteuid();  		syslog(LOG_ERR, "cannot flock(%s%s, fd=%d, type=%o, omode=%o, euid=%d)", 		       filename, ext, fd, type, omode, euid);
+endif|#
+directive|endif
+comment|/* 0 */
 name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* F_GETFL */
-if|#
-directive|if
-literal|0
-block|syslog(LOG_ERR, "cannot flock(%s%s, fd=%d, type=%o, omode=%o, euid=%d)", 		       filename, ext, fd, type, omode, (int) geteuid());
-endif|#
-directive|endif
-comment|/* 0 */
 return|return
 name|false
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.102 2001/12/13 17:10:00 ca Exp $"
+literal|"@(#)$Id: engine.c,v 8.109 2002/03/13 17:18:44 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2032,6 +2032,34 @@ operator|->
 name|ctx_reply
 operator|!=
 name|NULL
+operator|&&
+operator|(
+operator|(
+name|r
+operator|==
+name|SMFIS_TEMPFAIL
+operator|&&
+operator|*
+name|ctx
+operator|->
+name|ctx_reply
+operator|==
+literal|'4'
+operator|)
+operator|||
+operator|(
+name|r
+operator|==
+name|SMFIS_REJECT
+operator|&&
+operator|*
+name|ctx
+operator|->
+name|ctx_reply
+operator|==
+literal|'5'
+operator|)
+operator|)
 condition|)
 block|{
 name|ret
@@ -2974,13 +3002,6 @@ sizeof|sizeof
 name|port
 argument_list|)
 expr_stmt|;
-name|port
-operator|=
-name|ntohs
-argument_list|(
-name|port
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3025,6 +3046,21 @@ return|return
 name|_SMFIS_ABORT
 return|;
 block|}
+comment|/* make sure string is terminated */
+if|if
+condition|(
+name|s
+index|[
+name|l
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+return|return
+name|_SMFIS_ABORT
+return|;
 if|#
 directive|if
 name|NETINET
@@ -3055,8 +3091,8 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|)
-operator|==
-name|INADDR_NONE
+operator|!=
+literal|1
 condition|)
 block|{
 name|smi_log

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: config.c,v 1.26 2001/12/14 00:26:18 ca Exp $"
+literal|"@(#)$Id: config.c,v 1.27 2002/01/23 17:30:48 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -600,6 +600,14 @@ block|,
 endif|#
 directive|endif
 comment|/* SM_CONF_GETOPT */
+if|#
+directive|if
+name|SM_CONF_LDAP_MEMFREE
+literal|"SM_CONF_LDAP_MEMFREE"
+block|,
+endif|#
+directive|endif
+comment|/* SM_CONF_LDAP_MEMFREE */
 if|#
 directive|if
 name|SM_CONF_LONGLONG
