@@ -851,7 +851,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"MCA: allocated %d bytes for state information\n"
+literal|"MCA: allocated %ld bytes for state information\n"
 argument_list|,
 name|max_size
 argument_list|)

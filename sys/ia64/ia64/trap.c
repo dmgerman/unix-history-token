@@ -1258,7 +1258,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"    ar.cflg     = 0x%x\n"
+literal|"    ar.cflg     = 0x%lx\n"
 argument_list|,
 name|ia64_get_cflg
 argument_list|()
@@ -1266,7 +1266,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    ar.csd      = 0x%x\n"
+literal|"    ar.csd      = 0x%lx\n"
 argument_list|,
 name|ia64_get_csd
 argument_list|()
@@ -1274,7 +1274,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    ar.ssd      = 0x%x\n"
+literal|"    ar.ssd      = 0x%lx\n"
 argument_list|,
 name|ia64_get_ssd
 argument_list|()

@@ -529,7 +529,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"SAL: AP wake-up vector: 0x%x\n"
+literal|"SAL: AP wake-up vector: 0x%lx\n"
 argument_list|,
 name|dp
 operator|->
