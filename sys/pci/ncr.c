@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.31 1995/03/16 13:02:40 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.32 1995/03/17 04:27:18 davidg Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NCR_PATCHLEVEL
-value|"pl18 95/02/23"
+name|__NCR_C__
+value|"pl21 95/03/21"
 end_define
 
 begin_define
@@ -23,9 +23,6 @@ directive|define
 name|MAX_UNITS
 value|(16)
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** **	Configuration and Debugging ** **	May be overwritten in<arch/conf/xxxx> ** **========================================================== */
@@ -135,9 +132,6 @@ begin_comment
 comment|/* SCSI_NCR_MAX_TAGS */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** **      Configuration and Debugging ** **========================================================== */
 end_comment
@@ -194,7 +188,7 @@ begin_define
 define|#
 directive|define
 name|MAX_SIZE
-value|((MAX_SCATTER-1) * NBPG)
+value|((MAX_SCATTER-1) * (long) NBPG)
 end_define
 
 begin_comment
@@ -207,9 +201,6 @@ directive|define
 name|NCR_SNOOP_TIMEOUT
 value|(1000000)
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** **      Include files ** **========================================================== */
@@ -331,6 +322,15 @@ directive|include
 file|<pci/ncrreg.h>
 end_include
 
+begin_extern
+extern|extern PRINT_ADDR(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_else
 else|#
 directive|else
@@ -411,9 +411,6 @@ end_endif
 begin_comment
 comment|/* __NetBSD */
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** **	Debugging tags ** **========================================================== */
@@ -572,9 +569,6 @@ name|expression
 parameter_list|)
 value|{ \ 	if (!(expression)) { \ 		(void)printf(\ 			"assertion \"%s\" failed: file \"%s\", line %d\n", \ 			#expression, \ 			__FILE__, __LINE__); \ 	} \ }
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** **	Access to the controller chip. ** **========================================================== */
@@ -794,7 +788,7 @@ value|(6)
 end_define
 
 begin_comment
-comment|/* SCSI reset             */
+comment|/* SCSI reset	     */
 end_comment
 
 begin_define
@@ -943,9 +937,6 @@ name|SIR_MAX
 value|(12)
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** **	Extended error codes. **	xerr_status field of struct ccb. ** **========================================================== */
 end_comment
@@ -1069,226 +1060,9 @@ begin_comment
 comment|/* hard limit */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** **	OS dependencies. ** **========================================================== */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__NetBSD__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ANCIENT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*__NetBSD__*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*__FreeBSD__*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANCIENT
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|int
-name|splbio
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|splx
-parameter_list|(
-name|int
-name|level
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|wakeup
-parameter_list|(
-name|void
-modifier|*
-name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|tsleep
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|DELAY
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|scsi_attachdevs
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|timeout
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|untimeout
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bio_imask
-value|biomask
-end_define
-
-begin_define
-define|#
-directive|define
-name|LUN
-value|lu
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET
-value|targ
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRINT_ADDR
-parameter_list|(
-name|xp
-parameter_list|)
-value|printf ("ncr0: targ %d lun %d ",xp->targ,xp->lu)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INT32
-value|int
-end_define
-
-begin_define
-define|#
-directive|define
-name|U_INT32
-value|long
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !ANCIENT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LUN
-value|sc_link->lun
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET
-value|sc_link->target
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRINT_ADDR
-parameter_list|(
-name|xp
-parameter_list|)
-value|sc_print_addr(xp->sc_link)
-end_define
 
 begin_ifdef
 ifdef|#
@@ -1329,6 +1103,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRINT_ADDR
+parameter_list|(
+name|xp
+parameter_list|)
+value|sc_print_addr(xp->sc_link)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INT32
 value|int32
 end_define
@@ -1355,18 +1139,6 @@ end_endif
 begin_comment
 comment|/*__NetBSD__*/
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ANCIENT */
-end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** **	Declaration of structs. ** **========================================================== */
@@ -1537,9 +1309,6 @@ parameter_list|)
 value|((size_t)(&((type *)0)->member))
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*--------------------------------------- ** **	Timestamps for profiling ** **--------------------------------------- */
 end_comment
@@ -1626,18 +1395,15 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*========================================================== ** **      Declaration of structs:		TARGET control block ** **========================================================== */
+comment|/*========================================================== ** **	Declaration of structs:		target control block ** **========================================================== */
 end_comment
 
 begin_struct
 struct|struct
 name|tcb
 block|{
-comment|/* 	**	during reselection the ncr jumps to this point 	**	with SFBR set to the encoded TARGET number 	**	with bit 7 set. 	**	if it's not this target, jump to the next. 	** 	**	JUMP  IF (SFBR != #TARGET#) 	**	@(next tcb) 	*/
+comment|/* 	**	during reselection the ncr jumps to this point 	**	with SFBR set to the encoded target number 	**	with bit 7 set. 	**	if it's not this target, jump to the next. 	** 	**	JUMP  IF (SFBR != #target#) 	**	@(next tcb) 	*/
 name|struct
 name|link
 name|jump_tcb
@@ -1734,18 +1500,15 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*========================================================== ** **      Declaration of structs:		LUN control block ** **========================================================== */
+comment|/*========================================================== ** **	Declaration of structs:		lun control block ** **========================================================== */
 end_comment
 
 begin_struct
 struct|struct
 name|lcb
 block|{
-comment|/* 	**	during reselection the ncr jumps to this point 	**	with SFBR set to the "Identify" message. 	**	if it's not this lun, jump to the next. 	** 	**	JUMP  IF (SFBR == #LUN#) 	**	@(next lcb of this target) 	*/
+comment|/* 	**	during reselection the ncr jumps to this point 	**	with SFBR set to the "Identify" message. 	**	if it's not this lun, jump to the next. 	** 	**	JUMP  IF (SFBR == #lun#) 	**	@(next lcb of this target) 	*/
 name|struct
 name|link
 name|jump_lcb
@@ -1786,9 +1549,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** **      Declaration of structs:     COMMAND control block ** **========================================================== ** **	This substructure is copied from the ccb to a **	global address after selection (or reselection) **	and copied back before disconnect. ** **	These fields are accessible to the script processor. ** **---------------------------------------------------------- */
@@ -1984,9 +1744,6 @@ name|wide_status
 value|phys.wide_st
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** **      Declaration of structs:     Data structure block ** **========================================================== ** **	During execution of a ccb by the script processor, **	the DSA (data structure address) register points **	to this substructure of the ccb. **	This substructure contains the header with **	the script-processor-changable data and **	data blocks for the indirect move commands. ** **---------------------------------------------------------- */
 end_comment
@@ -2032,9 +1789,6 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** **      Declaration of structs:     Command control block. ** **========================================================== ** **	During execution of a ccb by the script processor, **	the DSA (data structure address) register points **	to this substructure of the ccb. **	This substructure contains the header with **	the script-processor-changable data and then **	data blocks for the indirect move commands. ** **---------------------------------------------------------- */
 end_comment
@@ -2071,17 +1825,6 @@ name|scsi_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANCIENT
-comment|/* 	**	We copy the SCSI command, because it 	**	may be volatile (on the stack). 	** 	*/
-name|struct
-name|scsi_generic
-name|cmd
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* ANCIENT */
 comment|/* 	**	We prepare a message to be sent after selection, 	**	and a second one to be sent after getcc selection. 	**      Contents are IDENTIFY and SIMPLE_TAG. 	**	While negotiating sync or wide transfer, 	**	a SDTM or WDTM message is appended. 	*/
 name|u_char
 name|scsi_smsg
@@ -2118,9 +1861,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** **      Declaration of structs:     NCR device descriptor ** **========================================================== */
@@ -2192,17 +1932,11 @@ decl_stmt|;
 name|u_char
 name|rv_scntl3
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|ANCIENT
 comment|/*----------------------------------------------- 	**	Link to the generic SCSI driver 	**----------------------------------------------- 	*/
 name|struct
 name|scsi_link
 name|sc_link
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* ANCIENT */
 comment|/*----------------------------------------------- 	**	Job control 	**----------------------------------------------- 	** 	**	Commands from user 	*/
 name|struct
 name|usrcmd
@@ -2316,15 +2050,9 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** ** **      Script for NCR-Processor. ** **	Use ncr_script_fill() to create the variable parts. **	Use ncr_script_copy_and_bind() to make a copy and **	bind to physical addresses. ** ** **========================================================== ** **	We have to know the offsets of all labels before **	we reach them (for forward jumps). **	Therefore we declare a struct here. **	If you make changes inside the script, **	DONT FORGET TO CHANGE THE LENGTHS HERE! ** **---------------------------------------------------------- */
 end_comment
-
-begin_escape
-end_escape
 
 begin_struct
 struct|struct
@@ -2693,9 +2421,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** ** **      Function headers. ** ** **========================================================== */
@@ -3260,9 +2985,6 @@ begin_comment
 comment|/* KERNEL */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** ** **      Global static data. ** ** **========================================================== */
 end_comment
@@ -3273,7 +2995,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.31 1995/03/16 13:02:40 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.32 1995/03/17 04:27:18 davidg Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3406,9 +3128,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** ** **      Global static data:	auto configure ** ** **========================================================== */
 end_comment
@@ -3520,15 +3239,6 @@ begin_comment
 comment|/* !__NetBSD__ */
 end_comment
 
-begin_escape
-end_escape
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ANCIENT
-end_ifndef
-
 begin_decl_stmt
 name|struct
 name|scsi_adapter
@@ -3572,49 +3282,6 @@ literal|"ncr"
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ANCIENT */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|scsi_switch
-name|ncr_switch
-init|=
-block|{
-name|ncr_start
-block|,
-name|ncr_min_phys
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ncr_info
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ANCIENT */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -3681,9 +3348,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** ** **      Scripts for NCR-Processor. ** **      Use ncr_script_bind for binding to physical addresses. ** ** **========================================================== ** **	NADDR generates a reference to a field of the controller data. **	PADDR generates a reference to another part of the script. **	RADDR generates a reference to a script processor register. **	FADDR generates a reference to a script processor register **		with offset. ** **---------------------------------------------------------- */
@@ -3828,8 +3492,7 @@ literal|0
 argument_list|)
 block|,
 name|SIR_SENSE_RESTART
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< START1>----------------------*/
 block|,
 block|{
@@ -3965,8 +3628,7 @@ name|PADDR
 argument_list|(
 name|reselect
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< SELECT>----------------------*/
 block|,
 block|{
@@ -4214,8 +3876,7 @@ name|RADDR
 argument_list|(
 name|scr0
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< PREPARE2>---------------------*/
 block|,
 block|{
@@ -4388,8 +4049,7 @@ name|SCR_ACK
 argument_list|)
 block|,
 literal|0
-block|,
-block|}
+block|,  }
 comment|/*-----------------------< DISPATCH>----------------------*/
 block|,
 block|{
@@ -4589,8 +4249,7 @@ name|PADDR
 argument_list|(
 name|dispatch
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< NO_DATA>--------------------*/
 block|,
 block|{
@@ -4739,8 +4398,7 @@ name|PADDR
 argument_list|(
 name|setmsg
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< COMMAND>--------------------*/
 block|,
 block|{
@@ -4831,8 +4489,7 @@ name|PADDR
 argument_list|(
 name|dispatch
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< STATUS>--------------------*/
 block|,
 block|{
@@ -4983,8 +4640,7 @@ name|PADDR
 argument_list|(
 name|checkatn
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< MSG_IN>--------------------*/
 block|,
 block|{
@@ -5189,8 +4845,7 @@ name|PADDR
 argument_list|(
 name|setmsg
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< MSG_PARITY>---------------*/
 block|,
 block|{
@@ -5265,8 +4920,7 @@ name|PADDR
 argument_list|(
 name|clrack
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< MSG_IGN_RESIDUE>----------*/
 block|,
 block|{
@@ -5440,8 +5094,7 @@ name|PADDR
 argument_list|(
 name|clrack
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< MSG_EXTENDED>-------------*/
 block|,
 block|{
@@ -5795,8 +5448,7 @@ name|PADDR
 argument_list|(
 name|msg_out_done
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< MSG_EXT_3>----------------*/
 block|,
 block|{
@@ -6038,8 +5690,7 @@ name|PADDR
 argument_list|(
 name|msg_out_done
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< COMPLETE>-----------------*/
 block|,
 block|{
@@ -6114,7 +5765,7 @@ block|, }
 comment|/*-------------------------< CLEANUP>-------------------*/
 block|,
 block|{
-comment|/* 	**      dsa:    Pointer to ccb 	**              or xxxxxxFF (no ccb) 	** 	**      HS_REG:   Host-Status (<>0!) 	*/
+comment|/* 	**      dsa:    Pointer to ccb 	**	      or xxxxxxFF (no ccb) 	** 	**      HS_REG:   Host-Status (<>0!) 	*/
 name|SCR_FROM_REG
 argument_list|(
 name|dsa
@@ -6300,8 +5951,7 @@ name|PADDR
 argument_list|(
 name|start
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< SAVE_DP>------------------*/
 block|,
 block|{
@@ -6357,8 +6007,7 @@ name|PADDR
 argument_list|(
 name|clrack
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< DISCONNECT>---------------*/
 block|,
 block|{
@@ -6588,8 +6237,7 @@ name|PADDR
 argument_list|(
 name|cleanup
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< MSG_OUT>-------------------*/
 block|,
 block|{
@@ -6733,8 +6381,7 @@ name|PADDR
 argument_list|(
 name|cleanup
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< GETCC>-----------------------*/
 block|,
 block|{
@@ -6962,8 +6609,7 @@ name|PADDR
 argument_list|(
 name|prepare2
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< GETCC3>----------------------*/
 block|,
 block|{
@@ -7018,8 +6664,7 @@ name|PADDR
 argument_list|(
 name|prepare2
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*------------------------< BADGETCC>---------------------*/
 block|,
 block|{
@@ -7140,8 +6785,7 @@ name|PADDR
 argument_list|(
 name|reselect
 argument_list|)
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< RESEL_TMP>-------------------*/
 block|,
 block|{
@@ -7228,7 +6872,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* 	**	Mask out the LUN. 	*/
+comment|/* 	**	Mask out the lun. 	*/
 name|SCR_REG_REG
 argument_list|(
 name|sfbr
@@ -7256,8 +6900,7 @@ block|,
 name|SCR_RETURN
 block|,
 literal|0
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< RESEL_TAG>-------------------*/
 block|,
 block|{
@@ -7375,8 +7018,7 @@ block|,
 name|SCR_RETURN
 block|,
 literal|0
-block|,
-block|}
+block|,  }
 comment|/*-------------------------< DATA_IN>--------------------*/
 block|,
 block|{
@@ -7581,9 +7223,6 @@ comment|/*--------------------------------------------------------*/
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*========================================================== ** ** **	Fill in #define dependent parts of the script ** ** **========================================================== */
@@ -8120,9 +7759,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** ** **	Copy and rebind a script. ** ** **========================================================== */
 end_comment
@@ -8542,9 +8178,6 @@ empty_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** ** **      Auto configuration. ** ** **========================================================== */
 end_comment
@@ -8600,9 +8233,6 @@ return|;
 comment|/* may be changed later */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*---------------------------------------------------------- ** **	Probe the hostadapter. ** **---------------------------------------------------------- */
@@ -8770,9 +8400,6 @@ begin_comment
 comment|/* !__NetBSD__ */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*========================================================== ** ** **      Auto configuration:  attach and init a host adapter. ** ** **========================================================== */
 end_comment
@@ -8852,7 +8479,7 @@ operator|*
 operator|)
 name|self
 decl_stmt|;
-comment|/* 	** XXX 	** Perhaps try to figure what which model chip it is and print that 	** out. 	*/
+comment|/* 	** XXX NetBSD 	** Perhaps try to figure what which model chip it is and print that 	** out. 	*/
 name|printf
 argument_list|(
 literal|"\n"
@@ -9023,44 +8650,6 @@ name|unit
 operator|=
 name|unit
 expr_stmt|;
-comment|/* 	**	Enables: 	**		response to memory addresses. 	**		devices bus master ability. 	** 	**	DISABLEs: 	**		response to io addresses (unless IOMAPPED) 	**		usage of "Write and invalidate" cycles. 	*/
-ifdef|#
-directive|ifdef
-name|NCR_IOMAPPED
-operator|(
-name|void
-operator|)
-name|pci_conf_write
-argument_list|(
-name|config_id
-argument_list|,
-name|PCI_COMMAND_STATUS_REG
-argument_list|,
-name|PCI_COMMAND_IO_ENABLE
-operator||
-name|PCI_COMMAND_MEM_ENABLE
-operator||
-name|PCI_COMMAND_MASTER_ENABLE
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|pci_conf_write
-argument_list|(
-name|config_id
-argument_list|,
-name|PCI_COMMAND_STATUS_REG
-argument_list|,
-name|PCI_COMMAND_MEM_ENABLE
-operator||
-name|PCI_COMMAND_MASTER_ENABLE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	**	Try to map the controller chip to 	**	virtual and physical memory. 	*/
 if|if
 condition|(
@@ -9349,7 +8938,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|NCR_DUMP_REG
+comment|/* NCR_DUMP_REG */
 comment|/* 	**	Now check the cache handling of the pci chipset. 	*/
 if|if
 condition|(
@@ -9418,12 +9007,530 @@ name|disc
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ANCIENT
 name|printf
 argument_list|(
-literal|"%s: waiting for scsi devices to settle\n"
+literal|"%s scanning for targets 0..%d (V%d "
+name|__NCR_C__
+literal|")\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|MAX_TARGET
+operator|-
+literal|1
+argument_list|,
+name|NCR_VERSION
+argument_list|)
+expr_stmt|;
+comment|/* 	**	Now let the generic SCSI driver 	**	look for the SCSI devices on the bus .. 	*/
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|np
+operator|->
+name|sc_link
+operator|.
+name|adapter_softc
+operator|=
+name|np
+expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
+name|np
+operator|->
+name|sc_link
+operator|.
+name|adapter_unit
+operator|=
+name|unit
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
+name|np
+operator|->
+name|sc_link
+operator|.
+name|adapter_targ
+operator|=
+name|np
+operator|->
+name|myaddr
+expr_stmt|;
+name|np
+operator|->
+name|sc_link
+operator|.
+name|adapter
+operator|=
+operator|&
+name|ncr_switch
+expr_stmt|;
+name|np
+operator|->
+name|sc_link
+operator|.
+name|device
+operator|=
+operator|&
+name|ncr_dev
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|config_found
+argument_list|(
+name|self
+argument_list|,
+operator|&
+name|np
+operator|->
+name|sc_link
+argument_list|,
+name|ncr_print
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
+name|scsi_attachdevs
+argument_list|(
+operator|&
+name|np
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
+comment|/* 	**	start the timeout daemon 	*/
+name|ncr_timeout
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|lasttime
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	**  Done. 	*/
+return|return;
+block|}
+comment|/*========================================================== ** ** **	Process pending device interrupts. ** ** **========================================================== */
+name|int
+name|ncr_intr
+parameter_list|(
+name|np
+parameter_list|)
+name|ncb_p
+name|np
+decl_stmt|;
+block|{
+name|int
+name|n
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|oldspl
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
+literal|"["
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|INB
+argument_list|(
+name|nc_istat
+argument_list|)
+operator|&
+operator|(
+name|INTF
+operator||
+name|SIP
+operator||
+name|DIP
+operator|)
+condition|)
+block|{
+comment|/* 		**	Repeat until no outstanding ints 		*/
+do|do
+block|{
+name|ncr_exception
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|INB
+argument_list|(
+name|nc_istat
+argument_list|)
+operator|&
+operator|(
+name|INTF
+operator||
+name|SIP
+operator||
+name|DIP
+operator|)
+condition|)
+do|;
+name|n
+operator|=
+literal|1
+expr_stmt|;
+name|np
+operator|->
+name|ticks
+operator|=
+literal|100
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
+literal|"]\n"
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|oldspl
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|n
+operator|)
+return|;
+block|}
+comment|/*========================================================== ** ** **	Start execution of a SCSI command. **	This is called from the generic SCSI driver. ** ** **========================================================== */
+specifier|static
+name|INT32
+name|ncr_start
+parameter_list|(
+name|struct
+name|scsi_xfer
+modifier|*
+name|xp
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|ncb_p
+name|np
+init|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|adapter_softc
+decl_stmt|;
+else|#
+directive|else
+comment|/*__NetBSD__*/
+name|ncb_p
+name|np
+init|=
+name|ncrp
+index|[
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|adapter_unit
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/*__NetBSD__*/
+name|struct
+name|scsi_generic
+modifier|*
+name|cmd
+init|=
+name|xp
+operator|->
+name|cmd
+decl_stmt|;
+name|ccb_p
+name|cp
+decl_stmt|;
+name|lcb_p
+name|lp
+decl_stmt|;
+name|tcb_p
+name|tp
+init|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|oldspl
+decl_stmt|,
+name|segments
+decl_stmt|,
+name|flags
+init|=
+name|xp
+operator|->
+name|flags
+decl_stmt|;
+name|u_char
+name|ptr
+decl_stmt|,
+name|nego
+decl_stmt|,
+name|idmsg
+decl_stmt|;
+name|u_long
+name|msglen
+decl_stmt|,
+name|msglen2
+decl_stmt|;
+comment|/*--------------------------------------------- 	** 	**   Reset SCSI bus 	** 	**	Interrupt handler does the real work. 	** 	**--------------------------------------------- 	*/
+if|if
+condition|(
+name|flags
+operator|&
+name|SCSI_RESET
+condition|)
+block|{
+name|OUTB
+argument_list|(
+name|nc_scntl1
+argument_list|,
+name|CRST
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|COMPLETE
+operator|)
+return|;
+block|}
+empty_stmt|;
+comment|/*--------------------------------------------- 	** 	**      Some shortcuts ... 	** 	**--------------------------------------------- 	*/
+if|if
+condition|(
+operator|(
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+operator|==
+name|np
+operator|->
+name|myaddr
+operator|)
+operator|||
+operator|(
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+operator|>=
+name|MAX_TARGET
+operator|)
+operator|||
+operator|(
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|lun
+operator|>=
+name|MAX_LUN
+operator|)
+operator|||
+operator|(
+name|flags
+operator|&
+name|SCSI_DATA_UIO
+operator|)
+condition|)
+block|{
+name|xp
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+return|return
+operator|(
+name|HAD_ERROR
+operator|)
+return|;
+block|}
+empty_stmt|;
+comment|/*--------------------------------------------- 	** 	**      Diskaccess to partial blocks? 	** 	**--------------------------------------------- 	*/
+if|if
+condition|(
+operator|(
+name|xp
+operator|->
+name|datalen
+operator|&
+literal|0x1ff
+operator|)
+operator|&&
+operator|!
+operator|(
+name|tp
+operator|->
+name|inqdata
+index|[
+literal|0
+index|]
+operator|&
+literal|0x1f
+operator|)
+condition|)
+block|{
+switch|switch
+condition|(
+name|cmd
+operator|->
+name|opcode
+condition|)
+block|{
+case|case
+literal|0x28
+case|:
+comment|/* READ_BIG  (10) */
+case|case
+literal|0xa8
+case|:
+comment|/* READ_HUGE (12) */
+case|case
+literal|0x2a
+case|:
+comment|/* WRITE_BIG (10) */
+case|case
+literal|0xaa
+case|:
+comment|/* WRITE_HUGE(12) */
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"access to partial disk block refused.\n"
+argument_list|)
+expr_stmt|;
+name|xp
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+return|return
+operator|(
+name|HAD_ERROR
+operator|)
+return|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CMD=%x F=%x L=%x "
+argument_list|,
+name|cmd
+operator|->
+name|opcode
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|xp
+operator|->
+name|flags
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|xp
+operator|->
+name|datalen
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*-------------------------------------------- 	** 	**   Sanity checks ... 	**	copied from Elischer's Adaptec driver. 	** 	**-------------------------------------------- 	*/
+name|flags
+operator|=
+name|xp
+operator|->
+name|flags
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|INUSE
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: ?INUSE?\n"
 argument_list|,
 name|ncr_name
 argument_list|(
@@ -9431,1803 +9538,10827 @@ name|np
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|xp
+operator|->
+name|flags
+operator||=
+name|INUSE
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|ITSDONE
+condition|)
+block|{
+name|printf
 argument_list|(
-literal|1000000
+literal|"%s: ?ITSDONE?\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ITSDONE
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|xp
+operator|->
+name|bp
+condition|)
+name|flags
+operator||=
+operator|(
+name|SCSI_NOSLEEP
+operator|)
+expr_stmt|;
+comment|/* just to be sure */
+comment|/*--------------------------------------------------- 	** 	**	Assign a ccb / bind xp 	** 	**---------------------------------------------------- 	*/
+name|oldspl
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|cp
+operator|=
+name|ncr_get_ccb
+argument_list|(
+name|np
+argument_list|,
+name|flags
+argument_list|,
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+argument_list|,
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|lun
+argument_list|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: no ccb.\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xp
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+name|splx
+argument_list|(
+name|oldspl
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|TRY_AGAIN_LATER
+operator|)
+return|;
+block|}
+empty_stmt|;
+name|cp
+operator|->
+name|xfer
+operator|=
+name|xp
+expr_stmt|;
+comment|/*--------------------------------------------------- 	** 	**	timestamp 	** 	**---------------------------------------------------- 	*/
+name|bzero
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|stamp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tstamp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|stamp
+operator|.
+name|start
+operator|=
+name|time
+expr_stmt|;
+comment|/*---------------------------------------------------- 	** 	**	Get device quirks from a speciality table. 	** 	**	@GENSCSI@ 	**	This should be a part of the device table 	**	in "scsi_conf.c". 	** 	**---------------------------------------------------- 	*/
+if|if
+condition|(
+name|tp
+operator|->
+name|quirks
+operator|&
+name|QUIRK_UPDATE
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|NEW_SCSICONF
+name|tp
+operator|->
+name|quirks
+operator|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|quirks
+expr_stmt|;
+else|#
+directive|else
+name|tp
+operator|->
+name|quirks
+operator|=
+name|ncr_lookup
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|tp
+operator|->
+name|inqdata
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|NCR_PATCHLEVEL
+if|if
+condition|(
+name|tp
+operator|->
+name|quirks
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s scanning for targets 0..%d (V%d "
-argument|NCR_PATCHLEVEL
-literal|")\n"
-argument_list|,
-else|#
-directive|else
-argument|printf (
-literal|"%s scanning for targets 0..%d (V%d)\n"
-argument|,
-endif|#
-directive|endif
-argument|ncr_name (np), MAX_TARGET-
-literal|1
-argument|, NCR_VERSION);
-comment|/* 	**	Now let the generic SCSI driver 	**	look for the SCSI devices on the bus .. 	*/
-ifndef|#
-directive|ifndef
-name|ANCIENT
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-argument|np->sc_link.adapter_softc = np;
-else|#
-directive|else
-comment|/* !__NetBSD__ */
-argument|np->sc_link.adapter_unit = unit;
-endif|#
-directive|endif
-comment|/* !__NetBSD__ */
-argument|np->sc_link.adapter_targ = np->myaddr; 	np->sc_link.adapter      =&ncr_switch; 	np->sc_link.device       =&ncr_dev;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-argument|config_found(self,&np->sc_link, ncr_print);
-else|#
-directive|else
-comment|/* !__NetBSD__ */
-argument|scsi_attachdevs (&np->sc_link);
-endif|#
-directive|endif
-comment|/* !__NetBSD__ */
-else|#
-directive|else
-comment|/* ANCIENT */
-argument|scsi_attachdevs (unit, np->myaddr,&ncr_switch);
-endif|#
-directive|endif
-comment|/* ANCIENT */
-comment|/* 	**	start the timeout daemon 	*/
-argument|ncr_timeout (np); 	np->lasttime=
-literal|0
-argument|;
-comment|/* 	**  Done. 	*/
-argument|return; }
-comment|/*========================================================== ** ** **	Process pending device interrupts. ** ** **========================================================== */
-argument|int ncr_intr(np) 	ncb_p np; { 	int n =
-literal|0
-argument|; 	int oldspl = splbio();  	if (DEBUG_FLAGS& DEBUG_TINY) printf (
-literal|"["
-argument|);  	if (INB(nc_istat)& (INTF|SIP|DIP)) {
-comment|/* 		**	Repeat until no outstanding ints 		*/
-argument|do { 			ncr_exception (np); 		} while (INB(nc_istat)& (INTF|SIP|DIP));  		n=
-literal|1
-argument|; 		np->ticks =
-literal|100
-argument|; 	};  	if (DEBUG_FLAGS& DEBUG_TINY) printf (
-literal|"]\n"
-argument|);  	splx (oldspl); 	return (n); }
-comment|/*========================================================== ** ** **	Start execution of a SCSI command. **	This is called from the generic SCSI driver. ** ** **========================================================== */
-argument|static INT32 ncr_start (struct scsi_xfer * xp) {
-ifndef|#
-directive|ifndef
-name|ANCIENT
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-argument|ncb_p np  = xp->sc_link->adapter_softc;
-else|#
-directive|else
-comment|/*__NetBSD__*/
-argument|ncb_p np  = ncrp[xp->sc_link->adapter_unit];
-endif|#
-directive|endif
-comment|/*__NetBSD__*/
-else|#
-directive|else
-comment|/* ANCIENT */
-argument|ncb_p np  = ncrp[xp->adapter];
-endif|#
-directive|endif
-comment|/* ANCIENT */
-argument|struct scsi_generic * cmd = xp->cmd; 	ccb_p cp; 	lcb_p lp; 	tcb_p tp =&np->target[xp->TARGET];  	int	i
-argument_list|,
-argument|oldspl
-argument_list|,
-argument|segments
-argument_list|,
-argument|flags = xp->flags; 	u_char	ptr
-argument_list|,
-argument|nego
-argument_list|,
-argument|idmsg; 	u_long  msglen
-argument_list|,
-argument|msglen2;
-comment|/*--------------------------------------------- 	** 	**   Reset SCSI bus 	** 	**	Interrupt handler does the real work. 	** 	**--------------------------------------------- 	*/
-argument|if (flags& SCSI_RESET) { 		OUTB (nc_scntl1, CRST); 		return(COMPLETE); 	};
-comment|/*--------------------------------------------- 	** 	**      Some shortcuts ... 	** 	**--------------------------------------------- 	*/
-argument|if ((xp->TARGET == np->myaddr    ) || 		(xp->TARGET>= MAX_TARGET) || 		(xp->LUN>= MAX_LUN   ) || 		(flags& SCSI_DATA_UIO)) { 		xp->error = XS_DRIVER_STUFFUP; 		return(HAD_ERROR); 	};
-comment|/*--------------------------------------------- 	** 	**      Diskaccess to partial blocks? 	** 	**--------------------------------------------- 	*/
-argument|if ((xp->datalen&
-literal|0x1ff
-argument|)&& !(tp->inqdata[
-literal|0
-argument|]&
-literal|0x1f
-argument|)) { 		switch (cmd->opcode) { 		case
-literal|0x28
-argument|:
-comment|/* READ_BIG  (10) */
-argument|case
-literal|0xa8
-argument|:
-comment|/* READ_HUGE (12) */
-argument|case
-literal|0x2a
-argument|:
-comment|/* WRITE_BIG (10) */
-argument|case
-literal|0xaa
-argument|:
-comment|/* WRITE_HUGE(12) */
-argument|PRINT_ADDR(xp); 			printf (
-literal|"access to partial disk block refused.\n"
-argument|); 			xp->error = XS_DRIVER_STUFFUP; 			return(HAD_ERROR); 		}; 	};
-ifdef|#
-directive|ifdef
-name|ANCIENT
-comment|/*--------------------------------------------- 	**   Ancient version of<sys/scsi/sd.c> 	**   doesn't set the DATA_IN/DATA_OUT bits. 	**   So we have to fix it .. 	**--------------------------------------------- 	*/
-argument|switch (cmd->opcode) { 	case
-literal|0x1a
-argument|:
-comment|/* MODE_SENSE    */
-argument|case
-literal|0x25
-argument|:
-comment|/* READ_CAPACITY */
-argument|case
-literal|0x28
-argument|:
-comment|/* READ_BIG (10) */
-argument|xp->flags |= SCSI_DATA_IN; 		break; 	case
-literal|0x2a
-argument|:
-comment|/* WRITE_BIG(10) */
-argument|xp->flags |= SCSI_DATA_OUT; 		break; 	};
-endif|#
-directive|endif
-comment|/* ANCIENT */
-argument|if (DEBUG_FLAGS& DEBUG_TINY) { 		PRINT_ADDR(xp); 		printf (
-literal|"CMD=%x F=%x L=%x "
-argument|, cmd->opcode, 			(unsigned)xp->flags, (unsigned) xp->datalen); 	}
-comment|/*-------------------------------------------- 	** 	**   Sanity checks ... 	**	copied from Elischer's Adaptec driver. 	** 	**-------------------------------------------- 	*/
-argument|flags = xp->flags; 	if (!(flags& INUSE)) { 		printf(
-literal|"%s: ?INUSE?\n"
-argument|, ncr_name (np)); 		xp->flags |= INUSE; 	};  	if(flags& ITSDONE) { 		printf(
-literal|"%s: ?ITSDONE?\n"
-argument|, ncr_name (np)); 		xp->flags&= ~ITSDONE; 	};  	if (xp->bp) 		flags |= (SCSI_NOSLEEP);
-comment|/* just to be sure */
-comment|/*--------------------------------------------------- 	** 	**	Assign a ccb / bind xp 	** 	**---------------------------------------------------- 	*/
-argument|oldspl = splbio();  	if (!(cp=ncr_get_ccb (np, flags, xp->TARGET, xp->LUN))) { 		printf (
-literal|"%s: no ccb.\n"
-argument|, ncr_name (np)); 		xp->error = XS_DRIVER_STUFFUP; 		splx(oldspl); 		return(TRY_AGAIN_LATER); 	}; 	cp->xfer = xp;
-comment|/*--------------------------------------------------- 	** 	**	timestamp 	** 	**---------------------------------------------------- 	*/
-argument|bzero (&cp->phys.header.stamp, sizeof (struct tstamp)); 	cp->phys.header.stamp.start = time;
-comment|/*---------------------------------------------------- 	** 	**	Get device quirks from a speciality table. 	** 	**	@GENSCSI@ 	**	This should be a part of the device table 	**	in "scsi_conf.c". 	** 	**---------------------------------------------------- 	*/
-argument|if (tp->quirks& QUIRK_UPDATE) {
-ifdef|#
-directive|ifdef
-name|NEW_SCSICONF
-argument|tp->quirks = xp->sc_link->quirks;
-else|#
-directive|else
-argument|tp->quirks = ncr_lookup ((char*)&tp->inqdata[
-literal|0
-argument|]);
-endif|#
-directive|endif
-argument|if (tp->quirks) { 			PRINT_ADDR(xp); 			printf (
 literal|"quirks=%x.\n"
-argument|, tp->quirks); 		}; 	};
+argument_list|,
+name|tp
+operator|->
+name|quirks
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
 comment|/*--------------------------------------------------- 	** 	**	negotiation required? 	** 	**---------------------------------------------------- 	*/
-argument|nego =
+name|nego
+operator|=
 literal|0
-argument|;  	if (tp->inqdata[
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|inqdata
+index|[
 literal|7
-argument|]) {
+index|]
+condition|)
+block|{
 comment|/* 		**	negotiate synchronous transfers? 		*/
-argument|if (!tp->period) { 			if (tp->inqdata[
+if|if
+condition|(
+operator|!
+name|tp
+operator|->
+name|period
+condition|)
+block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|inqdata
+index|[
 literal|7
-argument|]& INQ7_SYNC) { 				nego = NS_SYNC; 			} else { 				tp->period  =
+index|]
+operator|&
+name|INQ7_SYNC
+condition|)
+block|{
+name|nego
+operator|=
+name|NS_SYNC
+expr_stmt|;
+block|}
+else|else
+block|{
+name|tp
+operator|->
+name|period
+operator|=
 literal|0xffff
-argument|; 				tp->sval =
+expr_stmt|;
+name|tp
+operator|->
+name|sval
+operator|=
 literal|0xe0
-argument|; 				PRINT_ADDR(xp); 				printf (
+expr_stmt|;
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"asynchronous.\n"
-argument|); 			}; 		};
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
 comment|/* 		**	negotiate wide transfers ? 		*/
-argument|if (!tp->widedone) { 			if (tp->inqdata[
+if|if
+condition|(
+operator|!
+name|tp
+operator|->
+name|widedone
+condition|)
+block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|inqdata
+index|[
 literal|7
-argument|]& INQ7_WIDE16) { 				if (!nego) nego = NS_WIDE; 			} else 				tp->widedone=
+index|]
+operator|&
+name|INQ7_WIDE16
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|nego
+condition|)
+name|nego
+operator|=
+name|NS_WIDE
+expr_stmt|;
+block|}
+else|else
+name|tp
+operator|->
+name|widedone
+operator|=
 literal|1
-argument|; 		}; 	};
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
 comment|/*--------------------------------------------------- 	** 	**	choose a new tag ... 	** 	**---------------------------------------------------- 	*/
-argument|if ((lp = tp->lp[xp->LUN])&& (lp->usetags)) {
+if|if
+condition|(
+operator|(
+name|lp
+operator|=
+name|tp
+operator|->
+name|lp
+index|[
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|lun
+index|]
+operator|)
+operator|&&
+operator|(
+name|lp
+operator|->
+name|usetags
+operator|)
+condition|)
+block|{
 comment|/* 		**	assign a tag to this ccb! 		*/
-argument|while (!cp->tag) { 			ccb_p cp2 = lp->next_ccb; 			lp->lasttag = lp->lasttag %
+while|while
+condition|(
+operator|!
+name|cp
+operator|->
+name|tag
+condition|)
+block|{
+name|ccb_p
+name|cp2
+init|=
+name|lp
+operator|->
+name|next_ccb
+decl_stmt|;
+name|lp
+operator|->
+name|lasttag
+operator|=
+name|lp
+operator|->
+name|lasttag
+operator|%
 literal|255
-argument|+
+operator|+
 literal|1
-argument|; 			while (cp2&& cp2->tag != lp->lasttag) 				cp2 = cp2->next_ccb; 			if (cp2) continue; 			cp->tag=lp->lasttag; 			if (DEBUG_FLAGS& DEBUG_TAGS) { 				PRINT_ADDR(xp); 				printf (
+expr_stmt|;
+while|while
+condition|(
+name|cp2
+operator|&&
+name|cp2
+operator|->
+name|tag
+operator|!=
+name|lp
+operator|->
+name|lasttag
+condition|)
+name|cp2
+operator|=
+name|cp2
+operator|->
+name|next_ccb
+expr_stmt|;
+if|if
+condition|(
+name|cp2
+condition|)
+continue|continue;
+name|cp
+operator|->
+name|tag
+operator|=
+name|lp
+operator|->
+name|lasttag
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TAGS
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"using tag #%d.\n"
-argument|, cp->tag); 			}; 		}; 	} else { 		cp->tag=
+argument_list|,
+name|cp
+operator|->
+name|tag
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
+block|}
+else|else
+block|{
+name|cp
+operator|->
+name|tag
+operator|=
 literal|0
-argument|;
+expr_stmt|;
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|ANCIENT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|&&
-operator|!
-operator|(
-name|__FreeBSD__
-operator|>=
-literal|2
-operator|)
+literal|1
 comment|/* 		** @GENSCSI@	Bug in "/sys/scsi/cd.c" 		** 		**	/sys/scsi/cd.c initializes opennings with 2. 		**	Our info value of 1 is not respected. 		*/
-argument|if (xp->sc_link&& xp->sc_link->opennings) { 			PRINT_ADDR(xp); 			printf (
+if|if
+condition|(
+name|xp
+operator|->
+name|sc_link
+operator|&&
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|opennings
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"opennings set to 0.\n"
-argument|); 			xp->sc_link->opennings =
+argument_list|)
+expr_stmt|;
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|opennings
+operator|=
 literal|0
-argument|; 		};
+expr_stmt|;
+block|}
+empty_stmt|;
 endif|#
 directive|endif
-argument|};
+block|}
+empty_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Build the identify / tag / sdtr message 	** 	**---------------------------------------------------- 	*/
-argument|idmsg = M_IDENTIFY | xp->LUN;
+name|idmsg
+operator|=
+name|M_IDENTIFY
+operator||
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|lun
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NCR_NO_DISCONNECT
 comment|/*--------------------------------------------------------------------- 	** Some users have problems with this driver. 	** I assume that the current problems relate to a conflict between 	** a disconnect and an immediately following reconnect operation. 	** With this option one can prevent the driver from using disconnects. 	** Without disconnects the performance will be severely degraded. 	** But it may help to trace down the core problem. 	**--------------------------------------------------------------------- 	*/
-argument|if ((cp!=&np->ccb)&& (np->disc)) 		idmsg |=
+if|if
+condition|(
+operator|(
+name|cp
+operator|!=
+operator|&
+name|np
+operator|->
+name|ccb
+operator|)
+operator|&&
+operator|(
+name|np
+operator|->
+name|disc
+operator|)
+condition|)
+name|idmsg
+operator||=
 literal|0x40
-argument|;
+expr_stmt|;
 endif|#
 directive|endif
-argument|cp -> scsi_smsg [
+name|cp
+operator|->
+name|scsi_smsg
+index|[
 literal|0
-argument|] = idmsg; 	msglen=
+index|]
+operator|=
+name|idmsg
+expr_stmt|;
+name|msglen
+operator|=
 literal|1
-argument|;  	if (cp->tag) {
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|tag
+condition|)
+block|{
 comment|/* 		**	Ordered write ops, unordered read ops. 		*/
-argument|switch (cmd->opcode) { 		case
+switch|switch
+condition|(
+name|cmd
+operator|->
+name|opcode
+condition|)
+block|{
+case|case
 literal|0x08
-argument|:
+case|:
 comment|/* READ_SMALL (6) */
-argument|case
+case|case
 literal|0x28
-argument|:
+case|:
 comment|/* READ_BIG  (10) */
-argument|case
+case|case
 literal|0xa8
-argument|:
+case|:
 comment|/* READ_HUGE (12) */
-argument|cp -> scsi_smsg [msglen] = M_SIMPLE_TAG; 			break; 		default: 			cp -> scsi_smsg [msglen] = M_ORDERED_TAG; 		}
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+index|]
+operator|=
+name|M_SIMPLE_TAG
+expr_stmt|;
+break|break;
+default|default:
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+index|]
+operator|=
+name|M_ORDERED_TAG
+expr_stmt|;
+block|}
 comment|/* 		**	can be overwritten by ncrcontrol 		*/
-argument|switch (np->order) { 		case M_SIMPLE_TAG: 		case M_ORDERED_TAG: 			cp -> scsi_smsg [msglen] = np->order; 		}; 		msglen++; 		cp -> scsi_smsg [msglen++] = cp -> tag; 	}  	switch (nego) { 	case NS_SYNC: 		cp -> scsi_smsg [msglen++] = M_EXTENDED; 		cp -> scsi_smsg [msglen++] =
+switch|switch
+condition|(
+name|np
+operator|->
+name|order
+condition|)
+block|{
+case|case
+name|M_SIMPLE_TAG
+case|:
+case|case
+name|M_ORDERED_TAG
+case|:
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+index|]
+operator|=
+name|np
+operator|->
+name|order
+expr_stmt|;
+block|}
+empty_stmt|;
+name|msglen
+operator|++
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
+name|cp
+operator|->
+name|tag
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|nego
+condition|)
+block|{
+case|case
+name|NS_SYNC
+case|:
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
+name|M_EXTENDED
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
 literal|3
-argument|; 		cp -> scsi_smsg [msglen++] = M_X_SYNC_REQ; 		cp -> scsi_smsg [msglen++] = tp->minsync; 		cp -> scsi_smsg [msglen++] = tp->maxoffs; 		if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
+name|M_X_SYNC_REQ
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
+name|tp
+operator|->
+name|minsync
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
+name|tp
+operator|->
+name|maxoffs
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"sync msgout: "
-argument|); 			ncr_show_msg (&cp->scsi_smsg [msglen-
+argument_list|)
+expr_stmt|;
+name|ncr_show_msg
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|-
 literal|5
-argument|]); 			printf (
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		}; 		break; 	case NS_WIDE: 		cp -> scsi_smsg [msglen++] = M_EXTENDED; 		cp -> scsi_smsg [msglen++] =
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+break|break;
+case|case
+name|NS_WIDE
+case|:
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
+name|M_EXTENDED
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
 literal|2
-argument|; 		cp -> scsi_smsg [msglen++] = M_X_WIDE_REQ; 		cp -> scsi_smsg [msglen++] = tp->usrwide; 		if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
+name|M_X_WIDE_REQ
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|++
+index|]
+operator|=
+name|tp
+operator|->
+name|usrwide
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"wide msgout: "
-argument|); 			ncr_show_msg (&cp->scsi_smsg [msglen-
+argument_list|)
+expr_stmt|;
+name|ncr_show_msg
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|scsi_smsg
+index|[
+name|msglen
+operator|-
 literal|4
-argument|]); 			printf (
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		}; 		break; 	};
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+break|break;
+block|}
+empty_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Build the identify message for getcc. 	** 	**---------------------------------------------------- 	*/
-argument|cp -> scsi_smsg2 [
+name|cp
+operator|->
+name|scsi_smsg2
+index|[
 literal|0
-argument|] = idmsg; 	msglen2 =
+index|]
+operator|=
+name|idmsg
+expr_stmt|;
+name|msglen2
+operator|=
 literal|1
-argument|;
+expr_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Build the data descriptors 	** 	**---------------------------------------------------- 	*/
-argument|segments = ncr_scatter (&cp->phys, (vm_offset_t) xp->data, 					(vm_size_t) xp->datalen);  	if (segments<
+name|segments
+operator|=
+name|ncr_scatter
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|phys
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|xp
+operator|->
+name|data
+argument_list|,
+operator|(
+name|vm_size_t
+operator|)
+name|xp
+operator|->
+name|datalen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|segments
+operator|<
 literal|0
-argument|) { 		xp->error = XS_DRIVER_STUFFUP; 		ncr_free_ccb(np, cp, flags); 		splx(oldspl); 		return(HAD_ERROR); 	};
+condition|)
+block|{
+name|xp
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+name|ncr_free_ccb
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|oldspl
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|HAD_ERROR
+operator|)
+return|;
+block|}
+empty_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Set the SAVED_POINTER. 	** 	**---------------------------------------------------- 	*/
-argument|if (flags& SCSI_DATA_IN) { 		cp->phys.header.savep = vtophys (&np->script->data_in); 		cp->phys.header.goalp = cp->phys.header.savep +
+if|if
+condition|(
+name|flags
+operator|&
+name|SCSI_DATA_IN
+condition|)
+block|{
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|savep
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|data_in
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|goalp
+operator|=
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|savep
+operator|+
 literal|20
-argument|+segments*
+operator|+
+name|segments
+operator|*
 literal|16
-argument|; 	} else if (flags& SCSI_DATA_OUT) { 		cp->phys.header.savep = vtophys (&np->script->data_out); 		cp->phys.header.goalp = cp->phys.header.savep +
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|SCSI_DATA_OUT
+condition|)
+block|{
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|savep
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|data_out
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|goalp
+operator|=
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|savep
+operator|+
 literal|20
-argument|+segments*
+operator|+
+name|segments
+operator|*
 literal|16
-argument|; 	} else { 		cp->phys.header.savep = vtophys (&np->script->no_data); 		cp->phys.header.goalp = cp->phys.header.savep; 	}; 	cp->phys.header.lastp = cp->phys.header.savep;
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|savep
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|no_data
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|goalp
+operator|=
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|savep
+expr_stmt|;
+block|}
+empty_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|lastp
+operator|=
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|savep
+expr_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	fill ccb 	** 	**---------------------------------------------------- 	** 	** 	**	physical -> virtual backlink 	**	Generic SCSI command 	*/
-argument|cp->phys.header.cp		= cp;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|cp
+operator|=
+name|cp
+expr_stmt|;
 comment|/* 	**	Startqueue 	*/
-argument|cp->phys.header.launch.l_paddr	= vtophys (&np->script->select); 	cp->phys.header.launch.l_cmd	= SCR_JUMP;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|launch
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|select
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|launch
+operator|.
+name|l_cmd
+operator|=
+name|SCR_JUMP
+expr_stmt|;
 comment|/* 	**	select 	*/
-argument|cp->phys.select.sel_id		= xp->TARGET; 	cp->phys.select.sel_scntl3	= tp->wval; 	cp->phys.select.sel_sxfer	= tp->sval;
+name|cp
+operator|->
+name|phys
+operator|.
+name|select
+operator|.
+name|sel_id
+operator|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|select
+operator|.
+name|sel_scntl3
+operator|=
+name|tp
+operator|->
+name|wval
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|select
+operator|.
+name|sel_sxfer
+operator|=
+name|tp
+operator|->
+name|sval
+expr_stmt|;
 comment|/* 	**	message 	*/
-argument|cp->phys.smsg.addr		= vtophys (&cp->scsi_smsg ); 	cp->phys.smsg.size		= msglen; 	cp->phys.smsg2.addr		= vtophys (&cp->scsi_smsg2); 	cp->phys.smsg2.size		= msglen2;
+name|cp
+operator|->
+name|phys
+operator|.
+name|smsg
+operator|.
+name|addr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|scsi_smsg
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|smsg
+operator|.
+name|size
+operator|=
+name|msglen
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|smsg2
+operator|.
+name|addr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|scsi_smsg2
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|smsg2
+operator|.
+name|size
+operator|=
+name|msglen2
+expr_stmt|;
 comment|/* 	**	command 	*/
-ifdef|#
-directive|ifdef
-name|ANCIENT
-argument|bcopy (cmd,&cp->cmd, sizeof (cp->cmd)); 	cp->phys.cmd.addr		= vtophys (&cp->cmd);
-else|#
-directive|else
-comment|/* ANCIENT */
-argument|cp->phys.cmd.addr		= vtophys (cmd);
-endif|#
-directive|endif
-comment|/* ANCIENT */
-argument|cp->phys.cmd.size		= xp->cmdlen;
+name|cp
+operator|->
+name|phys
+operator|.
+name|cmd
+operator|.
+name|addr
+operator|=
+name|vtophys
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|cmd
+operator|.
+name|size
+operator|=
+name|xp
+operator|->
+name|cmdlen
+expr_stmt|;
 comment|/* 	**	sense data 	*/
-argument|cp->phys.sense.addr		= vtophys (&cp->xfer->sense); 	cp->phys.sense.size		= sizeof(struct scsi_sense_data);
+name|cp
+operator|->
+name|phys
+operator|.
+name|sense
+operator|.
+name|addr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|xfer
+operator|->
+name|sense
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|sense
+operator|.
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|scsi_sense_data
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|sense
+operator|.
+name|size
+operator|=
+name|xp
+operator|->
+name|req_sense_length
+expr_stmt|;
+comment|/*21.3.95*/
 comment|/* 	**	status 	*/
-argument|cp->actualquirks		= tp->quirks; 	cp->host_status			= nego ? HS_NEGOTIATE : HS_BUSY; 	cp->scsi_status			= S_ILLEGAL; 	cp->parity_status		=
+name|cp
+operator|->
+name|actualquirks
+operator|=
+name|tp
+operator|->
+name|quirks
+expr_stmt|;
+name|cp
+operator|->
+name|host_status
+operator|=
+name|nego
+condition|?
+name|HS_NEGOTIATE
+else|:
+name|HS_BUSY
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_status
+operator|=
+name|S_ILLEGAL
+expr_stmt|;
+name|cp
+operator|->
+name|parity_status
+operator|=
 literal|0
-argument|;  	cp->xerr_status			= XE_OK; 	cp->sync_status			= tp->sval; 	cp->nego_status			= nego; 	cp->wide_status			= tp->wval;
+expr_stmt|;
+name|cp
+operator|->
+name|xerr_status
+operator|=
+name|XE_OK
+expr_stmt|;
+name|cp
+operator|->
+name|sync_status
+operator|=
+name|tp
+operator|->
+name|sval
+expr_stmt|;
+name|cp
+operator|->
+name|nego_status
+operator|=
+name|nego
+expr_stmt|;
+name|cp
+operator|->
+name|wide_status
+operator|=
+name|tp
+operator|->
+name|wval
+expr_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Critical region: starting this job. 	** 	**---------------------------------------------------- 	*/
 comment|/* 	**	reselect pattern and activate this job. 	*/
-argument|cp->jump_ccb.l_cmd	= (SCR_JUMP ^ IFFALSE (DATA (cp->tag))); 	cp->tlimit		= time.tv_sec + xp->timeout /
+name|cp
+operator|->
+name|jump_ccb
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_JUMP
+operator|^
+name|IFFALSE
+argument_list|(
+name|DATA
+argument_list|(
+name|cp
+operator|->
+name|tag
+argument_list|)
+argument_list|)
+operator|)
+expr_stmt|;
+name|cp
+operator|->
+name|tlimit
+operator|=
+name|time
+operator|.
+name|tv_sec
+operator|+
+name|xp
+operator|->
+name|timeout
+operator|/
 literal|1000
-argument|+
+operator|+
 literal|2
-argument|; 	cp->magic               = CCB_MAGIC;
+expr_stmt|;
+name|cp
+operator|->
+name|magic
+operator|=
+name|CCB_MAGIC
+expr_stmt|;
 comment|/* 	**	insert into startqueue. 	*/
-argument|ptr = np->squeueput +
+name|ptr
+operator|=
+name|np
+operator|->
+name|squeueput
+operator|+
 literal|1
-argument|; 	if (ptr>= MAX_START) ptr=
+expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|>=
+name|MAX_START
+condition|)
+name|ptr
+operator|=
 literal|0
-argument|; 	np->squeue [ptr          ] = vtophys(&np->script->idle); 	np->squeue [np->squeueput] = vtophys(&cp->phys); 	np->squeueput = ptr;  	if(DEBUG_FLAGS& DEBUG_QUEUE) 		printf (
+expr_stmt|;
+name|np
+operator|->
+name|squeue
+index|[
+name|ptr
+index|]
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|idle
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|squeue
+index|[
+name|np
+operator|->
+name|squeueput
+index|]
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|phys
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|squeueput
+operator|=
+name|ptr
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_QUEUE
+condition|)
+name|printf
+argument_list|(
 literal|"%s: queuepos=%d tryoffset=%d.\n"
-argument|, ncr_name (np), 		np->squeueput, 		(unsigned)(np->script->startpos[
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|np
+operator|->
+name|squeueput
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|np
+operator|->
+name|script
+operator|->
+name|startpos
+index|[
 literal|0
-argument|]- 			(vtophys(&np->script->tryloop))));
+index|]
+operator|-
+operator|(
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|tryloop
+argument_list|)
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Script processor may be waiting for reconnect. 	**	Wake it up. 	*/
-argument|OUTB (nc_istat, SIGP);
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SIGP
+argument_list|)
+expr_stmt|;
 comment|/* 	**	and reenable interrupts 	*/
-argument|splx (oldspl);
+name|splx
+argument_list|(
+name|oldspl
+argument_list|)
+expr_stmt|;
 comment|/* 	**	If interrupts are enabled, return now. 	**	Command is successfully queued. 	*/
-argument|if (!(flags& SCSI_NOMASK)) { 		if (np->lasttime) { 			if(DEBUG_FLAGS& DEBUG_TINY) printf (
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCSI_NOMASK
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|np
+operator|->
+name|lasttime
+condition|)
+block|{
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
 literal|"Q"
-argument|); 			return(SUCCESSFULLY_QUEUED); 		}; 	};
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SUCCESSFULLY_QUEUED
+operator|)
+return|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Interrupts not yet enabled - have to poll. 	** 	**---------------------------------------------------- 	*/
-argument|if (DEBUG_FLAGS& DEBUG_POLL) printf(
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_POLL
+condition|)
+name|printf
+argument_list|(
 literal|"P"
-argument|);  	for (i=xp->timeout; i&& !(xp->flags& ITSDONE);i--) { 		if ((DEBUG_FLAGS& DEBUG_POLL)&& (cp->host_status)) 			printf (
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|xp
+operator|->
+name|timeout
+init|;
+name|i
+operator|&&
+operator|!
+operator|(
+name|xp
+operator|->
+name|flags
+operator|&
+name|ITSDONE
+operator|)
+condition|;
+name|i
+operator|--
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_POLL
+operator|)
+operator|&&
+operator|(
+name|cp
+operator|->
+name|host_status
+operator|)
+condition|)
+name|printf
+argument_list|(
 literal|"%c"
-argument|, (cp->host_status&
+argument_list|,
+operator|(
+name|cp
+operator|->
+name|host_status
+operator|&
 literal|0xf
-argument|) +
+operator|)
+operator|+
 literal|'0'
-argument|); 		DELAY (
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
 literal|1000
-argument|); 		ncr_exception (np); 	};
+argument_list|)
+expr_stmt|;
+name|ncr_exception
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	Abort if command not done. 	*/
-argument|if (!(xp->flags& ITSDONE)) { 		printf (
+if|if
+condition|(
+operator|!
+operator|(
+name|xp
+operator|->
+name|flags
+operator|&
+name|ITSDONE
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"%s: aborting job ...\n"
-argument|, ncr_name (np)); 		OUTB (nc_istat, CABRT); 		DELAY (
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|CABRT
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
 literal|100000
-argument|); 		OUTB (nc_istat, SIGP); 		ncr_exception (np); 	};  	if (!(xp->flags& ITSDONE)) { 		printf (
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SIGP
+argument_list|)
+expr_stmt|;
+name|ncr_exception
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|xp
+operator|->
+name|flags
+operator|&
+name|ITSDONE
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"%s: abortion failed at %x.\n"
-argument|, 			ncr_name (np), (unsigned) INL(nc_dsp)); 		ncr_init (np,
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|INL
+argument_list|(
+name|nc_dsp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ncr_init
+argument_list|(
+name|np
+argument_list|,
 literal|"timeout"
-argument|, HS_TIMEOUT); 	};  	if (!(xp->flags& ITSDONE)) { 		cp-> host_status = HS_SEL_TIMEOUT; 		ncr_complete (np, cp); 	};  	if (DEBUG_FLAGS& DEBUG_RESULT) { 		printf (
+argument_list|,
+name|HS_TIMEOUT
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|xp
+operator|->
+name|flags
+operator|&
+name|ITSDONE
+operator|)
+condition|)
+block|{
+name|cp
+operator|->
+name|host_status
+operator|=
+name|HS_SEL_TIMEOUT
+expr_stmt|;
+name|ncr_complete
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESULT
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"%s: result: %x %x.\n"
-argument|, 			ncr_name (np), cp->host_status, cp->scsi_status); 	}; 	if (!(flags& SCSI_NOMASK)) 		return (SUCCESSFULLY_QUEUED); 	switch (xp->error) { 	case
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|cp
+operator|->
+name|host_status
+argument_list|,
+name|cp
+operator|->
+name|scsi_status
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCSI_NOMASK
+operator|)
+condition|)
+return|return
+operator|(
+name|SUCCESSFULLY_QUEUED
+operator|)
+return|;
+switch|switch
+condition|(
+name|xp
+operator|->
+name|error
+condition|)
+block|{
+case|case
 literal|0
-argument|: return (COMPLETE); 	case XS_BUSY: return (TRY_AGAIN_LATER); 	}; 	return (HAD_ERROR); }
+case|:
+return|return
+operator|(
+name|COMPLETE
+operator|)
+return|;
+case|case
+name|XS_BUSY
+case|:
+return|return
+operator|(
+name|TRY_AGAIN_LATER
+operator|)
+return|;
+block|}
+empty_stmt|;
+return|return
+operator|(
+name|HAD_ERROR
+operator|)
+return|;
+block|}
 comment|/*========================================================== ** ** **	Complete execution of a SCSI command. **	Signal completion to the generic SCSI driver. ** ** **========================================================== */
-argument|void ncr_complete (ncb_p np, ccb_p cp) { 	struct scsi_xfer * xp; 	tcb_p tp; 	lcb_p lp;
+name|void
+name|ncr_complete
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|ccb_p
+name|cp
+parameter_list|)
+block|{
+name|struct
+name|scsi_xfer
+modifier|*
+name|xp
+decl_stmt|;
+name|tcb_p
+name|tp
+decl_stmt|;
+name|lcb_p
+name|lp
+decl_stmt|;
 comment|/* 	**	Sanity check 	*/
-argument|if (!cp || (cp->magic!=CCB_MAGIC) || !cp->xfer) return; 	cp->magic =
+if|if
+condition|(
+operator|!
+name|cp
+operator|||
+operator|(
+name|cp
+operator|->
+name|magic
+operator|!=
+name|CCB_MAGIC
+operator|)
+operator|||
+operator|!
+name|cp
+operator|->
+name|xfer
+condition|)
+return|return;
+name|cp
+operator|->
+name|magic
+operator|=
 literal|1
-argument|; 	cp->tlimit=
+expr_stmt|;
+name|cp
+operator|->
+name|tlimit
+operator|=
 literal|0
-argument|;
+expr_stmt|;
 comment|/* 	**	No Reselect anymore. 	*/
-argument|cp->jump_ccb.l_cmd = (SCR_JUMP);
+name|cp
+operator|->
+name|jump_ccb
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_JUMP
+operator|)
+expr_stmt|;
 comment|/* 	**	No starting. 	*/
-argument|cp->phys.header.launch.l_paddr= vtophys (&np->script->idle);
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|launch
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|idle
+argument_list|)
+expr_stmt|;
 comment|/* 	**	timestamp 	*/
-argument|ncb_profile (np, cp);
-argument|if (DEBUG_FLAGS& DEBUG_TINY) 		printf (
+name|ncb_profile
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
 literal|"CCB=%x STAT=%x/%x\n"
-argument|, (unsigned)cp&
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|cp
+operator|&
 literal|0xfff
-argument|, 			cp->host_status,cp->scsi_status);  	xp  = cp->xfer; 	cp->xfer = NULL; 	tp =&np->target[xp->TARGET]; 	lp  = tp->lp[xp->LUN];
+argument_list|,
+name|cp
+operator|->
+name|host_status
+argument_list|,
+name|cp
+operator|->
+name|scsi_status
+argument_list|)
+expr_stmt|;
+name|xp
+operator|=
+name|cp
+operator|->
+name|xfer
+expr_stmt|;
+name|cp
+operator|->
+name|xfer
+operator|=
+name|NULL
+expr_stmt|;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+index|]
+expr_stmt|;
+name|lp
+operator|=
+name|tp
+operator|->
+name|lp
+index|[
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|lun
+index|]
+expr_stmt|;
 comment|/* 	**	Check for parity errors. 	*/
-argument|if (cp->parity_status) { 		PRINT_ADDR(xp); 		printf (
+if|if
+condition|(
+name|cp
+operator|->
+name|parity_status
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%d parity error(s), fallback.\n"
-argument|, cp->parity_status);
+argument_list|,
+name|cp
+operator|->
+name|parity_status
+argument_list|)
+expr_stmt|;
 comment|/* 		**	fallback to asynch transfer. 		*/
-argument|tp->usrsync=
+name|tp
+operator|->
+name|usrsync
+operator|=
 literal|255
-argument|; 		tp->period =
+expr_stmt|;
+name|tp
+operator|->
+name|period
+operator|=
 literal|0
-argument|; 	};
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	Check for extended errors. 	*/
-argument|if (cp->xerr_status != XE_OK) { 		PRINT_ADDR(xp); 		switch (cp->xerr_status) { 		case XE_EXTRA_DATA: 			printf (
+if|if
+condition|(
+name|cp
+operator|->
+name|xerr_status
+operator|!=
+name|XE_OK
+operator|&&
+operator|!
+operator|(
+name|cp
+operator|->
+name|scsi_status
+operator|&
+name|S_SENSE
+operator|)
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|cp
+operator|->
+name|xerr_status
+condition|)
+block|{
+case|case
+name|XE_EXTRA_DATA
+case|:
+if|if
+condition|(
+name|cp
+operator|->
+name|scsi_status
+operator|&
+name|S_SENSE
+condition|)
+block|{
+name|cp
+operator|->
+name|xerr_status
+operator|=
+name|XE_OK
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+name|printf
+argument_list|(
 literal|"extraneous data discarded.\n"
-argument|); 			break; 		case XE_BAD_PHASE: 			printf (
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|XE_BAD_PHASE
+case|:
+name|printf
+argument_list|(
 literal|"illegal scsi phase (4/5).\n"
-argument|); 			break; 		default: 			printf (
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
 literal|"extended error %d.\n"
-argument|, cp->xerr_status); 			break; 		}; 		if (cp->host_status==HS_COMPLETE) 			cp->host_status = HS_FAIL; 	};
+argument_list|,
+name|cp
+operator|->
+name|xerr_status
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|host_status
+operator|==
+name|HS_COMPLETE
+condition|)
+name|cp
+operator|->
+name|host_status
+operator|=
+name|HS_FAIL
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	Check the status. 	*/
-argument|if (   (cp->host_status == HS_COMPLETE)&& (cp->scsi_status == S_GOOD)) {
+if|if
+condition|(
+operator|(
+name|cp
+operator|->
+name|host_status
+operator|==
+name|HS_COMPLETE
+operator|)
+operator|&&
+operator|(
+name|cp
+operator|->
+name|scsi_status
+operator|==
+name|S_GOOD
+operator|)
+condition|)
+block|{
 comment|/* 		**	All went well. 		*/
-argument|xp->resid =
+name|xp
+operator|->
+name|resid
+operator|=
 literal|0
-argument|;
+expr_stmt|;
 comment|/* 		** if (cp->phys.header.lastp != cp->phys.header.goalp)... 		** 		**	@RESID@ 		**	Could dig out the correct value for resid, 		**	but it would be quite complicated. 		** 		**	The ah1542.c driver sets it to 0 too ... 		*/
 comment|/* 		**	Try to assign a ccb to this nexus 		*/
-argument|ncr_alloc_ccb (np, xp);
+name|ncr_alloc_ccb
+argument_list|(
+name|np
+argument_list|,
+name|xp
+argument_list|)
+expr_stmt|;
 comment|/* 		**	On inquire cmd (0x12) save some data. 		*/
-ifdef|#
-directive|ifdef
-name|ANCIENT
-argument|if (cp->cmd.opcode ==
+if|if
+condition|(
+name|xp
+operator|->
+name|cmd
+operator|->
+name|opcode
+operator|==
 literal|0x12
-argument|) {
-else|#
-directive|else
-comment|/* ANCIENT */
-argument|if (xp->cmd->opcode ==
-literal|0x12
-argument|) {
-endif|#
-directive|endif
-comment|/* ANCIENT */
-argument|bcopy (	xp->data,&tp->inqdata, 				sizeof (tp->inqdata));
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|xp
+operator|->
+name|data
+argument_list|,
+operator|&
+name|tp
+operator|->
+name|inqdata
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tp
+operator|->
+name|inqdata
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 			**	set number of tags 			*/
-argument|ncr_setmaxtags (tp, tp->usrtags);
+name|ncr_setmaxtags
+argument_list|(
+name|tp
+argument_list|,
+name|tp
+operator|->
+name|usrtags
+argument_list|)
+expr_stmt|;
 comment|/* 			**	prepare negotiation of synch and wide. 			*/
-argument|ncr_negotiate (np, tp);
+name|ncr_negotiate
+argument_list|(
+name|np
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
 comment|/* 			**	force quirks update before next command start 			*/
-argument|tp->quirks |= QUIRK_UPDATE; 		};
+name|tp
+operator|->
+name|quirks
+operator||=
+name|QUIRK_UPDATE
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 		**	Announce changes to the generic driver 		*/
-argument|if (lp) { 			ncr_settags (tp, lp); 			if (lp->reqlink != lp->actlink) 				ncr_opennings (np, lp, xp); 		};  		tp->bytes     += xp->datalen; 		tp->transfers ++;  	} else if (xp->flags& SCSI_ERR_OK) {
+if|if
+condition|(
+name|lp
+condition|)
+block|{
+name|ncr_settags
+argument_list|(
+name|tp
+argument_list|,
+name|lp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|reqlink
+operator|!=
+name|lp
+operator|->
+name|actlink
+condition|)
+name|ncr_opennings
+argument_list|(
+name|np
+argument_list|,
+name|lp
+argument_list|,
+name|xp
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+name|tp
+operator|->
+name|bytes
+operator|+=
+name|xp
+operator|->
+name|datalen
+expr_stmt|;
+name|tp
+operator|->
+name|transfers
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|xp
+operator|->
+name|flags
+operator|&
+name|SCSI_ERR_OK
+condition|)
+block|{
 comment|/* 		**   Not correct, but errors expected. 		*/
-argument|xp->resid =
+name|xp
+operator|->
+name|resid
+operator|=
 literal|0
-argument|;  	} else if ((cp->host_status == HS_COMPLETE)&& (cp->scsi_status == (S_SENSE|S_GOOD))) {
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|cp
+operator|->
+name|host_status
+operator|==
+name|HS_COMPLETE
+operator|)
+operator|&&
+operator|(
+name|cp
+operator|->
+name|scsi_status
+operator|==
+operator|(
+name|S_SENSE
+operator||
+name|S_GOOD
+operator|)
+operator|)
+condition|)
+block|{
 comment|/* 		**   Check condition code 		*/
-argument|xp->error = XS_SENSE;  		if (DEBUG_FLAGS& (DEBUG_RESULT|DEBUG_TINY)) { 			u_char * p = (u_char*)& xp->sense; 			int i; 			printf (
+name|xp
+operator|->
+name|error
+operator|=
+name|XS_SENSE
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+operator|(
+name|DEBUG_RESULT
+operator||
+name|DEBUG_TINY
+operator|)
+condition|)
+block|{
+name|u_char
+modifier|*
+name|p
+init|=
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|xp
+operator|->
+name|sense
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|printf
+argument_list|(
 literal|"\n%s: sense data:"
-argument|, ncr_name (np)); 			for (i=
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|; i<
+init|;
+name|i
+operator|<
 literal|14
-argument|; i++) printf (
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
 literal|" %x"
-argument|, *p++); 			printf (
+argument_list|,
+operator|*
+name|p
+operator|++
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		};
-argument|} else if ((cp->host_status == HS_COMPLETE)&& (cp->scsi_status == S_BUSY)) {
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|cp
+operator|->
+name|host_status
+operator|==
+name|HS_COMPLETE
+operator|)
+operator|&&
+operator|(
+name|cp
+operator|->
+name|scsi_status
+operator|==
+name|S_BUSY
+operator|)
+condition|)
+block|{
 comment|/* 		**   Target is busy. 		*/
-argument|xp->error = XS_BUSY;  	} else if ((cp->host_status == HS_SEL_TIMEOUT) 		|| (cp->host_status == HS_TIMEOUT)) {
+name|xp
+operator|->
+name|error
+operator|=
+name|XS_BUSY
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|cp
+operator|->
+name|host_status
+operator|==
+name|HS_SEL_TIMEOUT
+operator|)
+operator|||
+operator|(
+name|cp
+operator|->
+name|host_status
+operator|==
+name|HS_TIMEOUT
+operator|)
+condition|)
+block|{
 comment|/* 		**   No response 		*/
-argument|xp->error = XS_TIMEOUT;  	} else {
+name|xp
+operator|->
+name|error
+operator|=
+name|XS_TIMEOUT
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* 		**  Other protocol messes 		*/
-argument|PRINT_ADDR(xp); 		printf (
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"COMMAND FAILED (%x %x) @%x.\n"
-argument|, 			cp->host_status, cp->scsi_status, (unsigned)cp);  		xp->error = XS_DRIVER_STUFFUP; 	}
-argument|xp->flags |= ITSDONE;
+argument_list|,
+name|cp
+operator|->
+name|host_status
+argument_list|,
+name|cp
+operator|->
+name|scsi_status
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|cp
+argument_list|)
+expr_stmt|;
+name|xp
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+block|}
+name|xp
+operator|->
+name|flags
+operator||=
+name|ITSDONE
+expr_stmt|;
 comment|/* 	**	trace output 	*/
-argument|if (tp->usrflag& UF_TRACE) { 		u_char * p; 		int i; 		PRINT_ADDR(xp); 		printf (
+if|if
+condition|(
+name|tp
+operator|->
+name|usrflag
+operator|&
+name|UF_TRACE
+condition|)
+block|{
+name|u_char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|" CMD:"
-argument|);
-ifdef|#
-directive|ifdef
-name|ANCIENT
-argument|p = (u_char*)&cp->cmd.opcode;
-else|#
-directive|else
-comment|/* ANCIENT */
-argument|p = (u_char*)&xp->cmd->opcode;
-endif|#
-directive|endif
-comment|/* ANCIENT */
-argument|for (i=
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|xp
+operator|->
+name|cmd
+operator|->
+name|opcode
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|; i<xp->cmdlen; i++) printf (
+init|;
+name|i
+operator|<
+name|xp
+operator|->
+name|cmdlen
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
 literal|" %x"
-argument|, *p++);  		if (cp->host_status==HS_COMPLETE) { 			switch (cp->scsi_status) { 			case S_GOOD: 				printf (
+argument_list|,
+operator|*
+name|p
+operator|++
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|host_status
+operator|==
+name|HS_COMPLETE
+condition|)
+block|{
+switch|switch
+condition|(
+name|cp
+operator|->
+name|scsi_status
+condition|)
+block|{
+case|case
+name|S_GOOD
+case|:
+name|printf
+argument_list|(
 literal|"  GOOD"
-argument|); 				break; 			case S_CHECK_COND: 				printf (
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|S_CHECK_COND
+case|:
+name|printf
+argument_list|(
 literal|"  SENSE:"
-argument|); 				p = (u_char*)&xp->sense;
-ifdef|#
-directive|ifdef
-name|ANCIENT
-argument|for (i=
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|xp
+operator|->
+name|sense
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|; i<sizeof(xp->sense); i++)
-else|#
-directive|else
-comment|/* ANCIENT */
-argument|for (i=
-literal|0
-argument|; i<xp->req_sense_length; i++)
-endif|#
-directive|endif
-comment|/* ANCIENT */
-argument|printf (
+init|;
+name|i
+operator|<
+name|xp
+operator|->
+name|req_sense_length
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
 literal|" %x"
-argument|, *p++); 				break; 			default: 				printf (
+argument_list|,
+operator|*
+name|p
+operator|++
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
 literal|"  STAT: %x\n"
-argument|, cp->scsi_status); 				break; 			}; 		} else printf (
+argument_list|,
+name|cp
+operator|->
+name|scsi_status
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
 literal|"  HOSTERROR: %x"
-argument|, cp->host_status); 		printf (
+argument_list|,
+name|cp
+operator|->
+name|host_status
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\n"
-argument|); 	};
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	Free this ccb 	*/
-argument|ncr_free_ccb (np, cp, xp->flags);
+name|ncr_free_ccb
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
+name|xp
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 comment|/* 	**	signal completion to generic driver. 	*/
-ifdef|#
-directive|ifdef
-name|ANCIENT
-argument|if (xp->when_done) 		(*(xp->when_done))(xp->done_arg,xp->done_arg2);
-else|#
-directive|else
-comment|/* ANCIENT */
-argument|scsi_done (xp);
-endif|#
-directive|endif
-comment|/* ANCIENT */
-argument|}
+name|scsi_done
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*========================================================== ** ** **	Signal all (or one) control block done. ** ** **========================================================== */
-argument|void ncr_wakeup (ncb_p np, u_long code) {
+name|void
+name|ncr_wakeup
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|u_long
+name|code
+parameter_list|)
+block|{
 comment|/* 	**	Starting at the default ccb and following 	**	the links, complete all jobs with a 	**	host_status greater than "disconnect". 	** 	**	If the "code" parameter is not zero, 	**	complete all jobs that are not IDLE. 	*/
-argument|ccb_p cp =&np->ccb; 	while (cp) { 		switch (cp->host_status) {  		case HS_IDLE: 			break;  		case HS_DISCONNECT: 			if(DEBUG_FLAGS& DEBUG_TINY) printf (
+name|ccb_p
+name|cp
+init|=
+operator|&
+name|np
+operator|->
+name|ccb
+decl_stmt|;
+while|while
+condition|(
+name|cp
+condition|)
+block|{
+switch|switch
+condition|(
+name|cp
+operator|->
+name|host_status
+condition|)
+block|{
+case|case
+name|HS_IDLE
+case|:
+break|break;
+case|case
+name|HS_DISCONNECT
+case|:
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
 literal|"D"
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* fall through */
-argument|case HS_BUSY: 		case HS_NEGOTIATE: 			if (!code) break; 			cp->host_status = code;
+case|case
+name|HS_BUSY
+case|:
+case|case
+name|HS_NEGOTIATE
+case|:
+if|if
+condition|(
+operator|!
+name|code
+condition|)
+break|break;
+name|cp
+operator|->
+name|host_status
+operator|=
+name|code
+expr_stmt|;
 comment|/* fall through */
-argument|default: 			ncr_complete (np, cp); 			break; 		}; 		cp = cp -> link_ccb; 	}; }
+default|default:
+name|ncr_complete
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+name|cp
+operator|=
+name|cp
+operator|->
+name|link_ccb
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
 comment|/*========================================================== ** ** **	Start NCR chip. ** ** **========================================================== */
-argument|void ncr_init (ncb_p np, char * msg, u_long code) { 	int	i; 	u_long	usrsync; 	u_char	usrwide;
+name|void
+name|ncr_init
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|char
+modifier|*
+name|msg
+parameter_list|,
+name|u_long
+name|code
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|u_long
+name|usrsync
+decl_stmt|;
+name|u_char
+name|usrwide
+decl_stmt|;
+name|u_char
+name|burstlen
+decl_stmt|;
 comment|/* 	**	Reset chip. 	*/
-argument|OUTB (nc_istat,  SRST	);
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SRST
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Message. 	*/
-argument|if (msg) printf (
+if|if
+condition|(
+name|msg
+condition|)
+name|printf
+argument_list|(
 literal|"%s: restart (%s).\n"
-argument|, ncr_name (np), msg);
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Clear Start Queue 	*/
-argument|for (i=
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|;i<MAX_START;i++) 		np -> squeue [i] = vtophys (&np->script->idle);
+init|;
+name|i
+operator|<
+name|MAX_START
+condition|;
+name|i
+operator|++
+control|)
+name|np
+operator|->
+name|squeue
+index|[
+name|i
+index|]
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|idle
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Start at first entry. 	*/
-argument|np->squeueput =
+name|np
+operator|->
+name|squeueput
+operator|=
 literal|0
-argument|; 	np->script->startpos[
+expr_stmt|;
+name|np
+operator|->
+name|script
+operator|->
+name|startpos
+index|[
 literal|0
-argument|] = vtophys (&np->script->tryloop); 	np->script->start0  [
+index|]
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|tryloop
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|script
+operator|->
+name|start0
+index|[
 literal|0
-argument|] = SCR_INT ^ IFFALSE (
+index|]
+operator|=
+name|SCR_INT
+operator|^
+name|IFFALSE
+argument_list|(
 literal|0
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Wakeup all pending jobs. 	*/
-argument|ncr_wakeup (np, code);
+name|ncr_wakeup
+argument_list|(
+name|np
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Init chip. 	*/
-argument|OUTB (nc_istat,
+if|if
+condition|(
+name|pci_max_burst_len
+operator|<
+literal|4
+condition|)
+block|{
+specifier|static
+name|u_char
+name|tbl
+index|[
+literal|4
+index|]
+init|=
+block|{
 literal|0
-argument|);
-comment|/*  Remove Reset, abort ...          */
-argument|OUTB (nc_scntl0,
-literal|0xca
-argument|);
-comment|/*  full arb., ena parity, par->ATN  */
-argument|OUTB (nc_scntl1,
-literal|0x00
-argument|);
-comment|/*  odd parity, and remove CRST!!    */
-argument|OUTB (nc_scntl3, np->rv_scntl3);
-comment|/*  timing prescaler                 */
-argument|OUTB (nc_scid  , RRE|np->myaddr);
-comment|/*  host adapter SCSI address       */
-argument|OUTW (nc_respid,
-literal|1ul
-argument|<<np->myaddr);
-comment|/*  id to respond to               */
-argument|OUTB (nc_istat , SIGP	);
-comment|/*  Signal Process                   */
-comment|/*	OUTB (nc_dmode , 0xc0	);*/
-comment|/*  Burst length = 16 DWORDs         */
-argument|OUTB (nc_dmode ,
+block|,
+literal|0
+block|,
 literal|0x40
-argument|);
-comment|/*  Burst length = 4 DWORDs          */
-argument|OUTB (nc_dcntl , NOCOM	);
+block|,
+literal|0x80
+block|}
+decl_stmt|;
+name|burstlen
+operator|=
+name|tbl
+index|[
+name|pci_max_burst_len
+index|]
+expr_stmt|;
+block|}
+else|else
+name|burstlen
+operator|=
+literal|0xc0
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/*  Remove Reset, abort ...	  */
+name|OUTB
+argument_list|(
+name|nc_scntl0
+argument_list|,
+literal|0xca
+argument_list|)
+expr_stmt|;
+comment|/*  full arb., ena parity, par->ATN  */
+name|OUTB
+argument_list|(
+name|nc_scntl1
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+comment|/*  odd parity, and remove CRST!!    */
+name|OUTB
+argument_list|(
+name|nc_scntl3
+argument_list|,
+name|np
+operator|->
+name|rv_scntl3
+argument_list|)
+expr_stmt|;
+comment|/*  timing prescaler		 */
+name|OUTB
+argument_list|(
+name|nc_scid
+argument_list|,
+name|RRE
+operator||
+name|np
+operator|->
+name|myaddr
+argument_list|)
+expr_stmt|;
+comment|/*  host adapter SCSI address       */
+name|OUTW
+argument_list|(
+name|nc_respid
+argument_list|,
+literal|1ul
+operator|<<
+name|np
+operator|->
+name|myaddr
+argument_list|)
+expr_stmt|;
+comment|/*  id to respond to	       */
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SIGP
+argument_list|)
+expr_stmt|;
+comment|/*  Signal Process		   */
+name|OUTB
+argument_list|(
+name|nc_dmode
+argument_list|,
+name|burstlen
+argument_list|)
+expr_stmt|;
+comment|/*  Burst length = 2 .. 16 transfers */
+name|OUTB
+argument_list|(
+name|nc_dcntl
+argument_list|,
+name|NOCOM
+argument_list|)
+expr_stmt|;
 comment|/*  no single step mode, protect SFBR*/
-argument|OUTB (nc_ctest4,
+name|OUTB
+argument_list|(
+name|nc_ctest4
+argument_list|,
 literal|0x08
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/*  enable master parity checking    */
-argument|OUTB (nc_stest2, EXT    );
+name|OUTB
+argument_list|(
+name|nc_stest2
+argument_list|,
+name|EXT
+argument_list|)
+expr_stmt|;
 comment|/*  Extended Sreq/Sack filtering     */
-argument|OUTB (nc_stest3, TE     );
-comment|/*  TolerANT enable                  */
-argument|OUTB (nc_stime0,
+name|OUTB
+argument_list|(
+name|nc_stest3
+argument_list|,
+name|TE
+argument_list|)
+expr_stmt|;
+comment|/*  TolerANT enable		  */
+name|OUTB
+argument_list|(
+name|nc_stime0
+argument_list|,
 literal|0xfb
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/*  HTH = 1.6sec  STO = 0.1 sec.     */
 comment|/* 	**	Reinitialize usrsync. 	**	Have to renegotiate synch mode. 	*/
-argument|usrsync =
+name|usrsync
+operator|=
 literal|255
-argument|; 	if (SCSI_NCR_MAX_SYNC) { 		u_long period; 		period =
+expr_stmt|;
+if|if
+condition|(
+name|SCSI_NCR_MAX_SYNC
+condition|)
+block|{
+name|u_long
+name|period
+decl_stmt|;
+name|period
+operator|=
 literal|1000000
-argument|/SCSI_NCR_MAX_SYNC;
+operator|/
+name|SCSI_NCR_MAX_SYNC
+expr_stmt|;
 comment|/* ns = 10e6 / kHz */
-argument|if (period<=
+if|if
+condition|(
+name|period
+operator|<=
 literal|11
-argument|* np->ns_sync) { 			if (period<
+operator|*
+name|np
+operator|->
+name|ns_sync
+condition|)
+block|{
+if|if
+condition|(
+name|period
+operator|<
 literal|4
-argument|* np->ns_sync) 				usrsync = np->ns_sync; 			else 				usrsync = period /
+operator|*
+name|np
+operator|->
+name|ns_sync
+condition|)
+name|usrsync
+operator|=
+name|np
+operator|->
+name|ns_sync
+expr_stmt|;
+else|else
+name|usrsync
+operator|=
+name|period
+operator|/
 literal|4
-argument|; 		}; 	};
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	Reinitialize usrwide. 	**	Have to renegotiate wide mode. 	*/
-argument|usrwide = (SCSI_NCR_MAX_WIDE); 	if (usrwide> np->maxwide) usrwide=np->maxwide;
+name|usrwide
+operator|=
+operator|(
+name|SCSI_NCR_MAX_WIDE
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|usrwide
+operator|>
+name|np
+operator|->
+name|maxwide
+condition|)
+name|usrwide
+operator|=
+name|np
+operator|->
+name|maxwide
+expr_stmt|;
 comment|/* 	**	Disable disconnects. 	*/
-argument|np->disc =
+name|np
+operator|->
+name|disc
+operator|=
 literal|0
-argument|;
+expr_stmt|;
 comment|/* 	**	Fill in target structure. 	*/
-argument|for (i=
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|;i<MAX_TARGET;i++) { 		tcb_p tp =&np->target[i];  		tp->sval    =
+init|;
+name|i
+operator|<
+name|MAX_TARGET
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|tcb_p
+name|tp
+init|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|i
+index|]
+decl_stmt|;
+name|tp
+operator|->
+name|sval
+operator|=
 literal|0
-argument|; 		tp->wval    = np->rv_scntl3;  		tp->usrsync = usrsync; 		tp->usrwide = usrwide;  		ncr_negotiate (np, tp); 	}
+expr_stmt|;
+name|tp
+operator|->
+name|wval
+operator|=
+name|np
+operator|->
+name|rv_scntl3
+expr_stmt|;
+name|tp
+operator|->
+name|usrsync
+operator|=
+name|usrsync
+expr_stmt|;
+name|tp
+operator|->
+name|usrwide
+operator|=
+name|usrwide
+expr_stmt|;
+name|ncr_negotiate
+argument_list|(
+name|np
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**      enable ints 	*/
-argument|OUTW (nc_sien , STO|HTH|MA|SGE|UDC|RST); 	OUTB (nc_dien , MDPE|BF|ABRT|SSI|SIR|IID);
+name|OUTW
+argument_list|(
+name|nc_sien
+argument_list|,
+name|STO
+operator||
+name|HTH
+operator||
+name|MA
+operator||
+name|SGE
+operator||
+name|UDC
+operator||
+name|RST
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_dien
+argument_list|,
+name|MDPE
+operator||
+name|BF
+operator||
+name|ABRT
+operator||
+name|SSI
+operator||
+name|SIR
+operator||
+name|IID
+argument_list|)
+expr_stmt|;
 comment|/* 	**    Start script processor. 	*/
-argument|OUTL (nc_dsp, vtophys (&np->script->start)); }
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|start
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*========================================================== ** **	Prepare the negotiation values for wide and **	synchronous transfers. ** **========================================================== */
-argument|static void ncr_negotiate (struct ncb* np, struct tcb* tp) {
+specifier|static
+name|void
+name|ncr_negotiate
+parameter_list|(
+name|struct
+name|ncb
+modifier|*
+name|np
+parameter_list|,
+name|struct
+name|tcb
+modifier|*
+name|tp
+parameter_list|)
+block|{
 comment|/* 	**	minsync unit is 4ns ! 	*/
-argument|u_long minsync = tp->usrsync;  	if (minsync<
+name|u_long
+name|minsync
+init|=
+name|tp
+operator|->
+name|usrsync
+decl_stmt|;
+if|if
+condition|(
+name|minsync
+operator|<
 literal|25
-argument|) minsync=
+condition|)
+name|minsync
+operator|=
 literal|25
-argument|;
+expr_stmt|;
 comment|/* 	**	if not scsi 2 	**	don't believe FAST! 	*/
-argument|if ((minsync<
+if|if
+condition|(
+operator|(
+name|minsync
+operator|<
 literal|50
-argument|)&& (tp->inqdata[
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|inqdata
+index|[
 literal|2
-argument|]&
+index|]
+operator|&
 literal|0x0f
-argument|)<
+operator|)
+operator|<
 literal|2
-argument|) 		minsync=
+condition|)
+name|minsync
+operator|=
 literal|50
-argument|;
+expr_stmt|;
 comment|/* 	**	our limit .. 	*/
-argument|if (minsync< np->ns_sync) 		minsync = np->ns_sync;
+if|if
+condition|(
+name|minsync
+operator|<
+name|np
+operator|->
+name|ns_sync
+condition|)
+name|minsync
+operator|=
+name|np
+operator|->
+name|ns_sync
+expr_stmt|;
 comment|/* 	**	divider limit 	*/
-argument|if (minsync> (np->ns_sync *
+if|if
+condition|(
+name|minsync
+operator|>
+operator|(
+name|np
+operator|->
+name|ns_sync
+operator|*
 literal|11
-argument|) /
+operator|)
+operator|/
 literal|4
-argument|) 		minsync =
+condition|)
+name|minsync
+operator|=
 literal|255
-argument|;  	tp->minsync = minsync; 	tp->maxoffs = (minsync<
+expr_stmt|;
+name|tp
+operator|->
+name|minsync
+operator|=
+name|minsync
+expr_stmt|;
+name|tp
+operator|->
+name|maxoffs
+operator|=
+operator|(
+name|minsync
+operator|<
 literal|255
-argument|?
+condition|?
 literal|8
-argument|:
+else|:
 literal|0
-argument|);
+operator|)
+expr_stmt|;
 comment|/* 	**	period=0: has to negotiate sync transfer 	*/
-argument|tp->period=
+name|tp
+operator|->
+name|period
+operator|=
 literal|0
-argument|;
+expr_stmt|;
 comment|/* 	**	widedone=0: has to negotiate wide transfer 	*/
-argument|tp->widedone=
+name|tp
+operator|->
+name|widedone
+operator|=
 literal|0
-argument|; }
+expr_stmt|;
+block|}
 comment|/*========================================================== ** **	Switch sync mode for current job and it's target ** **========================================================== */
-argument|static void ncr_setsync (ncb_p np, ccb_p cp, u_char sxfer) { 	struct scsi_xfer *xp; 	tcb_p tp; 	u_char target = INB (nc_ctest0)&
+specifier|static
+name|void
+name|ncr_setsync
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|ccb_p
+name|cp
+parameter_list|,
+name|u_char
+name|sxfer
+parameter_list|)
+block|{
+name|struct
+name|scsi_xfer
+modifier|*
+name|xp
+decl_stmt|;
+name|tcb_p
+name|tp
+decl_stmt|;
+name|u_char
+name|target
+init|=
+name|INB
+argument_list|(
+name|nc_ctest0
+argument_list|)
+operator|&
 literal|7
-argument|;  	assert (cp); 	if (!cp) return;  	xp = cp->xfer; 	assert (xp); 	if (!xp) return; 	assert (target == xp->TARGET&
+decl_stmt|;
+name|assert
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+return|return;
+name|xp
+operator|=
+name|cp
+operator|->
+name|xfer
+expr_stmt|;
+name|assert
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|xp
+condition|)
+return|return;
+name|assert
+argument_list|(
+name|target
+operator|==
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+operator|&
 literal|7
-argument|);  	tp =&np->target[target]; 	tp->period= sxfer&
+argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|target
+index|]
+expr_stmt|;
+name|tp
+operator|->
+name|period
+operator|=
+name|sxfer
+operator|&
 literal|0xf
-argument|? ((sxfer>>
+condition|?
+operator|(
+operator|(
+name|sxfer
+operator|>>
 literal|5
-argument|)+
+operator|)
+operator|+
 literal|4
-argument|) * np->ns_sync :
+operator|)
+operator|*
+name|np
+operator|->
+name|ns_sync
+else|:
 literal|0xffff
-argument|;  	if (tp->sval == sxfer) return; 	tp->sval = sxfer;
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|sval
+operator|==
+name|sxfer
+condition|)
+return|return;
+name|tp
+operator|->
+name|sval
+operator|=
+name|sxfer
+expr_stmt|;
 comment|/* 	**	Bells and whistles   ;-) 	*/
-argument|PRINT_ADDR(xp); 	if (sxfer&
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sxfer
+operator|&
 literal|0x0f
-argument|) {
+condition|)
+block|{
 comment|/* 		**  Disable extended Sreq/Sack filtering 		*/
-argument|if (tp->period<=
+if|if
+condition|(
+name|tp
+operator|->
+name|period
+operator|<=
 literal|200
-argument|) OUTB (nc_stest2,
+condition|)
+name|OUTB
+argument_list|(
+name|nc_stest2
+argument_list|,
 literal|0
-argument|); 		printf (
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%s%dns (%d Mb/sec) offset %d.\n"
-argument|, 			tp->period<
+argument_list|,
+name|tp
+operator|->
+name|period
+operator|<
 literal|200
-argument|?
+condition|?
 literal|"FAST SCSI-2 "
-argument|:
+else|:
 literal|""
-argument|, 			tp->period, (
+argument_list|,
+name|tp
+operator|->
+name|period
+argument_list|,
+operator|(
 literal|1000
-argument|+tp->period/
+operator|+
+name|tp
+operator|->
+name|period
+operator|/
 literal|2
-argument|)/tp->period, 			sxfer&
+operator|)
+operator|/
+name|tp
+operator|->
+name|period
+argument_list|,
+name|sxfer
+operator|&
 literal|0x0f
-argument|); 	} else  printf (
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
 literal|"asynchronous.\n"
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* 	**	set actual value and sync_status 	*/
-argument|OUTB (nc_sxfer, sxfer); 	np->sync_st = sxfer;
+name|OUTB
+argument_list|(
+name|nc_sxfer
+argument_list|,
+name|sxfer
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|sync_st
+operator|=
+name|sxfer
+expr_stmt|;
 comment|/* 	**	patch ALL ccbs of this target. 	*/
-argument|for (cp =&np->ccb; cp; cp = cp->link_ccb) { 		if (!cp->xfer) continue; 		if (cp->xfer->TARGET != target) continue; 		cp->sync_status = sxfer; 	}; }
+for|for
+control|(
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+init|;
+name|cp
+condition|;
+name|cp
+operator|=
+name|cp
+operator|->
+name|link_ccb
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|cp
+operator|->
+name|xfer
+condition|)
+continue|continue;
+if|if
+condition|(
+name|cp
+operator|->
+name|xfer
+operator|->
+name|sc_link
+operator|->
+name|target
+operator|!=
+name|target
+condition|)
+continue|continue;
+name|cp
+operator|->
+name|sync_status
+operator|=
+name|sxfer
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
 comment|/*========================================================== ** **	Switch wide mode for current job and it's target ** **========================================================== */
-argument|static void ncr_setwide (ncb_p np, ccb_p cp, u_char wide) { 	struct scsi_xfer *xp; 	u_short target = INB (nc_ctest0)&
+specifier|static
+name|void
+name|ncr_setwide
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|ccb_p
+name|cp
+parameter_list|,
+name|u_char
+name|wide
+parameter_list|)
+block|{
+name|struct
+name|scsi_xfer
+modifier|*
+name|xp
+decl_stmt|;
+name|u_short
+name|target
+init|=
+name|INB
+argument_list|(
+name|nc_ctest0
+argument_list|)
+operator|&
 literal|7
-argument|; 	tcb_p tp; 	u_char	scntl3 = np->rv_scntl3 | (wide ? EWS :
+decl_stmt|;
+name|tcb_p
+name|tp
+decl_stmt|;
+name|u_char
+name|scntl3
+init|=
+name|np
+operator|->
+name|rv_scntl3
+operator||
+operator|(
+name|wide
+condition|?
+name|EWS
+else|:
 literal|0
-argument|);  	assert (cp); 	if (!cp) return;  	xp = cp->xfer; 	assert (xp); 	if (!xp) return; 	assert (target == xp->TARGET&
+operator|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+return|return;
+name|xp
+operator|=
+name|cp
+operator|->
+name|xfer
+expr_stmt|;
+name|assert
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|xp
+condition|)
+return|return;
+name|assert
+argument_list|(
+name|target
+operator|==
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+operator|&
 literal|7
-argument|);  	tp =&np->target[target]; 	tp->widedone  =  wide+
+argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|target
+index|]
+expr_stmt|;
+name|tp
+operator|->
+name|widedone
+operator|=
+name|wide
+operator|+
 literal|1
-argument|; 	if (tp->wval == scntl3) return; 	tp->wval = scntl3;
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|wval
+operator|==
+name|scntl3
+condition|)
+return|return;
+name|tp
+operator|->
+name|wval
+operator|=
+name|scntl3
+expr_stmt|;
 comment|/* 	**	Bells and whistles   ;-) 	*/
-argument|PRINT_ADDR(xp); 	if (scntl3& EWS) 		printf (
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|scntl3
+operator|&
+name|EWS
+condition|)
+name|printf
+argument_list|(
 literal|"WIDE SCSI (16 bit) enabled.\n"
-argument|); 	else 		printf (
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
 literal|"WIDE SCSI disabled.\n"
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* 	**	set actual value and sync_status 	*/
-argument|OUTB (nc_scntl3, scntl3); 	np->wide_st = scntl3;
+name|OUTB
+argument_list|(
+name|nc_scntl3
+argument_list|,
+name|scntl3
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|wide_st
+operator|=
+name|scntl3
+expr_stmt|;
 comment|/* 	**	patch ALL ccbs of this target. 	*/
-argument|for (cp =&np->ccb; cp; cp = cp->link_ccb) { 		if (!cp->xfer) continue; 		if (cp->xfer->TARGET != target) continue; 		cp->wide_status = scntl3; 	}; }
+for|for
+control|(
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+init|;
+name|cp
+condition|;
+name|cp
+operator|=
+name|cp
+operator|->
+name|link_ccb
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|cp
+operator|->
+name|xfer
+condition|)
+continue|continue;
+if|if
+condition|(
+name|cp
+operator|->
+name|xfer
+operator|->
+name|sc_link
+operator|->
+name|target
+operator|!=
+name|target
+condition|)
+continue|continue;
+name|cp
+operator|->
+name|wide_status
+operator|=
+name|scntl3
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
 comment|/*========================================================== ** **	Switch tagged mode for a target. ** **========================================================== */
-argument|static void ncr_setmaxtags (tcb_p tp, u_long usrtags) { 	int l; 	tp->usrtags = usrtags; 	for (l=
+specifier|static
+name|void
+name|ncr_setmaxtags
+parameter_list|(
+name|tcb_p
+name|tp
+parameter_list|,
+name|u_long
+name|usrtags
+parameter_list|)
+block|{
+name|int
+name|l
+decl_stmt|;
+name|tp
+operator|->
+name|usrtags
+operator|=
+name|usrtags
+expr_stmt|;
+for|for
+control|(
+name|l
+operator|=
 literal|0
-argument|; l<MAX_LUN; l++) { 		lcb_p lp; 		if (!tp) break; 		lp=tp->lp[l]; 		if (!lp) continue; 		ncr_settags (tp, lp); 	}; }  static void ncr_settags (tcb_p tp, lcb_p lp) { 	u_char reqtags
+init|;
+name|l
+operator|<
+name|MAX_LUN
+condition|;
+name|l
+operator|++
+control|)
+block|{
+name|lcb_p
+name|lp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tp
+condition|)
+break|break;
+name|lp
+operator|=
+name|tp
+operator|->
+name|lp
+index|[
+name|l
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lp
+condition|)
+continue|continue;
+name|ncr_settags
+argument_list|(
+name|tp
 argument_list|,
-argument|tmp; 	 	if ((!tp) || (!lp)) return;
+name|lp
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+specifier|static
+name|void
+name|ncr_settags
+parameter_list|(
+name|tcb_p
+name|tp
+parameter_list|,
+name|lcb_p
+name|lp
+parameter_list|)
+block|{
+name|u_char
+name|reqtags
+decl_stmt|,
+name|tmp
+decl_stmt|;
+if|if
+condition|(
+operator|(
+operator|!
+name|tp
+operator|)
+operator|||
+operator|(
+operator|!
+name|lp
+operator|)
+condition|)
+return|return;
 comment|/* 	**	only devices capable of tagges commands 	**	only disk devices 	**	only if enabled by user .. 	*/
-argument|if ((  tp->inqdata[
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|inqdata
+index|[
 literal|7
-argument|]& INQ7_QUEUE)&& ((tp->inqdata[
+index|]
+operator|&
+name|INQ7_QUEUE
+operator|)
+operator|&&
+operator|(
+operator|(
+name|tp
+operator|->
+name|inqdata
+index|[
 literal|0
-argument|]&
+index|]
+operator|&
 literal|0x1f
-argument|)==
+operator|)
+operator|==
 literal|0x00
-argument|)&& tp->usrtags) { 		reqtags = tp->usrtags; 		if (lp->actlink<=
+operator|)
+operator|&&
+name|tp
+operator|->
+name|usrtags
+condition|)
+block|{
+name|reqtags
+operator|=
+name|tp
+operator|->
+name|usrtags
+expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|actlink
+operator|<=
 literal|1
-argument|) 			lp->usetags=reqtags; 	} else { 		reqtags =
+condition|)
+name|lp
+operator|->
+name|usetags
+operator|=
+name|reqtags
+expr_stmt|;
+block|}
+else|else
+block|{
+name|reqtags
+operator|=
 literal|1
-argument|; 		if (lp->actlink<=
+expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|actlink
+operator|<=
 literal|1
-argument|) 			lp->usetags=
+condition|)
+name|lp
+operator|->
+name|usetags
+operator|=
 literal|0
-argument|; 	};
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	don't announce more than available. 	*/
-argument|tmp = lp->actccbs; 	if (tmp> reqtags) tmp = reqtags; 	lp->reqlink = tmp;
+name|tmp
+operator|=
+name|lp
+operator|->
+name|actccbs
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|>
+name|reqtags
+condition|)
+name|tmp
+operator|=
+name|reqtags
+expr_stmt|;
+name|lp
+operator|->
+name|reqlink
+operator|=
+name|tmp
+expr_stmt|;
 comment|/* 	**	don't discard if announced. 	*/
-argument|tmp = lp->actlink; 	if (tmp< reqtags) tmp = reqtags; 	lp->reqccbs = tmp; }
+name|tmp
+operator|=
+name|lp
+operator|->
+name|actlink
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|<
+name|reqtags
+condition|)
+name|tmp
+operator|=
+name|reqtags
+expr_stmt|;
+name|lp
+operator|->
+name|reqccbs
+operator|=
+name|tmp
+expr_stmt|;
+block|}
 comment|/*---------------------------------------------------- ** **	handle user commands ** **---------------------------------------------------- */
-argument|static void ncr_usercmd (ncb_p np) { 	u_char t; 	tcb_p tp;  	switch (np->user.cmd) {  	case
+specifier|static
+name|void
+name|ncr_usercmd
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+block|{
+name|u_char
+name|t
+decl_stmt|;
+name|tcb_p
+name|tp
+decl_stmt|;
+switch|switch
+condition|(
+name|np
+operator|->
+name|user
+operator|.
+name|cmd
+condition|)
+block|{
+case|case
 literal|0
-argument|: return;  	case UC_SETSYNC: 		for (t=
+case|:
+return|return;
+case|case
+name|UC_SETSYNC
+case|:
+for|for
+control|(
+name|t
+operator|=
 literal|0
-argument|; t<MAX_TARGET; t++) { 			if (!((np->user.target>>t)&
+init|;
+name|t
+operator|<
+name|MAX_TARGET
+condition|;
+name|t
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|np
+operator|->
+name|user
+operator|.
+name|target
+operator|>>
+name|t
+operator|)
+operator|&
 literal|1
-argument|)) continue; 			tp =&np->target[t]; 			tp->usrsync = np->user.data; 			ncr_negotiate (np, tp); 		}; 		break;  	case UC_SETTAGS: 		if (np->user.data> MAX_TAGS) 			break; 		for (t=
-literal|0
-argument|; t<MAX_TARGET; t++) { 			if (!((np->user.target>>t)&
-literal|1
-argument|)) continue; 			ncr_setmaxtags (&np->target[t], np->user.data); 		}; 		break;  	case UC_SETDEBUG: 		ncr_debug = np->user.data; 		break;  	case UC_SETORDER: 		np->order = np->user.data; 		break;  	case UC_SETWIDE: 		for (t=
-literal|0
-argument|; t<MAX_TARGET; t++) { 			u_long size; 			if (!((np->user.target>>t)&
-literal|1
-argument|)) continue; 			tp =&np->target[t]; 			size = np->user.data; 			if (size> np->maxwide) size=np->maxwide; 			tp->usrwide = size; 			ncr_negotiate (np, tp); 		}; 		break;
-argument|case UC_SETFLAG: 		for (t=
-literal|0
-argument|; t<MAX_TARGET; t++) { 			if (!((np->user.target>>t)&
-literal|1
-argument|)) continue; 			tp =&np->target[t]; 			tp->usrflag = np->user.data; 		}; 		break; 	} 	np->user.cmd=
-literal|0
-argument|; }
-comment|/*========================================================== ** ** **	ncr timeout handler. ** ** **========================================================== ** **	Misused to keep the driver running when **	interrupts are not configured correctly. ** **---------------------------------------------------------- */
-argument|static void ncr_timeout (ncb_p np) { 	u_long	thistime = time.tv_sec; 	u_long	step  = np->ticks; 	u_long	count =
-literal|0
-argument|; 	long signed   t; 	ccb_p cp;  	if (np->lasttime != thistime) {
-comment|/* 		**	block ncr interrupts 		*/
-argument|int oldspl = splbio(); 		np->lasttime = thistime;  		ncr_usercmd (np);
-comment|/*---------------------------------------------------- 		** 		**	handle ncr chip timeouts 		** 		**	Assumption: 		**	We have a chance to arbitrate for the 		**	SCSI bus at least every 10 seconds. 		** 		**---------------------------------------------------- 		*/
-argument|t = thistime - np->heartbeat;  		if (t<
-literal|2
-argument|) np->latetime=
-literal|0
-argument|; else np->latetime++;  		if (np->latetime>
-literal|2
-argument|) {
-comment|/* 			**      If there are no requests, the script 			**      processor will sleep on SEL_WAIT_RESEL. 			**      But we have to check whether it died. 			**      Let's wake it up. 			*/
-argument|OUTB (nc_istat, SIGP); 		};  		if (np->latetime>
-literal|10
-argument|) {
-comment|/* 			**	Although we tried to wakeup it, 			**	the script processor didn't answer. 			** 			**	May be a target is hanging, 			**	or another initator lets a tape device 			**	rewind with disabled disconnect :-( 			** 			**	We won't accept that. 			*/
-argument|printf (
-literal|"%s: reset by timeout.\n"
-argument|, ncr_name (np)); 			OUTB (nc_istat, SRST); 			OUTB (nc_istat,
-literal|0
-argument|); 			if (INB (nc_sbcl)& CBSY) 				OUTB (nc_scntl1, CRST); 			ncr_init (np, NULL, HS_TIMEOUT); 			np->heartbeat = thistime; 		};
-comment|/*---------------------------------------------------- 		** 		**	handle ccb timeouts 		** 		**---------------------------------------------------- 		*/
-argument|for (cp=&np->ccb; cp; cp=cp->link_ccb) {
-comment|/* 			**	look for timed out ccbs. 			*/
-argument|if (!cp->host_status) continue; 			count++; 			if (cp->tlimit> thistime) continue;
-comment|/* 			**	Disable reselect. 			**      Remove it from startqueue. 			*/
-argument|cp->jump_ccb.l_cmd = (SCR_JUMP); 			if (cp->phys.header.launch.l_paddr == 				vtophys (&np->script->select)) { 				printf (
-literal|"%s: timeout ccb=%x (skip)\n"
-argument|, 					ncr_name (np), (unsigned)cp); 				cp->phys.header.launch.l_paddr 				= vtophys (&np->script->skip); 			};  			switch (cp->host_status) {  			case HS_BUSY: 			case HS_NEGOTIATE:
-comment|/* 				** still in start queue ? 				*/
-argument|if (cp->phys.header.launch.l_paddr == 					vtophys (&np->script->skip)) 					continue;
-comment|/* fall through */
-argument|case HS_DISCONNECT: 				cp->host_status=HS_TIMEOUT; 			}; 			cp->tag =
-literal|0
-argument|;
-comment|/* 			**	wakeup this ccb. 			*/
-argument|ncr_complete (np, cp); 		}; 		splx (oldspl); 	}
-argument|timeout (TIMEOUT ncr_timeout, (caddr_t) np, step ? step :
-literal|1
-argument|);  	if (INB(nc_istat)& (INTF|SIP|DIP)) {
-comment|/* 		**	Process pending interrupts. 		*/
-argument|int	oldspl	= splbio (); 		if (DEBUG_FLAGS& DEBUG_TINY) printf (
-literal|"{"
-argument|); 		ncr_exception (np); 		if (DEBUG_FLAGS& DEBUG_TINY) printf (
-literal|"}"
-argument|); 		splx (oldspl); 	}; }
-comment|/*========================================================== ** ** **	ncr chip exception handler. ** ** **========================================================== */
-argument|void ncr_exception (ncb_p np) { 	u_char  istat
+operator|)
+condition|)
+continue|continue;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|t
+index|]
+expr_stmt|;
+name|tp
+operator|->
+name|usrsync
+operator|=
+name|np
+operator|->
+name|user
+operator|.
+name|data
+expr_stmt|;
+name|ncr_negotiate
+argument_list|(
+name|np
 argument_list|,
-argument|dstat; 	u_short sist; 	u_long	dsp; 	int	i;
-comment|/* 	**	interrupt on the fly ? 	*/
-argument|while ((istat = INB (nc_istat))& INTF) { 		if (DEBUG_FLAGS& DEBUG_TINY) printf (
-literal|"F"
-argument|); 		OUTB (nc_istat, INTF); 		np->profile.num_fly++; 		ncr_wakeup (np,
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+break|break;
+case|case
+name|UC_SETTAGS
+case|:
+if|if
+condition|(
+name|np
+operator|->
+name|user
+operator|.
+name|data
+operator|>
+name|MAX_TAGS
+condition|)
+break|break;
+for|for
+control|(
+name|t
+operator|=
 literal|0
-argument|); 	};  	if (!(istat& (SIP|DIP))) return;
+init|;
+name|t
+operator|<
+name|MAX_TARGET
+condition|;
+name|t
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|np
+operator|->
+name|user
+operator|.
+name|target
+operator|>>
+name|t
+operator|)
+operator|&
+literal|1
+operator|)
+condition|)
+continue|continue;
+name|ncr_setmaxtags
+argument_list|(
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|t
+index|]
+argument_list|,
+name|np
+operator|->
+name|user
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+break|break;
+case|case
+name|UC_SETDEBUG
+case|:
+name|ncr_debug
+operator|=
+name|np
+operator|->
+name|user
+operator|.
+name|data
+expr_stmt|;
+break|break;
+case|case
+name|UC_SETORDER
+case|:
+name|np
+operator|->
+name|order
+operator|=
+name|np
+operator|->
+name|user
+operator|.
+name|data
+expr_stmt|;
+break|break;
+case|case
+name|UC_SETWIDE
+case|:
+for|for
+control|(
+name|t
+operator|=
+literal|0
+init|;
+name|t
+operator|<
+name|MAX_TARGET
+condition|;
+name|t
+operator|++
+control|)
+block|{
+name|u_long
+name|size
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|np
+operator|->
+name|user
+operator|.
+name|target
+operator|>>
+name|t
+operator|)
+operator|&
+literal|1
+operator|)
+condition|)
+continue|continue;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|t
+index|]
+expr_stmt|;
+name|size
+operator|=
+name|np
+operator|->
+name|user
+operator|.
+name|data
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|np
+operator|->
+name|maxwide
+condition|)
+name|size
+operator|=
+name|np
+operator|->
+name|maxwide
+expr_stmt|;
+name|tp
+operator|->
+name|usrwide
+operator|=
+name|size
+expr_stmt|;
+name|ncr_negotiate
+argument_list|(
+name|np
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+break|break;
+case|case
+name|UC_SETFLAG
+case|:
+for|for
+control|(
+name|t
+operator|=
+literal|0
+init|;
+name|t
+operator|<
+name|MAX_TARGET
+condition|;
+name|t
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|np
+operator|->
+name|user
+operator|.
+name|target
+operator|>>
+name|t
+operator|)
+operator|&
+literal|1
+operator|)
+condition|)
+continue|continue;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|t
+index|]
+expr_stmt|;
+name|tp
+operator|->
+name|usrflag
+operator|=
+name|np
+operator|->
+name|user
+operator|.
+name|data
+expr_stmt|;
+block|}
+empty_stmt|;
+break|break;
+block|}
+name|np
+operator|->
+name|user
+operator|.
+name|cmd
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/*========================================================== ** ** **	ncr timeout handler. ** ** **========================================================== ** **	Misused to keep the driver running when **	interrupts are not configured correctly. ** **---------------------------------------------------------- */
+specifier|static
+name|void
+name|ncr_timeout
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+block|{
+name|u_long
+name|thistime
+init|=
+name|time
+operator|.
+name|tv_sec
+decl_stmt|;
+name|u_long
+name|step
+init|=
+name|np
+operator|->
+name|ticks
+decl_stmt|;
+name|u_long
+name|count
+init|=
+literal|0
+decl_stmt|;
+name|long
+name|signed
+name|t
+decl_stmt|;
+name|ccb_p
+name|cp
+decl_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|lasttime
+operator|!=
+name|thistime
+condition|)
+block|{
+comment|/* 		**	block ncr interrupts 		*/
+name|int
+name|oldspl
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
+name|np
+operator|->
+name|lasttime
+operator|=
+name|thistime
+expr_stmt|;
+name|ncr_usercmd
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+comment|/*---------------------------------------------------- 		** 		**	handle ncr chip timeouts 		** 		**	Assumption: 		**	We have a chance to arbitrate for the 		**	SCSI bus at least every 10 seconds. 		** 		**---------------------------------------------------- 		*/
+name|t
+operator|=
+name|thistime
+operator|-
+name|np
+operator|->
+name|heartbeat
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|<
+literal|2
+condition|)
+name|np
+operator|->
+name|latetime
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|np
+operator|->
+name|latetime
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|latetime
+operator|>
+literal|2
+condition|)
+block|{
+comment|/* 			**      If there are no requests, the script 			**      processor will sleep on SEL_WAIT_RESEL. 			**      But we have to check whether it died. 			**      Let's wake it up. 			*/
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SIGP
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|latetime
+operator|>
+literal|10
+condition|)
+block|{
+comment|/* 			**	Although we tried to wakeup it, 			**	the script processor didn't answer. 			** 			**	May be a target is hanging, 			**	or another initator lets a tape device 			**	rewind with disabled disconnect :-( 			** 			**	We won't accept that. 			*/
+name|printf
+argument_list|(
+literal|"%s: reset by timeout.\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SRST
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|INB
+argument_list|(
+name|nc_sbcl
+argument_list|)
+operator|&
+name|CBSY
+condition|)
+name|OUTB
+argument_list|(
+name|nc_scntl1
+argument_list|,
+name|CRST
+argument_list|)
+expr_stmt|;
+name|ncr_init
+argument_list|(
+name|np
+argument_list|,
+name|NULL
+argument_list|,
+name|HS_TIMEOUT
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|heartbeat
+operator|=
+name|thistime
+expr_stmt|;
+block|}
+empty_stmt|;
+comment|/*---------------------------------------------------- 		** 		**	handle ccb timeouts 		** 		**---------------------------------------------------- 		*/
+for|for
+control|(
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+init|;
+name|cp
+condition|;
+name|cp
+operator|=
+name|cp
+operator|->
+name|link_ccb
+control|)
+block|{
+comment|/* 			**	look for timed out ccbs. 			*/
+if|if
+condition|(
+operator|!
+name|cp
+operator|->
+name|host_status
+condition|)
+continue|continue;
+name|count
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|tlimit
+operator|>
+name|thistime
+condition|)
+continue|continue;
+comment|/* 			**	Disable reselect. 			**      Remove it from startqueue. 			*/
+name|cp
+operator|->
+name|jump_ccb
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_JUMP
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|launch
+operator|.
+name|l_paddr
+operator|==
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|select
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: timeout ccb=%x (skip)\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|cp
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|launch
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|skip
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+switch|switch
+condition|(
+name|cp
+operator|->
+name|host_status
+condition|)
+block|{
+case|case
+name|HS_BUSY
+case|:
+case|case
+name|HS_NEGOTIATE
+case|:
+comment|/* 				** still in start queue ? 				*/
+if|if
+condition|(
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|launch
+operator|.
+name|l_paddr
+operator|==
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|skip
+argument_list|)
+condition|)
+continue|continue;
+comment|/* fall through */
+case|case
+name|HS_DISCONNECT
+case|:
+name|cp
+operator|->
+name|host_status
+operator|=
+name|HS_TIMEOUT
+expr_stmt|;
+block|}
+empty_stmt|;
+name|cp
+operator|->
+name|tag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 			**	wakeup this ccb. 			*/
+name|ncr_complete
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+name|splx
+argument_list|(
+name|oldspl
+argument_list|)
+expr_stmt|;
+block|}
+name|timeout
+argument_list|(
+argument|TIMEOUT ncr_timeout
+argument_list|,
+argument|(caddr_t) np
+argument_list|,
+argument|step ? step :
+literal|1
+argument_list|)
+empty_stmt|;
+if|if
+condition|(
+name|INB
+argument_list|(
+name|nc_istat
+argument_list|)
+operator|&
+operator|(
+name|INTF
+operator||
+name|SIP
+operator||
+name|DIP
+operator|)
+condition|)
+block|{
+comment|/* 		**	Process pending interrupts. 		*/
+name|int
+name|oldspl
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
+literal|"{"
+argument_list|)
+expr_stmt|;
+name|ncr_exception
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
+literal|"}"
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|oldspl
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+comment|/*========================================================== ** ** **	ncr chip exception handler. ** ** **========================================================== */
+name|void
+name|ncr_exception
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+block|{
+name|u_char
+name|istat
+decl_stmt|,
+name|dstat
+decl_stmt|;
+name|u_short
+name|sist
+decl_stmt|;
+name|u_long
+name|dsp
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* 	**	interrupt on the fly ? 	*/
+while|while
+condition|(
+operator|(
+name|istat
+operator|=
+name|INB
+argument_list|(
+name|nc_istat
+argument_list|)
+operator|)
+operator|&
+name|INTF
+condition|)
+block|{
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
+literal|"F"
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|INTF
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|profile
+operator|.
+name|num_fly
+operator|++
+expr_stmt|;
+name|ncr_wakeup
+argument_list|(
+name|np
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|istat
+operator|&
+operator|(
+name|SIP
+operator||
+name|DIP
+operator|)
+operator|)
+condition|)
+return|return;
 comment|/* 	**	Steinbach's Guideline for Systems Programming: 	**	Never test for an error condition you don't know how to handle. 	*/
-argument|dstat = INB (nc_dstat); 	sist  = INW (nc_sist) ; 	np->profile.num_int++;  	if (DEBUG_FLAGS& DEBUG_TINY) 		printf (
+name|dstat
+operator|=
+name|INB
+argument_list|(
+name|nc_dstat
+argument_list|)
+expr_stmt|;
+name|sist
+operator|=
+name|INW
+argument_list|(
+name|nc_sist
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|profile
+operator|.
+name|num_int
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
 literal|"<%d|%x:%x|%x:%x>"
-argument|, 			INB(nc_scr0), 			dstat,sist, 			(unsigned)INL(nc_dsp), 			(unsigned)INL(nc_dbc)); 	if ((dstat==DFE)&& (sist==PAR)) return;
+argument_list|,
+name|INB
+argument_list|(
+name|nc_scr0
+argument_list|)
+argument_list|,
+name|dstat
+argument_list|,
+name|sist
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|INL
+argument_list|(
+name|nc_dsp
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|INL
+argument_list|(
+name|nc_dbc
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dstat
+operator|==
+name|DFE
+operator|)
+operator|&&
+operator|(
+name|sist
+operator|==
+name|PAR
+operator|)
+condition|)
+return|return;
 comment|/*========================================================== ** **	First the normal cases. ** **========================================================== */
 comment|/*------------------------------------------- 	**	SCSI reset 	**------------------------------------------- 	*/
-argument|if (sist& RST) { 		ncr_init (np,
+if|if
+condition|(
+name|sist
+operator|&
+name|RST
+condition|)
+block|{
+name|ncr_init
+argument_list|(
+name|np
+argument_list|,
 literal|"scsi reset"
-argument|, HS_RESET); 		return; 	};
+argument_list|,
+name|HS_RESET
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/*------------------------------------------- 	**	selection timeout 	** 	**	IID excluded from dstat mask! 	**	(chip bug) 	**------------------------------------------- 	*/
-argument|if ((sist& STO)&& 		!(sist& (GEN|HTH|MA|SGE|UDC|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|SIR))) { 		ncr_int_sto (np); 		return; 	};
+if|if
+condition|(
+operator|(
+name|sist
+operator|&
+name|STO
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sist
+operator|&
+operator|(
+name|GEN
+operator||
+name|HTH
+operator||
+name|MA
+operator||
+name|SGE
+operator||
+name|UDC
+operator||
+name|RST
+operator||
+name|PAR
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|dstat
+operator|&
+operator|(
+name|MDPE
+operator||
+name|BF
+operator||
+name|ABRT
+operator||
+name|SIR
+operator|)
+operator|)
+condition|)
+block|{
+name|ncr_int_sto
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/*------------------------------------------- 	**      Phase mismatch. 	**------------------------------------------- 	*/
-argument|if ((sist& MA)&& 		!(sist& (STO|GEN|HTH|SGE|UDC|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|SIR|IID))) { 		ncr_int_ma (np); 		return; 	};
+if|if
+condition|(
+operator|(
+name|sist
+operator|&
+name|MA
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sist
+operator|&
+operator|(
+name|STO
+operator||
+name|GEN
+operator||
+name|HTH
+operator||
+name|SGE
+operator||
+name|UDC
+operator||
+name|RST
+operator||
+name|PAR
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|dstat
+operator|&
+operator|(
+name|MDPE
+operator||
+name|BF
+operator||
+name|ABRT
+operator||
+name|SIR
+operator||
+name|IID
+operator|)
+operator|)
+condition|)
+block|{
+name|ncr_int_ma
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/*---------------------------------------- 	**	move command with length 0 	**---------------------------------------- 	*/
-argument|if ((dstat& IID)&& 		!(sist& (STO|GEN|HTH|MA|SGE|UDC|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|SIR))&& 		((INL(nc_dbc)&
+if|if
+condition|(
+operator|(
+name|dstat
+operator|&
+name|IID
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sist
+operator|&
+operator|(
+name|STO
+operator||
+name|GEN
+operator||
+name|HTH
+operator||
+name|MA
+operator||
+name|SGE
+operator||
+name|UDC
+operator||
+name|RST
+operator||
+name|PAR
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|dstat
+operator|&
+operator|(
+name|MDPE
+operator||
+name|BF
+operator||
+name|ABRT
+operator||
+name|SIR
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|(
+name|INL
+argument_list|(
+name|nc_dbc
+argument_list|)
+operator|&
 literal|0xf8000000
-argument|) == SCR_MOVE_TBL)) {
+operator|)
+operator|==
+name|SCR_MOVE_TBL
+operator|)
+condition|)
+block|{
 comment|/* 		**      Target wants more data than available. 		**	The "no_data" script will do it. 		*/
-argument|OUTL (nc_dsp, vtophys(&np->script->no_data)); 		return; 	};
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|no_data
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/*------------------------------------------- 	**	Programmed interrupt 	**------------------------------------------- 	*/
-argument|if ((dstat& SIR)&& 		!(sist& (STO|GEN|HTH|MA|SGE|UDC|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|IID))&& 		(INB(nc_dsps)<= SIR_MAX)) { 		ncr_int_sir (np); 		return; 	};
+if|if
+condition|(
+operator|(
+name|dstat
+operator|&
+name|SIR
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sist
+operator|&
+operator|(
+name|STO
+operator||
+name|GEN
+operator||
+name|HTH
+operator||
+name|MA
+operator||
+name|SGE
+operator||
+name|UDC
+operator||
+name|RST
+operator||
+name|PAR
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|dstat
+operator|&
+operator|(
+name|MDPE
+operator||
+name|BF
+operator||
+name|ABRT
+operator||
+name|IID
+operator|)
+operator|)
+operator|&&
+operator|(
+name|INB
+argument_list|(
+name|nc_dsps
+argument_list|)
+operator|<=
+name|SIR_MAX
+operator|)
+condition|)
+block|{
+name|ncr_int_sir
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/*======================================== 	**	do the register dump 	**======================================== 	*/
-argument|if (time.tv_sec - np->regtime.tv_sec>
+if|if
+condition|(
+name|time
+operator|.
+name|tv_sec
+operator|-
+name|np
+operator|->
+name|regtime
+operator|.
+name|tv_sec
+operator|>
 literal|10
-argument|) { 		int i; 		np->regtime = time; 		for (i=
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|np
+operator|->
+name|regtime
+operator|=
+name|time
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|; i<sizeof(np->regdump); i++) 			((char*)&np->regdump)[i] = ((char*)np->reg)[i]; 		np->regdump.nc_dstat = dstat; 		np->regdump.nc_sist  = sist; 	};
-comment|/*========================================= 	**	log message for real hard errors 	**=========================================  	"ncr0 targ 0?: ERROR (ds:si) (so-si-sd) (sxfer/scntl3) @ (dsp:dbc)." 	"              reg: r0 r1 r2 r3 r4 r5 r6 ..... rf."  	exception register: 		ds:	dstat 		si:	sist  	SCSI bus lines: 		so:	control lines as driver by NCR. 		si:	control lines as seen by NCR. 		sd:	scsi data lines as seen by NCR.  	wide/fastmode: 		sxfer:	(see the manual) 		scntl3:	(see the manual)  	current script command: 		dsp:	script adress (relative to start of script). 		dbc:	first word of script command.  	First 16 register of the chip: 		r0..rf  	============================================= 	*/
-argument|printf (
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|np
+operator|->
+name|regdump
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|np
+operator|->
+name|regdump
+operator|)
+index|[
+name|i
+index|]
+operator|=
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|np
+operator|->
+name|reg
+operator|)
+index|[
+name|i
+index|]
+expr_stmt|;
+name|np
+operator|->
+name|regdump
+operator|.
+name|nc_dstat
+operator|=
+name|dstat
+expr_stmt|;
+name|np
+operator|->
+name|regdump
+operator|.
+name|nc_sist
+operator|=
+name|sist
+expr_stmt|;
+block|}
+empty_stmt|;
+comment|/*========================================= 	**	log message for real hard errors 	**=========================================  	"ncr0 targ 0?: ERROR (ds:si) (so-si-sd) (sxfer/scntl3) @ (dsp:dbc)." 	"	      reg: r0 r1 r2 r3 r4 r5 r6 ..... rf."  	exception register: 		ds:	dstat 		si:	sist  	SCSI bus lines: 		so:	control lines as driver by NCR. 		si:	control lines as seen by NCR. 		sd:	scsi data lines as seen by NCR.  	wide/fastmode: 		sxfer:	(see the manual) 		scntl3:	(see the manual)  	current script command: 		dsp:	script adress (relative to start of script). 		dbc:	first word of script command.  	First 16 register of the chip: 		r0..rf  	============================================= 	*/
+name|printf
+argument_list|(
 literal|"%s targ %d?: ERROR (%x:%x) (%x-%x-%x) (%x/%x) @ (%x:%x).\n"
-argument|, 		ncr_name (np), INB (nc_ctest0)&
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|INB
+argument_list|(
+name|nc_ctest0
+argument_list|)
+operator|&
 literal|7
-argument|, dstat, sist, 		INB (nc_socl), INB (nc_sbcl), INB (nc_sbdl), 		INB (nc_sxfer),INB (nc_scntl3), 		((unsigned) (dsp = INL (nc_dsp))) - (unsigned) np->p_script, 		(unsigned) INL (nc_dbc)); 	printf (
-literal|"              reg:"
-argument|); 	for (i=
+argument_list|,
+name|dstat
+argument_list|,
+name|sist
+argument_list|,
+name|INB
+argument_list|(
+name|nc_socl
+argument_list|)
+argument_list|,
+name|INB
+argument_list|(
+name|nc_sbcl
+argument_list|)
+argument_list|,
+name|INB
+argument_list|(
+name|nc_sbdl
+argument_list|)
+argument_list|,
+name|INB
+argument_list|(
+name|nc_sxfer
+argument_list|)
+argument_list|,
+name|INB
+argument_list|(
+name|nc_scntl3
+argument_list|)
+argument_list|,
+operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|dsp
+operator|=
+name|INL
+argument_list|(
+name|nc_dsp
+argument_list|)
+argument_list|)
+operator|)
+operator|-
+operator|(
+name|unsigned
+operator|)
+name|np
+operator|->
+name|p_script
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|INL
+argument_list|(
+name|nc_dbc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"	      reg:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|; i<
+init|;
+name|i
+operator|<
 literal|16
-argument|;i++) 		printf (
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
 literal|" %x"
-argument|, ((u_char*)np->reg)[i]); 	printf (
+argument_list|,
+operator|(
+operator|(
+name|u_char
+operator|*
+operator|)
+name|np
+operator|->
+name|reg
+operator|)
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/*---------------------------------------- 	**	clean up the dma fifo 	**---------------------------------------- 	*/
-argument|if ( (INB(nc_sstat0)& (ILF|ORF|OLF)   ) || 	     (INB(nc_sstat1)& (FF3210)        ) || 	     (INB(nc_sstat2)& (ILF1|ORF1|OLF1)) ||
+if|if
+condition|(
+operator|(
+name|INB
+argument_list|(
+name|nc_sstat0
+argument_list|)
+operator|&
+operator|(
+name|ILF
+operator||
+name|ORF
+operator||
+name|OLF
+operator|)
+operator|)
+operator|||
+operator|(
+name|INB
+argument_list|(
+name|nc_sstat1
+argument_list|)
+operator|&
+operator|(
+name|FF3210
+operator|)
+operator|)
+operator|||
+operator|(
+name|INB
+argument_list|(
+name|nc_sstat2
+argument_list|)
+operator|&
+operator|(
+name|ILF1
+operator||
+name|ORF1
+operator||
+name|OLF1
+operator|)
+operator|)
+operator|||
 comment|/* wide .. */
-argument|!(dstat& DFE)) { 		printf (
+operator|!
+operator|(
+name|dstat
+operator|&
+name|DFE
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"%s: have to clear fifos.\n"
-argument|, ncr_name (np)); 		OUTB (nc_stest3, TE|CSF);
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_stest3
+argument_list|,
+name|TE
+operator||
+name|CSF
+argument_list|)
+expr_stmt|;
 comment|/* clear scsi fifo */
-argument|OUTB (nc_ctest3, CLF);
+name|OUTB
+argument_list|(
+name|nc_ctest3
+argument_list|,
+name|CLF
+argument_list|)
+expr_stmt|;
 comment|/* clear dma fifo  */
-argument|}
+block|}
 comment|/*---------------------------------------- 	**	unexpected disconnect 	**---------------------------------------- 	*/
-argument|if ((sist& UDC)&& 		!(sist& (STO|GEN|HTH|MA|SGE|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|SIR|IID))) { 		OUTB (nc_scr0, HS_UNEXPECTED); 		OUTL (nc_dsp, vtophys(&np->script->cleanup)); 		return; 	};
+if|if
+condition|(
+operator|(
+name|sist
+operator|&
+name|UDC
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sist
+operator|&
+operator|(
+name|STO
+operator||
+name|GEN
+operator||
+name|HTH
+operator||
+name|MA
+operator||
+name|SGE
+operator||
+name|RST
+operator||
+name|PAR
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|dstat
+operator|&
+operator|(
+name|MDPE
+operator||
+name|BF
+operator||
+name|ABRT
+operator||
+name|SIR
+operator||
+name|IID
+operator|)
+operator|)
+condition|)
+block|{
+name|OUTB
+argument_list|(
+name|nc_scr0
+argument_list|,
+name|HS_UNEXPECTED
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|cleanup
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/*---------------------------------------- 	**	cannot disconnect 	**---------------------------------------- 	*/
-argument|if ((dstat& IID)&& 		!(sist& (STO|GEN|HTH|MA|SGE|UDC|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|SIR))&& 		((INL(nc_dbc)&
+if|if
+condition|(
+operator|(
+name|dstat
+operator|&
+name|IID
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sist
+operator|&
+operator|(
+name|STO
+operator||
+name|GEN
+operator||
+name|HTH
+operator||
+name|MA
+operator||
+name|SGE
+operator||
+name|UDC
+operator||
+name|RST
+operator||
+name|PAR
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|dstat
+operator|&
+operator|(
+name|MDPE
+operator||
+name|BF
+operator||
+name|ABRT
+operator||
+name|SIR
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|(
+name|INL
+argument_list|(
+name|nc_dbc
+argument_list|)
+operator|&
 literal|0xf8000000
-argument|) == SCR_WAIT_DISC)) {
+operator|)
+operator|==
+name|SCR_WAIT_DISC
+operator|)
+condition|)
+block|{
 comment|/* 		**      Unexpected data cycle while waiting for disconnect. 		*/
-argument|if (INB(nc_sstat2)& LDSC) {
+if|if
+condition|(
+name|INB
+argument_list|(
+name|nc_sstat2
+argument_list|)
+operator|&
+name|LDSC
+condition|)
+block|{
 comment|/* 			**	It's an early reconnect. 			**	Let's continue ... 			*/
-argument|OUTB (nc_dcntl, (STD|NOCOM));
+name|OUTB
+argument_list|(
+name|nc_dcntl
+argument_list|,
+operator|(
+name|STD
+operator||
+name|NOCOM
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 			**	info message 			*/
-argument|printf (
-literal|"%s: XXX INFO: LDSC while IID.\n"
-argument|, 				ncr_name (np)); 			return; 		}; 		printf (
+name|printf
+argument_list|(
+literal|"%s: INFO: LDSC while IID.\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
+name|printf
+argument_list|(
 literal|"%s: target %d? doesn't release the bus.\n"
-argument|, 			ncr_name (np), INB (nc_ctest0)&
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|INB
+argument_list|(
+name|nc_ctest0
+argument_list|)
+operator|&
 literal|7
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* 		**	return without restarting the NCR. 		**	timeout will do the real work. 		*/
-argument|return; 	};
+return|return;
+block|}
+empty_stmt|;
 comment|/*---------------------------------------- 	**	single step 	**---------------------------------------- 	*/
-argument|if ((dstat& SSI)&& 		!(sist& (STO|GEN|HTH|MA|SGE|UDC|RST|PAR))&& 		!(dstat& (MDPE|BF|ABRT|SIR|IID))) { 		OUTB (nc_dcntl, (STD|NOCOM)); 		return; 	};
+if|if
+condition|(
+operator|(
+name|dstat
+operator|&
+name|SSI
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sist
+operator|&
+operator|(
+name|STO
+operator||
+name|GEN
+operator||
+name|HTH
+operator||
+name|MA
+operator||
+name|SGE
+operator||
+name|UDC
+operator||
+name|RST
+operator||
+name|PAR
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|dstat
+operator|&
+operator|(
+name|MDPE
+operator||
+name|BF
+operator||
+name|ABRT
+operator||
+name|SIR
+operator||
+name|IID
+operator|)
+operator|)
+condition|)
+block|{
+name|OUTB
+argument_list|(
+name|nc_dcntl
+argument_list|,
+operator|(
+name|STD
+operator||
+name|NOCOM
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/* **	@RECOVER@ HTH, SGE, ABRT. ** **	We should try to recover from these interrupts. **	They may occur if there are problems with synch transfers, **	or if targets are powerswitched while the driver is running. */
-argument|if (sist& SGE) { 		OUTB (nc_ctest3, CLF);
+if|if
+condition|(
+name|sist
+operator|&
+name|SGE
+condition|)
+block|{
+name|OUTB
+argument_list|(
+name|nc_ctest3
+argument_list|,
+name|CLF
+argument_list|)
+expr_stmt|;
 comment|/* clear scsi offsets */
-argument|}
+block|}
 comment|/* 	**	Freeze controller to be able to read the messages. 	*/
-argument|if (DEBUG_FLAGS& DEBUG_FREEZE) { 		int i; 		unsigned char val; 		for (i=
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_FREEZE
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|unsigned
+name|char
+name|val
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|; i<
+init|;
+name|i
+operator|<
 literal|0x60
-argument|; i++) { 			switch (i%
+condition|;
+name|i
+operator|++
+control|)
+block|{
+switch|switch
+condition|(
+name|i
+operator|%
 literal|16
-argument|) {  			case
+condition|)
+block|{
+case|case
 literal|0
-argument|: 				printf (
+case|:
+name|printf
+argument_list|(
 literal|"%s: reg[%d0]: "
-argument|, 					ncr_name(np),i/
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|i
+operator|/
 literal|16
-argument|); 				break; 			case
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|4
-argument|: 			case
+case|:
+case|case
 literal|8
-argument|: 			case
+case|:
+case|case
 literal|12
-argument|: 				printf (
+case|:
+name|printf
+argument_list|(
 literal|" "
-argument|); 				break; 			}; 			val = ((unsigned char*) np->vaddr) [i]; 			printf (
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+name|val
+operator|=
+operator|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|np
+operator|->
+name|vaddr
+operator|)
+index|[
+name|i
+index|]
+expr_stmt|;
+name|printf
+argument_list|(
 literal|" %x%x"
-argument|, val/
+argument_list|,
+name|val
+operator|/
 literal|16
-argument|, val%
+argument_list|,
+name|val
+operator|%
 literal|16
-argument|); 			if (i%
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|%
 literal|16
-argument|==
+operator|==
 literal|15
-argument|) printf (
+condition|)
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		};  		untimeout (TIMEOUT ncr_timeout, (caddr_t) np);  		printf (
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+name|untimeout
+argument_list|(
+argument|TIMEOUT ncr_timeout
+argument_list|,
+argument|(caddr_t) np
+argument_list|)
+empty_stmt|;
+name|printf
+argument_list|(
 literal|"%s: halted!\n"
-argument|, ncr_name(np));
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 		**	don't restart controller ... 		*/
-argument|OUTB (nc_istat,  SRST); 		return; 	};
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SRST
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 ifdef|#
 directive|ifdef
 name|NCR_FREEZE
 comment|/* 	**	Freeze system to be able to read the messages. 	*/
-argument|printf (
+name|printf
+argument_list|(
 literal|"ncr: fatal error: system halted - press reset to reboot ..."
-argument|); 	(void) splhigh(); 	for (;;);
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|splhigh
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
 endif|#
 directive|endif
 comment|/* 	**	sorry, have to kill ALL jobs ... 	*/
-argument|ncr_init (np,
+name|ncr_init
+argument_list|(
+name|np
+argument_list|,
 literal|"fatal error"
-argument|, HS_FAIL); }
+argument_list|,
+name|HS_FAIL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*========================================================== ** **	ncr chip exception handler for selection timeout ** **========================================================== ** **	There seems to be a bug in the 53c810. **	Although a STO-Interrupt is pending, **	it continues executing script commands. **	But it will fail and interrupt (IID) on **	the next instruction where it's looking **	for a valid phase. ** **---------------------------------------------------------- */
-argument|void ncr_int_sto (ncb_p np) { 	u_long dsa
-argument_list|,
-argument|scratcha
-argument_list|,
-argument|diff; 	ccb_p cp; 	if (DEBUG_FLAGS& DEBUG_TINY) printf (
+name|void
+name|ncr_int_sto
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+block|{
+name|u_long
+name|dsa
+decl_stmt|,
+name|scratcha
+decl_stmt|,
+name|diff
+decl_stmt|;
+name|ccb_p
+name|cp
+decl_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
 literal|"T"
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* 	**	look for ccb and set the status. 	*/
-argument|dsa = INL (nc_dsa); 	cp =&np->ccb; 	while (cp&& (vtophys(&cp->phys) != dsa)) 		cp = cp->link_ccb;  	if (cp) { 		cp-> host_status = HS_SEL_TIMEOUT; 		ncr_complete (np, cp); 	};
+name|dsa
+operator|=
+name|INL
+argument_list|(
+name|nc_dsa
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+expr_stmt|;
+while|while
+condition|(
+name|cp
+operator|&&
+operator|(
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|phys
+argument_list|)
+operator|!=
+name|dsa
+operator|)
+condition|)
+name|cp
+operator|=
+name|cp
+operator|->
+name|link_ccb
+expr_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+block|{
+name|cp
+operator|->
+name|host_status
+operator|=
+name|HS_SEL_TIMEOUT
+expr_stmt|;
+name|ncr_complete
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	repair start queue 	*/
-argument|scratcha = INL (nc_scratcha); 	diff = scratcha - vtophys(&np->script->tryloop);  	assert ((diff<= MAX_START *
+name|scratcha
+operator|=
+name|INL
+argument_list|(
+name|nc_scratcha
+argument_list|)
+expr_stmt|;
+name|diff
+operator|=
+name|scratcha
+operator|-
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|tryloop
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|diff
+operator|<=
+name|MAX_START
+operator|*
 literal|20
-argument|)&& !(diff %
+operator|)
+operator|&&
+operator|!
+operator|(
+name|diff
+operator|%
 literal|20
-argument|));  	if ((diff<= MAX_START *
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|diff
+operator|<=
+name|MAX_START
+operator|*
 literal|20
-argument|)&& !(diff %
+operator|)
+operator|&&
+operator|!
+operator|(
+name|diff
+operator|%
 literal|20
-argument|)) { 		np->script->startpos[
+operator|)
+condition|)
+block|{
+name|np
+operator|->
+name|script
+operator|->
+name|startpos
+index|[
 literal|0
-argument|] = scratcha; 		OUTL (nc_dsp, vtophys (&np->script->start)); 		return; 	}; 	ncr_init (np,
+index|]
+operator|=
+name|scratcha
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|start
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
+name|ncr_init
+argument_list|(
+name|np
+argument_list|,
 literal|"selection timeout"
-argument|, HS_FAIL); }
+argument_list|,
+name|HS_FAIL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*========================================================== ** ** **	ncr chip exception handler for phase errors. ** ** **========================================================== ** **	We have to construct a new transfer descriptor, **	to transfer the rest of the current block. ** **---------------------------------------------------------- */
-argument|static void ncr_int_ma (ncb_p np) { 	u_long	dbc; 	u_long	rest; 	u_long	dsa; 	u_long	dsp; 	u_long	nxtdsp; 	u_long	*vdsp; 	u_long	oadr
-argument_list|,
-argument|olen; 	u_long	*tblp
-argument_list|,
-argument|*newcmd; 	u_char	cmd
-argument_list|,
-argument|sbcl
-argument_list|,
-argument|delta
-argument_list|,
-argument|ss0
-argument_list|,
-argument|ss2; 	ccb_p	cp;  	dsp = INL (nc_dsp); 	dsa = INL (nc_dsa); 	dbc = INL (nc_dbc); 	ss0 = INB (nc_sstat0); 	ss2 = INB (nc_sstat2); 	sbcl= INB (nc_sbcl);  	cmd = dbc>>
+specifier|static
+name|void
+name|ncr_int_ma
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+block|{
+name|u_long
+name|dbc
+decl_stmt|;
+name|u_long
+name|rest
+decl_stmt|;
+name|u_long
+name|dsa
+decl_stmt|;
+name|u_long
+name|dsp
+decl_stmt|;
+name|u_long
+name|nxtdsp
+decl_stmt|;
+name|u_long
+modifier|*
+name|vdsp
+decl_stmt|;
+name|u_long
+name|oadr
+decl_stmt|,
+name|olen
+decl_stmt|;
+name|u_long
+modifier|*
+name|tblp
+decl_stmt|,
+modifier|*
+name|newcmd
+decl_stmt|;
+name|u_char
+name|cmd
+decl_stmt|,
+name|sbcl
+decl_stmt|,
+name|delta
+decl_stmt|,
+name|ss0
+decl_stmt|,
+name|ss2
+decl_stmt|;
+name|ccb_p
+name|cp
+decl_stmt|;
+name|dsp
+operator|=
+name|INL
+argument_list|(
+name|nc_dsp
+argument_list|)
+expr_stmt|;
+name|dsa
+operator|=
+name|INL
+argument_list|(
+name|nc_dsa
+argument_list|)
+expr_stmt|;
+name|dbc
+operator|=
+name|INL
+argument_list|(
+name|nc_dbc
+argument_list|)
+expr_stmt|;
+name|ss0
+operator|=
+name|INB
+argument_list|(
+name|nc_sstat0
+argument_list|)
+expr_stmt|;
+name|ss2
+operator|=
+name|INB
+argument_list|(
+name|nc_sstat2
+argument_list|)
+expr_stmt|;
+name|sbcl
+operator|=
+name|INB
+argument_list|(
+name|nc_sbcl
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|dbc
+operator|>>
 literal|24
-argument|; 	rest= dbc&
+expr_stmt|;
+name|rest
+operator|=
+name|dbc
+operator|&
 literal|0xffffff
-argument|; 	delta=(INB (nc_dfifo) - rest)&
+expr_stmt|;
+name|delta
+operator|=
+operator|(
+name|INB
+argument_list|(
+name|nc_dfifo
+argument_list|)
+operator|-
+name|rest
+operator|)
+operator|&
 literal|0x7f
-argument|;
+expr_stmt|;
 comment|/* 	**	The data in the dma fifo has not been transfered to 	**	the target -> add the amount to the rest 	**	and clear the data. 	**	Check the sstat2 register in case of wide transfer. 	*/
-argument|if (! (INB(nc_dstat)& DFE)) rest += delta; 	if (ss0& OLF) rest++; 	if (ss0& ORF) rest++; 	if (INB(nc_scntl3)& EWS) { 		if (ss2& OLF1) rest++; 		if (ss2& ORF1) rest++; 	}; 	OUTB (nc_ctest3, CLF   );
+if|if
+condition|(
+operator|!
+operator|(
+name|INB
+argument_list|(
+name|nc_dstat
+argument_list|)
+operator|&
+name|DFE
+operator|)
+condition|)
+name|rest
+operator|+=
+name|delta
+expr_stmt|;
+if|if
+condition|(
+name|ss0
+operator|&
+name|OLF
+condition|)
+name|rest
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ss0
+operator|&
+name|ORF
+condition|)
+name|rest
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|INB
+argument_list|(
+name|nc_scntl3
+argument_list|)
+operator|&
+name|EWS
+condition|)
+block|{
+if|if
+condition|(
+name|ss2
+operator|&
+name|OLF1
+condition|)
+name|rest
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ss2
+operator|&
+name|ORF1
+condition|)
+name|rest
+operator|++
+expr_stmt|;
+block|}
+empty_stmt|;
+name|OUTB
+argument_list|(
+name|nc_ctest3
+argument_list|,
+name|CLF
+argument_list|)
+expr_stmt|;
 comment|/* clear dma fifo  */
-argument|OUTB (nc_stest3, TE|CSF);
+name|OUTB
+argument_list|(
+name|nc_stest3
+argument_list|,
+name|TE
+operator||
+name|CSF
+argument_list|)
+expr_stmt|;
 comment|/* clear scsi fifo */
 comment|/* 	**	verify cp 	*/
-argument|dsa = INL (nc_dsa); 	cp =&np->ccb; 	while (cp&& (vtophys(&cp->phys) != dsa)) 		cp = cp->link_ccb;  	assert (cp == np->header.cp); 	assert (cp); 	if (!cp) 		return;
+name|dsa
+operator|=
+name|INL
+argument_list|(
+name|nc_dsa
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+expr_stmt|;
+while|while
+condition|(
+name|cp
+operator|&&
+operator|(
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|phys
+argument_list|)
+operator|!=
+name|dsa
+operator|)
+condition|)
+name|cp
+operator|=
+name|cp
+operator|->
+name|link_ccb
+expr_stmt|;
+name|assert
+argument_list|(
+name|cp
+operator|==
+name|np
+operator|->
+name|header
+operator|.
+name|cp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+return|return;
 comment|/* 	**	find the interrupted script command, 	**	and the address at where to continue. 	*/
-argument|if (dsp == vtophys (&cp->patch[
+if|if
+condition|(
+name|dsp
+operator|==
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|patch
+index|[
 literal|2
-argument|])) { 		vdsp =&cp->patch[
+index|]
+argument_list|)
+condition|)
+block|{
+name|vdsp
+operator|=
+operator|&
+name|cp
+operator|->
+name|patch
+index|[
 literal|0
-argument|]; 		nxtdsp = vdsp[
+index|]
+expr_stmt|;
+name|nxtdsp
+operator|=
+name|vdsp
+index|[
 literal|3
-argument|]; 	} else if (dsp == vtophys (&cp->patch[
+index|]
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|dsp
+operator|==
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|patch
+index|[
 literal|6
-argument|])) { 		vdsp =&cp->patch[
+index|]
+argument_list|)
+condition|)
+block|{
+name|vdsp
+operator|=
+operator|&
+name|cp
+operator|->
+name|patch
+index|[
 literal|4
-argument|]; 		nxtdsp = vdsp[
+index|]
+expr_stmt|;
+name|nxtdsp
+operator|=
+name|vdsp
+index|[
 literal|3
-argument|]; 	} else { 		vdsp = (u_long*) ((char*)np->script - vtophys(np->script) + dsp -
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|vdsp
+operator|=
+operator|(
+name|u_long
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|np
+operator|->
+name|script
+operator|-
+name|vtophys
+argument_list|(
+name|np
+operator|->
+name|script
+argument_list|)
+operator|+
+name|dsp
+operator|-
 literal|8
-argument|); 		nxtdsp = dsp; 	};
+operator|)
+expr_stmt|;
+name|nxtdsp
+operator|=
+name|dsp
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	log the information 	*/
-argument|if (DEBUG_FLAGS& (DEBUG_TINY|DEBUG_PHASE)) { 		printf (
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+operator|(
+name|DEBUG_TINY
+operator||
+name|DEBUG_PHASE
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"P%d%d "
-argument|,cmd&
+argument_list|,
+name|cmd
+operator|&
 literal|7
-argument|, sbcl&
+argument_list|,
+name|sbcl
+operator|&
 literal|7
-argument|); 		printf (
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"RL=%d D=%d SS0=%x "
-argument|, 			(unsigned) rest, (unsigned) delta, ss0); 	}; 	if (DEBUG_FLAGS& DEBUG_PHASE) { 		printf (
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|rest
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|delta
+argument_list|,
+name|ss0
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_PHASE
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"\nCP=%x CP2=%x DSP=%x NXT=%x VDSP=%x CMD=%x "
-argument|, 			(unsigned)cp, (unsigned)np->header.cp, 			(unsigned)dsp, 			(unsigned)nxtdsp, (unsigned)vdsp, cmd); 	};
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|cp
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|np
+operator|->
+name|header
+operator|.
+name|cp
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|dsp
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|nxtdsp
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|vdsp
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	get old startaddress and old length. 	*/
-argument|oadr = vdsp[
+name|oadr
+operator|=
+name|vdsp
+index|[
 literal|1
-argument|];  	if (cmd&
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|&
 literal|0x10
-argument|) {
+condition|)
+block|{
 comment|/* Table indirect */
-argument|tblp = (u_long*) ((char*)&cp->phys + oadr); 		olen = tblp[
+name|tblp
+operator|=
+operator|(
+name|u_long
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|cp
+operator|->
+name|phys
+operator|+
+name|oadr
+operator|)
+expr_stmt|;
+name|olen
+operator|=
+name|tblp
+index|[
 literal|0
-argument|]; 		oadr = tblp[
+index|]
+expr_stmt|;
+name|oadr
+operator|=
+name|tblp
+index|[
 literal|1
-argument|]; 	} else { 		tblp = (u_long*)
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|tblp
+operator|=
+operator|(
+name|u_long
+operator|*
+operator|)
 literal|0
-argument|; 		olen = vdsp[
+expr_stmt|;
+name|olen
+operator|=
+name|vdsp
+index|[
 literal|0
-argument|]&
+index|]
+operator|&
 literal|0xffffff
-argument|; 	};
-argument|if (DEBUG_FLAGS& DEBUG_PHASE) { 		printf (
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_PHASE
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"OCMD=%x\nTBLP=%x OLEN=%x OADR=%x\n"
-argument|, 			(unsigned) (vdsp[
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|vdsp
+index|[
 literal|0
-argument|]>>
+index|]
+operator|>>
 literal|24
-argument|), 			(unsigned) tblp, 			(unsigned) olen, 			(unsigned) oadr); 	};
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|tblp
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|olen
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|oadr
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	if old phase not dataphase, leave here. 	*/
-argument|assert (cmd == (vdsp[
+name|assert
+argument_list|(
+name|cmd
+operator|==
+operator|(
+name|vdsp
+index|[
 literal|0
-argument|]>>
+index|]
+operator|>>
 literal|24
-argument|)); 	if (cmd&
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|&
 literal|0x06
-argument|) { 		PRINT_ADDR(cp->xfer); 		printf (
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"phase change %d-%d %d@%x resid=%d.\n"
-argument|, 			cmd&
+argument_list|,
+name|cmd
+operator|&
 literal|7
-argument|, sbcl&
+argument_list|,
+name|sbcl
+operator|&
 literal|7
-argument|, (unsigned)olen, 			(unsigned)oadr, (unsigned)rest);  		OUTB (nc_dcntl, (STD|NOCOM)); 		return; 	};
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|olen
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|oadr
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|rest
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_dcntl
+argument_list|,
+operator|(
+name|STD
+operator||
+name|NOCOM
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/* 	**	choose the correct patch area. 	**	if savep points to one, choose the other. 	*/
-argument|newcmd = cp->patch; 	if (cp->phys.header.savep == vtophys (newcmd)) newcmd+=
+name|newcmd
+operator|=
+name|cp
+operator|->
+name|patch
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|phys
+operator|.
+name|header
+operator|.
+name|savep
+operator|==
+name|vtophys
+argument_list|(
+name|newcmd
+argument_list|)
+condition|)
+name|newcmd
+operator|+=
 literal|4
-argument|;
+expr_stmt|;
 comment|/* 	**	fillin the commands 	*/
-argument|newcmd[
+name|newcmd
+index|[
 literal|0
-argument|] = ((cmd&
+index|]
+operator|=
+operator|(
+operator|(
+name|cmd
+operator|&
 literal|0x0f
-argument|)<<
+operator|)
+operator|<<
 literal|24
-argument|) | rest; 	newcmd[
+operator|)
+operator||
+name|rest
+expr_stmt|;
+name|newcmd
+index|[
 literal|1
-argument|] = oadr + olen - rest; 	newcmd[
+index|]
+operator|=
+name|oadr
+operator|+
+name|olen
+operator|-
+name|rest
+expr_stmt|;
+name|newcmd
+index|[
 literal|2
-argument|] = SCR_JUMP; 	newcmd[
+index|]
+operator|=
+name|SCR_JUMP
+expr_stmt|;
+name|newcmd
+index|[
 literal|3
-argument|] = nxtdsp;  	if (DEBUG_FLAGS& DEBUG_PHASE) { 		PRINT_ADDR(cp->xfer); 		printf (
+index|]
+operator|=
+name|nxtdsp
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_PHASE
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"newcmd[%d] %x %x %x %x.\n"
-argument|, 			newcmd - cp->patch, 			(unsigned)newcmd[
+argument_list|,
+name|newcmd
+operator|-
+name|cp
+operator|->
+name|patch
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|newcmd
+index|[
 literal|0
-argument|], 			(unsigned)newcmd[
+index|]
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|newcmd
+index|[
 literal|1
-argument|], 			(unsigned)newcmd[
+index|]
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|newcmd
+index|[
 literal|2
-argument|], 			(unsigned)newcmd[
+index|]
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|newcmd
+index|[
 literal|3
-argument|]); 	}
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**	fake the return address (to the patch). 	**	and restart script processor at dispatcher. 	*/
-argument|np->profile.num_break++; 	OUTL (nc_temp, vtophys (newcmd)); 	OUTL (nc_dsp, vtophys (&np->script->dispatch)); }
+name|np
+operator|->
+name|profile
+operator|.
+name|num_break
+operator|++
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_temp
+argument_list|,
+name|vtophys
+argument_list|(
+name|newcmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|dispatch
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*========================================================== ** ** **      ncr chip exception handler for programmed interrupts. ** ** **========================================================== */
-argument|static int ncr_show_msg (u_char * msg) { 	u_char i; 	printf (
+specifier|static
+name|int
+name|ncr_show_msg
+parameter_list|(
+name|u_char
+modifier|*
+name|msg
+parameter_list|)
+block|{
+name|u_char
+name|i
+decl_stmt|;
+name|printf
+argument_list|(
 literal|"%x"
-argument|,*msg); 	if (*msg==M_EXTENDED) { 		for (i=
+argument_list|,
+operator|*
+name|msg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|msg
+operator|==
+name|M_EXTENDED
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
 literal|1
-argument|;i<
+init|;
+name|i
+operator|<
 literal|8
-argument|;i++) { 			if (i-
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|i
+operator|-
 literal|1
-argument|>msg[
+operator|>
+name|msg
+index|[
 literal|1
-argument|]) break; 			printf (
+index|]
+condition|)
+break|break;
+name|printf
+argument_list|(
 literal|"-%x"
-argument|,msg[i]); 		}; 		return (i+
+argument_list|,
+name|msg
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+return|return
+operator|(
+name|i
+operator|+
 literal|1
-argument|); 	} else if ((*msg&
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+operator|*
+name|msg
+operator|&
 literal|0xf0
-argument|) ==
+operator|)
+operator|==
 literal|0x20
-argument|) { 		printf (
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"-%x"
-argument|,msg[
+argument_list|,
+name|msg
+index|[
 literal|1
-argument|]); 		return (
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|2
-argument|); 	}; 	return (
+operator|)
+return|;
+block|}
+empty_stmt|;
+return|return
+operator|(
 literal|1
-argument|); }  void ncr_int_sir (ncb_p np) { 	u_char chg
-argument_list|,
-argument|ofs
-argument_list|,
-argument|per
-argument_list|,
-argument|fak
-argument_list|,
-argument|wide; 	u_char num = INB (nc_dsps); 	ccb_p	cp=
+operator|)
+return|;
+block|}
+name|void
+name|ncr_int_sir
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+block|{
+name|u_char
+name|chg
+decl_stmt|,
+name|ofs
+decl_stmt|,
+name|per
+decl_stmt|,
+name|fak
+decl_stmt|,
+name|wide
+decl_stmt|;
+name|u_char
+name|num
+init|=
+name|INB
+argument_list|(
+name|nc_dsps
+argument_list|)
+decl_stmt|;
+name|ccb_p
+name|cp
+init|=
 literal|0
-argument|; 	u_long	dsa; 	u_char	target = INB (nc_ctest0)&
+decl_stmt|;
+name|u_long
+name|dsa
+decl_stmt|;
+name|u_char
+name|target
+init|=
+name|INB
+argument_list|(
+name|nc_ctest0
+argument_list|)
+operator|&
 literal|7
-argument|; 	tcb_p	tp     =&np->target[target]; 	int     i; 	if (DEBUG_FLAGS& DEBUG_TINY) printf (
+decl_stmt|;
+name|tcb_p
+name|tp
+init|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|target
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TINY
+condition|)
+name|printf
+argument_list|(
 literal|"I#%d"
-argument|, num);  	switch (num) { 	case SIR_SENSE_RESTART: 	case SIR_STALL_RESTART: 		break;  	default:
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|num
+condition|)
+block|{
+case|case
+name|SIR_SENSE_RESTART
+case|:
+case|case
+name|SIR_STALL_RESTART
+case|:
+break|break;
+default|default:
 comment|/* 		**	lookup the ccb 		*/
-argument|dsa = INL (nc_dsa); 		cp =&np->ccb; 		while (cp&& (vtophys(&cp->phys) != dsa)) 			cp = cp->link_ccb;  		assert (cp == np->header.cp); 		assert (cp); 		if (!cp) 			goto out; 	}  	switch (num) {
+name|dsa
+operator|=
+name|INL
+argument_list|(
+name|nc_dsa
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+expr_stmt|;
+while|while
+condition|(
+name|cp
+operator|&&
+operator|(
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|phys
+argument_list|)
+operator|!=
+name|dsa
+operator|)
+condition|)
+name|cp
+operator|=
+name|cp
+operator|->
+name|link_ccb
+expr_stmt|;
+name|assert
+argument_list|(
+name|cp
+operator|==
+name|np
+operator|->
+name|header
+operator|.
+name|cp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+goto|goto
+name|out
+goto|;
+block|}
+switch|switch
+condition|(
+name|num
+condition|)
+block|{
 comment|/*-------------------------------------------------------------------- ** **	Processing of interrupted getcc selects ** **-------------------------------------------------------------------- */
-argument|case SIR_SENSE_RESTART:
+case|case
+name|SIR_SENSE_RESTART
+case|:
 comment|/*------------------------------------------ 		**	Script processor is idle. 		**	Look for interrupted "check cond" 		**------------------------------------------ 		*/
-argument|if (DEBUG_FLAGS& DEBUG_RESTART) 			printf (
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESTART
+condition|)
+name|printf
+argument_list|(
 literal|"%s: int#%d"
-argument|,ncr_name (np),num); 		cp = (ccb_p)
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|(
+name|ccb_p
+operator|)
 literal|0
-argument|; 		for (i=
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|; i<MAX_TARGET; i++) { 			if (DEBUG_FLAGS& DEBUG_RESTART) printf (
+init|;
+name|i
+operator|<
+name|MAX_TARGET
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESTART
+condition|)
+name|printf
+argument_list|(
 literal|" t%d"
-argument|, i); 			tp =&np->target[i]; 			if (DEBUG_FLAGS& DEBUG_RESTART) printf (
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESTART
+condition|)
+name|printf
+argument_list|(
 literal|"+"
-argument|); 			cp = tp->hold_cp; 			if (!cp) continue; 			if (DEBUG_FLAGS& DEBUG_RESTART) printf (
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|tp
+operator|->
+name|hold_cp
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+continue|continue;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESTART
+condition|)
+name|printf
+argument_list|(
 literal|"+"
-argument|); 			if ((cp->host_status==HS_BUSY)&& 				(cp->scsi_status==S_CHECK_COND)) 				break; 			if (DEBUG_FLAGS& DEBUG_RESTART) printf (
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cp
+operator|->
+name|host_status
+operator|==
+name|HS_BUSY
+operator|)
+operator|&&
+operator|(
+name|cp
+operator|->
+name|scsi_status
+operator|==
+name|S_CHECK_COND
+operator|)
+condition|)
+break|break;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESTART
+condition|)
+name|printf
+argument_list|(
 literal|"- (remove)"
-argument|); 			tp->hold_cp = cp = (ccb_p)
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|hold_cp
+operator|=
+name|cp
+operator|=
+operator|(
+name|ccb_p
+operator|)
 literal|0
-argument|; 		};  		if (cp) { 			if (DEBUG_FLAGS& DEBUG_RESTART) 				printf (
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+block|{
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESTART
+condition|)
+name|printf
+argument_list|(
 literal|"+ restart job ..\n"
-argument|); 			OUTL (nc_dsa, vtophys (&cp->phys)); 			OUTL (nc_dsp, vtophys (&np->script->getcc)); 			return; 		};
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsa
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|phys
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|getcc
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/* 		**	no job, resume normal processing 		*/
-argument|if (DEBUG_FLAGS& DEBUG_RESTART) printf (
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESTART
+condition|)
+name|printf
+argument_list|(
 literal|" -- remove trap\n"
-argument|); 		np->script->start0[
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|script
+operator|->
+name|start0
+index|[
 literal|0
-argument|] =  SCR_INT ^ IFFALSE (
+index|]
+operator|=
+name|SCR_INT
+operator|^
+name|IFFALSE
+argument_list|(
 literal|0
-argument|); 		break;  	case SIR_SENSE_FAILED:
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIR_SENSE_FAILED
+case|:
 comment|/*------------------------------------------- 		**	While trying to select for 		**	getting the condition code, 		**	a target reselected us. 		**------------------------------------------- 		*/
-argument|PRINT_ADDR(cp->xfer); 		if (DEBUG_FLAGS& DEBUG_RESTART) 			printf (
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_RESTART
+condition|)
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"in getcc reselect by t%d.\n"
-argument|, 				INB(nc_ssid)&
+argument_list|,
+name|INB
+argument_list|(
+name|nc_ssid
+argument_list|)
+operator|&
 literal|7
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* 		**	Mark this job 		*/
-argument|cp->host_status = HS_BUSY; 		cp->scsi_status = S_CHECK_COND; 		np->target[cp->xfer->TARGET].hold_cp = cp;
+name|cp
+operator|->
+name|host_status
+operator|=
+name|HS_BUSY
+expr_stmt|;
+name|cp
+operator|->
+name|scsi_status
+operator|=
+name|S_CHECK_COND
+expr_stmt|;
+name|np
+operator|->
+name|target
+index|[
+name|cp
+operator|->
+name|xfer
+operator|->
+name|sc_link
+operator|->
+name|target
+index|]
+operator|.
+name|hold_cp
+operator|=
+name|cp
+expr_stmt|;
 comment|/* 		**	And patch code to restart it. 		*/
-argument|np->script->start0[
+name|np
+operator|->
+name|script
+operator|->
+name|start0
+index|[
 literal|0
-argument|] =  SCR_INT; 		break;
-comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look to byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simpletag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and set to the standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set the values, and send this **	answer back to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and set the values to **	the default. ** **	When we set the values, we set in all ccbs belonging to this **	target, in the controllers register, and in the "phys" **	field of the controllers struct ncb. ** **	Possible cases:            hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin         NEG FAIL  noop   defa   -      dispatch ** **	Target tries to negotiate: **	-> incoming message        --- SYNC  sdtr   set    SDTR   - **	-> incoming message        --- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
-argument|case SIR_NEGO_FAILED:
+index|]
+operator|=
+name|SCR_INT
+expr_stmt|;
+break|break;
+comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look to byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simpletag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and set to the standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set the values, and send this **	answer back to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and set the values to **	the default. ** **	When we set the values, we set in all ccbs belonging to this **	target, in the controllers register, and in the "phys" **	field of the controllers struct ncb. ** **	Possible cases:	    hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin	 NEG FAIL  noop   defa   -      dispatch ** **	Target tries to negotiate: **	-> incoming message	--- SYNC  sdtr   set    SDTR   - **	-> incoming message	--- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
+case|case
+name|SIR_NEGO_FAILED
+case|:
 comment|/*------------------------------------------------------- 		** 		**	Negotiation failed. 		**	Target doesn't send an answer message, 		**	or target rejected our message. 		** 		**      Remove negotiation request. 		** 		**------------------------------------------------------- 		*/
-argument|OUTB (HS_PRT, HS_BUSY);
+name|OUTB
+argument_list|(
+name|HS_PRT
+argument_list|,
+name|HS_BUSY
+argument_list|)
+expr_stmt|;
 comment|/* fall through */
-argument|case SIR_NEGO_PROTO:
+case|case
+name|SIR_NEGO_PROTO
+case|:
 comment|/*------------------------------------------------------- 		** 		**	Negotiation failed. 		**	Target doesn't fetch the answer message. 		** 		**------------------------------------------------------- 		*/
-argument|if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"negotiation failed sir=%x status=%x.\n"
-argument|, 				num, cp->nego_status); 		};
+argument_list|,
+name|num
+argument_list|,
+name|cp
+operator|->
+name|nego_status
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 		**	any error in negotiation: 		**	fall back to default mode. 		*/
-argument|switch (cp->nego_status) {  		case NS_SYNC: 			ncr_setsync (np, cp,
+switch|switch
+condition|(
+name|cp
+operator|->
+name|nego_status
+condition|)
+block|{
+case|case
+name|NS_SYNC
+case|:
+name|ncr_setsync
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
 literal|0xe0
-argument|); 			break;  		case NS_WIDE: 			ncr_setwide (np, cp,
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|NS_WIDE
+case|:
+name|ncr_setwide
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
 literal|0
-argument|); 			break;  		}; 		np->msgin [
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+name|np
+operator|->
+name|msgin
+index|[
 literal|0
-argument|] = M_NOOP; 		np->msgout[
+index|]
+operator|=
+name|M_NOOP
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|0
-argument|] = M_NOOP; 		cp->nego_status =
+index|]
+operator|=
+name|M_NOOP
+expr_stmt|;
+name|cp
+operator|->
+name|nego_status
+operator|=
 literal|0
-argument|; 		OUTL (nc_dsp,vtophys (&np->script->dispatch)); 		break;
-argument|case SIR_NEGO_SYNC:
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|dispatch
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIR_NEGO_SYNC
+case|:
 comment|/* 		**	Synchronous request message received. 		*/
-argument|if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"sync msgin: "
-argument|); 			(void) ncr_show_msg (np->msgin); 			printf (
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ncr_show_msg
+argument_list|(
+name|np
+operator|->
+name|msgin
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		};
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 		**	get requested values. 		*/
-argument|chg =
+name|chg
+operator|=
 literal|0
-argument|; 		per = np->msgin[
+expr_stmt|;
+name|per
+operator|=
+name|np
+operator|->
+name|msgin
+index|[
 literal|3
-argument|]; 		ofs = np->msgin[
+index|]
+expr_stmt|;
+name|ofs
+operator|=
+name|np
+operator|->
+name|msgin
+index|[
 literal|4
-argument|]; 		if (ofs==
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|ofs
+operator|==
 literal|0
-argument|) per=
+condition|)
+name|per
+operator|=
 literal|255
-argument|;
-comment|/* 		**      if target sends SDTR message, 		**              it CAN transfer synch. 		*/
-argument|if (ofs) 			tp->inqdata[
+expr_stmt|;
+comment|/* 		**      if target sends SDTR message, 		**	      it CAN transfer synch. 		*/
+if|if
+condition|(
+name|ofs
+condition|)
+name|tp
+operator|->
+name|inqdata
+index|[
 literal|7
-argument|] |= INQ7_SYNC;
+index|]
+operator||=
+name|INQ7_SYNC
+expr_stmt|;
 comment|/* 		**	check values against driver limits. 		*/
-argument|if (per< np->ns_sync) 			{chg =
+if|if
+condition|(
+name|per
+operator|<
+name|np
+operator|->
+name|ns_sync
+condition|)
+block|{
+name|chg
+operator|=
 literal|1
-argument|; per = np->ns_sync;} 		if (per< tp->minsync) 			{chg =
+expr_stmt|;
+name|per
+operator|=
+name|np
+operator|->
+name|ns_sync
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|per
+operator|<
+name|tp
+operator|->
+name|minsync
+condition|)
+block|{
+name|chg
+operator|=
 literal|1
-argument|; per = tp->minsync;} 		if (ofs> tp->maxoffs) 			{chg =
+expr_stmt|;
+name|per
+operator|=
+name|tp
+operator|->
+name|minsync
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ofs
+operator|>
+name|tp
+operator|->
+name|maxoffs
+condition|)
+block|{
+name|chg
+operator|=
 literal|1
-argument|; ofs = tp->maxoffs;}
+expr_stmt|;
+name|ofs
+operator|=
+name|tp
+operator|->
+name|maxoffs
+expr_stmt|;
+block|}
 comment|/* 		**	Check against controller limits. 		*/
-argument|fak = (
+name|fak
+operator|=
+operator|(
 literal|4ul
-argument|* per -
+operator|*
+name|per
+operator|-
 literal|1
-argument|) / np->ns_sync -
+operator|)
+operator|/
+name|np
+operator|->
+name|ns_sync
+operator|-
 literal|3
-argument|; 		if (ofs&& (fak>
+expr_stmt|;
+if|if
+condition|(
+name|ofs
+operator|&&
+operator|(
+name|fak
+operator|>
 literal|7
-argument|))   {chg =
+operator|)
+condition|)
+block|{
+name|chg
+operator|=
 literal|1
-argument|; ofs =
+expr_stmt|;
+name|ofs
+operator|=
 literal|0
-argument|;} 		if (!ofs) fak=
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|ofs
+condition|)
+name|fak
+operator|=
 literal|7
-argument|;  		if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"sync: per=%d ofs=%d fak=%d chg=%d.\n"
-argument|, 				per, ofs, fak, chg); 		}
-argument|if (INB (HS_PRT) == HS_NEGOTIATE) { 			OUTB (HS_PRT, HS_BUSY); 			switch (cp->nego_status) {  			case NS_SYNC:
+argument_list|,
+name|per
+argument_list|,
+name|ofs
+argument_list|,
+name|fak
+argument_list|,
+name|chg
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|INB
+argument_list|(
+name|HS_PRT
+argument_list|)
+operator|==
+name|HS_NEGOTIATE
+condition|)
+block|{
+name|OUTB
+argument_list|(
+name|HS_PRT
+argument_list|,
+name|HS_BUSY
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|cp
+operator|->
+name|nego_status
+condition|)
+block|{
+case|case
+name|NS_SYNC
+case|:
 comment|/* 				**      This was an answer message 				*/
-argument|if (chg) {
+if|if
+condition|(
+name|chg
+condition|)
+block|{
 comment|/* 					**	Answer wasn't acceptable. 					*/
-argument|ncr_setsync (np, cp,
+name|ncr_setsync
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
 literal|0xe0
-argument|); 					OUTL (nc_dsp,vtophys (&np->script->msg_bad)); 				} else {
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|msg_bad
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* 					**	Answer is ok. 					*/
-argument|ncr_setsync (np, cp, (fak<<
+name|ncr_setsync
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
+operator|(
+name|fak
+operator|<<
 literal|5
-argument|)|ofs); 					OUTL (nc_dsp,vtophys (&np->script->clrack)); 				}; 				return;  			case NS_WIDE: 				ncr_setwide (np, cp,
+operator|)
+operator||
+name|ofs
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|clrack
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+return|return;
+case|case
+name|NS_WIDE
+case|:
+name|ncr_setwide
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
 literal|0
-argument|); 				break; 			}; 		};
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
 comment|/* 		**	It was a request. Set value and 		**      prepare an answer message 		*/
-argument|ncr_setsync (np, cp, (fak<<
+name|ncr_setsync
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
+operator|(
+name|fak
+operator|<<
 literal|5
-argument|)|ofs);  		np->msgout[
+operator|)
+operator||
+name|ofs
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|0
-argument|] = M_EXTENDED; 		np->msgout[
+index|]
+operator|=
+name|M_EXTENDED
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|1
-argument|] =
+index|]
+operator|=
 literal|3
-argument|; 		np->msgout[
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|2
-argument|] = M_X_SYNC_REQ; 		np->msgout[
+index|]
+operator|=
+name|M_X_SYNC_REQ
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|3
-argument|] = per; 		np->msgout[
+index|]
+operator|=
+name|per
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|4
-argument|] = ofs;  		np->msgin [
+index|]
+operator|=
+name|ofs
+expr_stmt|;
+name|np
+operator|->
+name|msgin
+index|[
 literal|0
-argument|] = M_NOOP;  		cp->nego_status = NS_SYNC;  		if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+index|]
+operator|=
+name|M_NOOP
+expr_stmt|;
+name|cp
+operator|->
+name|nego_status
+operator|=
+name|NS_SYNC
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"sync msgout: "
-argument|); 			(void) ncr_show_msg (np->msgin); 			printf (
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ncr_show_msg
+argument_list|(
+name|np
+operator|->
+name|msgin
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		} 		break;
-argument|case SIR_NEGO_WIDE:
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|SIR_NEGO_WIDE
+case|:
 comment|/* 		**	Wide request message received. 		*/
-argument|if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"wide msgin: "
-argument|); 			(void) ncr_show_msg (np->msgin); 			printf (
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ncr_show_msg
+argument_list|(
+name|np
+operator|->
+name|msgin
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		};
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 		**	get requested values. 		*/
-argument|chg  =
+name|chg
+operator|=
 literal|0
-argument|; 		wide = np->msgin[
+expr_stmt|;
+name|wide
+operator|=
+name|np
+operator|->
+name|msgin
+index|[
 literal|3
-argument|];
-comment|/* 		**      if target sends WDTR message, 		**              it CAN transfer wide. 		*/
-argument|if (wide) 			tp->inqdata[
+index|]
+expr_stmt|;
+comment|/* 		**      if target sends WDTR message, 		**	      it CAN transfer wide. 		*/
+if|if
+condition|(
+name|wide
+condition|)
+name|tp
+operator|->
+name|inqdata
+index|[
 literal|7
-argument|] |= INQ7_WIDE16;
+index|]
+operator||=
+name|INQ7_WIDE16
+expr_stmt|;
 comment|/* 		**	check values against driver limits. 		*/
-argument|if (wide> tp->usrwide) 			{chg =
+if|if
+condition|(
+name|wide
+operator|>
+name|tp
+operator|->
+name|usrwide
+condition|)
+block|{
+name|chg
+operator|=
 literal|1
-argument|; wide = tp->usrwide;}  		if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+expr_stmt|;
+name|wide
+operator|=
+name|tp
+operator|->
+name|usrwide
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"wide: wide=%d chg=%d.\n"
-argument|, wide, chg); 		}
-argument|if (INB (HS_PRT) == HS_NEGOTIATE) { 			OUTB (HS_PRT, HS_BUSY); 			switch (cp->nego_status) {  			case NS_WIDE:
+argument_list|,
+name|wide
+argument_list|,
+name|chg
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|INB
+argument_list|(
+name|HS_PRT
+argument_list|)
+operator|==
+name|HS_NEGOTIATE
+condition|)
+block|{
+name|OUTB
+argument_list|(
+name|HS_PRT
+argument_list|,
+name|HS_BUSY
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|cp
+operator|->
+name|nego_status
+condition|)
+block|{
+case|case
+name|NS_WIDE
+case|:
 comment|/* 				**      This was an answer message 				*/
-argument|if (chg) {
+if|if
+condition|(
+name|chg
+condition|)
+block|{
 comment|/* 					**	Answer wasn't acceptable. 					*/
-argument|ncr_setwide (np, cp,
+name|ncr_setwide
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
 literal|0
-argument|); 					OUTL (nc_dsp,vtophys (&np->script->msg_bad)); 				} else {
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|msg_bad
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* 					**	Answer is ok. 					*/
-argument|ncr_setwide (np, cp, wide); 					OUTL (nc_dsp,vtophys (&np->script->clrack)); 				}; 				return;  			case NS_SYNC: 				ncr_setsync (np, cp,
+name|ncr_setwide
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
+name|wide
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|clrack
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+return|return;
+case|case
+name|NS_SYNC
+case|:
+name|ncr_setsync
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
 literal|0xe0
-argument|); 				break; 			}; 		};
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
 comment|/* 		**	It was a request, set value and 		**      prepare an answer message 		*/
-argument|ncr_setwide (np, cp, wide);  		np->msgout[
+name|ncr_setwide
+argument_list|(
+name|np
+argument_list|,
+name|cp
+argument_list|,
+name|wide
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|0
-argument|] = M_EXTENDED; 		np->msgout[
+index|]
+operator|=
+name|M_EXTENDED
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|1
-argument|] =
+index|]
+operator|=
 literal|2
-argument|; 		np->msgout[
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|2
-argument|] = M_X_WIDE_REQ; 		np->msgout[
+index|]
+operator|=
+name|M_X_WIDE_REQ
+expr_stmt|;
+name|np
+operator|->
+name|msgout
+index|[
 literal|3
-argument|] = wide;  		np->msgin [
+index|]
+operator|=
+name|wide
+expr_stmt|;
+name|np
+operator|->
+name|msgin
+index|[
 literal|0
-argument|] = M_NOOP;  		cp->nego_status = NS_WIDE;  		if (DEBUG_FLAGS& DEBUG_NEGO) { 			PRINT_ADDR(cp->xfer); 			printf (
+index|]
+operator|=
+name|M_NOOP
+expr_stmt|;
+name|cp
+operator|->
+name|nego_status
+operator|=
+name|NS_WIDE
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_NEGO
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"wide msgout: "
-argument|); 			(void) ncr_show_msg (np->msgin); 			printf (
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ncr_show_msg
+argument_list|(
+name|np
+operator|->
+name|msgin
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		} 		break;
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 comment|/*-------------------------------------------------------------------- ** **	Processing of special messages ** **-------------------------------------------------------------------- */
-argument|case SIR_REJECT_RECEIVED:
+case|case
+name|SIR_REJECT_RECEIVED
+case|:
 comment|/*----------------------------------------------- 		** 		**	We received a M_REJECT message. 		** 		**----------------------------------------------- 		*/
-argument|PRINT_ADDR(cp->xfer); 		printf (
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"M_REJECT received (%x:%x).\n"
-argument|, 			(unsigned)np->lastmsg, np->msgout[
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|np
+operator|->
+name|lastmsg
+argument_list|,
+name|np
+operator|->
+name|msgout
+index|[
 literal|0
-argument|]); 		break;  	case SIR_REJECT_SENT:
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIR_REJECT_SENT
+case|:
 comment|/*----------------------------------------------- 		** 		**	We received an unknown message 		** 		**----------------------------------------------- 		*/
-argument|PRINT_ADDR(cp->xfer); 		printf (
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"M_REJECT sent for "
-argument|); 		(void) ncr_show_msg (np->msgin); 		printf (
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ncr_show_msg
+argument_list|(
+name|np
+operator|->
+name|msgin
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|".\n"
-argument|); 		break;
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/*-------------------------------------------------------------------- ** **	Processing of special messages ** **-------------------------------------------------------------------- */
-argument|case SIR_IGN_RESIDUE:
+case|case
+name|SIR_IGN_RESIDUE
+case|:
 comment|/*----------------------------------------------- 		** 		**	We received an IGNORE RESIDUE message, 		**	which couldn't be handled by the script. 		** 		**----------------------------------------------- 		*/
-argument|PRINT_ADDR(cp->xfer); 		printf (
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"M_IGN_RESIDUE received, but not yet implemented.\n"
-argument|); 		break;  	case SIR_MISSING_SAVE:
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIR_MISSING_SAVE
+case|:
 comment|/*----------------------------------------------- 		** 		**	We received an DISCONNECT message, 		**	but the datapointer wasn't saved before. 		** 		**----------------------------------------------- 		*/
-argument|PRINT_ADDR(cp->xfer); 		printf (
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"M_DISCONNECT received, but datapointer not saved:\n"
 literal|"\tdata=%x save=%x goal=%x.\n"
-argument|, 			(unsigned) INL (nc_temp), 			(unsigned) np->header.savep, 			(unsigned) np->header.goalp); 		break;
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|INL
+argument_list|(
+name|nc_temp
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|np
+operator|->
+name|header
+operator|.
+name|savep
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|np
+operator|->
+name|header
+operator|.
+name|goalp
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/*-------------------------------------------------------------------- ** **	Processing of a "S_QUEUE_FULL" status. ** **	The current command has been rejected, **	because there are too many in the command queue. **	We have started too many commands for that target. ** **	If possible, reinsert at head of queue. **	Stall queue until there are no disconnected jobs **	(ncr is REALLY idle). Then restart processing. ** **	We should restart the current job after the controller **	has become idle. But this is not yet implemented. ** **-------------------------------------------------------------------- */
-argument|case SIR_STALL_QUEUE:
+case|case
+name|SIR_STALL_QUEUE
+case|:
 comment|/*----------------------------------------------- 		** 		**	Stall the start queue. 		** 		**----------------------------------------------- 		*/
-argument|PRINT_ADDR(cp->xfer); 		printf (
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"queue full.\n"
-argument|);  		np->script->start1[
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|script
+operator|->
+name|start1
+index|[
 literal|0
-argument|] =  SCR_INT;
+index|]
+operator|=
+name|SCR_INT
+expr_stmt|;
 comment|/* 		**	Try to disable tagged transfers. 		*/
-argument|ncr_setmaxtags (&np->target[target],
+name|ncr_setmaxtags
+argument_list|(
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|target
+index|]
+argument_list|,
 literal|0
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* 		** @QUEUE@ 		** 		**	Should update the launch field of the 		**	current job to be able to restart it. 		**	Then prepend it to the start queue. 		*/
 comment|/* fall through */
-argument|case SIR_STALL_RESTART:
+case|case
+name|SIR_STALL_RESTART
+case|:
 comment|/*----------------------------------------------- 		** 		**	Enable selecting again, 		**	if NO disconnected jobs. 		** 		**----------------------------------------------- 		*/
 comment|/* 		**	Look for a disconnected job. 		*/
-argument|cp =&np->ccb; 		while (cp&& cp->host_status != HS_DISCONNECT) 			cp = cp->link_ccb;
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+expr_stmt|;
+while|while
+condition|(
+name|cp
+operator|&&
+name|cp
+operator|->
+name|host_status
+operator|!=
+name|HS_DISCONNECT
+condition|)
+name|cp
+operator|=
+name|cp
+operator|->
+name|link_ccb
+expr_stmt|;
 comment|/* 		**	if there is one, ... 		*/
-argument|if (cp) {
+if|if
+condition|(
+name|cp
+condition|)
+block|{
 comment|/* 			**	wait for reselection 			*/
-argument|OUTL (nc_dsp, vtophys (&np->script->reselect)); 			return; 		};
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|reselect
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/* 		**	else remove the interrupt. 		*/
-argument|printf (
+name|printf
+argument_list|(
 literal|"%s: queue empty.\n"
-argument|, ncr_name (np)); 		np->script->start1[
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|script
+operator|->
+name|start1
+index|[
 literal|0
-argument|] =  SCR_INT ^ IFFALSE (
+index|]
+operator|=
+name|SCR_INT
+operator|^
+name|IFFALSE
+argument_list|(
 literal|0
-argument|); 		break; 	};  out: 	OUTB (nc_dcntl, (STD|NOCOM)); }
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+name|out
+label|:
+name|OUTB
+argument_list|(
+name|nc_dcntl
+argument_list|,
+operator|(
+name|STD
+operator||
+name|NOCOM
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*========================================================== ** ** **	Aquire a control block ** ** **========================================================== */
-argument|static	ccb_p ncr_get_ccb 	(ncb_p np, u_long flags, u_long target, u_long lun) { 	lcb_p lp; 	ccb_p cp = (ccb_p )
+specifier|static
+name|ccb_p
+name|ncr_get_ccb
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|u_long
+name|flags
+parameter_list|,
+name|u_long
+name|target
+parameter_list|,
+name|u_long
+name|lun
+parameter_list|)
+block|{
+name|lcb_p
+name|lp
+decl_stmt|;
+name|ccb_p
+name|cp
+init|=
+operator|(
+name|ccb_p
+operator|)
 literal|0
-argument|;
+decl_stmt|;
 comment|/* 	**	Lun structure available ? 	*/
-argument|lp = np->target[target].lp[lun]; 	if (lp) 		cp = lp->next_ccb;
+name|lp
+operator|=
+name|np
+operator|->
+name|target
+index|[
+name|target
+index|]
+operator|.
+name|lp
+index|[
+name|lun
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|lp
+condition|)
+name|cp
+operator|=
+name|lp
+operator|->
+name|next_ccb
+expr_stmt|;
 comment|/* 	**	Look for free CCB 	*/
-argument|while (cp&& cp->magic) cp = cp->next_ccb;
+while|while
+condition|(
+name|cp
+operator|&&
+name|cp
+operator|->
+name|magic
+condition|)
+name|cp
+operator|=
+name|cp
+operator|->
+name|next_ccb
+expr_stmt|;
 comment|/* 	**	if nothing available, take the default. 	*/
-argument|if (!cp) cp =&np->ccb;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+expr_stmt|;
 comment|/* 	**	Wait until available. 	*/
-argument|while (cp->magic) { 		if (flags& SCSI_NOSLEEP) break; 		if (tsleep ((caddr_t)cp, PRIBIO|PCATCH,
+while|while
+condition|(
+name|cp
+operator|->
+name|magic
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|SCSI_NOSLEEP
+condition|)
+break|break;
+if|if
+condition|(
+name|tsleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|cp
+argument_list|,
+name|PRIBIO
+operator||
+name|PCATCH
+argument_list|,
 literal|"ncr"
-argument|,
+argument_list|,
 literal|0
-argument|)) 			break; 	};  	if (cp->magic) 		return ((ccb_p)
+argument_list|)
+condition|)
+break|break;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|magic
+condition|)
+return|return
+operator|(
+operator|(
+name|ccb_p
+operator|)
 literal|0
-argument|);  	cp->magic =
+operator|)
+return|;
+name|cp
+operator|->
+name|magic
+operator|=
 literal|1
-argument|; 	return (cp); }
+expr_stmt|;
+return|return
+operator|(
+name|cp
+operator|)
+return|;
+block|}
 comment|/*========================================================== ** ** **	Release one control block ** ** **========================================================== */
-argument|void ncr_free_ccb (ncb_p np, ccb_p cp, int flags) {
+name|void
+name|ncr_free_ccb
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|ccb_p
+name|cp
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
 comment|/* 	**    sanity 	*/
-argument|if (!cp) return;  	cp -> host_status = HS_IDLE; 	cp -> magic =
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+return|return;
+name|cp
+operator|->
+name|host_status
+operator|=
+name|HS_IDLE
+expr_stmt|;
+name|cp
+operator|->
+name|magic
+operator|=
 literal|0
-argument|; 	if (cp ==&np->ccb) 		wakeup ((caddr_t) cp); }
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+operator|&
+name|np
+operator|->
+name|ccb
+condition|)
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*========================================================== ** ** **      Allocation of resources for Targets/Luns/Tags. ** ** **========================================================== */
-argument|static	void ncr_alloc_ccb (ncb_p np, struct scsi_xfer * xp) { 	tcb_p tp; 	lcb_p lp; 	ccb_p cp;  	u_long	target; 	u_long	lun;  	if (!np) return; 	if (!xp) return;  	target = xp->TARGET; 	lun    = xp->LUN;  	if (target>=MAX_TARGET) return; 	if (lun>=MAX_LUN   ) return;  	tp=&np->target[target];  	if (!tp->jump_tcb.l_cmd) {
+specifier|static
+name|void
+name|ncr_alloc_ccb
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|struct
+name|scsi_xfer
+modifier|*
+name|xp
+parameter_list|)
+block|{
+name|tcb_p
+name|tp
+decl_stmt|;
+name|lcb_p
+name|lp
+decl_stmt|;
+name|ccb_p
+name|cp
+decl_stmt|;
+name|u_long
+name|target
+decl_stmt|;
+name|u_long
+name|lun
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|np
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|xp
+condition|)
+return|return;
+name|target
+operator|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|target
+expr_stmt|;
+name|lun
+operator|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|lun
+expr_stmt|;
+if|if
+condition|(
+name|target
+operator|>=
+name|MAX_TARGET
+condition|)
+return|return;
+if|if
+condition|(
+name|lun
+operator|>=
+name|MAX_LUN
+condition|)
+return|return;
+name|tp
+operator|=
+operator|&
+name|np
+operator|->
+name|target
+index|[
+name|target
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tp
+operator|->
+name|jump_tcb
+operator|.
+name|l_cmd
+condition|)
+block|{
 comment|/* 		**	initialize it. 		*/
-argument|tp->jump_tcb.l_cmd   = (SCR_JUMP^IFFALSE (DATA (
+name|tp
+operator|->
+name|jump_tcb
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_JUMP
+operator|^
+name|IFFALSE
+argument_list|(
+name|DATA
+argument_list|(
 literal|0x80
-argument|+ target))); 		tp->jump_tcb.l_paddr = np->jump_tcb.l_paddr;  		tp->getscr[
+operator|+
+name|target
+argument_list|)
+argument_list|)
+operator|)
+expr_stmt|;
+name|tp
+operator|->
+name|jump_tcb
+operator|.
+name|l_paddr
+operator|=
+name|np
+operator|->
+name|jump_tcb
+operator|.
+name|l_paddr
+expr_stmt|;
+name|tp
+operator|->
+name|getscr
+index|[
 literal|0
-argument|] = SCR_COPY (
+index|]
+operator|=
+name|SCR_COPY
+argument_list|(
 literal|1
-argument|); 		tp->getscr[
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|getscr
+index|[
 literal|1
-argument|] = vtophys (&tp->sval); 		tp->getscr[
+index|]
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|sval
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|getscr
+index|[
 literal|2
-argument|] = np->paddr + offsetof (struct ncr_reg, nc_sxfer); 		tp->getscr[
+index|]
+operator|=
+name|np
+operator|->
+name|paddr
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|ncr_reg
+argument_list|,
+name|nc_sxfer
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|getscr
+index|[
 literal|3
-argument|] = SCR_COPY (
+index|]
+operator|=
+name|SCR_COPY
+argument_list|(
 literal|1
-argument|); 		tp->getscr[
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|getscr
+index|[
 literal|4
-argument|] = vtophys (&tp->wval); 		tp->getscr[
+index|]
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|wval
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|getscr
+index|[
 literal|5
-argument|] = np->paddr + offsetof (struct ncr_reg, nc_scntl3);  		assert (( (offsetof(struct ncr_reg, nc_sxfer) ^  			offsetof(struct tcb    , sval    ))&
+index|]
+operator|=
+name|np
+operator|->
+name|paddr
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|ncr_reg
+argument_list|,
+name|nc_scntl3
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|(
+name|offsetof
+argument_list|(
+expr|struct
+name|ncr_reg
+argument_list|,
+name|nc_sxfer
+argument_list|)
+operator|^
+name|offsetof
+argument_list|(
+expr|struct
+name|tcb
+argument_list|,
+name|sval
+argument_list|)
+operator|)
+operator|&
 literal|3
-argument|) ==
+operator|)
+operator|==
 literal|0
-argument|); 		assert (( (offsetof(struct ncr_reg, nc_scntl3) ^  			offsetof(struct tcb    , wval    ))&
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|(
+name|offsetof
+argument_list|(
+expr|struct
+name|ncr_reg
+argument_list|,
+name|nc_scntl3
+argument_list|)
+operator|^
+name|offsetof
+argument_list|(
+expr|struct
+name|tcb
+argument_list|,
+name|wval
+argument_list|)
+operator|)
+operator|&
 literal|3
-argument|) ==
+operator|)
+operator|==
 literal|0
-argument|);  		tp->call_lun.l_cmd   = (SCR_CALL); 		tp->call_lun.l_paddr = vtophys (&np->script->resel_lun);  		tp->jump_lcb.l_cmd   = (SCR_JUMP); 		tp->jump_lcb.l_paddr = vtophys (&np->script->abort); 		np->jump_tcb.l_paddr = vtophys (&tp->jump_tcb);  		ncr_setmaxtags (tp, SCSI_NCR_MAX_TAGS); 	}
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|call_lun
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_CALL
+operator|)
+expr_stmt|;
+name|tp
+operator|->
+name|call_lun
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|resel_lun
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|jump_lcb
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_JUMP
+operator|)
+expr_stmt|;
+name|tp
+operator|->
+name|jump_lcb
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|abort
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|jump_tcb
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|jump_tcb
+argument_list|)
+expr_stmt|;
+name|ncr_setmaxtags
+argument_list|(
+name|tp
+argument_list|,
+name|SCSI_NCR_MAX_TAGS
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**	Logic unit control block 	*/
-argument|lp = tp->lp[lun]; 	if (!lp) {
+name|lp
+operator|=
+name|tp
+operator|->
+name|lp
+index|[
+name|lun
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lp
+condition|)
+block|{
 comment|/* 		**	Allocate a lcb 		*/
-argument|lp = (lcb_p) malloc (sizeof (struct lcb), M_DEVBUF, M_NOWAIT); 		if (!lp) return;
+name|lp
+operator|=
+operator|(
+name|lcb_p
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|lcb
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lp
+condition|)
+return|return;
 comment|/* 		**	Initialize it 		*/
-argument|bzero (lp, sizeof (*lp)); 		lp->jump_lcb.l_cmd   = (SCR_JUMP ^ IFFALSE (DATA (lun))); 		lp->jump_lcb.l_paddr = tp->jump_lcb.l_paddr;  		lp->call_tag.l_cmd   = (SCR_CALL); 		lp->call_tag.l_paddr = vtophys (&np->script->resel_tag);  		lp->jump_ccb.l_cmd   = (SCR_JUMP); 		lp->jump_ccb.l_paddr = vtophys (&np->script->aborttag);  		lp->actlink =
+name|bzero
+argument_list|(
+name|lp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|lp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|lp
+operator|->
+name|jump_lcb
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_JUMP
+operator|^
+name|IFFALSE
+argument_list|(
+name|DATA
+argument_list|(
+name|lun
+argument_list|)
+argument_list|)
+operator|)
+expr_stmt|;
+name|lp
+operator|->
+name|jump_lcb
+operator|.
+name|l_paddr
+operator|=
+name|tp
+operator|->
+name|jump_lcb
+operator|.
+name|l_paddr
+expr_stmt|;
+name|lp
+operator|->
+name|call_tag
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_CALL
+operator|)
+expr_stmt|;
+name|lp
+operator|->
+name|call_tag
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|resel_tag
+argument_list|)
+expr_stmt|;
+name|lp
+operator|->
+name|jump_ccb
+operator|.
+name|l_cmd
+operator|=
+operator|(
+name|SCR_JUMP
+operator|)
+expr_stmt|;
+name|lp
+operator|->
+name|jump_ccb
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|aborttag
+argument_list|)
+expr_stmt|;
+name|lp
+operator|->
+name|actlink
+operator|=
 literal|1
-argument|;
+expr_stmt|;
 comment|/* 		**   Link into Lun-Chain 		*/
-argument|tp->jump_lcb.l_paddr = vtophys (&lp->jump_lcb); 		tp->lp[lun] = lp;  	}
+name|tp
+operator|->
+name|jump_lcb
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|lp
+operator|->
+name|jump_lcb
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|lp
+index|[
+name|lun
+index|]
+operator|=
+name|lp
+expr_stmt|;
+block|}
 comment|/* 	**	Limit possible number of ccbs. 	** 	**	If tagged command queueing is enabled, 	**	can use more than one ccb. 	*/
-argument|if (np->actccbs>= MAX_START-
+if|if
+condition|(
+name|np
+operator|->
+name|actccbs
+operator|>=
+name|MAX_START
+operator|-
 literal|2
-argument|) return; 	if (lp->actccbs&& (lp->actccbs>= lp->reqccbs)) 		return;
+condition|)
+return|return;
+if|if
+condition|(
+name|lp
+operator|->
+name|actccbs
+operator|&&
+operator|(
+name|lp
+operator|->
+name|actccbs
+operator|>=
+name|lp
+operator|->
+name|reqccbs
+operator|)
+condition|)
+return|return;
 comment|/* 	**	Allocate a ccb 	*/
-argument|cp = (ccb_p) malloc (sizeof (struct ccb), M_DEVBUF, M_NOWAIT);  	if (!cp) 		return;  	if (DEBUG_FLAGS& DEBUG_ALLOC) { 		PRINT_ADDR(xp); 		printf (
+name|cp
+operator|=
+operator|(
+name|ccb_p
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ccb
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+return|return;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_ALLOC
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|xp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"new ccb @%x.\n"
-argument|, (unsigned) cp); 	}
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**	Count it 	*/
-argument|lp->actccbs++; 	np->actccbs++;
+name|lp
+operator|->
+name|actccbs
+operator|++
+expr_stmt|;
+name|np
+operator|->
+name|actccbs
+operator|++
+expr_stmt|;
 comment|/* 	**	Initialize it. 	*/
-argument|bzero (cp, sizeof (*cp));
+name|bzero
+argument_list|(
+name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	**	link in reselect chain. 	*/
-argument|cp->jump_ccb.l_cmd   = SCR_JUMP; 	cp->jump_ccb.l_paddr = lp->jump_ccb.l_paddr; 	lp->jump_ccb.l_paddr = vtophys(&cp->jump_ccb); 	cp->call_tmp.l_cmd   = SCR_CALL; 	cp->call_tmp.l_paddr = vtophys(&np->script->resel_tmp);
+name|cp
+operator|->
+name|jump_ccb
+operator|.
+name|l_cmd
+operator|=
+name|SCR_JUMP
+expr_stmt|;
+name|cp
+operator|->
+name|jump_ccb
+operator|.
+name|l_paddr
+operator|=
+name|lp
+operator|->
+name|jump_ccb
+operator|.
+name|l_paddr
+expr_stmt|;
+name|lp
+operator|->
+name|jump_ccb
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|jump_ccb
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|call_tmp
+operator|.
+name|l_cmd
+operator|=
+name|SCR_CALL
+expr_stmt|;
+name|cp
+operator|->
+name|call_tmp
+operator|.
+name|l_paddr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|resel_tmp
+argument_list|)
+expr_stmt|;
 comment|/* 	**	link in wakeup chain 	*/
-argument|cp->link_ccb      = np->ccb.link_ccb; 	np->ccb.link_ccb  = cp;
+name|cp
+operator|->
+name|link_ccb
+operator|=
+name|np
+operator|->
+name|ccb
+operator|.
+name|link_ccb
+expr_stmt|;
+name|np
+operator|->
+name|ccb
+operator|.
+name|link_ccb
+operator|=
+name|cp
+expr_stmt|;
 comment|/* 	**	Link into CCB-Chain 	*/
-argument|cp->next_ccb	= lp->next_ccb; 	lp->next_ccb	= cp; }
+name|cp
+operator|->
+name|next_ccb
+operator|=
+name|lp
+operator|->
+name|next_ccb
+expr_stmt|;
+name|lp
+operator|->
+name|next_ccb
+operator|=
+name|cp
+expr_stmt|;
+block|}
 comment|/*========================================================== ** ** **	Announce the number of ccbs/tags to the scsi driver. ** ** **========================================================== */
-argument|static void ncr_opennings (ncb_p np, lcb_p lp, struct scsi_xfer * xp) {
-ifndef|#
-directive|ifndef
-name|ANCIENT
+specifier|static
+name|void
+name|ncr_opennings
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|lcb_p
+name|lp
+parameter_list|,
+name|struct
+name|scsi_xfer
+modifier|*
+name|xp
+parameter_list|)
+block|{
 comment|/* 	**	want to reduce the number ... 	*/
-argument|if (lp->actlink> lp->reqlink) {
+if|if
+condition|(
+name|lp
+operator|->
+name|actlink
+operator|>
+name|lp
+operator|->
+name|reqlink
+condition|)
+block|{
 comment|/* 		**	Try to  reduce the count. 		**	We assume to run at splbio .. 		*/
-argument|u_char diff = lp->actlink - lp->reqlink;  		if (!diff) return;  		if (diff> xp->sc_link->opennings) 			diff = xp->sc_link->opennings;  		xp->sc_link->opennings	-= diff; 		lp->actlink		-= diff; 		if (DEBUG_FLAGS& DEBUG_TAGS) 			printf (
+name|u_char
+name|diff
+init|=
+name|lp
+operator|->
+name|actlink
+operator|-
+name|lp
+operator|->
+name|reqlink
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|diff
+condition|)
+return|return;
+if|if
+condition|(
+name|diff
+operator|>
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|opennings
+condition|)
+name|diff
+operator|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|opennings
+expr_stmt|;
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|opennings
+operator|-=
+name|diff
+expr_stmt|;
+name|lp
+operator|->
+name|actlink
+operator|-=
+name|diff
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TAGS
+condition|)
+name|printf
+argument_list|(
 literal|"%s: actlink: diff=%d, new=%d, req=%d\n"
-argument|, 				ncr_name(np), diff, lp->actlink, lp->reqlink); 		return; 	};
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|diff
+argument_list|,
+name|lp
+operator|->
+name|actlink
+argument_list|,
+name|lp
+operator|->
+name|reqlink
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 comment|/* 	**	want to increase the number ? 	*/
-argument|if (lp->reqlink> lp->actlink) { 		u_char diff = lp->reqlink - lp->actlink;  		xp->sc_link->opennings	+= diff; 		lp->actlink		+= diff; 		wakeup ((caddr_t) xp->sc_link); 		if (DEBUG_FLAGS& DEBUG_TAGS) 			printf (
+if|if
+condition|(
+name|lp
+operator|->
+name|reqlink
+operator|>
+name|lp
+operator|->
+name|actlink
+condition|)
+block|{
+name|u_char
+name|diff
+init|=
+name|lp
+operator|->
+name|reqlink
+operator|-
+name|lp
+operator|->
+name|actlink
+decl_stmt|;
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|opennings
+operator|+=
+name|diff
+expr_stmt|;
+name|lp
+operator|->
+name|actlink
+operator|+=
+name|diff
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|xp
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TAGS
+condition|)
+name|printf
+argument_list|(
 literal|"%s: actlink: diff=%d, new=%d, req=%d\n"
-argument|, 				ncr_name(np), diff, lp->actlink, lp->reqlink); 	};
-endif|#
-directive|endif
-argument|}
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|diff
+argument_list|,
+name|lp
+operator|->
+name|actlink
+argument_list|,
+name|lp
+operator|->
+name|reqlink
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
 comment|/*========================================================== ** ** **	Build Scatter Gather Block ** ** **========================================================== ** **	The transfer area may be scattered among **	several non adjacent physical pages. ** **	We may use MAX_SCATTER blocks. ** **---------------------------------------------------------- */
-argument|static	int	ncr_scatter 	(struct dsb* phys, vm_offset_t vaddr, vm_size_t datalen) { 	u_long	paddr
-argument_list|,
-argument|pnext;  	u_short	segment  =
+specifier|static
+name|int
+name|ncr_scatter
+parameter_list|(
+name|struct
+name|dsb
+modifier|*
+name|phys
+parameter_list|,
+name|vm_offset_t
+name|vaddr
+parameter_list|,
+name|vm_size_t
+name|datalen
+parameter_list|)
+block|{
+name|u_long
+name|paddr
+decl_stmt|,
+name|pnext
+decl_stmt|;
+name|u_short
+name|segment
+init|=
 literal|0
-argument|; 	u_long	segsize
-argument_list|,
-argument|segaddr; 	u_long	size
-argument_list|,
-argument|csize    =
+decl_stmt|;
+name|u_long
+name|segsize
+decl_stmt|,
+name|segaddr
+decl_stmt|;
+name|u_long
+name|size
+decl_stmt|,
+name|csize
+init|=
 literal|0
-argument|; 	u_long	chunk = MAX_SIZE; 	int	free;  	bzero (&phys->data, sizeof (phys->data)); 	if (!datalen) return (
+decl_stmt|;
+name|u_long
+name|chunk
+init|=
+name|MAX_SIZE
+decl_stmt|;
+name|int
+name|free
+decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|phys
+operator|->
+name|data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|phys
+operator|->
+name|data
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|datalen
+condition|)
+return|return
+operator|(
 literal|0
-argument|);  	paddr = vtophys (vaddr);
+operator|)
+return|;
+name|paddr
+operator|=
+name|vtophys
+argument_list|(
+name|vaddr
+argument_list|)
+expr_stmt|;
 comment|/* 	**	insert extra break points at a distance of chunk. 	**	We try to reduce the number of interrupts due to 	**	unexpected phase changes due to disconnects. 	**	A typical harddisk may disconnect before ANY block. 	**	If we want to avoid unexpected phase changes at all 	**	we have to use a break point every 512 bytes. 	**	Of course the number of scatter/gather blocks is 	**	limited. 	*/
-argument|free = MAX_SCATTER -
+name|free
+operator|=
+name|MAX_SCATTER
+operator|-
 literal|1
-argument|;  	if (vaddr& (NBPG-
+expr_stmt|;
+if|if
+condition|(
+name|vaddr
+operator|&
+operator|(
+name|NBPG
+operator|-
 literal|1
-argument|)) free -= datalen / NBPG;  	if (free>
+operator|)
+condition|)
+name|free
+operator|-=
+name|datalen
+operator|/
+name|NBPG
+expr_stmt|;
+if|if
+condition|(
+name|free
+operator|>
 literal|1
-argument|) 		while ((chunk * free>=
+condition|)
+while|while
+condition|(
+operator|(
+name|chunk
+operator|*
+name|free
+operator|>=
 literal|2
-argument|* datalen)&& (chunk>=
+operator|*
+name|datalen
+operator|)
+operator|&&
+operator|(
+name|chunk
+operator|>=
 literal|1024
-argument|)) 			chunk /=
+operator|)
+condition|)
+name|chunk
+operator|/=
 literal|2
-argument|;  	if(DEBUG_FLAGS& DEBUG_SCATTER) 		printf(
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_SCATTER
+condition|)
+name|printf
+argument_list|(
 literal|"ncr?:\tscattering virtual=0x%x size=%d chunk=%d.\n"
-argument|, 			(unsigned) vaddr, (unsigned) datalen, (unsigned) chunk);
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|vaddr
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|datalen
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|chunk
+argument_list|)
+expr_stmt|;
 comment|/* 	**   Build data descriptors. 	*/
-argument|while (datalen&& (segment< MAX_SCATTER)) {
+while|while
+condition|(
+name|datalen
+operator|&&
+operator|(
+name|segment
+operator|<
+name|MAX_SCATTER
+operator|)
+condition|)
+block|{
 comment|/* 		**	this segment is empty 		*/
-argument|segsize =
+name|segsize
+operator|=
 literal|0
-argument|; 		segaddr = paddr; 		pnext   = paddr;  		if (!csize) csize = chunk;  		while ((datalen)&& (paddr == pnext)&& (csize)) {
+expr_stmt|;
+name|segaddr
+operator|=
+name|paddr
+expr_stmt|;
+name|pnext
+operator|=
+name|paddr
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|csize
+condition|)
+name|csize
+operator|=
+name|chunk
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|datalen
+operator|)
+operator|&&
+operator|(
+name|paddr
+operator|==
+name|pnext
+operator|)
+operator|&&
+operator|(
+name|csize
+operator|)
+condition|)
+block|{
 comment|/* 			**	continue this segment 			*/
-argument|pnext = (paddr& (~(NBPG -
+name|pnext
+operator|=
+operator|(
+name|paddr
+operator|&
+operator|(
+operator|~
+operator|(
+name|NBPG
+operator|-
 literal|1
-argument|))) + NBPG;
+operator|)
+operator|)
+operator|)
+operator|+
+name|NBPG
+expr_stmt|;
 comment|/* 			**	Compute max size 			*/
-argument|size = pnext - paddr;
+name|size
+operator|=
+name|pnext
+operator|-
+name|paddr
+expr_stmt|;
 comment|/* page size */
-argument|if (size> datalen) size = datalen;
+if|if
+condition|(
+name|size
+operator|>
+name|datalen
+condition|)
+name|size
+operator|=
+name|datalen
+expr_stmt|;
 comment|/* data size */
-argument|if (size> csize  ) size = csize  ;
+if|if
+condition|(
+name|size
+operator|>
+name|csize
+condition|)
+name|size
+operator|=
+name|csize
+expr_stmt|;
 comment|/* chunksize */
-argument|segsize += size; 			vaddr   += size; 			csize   -= size; 			datalen -= size; 			paddr    = vtophys (vaddr); 		};  		if(DEBUG_FLAGS& DEBUG_SCATTER) 			printf (
+name|segsize
+operator|+=
+name|size
+expr_stmt|;
+name|vaddr
+operator|+=
+name|size
+expr_stmt|;
+name|csize
+operator|-=
+name|size
+expr_stmt|;
+name|datalen
+operator|-=
+name|size
+expr_stmt|;
+name|paddr
+operator|=
+name|vtophys
+argument_list|(
+name|vaddr
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_SCATTER
+condition|)
+name|printf
+argument_list|(
 literal|"\tseg #%d  addr=%x  size=%d  (rest=%d).\n"
-argument|, 			segment, 			(unsigned) segaddr, 			(unsigned) segsize, 			(unsigned) datalen);  		phys->data[segment].addr = segaddr; 		phys->data[segment].size = segsize; 		segment++; 	}  	if (datalen) { 		printf(
+argument_list|,
+name|segment
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|segaddr
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|segsize
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|datalen
+argument_list|)
+expr_stmt|;
+name|phys
+operator|->
+name|data
+index|[
+name|segment
+index|]
+operator|.
+name|addr
+operator|=
+name|segaddr
+expr_stmt|;
+name|phys
+operator|->
+name|data
+index|[
+name|segment
+index|]
+operator|.
+name|size
+operator|=
+name|segsize
+expr_stmt|;
+name|segment
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|datalen
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"ncr?: scatter/gather failed (residue=%d).\n"
-argument|, 			(unsigned) datalen); 		return (-
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|datalen
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	};  	return (segment); }
+operator|)
+return|;
+block|}
+empty_stmt|;
+return|return
+operator|(
+name|segment
+operator|)
+return|;
+block|}
 comment|/*========================================================== ** ** **	Test the pci bus snoop logic :-( ** **	Has to be called with interrupts disabled. ** ** **========================================================== */
 ifndef|#
 directive|ifndef
 name|NCR_IOMAPPED
-argument|static int ncr_regtest (struct ncb* np) { 	register volatile u_long data
-argument_list|,
-argument|*addr;
+specifier|static
+name|int
+name|ncr_regtest
+parameter_list|(
+name|struct
+name|ncb
+modifier|*
+name|np
+parameter_list|)
+block|{
+specifier|register
+specifier|volatile
+name|u_long
+name|data
+decl_stmt|,
+modifier|*
+name|addr
+decl_stmt|;
 comment|/* 	**	ncr registers may NOT be cached. 	**	write 0xffffffff to a read only register area, 	**	and try to read it back. 	*/
-argument|addr = (u_long*)&np->reg->nc_dstat; 	data =
+name|addr
+operator|=
+operator|(
+name|u_long
+operator|*
+operator|)
+operator|&
+name|np
+operator|->
+name|reg
+operator|->
+name|nc_dstat
+expr_stmt|;
+name|data
+operator|=
 literal|0xffffffff
-argument|; 	*addr= data; 	data = *addr;
+expr_stmt|;
+operator|*
+name|addr
+operator|=
+name|data
+expr_stmt|;
+name|data
+operator|=
+operator|*
+name|addr
+expr_stmt|;
 if|#
 directive|if
 literal|1
-argument|if (data ==
+if|if
+condition|(
+name|data
+operator|==
 literal|0xffffffff
-argument|) {
+condition|)
+block|{
 else|#
 directive|else
-argument|if ((data&
+if|if
+condition|(
+operator|(
+name|data
+operator|&
 literal|0xe2f0fffd
-argument|) !=
+operator|)
+operator|!=
 literal|0x02000080
-argument|) {
+condition|)
+block|{
 endif|#
 directive|endif
-argument|printf (
+name|printf
+argument_list|(
 literal|"CACHE TEST FAILED: reg dstat-sstat2 readback %x.\n"
-argument|, 			(unsigned) data); 		return (
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|0x10
-argument|); 	}; 	return (
+operator|)
+return|;
+block|}
+empty_stmt|;
+return|return
+operator|(
 literal|0
-argument|); }
+operator|)
+return|;
+block|}
 endif|#
 directive|endif
-argument|static int ncr_snooptest (struct ncb* np) { 	u_long	ncr_rd
-argument_list|,
-argument|ncr_wr
-argument_list|,
-argument|ncr_bk
-argument_list|,
-argument|host_rd
-argument_list|,
-argument|host_wr
-argument_list|,
-argument|pc
-argument_list|,
-argument|err=
+specifier|static
+name|int
+name|ncr_snooptest
+parameter_list|(
+name|struct
+name|ncb
+modifier|*
+name|np
+parameter_list|)
+block|{
+name|u_long
+name|ncr_rd
+decl_stmt|,
+name|ncr_wr
+decl_stmt|,
+name|ncr_bk
+decl_stmt|,
+name|host_rd
+decl_stmt|,
+name|host_wr
+decl_stmt|,
+name|pc
+decl_stmt|,
+name|err
+init|=
 literal|0
-argument|; 	int	i;
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NCR_IOMAPPED
-argument|err |= ncr_regtest (np); 	if (err) return (err);
+name|err
+operator||=
+name|ncr_regtest
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
 endif|#
 directive|endif
 comment|/* 	**	init 	*/
-argument|pc  = vtophys (&np->script->snooptest); 	host_wr =
+name|pc
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|snooptest
+argument_list|)
+expr_stmt|;
+name|host_wr
+operator|=
 literal|1
-argument|; 	ncr_wr  =
+expr_stmt|;
+name|ncr_wr
+operator|=
 literal|2
-argument|;
+expr_stmt|;
 comment|/* 	**	Set memory and register. 	*/
-argument|ncr_cache = host_wr; 	OUTL (nc_temp, ncr_wr);
+name|ncr_cache
+operator|=
+name|host_wr
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_temp
+argument_list|,
+name|ncr_wr
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Start script (exchange values) 	*/
-argument|OUTL (nc_dsp, pc);
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|pc
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Wait 'til done (with timeout) 	*/
-argument|for (i=
+for|for
+control|(
+name|i
+operator|=
 literal|0
-argument|; i<NCR_SNOOP_TIMEOUT; i++) 		if (INB(nc_istat)& (INTF|SIP|DIP)) 			break;
+init|;
+name|i
+operator|<
+name|NCR_SNOOP_TIMEOUT
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|INB
+argument_list|(
+name|nc_istat
+argument_list|)
+operator|&
+operator|(
+name|INTF
+operator||
+name|SIP
+operator||
+name|DIP
+operator|)
+condition|)
+break|break;
 comment|/* 	**	Save termination position. 	*/
-argument|pc = INL (nc_dsp);
+name|pc
+operator|=
+name|INL
+argument_list|(
+name|nc_dsp
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Read memory and register. 	*/
-argument|host_rd = ncr_cache; 	ncr_rd  = INL (nc_scratcha); 	ncr_bk  = INL (nc_temp);
+name|host_rd
+operator|=
+name|ncr_cache
+expr_stmt|;
+name|ncr_rd
+operator|=
+name|INL
+argument_list|(
+name|nc_scratcha
+argument_list|)
+expr_stmt|;
+name|ncr_bk
+operator|=
+name|INL
+argument_list|(
+name|nc_temp
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Reset ncr chip 	*/
-argument|OUTB (nc_istat,  SRST); 	OUTB (nc_istat,
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SRST
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
 literal|0
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* 	**	check for timeout 	*/
-argument|if (i>=NCR_SNOOP_TIMEOUT) { 		printf (
+if|if
+condition|(
+name|i
+operator|>=
+name|NCR_SNOOP_TIMEOUT
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"CACHE TEST FAILED: timeout.\n"
-argument|); 		return (
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|0x20
-argument|); 	};
+operator|)
+return|;
+block|}
+empty_stmt|;
 comment|/* 	**	Check termination position. 	*/
-argument|if (pc != vtophys (&np->script->snoopend)+
+if|if
+condition|(
+name|pc
+operator|!=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|snoopend
+argument_list|)
+operator|+
 literal|8
-argument|) { 		printf (
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"CACHE TEST FAILED: script execution failed.\n"
-argument|); 		return (
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|0x40
-argument|); 	};
+operator|)
+return|;
+block|}
+empty_stmt|;
 comment|/* 	**	Show results. 	*/
-argument|if (host_wr != ncr_rd) { 		printf (
+if|if
+condition|(
+name|host_wr
+operator|!=
+name|ncr_rd
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"CACHE TEST FAILED: host wrote %d, ncr read %d.\n"
-argument|, 			(int) host_wr, (int) ncr_rd); 		err |=
+argument_list|,
+operator|(
+name|int
+operator|)
+name|host_wr
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ncr_rd
+argument_list|)
+expr_stmt|;
+name|err
+operator||=
 literal|1
-argument|; 	}; 	if (host_rd != ncr_wr) { 		printf (
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|host_rd
+operator|!=
+name|ncr_wr
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"CACHE TEST FAILED: ncr wrote %d, host read %d.\n"
-argument|, 			(int) ncr_wr, (int) host_rd); 		err |=
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ncr_wr
+argument_list|,
+operator|(
+name|int
+operator|)
+name|host_rd
+argument_list|)
+expr_stmt|;
+name|err
+operator||=
 literal|2
-argument|; 	}; 	if (ncr_bk != ncr_wr) { 		printf (
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|ncr_bk
+operator|!=
+name|ncr_wr
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"CACHE TEST FAILED: ncr wrote %d, read back %d.\n"
-argument|, 			(int) ncr_wr, (int) ncr_bk); 		err |=
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ncr_wr
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ncr_bk
+argument_list|)
+expr_stmt|;
+name|err
+operator||=
 literal|4
-argument|; 	}; 	return (err); }
+expr_stmt|;
+block|}
+empty_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
 comment|/*========================================================== ** ** **	Profiling the drivers and targets performance. ** ** **========================================================== */
 comment|/* **	Compute the difference in milliseconds. **/
-argument|static	int ncr_delta (struct timeval * from, struct timeval * to) { 	if (!from->tv_sec) return (-
+specifier|static
+name|int
+name|ncr_delta
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+name|from
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+name|to
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|from
+operator|->
+name|tv_sec
+condition|)
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	if (!to  ->tv_sec) return (-
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|to
+operator|->
+name|tv_sec
+condition|)
+return|return
+operator|(
+operator|-
 literal|2
-argument|); 	return ( (to->tv_sec  - from->tv_sec  -
+operator|)
+return|;
+return|return
+operator|(
+operator|(
+name|to
+operator|->
+name|tv_sec
+operator|-
+name|from
+operator|->
+name|tv_sec
+operator|-
 literal|2
-argument|)*
+operator|)
+operator|*
 literal|1000
-argument|+ 		+(to->tv_usec - from->tv_usec +
+operator|+
+operator|+
+operator|(
+name|to
+operator|->
+name|tv_usec
+operator|-
+name|from
+operator|->
+name|tv_usec
+operator|+
 literal|2000000
-argument|)/
+operator|)
+operator|/
 literal|1000
-argument|); }
+operator|)
+return|;
+block|}
 define|#
 directive|define
 name|PROFILE
 value|cp->phys.header.stamp
-argument|static	void ncb_profile (ncb_p np, ccb_p cp) { 	int co
+specifier|static
+name|void
+name|ncb_profile
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|,
+name|ccb_p
+name|cp
+parameter_list|)
+block|{
+name|int
+name|co
+decl_stmt|,
+name|da
+decl_stmt|,
+name|st
+decl_stmt|,
+name|en
+decl_stmt|,
+name|di
+decl_stmt|,
+name|se
+decl_stmt|,
+name|post
+decl_stmt|,
+name|work
+decl_stmt|,
+name|disc
+decl_stmt|;
+name|u_long
+name|diff
+decl_stmt|;
+name|PROFILE
+operator|.
+name|end
+operator|=
+name|time
+expr_stmt|;
+name|st
+operator|=
+name|ncr_delta
+argument_list|(
+operator|&
+name|PROFILE
+operator|.
+name|start
 argument_list|,
-argument|da
-argument_list|,
-argument|st
-argument_list|,
-argument|en
-argument_list|,
-argument|di
-argument_list|,
-argument|se
-argument_list|,
-argument|post
-argument_list|,
-argument|work
-argument_list|,
-argument|disc; 	u_long diff;  	PROFILE.end = time;  	st = ncr_delta (&PROFILE.start,&PROFILE.status); 	if (st<
+operator|&
+name|PROFILE
+operator|.
+name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|st
+operator|<
 literal|0
-argument|) return;
+condition|)
+return|return;
 comment|/* status  not reached  */
-argument|da = ncr_delta (&PROFILE.start,&PROFILE.data); 	if (da<
+name|da
+operator|=
+name|ncr_delta
+argument_list|(
+operator|&
+name|PROFILE
+operator|.
+name|start
+argument_list|,
+operator|&
+name|PROFILE
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|da
+operator|<
 literal|0
-argument|) return;
+condition|)
+return|return;
 comment|/* No data transfer phase */
-argument|co = ncr_delta (&PROFILE.start,&PROFILE.command); 	if (co<
+name|co
+operator|=
+name|ncr_delta
+argument_list|(
+operator|&
+name|PROFILE
+operator|.
+name|start
+argument_list|,
+operator|&
+name|PROFILE
+operator|.
+name|command
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|co
+operator|<
 literal|0
-argument|) return;
+condition|)
+return|return;
 comment|/* command not executed */
-argument|en = ncr_delta (&PROFILE.start,&PROFILE.end)
+name|en
+operator|=
+name|ncr_delta
+argument_list|(
+operator|&
+name|PROFILE
+operator|.
+name|start
 argument_list|,
-argument|di = ncr_delta (&PROFILE.start,&PROFILE.disconnect)
+operator|&
+name|PROFILE
+operator|.
+name|end
+argument_list|)
+operator|,
+name|di
+operator|=
+name|ncr_delta
+argument_list|(
+operator|&
+name|PROFILE
+operator|.
+name|start
 argument_list|,
-argument|se = ncr_delta (&PROFILE.start,&PROFILE.select); 	post = en - st;
+operator|&
+name|PROFILE
+operator|.
+name|disconnect
+argument_list|)
+operator|,
+name|se
+operator|=
+name|ncr_delta
+argument_list|(
+operator|&
+name|PROFILE
+operator|.
+name|start
+argument_list|,
+operator|&
+name|PROFILE
+operator|.
+name|select
+argument_list|)
+expr_stmt|;
+name|post
+operator|=
+name|en
+operator|-
+name|st
+expr_stmt|;
 comment|/* 	**	@PROFILE@  Disconnect time invalid if multiple disconnects 	*/
-argument|if (di>=
+if|if
+condition|(
+name|di
+operator|>=
 literal|0
-argument|) disc = se-di; else  disc =
+condition|)
+name|disc
+operator|=
+name|se
+operator|-
+name|di
+expr_stmt|;
+else|else
+name|disc
+operator|=
 literal|0
-argument|;  	work = (st - co) - disc;  	diff = (np->disc_phys - np->disc_ref)&
+expr_stmt|;
+name|work
+operator|=
+operator|(
+name|st
+operator|-
+name|co
+operator|)
+operator|-
+name|disc
+expr_stmt|;
+name|diff
+operator|=
+operator|(
+name|np
+operator|->
+name|disc_phys
+operator|-
+name|np
+operator|->
+name|disc_ref
+operator|)
+operator|&
 literal|0xff
-argument|; 	np->disc_ref += diff;  	np->profile.num_trans	+=
+expr_stmt|;
+name|np
+operator|->
+name|disc_ref
+operator|+=
+name|diff
+expr_stmt|;
+name|np
+operator|->
+name|profile
+operator|.
+name|num_trans
+operator|+=
 literal|1
-argument|; 	if (cp->xfer) 	np->profile.num_bytes	+= cp->xfer->datalen; 	np->profile.num_disc	+= diff; 	np->profile.ms_setup	+= co; 	np->profile.ms_data	+= work; 	np->profile.ms_disc	+= disc; 	np->profile.ms_post	+= post; }
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|xfer
+condition|)
+name|np
+operator|->
+name|profile
+operator|.
+name|num_bytes
+operator|+=
+name|cp
+operator|->
+name|xfer
+operator|->
+name|datalen
+expr_stmt|;
+name|np
+operator|->
+name|profile
+operator|.
+name|num_disc
+operator|+=
+name|diff
+expr_stmt|;
+name|np
+operator|->
+name|profile
+operator|.
+name|ms_setup
+operator|+=
+name|co
+expr_stmt|;
+name|np
+operator|->
+name|profile
+operator|.
+name|ms_data
+operator|+=
+name|work
+expr_stmt|;
+name|np
+operator|->
+name|profile
+operator|.
+name|ms_disc
+operator|+=
+name|disc
+expr_stmt|;
+name|np
+operator|->
+name|profile
+operator|.
+name|ms_post
+operator|+=
+name|post
+expr_stmt|;
+block|}
 undef|#
 directive|undef
 name|PROFILE
@@ -11235,63 +20366,235 @@ comment|/*========================================================== ** ** **	De
 ifndef|#
 directive|ifndef
 name|NEW_SCSICONF
-argument|struct table_entry { 	char *	manufacturer; 	char *	model; 	char *	version; 	u_long	info; };  static struct table_entry device_tab[] = { 	{
+struct|struct
+name|table_entry
+block|{
+name|char
+modifier|*
+name|manufacturer
+decl_stmt|;
+name|char
+modifier|*
+name|model
+decl_stmt|;
+name|char
+modifier|*
+name|version
+decl_stmt|;
+name|u_long
+name|info
+decl_stmt|;
+block|}
+struct|;
+specifier|static
+name|struct
+name|table_entry
+name|device_tab
+index|[]
+init|=
+block|{
+block|{
 literal|"SONY"
-argument_list|,
+block|,
 literal|"SDT-5000"
-argument_list|,
+block|,
 literal|"3.17"
-argument_list|,
-argument|QUIRK_NOMSG}
-argument_list|,
-argument|{
+block|,
+name|QUIRK_NOMSG
+block|}
+block|,
+block|{
 literal|"WangDAT"
-argument_list|,
+block|,
 literal|"Model 2600"
-argument_list|,
+block|,
 literal|"01.7"
-argument_list|,
-argument|QUIRK_NOMSG}
-argument_list|,
-argument|{
+block|,
+name|QUIRK_NOMSG
+block|}
+block|,
+block|{
 literal|"WangDAT"
-argument_list|,
+block|,
 literal|"Model 3200"
-argument_list|,
+block|,
 literal|"02.2"
-argument_list|,
-argument|QUIRK_NOMSG}
-argument_list|,
-argument|{
+block|,
+name|QUIRK_NOMSG
+block|}
+block|,
+block|{
 literal|"WangDAT"
-argument_list|,
+block|,
 literal|"Model 1300"
-argument_list|,
+block|,
 literal|"02.4"
-argument_list|,
-argument|QUIRK_NOMSG}
-argument_list|,
-argument|{
+block|,
+name|QUIRK_NOMSG
+block|}
+block|,
+block|{
 literal|""
-argument_list|,
+block|,
 literal|""
-argument_list|,
+block|,
 literal|""
-argument_list|,
+block|,
 literal|0
-argument|}
+block|}
 comment|/* catch all: must be last entry. */
-argument|};  static u_long ncr_lookup(char * id) { 	struct table_entry * p = device_tab; 	char *d
-argument_list|,
-argument|*r
-argument_list|,
-argument|c;  	for (;;p++) {  		d = id+
+block|}
+decl_stmt|;
+specifier|static
+name|u_long
+name|ncr_lookup
+parameter_list|(
+name|char
+modifier|*
+name|id
+parameter_list|)
+block|{
+name|struct
+name|table_entry
+modifier|*
+name|p
+init|=
+name|device_tab
+decl_stmt|;
+name|char
+modifier|*
+name|d
+decl_stmt|,
+modifier|*
+name|r
+decl_stmt|,
+name|c
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+name|p
+operator|++
+control|)
+block|{
+name|d
+operator|=
+name|id
+operator|+
 literal|8
-argument|; 		r = p->manufacturer; 		while ((c=*r++)) if (c!=*d++) break; 		if (c) continue;  		d = id+
+expr_stmt|;
+name|r
+operator|=
+name|p
+operator|->
+name|manufacturer
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+operator|*
+name|r
+operator|++
+operator|)
+condition|)
+if|if
+condition|(
+name|c
+operator|!=
+operator|*
+name|d
+operator|++
+condition|)
+break|break;
+if|if
+condition|(
+name|c
+condition|)
+continue|continue;
+name|d
+operator|=
+name|id
+operator|+
 literal|16
-argument|; 		r = p->model; 		while ((c=*r++)) if (c!=*d++) break; 		if (c) continue;  		d = id+
+expr_stmt|;
+name|r
+operator|=
+name|p
+operator|->
+name|model
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+operator|*
+name|r
+operator|++
+operator|)
+condition|)
+if|if
+condition|(
+name|c
+operator|!=
+operator|*
+name|d
+operator|++
+condition|)
+break|break;
+if|if
+condition|(
+name|c
+condition|)
+continue|continue;
+name|d
+operator|=
+name|id
+operator|+
 literal|32
-argument|; 		r = p->version; 		while ((c=*r++)) if (c!=*d++) break; 		if (c) continue;  		return (p->info); 	} }
+expr_stmt|;
+name|r
+operator|=
+name|p
+operator|->
+name|version
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+operator|*
+name|r
+operator|++
+operator|)
+condition|)
+if|if
+condition|(
+name|c
+operator|!=
+operator|*
+name|d
+operator|++
+condition|)
+break|break;
+if|if
+condition|(
+name|c
+condition|)
+continue|continue;
+return|return
+operator|(
+name|p
+operator|->
+name|info
+operator|)
+return|;
+block|}
+block|}
 endif|#
 directive|endif
 comment|/*========================================================== ** **	Determine the ncr's clock frequency. **	This is important for the negotiation **	of the synchronous transfer rate. ** **========================================================== ** **	Note: we have to return the correct value. **	THERE IS NO SAVE DEFAULT VALUE. ** **	We assume that all NCR based boards are delivered **	with a 40Mhz clock. Because we have to divide **	by an integer value greater than 3, only clock **	frequencies of 40Mhz (/4) or 50MHz (/5) permit **	the FAST-SCSI rate of 10MHz. ** **---------------------------------------------------------- */
@@ -11305,51 +20608,182 @@ value|40
 endif|#
 directive|endif
 comment|/* NCR_CLOCK */
-argument|static void ncr_getclock (ncb_p np) { 	u_char	tbl[
+specifier|static
+name|void
+name|ncr_getclock
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+block|{
+name|u_char
+name|tbl
+index|[
 literal|5
-argument|] = {
+index|]
+init|=
+block|{
 literal|6
-argument_list|,
+block|,
 literal|2
-argument_list|,
+block|,
 literal|3
-argument_list|,
+block|,
 literal|4
-argument_list|,
+block|,
 literal|6
-argument|}; 	u_char	f; 	u_char	ns_clock = (
+block|}
+decl_stmt|;
+name|u_char
+name|f
+decl_stmt|;
+name|u_char
+name|ns_clock
+init|=
+operator|(
 literal|1000
-argument|/NCR_CLOCK);
+operator|/
+name|NCR_CLOCK
+operator|)
+decl_stmt|;
 comment|/* 	**	Compute the best value for scntl3. 	*/
-argument|f = (
+name|f
+operator|=
+operator|(
 literal|2
-argument|* MIN_SYNC_PD -
+operator|*
+name|MIN_SYNC_PD
+operator|-
 literal|1
-argument|) / ns_clock; 	if (!f ) f=
+operator|)
+operator|/
+name|ns_clock
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|f
+condition|)
+name|f
+operator|=
 literal|1
-argument|; 	if (f>
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|>
 literal|4
-argument|) f=
+condition|)
+name|f
+operator|=
 literal|4
-argument|; 	np -> ns_sync = (ns_clock * tbl[f]) /
+expr_stmt|;
+name|np
+operator|->
+name|ns_sync
+operator|=
+operator|(
+name|ns_clock
+operator|*
+name|tbl
+index|[
+name|f
+index|]
+operator|)
+operator|/
 literal|2
-argument|; 	np -> rv_scntl3 = f<<
+expr_stmt|;
+name|np
+operator|->
+name|rv_scntl3
+operator|=
+name|f
+operator|<<
 literal|4
-argument|;  	f = (
+expr_stmt|;
+name|f
+operator|=
+operator|(
 literal|2
-argument|* MIN_ASYNC_PD -
+operator|*
+name|MIN_ASYNC_PD
+operator|-
 literal|1
-argument|) / ns_clock; 	if (!f ) f=
+operator|)
+operator|/
+name|ns_clock
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|f
+condition|)
+name|f
+operator|=
 literal|1
-argument|; 	if (f>
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|>
 literal|4
-argument|) f=
+condition|)
+name|f
+operator|=
 literal|4
-argument|; 	np -> ns_async = (ns_clock * tbl[f]) /
+expr_stmt|;
+name|np
+operator|->
+name|ns_async
+operator|=
+operator|(
+name|ns_clock
+operator|*
+name|tbl
+index|[
+name|f
+index|]
+operator|)
+operator|/
 literal|2
-argument|; 	np -> rv_scntl3 |= f; 	if (DEBUG_FLAGS& DEBUG_TIMING) 		printf (
+expr_stmt|;
+name|np
+operator|->
+name|rv_scntl3
+operator||=
+name|f
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG_FLAGS
+operator|&
+name|DEBUG_TIMING
+condition|)
+name|printf
+argument_list|(
 literal|"%s: sclk=%d async=%d sync=%d (ns) scntl3=0x%x\n"
-argument|, 		ncr_name (np), ns_clock, np->ns_async, np->ns_sync, np->rv_scntl3); }
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|,
+name|ns_clock
+argument_list|,
+name|np
+operator|->
+name|ns_async
+argument_list|,
+name|np
+operator|->
+name|ns_sync
+argument_list|,
+name|np
+operator|->
+name|rv_scntl3
+argument_list|)
+expr_stmt|;
+block|}
 end_block
 
 begin_comment
