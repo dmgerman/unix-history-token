@@ -2535,14 +2535,18 @@ directive|ifdef
 name|APIC_IO
 if|if
 condition|(
+operator|!
+name|strcmp
+argument_list|(
 name|pnp_eisaformat
 argument_list|(
 name|pd
 operator|->
 name|devid
 argument_list|)
-operator|==
+argument_list|,
 literal|"PNP0000"
+argument_list|)
 condition|)
 comment|/* ISA PIC */
 continue|continue;
@@ -2550,14 +2554,18 @@ else|#
 directive|else
 if|if
 condition|(
+operator|!
+name|strcmp
+argument_list|(
 name|pnp_eisaformat
 argument_list|(
 name|pd
 operator|->
 name|devid
 argument_list|)
-operator|==
+argument_list|,
 literal|"PNP0003"
+argument_list|)
 condition|)
 comment|/* APIC */
 continue|continue;
