@@ -67,6 +67,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_decl_stmt
 specifier|volatile
 name|u_int

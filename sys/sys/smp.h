@@ -21,12 +21,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -135,6 +135,12 @@ directive|include
 file|<machine/prom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_comment
 comment|/* Set to 1 once we're ready to let the APs out of the pen. */
 end_comment
