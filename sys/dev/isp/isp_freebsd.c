@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.c,v 1.19 1999/05/12 19:00:16 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.c,v 1.20 1999/07/02 23:12:58 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -2684,6 +2684,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP2100_SCCLUN
+if|#
+directive|if
+literal|0
+comment|/* Too much breakage as yet... */
+block|cpi->max_lun = (1<< 16) - 1;
+else|#
+directive|else
 name|cpi
 operator|->
 name|max_lun
@@ -2691,11 +2698,13 @@ operator|=
 operator|(
 literal|1
 operator|<<
-literal|16
+literal|4
 operator|)
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 name|cpi
