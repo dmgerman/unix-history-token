@@ -5217,6 +5217,9 @@ name|private
 operator|=
 name|d
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 name|diskPartition
 argument_list|(
 name|devs
@@ -5225,6 +5228,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|record_label_chunks
