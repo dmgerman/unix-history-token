@@ -103,6 +103,12 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
+begin_decl_stmt
+name|long
+name|physmem
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * System initialization  */
 end_comment
