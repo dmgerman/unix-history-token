@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.41 1999/07/06 19:22:45 des Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.42 1999/08/18 06:11:58 mdodd Exp $  */
 end_comment
 
 begin_comment
@@ -82,7 +82,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
 end_include
 
 begin_if
@@ -3107,27 +3125,6 @@ name|caddr_t
 name|data
 decl_stmt|;
 block|{
-name|struct
-name|el_softc
-modifier|*
-name|sc
-init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|struct
-name|ifreq
-modifier|*
-name|ifr
-init|=
-operator|(
-expr|struct
-name|ifreq
-operator|*
-operator|)
-name|data
-decl_stmt|;
 name|int
 name|s
 decl_stmt|,

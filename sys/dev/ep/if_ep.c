@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.81 1999/07/25 01:20:36 hosokawa Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.82 1999/08/18 06:11:58 mdodd Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -126,7 +126,25 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
 end_include
 
 begin_if
@@ -5493,18 +5511,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|struct
-name|ifreq
-modifier|*
-name|ifr
-init|=
-operator|(
-expr|struct
-name|ifreq
-operator|*
-operator|)
-name|data
-decl_stmt|;
 name|int
 name|s
 decl_stmt|,
@@ -5537,7 +5543,7 @@ name|ether_ioctl
 argument_list|(
 name|ifp
 argument_list|,
-name|command
+name|cmd
 argument_list|,
 name|data
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.22 1999/07/06 19:22:54 des Exp $ */
+comment|/* $Id: if_wl.c,v 1.23 1999/08/18 06:11:59 mdodd Exp $ */
 end_comment
 
 begin_comment
@@ -110,6 +110,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -5017,7 +5023,7 @@ name|ether_ioctl
 argument_list|(
 name|ifp
 argument_list|,
-name|command
+name|cmd
 argument_list|,
 name|data
 argument_list|)
