@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	8.5 (Berkeley) %G%"
+literal|"@(#)opendir.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -685,12 +685,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|DT_ISWHT
-argument_list|(
 name|dp
 operator|->
 name|d_type
-argument_list|)
+operator|==
+name|DT_WHT
 operator|&&
 operator|(
 name|flags

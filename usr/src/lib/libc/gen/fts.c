@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	8.5 (Berkeley) %G%"
+literal|"@(#)fts.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2886,34 +2886,20 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FTS_WHITEOUT
-switch|switch
+if|if
 condition|(
 name|dp
 operator|->
 name|d_type
-condition|)
-block|{
-case|case
+operator|==
 name|DT_WHT
-case|:
+condition|)
 name|p
 operator|->
 name|fts_flags
 operator||=
 name|FTS_ISW
 expr_stmt|;
-break|break;
-case|case
-name|DT_WHTD
-case|:
-name|p
-operator|->
-name|fts_flags
-operator||=
-name|FTS_ISWD
-expr_stmt|;
-break|break;
-block|}
 endif|#
 directive|endif
 if|if
@@ -3364,11 +3350,7 @@ name|p
 operator|->
 name|fts_flags
 operator|&
-operator|(
 name|FTS_ISW
-operator||
-name|FTS_ISWD
-operator|)
 condition|)
 block|{
 if|if
