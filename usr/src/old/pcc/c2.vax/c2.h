@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*static	char sccsid[] = "@(#)c2.h 4.4 %G%";*/
+comment|/*static	char sccsid[] = "@(#)c2.h 4.5 %G%";*/
 end_comment
 
 begin_comment
@@ -547,6 +547,10 @@ name|JBSS
 value|19
 end_define
 
+begin_comment
+comment|/*  *	When the new opcodes were added, the relative  *	ordering of the first 3 (those that are not float)  *	had to be retained, so that other parts of the program  *	were not broken.  *  *	In addition, the distance between OP3 and OP2 must be preserved.  *	The order of definitions above OP2 must not be changed.  *  *	Note that these definitions DO NOT correspond to  *	those definitions used in as, adb and sdb.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -571,50 +575,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|FLOAT
+name|FFLOAT
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOUBLE
+name|DFLOAT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|QUAD
+name|GFLOAT
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|OP2
+name|HFLOAT
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|OP3
+name|QUAD
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPB
+name|OCTA
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPX
+name|OP2
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP3
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPB
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPX
+value|13
 end_define
 
 begin_define

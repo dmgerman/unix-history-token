@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.7 %G%"
+literal|"@(#)c21.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,25 +74,51 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|bitsize
-index|[
-literal|4
-index|]
+index|[]
 init|=
 block|{
+comment|/* index by type codes */
 literal|0
 block|,
+comment|/* not allocated */
 literal|8
 block|,
+comment|/* BYTE */
 literal|16
 block|,
+comment|/* WORD */
 literal|32
+block|,
+comment|/* LONG */
+literal|32
+block|,
+comment|/* FFLOAT / 	64,		/* DFLOAT */
+literal|64
+block|,
+comment|/* GFLOAT */
+literal|128
+block|,
+comment|/* HFLOAT */
+literal|64
+block|,
+comment|/* QUAD */
+literal|128
+block|,
+comment|/* OCTA */
+literal|0
+block|,
+comment|/* OP2 */
+literal|0
+block|,
+comment|/* OP3 */
+literal|0
+block|,
+comment|/* OPB */
+literal|0
+comment|/* OPX */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* index by type codes */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -8989,28 +9015,21 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* if register destination, that reg is a goner */
-if|if
+switch|switch
 condition|(
-name|DOUBLE
-operator|==
-operator|(
 name|type
 operator|&
 literal|0xF
-operator|)
-operator|||
-name|DOUBLE
-operator|==
-operator|(
-operator|(
-name|type
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0xF
-operator|)
 condition|)
+block|{
+case|case
+name|DFLOAT
+case|:
+comment|/* clobber two at once */
+comment|/*FALLTHROUGH*/
+case|case
+name|GFLOAT
+case|:
 operator|*
 operator|(
 name|short
@@ -9027,7 +9046,152 @@ operator|)
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+case|case
+name|HFLOAT
+case|:
+comment|/* clobber four at once */
+operator|*
+operator|(
+name|short
+operator|*
+operator|)
+operator|(
+name|regs
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+operator|(
+name|short
+operator|*
+operator|)
+operator|(
+name|regs
+index|[
+name|i
+operator|+
+literal|2
+index|]
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+operator|(
+name|short
+operator|*
+operator|)
+operator|(
+name|regs
+index|[
+name|i
+operator|+
+literal|3
+index|]
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+switch|switch
+condition|(
+operator|(
+name|type
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0xF
+condition|)
+block|{
+case|case
+name|DFLOAT
+case|:
 comment|/* clobber two at once */
+comment|/*FALLTHROUGH*/
+case|case
+name|GFLOAT
+case|:
+operator|*
+operator|(
+name|short
+operator|*
+operator|)
+operator|(
+name|regs
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|HFLOAT
+case|:
+comment|/* clobber four at once */
+operator|*
+operator|(
+name|short
+operator|*
+operator|)
+operator|(
+name|regs
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+operator|(
+name|short
+operator|*
+operator|)
+operator|(
+name|regs
+index|[
+name|i
+operator|+
+literal|2
+index|]
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+operator|(
+name|short
+operator|*
+operator|)
+operator|(
+name|regs
+index|[
+name|i
+operator|+
+literal|3
+index|]
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		if (DFLOAT==(type&0xF) || DFLOAT==((type>>4)&0xF)) 			*(short *)(regs[i+1]) = 0; 		*/
 block|}
 for|for
 control|(
@@ -9369,7 +9533,7 @@ if|if
 condition|(
 name|want
 operator|>=
-name|FLOAT
+name|FFLOAT
 condition|)
 return|return
 operator|(
@@ -9382,7 +9546,7 @@ operator|==
 name|want
 operator|)
 return|;
-comment|/* FLOAT, DOUBLE not compat: rounding */
+comment|/* FLOAT, DFLOAT not compat: rounding */
 return|return
 operator|(
 name|hsrc
@@ -9395,7 +9559,7 @@ name|want
 operator|&&
 name|hdst
 operator|<
-name|FLOAT
+name|FFLOAT
 operator|)
 return|;
 block|}
