@@ -1285,7 +1285,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|vm_map_madvise
 name|__P
 argument_list|(

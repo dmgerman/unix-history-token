@@ -363,7 +363,7 @@ comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
 begin_comment
-comment|/*   * Memory Map (mmap) system call.  Note that the file offset  * and address are allowed to be NOT page aligned, though if  * the MAP_FIXED flag it set, both must have the same remainder  * modulo the PAGE_SIZE (POSIX 1003.1b).  If the address is not  * page-aligned, the actual mapping starts at trunc_page(addr)  * and the return value is adjusted up by the page offset.  */
+comment|/*   * Memory Map (mmap) system call.  Note that the file offset  * and address are allowed to be NOT page aligned, though if  * the MAP_FIXED flag it set, both must have the same remainder  * modulo the PAGE_SIZE (POSIX 1003.1b).  If the address is not  * page-aligned, the actual mapping starts at trunc_page(addr)  * and the return value is adjusted up by the page offset.  *  * Generally speaking, only character devices which are themselves  * memory-based, such as a video framebuffer, can be mmap'd.  Otherwise  * there would be no cache coherency between a descriptor and a VM mapping  * both to the same character device.  *  * Block devices can be mmap'd no matter what they represent.  Cache coherency  * is maintained as long as you do not write directly to the underlying  * character device.  */
 end_comment
 
 begin_ifndef
@@ -2377,6 +2377,26 @@ name|start
 decl_stmt|,
 name|end
 decl_stmt|;
+comment|/* 	 * Check for illegal behavior 	 */
+if|if
+condition|(
+name|uap
+operator|->
+name|behav
+operator|<
+literal|0
+operator|||
+name|uap
+operator|->
+name|behav
+operator|>
+name|MADV_FREE
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 	 * Check for illegal addresses.  Watch out for address wrap... Note 	 * that VM_*_ADDRESS are not constants due to casts (argh). 	 */
 if|if
 condition|(
@@ -2482,6 +2502,8 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|vm_map_madvise
 argument_list|(
 operator|&
@@ -2499,7 +2521,12 @@ name|uap
 operator|->
 name|behav
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 return|return
 operator|(
 literal|0

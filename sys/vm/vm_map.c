@@ -3460,7 +3460,7 @@ comment|/*  *	vm_map_madvise:  *  * 	This routine traverses a processes map hand
 end_comment
 
 begin_function
-name|void
+name|int
 name|vm_map_madvise
 parameter_list|(
 name|map
@@ -3490,40 +3490,57 @@ name|entry
 decl_stmt|;
 name|int
 name|modify_map
+init|=
+literal|0
 decl_stmt|;
-name|modify_map
-operator|=
-operator|(
-name|behav
-operator|==
-name|MADV_NORMAL
-operator|||
-name|behav
-operator|==
-name|MADV_SEQUENTIAL
-operator|||
-name|behav
-operator|==
-name|MADV_RANDOM
-operator|)
-expr_stmt|;
-if|if
+comment|/* 	 * Some madvise calls directly modify the vm_map_entry, in which case 	 * we need to use an exclusive lock on the map and we need to perform  	 * various clipping operations.  Otherwise we only need a read-lock 	 * on the map. 	 */
+switch|switch
 condition|(
-name|modify_map
+name|behav
 condition|)
 block|{
+case|case
+name|MADV_NORMAL
+case|:
+case|case
+name|MADV_SEQUENTIAL
+case|:
+case|case
+name|MADV_RANDOM
+case|:
+name|modify_map
+operator|=
+literal|1
+expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+break|break;
+case|case
+name|MADV_WILLNEED
+case|:
+case|case
+name|MADV_DONTNEED
+case|:
+case|case
+name|MADV_FREE
+case|:
 name|vm_map_lock_read
 argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+return|return
+operator|(
+name|KERN_INVALID_ARGUMENT
+operator|)
+return|;
+block|}
+comment|/* 	 * Locate starting entry and clip if necessary. 	 */
 name|VM_MAP_RANGE_CHECK
 argument_list|(
 name|map
@@ -3561,12 +3578,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|entry
 operator|=
 name|entry
 operator|->
 name|next
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|modify_map
@@ -3678,28 +3697,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|behav
-operator|==
-name|MADV_FREE
-operator|||
-name|behav
-operator|==
-name|MADV_DONTNEED
-operator|||
-name|behav
-operator|==
-name|MADV_WILLNEED
-condition|)
-block|{
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
 name|int
 name|count
 decl_stmt|;
-comment|/* 			 * madvise behaviors that are implemented in the underlying 			 * vm_object. 			 * 			 * Since we don't clip the vm_map_entry, we have to clip 			 * the vm_object pindex and count. 			 */
+comment|/* 		 * madvise behaviors that are implemented in the underlying 		 * vm_object. 		 * 		 * Since we don't clip the vm_map_entry, we have to clip 		 * the vm_object pindex and count. 		 */
 for|for
 control|(
 name|current
@@ -3840,6 +3844,7 @@ name|behav
 operator|==
 name|MADV_WILLNEED
 condition|)
+block|{
 name|pmap_object_init_pt
 argument_list|(
 name|map
@@ -3875,6 +3880,11 @@ name|map
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -9767,6 +9777,7 @@ operator|->
 name|shadow_count
 operator|--
 expr_stmt|;
+comment|/* XXX bump generation? */
 name|vm_object_deallocate
 argument_list|(
 name|oldobject
@@ -9790,6 +9801,7 @@ operator|->
 name|shadow_count
 operator|++
 expr_stmt|;
+comment|/* XXX bump generation? */
 name|first_object
 operator|->
 name|backing_object
