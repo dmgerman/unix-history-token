@@ -325,11 +325,6 @@ init|=
 literal|0x2800000
 block|,
 comment|/* start soft interrupt thread */
-name|SI_SUB_CLOCKS
-init|=
-literal|0x3000000
-block|,
-comment|/* real time and stat clocks*/
 name|SI_SUB_DRIVERS
 init|=
 literal|0x3100000
@@ -345,6 +340,11 @@ init|=
 literal|0x4000000
 block|,
 comment|/* virtual file system*/
+name|SI_SUB_CLOCKS
+init|=
+literal|0x4800000
+block|,
+comment|/* real time and stat clocks*/
 name|SI_SUB_CLIST
 init|=
 literal|0x5800000
