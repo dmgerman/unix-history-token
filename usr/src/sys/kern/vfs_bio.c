@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_bio.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_bio.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -179,7 +179,11 @@ name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_DONE
+operator||
+name|B_DELWRI
+operator|)
 condition|)
 block|{
 name|trace
@@ -407,7 +411,11 @@ name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_DONE
+operator||
+name|B_DELWRI
+operator|)
 operator|)
 operator|==
 literal|0
@@ -542,7 +550,11 @@ name|rabp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_DONE
+operator||
+name|B_DELWRI
+operator|)
 condition|)
 block|{
 name|brelse
@@ -1422,7 +1434,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Assign a buffer for the given block.  If the appropriate  * block is already associated, return it; otherwise search  * for the oldest non-busy buffer and reassign it.  *  * We use splx here because this routine may be called  * on the interrupt stack during a dump, and we don't  * want to lower the ipl back to 0.  */
+comment|/*  * Assign a buffer for the given block.  If the appropriate  * block is already associated, return it; otherwise search  * for the oldest non-busy buffer and reassign it.  *  * If we find the buffer, but it is dirty (marked DELWRI) and  * its size is changing, we must write it out first. When the  * buffer is shrinking, the write is done by brealloc to avoid  * losing the unwritten data. When the buffer is growing, the  * write is done by getblk, so that bread will not read stale  * disk data over the modified data in the buffer.  *  * We use splx here because this routine may be called  * on the interrupt stack during a dump, and we don't  * want to lower the ipl back to 0.  */
 end_comment
 
 begin_function
@@ -1641,6 +1653,63 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_bcount
+operator|!=
+name|size
+condition|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_bcount
+operator|<
+name|size
+operator|&&
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DELWRI
+operator|)
+condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_ASYNC
+expr_stmt|;
+name|bwrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
+if|if
+condition|(
+name|brealloc
+argument_list|(
+name|bp
+argument_list|,
+name|size
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|loop
+goto|;
+block|}
 if|if
 condition|(
 name|bp
