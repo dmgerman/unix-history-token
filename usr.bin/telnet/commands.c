@@ -10558,9 +10558,7 @@ name|usage
 label|:
 name|printf
 argument_list|(
-literal|"usage: %s [-l user] [-a] host-name [port]\n"
-argument_list|,
-name|cmd
+literal|"usage: telnet [-l user] [-a] host-name [port]\n"
 argument_list|)
 expr_stmt|;
 name|setuid
