@@ -45,6 +45,12 @@ begin_comment
 comment|/*************************************************************************  *  *	MOVE LIBRARY  *  *	This set of subroutines moves a cursor to a predefined  *	location, independent of the terminal type.  If the  *	terminal has an addressable cursor, it uses it.  If  *	not, it optimizes for tabs (currently) even if you don't  *      have them.  *  *	At all times the current address of the cursor must be maintained,  *	and that is available as structure cursor.  *  *	The following calls are allowed:  *		move(sp)	move to point sp.  *		up()		move up one line.  *		down()		move down one line.  *		bs()		move left one space (except column 0).  *		nd()		move right one space(no write).  *		clear()		clear screen.  *		home()		home.  *		ll()		move to lower left corner of screen.  *		cr()		carriage return (no line feed).  *		pr()		just like standard printf, but keeps track  *				of cursor position. (Uses pstring).  *		apr()		same as printf, but first argument is&point.  *				(Uses pstring).  *		pstring(s)	output the string of printing characters.  *				However, '\r' is interpreted to mean return  *				to column of origination AND do linefeed.  *				'\n' causes<cr><lf>.  *		putpad(str)	calls tputs to output character with proper  *					padding.  *		outch()		the output routine for a character used by  *					tputs. It just calls putchar.  *		pch(ch)		output character to screen and update  *					cursor address (must be a standard  *					printing character). WILL SCROLL.  *		pchar(ps,ch)	prints one character if it is on the  *					screen at the specified location;  *					otherwise, dumps it.(no wrap-around).  *  *		getcap()	initializes strings for later calls.  *		cap(string)	outputs the string designated in the termcap  *					data base. (Should not move the cursor.)  *		done()		returns the terminal to intial state and exits.  *  *		point(&p,x,y)	return point set to x,y.  *  *		baudrate()	returns the baudrate of the terminal.  *		delay(t)	causes an approximately constant delay  *					independent of baudrate.  *					Duration is ~ t/20 seconds.  *  ******************************************************************************/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -77,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -541,8 +553,6 @@ decl_stmt|,
 name|f
 decl_stmt|,
 name|tfield
-decl_stmt|,
-name|j
 decl_stmt|;
 if|if
 condition|(
@@ -1391,8 +1401,6 @@ end_macro
 begin_block
 block|{
 name|int
-name|j
-decl_stmt|,
 name|l
 decl_stmt|;
 name|struct
@@ -2210,6 +2218,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|int
 name|t
 decl_stmt|;
@@ -2217,40 +2226,23 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|k
-decl_stmt|,
-name|j
-decl_stmt|;
-name|k
-operator|=
-name|baudrate
-argument_list|()
-operator|*
-name|t
-operator|/
-literal|300
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|k
-condition|;
-name|j
-operator|++
-control|)
-block|{
-name|putchar
+while|while
+condition|(
+name|usleep
 argument_list|(
-name|PC
+name|t
+operator|*
+literal|50000U
 argument_list|)
-expr_stmt|;
-block|}
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+empty_stmt|;
 block|}
 end_block
 
@@ -2292,6 +2284,11 @@ expr_stmt|;
 name|putpad
 argument_list|(
 name|KE
+argument_list|)
+expr_stmt|;
+name|putpad
+argument_list|(
+name|VE
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -2427,10 +2424,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|xPC
-decl_stmt|;
-name|struct
-name|point
-name|z
 decl_stmt|;
 name|void
 name|stop
@@ -2799,6 +2792,10 @@ operator|&
 name|ap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|KL
+condition|)
 name|Klength
 operator|=
 name|strlen
@@ -2806,7 +2803,15 @@ argument_list|(
 name|KL
 argument_list|)
 expr_stmt|;
-comment|/*	NOTE:   If KL, KR, KU, and KD are not 		 *		all the same length, some problems 		 *		may arise, since tests are made on 		 *		all of them together. 		 */
+else|else
+name|Klength
+operator|=
+name|strlen
+argument_list|(
+name|KL
+argument_list|)
+expr_stmt|;
+comment|/* 	 *	NOTE:   If KL, KR, KU, and KD are not 	 *		all the same length, some problems 	 *		may arise, since tests are made on 	 *		all of them together. 	 */
 name|TI
 operator|=
 name|tgetstr
@@ -2847,6 +2852,26 @@ operator|&
 name|ap
 argument_list|)
 expr_stmt|;
+name|VI
+operator|=
+name|tgetstr
+argument_list|(
+literal|"vi"
+argument_list|,
+operator|&
+name|ap
+argument_list|)
+expr_stmt|;
+name|VE
+operator|=
+name|tgetstr
+argument_list|(
+literal|"ve"
+argument_list|,
+operator|&
+name|ap
+argument_list|)
+expr_stmt|;
 name|xPC
 operator|=
 name|tgetstr
@@ -2866,6 +2891,10 @@ operator|=
 operator|*
 name|xPC
 expr_stmt|;
+if|if
+condition|(
+name|ND
+condition|)
 name|NDlength
 operator|=
 name|strlen
@@ -2873,12 +2902,26 @@ argument_list|(
 name|ND
 argument_list|)
 expr_stmt|;
+else|else
+name|NDlength
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|BS
+condition|)
 name|BSlength
 operator|=
 name|strlen
 argument_list|(
 name|BS
 argument_list|)
+expr_stmt|;
+else|else
+name|BSlength
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2892,7 +2935,11 @@ operator|(
 name|HO
 operator|==
 literal|0
-operator||
+operator|||
+name|DO
+operator|==
+literal|0
+operator|||
 name|UP
 operator|==
 literal|0
@@ -2907,6 +2954,7 @@ literal|0
 operator|)
 condition|)
 block|{
+comment|/* XXX as written in rev.1.6, we can assert(DO) */
 name|fprintf
 argument_list|(
 name|stderr

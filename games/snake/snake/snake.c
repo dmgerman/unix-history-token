@@ -366,10 +366,6 @@ name|int
 name|ch
 decl_stmt|,
 name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|k
 decl_stmt|;
 name|void
 name|stop
@@ -580,6 +576,12 @@ name|KS
 argument_list|)
 expr_stmt|;
 comment|/*	Put terminal in keypad transmit mode */
+name|putpad
+argument_list|(
+name|VI
+argument_list|)
+expr_stmt|;
+comment|/*  Hide cursor */
 name|snrand
 argument_list|(
 operator|&
@@ -1563,16 +1565,6 @@ name|money
 argument_list|)
 condition|)
 block|{
-name|char
-name|xp
-index|[
-literal|20
-index|]
-decl_stmt|;
-name|struct
-name|point
-name|z
-decl_stmt|;
 name|loot
 operator|+=
 literal|25
@@ -3181,9 +3173,6 @@ name|struct
 name|point
 name|p
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|you
@@ -3839,8 +3828,6 @@ name|point
 name|x
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|;
 if|if
@@ -4831,10 +4818,6 @@ end_macro
 
 begin_block
 block|{
-name|char
-modifier|*
-name|sh
-decl_stmt|;
 name|ll
 argument_list|()
 expr_stmt|;
