@@ -5448,6 +5448,22 @@ block|,
 literal|0x10
 block|}
 block|,
+block|{
+literal|0x01101407
+block|,
+literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x01111407
+block|,
+literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
 comment|/* { 0xXXXXXXXX, "Xircom Cardbus modem", 0x10 }, */
 block|{
 literal|0x00000000
@@ -5760,434 +5776,6 @@ name|sio_ids
 index|[]
 init|=
 block|{
-block|{
-literal|0x0005d041
-block|,
-literal|"Standard PC COM port"
-block|}
-block|,
-comment|/* PNP0500 */
-block|{
-literal|0x0105d041
-block|,
-literal|"16550A-compatible COM port"
-block|}
-block|,
-comment|/* PNP0501 */
-block|{
-literal|0x0205d041
-block|,
-literal|"Multiport serial device (non-intelligent 16550)"
-block|}
-block|,
-comment|/* PNP0502 */
-block|{
-literal|0x1005d041
-block|,
-literal|"Generic IRDA-compatible device"
-block|}
-block|,
-comment|/* PNP0510 */
-block|{
-literal|0x1105d041
-block|,
-literal|"Generic IRDA-compatible device"
-block|}
-block|,
-comment|/* PNP0511 */
-comment|/* Devices that do not have a compatid */
-block|{
-literal|0x7602a904
-block|,
-name|NULL
-block|}
-block|,
-comment|/* AEI0276 - 56K v.90 Fax Modem (LKT) */
-block|{
-literal|0x00007905
-block|,
-name|NULL
-block|}
-block|,
-comment|/* AKY0000 - 56K Plug&Play Modem */
-block|{
-literal|0x01405407
-block|,
-name|NULL
-block|}
-block|,
-comment|/* AZT4001 - AZT3000 PnP SOUND DEVICE, MODEM */
-block|{
-literal|0x56039008
-block|,
-name|NULL
-block|}
-block|,
-comment|/* BDP0356 - Best Data 56x2 */
-block|{
-literal|0x36339008
-block|,
-name|NULL
-block|}
-block|,
-comment|/* BDP3336 - Best Data Prods. 336F */
-block|{
-literal|0x0014490a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* BRI1400 - Boca 33.6 PnP */
-block|{
-literal|0x0015490a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* BRI1500 - Internal Fax Data */
-block|{
-literal|0x0034490a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* BRI3400 - Internal ACF Modem */
-block|{
-literal|0x0094490a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* BRI9400 - Boca K56Flex PnP */
-block|{
-literal|0x00b4490a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* BRIB400 - Boca 56k PnP */
-block|{
-literal|0x0030320d
-block|,
-name|NULL
-block|}
-block|,
-comment|/* CIR3000 - Cirrus Logic V43 */
-block|{
-literal|0x0100440e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* CRD0001 - Cardinal MVP288IV ? */
-block|{
-literal|0x1200c31e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* GVC0012 - VF1128HV-R9 (win modem?) */
-block|{
-literal|0x0303c31e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* GVC0303 - MaxTech 33.6 PnP D/F/V */
-block|{
-literal|0x0505c31e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* GVC0505 - GVC 56k Faxmodem */
-block|{
-literal|0x0050c31e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* GVC5000 - some GVC modem */
-block|{
-literal|0x3800f91e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* GWY0038 - Telepath with v.90 */
-block|{
-literal|0x9062f91e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* GWY6290 - Telepath with x2 Technology */
-block|{
-literal|0x0000f435
-block|,
-name|NULL
-block|}
-block|,
-comment|/* MOT0000 - Motorola ModemSURFR 33.6 Intern */
-block|{
-literal|0x5015f435
-block|,
-name|NULL
-block|}
-block|,
-comment|/* MOT1550 - Motorola ModemSURFR 56K Modem */
-block|{
-literal|0xf015f435
-block|,
-name|NULL
-block|}
-block|,
-comment|/* MOT15F0 - Motorola VoiceSURFR 56K Modem */
-block|{
-literal|0x6045f435
-block|,
-name|NULL
-block|}
-block|,
-comment|/* MOT4560 - Motorola ? */
-block|{
-literal|0x61e7a338
-block|,
-name|NULL
-block|}
-block|,
-comment|/* NECE761 - 33.6Modem */
-block|{
-literal|0x39804f3f
-block|,
-name|NULL
-block|}
-block|,
-comment|/* OZO8039 - Zoom 56k flex */
-block|{
-literal|0x3024a341
-block|,
-name|NULL
-block|}
-block|,
-comment|/* PMC2430 - Pace 56 Voice Internal Modem */
-block|{
-literal|0x1000eb49
-block|,
-name|NULL
-block|}
-block|,
-comment|/* ROK0010 - Rockwell ? */
-block|{
-literal|0x5002734a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* RSS0250 - 5614Jx3(G) Internal Modem */
-block|{
-literal|0xc100ad4d
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SMM00C1 - Leopard 56k PnP */
-block|{
-literal|0x9012b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP1290 - Supra ? */
-block|{
-literal|0x1013b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP1310 - SupraExpress 336i PnP */
-block|{
-literal|0x8013b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP1380 - SupraExpress 288i PnP Voice */
-block|{
-literal|0x8113b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP1381 - SupraExpress 336i PnP Voice */
-block|{
-literal|0x5016b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP1650 - Supra 336i Sp Intl */
-block|{
-literal|0x7420b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP2070 - Supra ? */
-block|{
-literal|0x8020b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP2080 - Supra ? */
-block|{
-literal|0x8420b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP2084 - SupraExpress 56i PnP */
-block|{
-literal|0x7121b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP2171 - SupraExpress 56i Sp? */
-block|{
-literal|0x8024b04e
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SUP2480 - Supra ? */
-block|{
-literal|0x01007256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR0001 - U.S. Robotics Inc., Sportster W */
-block|{
-literal|0x02007256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR0002 - U.S. Robotics Inc. Sportster 33. */
-block|{
-literal|0x04007256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR0004 - USR Sportster 14.4k */
-block|{
-literal|0x06007256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR0006 - USR Sportster 33.6k */
-block|{
-literal|0x11007256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR0011 - USR ? */
-block|{
-literal|0x01017256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR0101 - USR ? */
-block|{
-literal|0x30207256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR2030 - U.S.Robotics Inc. Sportster 560 */
-block|{
-literal|0x50207256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR2050 - U.S.Robotics Inc. Sportster 33. */
-block|{
-literal|0x70207256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR2070 - U.S.Robotics Inc. Sportster 560 */
-block|{
-literal|0x30307256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR3030 - U.S. Robotics 56K FAX INT */
-block|{
-literal|0x31307256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR3031 - U.S. Robotics 56K FAX INT */
-block|{
-literal|0x50307256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR3050 - U.S. Robotics 56K FAX INT */
-block|{
-literal|0x70307256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR3070 - U.S. Robotics 56K Voice INT */
-block|{
-literal|0x90307256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR3090 - USR ? */
-block|{
-literal|0x90917256
-block|,
-name|NULL
-block|}
-block|,
-comment|/* USR9190 - USR 56k Voice INT */
-block|{
-literal|0x0300695c
-block|,
-name|NULL
-block|}
-block|,
-comment|/* WCI0003 - Fax/Voice/Modem/Speakphone/Asvd */
-block|{
-literal|0x01a0896a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* ZTIA001 - Zoom Internal V90 Faxmodem */
-block|{
-literal|0x61f7896a
-block|,
-name|NULL
-block|}
-block|,
-comment|/* ZTIF761 - Zoom ComStar 33.6 */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -7843,6 +7431,15 @@ name|result
 operator|=
 name|ENXIO
 expr_stmt|;
+name|sio_setreg
+argument_list|(
+name|com
+argument_list|,
+name|com_mcr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -7856,6 +7453,15 @@ name|COM_C_IIR_TXRDYBUG
 argument_list|)
 expr_stmt|;
 block|}
+name|sio_setreg
+argument_list|(
+name|com
+argument_list|,
+name|com_ier
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|sio_setreg
 argument_list|(
 name|com
@@ -11072,7 +10678,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unable to activate interrupt in fast mode - using normal mode"
+literal|"unable to activate interrupt in fast mode - using normal mode\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11087,6 +10693,51 @@ argument_list|,
 literal|"could not activate interrupt\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DDB
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|BREAK_TO_DEBUGGER
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|ALT_BREAK_TO_DEBUGGER
+argument_list|)
+operator|)
+comment|/* 		 * Enable interrupts for early break-to-debugger support 		 * on the console. 		 */
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+operator|&&
+name|unit
+operator|==
+name|comconsole
+condition|)
+name|outb
+argument_list|(
+name|siocniobase
+operator|+
+name|com_ier
+argument_list|,
+name|IER_ERXRDY
+operator||
+name|IER_ERLS
+operator||
+name|IER_EMSC
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -12505,6 +12156,42 @@ operator|~
 name|CFCR_SBREAK
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
+name|com
+operator|->
+name|tp
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DDB
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|BREAK_TO_DEBUGGER
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|ALT_BREAK_TO_DEBUGGER
+argument_list|)
+operator|)
+comment|/* 	 * Leave interrupts enabled and don't clear DTR if this is the 	 * console. This allows us to detect break-to-debugger events 	 * while the console device is closed. 	 */
+if|if
+condition|(
+name|com
+operator|->
+name|unit
+operator|!=
+name|comconsole
+condition|)
+endif|#
+directive|endif
 block|{
 ifdef|#
 directive|ifdef
@@ -12555,28 +12242,6 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sio_setreg
-argument_list|(
-name|com
-argument_list|,
-name|com_ier
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|tp
-operator|=
-name|com
-operator|->
-name|tp
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
 if|if
 condition|(
 name|IS_8251
@@ -12603,6 +12268,17 @@ operator|->
 name|prev_modem_status
 operator|&
 name|MSR_DCD
+expr_stmt|;
+else|#
+directive|else
+name|sio_setreg
+argument_list|(
+name|com
+argument_list|,
+name|com_ier
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -14707,6 +14383,135 @@ operator|->
 name|data_port
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DDB
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ALT_BREAK_TO_DEBUGGER
+argument_list|)
+comment|/* 			 * Solaris implements a new BREAK which is initiated 			 * by a character sequence CR ~ ^b which is similar 			 * to a familiar pattern used on Sun servers by the 			 * Remote Console. 			 */
+define|#
+directive|define
+name|KEY_CRTLB
+value|2
+comment|/* ^B */
+define|#
+directive|define
+name|KEY_CR
+value|13
+comment|/* CR '\r' */
+define|#
+directive|define
+name|KEY_TILDE
+value|126
+comment|/* ~ */
+if|if
+condition|(
+name|com
+operator|->
+name|unit
+operator|==
+name|comconsole
+condition|)
+block|{
+specifier|static
+name|int
+name|brk_state1
+init|=
+literal|0
+decl_stmt|,
+name|brk_state2
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|recv_data
+operator|==
+name|KEY_CR
+condition|)
+block|{
+name|brk_state1
+operator|=
+name|recv_data
+expr_stmt|;
+name|brk_state2
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|brk_state1
+operator|==
+name|KEY_CR
+operator|&&
+operator|(
+name|recv_data
+operator|==
+name|KEY_TILDE
+operator|||
+name|recv_data
+operator|==
+name|KEY_CRTLB
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|recv_data
+operator|==
+name|KEY_TILDE
+condition|)
+name|brk_state2
+operator|=
+name|recv_data
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|brk_state2
+operator|==
+name|KEY_TILDE
+operator|&&
+name|recv_data
+operator|==
+name|KEY_CRTLB
+condition|)
+block|{
+name|breakpoint
+argument_list|()
+expr_stmt|;
+name|brk_state1
+operator|=
+name|brk_state2
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|cont
+goto|;
+block|}
+else|else
+name|brk_state2
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|brk_state1
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|line_status
@@ -23106,6 +22911,35 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|sio
+argument_list|,
+name|acpi
+argument_list|,
+name|sio_isa_driver
+argument_list|,
+name|sio_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
