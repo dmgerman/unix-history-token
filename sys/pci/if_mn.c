@@ -36,67 +36,6 @@ name|NG_MN_NODE_TYPE
 value|"mn"
 end_define
 
-begin_define
-define|#
-directive|define
-name|NG_MN_COOKIKE
-value|941432500
-end_define
-
-begin_define
-define|#
-directive|define
-name|MN_MAGIC
-value|0x4d6e0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MN_GET
-value|(MN_MAGIC | 0x1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MN_SET
-value|(MN_MAGIC | 0x2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MN_DEBUG
-value|(MN_MAGIC | 0x3)
-end_define
-
-begin_struct
-struct|struct
-name|mn_control
-block|{
-name|int
-name|cmd
-decl_stmt|;
-name|char
-name|name
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|unsigned
-name|chan
-decl_stmt|;
-name|unsigned
-name|ts
-index|[
-name|M32_CHAN
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2070,6 +2009,21 @@ argument_list|,
 literal|"\20\7SHORT\5CRC\4MOD8\3LONG\2ABORT\1OVERRUN"
 argument_list|)
 expr_stmt|;
+name|pos
+operator|+=
+name|sprintf
+argument_list|(
+name|arg
+operator|+
+name|pos
+argument_list|,
+literal|"    Xmit bytes pending %ld\n"
+argument_list|,
+name|sch
+operator|->
+name|tx_pending
+argument_list|)
+expr_stmt|;
 block|}
 operator|(
 operator|*
@@ -2776,6 +2730,11 @@ argument_list|,
 name|meta
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"D1\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2806,6 +2765,11 @@ argument_list|(
 name|m
 argument_list|,
 name|meta
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"D2\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3071,6 +3035,13 @@ name|pitch
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|#
+directive|if
+literal|0
+block|printf("%d = %d + %d (%p)\n", 		    sch->tx_pending + m->m_pkthdr.len, 		    sch->tx_pending , m->m_pkthdr.len, m);
+endif|#
+directive|endif
 name|sch
 operator|->
 name|tx_pending
@@ -3081,6 +3052,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3152,19 +3124,6 @@ operator|=
 name|sch
 operator|->
 name|sc
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: OPEN{ state = %d\n"
-argument_list|,
-name|sch
-operator|->
-name|name
-argument_list|,
-name|sch
-operator|->
-name|state
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3286,6 +3245,14 @@ name|M_WAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+literal|0
 expr_stmt|;
 name|dp
 operator|->
@@ -3590,7 +3557,7 @@ literal|0x1
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|30
+literal|1000
 argument_list|)
 expr_stmt|;
 name|u
@@ -3630,26 +3597,6 @@ operator|->
 name|stat
 operator|=
 literal|1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s%d: TLS} state = %d\n"
-argument_list|,
-name|sc
-operator|->
-name|name
-argument_list|,
-name|chan
-argument_list|,
-name|sc
-operator|->
-name|ch
-index|[
-name|chan
-index|]
-operator|->
-name|state
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3715,19 +3662,6 @@ operator|=
 name|sch
 operator|->
 name|sc
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: TLF{ state = %d\n"
-argument_list|,
-name|sch
-operator|->
-name|name
-argument_list|,
-name|sch
-operator|->
-name|state
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3993,26 +3927,6 @@ name|dp
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"%s%d: TLF} state = %d\n"
-argument_list|,
-name|sc
-operator|->
-name|name
-argument_list|,
-name|chan
-argument_list|,
-name|sc
-operator|->
-name|ch
-index|[
-name|chan
-index|]
-operator|->
-name|state
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5598,6 +5512,12 @@ condition|(
 name|m
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|printf("%d = %d - %d (%p)\n", 			    sc->ch[chan]->tx_pending - m->m_pkthdr.len, 			    sc->ch[chan]->tx_pending , m->m_pkthdr.len, m);
+endif|#
+directive|endif
 name|sc
 operator|->
 name|ch
@@ -6215,7 +6135,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s*: I stat=%08x lstat=%08x\n"
+literal|"%s: I stat=%08x lstat=%08x\n"
 argument_list|,
 name|sc
 operator|->
@@ -6876,10 +6796,8 @@ name|sc
 operator|->
 name|name
 argument_list|,
-literal|"mn%c"
+literal|"mn%d"
 argument_list|,
-literal|'A'
-operator|+
 name|unit
 argument_list|)
 expr_stmt|;
