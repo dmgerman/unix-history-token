@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.18 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +354,43 @@ operator|=
 operator|&
 name|delimptrbuf
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|addr
+argument_list|)
+operator|>=
+name|MAXNAME
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Name too long, %d characters max"
+argument_list|,
+name|MAXNAME
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|20
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"parseaddr-->NULL\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|pvp
 operator|=
 name|prescan
@@ -2097,11 +2134,27 @@ index|]
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|22
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"prescan: null leading token\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|av
