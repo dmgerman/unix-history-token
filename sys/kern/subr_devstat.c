@@ -982,6 +982,8 @@ argument_list|,
 operator|&
 name|devstat_generation
 argument_list|,
+literal|0
+argument_list|,
 literal|"Devstat list generation"
 argument_list|)
 expr_stmt|;

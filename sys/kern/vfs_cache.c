@@ -194,7 +194,7 @@ comment|/* size of hash table */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_debug
 argument_list|,
@@ -228,7 +228,7 @@ comment|/* ratio of negative entries */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_debug
 argument_list|,
@@ -260,7 +260,7 @@ comment|/* number of cache entries allocated */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_debug
 argument_list|,
@@ -292,7 +292,7 @@ comment|/* number of cache entries allocated */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_debug
 argument_list|,
@@ -439,7 +439,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|SYSCTL_INT(_vfs_cache, OID_AUTO, name, mode, var, 0, "");
+value|SYSCTL_ULONG(_vfs_cache, OID_AUTO, name, mode, var, 0, "");
 end_define
 
 begin_expr_stmt
@@ -2320,21 +2320,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|STATNODE
-parameter_list|(
-name|mode
-parameter_list|,
-name|name
-parameter_list|,
-name|var
-parameter_list|)
-define|\
-value|SYSCTL_INT(_vfs_cache, OID_AUTO, name, mode, var, 0, "");
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2932,7 +2917,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static u_int name;						\ 	SYSCTL_INT(_vfs_cache, OID_AUTO, name, CTLFLAG_RD,&name, 0, "")
+value|static u_int name;						\ 	SYSCTL_UINT(_vfs_cache, OID_AUTO, name, CTLFLAG_RD,&name, 0, "")
 end_define
 
 begin_decl_stmt
