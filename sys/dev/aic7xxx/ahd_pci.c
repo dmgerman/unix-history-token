@@ -409,7 +409,7 @@ operator|&
 name|AHD_39BIT_ADDRESSING
 operator|)
 condition|?
-literal|0x7FFFFFFFFF
+literal|0x7FFFFFFFFFLL
 else|:
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
