@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -2540,6 +2546,10 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|bp
+decl_stmt|;
 name|uint8_t
 name|part
 decl_stmt|;
@@ -2607,30 +2617,52 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * In order to recognize a partition entry, we search 		 * for lines starting with a single letter followed by 		 * a colon as their first non-white characters.  We 		 * silently ignore any other lines, so any comment etc. 		 * lines in the label template will be ignored. 		 * 		 * XXX We should probably also recognize the geometry 		 * fields on top, and allow changing the geometry 		 * emulated by this disk. 		 */
+for|for
+control|(
+name|bp
+operator|=
+name|buf
+init|;
+name|isspace
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+condition|;
+name|bp
+operator|++
+control|)
+empty_stmt|;
 if|if
 condition|(
-name|buf
-index|[
-literal|0
-index|]
-operator|!=
-literal|' '
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+operator|<
+literal|2
 operator|||
-name|buf
+name|bp
 index|[
 literal|1
 index|]
 operator|!=
-literal|' '
+literal|':'
 condition|)
+block|{
+name|line
+operator|++
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|sscanf
 argument_list|(
-name|buf
+name|bp
 argument_list|,
-literal|"  %c: %s %s\n"
+literal|"%c: %s %s\n"
 argument_list|,
 operator|&
 name|part
@@ -2667,11 +2699,13 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: syntex error on line %d"
+literal|"%s: syntax error on line %d"
 argument_list|,
 name|file
 argument_list|,
 name|line
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|fclose
