@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.8 (Berkeley) 83/05/30"
+literal|"@(#)iostat.c	4.9 (Berkeley) 83/09/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,14 @@ define|#
 directive|define
 name|X_DK_MSPW
 value|8
+block|{
+literal|"_hz"
+block|}
+block|,
+define|#
+directive|define
+name|X_HZ
+value|9
 ifdef|#
 directive|ifdef
 name|vax
@@ -172,7 +180,7 @@ block|,
 define|#
 directive|define
 name|X_MBDINIT
-value|9
+value|10
 block|{
 literal|"_ubdinit"
 block|}
@@ -180,7 +188,7 @@ block|,
 define|#
 directive|define
 name|X_UBDINIT
-value|10
+value|11
 endif|#
 directive|endif
 ifdef|#
@@ -193,7 +201,7 @@ block|,
 define|#
 directive|define
 name|X_MBDINIT
-value|9
+value|10
 endif|#
 directive|endif
 block|{
@@ -273,6 +281,12 @@ end_struct
 begin_decl_stmt
 name|int
 name|mf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|hz
 decl_stmt|;
 end_decl_stmt
 
@@ -860,6 +874,34 @@ operator|.
 name|dk_mspw
 argument_list|)
 expr_stmt|;
+name|lseek
+argument_list|(
+name|mf
+argument_list|,
+operator|(
+name|long
+operator|)
+name|nl
+index|[
+name|X_HZ
+index|]
+operator|.
+name|n_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|read
+argument_list|(
+name|mf
+argument_list|,
+operator|&
+name|hz
+argument_list|,
+sizeof|sizeof
+name|hz
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -987,7 +1029,10 @@ literal|1.0
 expr_stmt|;
 name|etime
 operator|/=
-literal|60.0
+operator|(
+name|float
+operator|)
+name|hz
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1149,7 +1194,10 @@ index|]
 expr_stmt|;
 name|atime
 operator|/=
-literal|60.0
+operator|(
+name|float
+operator|)
+name|hz
 expr_stmt|;
 name|words
 operator|=
