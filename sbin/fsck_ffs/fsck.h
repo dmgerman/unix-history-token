@@ -1509,6 +1509,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|eascan
+parameter_list|(
+name|struct
+name|inodesc
+modifier|*
+parameter_list|,
+name|struct
+name|ufs2_dinode
+modifier|*
+name|dp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ffs_clrblock
 parameter_list|(
