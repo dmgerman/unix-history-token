@@ -157,23 +157,6 @@ directive|include
 file|<sys/user.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * quick version of vm_fault  */
 end_comment
@@ -1234,41 +1217,6 @@ name|void
 name|cpu_reset
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|SMP
-name|printf
-argument_list|(
-literal|"sending IPI_HALT to other processors\n"
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000000
-argument_list|)
-expr_stmt|;
-name|ipi_all_but_self
-argument_list|(
-name|IPI_HALT
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000000
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Rebooting Self\n"
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000000
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|prom_halt
 argument_list|(
 literal|0

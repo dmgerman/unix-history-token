@@ -1771,15 +1771,6 @@ name|cpumask
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|IPI_HALT
-case|:
-name|prom_halt
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 block|}
 comment|/* 	 * Dump console messages to the console.  XXX - we need to handle 	 * requests to provide PALcode to secondaries and to start up new 	 * secondaries that are added to the system on the fly. 	 */
