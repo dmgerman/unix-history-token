@@ -251,7 +251,6 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|NETATALK
 end_endif
 
 begin_decl_stmt
@@ -1606,7 +1605,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|NETATALK
 default|default:
 name|printf
 argument_list|(

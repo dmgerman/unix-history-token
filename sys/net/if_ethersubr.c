@@ -1295,7 +1295,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-endif|NETATALK
+comment|/* NETATALK */
 ifdef|#
 directive|ifdef
 name|NS
@@ -2747,7 +2747,7 @@ comment|/* XXX */
 return|return;
 endif|#
 directive|endif
-endif|NETATALK
+comment|/* NETATALK */
 case|case
 name|ETHERTYPE_VLAN
 case|:
