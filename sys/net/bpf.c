@@ -2344,11 +2344,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|NET_LOCK_GIANT
+argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -2374,11 +2371,8 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 comment|/* 	 * The driver frees the mbuf. 	 */
 return|return
