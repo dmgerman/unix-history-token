@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.2 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -963,6 +963,28 @@ argument_list|,
 name|nfsstats
 operator|.
 name|write_bios
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9.9s %9.9s\n"
+argument_list|,
+literal|"DirE Hits"
+argument_list|,
+literal|"Misses"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d %9d\n"
+argument_list|,
+name|nfsstats
+operator|.
+name|direofcache_hits
+argument_list|,
+name|nfsstats
+operator|.
+name|direofcache_misses
 argument_list|)
 expr_stmt|;
 name|printf
