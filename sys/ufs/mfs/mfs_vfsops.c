@@ -382,6 +382,8 @@ name|ffs_vget
 block|,
 name|ffs_fhtovp
 block|,
+name|ufs_check_export
+block|,
 name|ffs_vptofh
 block|,
 name|mfs_init

@@ -609,6 +609,8 @@ block|,
 name|vfs_stdfhtovp
 block|,
 comment|/* shouldn't happen */
+name|vfs_stdcheckexp
+block|,
 name|vfs_stdvptofh
 block|,
 comment|/* shouldn't happen */

@@ -884,6 +884,8 @@ name|vfs_stdvget
 block|,
 name|vfs_stdfhtovp
 block|,
+name|vfs_stdcheckexp
+block|,
 name|vfs_stdvptofh
 block|,
 name|fdesc_init

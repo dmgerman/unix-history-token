@@ -555,10 +555,14 @@ comment|/* may be implemented at a later date */
 end_comment
 
 begin_endif
-unit|static int	ntfs_fhtovp __P((struct mount *, struct fid *, 				 struct sockaddr *, struct vnode **, 				 int *, struct ucred **));
+unit|static int	ntfs_fhtovp __P((struct mount *, struct fid *, 				 struct vnode **)); static int	ntfs_checkexp __P((struct vnode *, struct mbuf *, 				   int *, struct ucred **));
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* 0, default ops in FreeBSD */
+end_comment
 
 begin_elif
 elif|#
@@ -4314,6 +4318,8 @@ block|,
 name|ntfs_vget
 block|,
 name|vfs_stdfhtovp
+block|,
+name|vfs_stdcheckexp
 block|,
 name|vfs_stdvptofh
 block|,

@@ -1935,6 +1935,7 @@ name|union_mount
 block|,
 name|vfs_stdstart
 block|,
+comment|/* underlying start already done */
 name|union_unmount
 block|,
 name|union_root
@@ -1949,6 +1950,8 @@ comment|/* XXX assumes no cached data on union level */
 name|vfs_stdvget
 block|,
 name|vfs_stdfhtovp
+block|,
+name|vfs_stdcheckexp
 block|,
 name|vfs_stdvptofh
 block|,
