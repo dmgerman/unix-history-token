@@ -392,8 +392,8 @@ name|pmap_uses_prom_console
 argument_list|()
 operator|||
 name|unit
-operator|>=
-literal|1
+operator|!=
+literal|0
 condition|)
 return|return
 name|ENXIO
