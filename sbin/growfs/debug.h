@@ -493,7 +493,7 @@ name|DBG_FUNC
 parameter_list|(
 name|N
 parameter_list|)
-value|char __FKT__[] = (N);
+value|char __FKT__[] = {N};
 end_define
 
 begin_define
