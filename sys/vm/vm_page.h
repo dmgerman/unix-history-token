@@ -575,12 +575,6 @@ name|PQ_L2_MASK
 value|(PQ_L2_SIZE - 1)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_define
 define|#
 directive|define
@@ -619,61 +613,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|PQ_COUNT
+name|PQ_HOLD
 value|(3 + 2*PQ_L2_SIZE)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PQ_NONE
-value|PQ_COUNT
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_FREE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_INACTIVE
-value|PQ_L2_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_ACTIVE
-value|(1 +   PQ_L2_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_CACHE
-value|(2 +   PQ_L2_SIZE)
-end_define
-
 begin_define
 define|#
 directive|define
 name|PQ_COUNT
-value|(2 + 2*PQ_L2_SIZE)
+value|(4 + 2*PQ_L2_SIZE)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -1306,6 +1255,16 @@ name|VM_ALLOC_RETRY
 value|0x80
 end_define
 
+begin_function_decl
+name|void
+name|vm_page_unhold
+parameter_list|(
+name|vm_page_t
+name|mem
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|void
 name|vm_page_activate
@@ -1792,37 +1751,6 @@ name|mem
 operator|->
 name|hold_count
 operator|++
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|vm_page_unhold
-parameter_list|(
-name|vm_page_t
-name|mem
-parameter_list|)
-block|{
-operator|--
-name|mem
-operator|->
-name|hold_count
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|mem
-operator|->
-name|hold_count
-operator|>=
-literal|0
-argument_list|,
-operator|(
-literal|"vm_page_unhold: hold count< 0!!!"
-operator|)
-argument_list|)
 expr_stmt|;
 block|}
 end_function
