@@ -155,7 +155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This module's target vector.  */
+comment|/* This module's target vectors.  */
 end_comment
 
 begin_decl_stmt
@@ -1472,7 +1472,6 @@ block|{
 name|td_err_e
 name|err
 decl_stmt|;
-comment|/* Don't attempt to use thread_db on targets which can not run      (core files).  */
 if|if
 condition|(
 name|objfile
@@ -1512,11 +1511,11 @@ condition|)
 goto|goto
 name|quit
 goto|;
+comment|/* Nothing to do.  The thread library was already detected and the      target vector was already activated.  */
 if|if
 condition|(
 name|fbsd_thread_active
 condition|)
-comment|/* Nothing to do.  The thread library was already detected and the        target vector was already activated.  */
 goto|goto
 name|quit
 goto|;
@@ -2011,7 +2010,7 @@ name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*        * For M:N thread, we need to tell UTS to set/unset single step        * flag at context switch time, the flag will be written into        * thread mailbox. This becauses some architecture may not have        * machine single step flag in ucontext, so we put the flag in mailbox,        * when the thread switches back, kse_switchin restores the single step        * state.        */
+comment|/* For M:N thread, we need to tell UTS to set/unset single step          flag at context switch time, the flag will be written into          thread mailbox. This becauses some architecture may not have          machine single step flag in ucontext, so we put the flag in mailbox,          when the thread switches back, kse_switchin restores the single step          state.  */
 name|ret
 operator|=
 name|td_thr_sstep_p
@@ -3323,7 +3322,7 @@ operator|!
 name|fbsd_thread_active
 condition|)
 block|{
-comment|/*        * The child process is now the actual multi-threaded        * program.  Snatch its process ID...         */
+comment|/* The child process is now the actual multi-threaded          program.  Snatch its process ID... */
 name|proc_handle
 operator|.
 name|pid
@@ -3357,7 +3356,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/*    * Forget about the child's process ID.  We shouldn't need it    * anymore.    */
 if|if
 condition|(
 name|fbsd_thread_active
