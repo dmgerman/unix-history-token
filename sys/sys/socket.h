@@ -282,6 +282,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SO_NOSIGPIPE
+value|0x0800
+end_define
+
+begin_comment
+comment|/* no SIGPIPE from EPIPE */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SO_ACCEPTFILTER
 value|0x1000
 end_define

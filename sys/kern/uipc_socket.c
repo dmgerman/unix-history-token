@@ -5776,6 +5776,9 @@ case|:
 case|case
 name|SO_TIMESTAMP
 case|:
+case|case
+name|SO_NOSIGPIPE
+case|:
 name|error
 operator|=
 name|sooptcopyin
@@ -6566,6 +6569,9 @@ name|SO_OOBINLINE
 case|:
 case|case
 name|SO_TIMESTAMP
+case|:
+case|case
+name|SO_NOSIGPIPE
 case|:
 name|optval
 operator|=

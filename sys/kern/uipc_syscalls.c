@@ -3149,11 +3149,21 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Generation of SIGPIPE can be controlled per socket */
 if|if
 condition|(
 name|error
 operator|==
 name|EPIPE
+operator|&&
+operator|!
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_NOSIGPIPE
+operator|)
 condition|)
 block|{
 name|PROC_LOCK

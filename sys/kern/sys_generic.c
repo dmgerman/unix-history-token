@@ -1973,11 +1973,18 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Socket layer is responsible for issuing SIGPIPE. */
 if|if
 condition|(
 name|error
 operator|==
 name|EPIPE
+operator|&&
+name|fp
+operator|->
+name|f_type
+operator|!=
+name|DTYPE_SOCKET
 condition|)
 block|{
 name|PROC_LOCK
