@@ -6761,6 +6761,7 @@ expr_stmt|;
 else|else
 name|tsleep
 argument_list|(
+operator|&
 name|ata_delayed_attach
 argument_list|,
 name|PRIBIO
