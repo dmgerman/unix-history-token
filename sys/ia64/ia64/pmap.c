@@ -3590,6 +3590,19 @@ operator|*
 literal|1024
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ks
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_new_thread: could not contigmalloc %d pages\n"
+argument_list|,
+name|KSTACK_PAGES
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_md
