@@ -1179,7 +1179,22 @@ argument_list|)
 block|,
 name|FUNKEY
 argument_list|(
-argument|resetstats
+name|resetstats
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|setstate
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|checkparity
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+argument|rebuildparity
 argument_list|)
 block|}
 struct|;
@@ -1314,6 +1329,11 @@ operator|&
 name|keyword_set
 argument_list|)
 expr_stmt|;
+name|dowait
+operator|=
+literal|0
+expr_stmt|;
+comment|/* initialize flags */
 name|force
 operator|=
 literal|0
@@ -3671,35 +3691,23 @@ argument_list|,
 name|sdno
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|VINUMDEBUG
 if|if
 condition|(
-name|debug
+name|dowait
+operator|==
+literal|0
 condition|)
+name|pid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+comment|/* do this in the background */
+else|else
 name|pid
 operator|=
 literal|0
 expr_stmt|;
-comment|/* wander through into the "child" process */
-else|else
-name|pid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-comment|/* do this in the background */
-else|#
-directive|else
-name|pid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-comment|/* do this in the background */
-endif|#
-directive|endif
 if|if
 condition|(
 name|pid
@@ -3836,6 +3844,12 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dowait
+operator|==
+literal|0
+condition|)
 name|exit
 argument_list|(
 literal|1
@@ -3873,6 +3887,12 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dowait
+operator|==
+literal|0
+condition|)
 name|exit
 argument_list|(
 literal|0
