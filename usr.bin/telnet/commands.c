@@ -10750,6 +10750,10 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+if|if
+condition|(
+name|doaddrlookup
+condition|)
 name|host
 operator|=
 name|gethostbyaddr
