@@ -2725,24 +2725,6 @@ operator|<<
 name|part
 operator|)
 expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_phys
-operator|=
-name|DEV_BSIZE
-expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_best
-operator|=
-name|BLKDEV_IOSIZE
-expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_max
-operator|=
-name|MAXBSIZE
-expr_stmt|;
 comment|/* 	 * If we're initialized, check to see if there are any other 	 * open partitions.  If not, then it's safe to update 	 * the in-core disklabel. 	 */
 if|if
 condition|(

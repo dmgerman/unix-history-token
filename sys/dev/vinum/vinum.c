@@ -1155,25 +1155,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_phys
-operator|=
-name|DEV_BSIZE
-expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_best
-operator|=
-name|VINUM_BSIZE_BEST
-expr_stmt|;
-comment|/* kludge until we track drive block sizes */
-name|dev
-operator|->
-name|si_bsize_max
-operator|=
-name|MAXBSIZE
-expr_stmt|;
 name|error
 operator|=
 literal|0

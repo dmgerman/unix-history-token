@@ -1650,18 +1650,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|dev
-operator|->
-name|si_bsize_phys
-operator|=
-literal|2048
-expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_max
-operator|=
-name|MAXBSIZE
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUGOPEN
@@ -2281,6 +2269,14 @@ name|MATCDLABEL
 expr_stmt|;
 comment|/*Mark drive as having TOC*/
 block|}
+name|dev
+operator|->
+name|si_bsize_phys
+operator|=
+name|cd
+operator|->
+name|blksize
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUGOPEN

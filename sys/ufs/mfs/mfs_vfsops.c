@@ -1124,17 +1124,12 @@ argument_list|,
 name|mfs_minor
 argument_list|)
 expr_stmt|;
+comment|/* It is not clear that these will get initialized otherwise */
 name|dev
 operator|->
 name|si_bsize_phys
 operator|=
 name|DEV_BSIZE
-expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_best
-operator|=
-name|BLKDEV_IOSIZE
 expr_stmt|;
 name|dev
 operator|->
@@ -1719,17 +1714,12 @@ argument_list|,
 name|mfs_minor
 argument_list|)
 expr_stmt|;
+comment|/* It is not clear that these will get initialized otherwise */
 name|rootdev
 operator|->
 name|si_bsize_phys
 operator|=
 name|DEV_BSIZE
-expr_stmt|;
-name|rootdev
-operator|->
-name|si_bsize_best
-operator|=
-name|BLKDEV_IOSIZE
 expr_stmt|;
 name|rootdev
 operator|->
