@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	5.3 (Berkeley) %G%"
+literal|"@(#)support.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_comment
 comment|/*   * Some IEEE standard 754 recommended functions and remainder and sqrt for   * supporting the C elementary functions.  ******************************************************************************  * WARNING:  *      These codes are developed (in double) to support the C elementary  * functions temporarily. They are not universal, and some of them are very  * slow (in particular, drem and sqrt is extremely inefficient). Each   * computer system should have its implementation of these functions using   * its own assembler.  ******************************************************************************  *  * IEEE 754 required operations:  *     drem(x,p)   *              returns  x REM y  =  x - [x/y]*y , where [x/y] is the integer  *              nearest x/y; in half way case, choose the even one.  *     sqrt(x)   *              returns the square root of x correctly rounded according to   *		the rounding mod.  *  * IEEE 754 recommended functions:  * (a) copysign(x,y)   *              returns x with the sign of y.   * (b) scalb(x,N)   *              returns  x * (2**N), for integer values N.  * (c) logb(x)   *              returns the unbiased exponent of x, a signed integer in   *              double precision, except that logb(0) is -INF, logb(INF)   *              is +INF, and logb(NAN) is that NAN.  * (d) finite(x)   *              returns the value TRUE if -INF< x< +INF and returns   *              FALSE otherwise.  *  *  * CODED IN C BY K.C. NG, 11/25/84;  * REVISED BY K.C. NG on 1/22/85, 2/13/85, 3/24/85.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"mathimpl.h"
+end_include
 
 begin_if
 if|#
@@ -58,6 +64,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|short
 name|msign
@@ -72,6 +79,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|prep1
 init|=
@@ -89,6 +97,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|novf
 init|=
@@ -117,6 +126,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|short
 name|msign
@@ -131,6 +141,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|prep1
 init|=
@@ -148,6 +159,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|novf
 init|=
@@ -192,10 +204,6 @@ block|{
 name|int
 name|k
 decl_stmt|;
-name|double
-name|scalb
-parameter_list|()
-function_decl|;
 ifdef|#
 directive|ifdef
 name|national
@@ -292,14 +300,6 @@ operator|>
 literal|260
 condition|)
 block|{
-specifier|extern
-name|double
-name|infnan
-argument_list|()
-decl_stmt|,
-name|copysign
-argument_list|()
-decl_stmt|;
 return|return
 operator|(
 name|copysign
@@ -896,12 +896,6 @@ decl_stmt|,
 name|dp
 decl_stmt|,
 name|tmp
-decl_stmt|,
-name|drem
-argument_list|()
-decl_stmt|,
-name|scalb
-argument_list|()
 decl_stmt|;
 name|unsigned
 name|short
@@ -1094,11 +1088,6 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
-specifier|extern
-name|double
-name|infnan
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|infnan
@@ -1443,15 +1432,10 @@ decl_stmt|,
 name|r
 decl_stmt|;
 name|double
-name|logb
-argument_list|()
-decl_stmt|,
-name|scalb
-argument_list|()
+name|t
 decl_stmt|;
 name|double
-name|t
-decl_stmt|,
+specifier|const
 name|zero
 init|=
 literal|0.0
@@ -1462,9 +1446,6 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|i
-decl_stmt|,
-name|finite
-argument_list|()
 decl_stmt|;
 if|#
 directive|if
@@ -1528,11 +1509,6 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
-specifier|extern
-name|double
-name|infnan
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|infnan
@@ -1939,7 +1915,7 @@ comment|/* order of words in floating point number */
 end_comment
 
 begin_else
-unit|static n0=3,n1=2,n2=1,n3=0;
+unit|static const n0=3,n1=2,n2=1,n3=0;
 else|#
 directive|else
 end_else
@@ -1949,13 +1925,13 @@ comment|/* VAX, SUN, ZILOG, TAHOE */
 end_comment
 
 begin_endif
-unit|static n0=0,n1=1,n2=2,n3=3;
+unit|static const n0=0,n1=1,n2=2,n3=3;
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-unit|static unsigned short mexp =0x7ff0, m25 =0x0190, m57 =0x0390; 	static double zero=0.0; 	double hy,y1,t,t1; 	short k; 	long n; 	int i,e;  	unsigned short xexp,yexp, *px  =(unsigned short *)&x  ,  	      		nx,nf,	  *py  =(unsigned short *)&y  , 	      		sign,	  *pt  =(unsigned short *)&t  , 	      			  *pt1 =(unsigned short *)&t1 ;  	xexp = px[n0]& mexp ;
+unit|static const unsigned short mexp =0x7ff0, m25 =0x0190, m57 =0x0390; 	static const double zero=0.0; 	double hy,y1,t,t1; 	short k; 	long n; 	int i,e;  	unsigned short xexp,yexp, *px  =(unsigned short *)&x  ,  	      		nx,nf,	  *py  =(unsigned short *)&y  , 	      		sign,	  *pt  =(unsigned short *)&t  , 	      			  *pt1 =(unsigned short *)&t1 ;  	xexp = px[n0]& mexp ;
 comment|/* exponent of x */
 end_comment
 
@@ -2050,12 +2026,12 @@ comment|/* SQRT  * RETURN CORRECTLY ROUNDED (ACCORDING TO THE ROUNDING MODE) SQR
 end_comment
 
 begin_comment
-unit|static unsigned long table[] = { 0, 1204, 3062, 5746, 9193, 13348, 18162, 23592, 29598, 36145, 43202, 50740, 58733, 67158, 75992, 85215, 83599, 71378, 60428, 50647, 41945, 34246, 27478, 21581, 16499, 12183, 8588, 5674, 3403, 1742, 661, 130, };  double newsqrt(x) double x; {         double y,z,t,addc(),subc(),b54=134217728.*134217728.;
+unit|static const unsigned long table[] = { 0, 1204, 3062, 5746, 9193, 13348, 18162, 23592, 29598, 36145, 43202, 50740, 58733, 67158, 75992, 85215, 83599, 71378, 60428, 50647, 41945, 34246, 27478, 21581, 16499, 12183, 8588, 5674, 3403, 1742, 661, 130, };  double newsqrt(x) double x; {         double y,z,t,addc(),subc() 	double const b54=134217728.*134217728.;
 comment|/* b54=2**54 */
 end_comment
 
 begin_ifdef
-unit|long mx,scalx,mexp=0x7ff00000;         int i,j,r,e,swapINX(),swapRM(),swapENI();                unsigned long *py=(unsigned long *)&y   ,                       *pt=(unsigned long *)&t   ,                       *px=(unsigned long *)&x   ;
+unit|long mx,scalx; 	long const mexp=0x7ff00000;         int i,j,r,e,swapINX(),swapRM(),swapENI();                unsigned long *py=(unsigned long *)&y   ,                       *pt=(unsigned long *)&t   ,                       *px=(unsigned long *)&x   ;
 ifdef|#
 directive|ifdef
 name|national
@@ -2066,13 +2042,13 @@ comment|/* ordering of word in a floating point number */
 end_comment
 
 begin_else
-unit|int n0=1, n1=0;
+unit|const int n0=1, n1=0;
 else|#
 directive|else
 end_else
 
 begin_endif
-unit|int n0=0, n1=1;
+unit|const int n0=0, n1=1;
 endif|#
 directive|endif
 end_endif
@@ -2082,7 +2058,7 @@ comment|/* Rounding Mode:  RN ...round-to-nearest   *                 RZ ...roun
 end_comment
 
 begin_comment
-unit|int RN=0,RZ=1,RP=2,RM=3;
+unit|const int RN=0,RZ=1,RP=2,RM=3;
 comment|/* machine dependent: work on a Zilog Z8070                                  * and a National 32081& 16081                                  */
 end_comment
 

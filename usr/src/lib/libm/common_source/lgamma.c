@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	5.2 (Berkeley) %G%"
+literal|"@(#)lgamma.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<math.h>
+file|"mathimpl.h"
 end_include
 
 begin_if
@@ -77,6 +77,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|goobie
 init|=
@@ -90,6 +91,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|pi
 init|=
@@ -113,6 +115,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|p1
 index|[]
@@ -138,6 +141,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|p2
 index|[]
@@ -171,6 +175,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|q2
 index|[]
@@ -200,6 +205,20 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|double
+name|pos
+argument_list|()
+decl_stmt|,
+name|neg
+argument_list|()
+decl_stmt|,
+name|asym
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|double
 name|lgamma
@@ -210,19 +229,6 @@ name|double
 name|arg
 decl_stmt|;
 block|{
-name|double
-name|log
-argument_list|()
-decl_stmt|,
-name|pos
-argument_list|()
-decl_stmt|,
-name|neg
-argument_list|()
-decl_stmt|,
-name|asym
-argument_list|()
-decl_stmt|;
 name|signgam
 operator|=
 literal|1.
@@ -280,10 +286,6 @@ name|double
 name|arg
 decl_stmt|;
 block|{
-name|double
-name|log
-parameter_list|()
-function_decl|;
 name|double
 name|n
 decl_stmt|,
@@ -373,19 +375,6 @@ block|{
 name|double
 name|t
 decl_stmt|;
-name|double
-name|log
-argument_list|()
-decl_stmt|,
-name|sin
-argument_list|()
-decl_stmt|,
-name|floor
-argument_list|()
-decl_stmt|,
-name|pos
-argument_list|()
-decl_stmt|;
 name|arg
 operator|=
 operator|-
@@ -430,11 +419,6 @@ operator|==
 name|t
 condition|)
 block|{
-specifier|extern
-name|double
-name|infnan
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|infnan

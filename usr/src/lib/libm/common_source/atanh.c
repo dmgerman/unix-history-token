@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atanh.c	5.3 (Berkeley) %G%"
+literal|"@(#)atanh.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_comment
 comment|/* ATANH(X)  * RETURN THE HYPERBOLIC ARC TANGENT OF X  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 2/7/85, 3/7/85, 8/18/85.  *  * Required kernel function:  *	log1p(x) 	...return log(1+x)  *  * Method :  *	Return   *                          1              2x                          x  *		atanh(x) = --- * log(1 + -------) = 0.5 * log1p(2 * --------)  *                          2             1 - x                      1 - x  *  * Special cases:  *	atanh(x) is NaN if |x|> 1 with signal;  *	atanh(NaN) is that NaN with no signal;  *	atanh(+-1) is +-INF with signal.  *  * Accuracy:  *	atanh(x) returns the exact hyperbolic arc tangent of x nearly rounded.  *	In a test run with 512,000 random arguments on a VAX, the maximum  *	observed error was 1.87 ulps (units in the last place) at  *	x= -3.8962076028810414000e-03.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"mathimpl.h"
+end_include
 
 begin_if
 if|#
@@ -72,12 +78,6 @@ name|x
 decl_stmt|;
 block|{
 name|double
-name|copysign
-argument_list|()
-decl_stmt|,
-name|log1p
-argument_list|()
-decl_stmt|,
 name|z
 decl_stmt|;
 name|z
@@ -116,11 +116,6 @@ operator|==
 literal|1.0
 condition|)
 block|{
-specifier|extern
-name|double
-name|infnan
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|copysign

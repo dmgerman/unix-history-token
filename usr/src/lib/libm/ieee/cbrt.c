@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cbrt.c	5.4 (Berkeley) %G%"
+literal|"@(#)cbrt.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|long
 name|B1
@@ -69,6 +70,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|C
 init|=
@@ -156,6 +158,7 @@ ifdef|#
 directive|ifdef
 name|national
 comment|/* ordering of words in a floating points number */
+specifier|const
 name|int
 name|n0
 init|=
@@ -168,6 +171,7 @@ decl_stmt|;
 else|#
 directive|else
 comment|/* national */
+specifier|const
 name|int
 name|n0
 init|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)floor.c	5.4 (Berkeley) %G%"
+literal|"@(#)floor.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,141 +28,85 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
+begin_include
+include|#
+directive|include
+file|"mathimpl.h"
+end_include
+
+begin_macro
+name|vc
 argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_0x
-parameter_list|(
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|0x
-comment|/**/
-value|A
-comment|/**/
-value|B
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* vax */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_0x
-parameter_list|(
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|0x
-comment|/**/
-value|B
-comment|/**/
-value|A
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* vax */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|long
-name|Lx
-index|[]
-init|=
-block|{
-name|_0x
-argument_list|(
+argument|L
+argument_list|,
+literal|4503599627370496.0E0
+argument_list|,
 literal|0000
 argument_list|,
 literal|5c00
-argument_list|)
-block|,
-name|_0x
-argument_list|(
+argument_list|,
 literal|0000
 argument_list|,
 literal|0000
+argument_list|,
+literal|55
+argument_list|,
+literal|1.0
 argument_list|)
-block|}
-decl_stmt|;
-end_decl_stmt
+end_macro
 
 begin_comment
 comment|/* 2**55 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|L
-value|*(double *) Lx
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* defined(vax)||defined(tahoe) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|double
-name|L
-init|=
+begin_macro
+name|ic
+argument_list|(
+argument|L
+argument_list|,
 literal|4503599627370496.0E0
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+literal|52
+argument_list|,
+literal|1.0
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* 2**52 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vccast
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|L
+value|vccast(L)
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* defined(vax)||defined(tahoe) */
-end_comment
+begin_function_decl
+name|double
+name|ceil
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
+name|floor
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * floor(x) := the largest integer no larger than x;  * ceil(x) := -floor(-x), for all real x.  *  * Note: Inexact will be signaled if x is not an integer, as is  *	customary for IEEE 754.  No other signal can be emitted.  */
@@ -180,9 +124,6 @@ decl_stmt|;
 block|{
 name|double
 name|y
-decl_stmt|,
-name|ceil
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -278,9 +219,6 @@ decl_stmt|;
 block|{
 name|double
 name|y
-decl_stmt|,
-name|floor
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -392,13 +330,12 @@ name|double
 name|s
 decl_stmt|,
 name|t
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|double
 name|one
 init|=
 literal|1.0
-decl_stmt|,
-name|copysign
-argument_list|()
 decl_stmt|;
 if|#
 directive|if

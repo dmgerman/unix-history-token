@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jn.c	5.2 (Berkeley) %G%"
+literal|"@(#)jn.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<math.h>
+file|"mathimpl.h"
 end_include
 
 begin_if
@@ -114,13 +114,6 @@ name|double
 name|xsq
 decl_stmt|,
 name|t
-decl_stmt|;
-name|double
-name|j0
-argument_list|()
-decl_stmt|,
-name|j1
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -387,13 +380,6 @@ name|b
 decl_stmt|,
 name|temp
 decl_stmt|;
-name|double
-name|y0
-argument_list|()
-decl_stmt|,
-name|y1
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 name|x
@@ -412,11 +398,6 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
-specifier|extern
-name|double
-name|infnan
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|infnan

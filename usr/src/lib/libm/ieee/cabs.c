@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cabs.c	5.3 (Berkeley) %G%"
+literal|"@(#)cabs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,231 +32,151 @@ begin_comment
 comment|/* HYPOT(X,Y)  * RETURN THE SQUARE ROOT OF X^2 + Y^2  WHERE Z=X+iY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 11/28/84;   * REVISED BY K.C. NG, 7/12/85.  *  * Required system supported functions :  *	copysign(x,y)  *	finite(x)  *	scalb(x,N)  *	sqrt(x)  *  * Method :  *	1. replace x by |x| and y by |y|, and swap x and  *	   y if y> x (hence x is never smaller than y).  *	2. Hypot(x,y) is computed by:  *	   Case I, x/y> 2  *		  *				       y  *		hypot = x + -----------------------------  *			 		    2  *			    sqrt ( 1 + [x/y]  )  +  x/y  *  *	   Case II, x/y<= 2   *				                   y  *		hypot = x + --------------------------------------------------  *				          		     2   *				     			[x/y]   -  2  *			   (sqrt(2)+1) + (x-y)/y + -----------------------------  *			 		    			  2  *			    			  sqrt ( 1 + [x/y]  )  + sqrt(2)  *  *  *  * Special cases:  *	hypot(x,y) is INF if x or y is +INF or -INF; else  *	hypot(x,y) is NAN if x or y is NAN.  *  * Accuracy:  * 	hypot(x,y) returns the sqrt(x^2+y^2) with error less than 1 ulps (units  *	in the last place). See Kahan's "Interval Arithmetic Options in the  *	Proposed IEEE Floating Point Arithmetic Standard", Interval Mathematics  *      1980, Edited by Karl L.E. Nickel, pp 99-128. (A faster but less accurate  *	code follows in	comments.) In a test run with 500,000 random arguments  *	on a VAX, the maximum observed error was .959 ulps.  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|"mathimpl.h"
+end_include
 
-begin_comment
-comment|/* VAX D format */
-end_comment
+begin_macro
+name|vc
+argument_list|(
+argument|r2p1hi
+argument_list|,
+literal|2.4142135623730950345E0
+argument_list|,
+literal|8279
+argument_list|,
+literal|411a
+argument_list|,
+argument|ef32
+argument_list|,
+literal|99fc
+argument_list|,
+literal|2
+argument_list|,
+literal|.9A827999FCEF32
+argument_list|)
+end_macro
+
+begin_macro
+name|vc
+argument_list|(
+argument|r2p1lo
+argument_list|,
+literal|1.4349369327986523769E
+argument|-
+literal|17
+argument_list|,
+literal|597d
+argument_list|,
+literal|2484
+argument_list|,
+literal|754b
+argument_list|,
+literal|89b3
+argument_list|,
+argument|-
+literal|55
+argument_list|,
+literal|.84597D89B3754B
+argument_list|)
+end_macro
+
+begin_macro
+name|vc
+argument_list|(
+argument|sqrt2
+argument_list|,
+literal|1.4142135623730950622E0
+argument_list|,
+literal|04f3
+argument_list|,
+literal|40b5
+argument_list|,
+argument|de65
+argument_list|,
+literal|33f9
+argument_list|,
+literal|1
+argument_list|,
+argument|.B504F333F9DE65
+argument_list|)
+end_macro
+
+begin_macro
+name|ic
+argument_list|(
+argument|r2p1hi
+argument_list|,
+literal|2.4142135623730949234E0
+argument_list|,
+literal|1
+argument_list|,
+literal|1.3504F333F9DE6
+argument_list|)
+end_macro
+
+begin_macro
+name|ic
+argument_list|(
+argument|r2p1lo
+argument_list|,
+literal|1.2537167179050217666E
+argument|-
+literal|16
+argument_list|,
+argument|-
+literal|53
+argument_list|,
+literal|1.21165F626CDD5
+argument_list|)
+end_macro
+
+begin_macro
+name|ic
+argument_list|(
+argument|sqrt2
+argument_list|,
+literal|1.4142135623730951455E0
+argument_list|,
+literal|0
+argument_list|,
+literal|1.6A09E667F3BCD
+argument_list|)
+end_macro
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|vax
+name|vccast
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|_0x
-parameter_list|(
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|0x
-comment|/**/
-value|A
-comment|/**/
-value|B
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* vax */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_0x
-parameter_list|(
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|0x
-comment|/**/
-value|B
-comment|/**/
-value|A
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* vax */
-end_comment
-
-begin_comment
-comment|/* static double */
-end_comment
-
-begin_comment
-comment|/* r2p1hi =  2.4142135623730950345E0     , Hex  2^  2   *  .9A827999FCEF32 */
-end_comment
-
-begin_comment
-comment|/* r2p1lo =  1.4349369327986523769E-17   , Hex  2^-55   *  .84597D89B3754B */
-end_comment
-
-begin_comment
-comment|/* sqrt2  =  1.4142135623730950622E0     ; Hex  2^  1   *  .B504F333F9DE65 */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|long
-name|r2p1hix
-index|[]
-init|=
-block|{
-name|_0x
-argument_list|(
-literal|8279
-argument_list|,
-literal|411a
-argument_list|)
-block|,
-name|_0x
-argument_list|(
-argument|ef32
-argument_list|,
-literal|99fc
-argument_list|)
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|r2p1lox
-index|[]
-init|=
-block|{
-name|_0x
-argument_list|(
-literal|597d
-argument_list|,
-literal|2484
-argument_list|)
-block|,
-name|_0x
-argument_list|(
-literal|754b
-argument_list|,
-literal|89b3
-argument_list|)
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|sqrt2x
-index|[]
-init|=
-block|{
-name|_0x
-argument_list|(
-literal|04f3
-argument_list|,
-literal|40b5
-argument_list|)
-block|,
-name|_0x
-argument_list|(
-argument|de65
-argument_list|,
-literal|33f9
-argument_list|)
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
 name|r2p1hi
-value|(*(double*)r2p1hix)
+value|vccast(r2p1hi)
 end_define
 
 begin_define
 define|#
 directive|define
 name|r2p1lo
-value|(*(double*)r2p1lox)
+value|vccast(r2p1lo)
 end_define
 
 begin_define
 define|#
 directive|define
 name|sqrt2
-value|(*(double*)sqrt2x)
+value|vccast(sqrt2)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* defined(vax)||defined(tahoe)	*/
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|double
-name|r2p1hi
-init|=
-literal|2.4142135623730949234E0
-decl_stmt|,
-comment|/*Hex  2^1     *  1.3504F333F9DE6 */
-name|r2p1lo
-init|=
-literal|1.2537167179050217666E
-operator|-
-literal|16
-decl_stmt|,
-comment|/*Hex  2^-53   *  1.21165F626CDD5 */
-name|sqrt2
-init|=
-literal|1.4142135623730951455E0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*Hex  2^  0   *  1.6A09E667F3BCD */
-end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* defined(vax)||defined(tahoe)	*/
-end_comment
 
 begin_function
 name|double
@@ -273,6 +193,7 @@ name|y
 decl_stmt|;
 block|{
 specifier|static
+specifier|const
 name|double
 name|zero
 init|=
@@ -290,32 +211,18 @@ literal|18
 decl_stmt|;
 comment|/* fl(1+small)==1 */
 specifier|static
+specifier|const
 name|ibig
 operator|=
 literal|30
 expr_stmt|;
 comment|/* fl(1+2**(2*ibig))==1 */
 name|double
-name|copysign
-argument_list|()
-decl_stmt|,
-name|scalb
-argument_list|()
-decl_stmt|,
-name|logb
-argument_list|()
-decl_stmt|,
-name|sqrt
-argument_list|()
-decl_stmt|,
 name|t
 decl_stmt|,
 name|r
 decl_stmt|;
 name|int
-name|finite
-argument_list|()
-decl_stmt|,
 name|exp
 decl_stmt|;
 if|if
@@ -709,17 +616,17 @@ literal|0
 end_if
 
 begin_comment
-unit|double hypot(x,y) double x, y; { 	static double zero=0, one=1; 		      small=1.0E-18;
+unit|double hypot(x,y) double x, y; { 	static const double zero=0, one=1; 		      small=1.0E-18;
 comment|/* fl(1+small)==1 */
 end_comment
 
 begin_comment
-unit|static ibig=30;
+unit|static const ibig=30;
 comment|/* fl(1+2**(2*ibig))==1 */
 end_comment
 
 begin_comment
-unit|double copysign(),scalb(),logb(),sqrt(),temp; 	int finite(), exp;  	if(finite(x)) 	    if(finite(y)) 	    {	 		x=copysign(x,one); 		y=copysign(y,one); 		if(y> x)  		    { temp=x; x=y; y=temp; } 		if(x == zero) return(zero); 		if(y == zero) return(x); 		exp= logb(x); 		x=scalb(x,-exp); 		if(exp-(int)logb(y)> ibig )
+unit|double temp; 	int exp;  	if(finite(x)) 	    if(finite(y)) 	    {	 		x=copysign(x,one); 		y=copysign(y,one); 		if(y> x)  		    { temp=x; x=y; y=temp; } 		if(x == zero) return(zero); 		if(y == zero) return(x); 		exp= logb(x); 		x=scalb(x,-exp); 		if(exp-(int)logb(y)> ibig )
 comment|/* raise inexact flag and return |x| */
 end_comment
 

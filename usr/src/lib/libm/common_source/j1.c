@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)j1.c	5.2 (Berkeley) %G%"
+literal|"@(#)j1.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<math.h>
+file|"mathimpl.h"
 end_include
 
 begin_if
@@ -69,6 +69,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|zero
 init|=
@@ -96,6 +97,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|tpi
 init|=
@@ -105,6 +107,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|pio4
 init|=
@@ -114,6 +117,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|p1
 index|[]
@@ -146,6 +150,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|q1
 index|[]
@@ -174,6 +179,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|p2
 index|[]
@@ -204,6 +210,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|q2
 index|[]
@@ -234,6 +241,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|p3
 index|[]
@@ -258,6 +266,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|q3
 index|[]
@@ -282,6 +291,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|p4
 index|[]
@@ -317,6 +327,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|double
 name|q4
 index|[]
@@ -345,6 +356,14 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|asympt
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|double
 name|j1
@@ -363,16 +382,6 @@ decl_stmt|,
 name|d
 decl_stmt|,
 name|x
-decl_stmt|;
-name|double
-name|sin
-argument_list|()
-decl_stmt|,
-name|cos
-argument_list|()
-decl_stmt|,
-name|sqrt
-argument_list|()
 decl_stmt|;
 name|int
 name|i
@@ -536,22 +545,6 @@ name|d
 decl_stmt|,
 name|x
 decl_stmt|;
-name|double
-name|sin
-argument_list|()
-decl_stmt|,
-name|cos
-argument_list|()
-decl_stmt|,
-name|sqrt
-argument_list|()
-decl_stmt|,
-name|log
-argument_list|()
-decl_stmt|,
-name|j1
-argument_list|()
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -577,11 +570,6 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
-specifier|extern
-name|double
-name|infnan
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|infnan
@@ -734,18 +722,16 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|asympt
-argument_list|(
-argument|arg
-argument_list|)
+parameter_list|(
+name|arg
+parameter_list|)
 name|double
 name|arg
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|double
 name|zsq
@@ -878,7 +864,7 @@ name|d
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
