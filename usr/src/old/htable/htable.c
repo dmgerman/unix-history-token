@@ -10,12 +10,33 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)htable.c	5.2 (Berkeley) %G%"
+literal|"@(#)htable.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
