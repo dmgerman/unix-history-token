@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.3 (Berkeley) %G%"
+literal|"@(#)if.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,26 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|YES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO
+value|0
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -112,6 +132,10 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|netname
+argument_list|()
+decl_stmt|,
+modifier|*
+name|ns_phost
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -190,6 +214,9 @@ condition|)
 block|{
 name|sidewaysintpr
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|interval
 argument_list|,
 name|ifnetaddr
@@ -210,6 +237,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ifnetaddr
 argument_list|,
@@ -292,11 +323,9 @@ parameter_list|()
 function_decl|;
 name|struct
 name|in_addr
-name|in
-decl_stmt|,
 name|inet_makeaddr
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|ifaddraddr
@@ -317,6 +346,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ifnet
 argument_list|,
@@ -487,6 +520,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ifaddr
 argument_list|,
@@ -639,7 +676,7 @@ name|in
 operator|.
 name|ia_addr
 decl_stmt|;
-name|long
+name|u_long
 name|net
 decl_stmt|;
 name|char
@@ -648,6 +685,11 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|ns_phost
+parameter_list|()
+function_decl|;
 operator|*
 operator|(
 expr|union
@@ -934,8 +976,18 @@ index|]
 struct|;
 end_struct
 
+begin_decl_stmt
+name|u_char
+name|signalled
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Print a running summary of interface statistics.  * Repeat display every interval seconds, showing  * statistics collected over that interval.  First  * line printed at top of screen is always cumulative.  */
+comment|/* set if alarm goes off "early" */
+end_comment
+
+begin_comment
+comment|/*  * Print a running summary of interface statistics.  * Repeat display every interval seconds, showing statistics  * collected over that interval.  Assumes that interval is non-zero.  * First line printed at top of screen is always cumulative.  */
 end_comment
 
 begin_macro
@@ -948,7 +1000,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|unsigned
 name|interval
 decl_stmt|;
 end_decl_stmt
@@ -993,8 +1045,12 @@ modifier|*
 name|interesting
 decl_stmt|;
 name|int
-name|maxtraffic
+name|oldmask
 decl_stmt|;
+name|int
+name|catchalarm
+parameter_list|()
+function_decl|;
 name|klseek
 argument_list|(
 name|kmem
@@ -1008,6 +1064,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|firstifnet
 argument_list|,
@@ -1070,6 +1130,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ifnet
 argument_list|,
@@ -1082,7 +1146,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 name|ifnet
 operator|.
@@ -1198,6 +1262,28 @@ block|}
 name|lastif
 operator|=
 name|ip
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|catchalarm
+argument_list|)
+expr_stmt|;
+name|signalled
+operator|=
+name|NO
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+name|interval
+argument_list|)
 expr_stmt|;
 name|banner
 label|:
@@ -1392,6 +1478,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ifnet
 argument_list|,
@@ -1607,11 +1697,41 @@ expr_stmt|;
 name|line
 operator|++
 expr_stmt|;
+name|oldmask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGALRM
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|interval
+operator|!
+name|signalled
 condition|)
-name|sleep
+block|{
+name|sigpause
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|sigsetmask
+argument_list|(
+name|oldmask
+argument_list|)
+expr_stmt|;
+name|signalled
+operator|=
+name|NO
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|alarm
 argument_list|(
 name|interval
 argument_list|)
@@ -1629,6 +1749,24 @@ goto|goto
 name|loop
 goto|;
 comment|/*NOTREACHED*/
+block|}
+end_block
+
+begin_comment
+comment|/*  * Called if an interval expires before sidewaysintpr has completed a loop.  * Sets a flag to not wait for the alarm.  */
+end_comment
+
+begin_macro
+name|catchalarm
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|signalled
+operator|=
+name|YES
+expr_stmt|;
 block|}
 end_block
 
