@@ -2636,6 +2636,10 @@ argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|count
+condition|)
 name|sndbuf_acquire
 argument_list|(
 name|to
