@@ -1435,7 +1435,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 operator|->
-name|cookie
+name|dt_cookie
 operator|=
 name|sc
 expr_stmt|;
@@ -1443,7 +1443,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 operator|->
-name|dmamap_create
+name|dt_dmamap_create
 operator|=
 name|sbus_dmamap_create
 expr_stmt|;
@@ -1451,7 +1451,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 operator|->
-name|dmamap_destroy
+name|dt_dmamap_destroy
 operator|=
 name|sbus_dmamap_destroy
 expr_stmt|;
@@ -1459,7 +1459,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 operator|->
-name|dmamap_load
+name|dt_dmamap_load
 operator|=
 name|sbus_dmamap_load
 expr_stmt|;
@@ -1467,7 +1467,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 operator|->
-name|dmamap_unload
+name|dt_dmamap_unload
 operator|=
 name|sbus_dmamap_unload
 expr_stmt|;
@@ -1475,7 +1475,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 operator|->
-name|dmamap_sync
+name|dt_dmamap_sync
 operator|=
 name|sbus_dmamap_sync
 expr_stmt|;
@@ -1483,7 +1483,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 operator|->
-name|dmamem_alloc
+name|dt_dmamem_alloc
 operator|=
 name|sbus_dmamem_alloc
 expr_stmt|;
@@ -1491,7 +1491,7 @@ name|sc
 operator|->
 name|sc_cdmatag
 operator|->
-name|dmamem_free
+name|dt_dmamem_free
 operator|=
 name|sbus_dmamem_free
 expr_stmt|;
@@ -4716,13 +4716,13 @@ argument_list|)
 expr_stmt|;
 name|sbt
 operator|->
-name|cookie
+name|bst_cookie
 operator|=
 name|sc
 expr_stmt|;
 name|sbt
 operator|->
-name|parent
+name|bst_parent
 operator|=
 name|sc
 operator|->
@@ -4730,7 +4730,7 @@ name|sc_bustag
 expr_stmt|;
 name|sbt
 operator|->
-name|type
+name|bst_type
 operator|=
 name|SBUS_BUS_SPACE
 expr_stmt|;
@@ -4773,7 +4773,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 return|return
 operator|(
@@ -4824,7 +4824,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 return|return
 operator|(
@@ -4891,7 +4891,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 return|return
 operator|(
@@ -4950,7 +4950,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 name|iommu_dvmamap_unload
 argument_list|(
@@ -4999,7 +4999,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 name|iommu_dvmamap_sync
 argument_list|(
@@ -5056,7 +5056,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 return|return
 operator|(
@@ -5113,7 +5113,7 @@ operator|*
 operator|)
 name|pdmat
 operator|->
-name|cookie
+name|dt_cookie
 decl_stmt|;
 name|iommu_dvmamem_free
 argument_list|(

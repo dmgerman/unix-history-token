@@ -1625,7 +1625,7 @@ operator|=
 operator|(
 name|t
 operator|->
-name|alignment
+name|dt_alignment
 operator|+
 name|IO_PAGE_MASK
 operator|)
@@ -1645,13 +1645,13 @@ if|if
 condition|(
 name|t
 operator|->
-name|boundary
+name|dt_boundary
 operator|>
 literal|0
 operator|&&
 name|t
 operator|->
-name|boundary
+name|dt_boundary
 operator|<
 name|IO_PAGE_SIZE
 condition|)
@@ -1666,7 +1666,7 @@ name|ulmax
 argument_list|(
 name|t
 operator|->
-name|boundary
+name|dt_boundary
 operator|>>
 name|IO_PAGE_SHIFT
 argument_list|,
@@ -1692,7 +1692,7 @@ literal|0L
 argument_list|,
 name|t
 operator|->
-name|lowaddr
+name|dt_lowaddr
 argument_list|,
 name|sgsize
 argument_list|,
@@ -1872,7 +1872,7 @@ name|malloc
 argument_list|(
 name|dt
 operator|->
-name|maxsize
+name|dt_maxsize
 argument_list|,
 name|M_IOMMU
 argument_list|,
@@ -1913,7 +1913,7 @@ name|IOMMU_SIZE_ROUNDUP
 argument_list|(
 name|dt
 operator|->
-name|maxsize
+name|dt_maxsize
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2020,7 +2020,7 @@ name|sparc64_dmamap_create
 argument_list|(
 name|pt
 operator|->
-name|parent
+name|dt_parent
 argument_list|,
 name|dt
 argument_list|,
@@ -2069,7 +2069,7 @@ name|IOMMU_SIZE_ROUNDUP
 argument_list|(
 name|dt
 operator|->
-name|maxsize
+name|dt_maxsize
 argument_list|)
 argument_list|,
 name|BUS_SPACE_MAXSIZE
@@ -2114,7 +2114,7 @@ name|sparc64_dmamap_destroy
 argument_list|(
 name|pt
 operator|->
-name|parent
+name|dt_parent
 argument_list|,
 name|dt
 argument_list|,
@@ -2181,7 +2181,7 @@ name|sgs
 index|[
 name|dt
 operator|->
-name|nsegments
+name|dt_nsegments
 index|]
 decl_stmt|;
 else|#
@@ -2252,7 +2252,7 @@ name|buflen
 operator|>
 name|dt
 operator|->
-name|maxsize
+name|dt_maxsize
 condition|)
 return|return
 operator|(
@@ -2504,7 +2504,7 @@ name|sgsize
 operator|>
 name|dt
 operator|->
-name|maxsegsz
+name|dt_maxsegsz
 condition|)
 block|{
 if|if
@@ -2513,7 +2513,7 @@ name|sgsize
 operator|>
 name|dt
 operator|->
-name|maxsegsz
+name|dt_maxsegsz
 condition|)
 block|{
 comment|/* XXX: add fixup */
@@ -2533,7 +2533,7 @@ name|sgcnt
 operator|>
 name|dt
 operator|->
-name|nsegments
+name|dt_nsegments
 operator|||
 name|sgcnt
 operator|>
@@ -2676,7 +2676,7 @@ name|sparc64_dmamap_unload
 argument_list|(
 name|pt
 operator|->
-name|parent
+name|dt_parent
 argument_list|,
 name|dt
 argument_list|,

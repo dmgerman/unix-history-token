@@ -221,18 +221,18 @@ name|bus_space_tag
 block|{
 name|void
 modifier|*
-name|cookie
+name|bst_cookie
 decl_stmt|;
 name|bus_space_tag_t
-name|parent
+name|bst_parent
 decl_stmt|;
 name|int
-name|type
+name|bst_type
 decl_stmt|;
 name|void
 function_decl|(
 modifier|*
-name|bus_barrier
+name|bst_bus_barrier
 function_decl|)
 parameter_list|(
 name|bus_space_tag_t
@@ -338,7 +338,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|while (t->f == NULL)						\ 		t = t->parent;						\ 	return (*(t)->f)
+value|while (t->f == NULL)						\ 		t = t->bst_parent;						\ 	return (*(t)->f)
 end_define
 
 begin_function
@@ -367,7 +367,7 @@ name|_BS_CALL
 argument_list|(
 name|t
 argument_list|,
-name|bus_barrier
+name|bst_bus_barrier
 argument_list|)
 argument_list|(
 name|t
@@ -579,7 +579,7 @@ name|bus_type_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|)
 operator|)
@@ -631,7 +631,7 @@ name|bus_type_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|)
 operator|)
@@ -683,7 +683,7 @@ name|bus_type_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|)
 operator|)
@@ -735,7 +735,7 @@ name|bus_type_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|)
 operator|)
@@ -972,7 +972,7 @@ name|bus_type_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|,
 name|v
@@ -1026,7 +1026,7 @@ name|bus_type_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|,
 name|v
@@ -1080,7 +1080,7 @@ name|bus_type_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|,
 name|v
@@ -1134,7 +1134,7 @@ name|bus_type_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|,
 name|v
@@ -2410,7 +2410,7 @@ name|bus_stream_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|)
 operator|)
@@ -2462,7 +2462,7 @@ name|bus_stream_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|)
 operator|)
@@ -2514,7 +2514,7 @@ name|bus_stream_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|)
 operator|)
@@ -2566,7 +2566,7 @@ name|bus_stream_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|)
 operator|)
@@ -2803,7 +2803,7 @@ name|bus_stream_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|,
 name|v
@@ -2857,7 +2857,7 @@ name|bus_stream_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|,
 name|v
@@ -2911,7 +2911,7 @@ name|bus_stream_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|,
 name|v
@@ -2965,7 +2965,7 @@ name|bus_stream_asi
 index|[
 name|t
 operator|->
-name|type
+name|bst_type
 index|]
 argument_list|,
 name|v
@@ -4863,55 +4863,55 @@ name|bus_dma_tag
 block|{
 name|void
 modifier|*
-name|cookie
+name|dt_cookie
 decl_stmt|;
 comment|/* cookie used in the guts */
 name|bus_dma_tag_t
-name|parent
+name|dt_parent
 decl_stmt|;
 name|bus_size_t
-name|alignment
+name|dt_alignment
 decl_stmt|;
 name|bus_size_t
-name|boundary
+name|dt_boundary
 decl_stmt|;
 name|bus_addr_t
-name|lowaddr
+name|dt_lowaddr
 decl_stmt|;
 name|bus_addr_t
-name|highaddr
+name|dt_highaddr
 decl_stmt|;
 name|bus_dma_filter_t
 modifier|*
-name|filter
+name|dt_filter
 decl_stmt|;
 name|void
 modifier|*
-name|filterarg
+name|dt_filterarg
 decl_stmt|;
 name|bus_size_t
-name|maxsize
+name|dt_maxsize
 decl_stmt|;
-name|u_int
-name|nsegments
+name|int
+name|dt_nsegments
 decl_stmt|;
 name|bus_size_t
-name|maxsegsz
+name|dt_maxsegsz
 decl_stmt|;
 name|int
-name|flags
+name|dt_flags
 decl_stmt|;
 name|int
-name|ref_count
+name|dt_ref_count
 decl_stmt|;
 name|int
-name|map_count
+name|dt_map_count
 decl_stmt|;
 comment|/* 	 * DMA mapping methods. 	 */
 name|int
 function_decl|(
 modifier|*
-name|dmamap_create
+name|dt_dmamap_create
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -4927,7 +4927,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|dmamap_destroy
+name|dt_dmamap_destroy
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -4940,7 +4940,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|dmamap_load
+name|dt_dmamap_load
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -4966,7 +4966,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|dmamap_load_mbuf
+name|dt_dmamap_load_mbuf
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -4991,7 +4991,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|dmamap_load_uio
+name|dt_dmamap_load_uio
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -5016,7 +5016,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|dmamap_unload
+name|dt_dmamap_unload
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -5029,7 +5029,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|dmamap_sync
+name|dt_dmamap_sync
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -5045,7 +5045,7 @@ comment|/* 	 * DMA memory utility functions. 	 */
 name|int
 function_decl|(
 modifier|*
-name|dmamem_alloc
+name|dt_dmamem_alloc
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -5065,7 +5065,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|dmamem_free
+name|dt_dmamem_free
 function_decl|)
 parameter_list|(
 name|bus_dma_tag_t
@@ -5194,7 +5194,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_create
+name|dt_dmamap_create
 operator|==
 name|NULL
 condition|;
@@ -5202,7 +5202,7 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 return|return
@@ -5211,7 +5211,7 @@ call|(
 modifier|*
 name|lt
 operator|->
-name|dmamap_create
+name|dt_dmamap_create
 call|)
 argument_list|(
 name|lt
@@ -5269,7 +5269,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_destroy
+name|dt_dmamap_destroy
 operator|==
 name|NULL
 condition|;
@@ -5277,7 +5277,7 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 return|return
@@ -5286,7 +5286,7 @@ call|(
 modifier|*
 name|lt
 operator|->
-name|dmamap_destroy
+name|dt_dmamap_destroy
 call|)
 argument_list|(
 name|lt
@@ -5358,7 +5358,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_load
+name|dt_dmamap_load
 operator|==
 name|NULL
 condition|;
@@ -5366,7 +5366,7 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 return|return
@@ -5375,7 +5375,7 @@ call|(
 modifier|*
 name|lt
 operator|->
-name|dmamap_load
+name|dt_dmamap_load
 call|)
 argument_list|(
 name|lt
@@ -5465,7 +5465,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_load_mbuf
+name|dt_dmamap_load_mbuf
 operator|==
 name|NULL
 condition|;
@@ -5473,7 +5473,7 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 return|return
@@ -5482,7 +5482,7 @@ call|(
 modifier|*
 name|lt
 operator|->
-name|dmamap_load_mbuf
+name|dt_dmamap_load_mbuf
 call|)
 argument_list|(
 name|lt
@@ -5568,7 +5568,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_load_uio
+name|dt_dmamap_load_uio
 operator|==
 name|NULL
 condition|;
@@ -5576,7 +5576,7 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 return|return
@@ -5585,7 +5585,7 @@ call|(
 modifier|*
 name|lt
 operator|->
-name|dmamap_load_uio
+name|dt_dmamap_load_uio
 call|)
 argument_list|(
 name|lt
@@ -5655,7 +5655,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_unload
+name|dt_dmamap_unload
 operator|==
 name|NULL
 condition|;
@@ -5663,14 +5663,14 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 call|(
 modifier|*
 name|lt
 operator|->
-name|dmamap_unload
+name|dt_dmamap_unload
 call|)
 argument_list|(
 name|lt
@@ -5726,7 +5726,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_sync
+name|dt_dmamap_sync
 operator|==
 name|NULL
 condition|;
@@ -5734,14 +5734,14 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 call|(
 modifier|*
 name|lt
 operator|->
-name|dmamap_sync
+name|dt_dmamap_sync
 call|)
 argument_list|(
 name|lt
@@ -5807,7 +5807,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamem_alloc
+name|dt_dmamem_alloc
 operator|==
 name|NULL
 condition|;
@@ -5815,7 +5815,7 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 return|return
@@ -5824,7 +5824,7 @@ call|(
 modifier|*
 name|lt
 operator|->
-name|dmamem_alloc
+name|dt_dmamem_alloc
 call|)
 argument_list|(
 name|lt
@@ -5890,7 +5890,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamem_free
+name|dt_dmamem_free
 operator|==
 name|NULL
 condition|;
@@ -5898,14 +5898,14 @@ name|lt
 operator|=
 name|lt
 operator|->
-name|parent
+name|dt_parent
 control|)
 empty_stmt|;
 call|(
 modifier|*
 name|lt
 operator|->
-name|dmamem_free
+name|dt_dmamem_free
 call|)
 argument_list|(
 name|lt
