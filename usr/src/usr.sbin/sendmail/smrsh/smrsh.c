@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)smrsh.c	8.1 (Berkeley) %G%"
+literal|"@(#)smrsh.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_comment
 comment|/* **  SMRSH -- sendmail restricted shell ** **	This is a patch to get around the prog mailer bugs in most **	versions of sendmail. ** **	Use this in place of /bin/sh in the "prog" mailer definition **	in your sendmail.cf file.  You then create CMDDIR (owned by **	root, mode 755) and put links to any programs you want **	available to prog mailers in that directory.  This should **	include things like "vacation" and "procmail", but not "sed" **	or "sh". ** **	Leading pathnames are stripped from program names so that **	existing .forward files that reference things like **	"/usr/ucb/vacation" will continue to work. ** **	The following characters are completely illegal: **<>  |  ^  ;&  $  `  (  ) \n \r **	This is more restrictive than strictly necessary. ** **	To use this, edit /etc/sendmail.cf, search for ^Mprog, and **	change P=/bin/sh to P=/usr/etc/smrsh, where this compiled **	binary is installed /usr/etc/smrsh. ** **	This can be used on any version of sendmail. ** **	In loving memory of RTM.  11/02/93. */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
