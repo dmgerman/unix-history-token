@@ -1497,7 +1497,9 @@ name|devclass_get_device
 argument_list|(
 name|pccard_devclass
 argument_list|,
-literal|0
+name|slt
+operator|->
+name|slotnum
 argument_list|)
 expr_stmt|;
 name|irq
