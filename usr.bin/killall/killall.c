@@ -126,7 +126,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: killall [-dlmsv] [-help]\n"
+literal|"usage: killall [-delmsv] [-help]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -511,6 +511,11 @@ name|killed
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|eflag
+init|=
+literal|0
+decl_stmt|;
 name|prog
 operator|=
 name|av
@@ -689,6 +694,13 @@ case|case
 literal|'d'
 case|:
 name|dflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|eflag
 operator|++
 expr_stmt|;
 break|break;
@@ -1157,6 +1169,10 @@ index|[
 literal|2
 index|]
 operator|=
+name|eflag
+condition|?
+name|KERN_PROC_UID
+else|:
 name|KERN_PROC_RUID
 expr_stmt|;
 name|mib
@@ -1436,6 +1452,25 @@ name|kp_eproc
 operator|.
 name|e_tdev
 expr_stmt|;
+if|if
+condition|(
+name|eflag
+condition|)
+name|thisuid
+operator|=
+name|procs
+index|[
+name|i
+index|]
+operator|.
+name|kp_eproc
+operator|.
+name|e_ucred
+operator|.
+name|cr_uid
+expr_stmt|;
+comment|/* effective uid */
+else|else
 name|thisuid
 operator|=
 name|procs
