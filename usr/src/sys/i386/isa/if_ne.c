@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * NE2000 Ethernet driver  * Copyright (C) 1990 W. Jolitz  * @(#)if_ne.c	1.1 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
+comment|/*  * NE2000 Ethernet driver  * Copyright (C) 1990 W. Jolitz  * @(#)if_ne.c	1.2 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
 end_comment
 
 begin_include
@@ -156,7 +156,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../machine/device.h"
+file|"machine/isa/device.h"
 end_include
 
 begin_include
@@ -197,9 +197,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_include
+include|#
+directive|include
+file|"dbg.h"
+end_include
+
 begin_decl_stmt
 name|struct
-name|driver
+name|isa_driver
 name|nedriver
 init|=
 block|{
@@ -209,19 +215,6 @@ name|neattach
 block|,
 literal|"ne"
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_short
-name|neaddr
-index|[
-name|NNE
-index|]
-init|=
-block|{
-literal|0x360
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -335,7 +328,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
@@ -376,7 +369,7 @@ name|nec
 operator|=
 name|dvp
 operator|->
-name|ioa
+name|id_iobase
 expr_stmt|;
 name|s
 operator|=
@@ -418,7 +411,10 @@ operator||
 name|DSCM_NODMA
 argument_list|)
 expr_stmt|;
-comment|/* install timeout and return 0 if error */
+name|i
+operator|=
+literal|1000000
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -433,8 +429,26 @@ name|DSIS_RESET
 operator|)
 operator|==
 literal|0
+operator|&&
+name|i
+operator|--
+operator|>
+literal|0
 condition|)
-empty_stmt|;
+name|nulldev
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|outb
 argument_list|(
 name|nec
@@ -471,7 +485,38 @@ operator||
 name|DSCM_STOP
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
 comment|/* check cmd reg and fail if not right */
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|inb
+argument_list|(
+name|nec
+operator|+
+name|ds_cmd
+argument_list|)
+operator|)
+operator|!=
+operator|(
+name|DSCM_NODMA
+operator||
+name|DSCM_PG0
+operator||
+name|DSCM_STOP
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|outb
 argument_list|(
 name|nec
@@ -590,7 +635,12 @@ name|boarddata
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 comment|/*{ int i,rom; 	rom=1; printf("ne ram "); 	for (i = 0; i< 0xfff0; i+=4) { 		int pat; 		pat = 0xa55a+i*37; 		putram(&pat,i,4); 		fetchram(&pat,i,4); 		if (pat == 0xa55a+i*37) { 			if (rom) { rom=0; printf(" %x", i); } 		} else { 			if (!rom) { rom=1; printf("..%x ", i); } 		} 		pat=0; 		putram(&pat,i,4); 	} printf("\n"); }*/
+endif|#
+directive|endif
 comment|/* checksum data? */
 comment|/* extract board address */
 for|for
@@ -617,16 +667,6 @@ name|boarddata
 index|[
 name|i
 index|]
-expr_stmt|;
-name|INTREN
-argument_list|(
-name|IRQ9
-argument_list|)
-expr_stmt|;
-name|INTREN
-argument_list|(
-literal|0x2
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -773,6 +813,13 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
+name|pausestr
+argument_list|(
+literal|"x"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -788,8 +835,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|nulldev
-argument_list|()
+name|pausestr
+argument_list|(
+literal|"fetchrom"
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -811,6 +862,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_expr_stmt
+specifier|static
+name|recur
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 name|fetchram
@@ -834,6 +891,9 @@ block|{
 name|u_char
 name|cmd
 decl_stmt|;
+name|recur
+operator|++
+expr_stmt|;
 name|cmd
 operator|=
 name|inb
@@ -943,6 +1003,13 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
+name|pausestr
+argument_list|(
+literal|"x"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -958,8 +1025,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|nulldev
-argument_list|()
+name|pausestr
+argument_list|(
+literal|"fetchram"
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -978,6 +1049,9 @@ name|ds_cmd
 argument_list|,
 name|cmd
 argument_list|)
+expr_stmt|;
+name|recur
+operator|--
 expr_stmt|;
 block|}
 end_block
@@ -1004,6 +1078,9 @@ block|{
 name|u_char
 name|cmd
 decl_stmt|;
+name|recur
+operator|++
+expr_stmt|;
 name|cmd
 operator|=
 name|inb
@@ -1122,6 +1199,13 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
+name|pausestr
+argument_list|(
+literal|"x"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1137,9 +1221,18 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|nulldev
-argument_list|()
-expr_stmt|;
+if|if
+condition|(
+name|pausestr
+argument_list|(
+literal|"putram"
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+break|break;
 name|outb
 argument_list|(
 name|nec
@@ -1157,6 +1250,9 @@ name|ds_cmd
 argument_list|,
 name|cmd
 argument_list|)
+expr_stmt|;
+name|recur
+operator|--
 expr_stmt|;
 block|}
 end_block
@@ -1229,7 +1325,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
@@ -1242,7 +1338,7 @@ name|unit
 init|=
 name|dvp
 operator|->
-name|unit
+name|id_unit
 decl_stmt|;
 specifier|register
 name|struct
@@ -1787,6 +1883,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ns
+operator|->
+name|ns_flags
+operator|&
+name|DSF_LOCK
+condition|)
+return|return;
+if|if
+condition|(
 name|inb
 argument_list|(
 name|nec
@@ -1832,6 +1937,13 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * Copy the mbuf chain into the transmit buffer 	 */
+name|ns
+operator|->
+name|ns_flags
+operator||=
+name|DSF_LOCK
+expr_stmt|;
+comment|/* prevent entering nestart */
 name|buffer
 operator|=
 name|TBUF
@@ -1899,6 +2011,37 @@ argument_list|)
 expr_stmt|;
 comment|/*}*/
 comment|/* 	 * Init transmit length registers, and set transmit start flag. 	 */
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+operator|||
+name|len
+operator|>
+literal|1536
+condition|)
+name|pg
+argument_list|(
+literal|"T Bogus Length %d\n"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|dprintf
+argument_list|(
+name|DEXPAND
+argument_list|,
+literal|"snd %d "
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|len
@@ -1990,6 +2133,8 @@ begin_macro
 name|neintr
 argument_list|(
 argument|vec
+argument_list|,
+argument|ppl
 argument_list|)
 end_macro
 
@@ -2018,9 +2163,13 @@ name|cmd
 decl_stmt|,
 name|isr
 decl_stmt|;
-comment|/* check cmd, clear interrupt */
-name|redo
-label|:
+specifier|static
+name|cnt
+expr_stmt|;
+name|redstack
+argument_list|()
+expr_stmt|;
+comment|/* save cmd, clear interrupt */
 name|cmd
 operator|=
 name|inb
@@ -2030,17 +2179,8 @@ operator|+
 name|ds_cmd
 argument_list|)
 expr_stmt|;
-name|outb
-argument_list|(
-name|nec
-operator|+
-name|ds_cmd
-argument_list|,
-name|DSCM_NODMA
-operator||
-name|DSCM_STOP
-argument_list|)
-expr_stmt|;
+name|loop
+label|:
 name|isr
 operator|=
 name|inb
@@ -2050,6 +2190,33 @@ operator|+
 name|ds0_isr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+name|dprintf
+argument_list|(
+name|DEXPAND
+argument_list|,
+literal|"|ppl %x isr %x "
+argument_list|,
+name|ppl
+argument_list|,
+name|isr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds_cmd
+argument_list|,
+name|DSCM_NODMA
+operator||
+name|DSCM_START
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|nec
@@ -2059,13 +2226,6 @@ argument_list|,
 name|isr
 argument_list|)
 expr_stmt|;
-name|ns
-operator|->
-name|ns_flags
-operator||=
-name|DSF_LOCK
-expr_stmt|;
-comment|/* prevent entering nestart */
 if|if
 condition|(
 name|isr
@@ -2159,6 +2319,9 @@ operator|+
 name|ds0_bnry
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 name|printf
 argument_list|(
 literal|"Cur %x pend %x lastfree %x "
@@ -2172,6 +2335,8 @@ argument_list|,
 name|lastfree
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* have we wrapped */
 if|if
 condition|(
@@ -2262,6 +2427,9 @@ name|ns_ph
 operator|.
 name|pr_nxtpg
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 name|printf
 argument_list|(
 literal|"nxt %x "
@@ -2269,6 +2437,8 @@ argument_list|,
 name|nxt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* sanity check */
 if|if
 condition|(
@@ -2392,14 +2562,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|redo
-goto|;
+endif|#
+directive|endif
 block|}
 comment|/* receiver error */
 if|if
@@ -2518,14 +2690,14 @@ operator|+
 name|ds0_bnry
 argument_list|)
 expr_stmt|;
-include|#
-directive|include
-file|"dbg.h"
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 name|dprintf
 argument_list|(
 name|DEXPAND
 argument_list|,
-literal|"cur %x pend %x lastfree %x "
+literal|"cur %x pnd %x lfr %x "
 argument_list|,
 name|ns
 operator|->
@@ -2536,6 +2708,8 @@ argument_list|,
 name|lastfree
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* have we wrapped */
 if|if
 condition|(
@@ -2552,7 +2726,7 @@ operator|/
 name|DS_PGSIZE
 expr_stmt|;
 comment|/* something in the buffer? */
-while|while
+if|if
 condition|(
 name|pend
 operator|!=
@@ -2610,14 +2784,81 @@ operator|->
 name|ns_ph
 operator|.
 name|pr_status
-operator|&
+operator|==
 name|DSRS_RPC
+operator|||
+name|ns
+operator|->
+name|ns_ph
+operator|.
+name|pr_status
+operator|==
+literal|0x21
 condition|)
 name|nerecv
 argument_list|(
 name|ns
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"cur %x pnd %x lfr %x "
+argument_list|,
+name|ns
+operator|->
+name|ns_cur
+argument_list|,
+name|pend
+argument_list|,
+name|lastfree
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"nxt %x len %x "
+argument_list|,
+name|ns
+operator|->
+name|ns_ph
+operator|.
+name|pr_nxtpg
+argument_list|,
+operator|(
+name|ns
+operator|->
+name|ns_ph
+operator|.
+name|pr_sz1
+operator|<<
+literal|8
+operator|)
+operator|+
+name|ns
+operator|->
+name|ns_ph
+operator|.
+name|pr_sz0
+argument_list|)
+expr_stmt|;
+name|pg
+argument_list|(
+literal|"Bogus Sts %x "
+argument_list|,
+name|ns
+operator|->
+name|ns_ph
+operator|.
+name|pr_status
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|nxt
 operator|=
 name|ns
@@ -2626,6 +2867,9 @@ name|ns_ph
 operator|.
 name|pr_nxtpg
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 name|dprintf
 argument_list|(
 name|DEXPAND
@@ -2635,6 +2879,8 @@ argument_list|,
 name|nxt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* sanity check */
 if|if
 condition|(
@@ -2685,8 +2931,23 @@ argument_list|,
 name|lastfree
 argument_list|)
 expr_stmt|;
+name|pend
+operator|=
+name|inb
+argument_list|(
+name|nec
+operator|+
+name|ds1_curr
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* else ns->ns_cur = pend;*/
+else|else
+name|ns
+operator|->
+name|ns_cur
+operator|=
+name|pend
+expr_stmt|;
 name|outb
 argument_list|(
 name|nec
@@ -2698,9 +2959,6 @@ operator||
 name|DSCM_NODMA
 argument_list|)
 expr_stmt|;
-goto|goto
-name|redo
-goto|;
 block|}
 if|if
 condition|(
@@ -2709,6 +2967,25 @@ operator|&
 name|DSIS_TXE
 condition|)
 block|{
+name|ns
+operator|->
+name|ns_flags
+operator|&=
+operator|~
+name|DSF_LOCK
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+name|dprintf
+argument_list|(
+name|DEXPAND
+argument_list|,
+literal|" clsn"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* need to read these registers to clear status */
 name|ns
 operator|->
@@ -2735,26 +3012,34 @@ if|if
 condition|(
 name|isr
 operator|&
-operator|(
-name|DSIS_TXE
-operator||
 name|DSIS_TX
-operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+name|dprintf
+argument_list|(
+name|DEXPAND
+argument_list|,
+literal|"tx "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ns
+operator|->
+name|ns_flags
+operator|&=
+operator|~
+name|DSF_LOCK
+expr_stmt|;
 operator|++
 name|ns
 operator|->
 name|ns_if
 operator|.
 name|if_opackets
-expr_stmt|;
-name|inb
-argument_list|(
-name|nec
-operator|+
-name|ds0_bnry
-argument_list|)
 expr_stmt|;
 name|ns
 operator|->
@@ -2770,20 +3055,6 @@ name|ds0_tbcr0
 argument_list|)
 expr_stmt|;
 block|}
-name|dprintf
-argument_list|(
-name|DEXPAND
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|ns
-operator|->
-name|ns_flags
-operator|&=
-operator|~
-name|DSF_LOCK
-expr_stmt|;
 name|outb
 argument_list|(
 name|nec
@@ -2808,11 +3079,7 @@ name|nec
 operator|+
 name|ds_cmd
 argument_list|,
-name|DSCM_NODMA
-operator||
-name|DSCM_PG0
-operator||
-name|DSCM_START
+name|cmd
 argument_list|)
 expr_stmt|;
 name|outb
@@ -2824,6 +3091,43 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
+name|isr
+operator|=
+name|inb
+argument_list|(
+name|nec
+operator|+
+name|ds0_isr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isr
+condition|)
+goto|goto
+name|loop
+goto|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+if|if
+condition|(
+operator|++
+name|cnt
+operator|%
+literal|10
+operator|==
+literal|0
+condition|)
+name|dprintf
+argument_list|(
+name|DEXPAND
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -2876,6 +3180,33 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|60
+operator|||
+name|len
+operator|>
+literal|1536
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+name|pg
+argument_list|(
+name|DEXPAND
+argument_list|,
+literal|"R Bogus Length %d"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
+block|}
 name|fetchram
 argument_list|(
 name|ns
@@ -2901,6 +3232,9 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 if|if
 condition|(
 operator|!
@@ -2954,6 +3288,8 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* else  printf("P%x ", ns->ns_cur);*/
+endif|#
+directive|endif
 if|if
 condition|(
 name|len
@@ -3005,11 +3341,14 @@ name|ns_ph
 argument_list|)
 operator|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 name|dprintf
 argument_list|(
 name|DEXPAND
 argument_list|,
-literal|"len %d( %d| "
+literal|"len %d(%d|"
 argument_list|,
 name|len
 argument_list|,
@@ -3020,6 +3359,8 @@ operator|->
 name|ns_pb
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|++
@@ -3090,11 +3431,14 @@ name|ns_cur
 operator|*
 name|DS_PGSIZE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 name|dprintf
 argument_list|(
 name|DEXPAND
 argument_list|,
-literal|"%d| "
+literal|"%d|"
 argument_list|,
 name|p
 operator|-
@@ -3103,16 +3447,23 @@ operator|->
 name|ns_pb
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|NEDEBUG
 name|dprintf
 argument_list|(
 name|DEXPAND
 argument_list|,
-literal|". %d)\n"
+literal|"%d) "
 argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|l
@@ -3159,6 +3510,84 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|pausestr
+argument_list|(
+argument|s
+argument_list|,
+argument|n
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|static
+name|downcnt
+expr_stmt|;
+if|if
+condition|(
+name|n
+condition|)
+block|{
+name|downcnt
+operator|=
+literal|0xffff
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|--
+name|downcnt
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+name|pg
+argument_list|(
+literal|"<%s> recur %d sts %x "
+argument_list|,
+name|s
+argument_list|,
+name|recur
+argument_list|,
+name|inb
+argument_list|(
+name|nec
+operator|+
+name|ds0_isr
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
