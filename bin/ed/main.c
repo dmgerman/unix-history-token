@@ -1653,7 +1653,7 @@ name|addr_last
 expr_stmt|;
 break|break;
 block|}
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(
@@ -2053,7 +2053,7 @@ condition|)
 return|return
 name|EMOD
 return|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|'E'
 case|:

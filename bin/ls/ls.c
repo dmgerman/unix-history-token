@@ -2413,7 +2413,7 @@ name|maxinode
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -2421,7 +2421,7 @@ name|maxblock
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -2429,7 +2429,7 @@ name|maxnlink
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|3
 case|:
@@ -2437,7 +2437,7 @@ name|maxuser
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -2445,7 +2445,7 @@ name|maxgroup
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|5
 case|:
@@ -2453,7 +2453,7 @@ name|maxflags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|6
 case|:
@@ -2461,7 +2461,7 @@ name|maxsize
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|7
 case|:
@@ -2469,7 +2469,7 @@ name|maxlen
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|8
 case|:
@@ -2477,7 +2477,7 @@ name|maxlattr
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 ifdef|#
 directive|ifdef
 name|COLORLS
@@ -2492,7 +2492,7 @@ name|f_notabs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 break|break;
 block|}

@@ -4084,7 +4084,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|'*'
 case|:

@@ -921,7 +921,7 @@ operator|=
 name|readtoken
 argument_list|()
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|TNL
 case|:
