@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.24 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.25 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.24 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.25 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1905,11 +1905,11 @@ begin_comment
 comment|/* **  GETAUTHINFO -- get the real host name asociated with a file descriptor ** **	Uses RFC1413 protocol to try to get info from the other end. ** **	Parameters: **		fd -- the descriptor ** **	Returns: **		The user@host information associated with this descriptor. ** **	Side Effects: **		Sets RealHostName to the name of the host at the other end. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|IDENTPROTO
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1956,8 +1956,8 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|IDENTPROTO
 name|SOCKADDR
 name|la
@@ -2096,8 +2096,8 @@ name|RealHostAddr
 operator|=
 name|fa
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|IDENTPROTO
 name|lalen
 operator|=
