@@ -1751,6 +1751,15 @@ name|tp
 operator|->
 name|snd_una
 expr_stmt|;
+comment|/* 	 * Note:  We overload snd_recover to function also as the 	 * snd_last variable described in RFC 2582 	 */
+name|tp
+operator|->
+name|snd_recover
+operator|=
+name|tp
+operator|->
+name|snd_max
+expr_stmt|;
 comment|/* 	 * Force a segment to be sent. 	 */
 name|tp
 operator|->
