@@ -67,6 +67,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|PacketAliasSetSkinnyPort
+parameter_list|(
+name|unsigned
+name|int
+name|_port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|unsigned
 name|int
 name|PacketAliasSetMode
