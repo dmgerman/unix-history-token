@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.12	82/01/14	*/
+comment|/*	cons.c	4.13	82/03/13	*/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/proc.h"
 end_include
 
 begin_include

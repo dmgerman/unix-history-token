@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.7	82/03/05	*/
+comment|/*	raw_imp.c	4.8	82/03/13	*/
 end_comment
 
 begin_include
@@ -356,9 +356,14 @@ name|il_length
 operator|=
 name|htons
 argument_list|(
+call|(
+name|u_short
+call|)
+argument_list|(
 name|len
 operator|<<
 literal|3
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sin

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.4	82/03/05	*/
+comment|/*	raw_cb.c	4.5	82/03/13	*/
 end_comment
 
 begin_include
@@ -312,8 +312,14 @@ name|addr
 condition|)
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|so
 operator|->
@@ -408,9 +414,6 @@ argument_list|(
 name|rp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|dtom
@@ -511,8 +514,14 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|rp
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	4.6	82/03/12	*/
+comment|/*	raw_ip.c	4.7	82/03/13	*/
 end_comment
 
 begin_include
@@ -181,9 +181,19 @@ argument_list|,
 operator|&
 name|ripproto
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ripdst
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ripsrc
 argument_list|)
@@ -441,6 +451,11 @@ name|ip_output
 argument_list|(
 name|m
 argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|)

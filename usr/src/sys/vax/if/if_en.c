@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.37	82/03/09	*/
+comment|/*	if_en.c	4.38	82/03/13	*/
 end_comment
 
 begin_include
@@ -1911,9 +1911,19 @@ argument_list|,
 operator|&
 name|pupproto
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|pupdst
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|pupsrc
 argument_list|)

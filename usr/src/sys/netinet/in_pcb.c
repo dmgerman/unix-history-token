@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.19	82/03/11	*/
+comment|/*	in_pcb.c	4.20	82/03/13	*/
 end_comment
 
 begin_include
@@ -202,8 +202,6 @@ argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 operator|==
 literal|0
@@ -611,8 +609,6 @@ argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 expr_stmt|;
 if|if

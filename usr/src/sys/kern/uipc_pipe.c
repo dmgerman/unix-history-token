@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.10	81/12/02	*/
+comment|/*	uipc_pipe.c	4.11	82/03/13	*/
 end_comment
 
 begin_include
@@ -593,6 +593,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_macro
 name|psndrcv
 argument_list|(
@@ -701,6 +707,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

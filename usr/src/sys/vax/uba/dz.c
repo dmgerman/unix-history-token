@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.34	82/03/12	*/
+comment|/*	dz.c	4.35	82/03/13	*/
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/proc.h"
 end_include
 
 begin_include
@@ -1311,6 +1317,9 @@ name|EBUSY
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -1478,6 +1487,9 @@ name|dzcsr
 operator|&
 name|DZ_32
 condition|)
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -1530,6 +1542,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -2279,6 +2294,9 @@ name|dzcsr
 operator|&
 name|DZ_32
 condition|)
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -2337,6 +2355,9 @@ name|dzcsr
 operator|&
 name|DZ_32
 condition|)
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -2373,6 +2394,9 @@ break|break;
 case|case
 name|TIOCSDTR
 case|:
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -2388,6 +2412,9 @@ break|break;
 case|case
 name|TIOCCDTR
 case|:
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -2428,6 +2455,9 @@ operator|=
 name|EFAULT
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -2469,6 +2499,9 @@ operator|=
 name|EFAULT
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -2510,6 +2543,9 @@ operator|=
 name|EFAULT
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|dev
@@ -2799,6 +2835,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|unit
@@ -4271,6 +4310,9 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dzmctl
 argument_list|(
 name|unit

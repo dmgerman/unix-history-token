@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.18	82/03/11	*/
+comment|/*	tty_pty.c	4.19	82/03/13	*/
 end_comment
 
 begin_comment
@@ -1243,6 +1243,9 @@ operator|->
 name|pt_send
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|passc
 argument_list|(
 name|pti
@@ -1258,6 +1261,9 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|passc
 argument_list|(
 literal|0
@@ -1937,6 +1943,9 @@ goto|goto
 name|again
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|b_to_q
 argument_list|(
 name|cp
@@ -1949,6 +1958,9 @@ operator|->
 name|t_rawq
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|0
@@ -2189,6 +2201,9 @@ name|caddr_t
 operator|)
 name|addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|packet
 argument_list|,
@@ -2246,6 +2261,9 @@ name|caddr_t
 operator|)
 name|addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|remote
 argument_list|,
@@ -2307,8 +2325,14 @@ if|if
 condition|(
 name|copyin
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|nbio
 argument_list|,

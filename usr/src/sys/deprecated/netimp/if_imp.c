@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.13	82/03/12	*/
+comment|/*	if_imp.c	4.14	82/03/13	*/
 end_comment
 
 begin_include
@@ -801,6 +801,9 @@ name|timeout
 argument_list|(
 name|impdown
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|sc
 argument_list|,
 literal|30
@@ -815,6 +818,9 @@ name|sc
 argument_list|,
 literal|"going down %s"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|impmessage
 index|[
 name|ip
@@ -925,6 +931,9 @@ name|sc
 argument_list|,
 literal|"reset (host %d/imp %d)"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|ip
 operator|->
 name|il_host
@@ -987,7 +996,10 @@ name|void
 operator|)
 name|impsnd
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|imp_if
 argument_list|,
 name|next
 argument_list|)
@@ -1202,9 +1214,19 @@ argument_list|,
 operator|&
 name|impproto
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|impdst
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|impsrc
 argument_list|)
@@ -1296,6 +1318,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|a1
 decl_stmt|;
 end_decl_stmt
 
@@ -1466,6 +1494,9 @@ name|len
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
@@ -1628,7 +1659,10 @@ name|il_length
 operator|=
 name|htons
 argument_list|(
-operator|(
+call|(
+name|u_short
+call|)
+argument_list|(
 name|len
 operator|+
 sizeof|sizeof
@@ -1636,7 +1670,7 @@ argument_list|(
 expr|struct
 name|imp_leader
 argument_list|)
-operator|)
+argument_list|)
 operator|<<
 literal|3
 argument_list|)

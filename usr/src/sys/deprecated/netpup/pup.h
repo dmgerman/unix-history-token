@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pup.h	4.2	82/03/03	*/
+comment|/*	pup.h	4.3	82/03/13	*/
 end_comment
 
 begin_comment
@@ -119,6 +119,27 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|sp_net
+value|spup_addr.pp_net
+end_define
+
+begin_define
+define|#
+directive|define
+name|sp_host
+value|spup_addr.pp_host
+end_define
+
+begin_define
+define|#
+directive|define
+name|sp_socket
+value|spup_addr.pp_port
+end_define
 
 end_unit
 

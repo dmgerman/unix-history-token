@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.8	82/03/05	*/
+comment|/*	raw_usrreq.c	4.9	82/03/13	*/
 end_comment
 
 begin_include
@@ -514,6 +514,9 @@ name|m_next
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 condition|)

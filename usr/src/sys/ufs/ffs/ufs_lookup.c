@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.12	82/03/12	*/
+comment|/*	ufs_lookup.c	4.13	82/03/13	*/
 end_comment
 
 begin_include
@@ -997,9 +997,14 @@ name|dp
 operator|->
 name|i_size
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|cp
 operator|-
 name|ocp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -1060,6 +1065,9 @@ name|b_un
 operator|.
 name|b_addr
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|dp
 operator|->
 name|i_size

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.59	82/03/11	*/
+comment|/*	tcp_input.c	1.60	82/03/13	*/
 end_comment
 
 begin_include
@@ -123,6 +123,12 @@ directive|include
 file|"../errno.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|tcpprintfs
@@ -130,6 +136,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -433,6 +444,9 @@ name|ti_len
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ti
 operator|->
 name|ti_len
@@ -629,6 +643,9 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|om
 operator|->
 name|m_len
@@ -652,6 +669,10 @@ name|m_len
 argument_list|,
 name|op
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|m
 operator|->
 name|m_len
@@ -660,6 +681,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|tcpiphdr
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -973,7 +995,7 @@ name|inp
 argument_list|,
 operator|(
 expr|struct
-name|sockaddr
+name|sockaddr_in
 operator|*
 operator|)
 operator|&
@@ -2160,8 +2182,6 @@ operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
 argument_list|,
 name|acked
 argument_list|)
@@ -2778,6 +2798,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Return any desired output. 	 */
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp
@@ -2820,6 +2843,9 @@ if|if
 condition|(
 name|om
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|om
@@ -3054,6 +3080,9 @@ name|t_maxseg
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|tp
 operator|->
 name|t_maxseg
@@ -3331,6 +3360,9 @@ directive|endif
 endif|TCPTRUEOOB
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|om
@@ -3452,6 +3484,10 @@ literal|1
 argument_list|,
 name|cp
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|m
 operator|->
 name|m_len
@@ -3459,6 +3495,7 @@ operator|-
 name|cnt
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -3943,9 +3980,6 @@ name|so_state
 operator|&
 name|SS_CANTRCVMORE
 condition|)
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|m

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.3	82/02/15	*/
+comment|/*	if_dmc.c	4.4	82/03/13	*/
 end_comment
 
 begin_include
@@ -1290,6 +1290,9 @@ operator||
 name|DMC_RQI
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|type
@@ -1302,6 +1305,9 @@ operator|->
 name|sc_que
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putw
 argument_list|(
 name|w0
@@ -1312,6 +1318,9 @@ operator|->
 name|sc_que
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putw
 argument_list|(
 name|w1

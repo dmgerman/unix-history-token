@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.32	82/03/12	*/
+comment|/*	tcp_output.c	4.33	82/03/13	*/
 end_comment
 
 begin_include
@@ -933,6 +933,9 @@ name|optlen
 expr_stmt|;
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|opt
 argument_list|,
 name|mtod
@@ -1364,6 +1367,9 @@ expr|struct
 name|tcpiphdr
 argument_list|)
 operator|+
+operator|(
+name|int
+operator|)
 name|optlen
 operator|+
 name|len

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_debug.c	4.1	81/12/22	*/
+comment|/*	tcp_debug.c	4.2	82/03/13	*/
 end_comment
 
 begin_include
@@ -216,10 +216,6 @@ name|len
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|struct
 name|tcp_debug
 modifier|*
@@ -430,6 +426,9 @@ name|len
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -491,6 +490,9 @@ condition|(
 name|flags
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|lint
 name|char
 modifier|*
 name|cp
@@ -526,6 +528,8 @@ argument_list|(
 name|RST
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|">"

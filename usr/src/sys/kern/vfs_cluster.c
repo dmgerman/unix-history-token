@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.25	82/01/17	*/
+comment|/*	vfs_cluster.c	4.26	82/03/13	*/
 end_comment
 
 begin_include
@@ -270,7 +270,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|{ \ 	int s = spl6(); \ 	(bp)->av_back->av_forw = (bp)->av_forw; \ 	(bp)->av_forw->av_back = (bp)->av_back; \ 	(bp)->b_flags |= B_BUSY; \ 	splx(s); \ }
+value|{ \ 	int x = spl6(); \ 	(bp)->av_back->av_forw = (bp)->av_forw; \ 	(bp)->av_forw->av_back = (bp)->av_back; \ 	(bp)->b_flags |= B_BUSY; \ 	splx(x); \ }
 end_define
 
 begin_endif

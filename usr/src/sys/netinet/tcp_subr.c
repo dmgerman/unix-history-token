@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.16	82/03/11	*/
+comment|/*	tcp_subr.c	4.17	82/03/13	*/
 end_comment
 
 begin_include
@@ -674,6 +674,9 @@ name|ti_len
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ti
 operator|->
 name|ti_len

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.8	82/03/12	*/
+comment|/*	if_acc.c	4.9	82/03/13	*/
 end_comment
 
 begin_include
@@ -752,6 +752,9 @@ name|ui_ubanum
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|btoc
 argument_list|(
 name|IMP_MTU
@@ -1449,12 +1452,6 @@ name|struct
 name|accdevice
 modifier|*
 name|addr
-decl_stmt|;
-specifier|register
-name|struct
-name|ifqueue
-modifier|*
-name|inq
 decl_stmt|;
 name|struct
 name|mbuf

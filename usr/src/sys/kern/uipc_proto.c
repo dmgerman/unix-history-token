@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.17	82/03/03	*/
+comment|/*	uipc_proto.c	4.18	82/03/13	*/
 end_comment
 
 begin_include
@@ -162,15 +162,8 @@ argument_list|()
 decl_stmt|,
 name|rip_ctlinput
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|rip_usrreq
-argument_list|()
 decl_stmt|,
-name|rip_slowtimo
+name|rip_usrreq
 argument_list|()
 decl_stmt|;
 end_decl_stmt
