@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -163,11 +163,9 @@ modifier|*
 name|internal
 decl_stmt|;
 comment|/* access method private; really void * */
-name|__BEGIN_DECLS
 name|int
 argument_list|(
-operator|*
-name|close
+argument|*close
 argument_list|)
 name|__P
 argument_list|(
@@ -178,7 +176,7 @@ name|__db
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|int
 argument_list|(
 argument|*del
@@ -285,7 +283,6 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|__END_DECLS
 block|}
 name|DB
 typedef|;
