@@ -12732,7 +12732,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 condition|)
 block|{
 comment|/* Make sure all other cr3 entries are updated. */

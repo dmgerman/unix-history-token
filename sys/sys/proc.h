@@ -2247,12 +2247,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_KSES
+name|P_THREADED
 value|0x08000
 end_define
 
 begin_comment
-comment|/* Process is using KSEs. */
+comment|/* Process is using threads. */
 end_comment
 
 begin_define

@@ -468,7 +468,7 @@ name|proc
 operator|.
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 operator|==
 literal|0
 condition|)
@@ -2034,7 +2034,7 @@ name|proc
 operator|.
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 operator|)
 condition|)
 block|{

@@ -3191,7 +3191,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 operator|)
 condition|)
 block|{
@@ -3392,7 +3392,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 operator|)
 condition|)
 block|{

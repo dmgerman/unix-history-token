@@ -2024,7 +2024,7 @@ name|td_proc
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 condition|)
 name|kse_reassign
 argument_list|(

@@ -1743,7 +1743,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 operator|)
 operator|||
 operator|(
@@ -2021,7 +2021,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_KSES
+name|P_THREADED
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -2492,7 +2492,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 operator|)
 condition|)
 return|return
@@ -2821,7 +2821,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|P_KSES
+name|P_THREADED
 expr_stmt|;
 name|kg
 operator|=
@@ -7409,7 +7409,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 operator|)
 operator|==
 literal|0

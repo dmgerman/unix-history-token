@@ -289,7 +289,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 condition|)
 block|{
 name|thread_userret
@@ -975,7 +975,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 operator|&&
 name|sigs
 condition|)

@@ -2032,7 +2032,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 condition|)
 name|thread_user_enter
 argument_list|(

@@ -490,7 +490,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 condition|)
 block|{
 comment|/* 		 * First check if some other thread got here before us.. 		 * if so, act apropriatly, (exit or suspend); 		 */
@@ -520,7 +520,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_KSES
+name|P_THREADED
 expr_stmt|;
 name|thread_single_end
 argument_list|()

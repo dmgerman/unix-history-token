@@ -1761,7 +1761,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 condition|)
 block|{
 comment|/* 		 * We will not be on the run queue. So we must be 		 * sleeping or similar. As it's available, 		 * someone else can use the KSE if they need it. 		 */

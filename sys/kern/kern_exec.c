@@ -922,7 +922,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KSES
+name|P_THREADED
 condition|)
 block|{
 if|if
@@ -951,7 +951,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_KSES
+name|P_THREADED
 expr_stmt|;
 name|td
 operator|->
