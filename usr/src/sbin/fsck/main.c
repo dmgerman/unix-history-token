@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.10	(Berkeley)	%G%"
+literal|"@(#)main.c	2.11	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6910,6 +6910,21 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|filsize
+operator|<=
+literal|0
+operator|&&
+name|dirp
+operator|->
+name|loc
+operator|%
+name|DIRBLKSIZ
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
 name|dirp
 operator|->
 name|loc
@@ -6959,6 +6974,7 @@ operator|->
 name|loc
 operator|%
 name|DIRBLKSIZ
+operator|)
 operator|)
 operator|)
 condition|)
