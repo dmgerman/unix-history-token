@@ -2135,7 +2135,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 if|if
 condition|(
