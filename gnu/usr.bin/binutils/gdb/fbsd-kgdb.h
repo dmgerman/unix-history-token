@@ -29,14 +29,6 @@ name|kernel_writablecore
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500032
-end_if
-
 begin_define
 define|#
 directive|define
@@ -86,11 +78,6 @@ parameter_list|)
 define|\
 value|if (!strcmp(STR, "kgdb")) \      kernel_debugging = 1;
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
