@@ -150,14 +150,6 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|pr_usrreqs
-name|ddp_usrreqs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|at_ifaddr
 modifier|*
 name|at_ifaddr
