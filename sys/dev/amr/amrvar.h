@@ -762,14 +762,6 @@ decl_stmt|;
 name|int
 name|amrd_unit
 decl_stmt|;
-name|int
-name|amrd_flags
-decl_stmt|;
-define|#
-directive|define
-name|AMRD_OPEN
-value|(1<<0)
-comment|/* drive is open (can't detach) */
 block|}
 struct|;
 end_struct
