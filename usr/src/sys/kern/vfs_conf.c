@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -537,7 +537,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ISOFS
+name|CD9660
 end_ifdef
 
 begin_decl_stmt
@@ -624,7 +624,7 @@ block|,
 comment|/* 13 = MOUNT_AFS */
 name|ISOFS_VFSOPS
 block|,
-comment|/* 14 = MOUNT_ISOFS */
+comment|/* 14 = MOUNT_CD9660 */
 literal|0
 block|}
 decl_stmt|;
@@ -958,7 +958,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|ISOFS
+name|CD9660
 operator|&
 name|isofs_vnodeop_opv_desc
 block|,
