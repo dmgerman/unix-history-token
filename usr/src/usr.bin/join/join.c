@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)join.c	8.3 (Berkeley) %G%"
+literal|"@(#)join.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1379,6 +1379,27 @@ name|LINE
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* re-set lastlp in case it moved */
+if|if
+condition|(
+name|lastlp
+operator|!=
+name|NULL
+condition|)
+name|lastp
+operator|=
+operator|&
+name|F
+operator|->
+name|set
+index|[
+name|F
+operator|->
+name|setcnt
+operator|-
+literal|1
+index|]
+expr_stmt|;
 block|}
 comment|/* 		 * Get any pushed back line, else get the next line.  Allocate 		 * space as necessary.  If taking the line from the stack swap 		 * the two structures so that we don't lose space allocated to 		 * either structure.  This could be avoided by doing another 		 * level of indirection, but it's probably okay as is. 		 * but it's probably okay as is. 		 */
 name|lp
@@ -1489,6 +1510,10 @@ argument_list|,
 name|len
 operator|+
 literal|1
+operator|-
+name|lp
+operator|->
+name|linealloc
 argument_list|)
 expr_stmt|;
 if|if
@@ -1748,7 +1773,7 @@ condition|(
 name|lp1
 operator|->
 name|fieldcnt
-operator|<
+operator|<=
 name|fieldno1
 condition|)
 return|return
@@ -1756,7 +1781,7 @@ operator|(
 name|lp2
 operator|->
 name|fieldcnt
-operator|<
+operator|<=
 name|fieldno2
 condition|?
 literal|0
@@ -1769,7 +1794,7 @@ condition|(
 name|lp2
 operator|->
 name|fieldcnt
-operator|<
+operator|<=
 name|fieldno2
 condition|)
 return|return
@@ -2409,7 +2434,7 @@ argument_list|(
 operator|&
 name|option
 argument_list|,
-literal|" \t"
+literal|", \t"
 argument_list|)
 operator|)
 operator|!=
