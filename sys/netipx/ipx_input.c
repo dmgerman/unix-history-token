@@ -1147,15 +1147,18 @@ block|{
 case|case
 name|IPXPROTO_SPX
 case|:
+name|IPX_LOCK
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
+comment|/* Will release both locks. */
 name|spx_input
 argument_list|(
 name|m
 argument_list|,
 name|ipxp
 argument_list|)
-expr_stmt|;
-name|IPX_LIST_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return;
 block|}
