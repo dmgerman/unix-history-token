@@ -260,7 +260,9 @@ expr_stmt|;
 name|savefpctx
 argument_list|(
 operator|&
-name|pcb
+name|td1
+operator|->
+name|td_pcb
 operator|->
 name|pcb_fpstate
 argument_list|)
@@ -549,6 +551,19 @@ modifier|*
 name|p
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
+name|int
+name|is_physical_memory
+parameter_list|(
+name|vm_offset_t
+name|addr
+parameter_list|)
+block|{
+name|TODO
+expr_stmt|;
+block|}
 end_function
 
 begin_function
