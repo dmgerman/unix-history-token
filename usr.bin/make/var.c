@@ -2697,8 +2697,6 @@ decl_stmt|;
 comment|/* Ending character when variable in parens 				 * or braces */
 name|char
 name|startc
-init|=
-literal|0
 decl_stmt|;
 comment|/* Starting character when variable in parens 				 * or braces */
 name|int
@@ -2740,6 +2738,32 @@ index|[
 literal|1
 index|]
 operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* 	 * Error - there is only a dollar sign! 	 */
+operator|*
+name|lengthPtr
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+name|err
+condition|?
+name|var_Error
+else|:
+name|varNoError
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|str
+index|[
+literal|1
+index|]
+operator|==
 name|OPEN_PAREN
 operator|||
 name|str
@@ -2750,6 +2774,7 @@ operator|==
 name|OPEN_BRACE
 condition|)
 block|{
+comment|/* 	 * Check if brackets contain a variable name. 	 */
 comment|/* build up expanded variable name in this buffer */
 name|Buffer
 modifier|*
@@ -2961,6 +2986,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* REPLACE str */
 name|vlen
 operator|=
 name|strlen
@@ -3532,33 +3558,6 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|str
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
-condition|)
-block|{
-comment|/* 	 * Error - there is only a dollar sign! 	 */
-operator|*
-name|lengthPtr
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-name|err
-condition|?
-name|var_Error
-else|:
-name|varNoError
-operator|)
-return|;
-block|}
 else|else
 block|{
 comment|/* 	 * If it's not bounded by braces of some sort, life is much simpler. 	 * We just need to check for the first character and return the 	 * value if it exists. 	 */
@@ -3684,11 +3683,20 @@ name|varNoError
 operator|)
 return|;
 block|}
-else|else
-block|{
 name|haveModifier
 operator|=
 name|FALSE
+expr_stmt|;
+name|startc
+operator|=
+literal|0
+expr_stmt|;
+name|endc
+operator|=
+name|str
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|tstr
 operator|=
@@ -3698,14 +3706,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|endc
-operator|=
-name|str
-index|[
-literal|1
-index|]
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
