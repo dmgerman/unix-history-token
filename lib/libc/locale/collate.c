@@ -51,12 +51,11 @@ directive|include
 file|"collate.h"
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|_PathLocale
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"setlocale.h"
+end_include
 
 begin_decl_stmt
 name|int
