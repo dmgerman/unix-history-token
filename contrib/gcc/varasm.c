@@ -5783,6 +5783,12 @@ begin_comment
 comment|/* Assemble the static constant template for function entry trampolines.    This is done at most once per compilation.    Returns an RTX for the address of the template.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRAMPOLINE_TEMPLATE
+end_ifdef
+
 begin_function
 name|rtx
 name|assemble_trampoline_template
@@ -5901,6 +5907,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
