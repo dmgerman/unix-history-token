@@ -389,13 +389,16 @@ name|dmat
 parameter_list|,
 name|bus_dmamap_t
 name|map
+parameter_list|,
+name|int
+name|commit
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|vm_offset_t
+name|bus_addr_t
 name|add_bounce_page
 parameter_list|(
 name|bus_dma_tag_t
@@ -443,6 +446,10 @@ name|paddr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Return true if a match is made.  *  * To find a match walk the chain of bus_dma_tag_t's looking for 'paddr'.  *  * If paddr is within the bounds of the dma tag then call the filter callback  * to check for a match, if there is no filter callback then assume a match.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1166,10 +1173,16 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
 name|dmat
 operator|=
 name|parent
+expr_stmt|;
+block|}
+else|else
+name|dmat
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -1724,7 +1737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  */
+comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  Make the same choice for free/contigfree.  */
 end_comment
 
 begin_function
@@ -2887,7 +2900,7 @@ name|first
 init|=
 literal|1
 decl_stmt|;
-name|vm_offset_t
+name|bus_addr_t
 name|lastaddr
 init|=
 literal|0
@@ -3057,7 +3070,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|vm_offset_t
+name|bus_addr_t
 name|lastaddr
 decl_stmt|;
 ifdef|#
@@ -3724,7 +3737,7 @@ name|bpage
 operator|->
 name|vaddr
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|free
@@ -3898,7 +3911,7 @@ end_function
 
 begin_function
 specifier|static
-name|vm_offset_t
+name|bus_addr_t
 name|add_bounce_page
 parameter_list|(
 name|bus_dma_tag_t
