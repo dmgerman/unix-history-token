@@ -133,11 +133,15 @@ begin_comment
 comment|/* max probes before drop */
 end_comment
 
+begin_comment
+comment|/*  * Minimum retransmit timer is 3 ticks, for algorithmic stability.  * The maximum is 64 seconds.  The prior minimum of 1*hz (1 second) badly  * breaks throughput on any networks faster then a modem that has minor  * (e.g. 1%) packet loss.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TCPTV_MIN
-value|(  1*hz)
+value|( 3 )
 end_define
 
 begin_comment
