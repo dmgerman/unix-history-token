@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.2 %G%"
+literal|"@(#)main.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -911,12 +911,9 @@ name|i
 operator|<
 name|argc
 name|and
-name|not
-name|foundfile
-name|and
-name|corefile
-operator|==
-name|nil
+argument_list|(
+argument|not foundfile or corefile == nil
+argument_list|)
 condition|)
 block|{
 if|if
