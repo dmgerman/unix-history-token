@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eui64.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/event.h>
 end_include
 
@@ -1914,7 +1920,7 @@ literal|"\t-t	EUI64 of target host (must be specified)\n"
 literal|"\t-a	physical address of dcons buffer on target host\n"
 argument|); 	exit(
 literal|0
-argument|); } int main(int argc, char **argv) { 	struct dcons_state *dc; 	struct fw_eui64 eui; 	char devname[
+argument|); } int main(int argc, char **argv) { 	struct dcons_state *dc; 	struct fw_eui64 eui; 	struct eui64 target; 	char devname[
 literal|256
 argument|]
 argument_list|,
@@ -1929,9 +1935,7 @@ literal|0
 argument_list|,
 argument|wildcard=
 literal|0
-argument|; 	int port[DCONS_NPORT]; 	u_int64_t target =
-literal|0
-argument|;  	bzero(&sc, sizeof(sc)); 	dc =&sc; 	dc->flags |= USE_CROM ? F_USE_CROM :
+argument|; 	int port[DCONS_NPORT];  	bzero(&sc, sizeof(sc)); 	dc =&sc; 	dc->flags |= USE_CROM ? F_USE_CROM :
 literal|0
 argument|;
 comment|/* defualt ports */
@@ -1967,17 +1971,19 @@ argument|) 				poll_hz = DCONS_POLL_HZ; 			break; 		case
 literal|'r'
 argument|: 			dc->flags |= F_REPLAY; 			break; 		case
 literal|'t'
-argument|: 			target = strtoull(optarg, NULL,
+argument|: 			if (eui64_hostton(optarg,&target) !=
 literal|0
-argument|); 			eui.hi = target>>
-literal|32
-argument|; 			eui.lo = target& (((u_int64_t)
+argument|&& 			    eui64_aton(optarg,&target) !=
+literal|0
+argument|) 				errx(
 literal|1
-argument|<<
-literal|32
-argument|) -
-literal|1
-argument|); 			dc->type = TYPE_FW; 			break; 		case
+argument|,
+literal|"invalid target: %s"
+argument|, optarg); 			eui.hi = ntohl(*(u_int32_t*)&(target.octet[
+literal|0
+argument|])); 			eui.lo = ntohl(*(u_int32_t*)&(target.octet[
+literal|4
+argument|])); 			dc->type = TYPE_FW; 			break; 		case
 literal|'u'
 argument|: 			unit = strtol(optarg, NULL,
 literal|0
