@@ -2078,6 +2078,7 @@ if|if
 condition|(
 literal|1
 condition|)
+block|{
 name|snprintf
 argument_list|(
 name|buf
@@ -2094,7 +2095,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"pcm%d:<%s> %s (%d/%d channels%s)\n"
+literal|"pcm%d:<%s> %s"
 argument_list|,
 name|i
 argument_list|,
@@ -2106,6 +2107,33 @@ argument_list|,
 name|d
 operator|->
 name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|chancount
+operator|>
+literal|0
+condition|)
+name|snprintf
+argument_list|(
+name|buf
+operator|+
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|size
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|" (%dp/%dr channels%s)\n"
 argument_list|,
 name|d
 operator|->
@@ -2131,6 +2159,27 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|buf
+operator|+
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|size
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|" (mixer only)"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 name|strlen
