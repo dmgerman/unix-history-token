@@ -2647,7 +2647,7 @@ name|sio_lock
 argument_list|)
 expr_stmt|;
 comment|/* EXTRA DELAY? */
-comment|/* 	 * For the TI16754 chips set prescaler to 1 (4 is often the 	 * default after-reset value), otherwise it's impossible to 	 * get highest baudrates. 	 */
+comment|/* 	 * For the TI16754 chips, set prescaler to 1 (4 is often the 	 * default after-reset value) as otherwise it's impossible to 	 * get highest baudrates. 	 */
 if|if
 condition|(
 name|COM_TI16754
@@ -2657,63 +2657,68 @@ argument_list|)
 condition|)
 block|{
 name|u_char
-name|t1
+name|cfcr
 decl_stmt|,
-name|t2
+name|efr
 decl_stmt|;
-comment|/* Save LCR */
-name|t1
+name|cfcr
 operator|=
 name|sio_getreg
 argument_list|(
 name|com
 argument_list|,
-name|com_lctl
+name|com_cfcr
 argument_list|)
 expr_stmt|;
-comment|/* Enable EFR */
 name|sio_setreg
 argument_list|(
 name|com
 argument_list|,
-name|com_lctl
+name|com_cfcr
 argument_list|,
-literal|0xbf
+name|CFCR_EFR_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* Save EFR */
-name|t2
+name|efr
 operator|=
 name|sio_getreg
 argument_list|(
 name|com
 argument_list|,
-name|com_iir
+name|com_efr
 argument_list|)
 expr_stmt|;
-comment|/* Unlock MCR[7] */
+comment|/* Unlock extended features to turn off prescaler. */
 name|sio_setreg
 argument_list|(
 name|com
 argument_list|,
-name|com_iir
+name|com_efr
 argument_list|,
-name|t2
+name|efr
 operator||
-literal|0x10
+name|EFR_EFE
 argument_list|)
 expr_stmt|;
-comment|/* Disable EFR */
+comment|/* Disable EFR. */
 name|sio_setreg
 argument_list|(
 name|com
 argument_list|,
-name|com_lctl
+name|com_cfcr
 argument_list|,
+operator|(
+name|cfcr
+operator|!=
+name|CFCR_EFR_ENABLE
+operator|)
+condition|?
+name|cfcr
+else|:
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Set prescaler to 1 */
+comment|/* Turn off prescaler. */
 name|sio_setreg
 argument_list|(
 name|com
@@ -2727,37 +2732,35 @@ argument_list|,
 name|com_mcr
 argument_list|)
 operator|&
-literal|0x7f
+operator|~
+name|MCR_PRESCALE
 argument_list|)
 expr_stmt|;
-comment|/* Enable EFR */
 name|sio_setreg
 argument_list|(
 name|com
 argument_list|,
-name|com_lctl
+name|com_cfcr
 argument_list|,
-literal|0xbf
+name|CFCR_EFR_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* Restore EFR */
 name|sio_setreg
 argument_list|(
 name|com
 argument_list|,
-name|com_iir
+name|com_efr
 argument_list|,
-name|t2
+name|efr
 argument_list|)
 expr_stmt|;
-comment|/* Restore LCR */
 name|sio_setreg
 argument_list|(
 name|com
 argument_list|,
-name|com_lctl
+name|com_cfcr
 argument_list|,
-name|t1
+name|cfcr
 argument_list|)
 expr_stmt|;
 block|}

@@ -171,7 +171,7 @@ value|0xc0
 end_define
 
 begin_comment
-comment|/* character format control register */
+comment|/* character format control register (aka line control register) */
 end_comment
 
 begin_define
@@ -258,8 +258,30 @@ name|CFCR_5BITS
 value|0x00
 end_define
 
+begin_define
+define|#
+directive|define
+name|CFCR_EFR_ENABLE
+value|0xbf
+end_define
+
+begin_comment
+comment|/* magic to enable EFR on 16650 up */
+end_comment
+
 begin_comment
 comment|/* modem control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCR_PRESCALE
+value|0x80
+end_define
+
+begin_comment
+comment|/* only available on 16650 up */
 end_comment
 
 begin_define
@@ -423,6 +445,28 @@ directive|define
 name|MSR_DCTS
 value|0x01
 end_define
+
+begin_comment
+comment|/* enhanced feature register (only available on 16650 up) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_efr
+value|com_fifo
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFR_EFE
+value|0x10
+end_define
+
+begin_comment
+comment|/* enhanced functions enable */
+end_comment
 
 begin_ifdef
 ifdef|#
