@@ -547,12 +547,37 @@ begin_comment
 comment|/* two pointers for HARP */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|PAGE_SIZE
+operator|>
+literal|8192
+end_if
+
+begin_define
+define|#
+directive|define
+name|MBUF_ALLOC_SIZE
+value|(8192)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MBUF_ALLOC_SIZE
 value|(PAGE_SIZE)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* each allocated page has one of these structures at its very end. */
