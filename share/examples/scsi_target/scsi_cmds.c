@@ -395,6 +395,7 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* XXX REPORT_LUNS should be handled here. */
 ifdef|#
 directive|ifdef
 name|READ_16
@@ -1280,7 +1281,8 @@ name|flags
 operator||=
 name|CAM_DIR_NONE
 operator||
-comment|/* CAM_SEND_SENSE | */
+name|CAM_SEND_SENSE
+operator||
 name|CAM_SEND_STATUS
 expr_stmt|;
 name|ctio
