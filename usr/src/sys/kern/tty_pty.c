@@ -4,7 +4,7 @@ empty|#
 end_empty
 
 begin_comment
-comment|/*	@(#)tty_pty.c	1.2	1.2	%G%	*/
+comment|/*	tty_pty.c	1.3	%G%	*/
 end_comment
 
 begin_comment
