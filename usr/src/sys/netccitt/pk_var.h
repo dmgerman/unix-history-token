@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -487,6 +487,33 @@ end_define
 begin_comment
 comment|/* accepting incoming calls */
 end_comment
+
+begin_comment
+comment|/*  * miscellenous debugging info  */
+end_comment
+
+begin_struct
+struct|struct
+name|mbuf_cache
+block|{
+name|int
+name|mbc_size
+decl_stmt|;
+name|int
+name|mbc_num
+decl_stmt|;
+name|int
+name|mbc_oldsize
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mbc_cache
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_if
 if|#
