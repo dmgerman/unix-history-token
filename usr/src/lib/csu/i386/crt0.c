@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.1 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  *	C start up routine.  *	Robert Henry, UCB, 20 Oct 81  *  *	We make the following (true) assumptions:  *	1) The only register variable that we can trust is bp,  *	which points to the base of the kernel calling frame.  *	2) We can allocate as many register variables as we want,  *	and don't have to save them for anybody.  */
+comment|/*  *	C start up routine.  *	Robert Henry, UCB, 20 Oct 81  *  *	We make the following (true) assumption:  *	1) The only register variable that we can trust is ebp,  *	which points to the base of the kernel calling frame.  */
 end_comment
 
 begin_decl_stmt
@@ -54,12 +54,6 @@ name|fd
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_asm
 asm|asm("#define _start start");
 end_asm
@@ -73,29 +67,8 @@ asm|asm("	.text");
 end_asm
 
 begin_asm
-asm|asm("	.long 0");
+asm|asm("	.long 0xc000c000");
 end_asm
-
-begin_comment
-comment|/* first instruction should always be 0 (indir thru 0) */
-end_comment
-
-begin_asm
-asm|asm("	.long 0");
-end_asm
-
-begin_comment
-comment|/*this means all null pointers return value 0 regardless */
-end_comment
-
-begin_comment
-comment|/* of type */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
