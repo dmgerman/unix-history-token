@@ -6023,7 +6023,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -6227,7 +6227,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -6547,7 +6547,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -6876,7 +6876,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -7332,7 +7332,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -7385,7 +7385,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -7575,7 +7575,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -7673,7 +7673,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -7751,7 +7751,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -9311,7 +9311,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -10971,7 +10971,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -11615,7 +11615,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -12084,7 +12084,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -12406,7 +12406,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -12978,7 +12978,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -16281,7 +16281,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -16377,7 +16377,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -16428,7 +16428,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -16469,7 +16469,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
@@ -16539,7 +16539,7 @@ operator|->
 name|bge_asicrev
 operator|!=
 name|BGE_ASICREV_BCM5705
-operator|||
+operator|&&
 name|sc
 operator|->
 name|bge_asicrev
