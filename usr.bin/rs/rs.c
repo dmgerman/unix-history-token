@@ -2420,6 +2420,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|t
 argument_list|)
@@ -2443,6 +2447,10 @@ name|t
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|t
 argument_list|)
@@ -2548,6 +2556,10 @@ name|t
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|t
 argument_list|)
@@ -2616,6 +2628,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|t
@@ -2675,6 +2691,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|t
 argument_list|)
