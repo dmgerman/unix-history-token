@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	6.1	83/08/13	*/
+comment|/*	ubavar.h	6.2	85/01/18	*/
 end_comment
 
 begin_comment
@@ -90,6 +90,10 @@ name|short
 name|uh_xclu
 decl_stmt|;
 comment|/* an rk07 is using this uba! */
+name|int
+name|uh_lastmem
+decl_stmt|;
+comment|/* limit of any unibus memory */
 define|#
 directive|define
 name|UAMSIZ
@@ -332,6 +336,14 @@ name|short
 name|ud_xclu
 decl_stmt|;
 comment|/* want exclusive use of bdp's */
+name|int
+function_decl|(
+modifier|*
+name|ud_ubamem
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* see if dedicated memory is present */
 block|}
 struct|;
 end_struct
