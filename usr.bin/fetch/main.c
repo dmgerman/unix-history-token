@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.9 1996/07/18 00:08:02 jkh Exp $ */
+comment|/* $Id: main.c,v 1.10 1996/07/18 00:08:58 jkh Exp $ */
 end_comment
 
 begin_include
@@ -965,6 +965,8 @@ argument_list|,
 name|ftp_pw
 argument_list|,
 literal|0
+argument_list|,
+name|verbose
 argument_list|)
 expr_stmt|;
 if|if
@@ -976,7 +978,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Couldn't open FTP connection to %s."
+literal|"Couldn't open FTP connection or login to %s."
 argument_list|,
 name|host
 argument_list|)
@@ -1232,6 +1234,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"Could not open output file %s\n"
 argument_list|,
 name|outputfile
 argument_list|)
@@ -2311,7 +2315,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|0
+literal|"Could not send GET command to HTTP server\n"
 argument_list|)
 expr_stmt|;
 name|FD_ZERO
@@ -2391,7 +2395,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|0
+literal|"Could not open output file %s\n"
+argument_list|,
+name|outputfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -2496,7 +2502,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|0
+literal|"Communication error with HTTP server\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3116,7 +3122,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|0
+literal|"Could not lookup host %s\n"
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 name|sin
@@ -3245,7 +3253,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|0
+literal|"Could not bind to socket\n"
 argument_list|)
 expr_stmt|;
 if|if
