@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.14 (Berkeley) %G%"
+literal|"@(#)main.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,6 +110,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -309,6 +315,14 @@ name|N_NIMP
 value|23
 block|{
 literal|"_nimp"
+block|}
+block|,
+define|#
+directive|define
+name|N_RTREE
+value|24
+block|{
+literal|"_radix_node_head"
 block|}
 block|,
 comment|/* BBN Internet protocol implementation */
@@ -753,7 +767,7 @@ name|char
 modifier|*
 name|system
 init|=
-literal|"/vmunix"
+name|_PATH_UNIX
 decl_stmt|;
 end_decl_stmt
 
@@ -762,7 +776,7 @@ name|char
 modifier|*
 name|kmemf
 init|=
-literal|"/dev/kmem"
+name|_PATH_KMEM
 decl_stmt|;
 end_decl_stmt
 
@@ -1648,6 +1662,16 @@ operator|)
 name|nl
 index|[
 name|N_RTHASHSIZE
+index|]
+operator|.
+name|n_value
+argument_list|,
+operator|(
+name|off_t
+operator|)
+name|nl
+index|[
+name|N_RTREE
 index|]
 operator|.
 name|n_value
