@@ -119,28 +119,6 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Default to existing user space version.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_VERSION
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_POSIX_VERSION
-value|199009L
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Test for visibility of P1003.1B features:  * If _POSIX_SOURCE and POSIX_C_SOURCE are completely undefined  * they show up.  *  * If they specify a version including P1003.1B then they show up.  *  * (Two macros are added to permit hiding new extensions while   * keeping historic BSD features - that is not done now)  *  */
 end_comment
 

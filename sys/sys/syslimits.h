@@ -158,6 +158,10 @@ begin_comment
 comment|/* max elements in i/o vector */
 end_comment
 
+begin_comment
+comment|/* XXX - these don't belong here */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -244,6 +248,10 @@ end_define
 
 begin_comment
 comment|/* max RE's in interval notation */
+end_comment
+
+begin_comment
+comment|/*  * We leave the following values undefined to force applications to either  * assume conservative values or call sysconf() to get the current value.  *  * HOST_NAME_MAX  */
 end_comment
 
 begin_endif
