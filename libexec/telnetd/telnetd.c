@@ -4054,10 +4054,6 @@ name|struct
 name|stat
 name|statbuf
 decl_stmt|;
-name|void
-name|netflush
-parameter_list|()
-function_decl|;
 comment|/* 	 * Initialize the slc mapping table. 	 */
 name|get_slc_defaults
 argument_list|()
