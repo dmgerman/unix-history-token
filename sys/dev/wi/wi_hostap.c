@@ -5221,6 +5221,30 @@ name|n
 decl_stmt|,
 name|flag
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+else|#
+directive|else
+name|struct
+name|proc
+modifier|*
+name|td
+init|=
+name|curproc
+decl_stmt|;
+comment|/* Little white lie */
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -5254,7 +5278,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5486,7 +5510,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5619,7 +5643,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 operator|)
 condition|)

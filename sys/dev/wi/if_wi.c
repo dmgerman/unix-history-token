@@ -8,7 +8,7 @@ comment|/*  * Lucent WaveLAN/IEEE 802.11 PCMCIA driver for FreeBSD.  *  * Writte
 end_comment
 
 begin_comment
-comment|/*  * The WaveLAN/IEEE adapter is the second generation of the WaveLAN  * from Lucent. Unlike the older cards, the new ones are programmed  * entirely via a firmware-driven controller called the Hermes.  * Unfortunately, Lucent will not release the Hermes programming manual  * without an NDA (if at all). What they do release is an API library  * called the HCF (Hardware Control Functions) which is supposed to  * do the device-specific operations of a device driver for you. The  * publically available version of the HCF library (the 'HCF Light') is   * a) extremely gross, b) lacks certain features, particularly support  * for 802.11 frames, and c) is contaminated by the GNU Public License.  *  * This driver does not use the HCF or HCF Light at all. Instead, it  * programs the Hermes controller directly, using information gleaned  * from the HCF Light code and corresponding documentation.  *  * This driver supports both the PCMCIA and ISA versions of the  * WaveLAN/IEEE cards. Note however that the ISA card isn't really  * anything of the sort: it's actually a PCMCIA bridge adapter  * that fits into an ISA slot, into which a PCMCIA WaveLAN card is  * inserted. Consequently, you need to use the pccard support for  * both the ISA and PCMCIA adapters.  */
+comment|/*  * The WaveLAN/IEEE adapter is the second generation of the WaveLAN  * from Lucent. Unlike the older cards, the new ones are programmed  * entirely via a firmware-driven controller called the Hermes.  * Unfortunately, Lucent will not release the Hermes programming manual  * without an NDA (if at all). What they do release is an API library  * called the HCF (Hardware Control Functions) which is supposed to  * do the device-specific operations of a device driver for you. The  * publically available version of the HCF library (the 'HCF Light') is   * a) extremely gross, b) lacks certain features, particularly support  * for 802.11 frames, and c) is contaminated by the GNU Public License.  *  * This driver does not use the HCF or HCF Light at all. Instead, it  * programs the Hermes controller directly, using information gleaned  * from the HCF Light code and corresponding documentation.  *  * This driver supports the ISA, PCMCIA and PCI versions of the Lucent  * WaveLan cards (based on the Hermes chipset), as well as the newer  * Prism 2 chipsets with firmware from Intersil and Symbol.  */
 end_comment
 
 begin_include
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -894,6 +900,9 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -904,6 +913,8 @@ expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -932,6 +943,8 @@ expr_stmt|;
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -988,8 +1001,15 @@ expr_stmt|;
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -998,6 +1018,8 @@ operator|->
 name|wi_mtx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1034,6 +1056,9 @@ name|ifp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 comment|/* XXX maybe we need the splimp stuff here XXX */
 name|sc
@@ -1099,6 +1124,11 @@ name|error
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|mtx_init
 argument_list|(
 operator|&
@@ -1118,9 +1148,13 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|WI_LOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* Reset the NIC. */
@@ -1932,6 +1966,8 @@ expr_stmt|;
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -3870,10 +3906,12 @@ operator|&
 name|IFF_OACTIVE
 condition|)
 return|return;
+name|WI_LOCK
+argument_list|(
+name|sc
+argument_list|,
 name|s
-operator|=
-name|splimp
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|wi_cmd
 argument_list|(
@@ -3888,8 +3926,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|splx
+name|WI_UNLOCK
 argument_list|(
+name|sc
+argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
@@ -4171,9 +4211,14 @@ decl_stmt|;
 name|u_int16_t
 name|status
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4222,6 +4267,8 @@ expr_stmt|;
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4438,6 +4485,8 @@ block|}
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4484,6 +4533,27 @@ name|s
 init|=
 literal|0
 decl_stmt|;
+specifier|static
+specifier|volatile
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|count
+operator|>
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"Hey partner, hold on there!"
+argument_list|)
+expr_stmt|;
+name|count
+operator|++
+expr_stmt|;
 comment|/* wait for the busy bit to clear */
 for|for
 control|(
@@ -4541,6 +4611,9 @@ name|dev
 argument_list|,
 literal|"wi_cmd: busy bit won't clear.\n"
 argument_list|)
+expr_stmt|;
+name|count
+operator|--
 expr_stmt|;
 return|return
 operator|(
@@ -4664,11 +4737,16 @@ name|s
 operator|&
 name|WI_STAT_CMD_RESULT
 condition|)
+block|{
+name|count
+operator|--
+expr_stmt|;
 return|return
 operator|(
 name|EIO
 operator|)
 return|;
+block|}
 break|break;
 block|}
 name|DELAY
@@ -4677,6 +4755,9 @@ name|WI_DELAY
 argument_list|)
 expr_stmt|;
 block|}
+name|count
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -6845,6 +6926,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+name|LIST_FOREACH
+argument_list|(
+argument|ifma
+argument_list|,
+argument|&ifp->if_multiaddrs
+argument_list|,
+argument|ifma_link
+argument_list|)
+block|{
+else|#
+directive|else
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -6854,6 +6951,8 @@ argument_list|,
 argument|ifma_link
 argument_list|)
 block|{
+endif|#
+directive|endif
 if|if
 condition|(
 name|ifma
@@ -6952,9 +7051,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|wi_setdef
@@ -7481,9 +7577,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|wi_ioctl
@@ -7545,12 +7638,32 @@ name|ieee80211req
 modifier|*
 name|ireq
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|struct
 name|thread
 modifier|*
 name|td
 init|=
 name|curthread
+decl_stmt|;
+else|#
+directive|else
+name|struct
+name|proc
+modifier|*
+name|td
+init|=
+name|curproc
+decl_stmt|;
+comment|/* Little white lie */
+endif|#
+directive|endif
+name|int
+name|s
 decl_stmt|;
 name|sc
 operator|=
@@ -7561,6 +7674,8 @@ expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|ifr
@@ -9430,6 +9545,8 @@ label|:
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -9438,9 +9555,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|wi_init
@@ -9480,9 +9594,14 @@ name|id
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -9495,6 +9614,8 @@ block|{
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9992,13 +10113,12 @@ expr_stmt|;
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|crc32_tab
@@ -10518,23 +10638,14 @@ block|,
 literal|0x2d02ef8dL
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|RC4STATE
 value|256
-end_define
-
-begin_define
 define|#
 directive|define
 name|RC4KEYLEN
 value|16
-end_define
-
-begin_define
 define|#
 directive|define
 name|RC4SWAP
@@ -10545,9 +10656,6 @@ name|y
 parameter_list|)
 define|\
 value|do { u_int8_t t = state[x]; state[x] = state[y]; state[y] = t; } while(0)
-end_define
-
-begin_function
 specifier|static
 name|void
 name|wi_do_hostencrypt
@@ -11079,9 +11187,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|wi_start
@@ -11116,6 +11221,9 @@ decl_stmt|;
 name|int
 name|id
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|sc
 operator|=
 name|ifp
@@ -11125,6 +11233,8 @@ expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -11137,6 +11247,8 @@ block|{
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11153,6 +11265,8 @@ block|{
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11179,6 +11293,8 @@ block|{
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11964,13 +12080,12 @@ expr_stmt|;
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 name|int
 name|wi_mgmt_xmit
 parameter_list|(
@@ -12192,9 +12307,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|wi_stop
@@ -12212,9 +12324,14 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -12227,6 +12344,8 @@ block|{
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12310,13 +12429,12 @@ expr_stmt|;
 name|WI_UNLOCK
 argument_list|(
 name|sc
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|wi_watchdog
@@ -12361,9 +12479,6 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 name|int
 name|wi_alloc
 parameter_list|(
@@ -12663,9 +12778,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|wi_free
 parameter_list|(
@@ -12780,9 +12892,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-end_function
-
-begin_function
 name|void
 name|wi_shutdown
 parameter_list|(
@@ -12811,35 +12920,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|WICACHE
-end_ifdef
-
-begin_comment
 comment|/* wavelan signal strength cache code.  * store signal/noise/quality on per MAC src basis in  * a small fixed cache.  The cache wraps if> MAX slots  * used.  The cache may be zeroed out to start over.  * Two simple filters exist to reduce computation:  * 1. ip only (literally 0x800) which may be used  * to ignore some packets.  It defaults to ip only.  * it could be used to focus on broadcast, non-IP 802.11 beacons.  * 2. multicast/broadcast only.  This may be used to  * ignore unicast packets and only cache signal strength  * for multicast/broadcast packets (beacons); e.g., Mobile-IP  * beacons and not unicast traffic.  *  * The cache stores (MAC src(index), IP src (major clue), signal,  *	quality, noise)  *  * No apologies for storing IP src here.  It's easy and saves much  * trouble elsewhere.  The cache is assumed to be INET dependent,   * although it need not be.  */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|documentation
-end_ifdef
-
-begin_decl_stmt
 name|int
 name|wi_sigitems
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* number of cached entries */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|wi_sigcache
 name|wi_sigcache
@@ -12847,45 +12938,21 @@ index|[
 name|MAXWICACHE
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  array of cache entries */
-end_comment
-
-begin_decl_stmt
 name|int
 name|wi_nextitem
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  index/# of entries */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* control variables for cache filtering.  Basic idea is  * to reduce cost (e.g., to only Mobile-IP agent beacons  * which are broadcast or multicast).  Still you might  * want to measure signal strength with unicast ping packets  * on a pt. to pt. ant. setup.  */
-end_comment
-
-begin_comment
 comment|/* set true if you want to limit cache items to broadcast/mcast   * only packets (not unicast).  Useful for mobile-ip beacons which  * are broadcast/multicast at network layer.  Default is all packets  * so ping/unicast will work say with pt. to pt. antennae setup.  */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|wi_cache_mcastonly
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
@@ -12904,22 +12971,13 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* set true if you want to limit cache items to IP packets only */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|wi_cache_iponly
 init|=
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
@@ -12938,13 +12996,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Original comments:  * -----------------  * wi_cache_store, per rx packet store signal  * strength in MAC (src) indexed cache.  *  * follows linux driver in how signal strength is computed.  * In ad hoc mode, we use the rx_quality field.   * signal and noise are trimmed to fit in the range from 47..138.  * rx_quality field MSB is signal strength.  * rx_quality field LSB is noise.  * "quality" is (signal - noise) as is log value.  * note: quality CAN be negative.  *   * In BSS mode, we use the RID for communication quality.  * TBD:  BSS mode is currently untested.  *  * Bill's comments:  * ---------------  * Actually, we use the rx_quality field all the time for both "ad-hoc"  * and BSS modes. Why? Because reading an RID is really, really expensive:  * there's a bunch of PIO operations that have to be done to read a record  * from the NIC, and reading the comms quality RID each time a packet is  * received can really hurt performance. We don't have to do this anyway:  * the comms quality field only reflects the values in the rx_quality field  * anyway. The comms quality RID is only meaningful in infrastructure mode,  * but the values it contains are updated based on the rx_quality from  * frames received from the access point.  *  * Also, according to Lucent, the signal strength and noise level values  * can be converted to dBms by subtracting 149, so I've modified the code  * to do that instead of the scaling it did originally.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|wi_cache_store
@@ -13333,14 +13385,8 @@ name|noise
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
 specifier|static
 name|int
 name|wi_get_cur_ssid
@@ -13635,9 +13681,6 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|wi_media_change
@@ -13815,9 +13858,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|wi_media_status
@@ -14078,9 +14118,6 @@ name|IFM_ACTIVE
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|wi_get_debug
@@ -14398,9 +14435,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|wi_set_debug
