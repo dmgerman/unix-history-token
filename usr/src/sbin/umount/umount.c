@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	5.15 (Berkeley) %G%"
+literal|"@(#)umount.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -977,6 +977,25 @@ condition|)
 block|{
 if|if
 condition|(
+name|getmntname
+argument_list|(
+name|name
+argument_list|,
+name|MNTFROM
+argument_list|,
+operator|&
+name|type
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|mntpt
+operator|=
+name|name
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|mntpt
 operator|=
@@ -993,11 +1012,22 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: not currently mounted\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1031,11 +1061,22 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: not currently mounted\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1057,9 +1098,6 @@ name|name
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|name
-operator|=
 name|getmntname
 argument_list|(
 name|mntpt
@@ -1069,15 +1107,25 @@ argument_list|,
 operator|&
 name|type
 argument_list|)
-operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: not currently mounted\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 else|else
 block|{
@@ -1612,15 +1660,6 @@ operator|)
 return|;
 block|}
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: not currently mounted\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
