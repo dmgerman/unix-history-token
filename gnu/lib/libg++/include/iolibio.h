@@ -9,7 +9,18 @@ begin_comment
 comment|/* These emulate stdio functionality, but with a different name    (_IO_ungetc instead of ungetc), and using _IO_FILE instead of FILE. */
 end_comment
 
-begin_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 specifier|extern
 name|int
 name|_IO_fclose
@@ -21,9 +32,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|_IO_FILE
 modifier|*
@@ -39,9 +47,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_fflush
@@ -53,9 +58,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_fgetpos
@@ -70,9 +72,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -90,9 +89,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|_IO_FILE
 modifier|*
@@ -110,9 +106,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_fprintf
@@ -130,9 +123,6 @@ operator|...
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_fputs
@@ -148,9 +138,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_fsetpos
@@ -166,9 +153,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|long
 name|int
@@ -181,9 +165,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|_IO_size_t
 name|_IO_fwrite
@@ -203,9 +184,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -218,9 +196,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|void
 name|_IO_perror
@@ -233,9 +208,20 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|extern
+name|int
+name|_IO_printf
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
 specifier|extern
 name|int
 name|_IO_puts
@@ -248,9 +234,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_scanf
@@ -265,9 +248,6 @@ operator|...
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|void
 name|_IO_setbuffer
@@ -284,9 +264,6 @@ name|_IO_size_t
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_setvbuf
@@ -305,9 +282,6 @@ name|_IO_size_t
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_sscanf
@@ -326,9 +300,6 @@ operator|...
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_sprintf
@@ -346,9 +317,6 @@ operator|...
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_ungetc
@@ -362,9 +330,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_vsscanf
@@ -383,9 +348,6 @@ name|_IO_va_list
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|_IO_vsprintf
@@ -403,27 +365,15 @@ name|_IO_va_list
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|_IO_pos_BAD
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|_IO_pos_BAD
 value|((_IO_fpos_t)(-1))
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
 define|#
 directive|define
 name|_IO_clearerr
@@ -431,29 +381,6 @@ parameter_list|(
 name|FP
 parameter_list|)
 value|((FP)->_flags&= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_IO_feof
-parameter_list|(
-name|__fp
-parameter_list|)
-value|(((__fp)->_flags& _IO_EOF_SEEN) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_IO_ferror
-parameter_list|(
-name|__fp
-parameter_list|)
-value|(((__fp)->_flags& _IO_ERR_SEEN) != 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|_IO_fseek
@@ -466,9 +393,6 @@ name|__whence
 parameter_list|)
 define|\
 value|(_IO_seekoff(__fp, __offset, (_IO_off_t)(__whence)) == _IO_pos_BAD ? EOF : 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|_IO_rewind
@@ -476,9 +400,6 @@ parameter_list|(
 name|FILE
 parameter_list|)
 value|(void)_IO_seekoff(FILE, 0, 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|_IO_vprintf
@@ -488,9 +409,6 @@ parameter_list|,
 name|ARGS
 parameter_list|)
 value|_IO_vfprintf(_IO_stdout, FORMAT, ARGS)
-end_define
-
-begin_define
 define|#
 directive|define
 name|_IO_freopen
@@ -503,9 +421,6 @@ name|FP
 parameter_list|)
 define|\
 value|(_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE))
-end_define
-
-begin_define
 define|#
 directive|define
 name|_IO_fileno
@@ -513,9 +428,6 @@ parameter_list|(
 name|FP
 parameter_list|)
 value|((FP)->_fileno)
-end_define
-
-begin_decl_stmt
 specifier|extern
 name|_IO_FILE
 modifier|*
@@ -533,16 +445,10 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|_IO_pclose
 value|_IO_fclose
-end_define
-
-begin_define
 define|#
 directive|define
 name|_IO_setbuf
@@ -552,9 +458,6 @@ parameter_list|,
 name|_BUF
 parameter_list|)
 value|_IO_setbuffer(_FP, _BUF, _IO_BUFSIZ)
-end_define
-
-begin_define
 define|#
 directive|define
 name|_IO_setlinebuf
@@ -562,7 +465,16 @@ parameter_list|(
 name|_FP
 parameter_list|)
 value|_IO_setvbuf(_FP, NULL, 1, 0)
-end_define
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

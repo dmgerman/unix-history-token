@@ -48,11 +48,23 @@ directive|if
 name|_G_HAVE_CURSES
 end_if
 
-begin_include
+begin_comment
+comment|// Even many system which mostly have C++-ready header files,
+end_comment
+
+begin_comment
+comment|// do not have C++-ready curses.h.
+end_comment
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
 include|#
 directive|include
 file|<curses.h>
-end_include
+block|}
+end_extern
 
 begin_comment
 comment|/* SCO 3.2v4 curses.h includes term.h, which defines lines as a macro.    Undefine it here, because CursesWindow uses lines as a method.  */
@@ -1098,22 +1110,16 @@ directive|ifdef
 name|box
 end_ifdef
 
-begin_function
+begin_expr_stmt
 specifier|inline
-function|(
-name|box
-function|)
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|chtype
-name|v
-parameter_list|,
-name|chtype
-name|h
-parameter_list|)
+name|_G_box
+argument_list|(
+argument|WINDOW* win
+argument_list|,
+argument|chtype v
+argument_list|,
+argument|chtype h
+argument_list|)
 block|{
 return|return
 name|box
@@ -1126,13 +1132,37 @@ name|h
 argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_undef
 undef|#
 directive|undef
 name|box
 end_undef
+
+begin_expr_stmt
+specifier|inline
+name|box
+argument_list|(
+argument|WINDOW* win
+argument_list|,
+argument|chtype v
+argument_list|,
+argument|chtype h
+argument_list|)
+block|{
+return|return
+name|_G_box
+argument_list|(
+name|win
+argument_list|,
+name|v
+argument_list|,
+name|h
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -116,21 +116,18 @@ range|:
 name|public
 name|RNG
 block|{
-name|unsigned
-name|long
+name|_G_uint32_t
 name|initialSeed
 block|;
 comment|// used to reset generator
 name|int
 name|initialTableEntry
 block|;
-name|unsigned
-name|long
+name|_G_uint32_t
 operator|*
 name|state
 block|;
-name|unsigned
-name|long
+name|_G_uint32_t
 operator|*
 name|auxState
 block|;
@@ -140,8 +137,7 @@ block|;
 name|short
 name|auxSize
 block|;
-name|unsigned
-name|long
+name|_G_uint32_t
 name|lcgRecurr
 block|;
 name|short
@@ -156,7 +152,7 @@ name|public
 operator|:
 name|ACG
 argument_list|(
-argument|unsigned long seed =
+argument|_G_uint32_t seed =
 literal|0
 argument_list|,
 argument|int size =
@@ -172,8 +168,7 @@ comment|//
 comment|// Return a long-words word of random bits
 comment|//
 name|virtual
-name|unsigned
-name|long
+name|_G_uint32_t
 name|asLong
 argument_list|()
 block|;

@@ -232,6 +232,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Return a signal message string for a signal number    (e.g., strsignal (SIGHUP) returns something like "Hangup").  */
+end_comment
+
+begin_comment
+comment|/* This is commented out as it can conflict with one in system headers.    We still document its existence though.  */
+end_comment
+
+begin_comment
+comment|/*extern const char *strsignal PARAMS ((int));*/
+end_comment
+
+begin_comment
 comment|/* Return the name of a signal number (e.g., strsigno (SIGHUP) returns    "SIGHUP").  */
 end_comment
 

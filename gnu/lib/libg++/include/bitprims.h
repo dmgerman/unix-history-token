@@ -706,8 +706,11 @@ end_endif
 begin_endif
 endif|#
 directive|endif
-endif|_BS_PRIMS
 end_endif
+
+begin_comment
+comment|/* !_BS_PRIMS */
+end_comment
 
 end_unit
 

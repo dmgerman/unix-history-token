@@ -433,7 +433,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|USE_DTOA
+name|_IO_USE_DTOA
 end_ifndef
 
 begin_function_decl
@@ -2731,7 +2731,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USE_DTOA
+name|_IO_USE_DTOA
 name|res
 operator|=
 name|_IO_strtod

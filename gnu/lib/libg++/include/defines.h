@@ -78,6 +78,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_enum
+enum|enum
+name|capacity
+block|{
+name|default_size
+block|,
+name|reserve
+block|}
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif

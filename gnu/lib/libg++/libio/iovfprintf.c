@@ -679,7 +679,7 @@ decl_stmt|;
 comment|/* double precision arguments %[eEfgG] */
 ifndef|#
 directive|ifndef
-name|USE_DTOA
+name|_IO_USE_DTOA
 name|int
 name|fpprec
 decl_stmt|;
@@ -889,7 +889,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|USE_DTOA
+name|_IO_USE_DTOA
 argument_list|)
 name|fpprec
 operator|=
@@ -1315,7 +1315,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USE_DTOA
+name|_IO_USE_DTOA
 block|{
 name|int
 name|fmt_flags
@@ -2011,7 +2011,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|USE_DTOA
+name|_IO_USE_DTOA
 argument_list|)
 name|fieldsz
 operator|=
@@ -2178,7 +2178,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|USE_DTOA
+name|_IO_USE_DTOA
 argument_list|)
 comment|/* trailing f.p. zeroes */
 name|PAD_0
@@ -2239,7 +2239,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|USE_DTOA
+name|_IO_USE_DTOA
 argument_list|)
 end_if
 
@@ -3499,7 +3499,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(FLOATING_POINT)&& !defined(USE_DTOA) */
+comment|/* defined(FLOATING_POINT)&& !defined(_IO_USE_DTOA) */
 end_comment
 
 end_unit

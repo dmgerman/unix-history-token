@@ -739,6 +739,7 @@ name|ostream
 operator|&
 name|o
 operator|,
+specifier|const
 name|omanip
 operator|<
 name|TP

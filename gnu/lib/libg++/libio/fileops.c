@@ -68,7 +68,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* An fstream can be in at most one of put mode, get mode, or putback mode.    Putback mode is a variant of get mode.     In a filebuf, there is only one current position, instead of two    separate get and put pointers.  In get mode, the current posistion    is that of gptr(); in put mode that of pptr().     The position in the buffer that corresponds to the position    in external file system is file_ptr().    This is normally egptr(), except in putback mode, when it is _save_egptr.    If the field _fb._offset is>= 0, it gives the offset in    the file as a whole corresponding to eGptr(). (???)     PUT MODE:    If a filebuf is in put mode, pbase() is non-NULL and equal to base().    Also, epptr() == ebuf().    Also, eback() == gptr()&& gptr() == egptr().    The un-flushed character are those between pbase() and pptr().    GET MODE:    If a filebuf is in get or putback mode, eback() != egptr().    In get mode, the unread characters are between gptr() and egptr().    The OS file position corresponds to that of egptr().    PUTBACK MODE:    Putback mode is used to remember "excess" characters that have    been sputbackc'd in a separate putback buffer.    In putback mode, the get buffer points to the special putback buffer.    The unread characters are the characters between gptr() and egptr()    in the putback buffer, as well as the area between save_gptr()    and save_egptr(), which point into the original reserve buffer.    (The pointers save_gptr() and save_egptr() are the values    of gptr() and egptr() at the time putback mode was entered.)    The OS position corresponds to that of save_egptr().        LINE BUFFERED OUTPUT:    During line buffered output, pbase()==base()&& epptr()==base().    However, ptr() may be anywhere between base() and ebuf().    This forces a call to filebuf::overflow(int C) on every put.    If there is more space in the buffer, and C is not a '\n',    then C is inserted, and pptr() incremented.        UNBUFFERED STREAMS:    If a filebuf is unbuffered(), the _shortbuf[1] is used as the buffer. */
+comment|/* An fstream can be in at most one of put mode, get mode, or putback mode.    Putback mode is a variant of get mode.     In a filebuf, there is only one current position, instead of two    separate get and put pointers.  In get mode, the current posistion    is that of gptr(); in put mode that of pptr().     The position in the buffer that corresponds to the position    in external file system is file_ptr().    This is normally _IO_read_end, except in putback mode,    when it is _IO_save_end.    If the field _fb._offset is>= 0, it gives the offset in    the file as a whole corresponding to eGptr(). (???)     PUT MODE:    If a filebuf is in put mode, pbase() is non-NULL and equal to base().    Also, epptr() == ebuf().    Also, eback() == gptr()&& gptr() == egptr().    The un-flushed character are those between pbase() and pptr().    GET MODE:    If a filebuf is in get or putback mode, eback() != egptr().    In get mode, the unread characters are between gptr() and egptr().    The OS file position corresponds to that of egptr().    PUTBACK MODE:    Putback mode is used to remember "excess" characters that have    been sputbackc'd in a separate putback buffer.    In putback mode, the get buffer points to the special putback buffer.    The unread characters are the characters between gptr() and egptr()    in the putback buffer, as well as the area between save_gptr()    and save_egptr(), which point into the original reserve buffer.    (The pointers save_gptr() and save_egptr() are the values    of gptr() and egptr() at the time putback mode was entered.)    The OS position corresponds to that of save_egptr().        LINE BUFFERED OUTPUT:    During line buffered output, pbase()==base()&& epptr()==base().    However, ptr() may be anywhere between base() and ebuf().    This forces a call to filebuf::overflow(int C) on every put.    If there is more space in the buffer, and C is not a '\n',    then C is inserted, and pptr() incremented.        UNBUFFERED STREAMS:    If a filebuf is unbuffered(), the _shortbuf[1] is used as the buffer. */
 end_comment
 
 begin_define
@@ -837,9 +837,11 @@ name|fp
 operator|->
 name|_flags
 operator|&
+operator|(
 name|_IO_LINE_BUF
 operator|+
 name|_IO_UNBUFFERED
+operator|)
 operator|)
 condition|?
 name|fp
@@ -1202,9 +1204,11 @@ name|f
 operator|->
 name|_flags
 operator|&
+operator|(
 name|_IO_LINE_BUF
 operator|+
 name|_IO_UNBUFFERED
+operator|)
 condition|)
 name|f
 operator|->
@@ -1576,17 +1580,6 @@ block|{
 case|case
 name|_IO_seek_cur
 case|:
-if|if
-condition|(
-name|fp
-operator|->
-name|_offset
-operator|==
-name|_IO_pos_BAD
-condition|)
-goto|goto
-name|dumb
-goto|;
 comment|/* Adjust for read-ahead (bytes is buffer). */
 name|offset
 operator|-=
@@ -1598,6 +1591,17 @@ name|fp
 operator|->
 name|_IO_read_ptr
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|_offset
+operator|==
+name|_IO_pos_BAD
+condition|)
+goto|goto
+name|dumb
+goto|;
 comment|/* Make offset absolute, assuming current pointer is file_ptr(). */
 name|offset
 operator|+=
@@ -1667,9 +1671,6 @@ goto|;
 block|}
 block|}
 comment|/* At this point, dir==_IO_seek_set. */
-ifdef|#
-directive|ifdef
-name|TODO
 comment|/* If destination is within current buffer, optimize: */
 if|if
 condition|(
@@ -1677,13 +1678,19 @@ name|fp
 operator|->
 name|_offset
 operator|!=
-name|IO_pos_BAD
+name|_IO_pos_BAD
 operator|&&
 name|fp
 operator|->
 name|_IO_read_base
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|_IO_in_backup
+argument_list|(
+name|fp
+argument_list|)
 condition|)
 block|{
 comment|/* Offset relative to start of main get area. */
@@ -1692,16 +1699,18 @@ name|rel_offset
 init|=
 name|offset
 operator|-
-name|_fb
-operator|.
+name|fp
+operator|->
 name|_offset
 operator|+
 operator|(
-name|eGptr
-argument_list|()
+name|fp
+operator|->
+name|_IO_read_end
 operator|-
-name|Gbase
-argument_list|()
+name|fp
+operator|->
+name|_IO_read_base
 operator|)
 decl_stmt|;
 if|if
@@ -1711,29 +1720,29 @@ operator|>=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|_IO_in_backup
-argument_list|(
-name|fp
-argument_list|)
-condition|)
-name|_IO_switch_to_main_get_area
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (_IO_in_backup(fp)) 	    _IO_switch_to_main_get_area(fp);
+endif|#
+directive|endif
 if|if
 condition|(
 name|rel_offset
 operator|<=
+name|fp
+operator|->
 name|_IO_read_end
 operator|-
+name|fp
+operator|->
 name|_IO_read_base
 condition|)
 block|{
 name|_IO_setg
 argument_list|(
+name|fp
+argument_list|,
 name|fp
 operator|->
 name|_IO_buf_base
@@ -1752,6 +1761,8 @@ expr_stmt|;
 name|_IO_setp
 argument_list|(
 name|fp
+argument_list|,
+name|fp
 operator|->
 name|_IO_buf_base
 argument_list|,
@@ -1764,6 +1775,9 @@ return|return
 name|offset
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|TODO
 comment|/* If we have streammarkers, seek forward by reading ahead. */
 if|if
 condition|(
@@ -1804,7 +1818,12 @@ return|return
 name|offset
 return|;
 block|}
+endif|#
+directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|TODO
 if|if
 condition|(
 name|rel_offset
@@ -1850,7 +1869,12 @@ return|return
 name|offset
 return|;
 block|}
+endif|#
+directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|TODO
 name|_IO_unsave_markers
 argument_list|(
 name|fp

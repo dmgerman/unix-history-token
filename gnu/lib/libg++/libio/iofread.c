@@ -46,9 +46,11 @@ decl_stmt|;
 name|_IO_size_t
 name|bytes_read
 decl_stmt|;
-name|COERCE_FILE
+name|CHECK_FILE
 argument_list|(
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

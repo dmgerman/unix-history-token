@@ -12,7 +12,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USE_DTOA
+name|_IO_USE_DTOA
 end_ifdef
 
 begin_comment
@@ -2267,7 +2267,7 @@ name|i
 block|,
 name|k
 block|;
-name|long
+name|_G_int32_t
 name|x
 block|,
 name|y
@@ -3156,12 +3156,14 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|y
 operator|=
 operator|*
 name|xb
 operator|&
 literal|0xffff
+operator|)
 condition|)
 block|{
 name|x
@@ -3256,12 +3258,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|y
 operator|=
 operator|*
 name|xb
 operator|>>
 literal|16
+operator|)
 condition|)
 block|{
 name|x
@@ -4126,7 +4130,7 @@ name|wa
 block|,
 name|wb
 block|;
-name|long
+name|_G_int32_t
 name|borrow
 block|,
 name|y
@@ -4148,7 +4152,7 @@ block|,
 operator|*
 name|xc
 block|;
-name|long
+name|_G_int32_t
 name|z
 block|;
 name|i
@@ -4535,7 +4539,7 @@ endif|#
 directive|endif
 block|{
 specifier|register
-name|long
+name|_G_int32_t
 name|L
 block|;
 name|double
@@ -4663,9 +4667,11 @@ literal|1
 else|:
 literal|1
 operator|<<
+operator|(
 literal|31
 operator|-
 name|L
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -4832,9 +4838,11 @@ name|Exp_1
 operator||
 name|y
 operator|>>
+operator|(
 name|Ebits
 operator|-
 name|k
+operator|)
 expr_stmt|;
 name|w
 operator|=
@@ -4853,18 +4861,22 @@ operator|=
 name|y
 operator|<<
 operator|(
+operator|(
 literal|32
 operator|-
 name|Ebits
 operator|)
 operator|+
 name|k
+operator|)
 operator||
 name|w
 operator|>>
+operator|(
 name|Ebits
 operator|-
 name|k
+operator|)
 expr_stmt|;
 goto|goto
 name|ret_d
@@ -4905,9 +4917,11 @@ name|k
 operator||
 name|z
 operator|>>
+operator|(
 literal|32
 operator|-
 name|k
+operator|)
 expr_stmt|;
 name|y
 operator|=
@@ -4929,9 +4943,11 @@ name|k
 operator||
 name|y
 operator|>>
+operator|(
 literal|32
 operator|-
 name|k
+operator|)
 expr_stmt|;
 block|}
 else|else
@@ -5216,13 +5232,16 @@ end_endif
 begin_if
 if|if
 condition|(
+operator|(
 name|y
 operator|=
 name|d1
+operator|)
 condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|k
 operator|=
 name|lo0bits
@@ -5230,6 +5249,7 @@ argument_list|(
 operator|&
 name|y
 argument_list|)
+operator|)
 condition|)
 block|{
 name|x
@@ -5241,9 +5261,11 @@ name|y
 operator||
 name|z
 operator|<<
+operator|(
 literal|32
 operator|-
 name|k
+operator|)
 expr_stmt|;
 name|z
 operator|>>=
@@ -6013,7 +6035,7 @@ name|rv
 block|,
 name|rv0
 block|;
-name|long
+name|_G_int32_t
 name|L
 block|;
 name|unsigned32
@@ -6996,11 +7018,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|e1
 operator|&
 literal|15
+operator|)
 condition|)
 name|rv
 operator|*=
@@ -7207,11 +7231,13 @@ name|e1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|e1
 operator|&
 literal|15
+operator|)
 condition|)
 name|rv
 operator|/=
@@ -8523,7 +8549,7 @@ comment|/* Can we stop now? */
 name|L
 operator|=
 operator|(
-name|long
+name|_G_int32_t
 operator|)
 name|aadj
 expr_stmt|;
@@ -8697,7 +8723,7 @@ block|{
 name|int
 name|n
 block|;
-name|long
+name|_G_int32_t
 name|borrow
 block|,
 name|y
@@ -8722,7 +8748,7 @@ block|,
 operator|*
 name|sxe
 block|;
-name|long
+name|_G_int32_t
 name|z
 block|;
 name|unsigned32
@@ -9361,7 +9387,7 @@ name|spec_case
 block|,
 name|try_quick
 block|;
-name|long
+name|_G_int32_t
 name|L
 block|;
 ifndef|#
@@ -9854,27 +9880,33 @@ argument_list|(
 name|d
 argument_list|)
 operator|<<
+operator|(
 literal|64
 operator|-
 name|i
+operator|)
 operator||
 name|word1
 argument_list|(
 name|d
 argument_list|)
 operator|>>
+operator|(
 name|i
 operator|-
 literal|32
+operator|)
 else|:
 name|word1
 argument_list|(
 name|d
 argument_list|)
 operator|<<
+operator|(
 literal|32
 operator|-
 name|i
+operator|)
 expr_stmt|;
 name|d2
 operator|=
@@ -10454,10 +10486,12 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|j1
 operator|=
 operator|-
 name|k
+operator|)
 condition|)
 block|{
 name|d
@@ -10631,7 +10665,7 @@ block|{
 name|L
 operator|=
 operator|(
-name|long
+name|_G_int32_t
 operator|)
 name|d
 expr_stmt|;
@@ -10720,7 +10754,7 @@ block|{
 name|L
 operator|=
 operator|(
-name|long
+name|_G_int32_t
 operator|)
 name|d
 expr_stmt|;
@@ -10881,7 +10915,7 @@ block|{
 name|L
 operator|=
 call|(
-name|long
+name|_G_int32_t
 call|)
 argument_list|(
 name|d
@@ -10944,6 +10978,7 @@ name|d
 operator|>
 name|ds
 operator|||
+operator|(
 name|d
 operator|==
 name|ds
@@ -10951,6 +10986,7 @@ operator|&&
 name|L
 operator|&
 literal|1
+operator|)
 condition|)
 block|{
 name|bump_up
@@ -11265,11 +11301,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|j
 operator|=
 name|b5
 operator|-
 name|m5
+operator|)
 condition|)
 name|b
 operator|=
@@ -11396,6 +11434,7 @@ end_comment
 begin_if
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 operator|(
@@ -11425,6 +11464,7 @@ name|s2
 operator|)
 operator|&
 literal|0x1f
+operator|)
 condition|)
 name|i
 operator|=
@@ -11828,6 +11868,7 @@ name|j
 operator|<
 literal|0
 operator|||
+operator|(
 name|j
 operator|==
 literal|0
@@ -11849,6 +11890,7 @@ literal|1
 operator|)
 endif|#
 directive|endif
+operator|)
 condition|)
 block|{
 if|if
@@ -11883,6 +11925,7 @@ name|j1
 operator|>
 literal|0
 operator|||
+operator|(
 name|j1
 operator|==
 literal|0
@@ -11890,6 +11933,7 @@ operator|&&
 name|dig
 operator|&
 literal|1
+operator|)
 operator|)
 operator|&&
 name|dig
@@ -12103,6 +12147,7 @@ name|j
 operator|>
 literal|0
 operator|||
+operator|(
 name|j
 operator|==
 literal|0
@@ -12110,6 +12155,7 @@ operator|&&
 name|dig
 operator|&
 literal|1
+operator|)
 condition|)
 block|{
 name|roundoff
@@ -12269,7 +12315,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_DTOA */
+comment|/* _IO_USE_DTOA */
 end_comment
 
 end_unit

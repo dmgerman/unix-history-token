@@ -713,6 +713,27 @@ operator|&
 name|operator
 operator|<<
 operator|(
+name|long
+name|double
+name|n
+operator|)
+block|{
+return|return
+name|operator
+operator|<<
+operator|(
+operator|(
+name|double
+operator|)
+name|n
+operator|)
+return|;
+block|}
+name|ostream
+operator|&
+name|operator
+operator|<<
+operator|(
 name|__omanip
 name|func
 operator|)
@@ -785,6 +806,8 @@ name|public
 name|ios
 block|{
 comment|// NOTE: If fields are changed, you must fix _fake_istream in stdstreams.C!
+name|protected
+operator|:
 name|_IO_size_t
 name|_gcount
 block|;
@@ -1796,6 +1819,19 @@ operator|&
 name|operator
 operator|>>
 operator|(
+name|long
+name|double
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|istream
+operator|&
+name|operator
+operator|>>
+operator|(
 name|__manip
 name|func
 operator|)
@@ -1862,19 +1898,11 @@ decl_stmt|,
 name|public
 name|ostream
 block|{
-name|_IO_size_t
-name|_gcount
-decl_stmt|;
 name|public
 label|:
 name|iostream
 argument_list|()
-block|{
-name|_gcount
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{ }
 name|iostream
 argument_list|(
 name|streambuf
@@ -1896,15 +1924,61 @@ empty_stmt|;
 end_empty_stmt
 
 begin_decl_stmt
-specifier|extern
+name|class
+name|_IO_istream_withassign
+range|:
+name|public
 name|istream
-name|cin
+block|{
+name|public
+operator|:
+name|_IO_istream_withassign
+operator|&
+name|operator
+operator|=
+operator|(
+name|istream
+operator|&
+operator|)
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|_IO_ostream_withassign
+range|:
+name|public
+name|ostream
+block|{
+name|public
+operator|:
+name|_IO_ostream_withassign
+operator|&
+name|operator
+operator|=
+operator|(
+name|ostream
+operator|&
+operator|)
+block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|ostream
+name|_IO_istream_withassign
+name|cin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// clog->rdbuf() == cerr->rdbuf()
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|_IO_ostream_withassign
 name|cout
 decl_stmt|,
 name|cerr
@@ -1912,10 +1986,6 @@ decl_stmt|,
 name|clog
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// clog->rdbuf() == cerr->rdbuf()
-end_comment
 
 begin_struct
 struct|struct

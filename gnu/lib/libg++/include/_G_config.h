@@ -3,6 +3,12 @@ begin_comment
 comment|/* AUTOMATICALLY GENERATED; DO NOT EDIT! */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -19,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|_G_LIB_VERSION
-value|"0.65"
+value|"0.66"
 end_define
 
 begin_define
@@ -33,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|_G_VTABLE_LABEL_HAS_LENGTH
-value|0
+value|1
 end_define
 
 begin_define
@@ -228,6 +234,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
+comment|/* default */
 name|_G_wint_t
 typedef|;
 end_typedef
@@ -412,11 +419,12 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
 name|__GNUG__
 argument_list|)
-operator|&&
+operator|||
 name|defined
 argument_list|(
 name|__STRICT_ANSI__
@@ -427,6 +435,27 @@ begin_define
 define|#
 directive|define
 name|_G_NO_NRV
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__GNUG__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_G_NO_EXTERN_TEMPLATES
 end_define
 
 begin_endif
@@ -494,7 +523,7 @@ begin_define
 define|#
 directive|define
 name|_G_HAVE_BOOL
-value|0
+value|1
 end_define
 
 begin_endif

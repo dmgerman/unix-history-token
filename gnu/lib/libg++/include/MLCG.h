@@ -97,8 +97,7 @@ comment|//
 comment|// Return a long-words word of random bits
 comment|//
 name|virtual
-name|unsigned
-name|long
+name|_G_uint32_t
 name|asLong
 argument_list|()
 block|;
