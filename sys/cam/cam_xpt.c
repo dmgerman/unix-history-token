@@ -23873,7 +23873,25 @@ name|inq_buf
 operator|->
 name|additional_length
 operator|+
-literal|4
+name|offsetof
+argument_list|(
+expr|struct
+name|scsi_inquiry_data
+argument_list|,
+name|additional_length
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+comment|/* 		 * Some parallel SCSI devices fail to send an 		 * ignore wide residue message when dealing with 		 * odd length inquiry requests.  Round up to be 		 * safe. 		 */
+name|inquiry_len
+operator|=
+name|roundup2
+argument_list|(
+name|inquiry_len
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 name|scsi_inquiry
 argument_list|(
