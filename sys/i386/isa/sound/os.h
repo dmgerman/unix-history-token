@@ -97,24 +97,6 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
-end_include
-
 begin_comment
 comment|/* These few lines are used by 386BSD (only??). */
 end_comment
