@@ -113,6 +113,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ypclnt_havepasswdd
+parameter_list|(
+name|ypclnt_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ypclnt_passwd
 parameter_list|(
 name|ypclnt_t
