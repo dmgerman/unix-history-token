@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	5.7 (Berkeley) %G%"
+literal|"@(#)bt_search.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<db.h>
 end_include
 
 begin_include

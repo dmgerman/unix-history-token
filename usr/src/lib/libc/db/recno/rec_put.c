@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_put.c	5.7 (Berkeley) %G%"
+literal|"@(#)rec_put.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
 end_include
 
 begin_include

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.23 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,18 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|__DBINTERFACE_PRIVATE
-end_define
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -111,6 +99,18 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|__DBINTERFACE_PRIVATE
+end_define
+
+begin_include
+include|#
+directive|include
+file|<db.h>
 end_include
 
 begin_include

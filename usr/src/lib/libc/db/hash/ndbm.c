@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.12 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,12 +46,6 @@ include|#
 directive|include
 file|<sys/param.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|__DBINTERFACE_PRIVATE
-end_define
 
 begin_include
 include|#

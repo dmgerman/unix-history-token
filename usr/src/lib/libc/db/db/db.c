@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)db.c	5.3 (Berkeley) %G%"
+literal|"@(#)db.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,22 +43,10 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|__DBINTERFACE_PRIVATE
-end_define
-
 begin_include
 include|#
 directive|include
-file|<db.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -70,13 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdio.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|__DBINTERFACE_PRIVATE
+end_define
 
 begin_include
 include|#
 directive|include
-file|"../btree/btree.h"
+file|<db.h>
 end_include
 
 begin_function
