@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfontedpr.c	5.3 (Berkeley) %G%"
+literal|"@(#)vfontedpr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_include
 include|#
@@ -67,13 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -382,7 +388,7 @@ name|char
 modifier|*
 name|defsfile
 init|=
-literal|"/usr/lib/vgrindefs"
+name|_PATH_VGRINDEFS
 decl_stmt|;
 end_decl_stmt
 
