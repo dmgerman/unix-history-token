@@ -506,31 +506,25 @@ specifier|extern
 expr|struct
 name|ns_addr
 name|ns_addr
-name|__P
 argument_list|(
-operator|(
 specifier|const
 name|char
 operator|*
-operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|ns_ntoa
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ns_addr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS

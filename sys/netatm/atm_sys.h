@@ -447,19 +447,17 @@ name|ti_flag
 decl_stmt|;
 comment|/* Timer flag bits (see below) */
 name|void
-argument_list|(
-argument|*ti_func
-argument_list|)
+function_decl|(
+modifier|*
+name|ti_func
+function_decl|)
 comment|/* Call at timeout expiration */
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|atm_time
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|struct
 name|atm_time
 modifier|*

@@ -224,22 +224,19 @@ name|ipx_ifaddr
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|struct
 name|ipx_ifaddr
 modifier|*
 name|ipx_iaonnetof
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ipx_addr
-operator|*
+modifier|*
 name|dst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
