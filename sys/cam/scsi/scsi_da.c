@@ -286,6 +286,10 @@ block|,
 name|DA_FLAG_OPEN
 init|=
 literal|0x100
+block|,
+name|DA_FLAG_SCTX_INIT
+init|=
+literal|0x200
 block|}
 name|da_flags
 typedef|;
@@ -3099,6 +3103,16 @@ expr_stmt|;
 comment|/* 	 * If we can't free the sysctl tree, oh well... 	 */
 if|if
 condition|(
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|DA_FLAG_SCTX_INIT
+operator|)
+operator|!=
+literal|0
+operator|&&
 name|sysctl_ctx_free
 argument_list|(
 operator|&
@@ -3473,6 +3487,12 @@ name|softc
 operator|->
 name|sysctl_ctx
 argument_list|)
+expr_stmt|;
+name|softc
+operator|->
+name|flags
+operator||=
+name|DA_FLAG_SCTX_INIT
 expr_stmt|;
 name|softc
 operator|->
