@@ -524,7 +524,7 @@ name|bp
 argument_list|,
 name|stp
 argument_list|,
-name|ENXIO
+name|error
 argument_list|)
 expr_stmt|;
 block|}
