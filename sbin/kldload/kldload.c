@@ -77,7 +77,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldload [-v] filename\n"
+literal|"usage: kldload [-v] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -105,13 +105,22 @@ name|int
 name|c
 decl_stmt|;
 name|int
-name|verbose
-init|=
-literal|0
+name|errors
 decl_stmt|;
 name|int
 name|fileid
 decl_stmt|;
+name|int
+name|verbose
+decl_stmt|;
+name|errors
+operator|=
+literal|0
+expr_stmt|;
+name|verbose
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -159,12 +168,20 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
-literal|1
+operator|==
+literal|0
 condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+while|while
+condition|(
+name|argc
+operator|--
+operator|!=
+literal|0
+condition|)
+block|{
 name|fileid
 operator|=
 name|kldload
@@ -181,10 +198,9 @@ name|fileid
 operator|<
 literal|0
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"can't load %s"
 argument_list|,
 name|argv
@@ -193,6 +209,10 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|errors
+operator|++
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -210,7 +230,15 @@ argument_list|,
 name|fileid
 argument_list|)
 expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+block|}
 return|return
+name|errors
+condition|?
+literal|1
+else|:
 literal|0
 return|;
 block|}
