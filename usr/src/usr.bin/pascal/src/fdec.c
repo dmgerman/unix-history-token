@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.5 %G%"
+literal|"@(#)fdec.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1330,7 +1330,12 @@ index|[
 name|NL_OFFS
 index|]
 operator|=
+name|roundup
+argument_list|(
 name|o
+argument_list|,
+name|A_STACK
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
