@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	3.3	%H%	*/
+comment|/*	trap.c	3.4	%H%	*/
 end_comment
 
 begin_include
@@ -624,12 +624,7 @@ literal|0
 expr_stmt|;
 name|opc
 operator|=
-name|u
-operator|.
-name|u_ar0
-index|[
-name|PC
-index|]
+name|pc
 operator|-
 literal|2
 expr_stmt|;

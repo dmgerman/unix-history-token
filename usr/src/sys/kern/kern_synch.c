@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.9	%H%	*/
+comment|/*	kern_synch.c	3.10	%H%	*/
 end_comment
 
 begin_include
@@ -128,8 +128,6 @@ name|hp
 decl_stmt|;
 specifier|register
 name|s
-operator|,
-name|h
 expr_stmt|;
 name|rp
 operator|=
@@ -306,6 +304,12 @@ goto|;
 block|}
 else|else
 block|{
+name|rp
+operator|->
+name|p_stat
+operator|=
+name|SSLEEP
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -751,12 +755,6 @@ operator|->
 name|p_wchan
 operator|==
 name|chan
-operator|&&
-name|p
-operator|->
-name|p_stat
-operator|!=
-name|SZOMB
 condition|)
 block|{
 name|p
@@ -980,10 +978,6 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|caddr_t
-name|w
-decl_stmt|;
-specifier|register
 name|s
 expr_stmt|;
 name|s
@@ -1017,6 +1011,9 @@ literal|"setrun"
 argument_list|)
 expr_stmt|;
 case|case
+name|SSTOP
+case|:
+case|case
 name|SSLEEP
 case|:
 name|unsleep
@@ -1028,9 +1025,6 @@ comment|/* e.g. when sending signals */
 break|break;
 case|case
 name|SIDL
-case|:
-case|case
-name|SSTOP
 case|:
 break|break;
 block|}

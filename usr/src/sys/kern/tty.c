@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.5	%H%	*/
+comment|/*	tty.c	3.6	%H%	*/
 end_comment
 
 begin_comment
@@ -474,6 +474,14 @@ name|u_ttyd
 operator|=
 name|dev
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_pgrp
+operator|==
+literal|0
+condition|)
 name|tp
 operator|->
 name|t_pgrp
@@ -586,13 +594,19 @@ name|tlun
 operator|.
 name|t_suspc
 operator|=
-literal|0377
+name|CTRL
+argument_list|(
+name|z
+argument_list|)
 expr_stmt|;
 name|tlun
 operator|.
-name|t_dstopc
+name|t_dsuspc
 operator|=
-literal|0377
+name|CTRL
+argument_list|(
+name|y
+argument_list|)
 expr_stmt|;
 name|tlun
 operator|.
@@ -2255,7 +2269,6 @@ name|t_lstate
 operator|=
 literal|0
 expr_stmt|;
-comment|/* reset */
 name|splx
 argument_list|(
 name|s
