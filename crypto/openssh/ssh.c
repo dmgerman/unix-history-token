@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh.c,v 1.51 2000/05/08 17:12:15 markus Exp $"
+literal|"$Id: ssh.c,v 1.54 2000/05/30 17:32:06 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -339,6 +339,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -A          Enable authentication agent forwarding.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -a          Disable authentication agent forwarding.\n"
 argument_list|)
 expr_stmt|;
@@ -355,6 +362,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* AFS */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -X          Enable X11 connection forwarding.\n"
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1240,6 +1254,16 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+literal|'A'
+case|:
+name|options
+operator|.
+name|forward_agent
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|AFS
@@ -1815,7 +1839,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|OpenSSL_add_all_algorithms
+name|SSLeay_add_all_algorithms
 argument_list|()
 expr_stmt|;
 comment|/* Initialize the command to execute on remote host. */
