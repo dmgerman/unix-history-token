@@ -548,7 +548,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-literal|512
+literal|513
 argument_list|)
 expr_stmt|;
 name|pass
@@ -570,7 +570,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-literal|512
+literal|513
 argument_list|)
 expr_stmt|;
 if|if
@@ -852,6 +852,14 @@ case|case
 name|SRA_USER
 case|:
 comment|/* decode KAB(u) */
+if|if
+condition|(
+name|cnt
+operator|>
+literal|512
+condition|)
+comment|/* Attempted buffer overflow */
+break|break;
 name|memcpy
 argument_list|(
 name|xuser
@@ -902,6 +910,14 @@ break|break;
 case|case
 name|SRA_PASS
 case|:
+if|if
+condition|(
+name|cnt
+operator|>
+literal|512
+condition|)
+comment|/* Attempted buffer overflow */
+break|break;
 comment|/* decode KAB(P) */
 name|memcpy
 argument_list|(
