@@ -4839,6 +4839,25 @@ undef|#
 directive|undef
 name|SETFLAG
 block|}
+if|if
+condition|(
+operator|!
+name|ND
+operator|.
+name|initialized
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: not initialized yet"
+argument_list|,
+name|ifname
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|printf
 argument_list|(
 literal|"linkmtu=%d"
