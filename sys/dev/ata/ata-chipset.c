@@ -10391,6 +10391,20 @@ literal|"SiI 3114"
 block|}
 block|,
 block|{
+name|ATA_SII3512
+block|,
+literal|0x02
+block|,
+name|SIIMEMIO
+block|,
+literal|0
+block|,
+name|ATA_SA150
+block|,
+literal|"SiI 3512"
+block|}
+block|,
+block|{
 name|ATA_SII3112
 block|,
 literal|0x02
@@ -10416,6 +10430,20 @@ block|,
 name|ATA_SA150
 block|,
 literal|"SiI 3112"
+block|}
+block|,
+block|{
+name|ATA_SII3512
+block|,
+literal|0x00
+block|,
+name|SIIMEMIO
+block|,
+name|SIIBUG
+block|,
+name|ATA_SA150
+block|,
+literal|"SiI 3512"
 block|}
 block|,
 block|{
