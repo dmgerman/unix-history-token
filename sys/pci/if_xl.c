@@ -5380,14 +5380,14 @@ name|pci_enable_io
 argument_list|(
 name|dev
 argument_list|,
-name|PCIM_CMD_PORTEN
+name|SYS_RES_IOPORT
 argument_list|)
 expr_stmt|;
 name|pci_enable_io
 argument_list|(
 name|dev
 argument_list|,
-name|PCIM_CMD_MEMEN
+name|SYS_RES_MEMORY
 argument_list|)
 expr_stmt|;
 name|command
