@@ -964,7 +964,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|int
+name|_usrstack
 argument_list|)
 expr_stmt|;
 if|if
@@ -991,6 +991,10 @@ literal|1
 condition|)
 name|_usrstack
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|USRSTACK
 expr_stmt|;
 comment|/* 		 * Create a red zone below the main stack.  All other stacks are 		 * constrained to a maximum size by the paramters passed to 		 * mmap(), but this stack is only limited by resource limits, so 		 * this stack needs an explicitly mapped red zone to protect the 		 * thread stack that is just beyond. 		 */
