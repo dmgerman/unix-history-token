@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Accept one (or more) ASCII encoded chunks that together make a compressed  * CTM delta.  Decode them and reconstruct the deltas.  Any completed  * deltas may be passed to ctm for unpacking.  *  * Author: Stephen McKay  *  * NOTICE: This is free software.  I hope you get some use from this program.  * In return you should think about all the nice people who give away software.  * Maybe you should write some free software too.  */
+comment|/*  * Accept one (or more) ASCII encoded chunks that together make a compressed  * CTM delta.  Decode them and reconstruct the deltas.  Any completed  * deltas may be passed to ctm for unpacking.  *  * Author: Stephen McKay  *  * NOTICE: This is free software.  I hope you get some use from this program.  * In return you should think about all the nice people who give away software.  * Maybe you should write some free software too.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -620,7 +620,7 @@ name|fscanf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s %d %c"
+literal|"%19s %d %c"
 argument_list|,
 name|class
 argument_list|,
@@ -959,9 +959,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|ofd
-decl_stmt|;
-name|int
 name|decoding
 init|=
 literal|0
@@ -1129,13 +1126,19 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|int
+name|fd
+init|=
+operator|-
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"CTM_MAIL BEGIN %s %d %d %c"
+literal|"CTM_MAIL BEGIN %29s %d %d %c"
 argument_list|,
 name|delta
 argument_list|,
@@ -1185,43 +1188,29 @@ name|strcat
 argument_list|(
 name|tname
 argument_list|,
-literal|"/p.XXXXXX"
+literal|"/p.XXXXXXXXXX"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ofd
+name|fd
 operator|=
 name|mkstemp
 argument_list|(
 name|tname
 argument_list|)
 operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|err
-argument_list|(
-literal|"*mkstemp: '%s'"
-argument_list|,
-name|tname
-argument_list|)
-expr_stmt|;
-name|status
-operator|++
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
+operator|==
+operator|-
+literal|1
+operator|||
 operator|(
 name|ofp
 operator|=
 name|fdopen
 argument_list|(
-name|ofd
+name|fd
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1230,9 +1219,31 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|err
 argument_list|(
 literal|"cannot open '%s' for writing"
+argument_list|,
+name|tname
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|err
+argument_list|(
+literal|"*mkstemp: '%s'"
 argument_list|,
 name|tname
 argument_list|)
@@ -1873,9 +1884,6 @@ modifier|*
 name|pfp
 decl_stmt|;
 name|int
-name|dfd
-decl_stmt|;
-name|int
 name|i
 decl_stmt|,
 name|n
@@ -1888,6 +1896,12 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|int
+name|fd
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|tname
@@ -1899,42 +1913,29 @@ name|strcat
 argument_list|(
 name|tname
 argument_list|,
-literal|"/d.XXXXXX"
+literal|"/d.XXXXXXXXXX"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|dfd
+name|fd
 operator|=
 name|mkstemp
 argument_list|(
 name|tname
 argument_list|)
 operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|err
-argument_list|(
-literal|"*mkstemp: '%s'"
-argument_list|,
-name|tname
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-if|if
-condition|(
+operator|==
+operator|-
+literal|1
+operator|||
 operator|(
 name|dfp
 operator|=
 name|fdopen
 argument_list|(
-name|dfd
+name|fd
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1943,9 +1944,31 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|"cannot open '%s' for writing"
+argument_list|,
+name|tname
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|err
+argument_list|(
+literal|"*mktemp: '%s'"
 argument_list|,
 name|tname
 argument_list|)
