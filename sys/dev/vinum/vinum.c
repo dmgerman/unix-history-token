@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.42 2003/05/04 05:25:14 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.44 2003/05/23 00:50:55 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -11,7 +11,7 @@ value|static
 end_define
 
 begin_comment
-comment|/* nothing while we're testing XXX */
+comment|/* nothing while we're testing */
 end_comment
 
 begin_include
@@ -49,6 +49,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* debug flags */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -224,6 +228,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Mutexes for plex synchronization.  Ideally each plex  * should have its own mutex, but the fact that the plex  * struct can move makes that very complicated.  Instead,  * have plexes use share these mutexes based on modulo plex  * number.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|plexmutex
+index|[
+name|PLEXMUTEXES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later, and  * add devsw entries.  */
 end_comment
 
@@ -240,6 +258,29 @@ name|char
 modifier|*
 name|envp
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+define|#
+directive|define
+name|MUTEXNAMELEN
+value|16
+name|char
+name|mutexname
+index|[
+name|MUTEXNAMELEN
+index|]
+decl_stmt|;
+if|#
+directive|if
+name|PLEXMUTEXES
+operator|>
+literal|10000
+error|#
+directive|error
+error|Increase size of MUTEXNAMELEN
+endif|#
+directive|endif
 comment|/* modload should prevent multiple loads, so this is worth a panic */
 if|if
 condition|(
@@ -503,6 +544,47 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* and number in use */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|PLEXMUTEXES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|snprintf
+argument_list|(
+name|mutexname
+argument_list|,
+name|MUTEXNAMELEN
+argument_list|,
+literal|"vinumplex%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|plexmutex
+index|[
+name|i
+index|]
+argument_list|,
+name|mutexname
+argument_list|,
+literal|"plex"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* and subdisks */
 name|SD
 operator|=
@@ -1079,6 +1161,9 @@ block|{
 literal|0
 block|}
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1301,6 +1386,28 @@ comment|/* daemon device */
 name|destroy_dev
 argument_list|(
 name|vinum_super_dev
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|PLEXMUTEXES
+condition|;
+name|i
+operator|++
+control|)
+name|mtx_destroy
+argument_list|(
+operator|&
+name|plexmutex
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|log
