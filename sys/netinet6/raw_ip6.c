@@ -1425,7 +1425,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXRW: In IPv6, we don't start referencing the contents of the 	 * inpcb until after all M_TRYWAIT allocations have finished.  We may 	 * want to reorder this function to provide similar guarantees here, 	 * so as to avoid holding a mutex over M_TRYWAIT. 	 */
 name|INP_LOCK
 argument_list|(
 name|in6p
