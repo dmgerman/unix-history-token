@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	8.2 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,10 +255,6 @@ directive|include
 file|"mntopts.h"
 end_include
 
-begin_comment
-comment|/*  * XXX  * This is without question incorrect -- not sure what the right  * values are.  */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|mntopt
@@ -268,11 +264,7 @@ init|=
 block|{
 name|MOPT_STDOPTS
 block|,
-name|MOPT_ASYNC
-block|,
 name|MOPT_FORCE
-block|,
-name|MOPT_SYNCHRONOUS
 block|,
 name|MOPT_UPDATE
 block|,
