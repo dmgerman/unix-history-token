@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.6	%G%	*/
+comment|/*	tm.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -20,6 +20,16 @@ end_if
 begin_comment
 comment|/*  * TM tape driver  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|N
+parameter_list|)
+value|{ register int d; d = N; while (--d> 0); }
+end_define
 
 begin_include
 include|#
@@ -2281,6 +2291,8 @@ block|,
 name|REW
 block|,
 name|OFFL
+block|,
+name|NOP
 block|}
 expr_stmt|;
 switch|switch
@@ -2371,6 +2383,9 @@ name|MTREW
 case|:
 case|case
 name|MTOFFL
+case|:
+case|case
+name|MTNOP
 case|:
 name|callcount
 operator|=
@@ -2589,14 +2604,6 @@ name|blk
 decl_stmt|,
 name|bdp
 decl_stmt|;
-name|TMPHYS
-operator|->
-name|tmcs
-operator|=
-name|DCLR
-operator||
-name|GO
-expr_stmt|;
 if|#
 directive|if
 name|VAX
@@ -2635,6 +2642,22 @@ condition|)
 empty_stmt|;
 endif|#
 directive|endif
+name|DELAY
+argument_list|(
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|twait
+argument_list|()
+expr_stmt|;
+name|TMPHYS
+operator|->
+name|tmcs
+operator|=
+name|DCLR
+operator||
+name|GO
+expr_stmt|;
 while|while
 condition|(
 name|num
@@ -2821,8 +2844,6 @@ operator|=
 name|WCOM
 operator||
 name|GO
-operator||
-name|D800
 expr_stmt|;
 block|}
 end_block
@@ -2896,8 +2917,6 @@ operator|=
 name|WEOF
 operator||
 name|GO
-operator||
-name|D800
 expr_stmt|;
 block|}
 end_block
