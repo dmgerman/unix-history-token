@@ -1441,6 +1441,12 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
+name|cpi
+operator|->
+name|base_transfer_speed
+operator|=
+literal|3300
+expr_stmt|;
 if|if
 condition|(
 name|softc
@@ -1450,8 +1456,8 @@ operator|&&
 name|ccb_h
 operator|->
 name|target_id
-operator|>=
-literal|0
+operator|!=
+name|CAM_TARGET_WILDCARD
 condition|)
 block|{
 switch|switch
@@ -1557,12 +1563,7 @@ literal|133000
 expr_stmt|;
 break|break;
 default|default:
-name|cpi
-operator|->
-name|base_transfer_speed
-operator|=
-literal|3300
-expr_stmt|;
+break|break;
 block|}
 block|}
 name|ccb
