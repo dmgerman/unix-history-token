@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.58	82/04/20	*/
+comment|/*	if_en.c	4.59	82/04/24	*/
 end_comment
 
 begin_include
@@ -681,20 +681,54 @@ name|NIMP
 operator|==
 literal|0
 comment|/* here's one for you john baby.... */
-name|enlhinit
-argument_list|(
-operator|(
+if|if
+condition|(
 name|ui
 operator|->
 name|ui_flags
 operator|&
 operator|~
 literal|0xff
-operator|)
-operator||
-literal|0x0a
+condition|)
+block|{
+name|struct
+name|in_addr
+name|logicaladdr
+decl_stmt|;
+name|logicaladdr
+operator|.
+name|s_addr
+operator|=
+name|ui
+operator|->
+name|ui_flags
+expr_stmt|;
+comment|/* gateway */
+name|logicaladdr
+operator|.
+name|s_lh
+operator|=
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_host
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|logicaladdr
+operator|.
+name|s_net
+operator|=
+literal|10
+expr_stmt|;
+name|enlhinit
+argument_list|(
+name|logicaladdr
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
