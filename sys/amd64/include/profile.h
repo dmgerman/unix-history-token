@@ -222,7 +222,8 @@ begin_define
 define|#
 directive|define
 name|_MCOUNT_DECL
-value|static __inline void _mcount
+define|\
+value|static void _mcount(uintfptr_t frompc, uintfptr_t selfpc) __unused; \ static void _mcount
 end_define
 
 begin_ifdef
@@ -235,13 +236,35 @@ begin_define
 define|#
 directive|define
 name|MCOUNT
+value|__asm ("			\n\ 	.globl	.mcount			\n\ 	.type	.mcount @function	\n\ .mcount:				\n\ 	pushq	%rbp			\n\ 	movq	%rsp, %rbp		\n\ 	pushq	%rdi			\n\ 	pushq	%rsi			\n\ 	pushq	%rdx			\n\ 	pushq	%rcx			\n\ 	pushq	%r8			\n\ 	pushq	%r9			\n\ 	movq	8(%rbp),%rsi		\n\ 	movq	(%rbp),%rdi		\n\ 	movq	8(%rdi),%rdi		\n\ 	call	_mcount			\n\ 	popq	%r9			\n\ 	popq	%r8			\n\ 	popq	%rcx			\n\ 	popq	%rdx			\n\ 	popq	%rsi			\n\ 	popq	%rdi			\n\ 	leave				\n\ 	ret				\n\ 	.size	.mcount, . - .mcount");
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*  * We could use this, except it doesn't preserve the registers that were  * being passed with arguments to the function that we were inserted  * into.  I've left it here as documentation of what the code above is  * supposed to do.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCOUNT
 define|\
 value|void									\ mcount()								\ {									\ 	uintfptr_t selfpc, frompc;					\
 comment|/*								\ 	 * Find the return address for mcount,				\ 	 * and the return address for mcount's caller.			\ 	 *								\ 	 * selfpc = pc pushed by call to mcount				\ 	 */
 value|\ 	__asm("movq 8(%%rbp),%0" : "=r" (selfpc));			\
 comment|/*								\ 	 * frompc = pc pushed by call to mcount's caller.		\ 	 * The caller's stack frame has already been built, so %ebp is	\ 	 * the caller's frame pointer.  The caller's raddr is in the	\ 	 * caller's frame following the caller's caller's frame pointer.\ 	 */
-value|\ 	__asm("movq (%%rbp),%0" : "=r" (frompc));				\ 	frompc = ((uintfptr_t *)frompc)[1];				\ 	_mcount(frompc, selfpc);					\ }
+value|\ 	__asm("movq (%%rbp),%0" : "=r" (frompc));			\ 	frompc = ((uintfptr_t *)frompc)[1];				\ 	_mcount(frompc, selfpc);					\ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
