@@ -931,22 +931,6 @@ begin_comment
 comment|/*  * vm_pager_get_pages() - inline, see vm/vm_pager.h  * vm_pager_put_pages() - inline, see vm/vm_pager.h  * vm_pager_has_page() - inline, see vm/vm_pager.h  * vm_pager_page_inserted() - inline, see vm/vm_pager.h  * vm_pager_page_removed() - inline, see vm/vm_pager.h  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  *	vm_pager_sync:  *  *	Called by pageout daemon before going back to sleep.  *	Gives pagers a chance to clean up any completed async pageing   *	operations.  */
-end_comment
-
-begin_endif
-unit|void vm_pager_sync() { 	struct pagerops **pgops;  	for (pgops = pagertab; pgops<&pagertab[npagers]; pgops++) 		if (pgops&& ((*pgops)->pgo_sync != NULL)) 			(*(*pgops)->pgo_sync) (); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|vm_offset_t
 name|vm_pager_map_page
