@@ -69,6 +69,19 @@ end_comment
 begin_undef
 undef|#
 directive|undef
+name|TARGET_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (FreeBSD/alpha ELF)");
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|TARGET_DEFAULT
 end_undef
 
@@ -89,7 +102,21 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"\ -D__alpha__ -D__alpha -Acpu(alpha) -Amachine(alpha) " \ CPP_FBSD_PREDEFINES \ SUB_CPP_PREDEFINES
+define|\
+value|"-D__alpha__ -D__alpha -D__ELF__ -Acpu(alpha) -Amachine(alpha)"  \   CPP_FBSD_PREDEFINES
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|"%{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
@@ -752,7 +779,7 @@ value|const_section()
 end_define
 
 begin_comment
-comment|/* Define the strings used for the special svr4 .type and .size directives.    These strings generally do not vary from one system running svr4 to    another, but if a given system (e.g. m88k running svr) needs to use    different pseudo-op names for these, they may be overridden in the    file which includes this one.  */
+comment|/* Define the strings used for the .type, .size and .set directives.    These strings generally do not vary from one system running svr4 to    another, but if a given system (e.g. m88k running svr) needs to use    different pseudo-op names for these, they may be overridden in the    file which includes this one.  */
 end_comment
 
 begin_define
@@ -767,6 +794,13 @@ define|#
 directive|define
 name|SIZE_ASM_OP
 value|".size"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
 end_define
 
 begin_comment
@@ -847,6 +881,141 @@ directive|define
 name|PREFERRED_DEBUGGING_TYPE
 value|DBX_DEBUG
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"-m elf64alpha 				\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}		\   %{Wl,*:%*}							\   %{assert*} %{R*} %{rpath*} %{defsym*}				\   %{shared:-Bshareable %{h*} %{soname*}}			\   %{symbolic:-Bsymbolic}					\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-Bstatic}}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|STARTFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \      %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+end_define
+
+begin_comment
+comment|/* Provide a ENDFILE_SPEC appropriate for ELF.  Here we tack on the    magical crtend.o file which provides part of the support for    getting C++ file-scope static object constructed before entering    `main', followed by a normal ELF "finalizer" file, `crtn.o'.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+define|\
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s}"
+end_define
+
+begin_comment
+comment|/* Implicit library calls should use memcpy, not bcopy, etc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_MEM_FUNCTIONS
+end_define
+
+begin_comment
+comment|/* Handle #pragma weak and #pragma pack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+end_define
+
+begin_comment
+comment|/*  * Some imports from svr4.h in support of shared libraries.  * Currently, we need the DECLARE_OBJECT_SIZE stuff.  */
+end_comment
+
+begin_comment
+comment|/* This is how we tell the assembler that a symbol is weak.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_WEAKEN_LABEL
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_WEAKEN_LABEL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|do { fputs ("\t.globl\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); \        fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); } while (0)
+end_define
+
+begin_comment
+comment|/* The following macro defines the format used to output the second    operand of the .type assembler directive.  Different svr4 assemblers    expect various different forms for this operand.  The one given here    is just a default.  You may need to override it in your machine-    specific tm.h file (depending upon the particulars of your assembler).  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TYPE_OPERAND_FMT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TYPE_OPERAND_FMT
+value|"@%s"
+end_define
+
+begin_comment
+comment|/* Write the extra assembler code needed to declare a function's result.    Most svr4 assemblers don't require any special declaration of the    result value, but there are exceptions.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASM_DECLARE_RESULT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASM_DECLARE_RESULT
+parameter_list|(
+name|FILE
+parameter_list|,
+name|RESULT
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
