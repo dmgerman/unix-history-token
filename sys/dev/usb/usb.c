@@ -592,7 +592,9 @@ directive|if
 name|__FreeBSD_version
 operator|<
 literal|500014
-comment|/* bmaj */
+operator|.
+name|d_bmaj
+operator|=
 operator|-
 literal|1
 endif|#

@@ -617,18 +617,7 @@ operator|.
 name|d_maj
 operator|=
 name|UMS_CDEV_MAJOR
-block|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500014
-comment|/* bmaj */
-operator|-
-literal|1
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
