@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.12 (Berkeley) %G%"
+literal|"@(#)fts.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,7 +85,14 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
+specifier|static
 name|FTSENT
 modifier|*
 name|fts_alloc
@@ -110,6 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|fts_lfree
 argument_list|()
@@ -120,8 +128,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|u_short
 name|fts_stat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|fts_path
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -229,40 +247,48 @@ name|ROOTPARENTLEVEL
 value|-1
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|FTS
 modifier|*
 name|fts_open
-argument_list|(
+parameter_list|(
 name|argv
-argument_list|,
+parameter_list|,
 name|options
-argument_list|,
+parameter_list|,
 name|compar
-argument_list|)
+parameter_list|)
 name|char
 modifier|*
+specifier|const
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|options
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|compar
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|int
+parameter_list|(
+function_decl|*compar
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|FTSENT
+operator|*
+operator|,
+specifier|const
+name|FTSENT
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -292,11 +318,6 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
-name|char
-modifier|*
-name|fts_path
-parameter_list|()
-function_decl|;
 comment|/* Allocate/initialize the stream */
 if|if
 condition|(
@@ -823,21 +844,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|fts_close
-argument_list|(
-argument|sp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sp
+parameter_list|)
 name|FTS
 modifier|*
 name|sp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FTSENT
@@ -1027,7 +1043,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|FTSENT
@@ -1740,38 +1756,27 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fts_set
-argument_list|(
-argument|sp
-argument_list|,
-argument|p
-argument_list|,
-argument|instr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sp
+parameter_list|,
+name|p
+parameter_list|,
+name|instr
+parameter_list|)
 name|FTS
 modifier|*
 name|sp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|instr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|p
 operator|->
@@ -1785,7 +1790,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|FTSENT
@@ -1975,6 +1980,7 @@ value|(a[0] == '.'&& (!a[1] || a[1] == '.'&& !a[2]))
 end_define
 
 begin_function
+specifier|static
 name|FTSENT
 modifier|*
 name|fts_build
@@ -3424,6 +3430,9 @@ name|NULL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 while|while
 condition|(
 operator|--
@@ -3443,6 +3452,8 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|fts_alloc
@@ -3454,6 +3465,8 @@ argument_list|,
 name|cp
 operator|-
 name|name
+operator|+
+literal|1
 argument_list|)
 operator|)
 return|;
