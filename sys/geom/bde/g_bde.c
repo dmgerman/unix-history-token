@@ -838,12 +838,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* XXX: error check */
 name|kthread_create
 argument_list|(
@@ -865,12 +859,6 @@ argument_list|,
 name|gp
 operator|->
 name|name
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|pp
