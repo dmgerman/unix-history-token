@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp_deflate.c,v 1.7 1998/03/21 20:56:14 peter Exp $	*/
+comment|/*	$Id: ppp_deflate.c,v 1.8 1998/03/22 06:51:57 peter Exp $	*/
 end_comment
 
 begin_comment
@@ -3151,6 +3151,10 @@ directive|if
 name|DEFLATE_DEBUG
 if|if
 condition|(
+name|state
+operator|->
+name|debug
+operator|&&
 name|olen
 operator|>
 name|state
