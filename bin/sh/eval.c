@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eval.c,v 1.17 1999/04/03 12:55:51 cracauer Exp $"
+literal|"$Id: eval.c,v 1.18 1999/04/21 11:52:39 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,7 +478,7 @@ literal|0
 block|; }
 endif|#
 directive|endif
-comment|/*  * The eval commmand.  */
+comment|/*  * The eval command.  */
 name|int
 name|evalcmd
 argument_list|(

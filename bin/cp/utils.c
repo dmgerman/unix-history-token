@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: utils.c,v 1.21 1998/11/18 11:47:45 bde Exp $"
+literal|"$Id: utils.c,v 1.22 1999/04/25 21:13:32 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -705,7 +705,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Don't remove the target even after an error.  The target might 	 * not be a regular file, or its attributes might be important, 	 * or its contents might be irreplacable.  It would only be safe 	 * to remove it if we created it and its length is 0. 	 */
+comment|/* 	 * Don't remove the target even after an error.  The target might 	 * not be a regular file, or its attributes might be important, 	 * or its contents might be irreplaceable.  It would only be safe 	 * to remove it if we created it and its length is 0. 	 */
 if|if
 condition|(
 name|pflag

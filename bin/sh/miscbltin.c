@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: miscbltin.c,v 1.17 1998/08/25 09:33:34 cracauer Exp $"
+literal|"$Id: miscbltin.c,v 1.18 1998/12/16 04:45:35 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Miscelaneous builtins.  */
+comment|/*  * Miscellaneous builtins.  */
 end_comment
 
 begin_include

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: time.c,v 1.7 1997/02/22 14:02:09 peter Exp $"
+literal|"$Id: time.c,v 1.8 1997/08/07 21:42:17 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1112,7 +1112,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-comment|/* socket messages recieved */
+comment|/* socket messages received */
 operator|(
 name|void
 operator|)
@@ -1158,7 +1158,7 @@ break|break;
 case|case
 literal|'k'
 case|:
-comment|/* number of signals recieved */
+comment|/* number of signals received */
 operator|(
 name|void
 operator|)

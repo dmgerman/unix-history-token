@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: func.c,v 1.11 1998/07/27 21:15:52 nectar Exp $"
+literal|"$Id: func.c,v 1.12 1999/04/25 21:13:32 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6849,7 +6849,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is the dreaded EVAL built-in.  *   If you don't fiddle with file descriptors, and reset didfds,  *   this command will either ignore redirection inside or outside  *   its aguments, e.g. eval "date>x"  vs.  eval "date">x  *   The stuff here seems to work, but I did it by trial and error rather  *   than really knowing what was going on.  If tpgrp is zero, we are  *   probably a background eval, e.g. "eval date&", and we want to  *   make sure that any processes we start stay in our pgrp.  *   This is also the case for "time eval date" -- stay in same pgrp.  *   Otherwise, under stty tostop, processes will stop in the wrong  *   pgrp, with no way for the shell to get them going again.  -IAN!  */
+comment|/* This is the dreaded EVAL built-in.  *   If you don't fiddle with file descriptors, and reset didfds,  *   this command will either ignore redirection inside or outside  *   its arguments, e.g. eval "date>x"  vs.  eval "date">x  *   The stuff here seems to work, but I did it by trial and error rather  *   than really knowing what was going on.  If tpgrp is zero, we are  *   probably a background eval, e.g. "eval date&", and we want to  *   make sure that any processes we start stay in our pgrp.  *   This is also the case for "time eval date" -- stay in same pgrp.  *   Otherwise, under stty tostop, processes will stop in the wrong  *   pgrp, with no way for the shell to get them going again.  -IAN!  */
 end_comment
 
 begin_decl_stmt

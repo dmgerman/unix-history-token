@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cpio.c,v 1.10 1998/05/15 06:27:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4337,7 +4337,7 @@ condition|(
 name|swp_head
 condition|)
 block|{
-comment|/* 		 * header has swapped bytes on 16 bit boundries 		 */
+comment|/* 		 * header has swapped bytes on 16 bit boundaries 		 */
 name|arcn
 operator|->
 name|sb

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sem.c,v 1.8 1998/05/06 06:51:00 charnier Exp $"
+literal|"$Id: sem.c,v 1.9 1999/04/25 21:13:32 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2169,7 +2169,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expand and glob the words after an i/o redirection.  * If more than one word is generated, then update the command vector.  *  * This is done differently in all the shells:  * 1. in the bourne shell and ksh globbing is not performed  * 2. Bash/csh say ambiguous  * 3. zsh does i/o to/from all the files  * 4. itcsh concatenates the words.  *  * I don't know what is best to do. I think that Ambiguous is better  * than restructuring the command vector, because the user can get  * unexpected results. In any case, the command vector restructuring  * code is present and the user can choose it by setting noambiguous  */
+comment|/*  * Expand and glob the words after an i/o redirection.  * If more than one word is generated, then update the command vector.  *  * This is done differently in all the shells:  * 1. in the Bourne shell and ksh globbing is not performed  * 2. Bash/csh say ambiguous  * 3. zsh does i/o to/from all the files  * 4. itcsh concatenates the words.  *  * I don't know what is best to do. I think that Ambiguous is better  * than restructuring the command vector, because the user can get  * unexpected results. In any case, the command vector restructuring  * code is present and the user can choose it by setting noambiguous  */
 end_comment
 
 begin_function

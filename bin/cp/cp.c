@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cp.c,v 1.17 1998/06/09 13:42:51 dt Exp $"
+literal|"$Id: cp.c,v 1.18 1999/04/25 21:13:32 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -947,7 +947,7 @@ operator|!=
 name|FILE_TO_FILE
 condition|)
 block|{
-comment|/* 			 * Need to remember the roots of traversals to create 			 * correct pathnames.  If there's a directory being 			 * copied to a non-existent directory, e.g. 			 *	cp -R a/dir noexist 			 * the resulting path name should be noexist/foo, not 			 * noexist/dir/foo (where foo is a file in dir), which 			 * is the case where the target exists. 			 * 			 * Also, check for "..".  This is for correct path 			 * concatentation for paths ending in "..", e.g. 			 *	cp -R .. /tmp 			 * Paths ending in ".." are changed to ".".  This is 			 * tricky, but seems the easiest way to fix the problem. 			 * 			 * XXX 			 * Since the first level MUST be FTS_ROOTLEVEL, base 			 * is always initialized. 			 */
+comment|/* 			 * Need to remember the roots of traversals to create 			 * correct pathnames.  If there's a directory being 			 * copied to a non-existent directory, e.g. 			 *	cp -R a/dir noexist 			 * the resulting path name should be noexist/foo, not 			 * noexist/dir/foo (where foo is a file in dir), which 			 * is the case where the target exists. 			 * 			 * Also, check for "..".  This is for correct path 			 * concatenation for paths ending in "..", e.g. 			 *	cp -R .. /tmp 			 * Paths ending in ".." are changed to ".".  This is 			 * tricky, but seems the easiest way to fix the problem. 			 * 			 * XXX 			 * Since the first level MUST be FTS_ROOTLEVEL, base 			 * is always initialized. 			 */
 if|if
 condition|(
 name|curr

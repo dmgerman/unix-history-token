@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: expand.c,v 1.26 1999/04/13 04:13:09 tegge Exp $"
+literal|"$Id: expand.c,v 1.27 1999/04/21 11:52:39 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1774,7 +1774,7 @@ decl_stmt|;
 name|int
 name|quoted
 decl_stmt|;
-comment|/* 	 * This routine is slightly over-compilcated for 	 * efficiency.  First we make sure there is 	 * enough space for the result, which may be bigger 	 * than the expression if we add exponentation.  Next we 	 * scan backwards looking for the start of arithmetic.  If the 	 * next previous character is a CTLESC character, then we 	 * have to rescan starting from the beginning since CTLESC 	 * characters have to be processed left to right. 	 */
+comment|/* 	 * This routine is slightly over-complicated for 	 * efficiency.  First we make sure there is 	 * enough space for the result, which may be bigger 	 * than the expression if we add exponentiation.  Next we 	 * scan backwards looking for the start of arithmetic.  If the 	 * next previous character is a CTLESC character, then we 	 * have to rescan starting from the beginning since CTLESC 	 * characters have to be processed left to right. 	 */
 if|#
 directive|if
 name|INT_MAX

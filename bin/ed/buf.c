@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* buf.c: This file contains the scratch-file buffer rountines for the    ed line editor. */
+comment|/* buf.c: This file contains the scratch-file buffer routines for the    ed line editor. */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: buf.c,v 1.14 1997/10/09 11:05:16 eivind Exp $"
+literal|"$Id: buf.c,v 1.15 1997/12/31 12:25:33 helbig Exp $"
 decl_stmt|;
 end_decl_stmt
 

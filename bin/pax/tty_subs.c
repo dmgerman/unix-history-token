@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tty_subs.c,v 1.9 1998/05/15 06:27:48 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,7 +167,7 @@ comment|/* input pointing at control tty */
 end_comment
 
 begin_comment
-comment|/*  * tty_init()  *	try to open the controlling termina (if any) for this process. if the  *	open fails, future ops that require user input will get an EOF  */
+comment|/*  * tty_init()  *	try to open the controlling terminal (if any) for this process. if the  *	open fails, future ops that require user input will get an EOF  */
 end_comment
 
 begin_if

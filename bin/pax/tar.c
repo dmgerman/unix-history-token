@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tar.c,v 1.10 1998/05/15 06:27:47 charnier Exp $"
+literal|"$Id: tar.c,v 1.11 1998/10/20 05:52:33 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -856,7 +856,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * tar_chksm()  *	calculate the checksum for a tar block counting the checksum field as  *	all blanks (BLNKSUM is that value pre-calculated, the sume of 8 blanks).  *	NOTE: we use len to short circuit summing 0's on write since we ALWAYS  *	pad headers with 0.  * Return:  *	unsigned long checksum  */
+comment|/*  * tar_chksm()  *	calculate the checksum for a tar block counting the checksum field as  *	all blanks (BLNKSUM is that value pre-calculated, the sum of 8 blanks).  *	NOTE: we use len to short circuit summing 0's on write since we ALWAYS  *	pad headers with 0.  * Return:  *	unsigned long checksum  */
 end_comment
 
 begin_if
@@ -925,7 +925,7 @@ name|chksm
 init|=
 name|BLNKSUM
 decl_stmt|;
-comment|/* inital value is checksum field sum */
+comment|/* initial value is checksum field sum */
 comment|/* 	 * add the part of the block before the checksum field 	 */
 name|pt
 operator|=
@@ -1812,7 +1812,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * have a file that will be followed by data. Set the 			 * skip value to the size field and caluculate the size 			 * of the padding. 			 */
+comment|/* 			 * have a file that will be followed by data. Set the 			 * skip value to the size field and calculate the size 			 * of the padding. 			 */
 name|arcn
 operator|->
 name|type
@@ -3242,7 +3242,7 @@ name|sb
 operator|.
 name|st_mtime
 expr_stmt|;
-comment|/* 	 * If we can find the ascii names for gname and uname in the password 	 * and group files we will use the uid's and gid they bind. Otherwise 	 * we use the uid and gid values stored in the header. (This is what 	 * the posix spec wants). 	 */
+comment|/* 	 * If we can find the ascii names for gname and uname in the password 	 * and group files we will use the uid's and gid they bind. Otherwise 	 * we use the uid and gid values stored in the header. (This is what 	 * the POSIX spec wants). 	 */
 name|hd
 operator|->
 name|gname
@@ -4926,7 +4926,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * we start looking at the biggest sized piece that fits in the name 	 * field. We walk foward looking for a slash to split at. The idea is 	 * to find the biggest piece to fit in the name field (or the smallest 	 * prefix we can find) 	 */
+comment|/* 	 * we start looking at the biggest sized piece that fits in the name 	 * field. We walk forward looking for a slash to split at. The idea is 	 * to find the biggest piece to fit in the name field (or the smallest 	 * prefix we can find) 	 */
 name|start
 operator|=
 name|name

@@ -32,7 +32,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: undo.c,v 1.6 1997/02/22 14:03:20 peter Exp $"
+literal|"$Id: undo.c,v 1.7 1997/08/07 21:33:47 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,7 +105,7 @@ comment|/* undo stack pointer */
 end_comment
 
 begin_comment
-comment|/* push_undo_stack: return pointer to intialized undo node */
+comment|/* push_undo_stack: return pointer to initialized undo node */
 end_comment
 
 begin_function

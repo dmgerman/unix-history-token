@@ -32,7 +32,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: cbc.c,v 1.9 1997/02/22 14:03:12 peter Exp $"
+literal|"$Id: cbc.c,v 1.10 1997/08/07 21:33:40 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,7 +391,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* intialize the padding vector */
+comment|/* initialize the padding vector */
 name|srand
 argument_list|(
 operator|(

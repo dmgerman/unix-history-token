@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: csh.c,v 1.12 1997/12/10 22:18:21 eivind Exp $"
+literal|"$Id: csh.c,v 1.13 1998/02/28 10:49:52 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5070,7 +5070,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When didfds is set, we do I/O from 0, 1, 2 otherwise from 15, 16, 17  * We also check if the shell has already changed the decriptor to point to  * 0, 1, 2 when didfds is set.  */
+comment|/*  * When didfds is set, we do I/O from 0, 1, 2 otherwise from 15, 16, 17  * We also check if the shell has already changed the descriptor to point to  * 0, 1, 2 when didfds is set.  */
 end_comment
 
 begin_define

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trap.c,v 1.17 1998/09/10 22:09:11 cracauer Exp $"
+literal|"$Id: trap.c,v 1.18 1999/04/01 13:27:36 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,7 +186,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* signal is ignored permenantly */
+comment|/* signal is ignored permanently */
 end_comment
 
 begin_define

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: buf_subs.c,v 1.10 1998/05/15 06:27:37 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -302,7 +302,7 @@ name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
-literal|"Write block size of %d too large, maximium is: %d"
+literal|"Write block size of %d too large, maximum is: %d"
 argument_list|,
 name|wrblksz
 argument_list|,
@@ -451,7 +451,7 @@ name|pax_warn
 argument_list|(
 literal|1
 argument_list|,
-literal|"Write block size %d too large, maximium is: %d"
+literal|"Write block size %d too large, maximum is: %d"
 argument_list|,
 name|wrblksz
 argument_list|,
@@ -1686,7 +1686,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * wr_skip()  *	skip foward during a write. In other words add padding to the file.  *	we add zero filled padding as it makes flawed archives much easier to  *	recover from. the caller tells us how many bytes of padding to add  *	This routine was not designed to add HUGE amount of padding, just small  *	amounts (a few 512 byte blocks at most)  * Return:  *	0 if ok, -1 if there was a buf_flush failure  */
+comment|/*  * wr_skip()  *	skip forward during a write. In other words add padding to the file.  *	we add zero filled padding as it makes flawed archives much easier to  *	recover from. the caller tells us how many bytes of padding to add  *	This routine was not designed to add HUGE amount of padding, just small  *	amounts (a few 512 byte blocks at most)  * Return:  *	0 if ok, -1 if there was a buf_flush failure  */
 end_comment
 
 begin_if
@@ -2320,7 +2320,7 @@ operator|-=
 name|res
 expr_stmt|;
 block|}
-comment|/* 	 * if the last block has a file hole (all zero), we must make sure this 	 * gets updated in the file. We force the last block of zeros to be 	 * written. just closing with the file offset moved foward may not put 	 * a hole at the end of the file. 	 */
+comment|/* 	 * if the last block has a file hole (all zero), we must make sure this 	 * gets updated in the file. We force the last block of zeros to be 	 * written. just closing with the file offset moved forward may not put 	 * a hole at the end of the file. 	 */
 if|if
 condition|(
 name|isem
@@ -2749,7 +2749,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if the last block has a file hole (all zero), we must make sure this 	 * gets updated in the file. We force the last block of zeros to be 	 * written. just closing with the file offset moved foward may not put 	 * a hole at the end of the file. 	 */
+comment|/* 	 * if the last block has a file hole (all zero), we must make sure this 	 * gets updated in the file. We force the last block of zeros to be 	 * written. just closing with the file offset moved forward may not put 	 * a hole at the end of the file. 	 */
 if|if
 condition|(
 operator|!

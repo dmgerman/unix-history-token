@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tables.c,v 1.11 1998/05/15 06:27:46 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * Routines for controlling the contents of all the different databases pax  * keeps. Tables are dynamically created only when they are needed. The  * goal was speed and the ability to work with HUGE archives. The databases  * were kept simple, but do have complex rules for when the contents change.  * As of this writing, the posix library functions were more complex than  * needed for this application (pax databases have very short lifetimes and  * do not survive after pax is finished). Pax is required to handle very  * large archives. These database routines carefully combine memory usage and  * temporary file storage in ways which will not significantly impact runtime  * performance while allowing the largest possible archives to be handled.  * Trying to force the fit to the posix databases routines was not considered  * time well spent.  */
+comment|/*  * Routines for controlling the contents of all the different databases pax  * keeps. Tables are dynamically created only when they are needed. The  * goal was speed and the ability to work with HUGE archives. The databases  * were kept simple, but do have complex rules for when the contents change.  * As of this writing, the POSIX library functions were more complex than  * needed for this application (pax databases have very short lifetimes and  * do not survive after pax is finished). Pax is required to handle very  * large archives. These database routines carefully combine memory usage and  * temporary file storage in ways which will not significantly impact runtime  * performance while allowing the largest possible archives to be handled.  * Trying to force the fit to the POSIX databases routines was not considered  * time well spent.  */
 end_comment
 
 begin_decl_stmt
@@ -1706,7 +1706,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Interactive rename table routines  *  * The interactive rename table keeps track of the new names that the user  * assignes to files from tty input. Since this map is unique for each file  * we must store it in case there is a reference to the file later in archive  * (a link). Otherwise we will be unable to find the file we know was  * extracted. The remapping of these files is stored in a memory based hash  * table (it is assumed since input must come from /dev/tty, it is unlikely to  * be a very large table).  */
+comment|/*  * Interactive rename table routines  *  * The interactive rename table keeps track of the new names that the user  * assigns to files from tty input. Since this map is unique for each file  * we must store it in case there is a reference to the file later in archive  * (a link). Otherwise we will be unable to find the file we know was  * extracted. The remapping of these files is stored in a memory based hash  * table (it is assumed since input must come from /dev/tty, it is unlikely to  * be a very large table).  */
 end_comment
 
 begin_comment
@@ -2448,7 +2448,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * chk_dev()  *	check for a device value in the device table. If not found and the add  *	flag is set, it is added. This does NOT assign any mapping values, just  *	adds the device number as one that need to be remapped. If this device  *	is alread mapped, just return with a pointer to that entry.  * Return:  *	pointer to the entry for this device in the device map table. Null  *	if the add flag is not set and the device is not in the table (it is  *	not been seen yet). If add is set and the device cannot be added, null  *	is returned (indicates an error).  */
+comment|/*  * chk_dev()  *	check for a device value in the device table. If not found and the add  *	flag is set, it is added. This does NOT assign any mapping values, just  *	adds the device number as one that need to be remapped. If this device  *	is already mapped, just return with a pointer to that entry.  * Return:  *	pointer to the entry for this device in the device map table. Null  *	if the add flag is not set and the device is not in the table (it is  *	not been seen yet). If add is set and the device cannot be added, null  *	is returned (indicates an error).  */
 end_comment
 
 begin_if

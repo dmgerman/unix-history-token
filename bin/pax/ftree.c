@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftree.c,v 1.10 1998/05/15 06:27:42 charnier Exp $"
+literal|"$Id: ftree.c,v 1.11 1998/06/09 03:38:43 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,7 +128,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* curent FTS handle */
+comment|/* current FTS handle */
 end_comment
 
 begin_decl_stmt
@@ -953,7 +953,7 @@ operator|->
 name|fname
 expr_stmt|;
 block|}
-comment|/* 		 * watch it, fts wants the file arg stored in a array of char 		 * ptrs, with the last one a null. we use a two element array 		 * and set farray[0] to point at the buffer with the file name 		 * in it. We cannnot pass all the file args to fts at one shot 		 * as we need to keep a handle on which file arg generates what 		 * files (the -n and -d flags need this). If the open is 		 * successful, return a 0. 		 */
+comment|/* 		 * watch it, fts wants the file arg stored in a array of char 		 * ptrs, with the last one a null. we use a two element array 		 * and set farray[0] to point at the buffer with the file name 		 * in it. We cannot pass all the file args to fts at one shot 		 * as we need to keep a handle on which file arg generates what 		 * files (the -n and -d flags need this). If the open is 		 * successful, return a 0. 		 */
 if|if
 condition|(
 operator|(
@@ -1306,7 +1306,7 @@ literal|1
 argument|, errno,
 literal|"Unable to read symlink %s"
 argument|, 				    ftent->fts_path); 				continue; 			}
-comment|/* 			 * set link name length, watch out readlink does not 			 * allways NUL terminate the link path 			 */
+comment|/* 			 * set link name length, watch out readlink does not 			 * always NUL terminate the link path 			 */
 argument|arcn->ln_name[cnt] =
 literal|'\0'
 argument|; 			arcn->ln_nlen = cnt; 			break; 		case S_IFSOCK:

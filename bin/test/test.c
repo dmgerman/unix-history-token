@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: test.c,v 1.19 1998/05/18 06:51:59 charnier Exp $"
+literal|"$Id: test.c,v 1.20 1998/09/07 16:59:05 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,7 +531,7 @@ name|name
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Test(1) implements an inherently ambiguous grammer.  In order to 	 * assure some degree of consistency, we special case the POSIX 1003.2 	 * requirements to assure correct evaluation for POSIX scripts.  The 	 * following special cases comply with POSIX P1003.2/D11.2 Section 	 * 4.62.4. 	 */
+comment|/* 	 * Test(1) implements an inherently ambiguous grammar.  In order to 	 * assure some degree of consistency, we special case the POSIX 1003.2 	 * requirements to assure correct evaluation for POSIX scripts.  The 	 * following special cases comply with POSIX P1003.2/D11.2 Section 	 * 4.62.4. 	 */
 switch|switch
 condition|(
 name|argc
