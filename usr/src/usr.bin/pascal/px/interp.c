@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.16 %G%"
+literal|"@(#)interp.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,6 +444,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * stuff for pdx  */
+end_comment
+
+begin_decl_stmt
+name|union
+name|progcntr
+modifier|*
+name|pcaddrp
+decl_stmt|;
+end_decl_stmt
+
+begin_asm
+asm|asm(".globl _loopaddr");
+end_asm
+
+begin_comment
 comment|/*  * Px profile array  */
 end_comment
 
@@ -608,6 +624,11 @@ modifier|*
 modifier|*
 name|ip
 decl_stmt|;
+name|pcaddrp
+operator|=
+operator|&
+name|pc
+expr_stmt|;
 comment|/* 	 * Setup sets up any hardware specific parameters before 	 * starting the interpreter. Typically this is inline replaced 	 * by interp.sed to utilize specific machine instructions. 	 */
 name|setup
 argument_list|()
@@ -765,6 +786,7 @@ name|cp
 operator|=
 name|base
 expr_stmt|;
+asm|asm("_loopaddr:");
 for|for
 control|(
 init|;
@@ -822,6 +844,17 @@ name|ucp
 operator|++
 condition|)
 block|{
+case|case
+name|O_BPT
+case|:
+comment|/* breakpoint trap */
+asm|asm(".byte 0");
+name|pc
+operator|.
+name|ucp
+operator|--
+expr_stmt|;
+continue|continue;
 case|case
 name|O_NODUMP
 case|:
