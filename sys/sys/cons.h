@@ -167,6 +167,10 @@ name|int
 name|cn_unit
 decl_stmt|;
 comment|/* some drivers prefer this */
+name|int
+name|cn_flags
+decl_stmt|;
+comment|/* capabilities of this console */
 name|char
 name|cn_name
 index|[
@@ -237,6 +241,21 @@ end_define
 
 begin_comment
 comment|/* serial interface with remote bit set */
+end_comment
+
+begin_comment
+comment|/* Values for cn_flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CN_FLAG_NODEBUG
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Not supported with debugger. */
 end_comment
 
 begin_ifdef
