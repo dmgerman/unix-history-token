@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb_subr.c,v 1.99 2002/07/11 21:14:34 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also already have from NetBSD:  *	$NetBSD: usb_subr.c,v 1.102 2003/01/01 16:21:50 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.103 2003/01/10 11:19:13 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.111 2004/03/15 10:35:04 augustss Exp $  */
+comment|/* Also already have from NetBSD:  *	$NetBSD: usb_subr.c,v 1.102 2003/01/01 16:21:50 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.103 2003/01/10 11:19:13 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.111 2004/03/15 10:35:04 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.114 2004/06/23 02:30:52 mycroft Exp $  *	$NetBSD: usb_subr.c,v 1.115 2004/06/23 05:23:19 mycroft Exp $  *	$NetBSD: usb_subr.c,v 1.116 2004/06/23 06:27:54 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -640,6 +640,10 @@ parameter_list|,
 name|usb_string_descriptor_t
 modifier|*
 name|sdesc
+parameter_list|,
+name|int
+modifier|*
+name|sizep
 parameter_list|)
 block|{
 name|usb_device_request_t
@@ -725,7 +729,7 @@ if|if
 condition|(
 name|actlen
 operator|<
-literal|1
+literal|2
 condition|)
 return|return
 operator|(
@@ -744,9 +748,9 @@ name|bLength
 argument_list|)
 expr_stmt|;
 comment|/* the whole string */
-return|return
-operator|(
-name|usbd_do_request
+name|err
+operator|=
+name|usbd_do_request_flags
 argument_list|(
 name|dev
 argument_list|,
@@ -754,7 +758,58 @@ operator|&
 name|req
 argument_list|,
 name|sdesc
+argument_list|,
+name|USBD_SHORT_XFER_OK
+argument_list|,
+operator|&
+name|actlen
+argument_list|,
+name|USBD_DEFAULT_TIMEOUT
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
+if|if
+condition|(
+name|actlen
+operator|!=
+name|sdesc
+operator|->
+name|bLength
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+operator|(
+literal|"usbd_get_string_desc: expected %d, got %d\n"
+operator|,
+name|sdesc
+operator|->
+name|bLength
+operator|,
+name|actlen
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|sizep
+operator|=
+name|actlen
+expr_stmt|;
+return|return
+operator|(
+name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
@@ -805,6 +860,9 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
+name|int
+name|size
+decl_stmt|;
 if|if
 condition|(
 name|si
@@ -853,15 +911,16 @@ literal|0
 argument_list|,
 operator|&
 name|us
+argument_list|,
+operator|&
+name|size
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|err
 operator|||
-name|us
-operator|.
-name|bLength
+name|size
 operator|<
 literal|4
 condition|)
@@ -907,6 +966,9 @@ name|langid
 argument_list|,
 operator|&
 name|us
+argument_list|,
+operator|&
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -924,9 +986,7 @@ name|buf
 expr_stmt|;
 name|n
 operator|=
-name|us
-operator|.
-name|bLength
+name|size
 operator|/
 literal|2
 operator|-

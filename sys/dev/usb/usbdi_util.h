@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.h,v 1.23 2001/10/26 17:58:22 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.h,v 1.29 2004/06/23 02:30:52 mycroft Exp $	*/
 end_comment
 
 begin_comment
@@ -361,6 +361,10 @@ parameter_list|,
 name|usb_string_descriptor_t
 modifier|*
 name|sdesc
+parameter_list|,
+name|int
+modifier|*
+name|sizep
 parameter_list|)
 function_decl|;
 end_function_decl
