@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	6.13 (Berkeley) %G%"
+literal|"@(#)ld.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6136,6 +6136,17 @@ name|sp
 operator|->
 name|defined
 decl_stmt|;
+name|int
+name|com
+init|=
+name|sp
+operator|->
+name|defined
+operator|&&
+name|sp
+operator|->
+name|max_common_size
+decl_stmt|;
 name|nlist_p
 operator|->
 name|n_un
@@ -6245,11 +6256,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|olddef
-operator|&&
-name|sp
-operator|->
-name|max_common_size
+name|com
 operator|&&
 name|type
 operator|!=
@@ -6274,11 +6281,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|olddef
-operator|&&
-name|sp
-operator|->
-name|max_common_size
+name|com
 operator|&&
 name|type
 operator|==
@@ -6317,13 +6320,7 @@ operator|(
 operator|!
 name|olddef
 operator|||
-operator|(
-name|olddef
-operator|&&
-name|sp
-operator|->
-name|max_common_size
-operator|)
+name|com
 operator|)
 condition|)
 name|set_vector_count
