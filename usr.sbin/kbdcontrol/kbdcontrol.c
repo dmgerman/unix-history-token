@@ -3926,7 +3926,9 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"keymap file not found"
+literal|"keymap file \"%s\" not found"
+argument_list|,
+name|opt
 argument_list|)
 expr_stmt|;
 return|return;
