@@ -24,19 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -48,7 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -60,13 +60,23 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<vm/vm_extern.h>
+end_include
+
+begin_comment
+comment|/*#include<vm/vm_page.h> #include<vm/vm_object.h>*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -86,22 +96,6 @@ include|#
 directive|include
 file|<netsmb/smb_subr.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_comment
-comment|/*#include<vm/vm_page.h> #include<vm/vm_object.h>*/
-end_comment
 
 begin_include
 include|#
@@ -1181,9 +1175,9 @@ expr_stmt|;
 name|lockinit
 argument_list|(
 operator|&
-name|vp
+name|np
 operator|->
-name|v_lock
+name|n_lock
 argument_list|,
 name|PINOD
 argument_list|,

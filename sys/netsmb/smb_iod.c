@@ -2808,35 +2808,12 @@ return|return;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FB_CURRENT
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|kthread_create_compat
 value|kthread_create2
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|kthread_create_compat
-value|kthread_create
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -2854,12 +2831,6 @@ name|iod
 init|=
 name|arg
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|smb_makescred
 argument_list|(
 operator|&
@@ -2901,7 +2872,6 @@ operator|->
 name|iod_sleeptimo
 argument_list|)
 expr_stmt|;
-comment|/*		mtx_unlock(&Giant, MTX_DEF);*/
 if|if
 condition|(
 name|iod
@@ -2928,7 +2898,6 @@ name|iod_sleeptimo
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*	mtx_lock(&Giant, MTX_DEF);*/
 name|kthread_exit
 argument_list|(
 literal|0
@@ -3127,7 +3096,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|smb_sl_destroy
 argument_list|(
 operator|&
 name|iod
@@ -3135,7 +3104,7 @@ operator|->
 name|iod_rqlock
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|smb_sl_destroy
 argument_list|(
 operator|&
 name|iod

@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VT_SMBFS
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
 name|SMBFS_VERMAJ
 value|1
 end_define
