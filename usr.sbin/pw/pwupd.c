@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_PWDB_C
-value|1
+value|0
 end_define
 
 begin_function
