@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|SPARE_USRSPACE
-value|256
+value|4096
 end_define
 
 begin_struct_decl
