@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.16 (Berkeley) %G%"
+literal|"@(#)rm.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1201,9 +1201,11 @@ condition|)
 block|{
 name|pathsz
 operator|=
-name|n
+name|MAXNAMLEN
 operator|+
-literal|2048
+name|MAXPATHLEN
+operator|+
+literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -1251,44 +1253,19 @@ operator|+
 name|pathsz
 condition|)
 block|{
-name|pathsz
-operator|=
-name|n
-operator|+
-literal|2048
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|path
-operator|=
-name|realloc
-argument_list|(
-name|path
-argument_list|,
-name|pathsz
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: ran out of memory\n"
+literal|"rm: path name too long: %s\n"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
-name|pathp
-operator|=
-name|path
 expr_stmt|;
 block|}
 elseif|else
