@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mptable.c,v 1.9 1997/09/25 06:47:33 charnier Exp $"
+literal|"$Id: mptable.c,v 1.10 1998/02/24 01:11:47 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1239,7 +1239,8 @@ literal|"d:g:h:v:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
