@@ -8475,81 +8475,26 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/******************************************************************************  *  *  Append instance number to OID  *  *  in:  Variable, instance number  * out:  zero = success  *  */
 end_comment
 
-begin_function
-specifier|static
-name|int
-name|lmi_object_instance
-parameter_list|(
-name|Variable
-modifier|*
-name|var
-parameter_list|,
-name|int
-name|instnum
-parameter_list|)
-block|{
-name|int
-modifier|*
-name|oidptr
-decl_stmt|;
-name|int
-name|curlen
-decl_stmt|;
-name|oidptr
-operator|=
-name|var
-operator|->
-name|oid
-operator|.
-name|oid
-expr_stmt|;
-name|curlen
-operator|=
-name|oidptr
-index|[
-literal|0
-index|]
-expr_stmt|;
+begin_comment
+unit|static int lmi_object_instance(Variable *var, int instnum) { 	int *	oidptr; 	int	curlen;  	oidptr = var->oid.oid; 	curlen = oidptr[0];
 comment|/* current length */
-if|if
-condition|(
-name|curlen
-operator|>
-literal|126
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-name|curlen
-operator|++
-expr_stmt|;
-name|oidptr
-index|[
-name|curlen
-index|]
-operator|=
-name|instnum
-expr_stmt|;
-name|oidptr
-index|[
-literal|0
-index|]
-operator|=
-name|curlen
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|if (curlen> 126) 		return (1); 	curlen++; 	oidptr[curlen] = instnum; 	oidptr[0] = curlen; 	return (0); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/******************************************************************************  *  *  Handle received GETNEXT  *  *  in:  Header with valid fields, interface number  * out:  zero = success  *  */
