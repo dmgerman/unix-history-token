@@ -1795,12 +1795,49 @@ expr_stmt|;
 name|kp
 operator|->
 name|ki_pri
+operator|.
+name|pri_class
 operator|=
 name|proc
 operator|.
 name|p_ksegrp
 operator|.
-name|kg_pri
+name|kg_pri_class
+expr_stmt|;
+comment|/* XXXKSE */
+name|kp
+operator|->
+name|ki_pri
+operator|.
+name|pri_user
+operator|=
+name|proc
+operator|.
+name|p_ksegrp
+operator|.
+name|kg_user_pri
+expr_stmt|;
+comment|/* XXXKSE */
+name|kp
+operator|->
+name|ki_pri
+operator|.
+name|pri_level
+operator|=
+name|mainthread
+operator|.
+name|td_priority
+expr_stmt|;
+comment|/* XXXKSE */
+name|kp
+operator|->
+name|ki_pri
+operator|.
+name|pri_native
+operator|=
+name|mainthread
+operator|.
+name|td_base_pri
 expr_stmt|;
 comment|/* XXXKSE */
 name|kp
