@@ -347,7 +347,7 @@ modifier|*
 name|io
 decl_stmt|,
 modifier|*
-name|altio
+name|ctlio
 decl_stmt|;
 name|int
 name|i
@@ -397,7 +397,7 @@ name|ATA_DATA
 init|;
 name|i
 operator|<=
-name|ATA_STATUS
+name|ATA_COMMAND
 condition|;
 name|i
 operator|++
@@ -426,7 +426,18 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-comment|/*      * if we got more than the default ATA_IOSIZE ports, this is a device      * where altio is located at offset 14 into "normal" io space.      */
+name|ch
+operator|->
+name|r_io
+index|[
+name|ATA_IDX_ADDR
+index|]
+operator|.
+name|res
+operator|=
+name|io
+expr_stmt|;
+comment|/*      * if we got more than the default ATA_IOSIZE ports, this is a device      * where ctlio is located at offset 14 into "normal" io space.      */
 if|if
 condition|(
 name|rman_get_size
@@ -441,7 +452,7 @@ name|ch
 operator|->
 name|r_io
 index|[
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 index|]
 operator|.
 name|res
@@ -452,7 +463,7 @@ name|ch
 operator|->
 name|r_io
 index|[
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 index|]
 operator|.
 name|offset
@@ -464,9 +475,9 @@ else|else
 block|{
 name|rid
 operator|=
-name|ATA_ALTADDR_RID
+name|ATA_CTLADDR_RID
 expr_stmt|;
-name|altio
+name|ctlio
 operator|=
 name|bus_alloc_resource
 argument_list|(
@@ -482,7 +493,7 @@ argument_list|,
 operator|~
 literal|0
 argument_list|,
-name|ATA_ALTIOSIZE
+name|ATA_CTLIOSIZE
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -490,7 +501,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|altio
+name|ctlio
 condition|)
 block|{
 name|bus_release_resource
@@ -536,18 +547,18 @@ name|ch
 operator|->
 name|r_io
 index|[
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 index|]
 operator|.
 name|res
 operator|=
-name|altio
+name|ctlio
 expr_stmt|;
 name|ch
 operator|->
 name|r_io
 index|[
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 index|]
 operator|.
 name|offset
@@ -555,6 +566,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|ata_default_registers
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 comment|/* initialize softc for this channel */
 name|ch
 operator|->
@@ -619,7 +635,7 @@ name|ch
 operator|->
 name|r_io
 index|[
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 index|]
 operator|.
 name|res
@@ -639,13 +655,13 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|ATA_ALTADDR_RID
+name|ATA_CTLADDR_RID
 argument_list|,
 name|ch
 operator|->
 name|r_io
 index|[
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 index|]
 operator|.
 name|res

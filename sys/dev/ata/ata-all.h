@@ -11,22 +11,143 @@ begin_define
 define|#
 directive|define
 name|ATA_DATA
-value|0x00
+value|0
 end_define
 
 begin_comment
-comment|/* data register */
+comment|/* (RW) data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_FEATURE
+value|1
+end_define
+
+begin_comment
+comment|/* (W) feature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_F_DMA
+value|0x01
+end_define
+
+begin_comment
+comment|/* enable DMA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_F_OVL
+value|0x02
+end_define
+
+begin_comment
+comment|/* enable overlap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_COUNT
+value|2
+end_define
+
+begin_comment
+comment|/* (W) sector count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SECTOR
+value|3
+end_define
+
+begin_comment
+comment|/* (RW) sector # */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_CYL_LSB
+value|4
+end_define
+
+begin_comment
+comment|/* (RW) cylinder# LSB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_CYL_MSB
+value|5
+end_define
+
+begin_comment
+comment|/* (RW) cylinder# MSB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_DRIVE
+value|6
+end_define
+
+begin_comment
+comment|/* (W) Sector/Drive/Head */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_D_LBA
+value|0x40
+end_define
+
+begin_comment
+comment|/* use LBA addressing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_D_IBM
+value|0xa0
+end_define
+
+begin_comment
+comment|/* 512 byte sectors, ECC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_COMMAND
+value|7
+end_define
+
+begin_comment
+comment|/* (W) command */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ATA_ERROR
-value|0x01
+value|8
 end_define
 
 begin_comment
-comment|/* (R) error register */
+comment|/* (R) error */
 end_comment
 
 begin_define
@@ -314,52 +435,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_FEATURE
-value|0x01
-end_define
-
-begin_comment
-comment|/* (W) feature register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_F_DMA
-value|0x01
-end_define
-
-begin_comment
-comment|/* enable DMA */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_F_OVL
-value|0x02
-end_define
-
-begin_comment
-comment|/* enable overlap */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_COUNT
-value|0x02
-end_define
-
-begin_comment
-comment|/* (W) sector count */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ATA_IREASON
-value|0x02
+value|9
 end_define
 
 begin_comment
@@ -413,89 +490,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_SECTOR
-value|0x03
-end_define
-
-begin_comment
-comment|/* sector # */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_CYL_LSB
-value|0x04
-end_define
-
-begin_comment
-comment|/* cylinder# LSB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_CYL_MSB
-value|0x05
-end_define
-
-begin_comment
-comment|/* cylinder# MSB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_DRIVE
-value|0x06
-end_define
-
-begin_comment
-comment|/* Sector/Drive/Head register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_D_LBA
-value|0x40
-end_define
-
-begin_comment
-comment|/* use LBA addressing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_D_IBM
-value|0xa0
-end_define
-
-begin_comment
-comment|/* 512 byte sectors, ECC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_CMD
-value|0x07
-end_define
-
-begin_comment
-comment|/* command register */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ATA_STATUS
-value|0x07
+value|10
 end_define
 
 begin_comment
-comment|/* status register */
+comment|/* (R) status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_ALTSTAT
+value|11
+end_define
+
+begin_comment
+comment|/* (R) alternate status */
 end_comment
 
 begin_define
@@ -611,29 +622,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_ALTSTAT
-value|0x08
+name|ATA_CONTROL
+value|12
 end_define
 
 begin_comment
-comment|/* alternate status register */
+comment|/* (W) control */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATA_ALTOFFSET
+name|ATA_CTLOFFSET
 value|0x206
 end_define
 
 begin_comment
-comment|/* alternate registers offset */
+comment|/* control register offset */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATA_PCCARD_ALTOFFSET
+name|ATA_PCCARD_CTLOFFSET
 value|0x0e
 end_define
 
@@ -644,7 +655,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_PC98_ALTOFFSET
+name|ATA_PC98_CTLOFFSET
 value|0x10c
 end_define
 
@@ -798,7 +809,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_ALTIOSIZE
+name|ATA_CTLIOSIZE
 value|0x01
 end_define
 
@@ -826,7 +837,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_ALTADDR_RID
+name|ATA_CTLADDR_RID
 value|1
 end_define
 
@@ -840,7 +851,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_PC98_ALTADDR_RID
+name|ATA_PC98_CTLADDR_RID
 value|8
 end_define
 
@@ -890,7 +901,7 @@ begin_define
 define|#
 directive|define
 name|ATA_BMCMD_PORT
-value|0x09
+value|13
 end_define
 
 begin_define
@@ -911,14 +922,14 @@ begin_define
 define|#
 directive|define
 name|ATA_BMDEVSPEC_0
-value|0x0a
+value|14
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_BMSTAT_PORT
-value|0x0b
+value|15
 end_define
 
 begin_define
@@ -974,35 +985,35 @@ begin_define
 define|#
 directive|define
 name|ATA_BMDEVSPEC_1
-value|0x0c
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_BMDTP_PORT
-value|0x0d
+value|17
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_IDX_ADDR
-value|0x0e
+value|18
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_IDX_DATA
-value|0x0f
+value|19
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_MAX_RES
-value|0x10
+value|20
 end_define
 
 begin_define
@@ -1417,7 +1428,7 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|1
+literal|0
 end_if
 
 begin_define
@@ -2143,6 +2154,18 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_default_registers
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 end_function_decl

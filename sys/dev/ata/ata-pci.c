@@ -1208,7 +1208,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ATA_ALTADDR_RID
+name|ATA_CTLADDR_RID
 case|:
 if|if
 condition|(
@@ -1228,11 +1228,11 @@ else|:
 name|ATA_PRIMARY
 operator|)
 operator|+
-name|ATA_ALTOFFSET
+name|ATA_CTLOFFSET
 expr_stmt|;
 name|count
 operator|=
-name|ATA_ALTIOSIZE
+name|ATA_CTLIOSIZE
 expr_stmt|;
 name|end
 operator|=
@@ -1452,7 +1452,7 @@ argument_list|)
 return|;
 break|break;
 case|case
-name|ATA_ALTADDR_RID
+name|ATA_CTLADDR_RID
 case|:
 return|return
 name|BUS_RELEASE_RESOURCE
@@ -1860,7 +1860,7 @@ init|=
 name|NULL
 decl_stmt|,
 modifier|*
-name|altio
+name|ctlio
 init|=
 name|NULL
 decl_stmt|;
@@ -1897,9 +1897,9 @@ name|ENXIO
 return|;
 name|rid
 operator|=
-name|ATA_ALTADDR_RID
+name|ATA_CTLADDR_RID
 expr_stmt|;
-name|altio
+name|ctlio
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
@@ -1916,7 +1916,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|altio
+name|ctlio
 condition|)
 block|{
 name|bus_release_resource
@@ -1942,7 +1942,7 @@ name|ATA_DATA
 init|;
 name|i
 operator|<=
-name|ATA_STATUS
+name|ATA_COMMAND
 condition|;
 name|i
 operator|++
@@ -1975,18 +1975,18 @@ name|ch
 operator|->
 name|r_io
 index|[
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 index|]
 operator|.
 name|res
 operator|=
-name|altio
+name|ctlio
 expr_stmt|;
 name|ch
 operator|->
 name|r_io
 index|[
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 index|]
 operator|.
 name|offset
@@ -2013,6 +2013,11 @@ operator|.
 name|res
 operator|=
 name|io
+expr_stmt|;
+name|ata_default_registers
+argument_list|(
+name|ch
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2727,7 +2732,7 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-comment|/* free resources for io and altio XXX SOS */
+comment|/* free resources for io and ctlio XXX SOS */
 return|return
 literal|0
 return|;

@@ -361,7 +361,7 @@ name|ATA_IDX_OUTB
 argument_list|(
 name|ch
 argument_list|,
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 argument_list|,
 name|ATA_A_4BIT
 operator||
@@ -444,7 +444,7 @@ name|ATA_IDX_OUTB
 argument_list|(
 name|ch
 argument_list|,
-name|ATA_CMD
+name|ATA_COMMAND
 argument_list|,
 name|command
 argument_list|)
@@ -2965,7 +2965,7 @@ comment|//return ATA_OP_FINISHED;
 break|break;
 block|}
 comment|/* disable interrupt */
-comment|//ATA_IDX_OUTB(ch, ATA_ALTSTAT, ATA_A_4BIT | ATA_A_IDS);
+comment|//ATA_IDX_OUTB(ch, ATA_CONTROL, ATA_A_4BIT | ATA_A_IDS);
 return|return
 name|ATA_OP_FINISHED
 return|;
@@ -3250,7 +3250,7 @@ name|ATA_IDX_OUTB
 argument_list|(
 name|ch
 argument_list|,
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 argument_list|,
 name|ATA_A_IDS
 operator||
@@ -3266,7 +3266,7 @@ name|ATA_IDX_OUTB
 argument_list|(
 name|ch
 argument_list|,
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 argument_list|,
 name|ATA_A_IDS
 argument_list|)
@@ -4141,7 +4141,7 @@ name|ATA_IDX_OUTB
 argument_list|(
 name|ch
 argument_list|,
-name|ATA_ALTSTAT
+name|ATA_CONTROL
 argument_list|,
 name|ATA_A_4BIT
 argument_list|)
@@ -4667,7 +4667,7 @@ name|ATA_IDX_OUTB
 argument_list|(
 name|ch
 argument_list|,
-name|ATA_CMD
+name|ATA_COMMAND
 argument_list|,
 name|command
 argument_list|)
