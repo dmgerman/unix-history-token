@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.19 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -717,85 +717,15 @@ condition|(
 operator|!
 name|warned
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|write
+name|syslog
 argument_list|(
-name|STDERR_FILENO
+name|LOG_ERR
 argument_list|,
-literal|"getpwent: "
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|STDERR_FILENO
+literal|"%s: %m"
 argument_list|,
 name|p
-argument_list|,
-name|strlen
-argument_list|(
-name|p
-argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-literal|": "
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-name|p
-argument_list|,
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|warned
-operator|=
-literal|1
-expr_stmt|;
-block|}
 end_if
 
 begin_return
