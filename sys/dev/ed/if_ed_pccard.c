@@ -1483,6 +1483,8 @@ literal|0x90
 block|,
 literal|0x99
 block|}
+block|,
+name|NE2000DVF_AX88190
 block|}
 block|,
 block|{
