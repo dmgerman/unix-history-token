@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: load.c,v 1.35 2000/01/25 22:59:27 assar Exp $"
+literal|"$Id: load.c,v 1.36 2000/02/16 16:05:28 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2185,7 +2185,7 @@ operator|.
 name|flags
 argument_list|)
 operator|!=
-literal|0
+literal|1
 condition|)
 block|{
 name|fprintf
