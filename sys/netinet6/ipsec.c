@@ -16025,6 +16025,7 @@ operator|&
 name|idst
 argument_list|)
 expr_stmt|;
+comment|/* 	 * when there is no suitable inbound policy for the packet of the ipsec 	 * tunnel mode, the kernel never decapsulate the tunneled packet 	 * as the ipsec tunnel mode even when the system wide policy is "none". 	 * then the kernel leaves the generic tunnel module to process this 	 * packet.  if there is no rule of the generic tunnel, the packet 	 * is rejected and the statistics will be counted up. 	 */
 if|if
 condition|(
 operator|!
