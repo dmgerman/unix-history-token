@@ -3572,6 +3572,23 @@ name|to
 operator|->
 name|to_tsval
 expr_stmt|;
+comment|/* 		 * PCB may have changed, pick up new values. 		 */
+name|sc
+operator|->
+name|sc_tp
+operator|=
+name|tp
+expr_stmt|;
+name|sc
+operator|->
+name|sc_inp_gencnt
+operator|=
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_gencnt
+expr_stmt|;
 if|if
 condition|(
 name|syncache_respond
