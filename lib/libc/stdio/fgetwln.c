@@ -108,9 +108,6 @@ define|#
 directive|define
 name|GROW
 value|512
-name|len
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|len
@@ -158,6 +155,7 @@ operator|.
 name|_base
 operator|+
 name|len
+operator|++
 operator|)
 operator|=
 name|wc
