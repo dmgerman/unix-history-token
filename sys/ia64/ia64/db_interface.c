@@ -156,21 +156,15 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|extern char *trap_type[]; extern int trap_types;
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|db_active
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|db_regs_t
+name|ddb_regs
 decl_stmt|;
 end_decl_stmt
 
