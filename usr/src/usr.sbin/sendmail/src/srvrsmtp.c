@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.5 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.6 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.5 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2106,14 +2106,13 @@ name|InChild
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
-block|}
-comment|/* child (or ONEX command specified) */
 name|clearenvelope
 argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 comment|/* open alias database */
 name|initaliases
 argument_list|(
