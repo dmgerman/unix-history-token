@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.19	81/04/23	*/
+comment|/*	vfs_bio.c	4.20	81/04/24	*/
 end_comment
 
 begin_include
@@ -2321,11 +2321,6 @@ operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
-name|cnt
-operator|.
-name|v_pgout
-operator|++
-expr_stmt|;
 name|bp
 operator|->
 name|av_forw
@@ -2353,6 +2348,21 @@ name|bp
 operator|-
 name|swbuf
 index|]
+expr_stmt|;
+name|cnt
+operator|.
+name|v_pgout
+operator|++
+expr_stmt|;
+name|cnt
+operator|.
+name|v_pgpgout
+operator|+=
+name|bp
+operator|->
+name|b_bcount
+operator|/
+name|NBPG
 expr_stmt|;
 name|bclnlist
 operator|=
