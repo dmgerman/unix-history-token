@@ -744,6 +744,8 @@ expr_stmt|;
 name|length
 operator|=
 operator|(
+literal|1
+operator|+
 name|u
 operator|-
 name|v
