@@ -310,6 +310,11 @@ name|int
 name|if_pcount
 decl_stmt|;
 comment|/* number of promiscuous listeners */
+name|void
+modifier|*
+name|if_carp
+decl_stmt|;
+comment|/* carp (tbd) interface pointer */
 name|struct
 name|bpf_if
 modifier|*
