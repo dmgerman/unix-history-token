@@ -2630,7 +2630,7 @@ operator|)
 condition|)
 name|selrecord
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 operator|&
 name|pti
@@ -2650,7 +2650,7 @@ operator|)
 condition|)
 name|selrecord
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 operator|&
 name|pti
