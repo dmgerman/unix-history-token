@@ -53,7 +53,7 @@ name|SM_IDSTR
 argument_list|(
 argument|MilterlId
 argument_list|,
-literal|"@(#)$Id: libmilter.h,v 8.33.2.12 2003/09/08 21:39:55 yuri Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.33.2.13 2003/10/20 21:51:50 msk Exp $"
 argument_list|)
 end_macro
 
@@ -1079,6 +1079,8 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+name|bool
 operator|,
 name|smfiDesc_ptr
 operator|)

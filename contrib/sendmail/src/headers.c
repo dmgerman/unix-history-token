@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.266.4.7 2003/09/03 21:32:20 ca Exp $"
+literal|"@(#)$Id: headers.c,v 8.266.4.9 2003/10/30 00:17:22 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -3023,6 +3023,31 @@ operator|->
 name|e_msgid
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_MESSAGEID_MACRO
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{msg_id}"
+argument_list|)
+argument_list|,
+name|e
+operator|->
+name|e_msgid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MESSAGEID_MACRO */
 block|}
 block|}
 if|if
@@ -3250,19 +3275,37 @@ name|e_timeoutclass
 operator|=
 name|TOC_NONURGENT
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_QUEUERETURN_DSN
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|e
+operator|->
+name|e_timeoutclass
+operator|=
+name|TOC_DSN
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUEUERETURN_DSN */
 block|}
 if|#
 directive|if
 name|_FFR_QUEUERETURN_DSN
-comment|/* If no timeoutclass picked and it's a DSN, use that timeoutclass */
+elseif|else
 if|if
 condition|(
-name|e
-operator|->
-name|e_timeoutclass
-operator|==
-name|TOC_NORMAL
-operator|&&
 name|bitset
 argument_list|(
 name|EF_RESPONSE

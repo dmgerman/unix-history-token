@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.363.2.7 2003/06/02 03:25:39 gshapiro Exp $"
+literal|"@(#)$Id: util.c,v 8.363.2.10 2003/10/15 17:19:14 ca Exp $"
 argument_list|)
 end_macro
 
@@ -8433,10 +8433,17 @@ name|l
 argument_list|,
 literal|"%03o"
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|int
+call|)
+argument_list|(
+operator|(
+name|unsigned
+name|char
 operator|)
 name|c
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 				**  XXX since l is unsigned this may 				**  wrap around if the calculation is screwed 				**  up... 				*/

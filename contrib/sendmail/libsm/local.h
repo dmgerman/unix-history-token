@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: local.h,v 1.51.2.1 2002/09/09 21:38:08 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2002, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: local.h,v 1.51.2.2 2004/01/09 18:32:44 ca Exp $  */
 end_comment
 
 begin_comment
@@ -218,27 +218,6 @@ name|sm_vprintf
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
-name|char
-specifier|const
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sm_vfscanf
-name|__P
-argument_list|(
-operator|(
-name|SM_FILE_T
-operator|*
-operator|,
 name|int
 operator|,
 name|char

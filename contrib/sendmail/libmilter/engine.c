@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.109.2.5 2003/08/04 18:14:33 ca Exp $"
+literal|"@(#)$Id: engine.c,v 8.109.2.8 2003/12/01 23:57:45 msk Exp $"
 argument_list|)
 end_macro
 
@@ -310,7 +310,20 @@ end_define
 begin_if
 if|#
 directive|if
-name|CI_RCPT
+name|_FFR_MILTER_MACROS_EOM
+end_if
+
+begin_define
+define|#
+directive|define
+name|CI_EOM
+value|4
+end_define
+
+begin_if
+if|#
+directive|if
+name|CI_EOM
 operator|>=
 name|MAX_MACROS_ENTRIES
 end_if
@@ -325,11 +338,33 @@ do|do
 name|not
 name|compile
 name|with
+name|CI_EOM
+operator|>=
+name|MAX_MACROS_ENTRIES
+endif|#
+directive|endif
+else|#
+directive|else
+comment|/* _FFR_MILTER_MACROS_EOM */
+if|#
+directive|if
+name|CI_RCPT
+operator|>=
+name|MAX_MACROS_ENTRIES
+name|ERROR
+operator|:
+do|do
+name|not
+name|compile
+name|with
 name|CI_RCPT
 operator|>=
 name|MAX_MACROS_ENTRIES
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_MACROS_EOM */
 comment|/* function prototypes */
 specifier|static
 name|int
@@ -966,6 +1001,26 @@ block|,
 name|st_connectinfo
 block|}
 block|,
+if|#
+directive|if
+name|_FFR_MILTER_MACROS_EOM
+block|{
+name|SMFIC_BODYEOB
+block|,
+name|CM_ARG1
+block|,
+name|ST_ENDM
+block|,
+name|CT_CONT
+block|,
+name|CI_EOM
+block|,
+name|st_bodyend
+block|}
+block|,
+else|#
+directive|else
+comment|/* _FFR_MILTER_MACROS_EOM */
 block|{
 name|SMFIC_BODYEOB
 block|,
@@ -980,6 +1035,9 @@ block|,
 name|st_bodyend
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_MACROS_EOM */
 block|{
 name|SMFIC_HELO
 block|,
@@ -2954,6 +3012,8 @@ expr_stmt|;
 if|if
 condition|(
 name|i
+operator|+
+literal|1
 operator|>=
 name|l
 condition|)
@@ -2993,40 +3053,12 @@ operator|!=
 name|SMFIA_UNKNOWN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|memcpy
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|port
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|s
-operator|+
-name|i
-operator|)
-argument_list|,
-sizeof|sizeof
-name|port
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|(
 name|i
-operator|+=
+operator|+
 sizeof|sizeof
 name|port
-operator|)
 operator|>=
 name|l
 condition|)
@@ -3069,6 +3101,37 @@ return|return
 name|_SMFIS_ABORT
 return|;
 block|}
+operator|(
+name|void
+operator|)
+name|memcpy
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|port
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|s
+operator|+
+name|i
+operator|)
+argument_list|,
+sizeof|sizeof
+name|port
+argument_list|)
+expr_stmt|;
+name|i
+operator|+=
+sizeof|sizeof
+name|port
+expr_stmt|;
 comment|/* make sure string is terminated */
 if|if
 condition|(
@@ -3554,6 +3617,32 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* paranoia: check for terminating '\0' */
+if|if
+condition|(
+name|g
+operator|->
+name|a_len
+operator|==
+literal|0
+operator|||
+name|g
+operator|->
+name|a_buf
+index|[
+name|g
+operator|->
+name|a_len
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+return|return
+name|MI_FAILURE
+return|;
 return|return
 call|(
 modifier|*
@@ -3569,6 +3658,7 @@ operator|->
 name|a_buf
 argument_list|)
 return|;
+block|}
 return|return
 name|SMFIS_CONTINUE
 return|;
@@ -3871,6 +3961,20 @@ operator|=
 name|CI_RCPT
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_MILTER_MACROS_EOM
+case|case
+name|SMFIC_BODYEOB
+case|:
+name|i
+operator|=
+name|CI_EOM
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_MACROS_EOM */
 default|default:
 name|free
 argument_list|(
@@ -4775,9 +4879,28 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
+operator|++
+name|elem
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|+
+literal|1
+operator|>=
+name|len
+condition|)
 name|s
 index|[
-operator|++
+name|elem
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+name|s
+index|[
 name|elem
 index|]
 operator|=
@@ -4792,7 +4915,8 @@ index|]
 operator|)
 expr_stmt|;
 block|}
-comment|/* overwrite last entry */
+block|}
+comment|/* overwrite last entry (already done above, just paranoia) */
 name|s
 index|[
 name|elem
@@ -4844,6 +4968,25 @@ block|{
 name|size_t
 name|i
 decl_stmt|;
+comment|/* paranoia: check for terminating '\0' */
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+operator|||
+name|buf
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+return|return
+name|MI_FAILURE
+return|;
 operator|*
 name|s1
 operator|=

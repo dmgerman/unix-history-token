@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.940.2.19 2003/09/03 19:58:26 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.940.2.20 2003/09/26 18:26:19 ca Exp $"
 argument_list|)
 end_macro
 
@@ -14077,12 +14077,37 @@ operator|==
 name|MCIS_DATA
 operator|)
 condition|)
+block|{
 name|mci
 operator|->
 name|mci_state
 operator|=
 name|MCIS_OPEN
 expr_stmt|;
+name|SmtpPhase
+operator|=
+name|mci
+operator|->
+name|mci_phase
+operator|=
+literal|"idle"
+expr_stmt|;
+name|sm_setproctitle
+argument_list|(
+name|true
+argument_list|,
+name|e
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|CurHostName
+argument_list|,
+name|mci
+operator|->
+name|mci_phase
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

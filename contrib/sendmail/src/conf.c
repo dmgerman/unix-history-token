@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.972.2.50 2003/09/03 21:37:03 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.972.2.54 2004/01/08 21:54:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -21283,6 +21283,14 @@ directive|endif
 comment|/* MIME7TO8 */
 if|#
 directive|if
+name|MIME7TO8_OLD
+literal|"MIME7TO8_OLD"
+block|,
+endif|#
+directive|endif
+comment|/* MIME7TO8_OLD */
+if|#
+directive|if
 name|MIME8TO7
 literal|"MIME8TO7"
 block|,
@@ -22450,6 +22458,15 @@ directive|endif
 comment|/* _FFR_MAX_SLEEP_TIME */
 if|#
 directive|if
+name|_FFR_MESSAGEID_MACRO
+comment|/* stick the message ID header's value in a macro */
+literal|"_FFR_MESSAGEID_MACRO"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MESSAGEID_MACRO */
+if|#
+directive|if
 name|MILTER
 if|#
 directive|if
@@ -22460,6 +22477,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_MILTER_421 */
+if|#
+directive|if
+name|_FFR_MILTER_MACROS_EOM
+comment|/* Add an EOM macro set for milter */
+literal|"_FFR_MILTER_MACROS_EOM"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_MACROS_EOM */
 if|#
 directive|if
 name|_FFR_MILTER_PERDAEMON

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.85.2.12 2003/08/04 18:47:29 ca Exp $"
+literal|"@(#)$Id: listener.c,v 8.85.2.17 2003/10/21 17:22:57 ca Exp $"
 argument_list|)
 end_macro
 
@@ -30,6 +30,18 @@ begin_include
 include|#
 directive|include
 file|<sm/errstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_if
@@ -97,6 +109,8 @@ operator|*
 operator|,
 name|int
 operator|,
+name|bool
+operator|,
 name|char
 operator|*
 operator|)
@@ -105,7 +119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  MI_OPENSOCKET -- create the socket where this filter and the MTA will meet ** **  	Parameters: **		conn -- connection description **		backlog -- listen backlog **  		dbg -- debug level **		smfi -- filter structure to use ** **  	Return value: **  		MI_SUCCESS/MI_FAILURE */
+comment|/* **  MI_OPENSOCKET -- create the socket where this filter and the MTA will meet ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		dbg -- debug level **		rmsocket -- if true, try to unlink() the socket first **		            (UNIX domain sockets only) **		smfi -- filter structure to use ** **	Return value: **		MI_SUCCESS/MI_FAILURE */
 end_comment
 
 begin_function
@@ -118,6 +132,8 @@ name|backlog
 parameter_list|,
 name|dbg
 parameter_list|,
+name|rmsocket
+parameter_list|,
 name|smfi
 parameter_list|)
 name|char
@@ -129,6 +145,9 @@ name|backlog
 decl_stmt|;
 name|int
 name|dbg
+decl_stmt|;
+name|bool
+name|rmsocket
 decl_stmt|;
 name|smfiDesc_ptr
 name|smfi
@@ -203,6 +222,8 @@ argument_list|(
 name|conn
 argument_list|,
 name|backlog
+argument_list|,
+name|rmsocket
 argument_list|,
 name|smfi
 operator|->
@@ -295,7 +316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MI_MILTEROPEN -- setup socket to listen on ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		name -- name for logging ** **	Returns: **		socket upon success, error code otherwise. ** **	Side effect: **		sets sockpath if UNIX socket. */
+comment|/* **  MI_MILTEROPEN -- setup socket to listen on ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		rmsocket -- if true, try to unlink() the socket first **			(UNIX domain sockets only) **		name -- name for logging ** **	Returns: **		socket upon success, error code otherwise. ** **	Side effect: **		sets sockpath if UNIX socket. */
 end_comment
 
 begin_if
@@ -332,6 +353,8 @@ name|conn
 parameter_list|,
 name|backlog
 parameter_list|,
+name|rmsocket
+parameter_list|,
 name|name
 parameter_list|)
 name|char
@@ -340,6 +363,9 @@ name|conn
 decl_stmt|;
 name|int
 name|backlog
+decl_stmt|;
+name|bool
+name|rmsocket
 decl_stmt|;
 name|char
 modifier|*
@@ -1714,6 +1740,153 @@ return|return
 name|INVALID_SOCKET
 return|;
 block|}
+if|#
+directive|if
+name|NETUNIX
+if|if
+condition|(
+name|addr
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_UNIX
+operator|&&
+name|rmsocket
+condition|)
+block|{
+name|struct
+name|stat
+name|s
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|colon
+argument_list|,
+operator|&
+name|s
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+block|{
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: Unable to stat() %s: %s"
+argument_list|,
+name|name
+argument_list|,
+name|colon
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|closesocket
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+return|return
+name|INVALID_SOCKET
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|S_ISSOCK
+argument_list|(
+name|s
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: %s is not a UNIX domain socket"
+argument_list|,
+name|name
+argument_list|,
+name|colon
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|closesocket
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+return|return
+name|INVALID_SOCKET
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|colon
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: Unable to remove %s: %s"
+argument_list|,
+name|name
+argument_list|,
+name|colon
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|closesocket
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+return|return
+name|INVALID_SOCKET
+return|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* NETUNIX */
 if|if
 condition|(
 name|bind
@@ -2144,7 +2317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MI_LISTENER -- Generic listener harness ** **	Open up listen port **	Wait for connections ** **	Parameters: **		conn -- connection description **		dbg -- debug level **		smfi -- filter structure to use **		timeout -- timeout for reads/writes **  		backlog -- listen queue backlog size ** **	Returns: **		MI_SUCCESS -- Exited normally **			   (session finished or we were told to exit) **		MI_FAILURE -- Network initialization failed. */
+comment|/* **  MI_LISTENER -- Generic listener harness ** **	Open up listen port **	Wait for connections ** **	Parameters: **		conn -- connection description **		dbg -- debug level **		rmsocket -- if true, try to unlink() the socket first **			(UNIX domain sockets only) **		smfi -- filter structure to use **		timeout -- timeout for reads/writes **		backlog -- listen queue backlog size ** **	Returns: **		MI_SUCCESS -- Exited normally **			   (session finished or we were told to exit) **		MI_FAILURE -- Network initialization failed. */
 end_comment
 
 begin_if
@@ -2308,6 +2481,8 @@ argument_list|,
 name|backlog
 argument_list|,
 name|dbg
+argument_list|,
+name|false
 argument_list|,
 name|smfi
 argument_list|)

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.79.4.4 2003/03/20 00:03:42 ca Exp $"
+literal|"@(#)$Id: tls.c,v 8.79.4.5 2003/12/28 04:23:28 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1546,7 +1546,32 @@ comment|/* DH param file is ok to use */
 end_comment
 
 begin_comment
-comment|/* **  TLS_OK_F -- can var be an absolute filename? ** **	Parameters: **		var -- filename **		fn -- what is the filename used for? **		srv -- server side? ** **	Returns: **		ok? */
+comment|/* Type of variable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLS_T_OTHER
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_T_SRV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_T_CLT
+value|2
+end_define
+
+begin_comment
+comment|/* **  TLS_OK_F -- can var be an absolute filename? ** **	Parameters: **		var -- filename **		fn -- what is the filename used for? **		type -- type of variable ** **	Returns: **		ok? */
 end_comment
 
 begin_function
@@ -1558,7 +1583,7 @@ name|var
 parameter_list|,
 name|fn
 parameter_list|,
-name|srv
+name|type
 parameter_list|)
 name|char
 modifier|*
@@ -1568,8 +1593,8 @@ name|char
 modifier|*
 name|fn
 decl_stmt|;
-name|bool
-name|srv
+name|int
+name|type
 decl_stmt|;
 block|{
 comment|/* must be absolute pathname */
@@ -1601,13 +1626,23 @@ name|NOQID
 argument_list|,
 literal|"STARTTLS: %s%s missing"
 argument_list|,
-name|srv
+name|type
+operator|==
+name|TLS_T_SRV
 condition|?
 literal|"Server"
 else|:
+operator|(
+name|type
+operator|==
+name|TLS_T_CLT
+condition|?
 literal|"Client"
+else|:
+literal|""
+operator|)
 argument_list|,
-name|fn
+name|var
 argument_list|)
 expr_stmt|;
 return|return
@@ -1708,7 +1743,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  TLS_OK_F -- macro to simplify calls to tls_ok_f ** **	Parameters: **		var -- filename **		fn -- what is the filename used for? **		req -- is the file required? **		st -- status bit to set if ok **		srv -- server side? ** **	Side Effects: **		uses r, ok; may change ok and status. ** */
+comment|/* **  TLS_OK_F -- macro to simplify calls to tls_ok_f ** **	Parameters: **		var -- filename **		fn -- what is the filename used for? **		req -- is the file required? **		st -- status bit to set if ok **		type -- type of variable ** **	Side Effects: **		uses r, ok; may change ok and status. ** */
 end_comment
 
 begin_define
@@ -1724,9 +1759,9 @@ name|req
 parameter_list|,
 name|st
 parameter_list|,
-name|srv
+name|type
 parameter_list|)
-value|if (ok) \ 	{ \ 		r = tls_ok_f(var, fn, srv); \ 		if (r) \ 			status |= st; \ 		else if (req) \ 			ok = false; \ 	}
+value|if (ok) \ 	{ \ 		r = tls_ok_f(var, fn, type); \ 		if (r) \ 			status |= st; \ 		else if (req) \ 			ok = false; \ 	}
 end_define
 
 begin_comment
@@ -2024,6 +2059,10 @@ argument_list|,
 name|TLS_S_CERT_EX
 argument_list|,
 name|srv
+condition|?
+name|TLS_T_SRV
+else|:
+name|TLS_T_CLT
 argument_list|)
 expr_stmt|;
 name|TLS_OK_F
@@ -2042,6 +2081,10 @@ argument_list|,
 name|TLS_S_KEY_EX
 argument_list|,
 name|srv
+condition|?
+name|TLS_T_SRV
+else|:
+name|TLS_T_CLT
 argument_list|)
 expr_stmt|;
 name|TLS_OK_F
@@ -2059,7 +2102,7 @@ argument_list|)
 argument_list|,
 name|TLS_S_CERTP_EX
 argument_list|,
-name|srv
+name|TLS_T_OTHER
 argument_list|)
 expr_stmt|;
 name|TLS_OK_F
@@ -2077,7 +2120,7 @@ argument_list|)
 argument_list|,
 name|TLS_S_CERTF_EX
 argument_list|,
-name|srv
+name|TLS_T_OTHER
 argument_list|)
 expr_stmt|;
 if|#
@@ -2107,6 +2150,10 @@ argument_list|,
 name|TLS_S_CERT2_EX
 argument_list|,
 name|srv
+condition|?
+name|TLS_T_SRV
+else|:
+name|TLS_T_CLT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2133,6 +2180,10 @@ argument_list|,
 name|TLS_S_KEY2_EX
 argument_list|,
 name|srv
+condition|?
+name|TLS_T_SRV
+else|:
+name|TLS_T_CLT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2263,7 +2314,7 @@ argument_list|)
 argument_list|,
 name|TLS_S_DHPAR_EX
 argument_list|,
-name|srv
+name|TLS_T_OTHER
 argument_list|)
 expr_stmt|;
 block|}

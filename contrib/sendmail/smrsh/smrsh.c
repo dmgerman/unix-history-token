@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: smrsh.c,v 8.58.2.2 2002/09/24 21:40:05 ca Exp $"
+literal|"@(#)$Id: smrsh.c,v 8.58.2.5 2003/12/15 17:09:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -323,6 +323,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return;
+comment|/* enough space for s (len) and CMDDIR + "/" and '\0'? */
 if|if
 condition|(
 sizeof|sizeof
@@ -334,6 +335,8 @@ name|newcmdbuf
 argument_list|)
 operator|<=
 name|len
+operator|+
+literal|1
 operator|+
 operator|(
 name|cmd
@@ -410,14 +413,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sm_strlcat
+name|strncat
 argument_list|(
 name|newcmdbuf
 argument_list|,
 name|s
 argument_list|,
-sizeof|sizeof
-name|newcmdbuf
+name|len
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.44.2.3 2002/12/19 02:10:09 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.44.2.4 2003/10/20 21:51:49 msk Exp $  */
 end_comment
 
 begin_comment
@@ -456,7 +456,7 @@ name|smfi_opensocket
 name|__P
 argument_list|(
 operator|(
-name|void
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;

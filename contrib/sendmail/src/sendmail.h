@@ -204,7 +204,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.919.2.28 2003/09/03 19:58:27 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.919.2.29 2003/11/07 00:08:02 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -12702,6 +12702,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|sync_queue_time
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_qid_alg
 name|__P
 argument_list|(
 operator|(

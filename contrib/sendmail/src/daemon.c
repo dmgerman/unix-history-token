@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.613.2.17 2003/07/30 20:17:04 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.613.2.20 2003/11/25 19:02:24 ca Exp $"
 argument_list|)
 end_macro
 
@@ -580,6 +580,10 @@ name|bool
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* initialize data for function that generates queue ids */
+name|init_qid_alg
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|idx
@@ -13722,6 +13726,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
 name|p
 operator|+=
 name|i
@@ -13737,15 +13745,45 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|s
+operator|=
 name|strchr
 argument_list|(
 name|ibuf
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 operator|!=
 name|NULL
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|>
+name|s
+operator|+
+literal|1
+condition|)
+block|{
+name|p
+operator|=
+name|s
+operator|+
+literal|1
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+break|break;
+block|}
+if|if
+condition|(
 name|nleft
 operator|<=
 literal|0
