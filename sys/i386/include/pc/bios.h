@@ -588,7 +588,7 @@ begin_define
 define|#
 directive|define
 name|PNP_SET_DEVNODE
-value|"sppsD",	0x02
+value|"sspsD",	0x02
 end_define
 
 begin_define
