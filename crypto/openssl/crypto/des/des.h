@@ -768,6 +768,12 @@ name|defined
 argument_list|(
 name|NeXT
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_UWIN
+argument_list|)
 name|char
 modifier|*
 name|crypt
