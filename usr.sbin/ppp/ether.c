@@ -1323,6 +1323,12 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|dev
+operator|->
+name|connected
+operator|!=
+name|CARRIER_OK
+operator|&&
 operator|!
 name|dev
 operator|->
