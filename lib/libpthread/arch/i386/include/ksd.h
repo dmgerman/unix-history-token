@@ -27,50 +27,9 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|pthread
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|__ucontext
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|kse
 struct_decl|;
 end_struct_decl
-
-begin_comment
-comment|/*  * KSE Specific Data.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ksd
-block|{
-name|int
-name|ldt
-decl_stmt|;
-define|#
-directive|define
-name|KSDF_INITIALIZED
-value|0x01
-name|long
-name|flags
-decl_stmt|;
-name|void
-modifier|*
-name|base
-decl_stmt|;
-name|long
-name|size
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Evaluates to the byte offset of the per-kse variable name.  */

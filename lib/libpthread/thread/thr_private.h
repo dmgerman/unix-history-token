@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ksd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lock.h"
 end_include
 

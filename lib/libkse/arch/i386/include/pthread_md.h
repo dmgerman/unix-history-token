@@ -124,6 +124,35 @@ parameter_list|)
 value|(((unsigned)(td) + THR_ALIGNBYTES)& ~THR_ALIGNBYTES)
 end_define
 
+begin_comment
+comment|/*  * KSE Specific Data.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ksd
+block|{
+name|int
+name|ldt
+decl_stmt|;
+define|#
+directive|define
+name|KSDF_INITIALIZED
+value|0x01
+name|long
+name|flags
+decl_stmt|;
+name|void
+modifier|*
+name|base
+decl_stmt|;
+name|long
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

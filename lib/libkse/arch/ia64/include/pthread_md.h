@@ -52,6 +52,25 @@ parameter_list|)
 value|(((uintptr_t)(td) + THR_ALIGNBYTES)& ~THR_ALIGNBYTES)
 end_define
 
+begin_comment
+comment|/* KSE Specific Data. */
+end_comment
+
+begin_struct
+struct|struct
+name|ksd
+block|{
+name|void
+modifier|*
+name|ksd_base
+decl_stmt|;
+name|int
+name|ksd_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

@@ -110,13 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pthread_md.h"
+file|"libc_private.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"libc_private.h"
+file|"ksd.h"
 end_include
 
 begin_comment
