@@ -41,12 +41,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.34	%G%"
+literal|"@(#)deliver.c	3.35	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  DELIVER -- Deliver a message to a particular address. ** **	Parameters: **		to -- the address to deliver the message to. **		editfcn -- if non-NULL, we want to call this function **			to output the letter (instead of just out- **			putting it raw). ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. */
+comment|/* **  DELIVER -- Deliver a message to a list of addresses. ** **	This routine delivers to everyone on the same host as the **	user on the head of the list.  It is clever about mailers **	that don't handle multiple users.  It is NOT guaranteed **	that it will deliver to all these addresses however -- so **	deliver should be called once for each address on the **	list. ** **	Parameters: **		to -- head of the address list to deliver to. **		editfcn -- if non-NULL, we want to call this function **			to output the letter (instead of just out- **			putting it raw). ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. */
 end_comment
 
 begin_macro
@@ -633,10 +633,6 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
-name|firstone
-operator|=
-name|FALSE
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -800,6 +796,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+comment|/* 		**  Address is verified -- add this user to mailer 		**  argv, and add it to the print list of recipients. 		*/
 comment|/* create list of users for error messages */
 if|if
 condition|(
@@ -1007,7 +1004,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	**  Call the mailer. 	**	The argument vector gets built, pipes 	**	are created as necessary, and we fork& exec as 	**	appropriate. 	** 	**	Notice the tacky hack to handle private mailers. 	*/
+comment|/* 	**  Call the mailer. 	**	The argument vector gets built, pipes 	**	are created as necessary, and we fork& exec as 	**	appropriate. 	*/
 end_comment
 
 begin_if
@@ -1699,7 +1696,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		force -- if set, force an error message output, even **			if the mailer seems to like to print its own **			messages. **		m -- the mailer descriptor for this mailer. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. ** **	Called By: **		deliver */
+comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		force -- if set, force an error message output, even **			if the mailer seems to like to print its own **			messages. **		m -- the mailer descriptor for this mailer. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. */
 end_comment
 
 begin_expr_stmt
@@ -1758,6 +1755,7 @@ index|[
 literal|30
 index|]
 decl_stmt|;
+comment|/* 	**  Compute status message from code. 	*/
 name|i
 operator|=
 name|stat
@@ -2024,14 +2022,10 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
 name|HDR
 modifier|*
 name|h
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 specifier|extern
 name|char
@@ -2055,7 +2049,7 @@ name|char
 name|SentDate
 index|[]
 decl_stmt|;
-comment|/* output "From" line unless supressed */
+comment|/* 	**  Output "From" line unless supressed 	*/
 if|if
 condition|(
 operator|!
@@ -2098,7 +2092,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* output all header lines */
+comment|/* 	**  Output all header lines 	*/
 for|for
 control|(
 name|h
@@ -2116,6 +2110,11 @@ operator|->
 name|h_link
 control|)
 block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|bitset
@@ -2297,7 +2296,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* output the body of the message */
+comment|/* 	**  Output the body of the message 	*/
 name|rewind
 argument_list|(
 name|TempFile
@@ -2403,10 +2402,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|pid
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 comment|/* 	**  Fork so we can change permissions here. 	**	Note that we MUST use fork, not vfork, because of 	**	the complications of calling subroutines, etc. 	*/
 name|DOFORK
@@ -2540,6 +2535,7 @@ argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 else|else
 block|{

@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.9	%G%"
+literal|"@(#)err.c	3.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,7 +316,11 @@ name|q_paddr
 argument_list|,
 name|To
 argument_list|,
+operator|&
 name|errbuf
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 endif|#

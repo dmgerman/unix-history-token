@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.18	%G%	(with DBM)"
+literal|"@(#)alias.c	3.19	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.18	%G%	(without DBM)"
+literal|"@(#)alias.c	3.19	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,6 +181,7 @@ name|a
 operator|->
 name|q_paddr
 expr_stmt|;
+comment|/* 	**  Look up this name 	*/
 ifdef|#
 directive|ifdef
 name|DBM
@@ -605,7 +606,7 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-comment|/* read and interpret lines */
+comment|/* 	**  Read and interpret lines 	*/
 name|lineno
 operator|=
 literal|0
@@ -684,7 +685,7 @@ name|skipping
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* process the LHS */
+comment|/* 		**  Process the LHS 		**	Find the final colon, and parse the address. 		**	It should resolve to a local name -- this will 		**	be checked later (we want to optionally do 		**	parsing of the RHS first to maximize error 		**	detection). 		*/
 for|for
 control|(
 name|p
@@ -765,6 +766,7 @@ goto|goto
 name|syntaxerr
 goto|;
 block|}
+comment|/* 		**  Process the RHS. 		**	'al' is the internal form of the LHS address. 		**	'p' points to the text of the RHS. 		*/
 name|rhs
 operator|=
 name|p
@@ -850,6 +852,9 @@ name|c
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
 name|parse
 argument_list|(
 name|p2
@@ -910,6 +915,9 @@ argument_list|(
 name|af
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|ungetc
 argument_list|(
 name|c
@@ -975,6 +983,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		**  Insert alias into symbol table or DBM file 		*/
 ifdef|#
 directive|ifdef
 name|DBM
@@ -1078,7 +1087,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we **			would like to forward to. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. **		Sets the QDONTSEND bit in addresses that are forwarded. */
+comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. **		Sets the QDONTSEND bit in addresses that are forwarded. */
 end_comment
 
 begin_macro
@@ -1102,16 +1111,6 @@ name|buf
 index|[
 literal|60
 index|]
-decl_stmt|;
-specifier|register
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|struct
 name|stat
@@ -1154,6 +1153,25 @@ name|q_flags
 argument_list|)
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|user
+operator|->
+name|q_home
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"forward: no home"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 comment|/* good address -- look for .forward file in home */
 name|define
 argument_list|(

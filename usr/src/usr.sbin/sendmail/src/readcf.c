@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.12	%G%"
+literal|"@(#)readcf.c	3.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -895,6 +895,10 @@ operator|*
 operator|)
 name|xalloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 sizeof|sizeof
 name|margv
 index|[
@@ -902,6 +906,7 @@ literal|0
 index|]
 operator|*
 name|i
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bmove
@@ -938,6 +943,12 @@ end_escape
 begin_comment
 comment|/* **  PRINTRULES -- print rewrite rules (for debugging) ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		prints rewrite rules. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
 
 begin_macro
 name|printrules
@@ -1091,6 +1102,12 @@ block|}
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+endif|DEBUG
+end_endif
+
 begin_escape
 end_escape
 
@@ -1181,7 +1198,7 @@ literal|'A'
 block|,
 name|M_ARPAFMT
 block|,
-literal|0
+literal|'\0'
 block|,
 literal|0
 block|}

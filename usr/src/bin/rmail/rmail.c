@@ -9,7 +9,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)rmail.c	3.2	%G%"
+literal|"@(#)rmail.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,9 @@ init|;
 condition|;
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|fgets
 argument_list|(
 name|lbuf

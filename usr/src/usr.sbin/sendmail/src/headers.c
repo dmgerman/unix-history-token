@@ -17,12 +17,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.5	%G%"
+literal|"@(#)headers.c	3.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. */
+comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
 end_comment
 
 begin_macro
@@ -523,7 +523,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	Parameters: **		s -- string to check for possible headerness. ** **	Returns: **		TRUE if s is a header. **		FALSE otherwise. ** **	Side Effects: **		none. */
+comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Parameters: **		s -- string to check for possible headerness. ** **	Returns: **		TRUE if s is a header. **		FALSE otherwise. ** **	Side Effects: **		none. ** **	Bugs: **		According to RFC733, there should be a newline **		permitted after the word but before the colon. **		We don't seem to support that..... */
 end_comment
 
 begin_function

@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stats.c	3.1	%G%"
+literal|"@(#)stats.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,19 @@ name|struct
 name|statistics
 name|stat
 decl_stmt|;
+specifier|extern
+name|long
+name|lseek
+parameter_list|()
+function_decl|;
+specifier|extern
+name|long
+name|time
+parameter_list|()
+function_decl|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -87,6 +100,10 @@ name|read
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|stat
 argument_list|,
@@ -185,9 +202,17 @@ block|}
 else|else
 name|bmove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Stat
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|stat
 argument_list|,
@@ -196,6 +221,9 @@ name|stat
 argument_list|)
 expr_stmt|;
 comment|/* write out results */
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|fd
@@ -205,10 +233,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|stat
 argument_list|,
@@ -216,6 +251,9 @@ sizeof|sizeof
 name|stat
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd

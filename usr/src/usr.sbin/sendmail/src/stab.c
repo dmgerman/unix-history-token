@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	3.7	%G%"
+literal|"@(#)stab.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|extern
+name|char
+name|lower
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG

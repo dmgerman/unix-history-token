@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)macro.c	3.3	%G%"
+literal|"@(#)macro.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. ** **	Returns: **		buf. ** **	Side Effects: **		none. */
+comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. ** **	Returns: **		End of interpolated output. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -65,16 +65,12 @@ block|{
 specifier|register
 name|char
 modifier|*
-name|q
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
 name|bp
 decl_stmt|;
 name|bool
 name|skipping
 decl_stmt|;
+comment|/* set if conditionally skipping output */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -113,7 +109,12 @@ name|s
 operator|++
 control|)
 block|{
-comment|/* q will be the interpolated quantity */
+specifier|register
+name|char
+modifier|*
+name|q
+decl_stmt|;
+comment|/* 		**  Check for non-ordinary (special?) character -- 		**  always escaped with dollar sign. 		**	'q' will be the interpolated quantity. 		*/
 name|q
 operator|=
 name|NULL

@@ -17,12 +17,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.16	%G%"
+literal|"@(#)savemail.c	3.17	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. ** **		WARNING: the user id is reset to the original user. */
+comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. */
 end_comment
 
 begin_macro
@@ -281,7 +281,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Errors occurred while sending mail, transcript follows:\r\n"
+literal|"Errors occurred while sending mail; transcript follows:\r\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -435,6 +435,12 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+name|to_addr
+operator|.
+name|q_next
+operator|=
+name|NULL
+expr_stmt|;
 name|i
 operator|=
 name|deliver
@@ -688,6 +694,8 @@ begin_expr_stmt
 unit|errhdr
 operator|(
 name|fp
+operator|,
+name|m
 operator|)
 specifier|register
 name|FILE
@@ -695,6 +703,15 @@ operator|*
 name|fp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|mailer
+modifier|*
+name|m
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -743,6 +760,89 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	**  Output header of error message. 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|M_NEEDDATE
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+literal|"$b"
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"Date: %s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|M_NEEDFROM
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+literal|"$g"
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"From: %s (Mail Delivery Subsystem)\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|fp
@@ -759,6 +859,7 @@ argument_list|,
 literal|"Subject: Unable to deliver mail\n"
 argument_list|)
 expr_stmt|;
+comment|/* 	**  Output transcript of errors 	*/
 name|fprintf
 argument_list|(
 name|fp
@@ -787,6 +888,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* 	**  Output text of original message 	*/
 if|if
 condition|(
 name|NoReturn
@@ -840,6 +942,7 @@ argument_list|,
 literal|"\n  ----- No message was collected -----\n\n"
 argument_list|)
 expr_stmt|;
+comment|/* 	**  Cleanup and exit 	*/
 operator|(
 name|void
 operator|)

@@ -34,38 +34,13 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	3.5	%G%"
+literal|"@(#)arpadate.c	3.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		ud -- unix style date string.  if NULL, one is created. ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. ** **	Bugs: **		Timezone is computed from local time, rather than **		from whereever (and whenever) the message was sent. **		To do better is very hard. */
+comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		ud -- unix style date string.  if NULL, one is created. ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. ** **	Bugs: **		Timezone is computed from local time, rather than **		from whereever (and whenever) the message was sent. **		To do better is very hard. ** **		Some sites are now inserting the timezone into the **		local date.  This routine should figure out what **		the format is and work appropriately. */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|V6
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DST_NAME
-value|"PDT"
-end_define
-
-begin_define
-define|#
-directive|define
-name|STD_NAME
-value|"PST"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -252,6 +227,19 @@ name|V6
 name|long
 name|t
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|StdTimezone
+decl_stmt|,
+modifier|*
+name|DstTimezone
+decl_stmt|;
+specifier|extern
+name|long
+name|time
+parameter_list|()
+function_decl|;
 else|#
 directive|else
 name|struct
@@ -273,9 +261,13 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
+comment|/* 	**  Get current time. 	**	This will be used if a null argument is passed and 	**	to resolve the timezone. 	*/
 ifdef|#
 directive|ifdef
 name|V6
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -322,6 +314,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	**  Crack the UNIX date line in a singularly unoriginal way. 	*/
 name|q
 operator|=
 name|b
@@ -564,12 +557,12 @@ name|tm_isdst
 condition|)
 name|p
 operator|=
-name|DST_NAME
+name|DstTimezone
 expr_stmt|;
 else|else
 name|p
 operator|=
-name|STD_NAME
+name|StdTimezone
 expr_stmt|;
 else|#
 directive|else

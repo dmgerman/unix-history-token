@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.22	%G%"
+literal|"@(#)parseaddr.c	3.23	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,9 +459,6 @@ modifier|*
 name|avp
 decl_stmt|;
 name|bool
-name|space
-decl_stmt|;
-name|bool
 name|bslashmode
 decl_stmt|;
 name|int
@@ -495,10 +492,6 @@ name|char
 name|lower
 parameter_list|()
 function_decl|;
-name|space
-operator|=
-name|FALSE
-expr_stmt|;
 name|q
 operator|=
 name|buf
@@ -695,10 +688,6 @@ comment|/* linear white space */
 name|state
 operator|=
 name|nstate
-expr_stmt|;
-name|space
-operator|=
-name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1016,10 +1005,6 @@ return|;
 block|}
 name|brccnt
 operator|++
-expr_stmt|;
-name|space
-operator|=
-name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -3000,6 +2985,12 @@ begin_comment
 comment|/* **  PRINTADDR -- print address (for debugging) ** **	Parameters: **		a -- the address to print **		follow -- follow the q_next chain. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_expr_stmt
 name|printaddr
 argument_list|(
@@ -3106,6 +3097,12 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|DEBUG
+end_endif
 
 end_unit
 

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.18	%G%"
+literal|"@(#)collect.c	3.19	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,14 +81,6 @@ modifier|*
 name|p
 decl_stmt|;
 name|char
-name|c
-decl_stmt|;
-specifier|extern
-name|bool
-name|isheader
-parameter_list|()
-function_decl|;
-name|char
 modifier|*
 name|xfrom
 decl_stmt|;
@@ -104,21 +96,6 @@ modifier|*
 name|mktemp
 parameter_list|()
 function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|capitalize
-parameter_list|()
-function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|HDR
-modifier|*
-name|h
-decl_stmt|;
-endif|#
-directive|endif
 specifier|extern
 name|char
 modifier|*
@@ -172,7 +149,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* try to read a UNIX-style From line */
+comment|/* 	**  Try to read a UNIX-style From line 	*/
 if|if
 condition|(
 name|fgets
@@ -248,6 +225,15 @@ name|stdin
 argument_list|)
 control|)
 block|{
+specifier|register
+name|char
+name|c
+decl_stmt|;
+specifier|extern
+name|bool
+name|isheader
+parameter_list|()
+function_decl|;
 comment|/* see if the header is over */
 if|if
 condition|(
@@ -624,6 +610,10 @@ name|setfrom
 argument_list|(
 name|xfrom
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -904,6 +894,16 @@ condition|(
 name|Debug
 condition|)
 block|{
+name|HDR
+modifier|*
+name|h
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|capitalize
+parameter_list|()
+function_decl|;
 name|printf
 argument_list|(
 literal|"----- collected header -----\n"

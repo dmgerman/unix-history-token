@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.36	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.37	%G% */
 end_comment
 
 begin_include
@@ -458,7 +458,7 @@ begin_define
 define|#
 directive|define
 name|M_ARPAFMT
-value|(M_NEEDDATE|M_NEEDFROM|M_NEEDDATE)
+value|(M_NEEDDATE|M_NEEDFROM|M_MSGID)
 end_define
 
 begin_decl_stmt
