@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.21 (Berkeley) %G%"
+literal|"@(#)finger.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,10 @@ decl_stmt|;
 name|PERSON
 modifier|*
 name|nethead
+decl_stmt|,
+modifier|*
+modifier|*
+name|nettail
 decl_stmt|;
 name|struct
 name|utmp
@@ -614,9 +618,10 @@ name|dolocal
 operator|=
 literal|0
 operator|,
-name|nethead
+name|nettail
 operator|=
-name|NULL
+operator|&
+name|nethead
 init|;
 name|i
 operator|<
@@ -651,15 +656,17 @@ operator|=
 name|palloc
 argument_list|()
 expr_stmt|;
+operator|*
+name|nettail
+operator|=
+name|pn
+expr_stmt|;
+name|nettail
+operator|=
+operator|&
 name|pn
 operator|->
 name|next
-operator|=
-name|nethead
-expr_stmt|;
-name|nethead
-operator|=
-name|pn
 expr_stmt|;
 name|pn
 operator|->
@@ -679,6 +686,11 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+operator|*
+name|nettail
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
