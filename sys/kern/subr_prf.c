@@ -2976,6 +2976,9 @@ goto|;
 case|case
 literal|'x'
 case|:
+case|case
+literal|'X'
+case|:
 if|if
 condition|(
 name|qflag
