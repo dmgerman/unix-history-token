@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.51 1999/06/21 11:17:34 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.52 1999/06/27 18:05:34 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2692,7 +2692,7 @@ if|if
 condition|(
 operator|!
 name|wrap
-operator|||
+operator|&&
 name|log
 condition|)
 block|{
