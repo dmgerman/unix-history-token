@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	5.10 (Berkeley) %G%"
+literal|"@(#)verify.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,29 +444,6 @@ name|F_VISIT
 expr_stmt|;
 if|if
 condition|(
-name|ep
-operator|->
-name|flags
-operator|&
-name|F_IGN
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fts_set
-argument_list|(
-name|t
-argument_list|,
-name|p
-argument_list|,
-name|FTS_SKIP
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
 name|compare
 argument_list|(
 name|ep
@@ -482,6 +459,27 @@ name|rval
 operator|=
 name|MISMATCHEXIT
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|->
+name|flags
+operator|&
+name|F_IGN
+condition|)
+operator|(
+name|void
+operator|)
+name|fts_set
+argument_list|(
+name|t
+argument_list|,
+name|p
+argument_list|,
+name|FTS_SKIP
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|ep
