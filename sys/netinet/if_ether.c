@@ -121,12 +121,6 @@ directive|include
 file|<net/if_llc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BRIDGE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -138,11 +132,6 @@ include|#
 directive|include
 file|<net/bridge.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2763,22 +2752,6 @@ name|itaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BRIDGE
-define|#
-directive|define
-name|BRIDGE_TEST
-value|(do_bridge)
-else|#
-directive|else
-define|#
-directive|define
-name|BRIDGE_TEST
-value|(0)
-comment|/* cc will optimise the test away */
-endif|#
-directive|endif
 comment|/* 	 * For a bridge, we want to check the address irrespective 	 * of the receive interface. (This will change slightly 	 * when we have clusters of interfaces). 	 */
 name|LIST_FOREACH
 argument_list|(
@@ -2791,7 +2764,7 @@ argument_list|)
 if|if
 condition|(
 operator|(
-name|BRIDGE_TEST
+name|do_bridge
 operator|||
 operator|(
 name|ia
@@ -2828,7 +2801,7 @@ argument_list|)
 if|if
 condition|(
 operator|(
-name|BRIDGE_TEST
+name|do_bridge
 operator|||
 operator|(
 name|ia
@@ -2893,7 +2866,7 @@ comment|/* 	 * If bridging, fall back to using any inet address. 	 */
 if|if
 condition|(
 operator|!
-name|BRIDGE_TEST
+name|do_bridge
 operator|||
 operator|(
 name|ia
@@ -3084,7 +3057,7 @@ comment|/* the following is not an error when doing bridging */
 if|if
 condition|(
 operator|!
-name|BRIDGE_TEST
+name|do_bridge
 operator|&&
 name|rt
 operator|->
