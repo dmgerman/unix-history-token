@@ -258,12 +258,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"joy.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cy.h"
 end_include
 
@@ -729,14 +723,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|gscdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|joydriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1736,20 +1722,6 @@ name|INTR_TYPE_MISC
 block|,
 operator|&
 name|spigotdriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|NJOY
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_MISC
-block|,
-operator|&
-name|joydriver
 block|}
 block|,
 endif|#
