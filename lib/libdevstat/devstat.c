@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devstat.c,v 1.1 1998/09/15 06:23:21 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dkstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -524,27 +530,90 @@ name|func_name
 init|=
 literal|"checkversion"
 decl_stmt|;
-if|if
-condition|(
+name|int
+name|version
+decl_stmt|;
+name|version
+operator|=
 name|getversion
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|version
 operator|!=
 name|DEVSTAT_VERSION
 condition|)
 block|{
+name|int
+name|buflen
+init|=
+literal|0
+decl_stmt|;
 name|char
 name|tmpstr
 index|[
 literal|256
 index|]
 decl_stmt|;
+comment|/* 		 * This is really pretty silly, but basically the idea is 		 * that if getversion() returns an error (i.e. -1), then it 		 * has printed an error message in the buffer.  Therefore, 		 * we need to add a \n to the end of that message before we 		 * print our own message in the buffer. 		 */
+if|if
+condition|(
+name|version
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|buflen
+operator|=
+name|strlen
+argument_list|(
+name|devstat_errbuf
+argument_list|)
+expr_stmt|;
 name|errlen
 operator|=
 name|snprintf
 argument_list|(
+name|tmpstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpstr
+argument_list|)
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|strncat
+argument_list|(
 name|devstat_errbuf
 argument_list|,
+name|tmpstr
+argument_list|,
 name|DEVSTAT_ERRBUF_SIZE
+operator|-
+name|buflen
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|buflen
+operator|+=
+name|errlen
+expr_stmt|;
+block|}
+name|errlen
+operator|=
+name|snprintf
+argument_list|(
+name|tmpstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpstr
+argument_list|)
 argument_list|,
 literal|"%s: userland devstat version %d is not "
 literal|"the same as the kernel\n%s: devstat "
@@ -556,14 +625,48 @@ name|DEVSTAT_VERSION
 argument_list|,
 name|func_name
 argument_list|,
-name|getversion
-argument_list|()
+name|version
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getversion
-argument_list|()
+name|version
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|strncat
+argument_list|(
+name|devstat_errbuf
+argument_list|,
+name|tmpstr
+argument_list|,
+name|DEVSTAT_ERRBUF_SIZE
+operator|-
+name|buflen
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|buflen
+operator|+=
+name|errlen
+expr_stmt|;
+block|}
+else|else
+name|strncpy
+argument_list|(
+name|devstat_errbuf
+argument_list|,
+name|tmpstr
+argument_list|,
+name|DEVSTAT_ERRBUF_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|version
 operator|<
 name|DEVSTAT_VERSION
 condition|)
@@ -579,7 +682,7 @@ argument_list|,
 literal|"%s: you really should know better"
 literal|" than to upgrade your\n%s: "
 literal|"userland binaries without "
-literal|"upgrading your kernel\n"
+literal|"upgrading your kernel"
 argument_list|,
 name|func_name
 argument_list|,
@@ -599,7 +702,7 @@ argument_list|,
 literal|"%s: you really should know better"
 literal|" than to upgrade your kernel "
 literal|"without\n%s: upgrading your "
-literal|"userland binaries\n"
+literal|"userland binaries"
 argument_list|,
 name|func_name
 argument_list|,
@@ -614,7 +717,7 @@ name|tmpstr
 argument_list|,
 name|DEVSTAT_ERRBUF_SIZE
 operator|-
-name|errlen
+name|buflen
 operator|-
 literal|1
 argument_list|)
