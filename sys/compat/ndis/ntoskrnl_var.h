@@ -15,6 +15,30 @@ directive|define
 name|_NTOSKRNL_VAR_H_
 end_define
 
+begin_comment
+comment|/* Note: assumes x86 page size of 4K. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAGE_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPAN_PAGES
+parameter_list|(
+name|ptr
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|((uint32_t)((((uintptr_t)(ptr)& (PAGE_SIZE -1)) +	\ 	(len) + (PAGE_SIZE - 1))>> PAGE_SHIFT))
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint32_t
