@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)save.c	5.4 (Berkeley) %G%"
+literal|"@(#)save.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_ifndef
@@ -122,22 +128,6 @@ begin_comment
 comment|/*  *	This routine saves the current game for use at a later date  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|save
 argument_list|()
@@ -145,6 +135,10 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|reg
 name|char
 modifier|*
@@ -368,10 +362,10 @@ condition|)
 block|{
 name|error
 argument_list|(
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
