@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: route6d.c,v 1.64 2001/05/08 04:36:37 itojun Exp $	*/
+comment|/*	$KAME: route6d.c,v 1.104 2003/10/31 00:30:20 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|_rcsid
 index|[]
 init|=
-literal|"$KAME: route6d.c,v 1.64 2001/05/08 04:36:37 itojun Exp $"
+literal|"$KAME: route6d.c,v 1.104 2003/10/31 00:30:20 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,40 +185,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/if_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__>= 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-value|1
-end_define
 
 begin_define
 define|#
@@ -232,12 +203,6 @@ include|#
 directive|include
 file|<net/route.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
 
 begin_undef
 undef|#
@@ -2428,35 +2393,6 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|sranddev
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
-name|srand
-argument_list|(
-call|(
-name|unsigned
-call|)
-argument_list|(
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|^
-operator|(
-name|pid
-operator|<<
-literal|16
-operator|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|ifcp
@@ -2495,6 +2431,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|1
 name|pid
 operator|=
 name|getpid
@@ -2531,6 +2470,8 @@ name|pidfile
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -5419,7 +5360,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-comment|/* 	 * MSG_DONTROUTE should not be specified when it responds with a 	 * RIP6_REQUEST message.  SO_DONTROUTE has been specified to 	 * other sockets. 	 */
 name|struct
 name|msghdr
 name|m
@@ -5484,6 +5424,7 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
+comment|/* XXX: do not mix the interface index and link index */
 name|idx
 operator|=
 name|IN6_LINKLOCAL_IFINDEX
@@ -5501,6 +5442,12 @@ name|sin6_addr
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|sin6
+operator|->
+name|sin6_scope_id
+operator|=
+name|idx
 expr_stmt|;
 block|}
 else|else
@@ -5768,11 +5715,13 @@ name|riprt
 modifier|*
 name|rrt
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 decl_stmt|,
 name|nn
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|need_trigger
 decl_stmt|,
 name|idx
@@ -8238,6 +8187,20 @@ operator|*
 operator|)
 name|sa
 expr_stmt|;
+if|if
+condition|(
+name|IN6_IS_ADDR_SITELOCAL
+argument_list|(
+operator|&
+name|sin6
+operator|->
+name|sin6_addr
+argument_list|)
+operator|&&
+operator|!
+name|lflag
+condition|)
+return|return;
 name|ifr
 operator|.
 name|ifr_addr
@@ -11051,18 +11014,13 @@ name|need_trigger
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|ifcp
-operator|->
-name|ifc_flags
-operator|&
-name|IFF_LOOPBACK
-condition|)
-return|return
+if|#
+directive|if
 literal|0
-return|;
+block|if (ifcp->ifc_flags& IFF_LOOPBACK) 		return 0;
 comment|/* ignore loopback */
+endif|#
+directive|endif
 if|if
 condition|(
 name|ifcp
@@ -11134,6 +11092,25 @@ if|#
 directive|if
 literal|0
 block|trace(1, "route: %s: skip unspec interface address\n", 			    ifcp->ifc_name);
+endif|#
+directive|endif
+continue|continue;
+block|}
+if|if
+condition|(
+name|IN6_IS_ADDR_LOOPBACK
+argument_list|(
+operator|&
+name|ifa
+operator|->
+name|ifa_addr
+argument_list|)
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+block|trace(1, "route: %s: skip loopback address\n", 			    ifcp->ifc_name);
 endif|#
 directive|endif
 continue|continue;
@@ -11245,6 +11222,21 @@ name|ifa
 operator|->
 name|ifa_plen
 expr_stmt|;
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_plen
+operator|==
+literal|128
+condition|)
+name|rrt
+operator|->
+name|rrt_flags
+operator|=
+name|RTF_HOST
+expr_stmt|;
+else|else
 name|rrt
 operator|->
 name|rrt_flags
@@ -12465,9 +12457,6 @@ name|ifm_data
 operator|.
 name|ifi_mtu
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 if|if
 condition|(
 name|ifindex
@@ -12484,8 +12473,6 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-endif|#
-directive|endif
 name|free
 argument_list|(
 name|buf
@@ -13871,6 +13858,29 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Don't age static routes */
+if|if
+condition|(
+operator|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+operator|(
+name|RTF_HOST
+operator||
+name|RTF_GATEWAY
+operator|)
+operator|)
+operator|==
+name|RTF_HOST
+condition|)
+name|rrt
+operator|->
+name|rrt_t
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Don't age non-gateway host routes */
 name|np
 operator|->
 name|rip6_tag
@@ -14217,9 +14227,6 @@ name|rrt
 operator|->
 name|rrt_gw
 argument_list|)
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 operator|&&
 operator|(
 name|rrt
@@ -14230,8 +14237,6 @@ name|RTF_LOCAL
 operator|)
 operator|==
 literal|0
-endif|#
-directive|endif
 condition|)
 block|{
 name|trace
@@ -18784,6 +18789,8 @@ decl_stmt|;
 block|{
 name|int
 name|n
+decl_stmt|,
+name|nsize
 decl_stmt|;
 name|struct
 name|ifc
@@ -18855,21 +18862,26 @@ name|n
 operator|=
 name|nindex2ifc
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|nsize
+operator|=
 name|nindex2ifc
+init|;
+name|nsize
 operator|<=
 name|idx
-condition|)
-name|nindex2ifc
+condition|;
+name|nsize
 operator|*=
 literal|2
-expr_stmt|;
+control|)
+empty_stmt|;
 if|if
 condition|(
 name|n
 operator|!=
-name|nindex2ifc
+name|nsize
 condition|)
 block|{
 name|p
@@ -18890,7 +18902,7 @@ operator|*
 name|index2ifc
 argument_list|)
 operator|*
-name|nindex2ifc
+name|nsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -18931,6 +18943,10 @@ expr_stmt|;
 name|index2ifc
 operator|=
 name|p
+expr_stmt|;
+name|nindex2ifc
+operator|=
+name|nsize
 expr_stmt|;
 block|}
 name|index2ifc
