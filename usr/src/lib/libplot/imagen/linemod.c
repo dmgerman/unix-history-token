@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)linemod.c	5.2 (Berkeley) %G%"
+literal|"@(#)linemod.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"imp.h"
+end_include
 
 begin_comment
 comment|/*  * Hack to set font.  */
