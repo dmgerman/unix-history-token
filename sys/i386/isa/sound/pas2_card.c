@@ -6,7 +6,7 @@ name|_PAS2_CARD_C_
 end_define
 
 begin_comment
-comment|/*  * sound/pas2_card.c  *  * Detection routine for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pas2_card.c,v 1.9 1994/08/02 07:40:20 davidg Exp $  */
+comment|/*  * sound/pas2_card.c  *  * Detection routine for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pas2_card.c,v 1.10 1994/10/01 02:16:55 swallace Exp $  */
 end_comment
 
 begin_include
@@ -84,13 +84,6 @@ name|char
 name|board_rev_id
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|PAS_REVD_BOARD_ID
-value|127
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -187,9 +180,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|board_rev_id
-operator|>=
-name|PAS_REVD_BOARD_ID
+name|pas_model
+operator|==
+name|PAS_16D
 condition|)
 block|{
 name|outw
@@ -1078,15 +1071,10 @@ literal|0
 return|;
 name|pas_model
 operator|=
-name|O_M_1_to_card
-index|[
 name|pas_read
 argument_list|(
-name|OPERATION_MODE_1
+name|CHIP_REV
 argument_list|)
-operator|&
-literal|0x0f
-index|]
 expr_stmt|;
 return|return
 name|pas_model
@@ -1130,19 +1118,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|pas_model
 operator|=
-name|O_M_1_to_card
-index|[
 name|pas_read
 argument_list|(
-name|OPERATION_MODE_1
+name|CHIP_REV
 argument_list|)
-operator|&
-literal|0x0f
-index|]
-operator|)
 condition|)
 block|{
 ifdef|#
