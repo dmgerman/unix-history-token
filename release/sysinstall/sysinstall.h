@@ -1569,6 +1569,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
+name|MenuMouse
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Mouse type menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
 name|MenuMediaCDROM
 decl_stmt|;
 end_decl_stmt

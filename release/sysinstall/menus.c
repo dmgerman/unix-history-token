@@ -325,6 +325,116 @@ end_decl_stmt
 
 begin_decl_stmt
 name|DMenu
+name|MenuMouse
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Choose a Mouse type"
+block|,
+literal|"There are many different types of mice currently on the market,\n\ but this configuration menu should at least narrow down the choices\n\ somewhat.  Once you've selected one of the below, you can specify\n\ /dev/mouse as your mouse device when running the XFree86 configuration\n\ utility (see Configuration menu).  Please note that for PS/2 mice,\n\ a kernel recompile is also required!  See the handbook for more details\n\ on building a kernel."
+block|,
+literal|"For more information, visit the Documentation menu"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"COM1"
+block|,
+literal|"Serial mouse on COM1"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"ln -fs /dev/cuaa0 /dev/mouse"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"COM2"
+block|,
+literal|"Serial mouse on COM2"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"ln -fs /dev/cuaa1 /dev/mouse"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"COM3"
+block|,
+literal|"Serial mouse on COM3"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"ln -fs /dev/cuaa2 /dev/mouse"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"COM4"
+block|,
+literal|"Serial mouse on COM4"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"ln -fs /dev/cuaa3 /dev/mouse"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"BusMouse"
+block|,
+literal|"Logitech or ATI bus mouse"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"ln -fs /dev/mse0 /dev/mouse"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"PS/2"
+block|,
+literal|"PS/2 style mouse (requires new kernel)"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"ln -fs /dev/psm0 /dev/mouse"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
 name|MenuMediaCDROM
 init|=
 block|{
@@ -3271,6 +3381,21 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Mouse"
+block|,
+literal|"Select the type of mouse you have"
+block|,
+name|DMENU_SUBMENU
+block|,
+operator|&
+name|MenuMouse
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"Networking"
 block|,
 literal|"Configure additional network services"
@@ -3334,6 +3459,20 @@ block|,
 name|DMENU_SYSTEM_COMMAND
 block|,
 literal|"passwd root"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"WEB"
+block|,
+literal|"Go to the HTML documentation menu (post-install)."
+block|,
+name|DMENU_CALL
+block|,
+name|docBrowser
 block|,
 literal|0
 block|,
