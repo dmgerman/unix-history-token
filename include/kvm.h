@@ -15,24 +15,6 @@ directive|define
 name|_KVM_H_
 end_define
 
-begin_comment
-comment|/* Default version symbol. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VRS_SYM
-value|"_version"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VRS_KEY
-value|"VERSION"
-end_define
-
 begin_include
 include|#
 directive|include
