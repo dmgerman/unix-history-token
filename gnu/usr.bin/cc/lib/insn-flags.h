@@ -667,14 +667,65 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|HAVE_sqrtdf2
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_sqrtsf2
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_sindf2
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_sinsf2
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_cosdf2
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_cossf2
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Have a fpu */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_sqrtdf2
 value|(TARGET_80387&& (TARGET_IEEE_FP || flag_fast_math))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HAVE_sqrtdf2
+name|HAVE_sqrtsf2
 value|(TARGET_80387&& (TARGET_IEEE_FP || flag_fast_math))
 end_define
 
