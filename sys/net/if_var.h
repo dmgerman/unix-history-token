@@ -1438,6 +1438,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|if_setlladdr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|if_unroute
 name|__P
