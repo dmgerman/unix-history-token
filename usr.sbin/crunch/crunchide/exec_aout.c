@@ -27,6 +27,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -170,7 +178,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__sparc
+name|arch_sparc
 end_ifdef
 
 begin_comment
