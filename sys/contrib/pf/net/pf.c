@@ -37443,7 +37443,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_comment
-comment|/*  * FreeBSD supports cksum offloads for the following drivers.  *  em(4), fxp(4), gx(4), ixgb(4), lge(4), ndis(4), nge(4), re(4),  *   ti(4), txp(4), xl(4)  *  * CSUM_DATA_VALID | CSUM_PSEUDO_HDR :  *  network driver performed cksum including pseudo header, need to verify  *   csum_data  * CSUM_DATA_VALID :  *  network driver performed cksum, needs to additional pseudo header  *  cksum computation with partial csum_data(i.e. lack of H/W support for  *  pseudo header, for instance hme(4), sk(4) and possibly gem(4))  *  * After validating the cksum of packet, set both flag CSUM_DATA_VALID and  * CSUM_PSEUDO_HDR in order to avoid recomputation of the cksum in upper  * TCP/UDP layer.  * Also, set csum_data to 0xffff to force cksum validation.  */
+comment|/*  * FreeBSD supports cksum offloads for the following drivers.  *  em(4), fxp(4), ixgb(4), lge(4), ndis(4), nge(4), re(4),  *   ti(4), txp(4), xl(4)  *  * CSUM_DATA_VALID | CSUM_PSEUDO_HDR :  *  network driver performed cksum including pseudo header, need to verify  *   csum_data  * CSUM_DATA_VALID :  *  network driver performed cksum, needs to additional pseudo header  *  cksum computation with partial csum_data(i.e. lack of H/W support for  *  pseudo header, for instance hme(4), sk(4) and possibly gem(4))  *  * After validating the cksum of packet, set both flag CSUM_DATA_VALID and  * CSUM_PSEUDO_HDR in order to avoid recomputation of the cksum in upper  * TCP/UDP layer.  * Also, set csum_data to 0xffff to force cksum validation.  */
 end_comment
 
 begin_function
