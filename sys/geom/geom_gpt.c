@@ -481,6 +481,12 @@ index|]
 operator|->
 name|ent_type
 expr_stmt|;
+if|if
+condition|(
+name|indent
+operator|!=
+name|NULL
+condition|)
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -490,6 +496,14 @@ argument_list|,
 name|indent
 argument_list|)
 expr_stmt|;
+else|else
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|" ty "
+argument_list|)
+expr_stmt|;
 name|sbuf_printf_uuid
 argument_list|(
 name|sb
@@ -497,6 +511,12 @@ argument_list|,
 name|uuid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|indent
+operator|!=
+name|NULL
+condition|)
 name|sbuf_printf
 argument_list|(
 name|sb
