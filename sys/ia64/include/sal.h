@@ -485,10 +485,7 @@ specifier|extern
 name|void
 name|ia64_sal_init
 parameter_list|(
-name|struct
-name|sal_system_table
-modifier|*
-name|saltab
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
