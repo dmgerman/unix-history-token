@@ -34,9 +34,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "From: @(#)nfsstat.c	8.1 (Berkeley) 6/6/93";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)nfsstat.c	8.2 (Berkeley) 3/31/95";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -45,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nfsstat.c,v 1.8 1997/02/22 19:56:25 peter Exp $"
+literal|"$Id: nfsstat.c,v 1.9 1997/03/29 04:31:23 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -590,6 +598,29 @@ sizeof|sizeof
 expr|*
 name|stp
 decl_stmt|;
+name|struct
+name|vfsconf
+name|vfc
+decl_stmt|;
+if|if
+condition|(
+name|getvfsbyname
+argument_list|(
+literal|"nfs"
+argument_list|,
+operator|&
+name|vfc
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"getvfsbyname: NFS not compiled into kernel"
+argument_list|)
+expr_stmt|;
 name|name
 index|[
 literal|0
@@ -602,7 +633,9 @@ index|[
 literal|1
 index|]
 operator|=
-name|MOUNT_NFS
+name|vfc
+operator|.
+name|vfc_typenum
 expr_stmt|;
 name|name
 index|[
