@@ -351,6 +351,7 @@ comment|/* for IPSEC */
 name|u_char
 name|inp_vflag
 decl_stmt|;
+comment|/* IP version flag (v4/v6) */
 define|#
 directive|define
 name|INP_IPV4
