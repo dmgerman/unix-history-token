@@ -915,6 +915,12 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|mdio
+operator|.
+name|md_version
+operator|=
+name|MDIOVERSION
+expr_stmt|;
 name|mdmaybeload
 argument_list|()
 expr_stmt|;
@@ -1517,6 +1523,12 @@ name|int
 name|unit
 parameter_list|)
 block|{
+name|mdio
+operator|.
+name|md_version
+operator|=
+name|MDIOVERSION
+expr_stmt|;
 name|mdio
 operator|.
 name|md_unit

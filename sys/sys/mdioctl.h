@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|MDIOVERSION
-value|1
+value|0
 end_define
 
 begin_comment
