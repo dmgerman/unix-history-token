@@ -3374,6 +3374,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM4401B0
+value|0x170c
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_SETBIT
 parameter_list|(
 name|dev
