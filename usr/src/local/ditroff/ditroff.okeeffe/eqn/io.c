@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"io.c	(CWI)	1.1	85/03/01"
+literal|"io.c	(CWI)	1.2	85/03/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -1299,6 +1299,39 @@ expr_stmt|;
 name|ttype
 operator|=
 name|DEVHAR
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|&
+name|svargv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"ver"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|res
+operator|=
+literal|200
+expr_stmt|;
+name|minsize
+operator|=
+literal|6
+expr_stmt|;
+name|ttype
+operator|=
+name|DEVVER
 expr_stmt|;
 block|}
 else|else

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	e.h	(CWI)	1.1	85/03/01	*/
+comment|/*	e.h	(CWI)	1.2	85/03/12	*/
 end_comment
 
 begin_include
@@ -224,6 +224,13 @@ define|#
 directive|define
 name|DEVHAR
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVVER
+value|5
 end_define
 
 begin_decl_stmt
