@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.7 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,31 +163,7 @@ end_comment
 
 begin_function
 name|int
-if|#
-directive|if
-name|__STDC__
 name|radixsort
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-modifier|*
-name|l1
-parameter_list|,
-name|int
-name|nmemb
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-name|tab
-parameter_list|,
-name|u_char
-name|endbyte
-parameter_list|)
-else|#
-directive|else
-function|radixsort
 parameter_list|(
 name|l1
 parameter_list|,
@@ -212,11 +188,9 @@ name|u_char
 modifier|*
 name|tab
 decl_stmt|;
-name|u_char
+name|u_int
 name|endbyte
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|int
