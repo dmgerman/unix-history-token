@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.9 (Berkeley) %G%"
+literal|"@(#)cron.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -913,11 +913,6 @@ condition|(
 name|list
 condition|)
 block|{
-name|free
-argument_list|(
-name|list
-argument_list|)
-expr_stmt|;
 name|list
 operator|=
 name|realloc
@@ -968,11 +963,6 @@ expr_stmt|;
 name|olist
 operator|=
 name|list
-expr_stmt|;
-name|free
-argument_list|(
-name|list
-argument_list|)
 expr_stmt|;
 name|list
 operator|=
