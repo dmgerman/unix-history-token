@@ -199,7 +199,7 @@ name|thread
 modifier|*
 name|ts_owner
 decl_stmt|;
-comment|/* (q) Who owns the lock. */
+comment|/* (c + q) Who owns the lock. */
 block|}
 struct|;
 end_struct
@@ -561,6 +561,28 @@ operator|->
 name|tc_lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If this turnstile has no threads on its blocked queue 		 * then it's possible that it was just woken up on another 		 * CPU.  If so, we are done. 		 */
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|ts
+operator|->
+name|ts_blocked
+argument_list|)
+condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tc
+operator|->
+name|tc_lock
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 		 * Check if the thread needs to be moved up on 		 * the blocked chain.  It doesn't need to be moved 		 * if it is already at the head of the list or if 		 * the item in front of it still has a higher priority. 		 */
 if|if
 condition|(
@@ -2275,17 +2297,12 @@ operator|&
 name|td_contested_lock
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|ts
 operator|->
 name|ts_owner
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 name|LIST_REMOVE
 argument_list|(
 name|ts
