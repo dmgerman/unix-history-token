@@ -322,12 +322,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_MISC1
+value|0x16
+end_define
+
+begin_comment
+comment|/* PD672x: Misc control register 1 per slot */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_GLO_CTRL
 value|0x1e
 end_define
 
 begin_comment
 comment|/* Global Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MISC2
+value|0x1e
+end_define
+
+begin_comment
+comment|/* PD672x: Misc control register 2 per chip */
 end_comment
 
 begin_define
@@ -985,6 +1007,21 @@ comment|/* s/w card detect interrupt */
 end_comment
 
 begin_comment
+comment|/* For Misc. Control Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_SPKR_EN
+value|0x10
+end_define
+
+begin_comment
+comment|/* Cirrus PD672x: speaker enable */
+end_comment
+
+begin_comment
 comment|/* For Global Control register (PCIC_GLO_CTRL) */
 end_comment
 
@@ -1038,6 +1075,21 @@ directive|define
 name|PCIC_IRQ1_LEVEL
 value|0x10
 end_define
+
+begin_comment
+comment|/* For Misc. Control Register 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_LPDM_EN
+value|0x02
+end_define
+
+begin_comment
+comment|/* Cirrus PD672x: low power dynamic mode */
+end_comment
 
 begin_comment
 comment|/*  *	Mask of allowable interrupts.  *	Ints are 3,4,5,7,9,10,11,12,14,15  */
