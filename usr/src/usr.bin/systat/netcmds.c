@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netcmds.c	5.4 (Berkeley) %G%"
+literal|"@(#)netcmds.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,37 @@ name|b
 parameter_list|)
 value|(strcmp(a,b)==0)
 end_define
+
+begin_decl_stmt
+specifier|static
+name|void
+name|changeitems
+argument_list|()
+decl_stmt|,
+name|showprotos
+argument_list|()
+decl_stmt|,
+name|showports
+argument_list|()
+decl_stmt|,
+name|showhosts
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|selectproto
+argument_list|()
+decl_stmt|,
+name|selectport
+argument_list|()
+decl_stmt|,
+name|selecthost
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|netcmd
@@ -318,27 +349,22 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|changeitems
-argument_list|(
-argument|args
-argument_list|,
-argument|onoff
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|args
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|onoff
+parameter_list|)
+name|char
+modifier|*
+name|args
+decl_stmt|;
 name|int
 name|onoff
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -554,21 +580,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|selectproto
-argument_list|(
-argument|proto
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|proto
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|proto
+decl_stmt|;
 block|{
 name|int
 name|new
@@ -634,12 +658,13 @@ name|new
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|showprotos
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -661,9 +686,6 @@ argument_list|(
 literal|"tcp "
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -679,18 +701,16 @@ argument_list|(
 literal|'!'
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|addstr
 argument_list|(
 literal|"udp "
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_struct
-unit|}  static
+specifier|static
 struct|struct
 name|pitem
 block|{
@@ -706,26 +726,21 @@ name|ports
 struct|;
 end_struct
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|selectport
-argument_list|(
-argument|port
-argument_list|,
-argument|onoff
-argument_list|)
+parameter_list|(
+name|port
+parameter_list|,
+name|onoff
+parameter_list|)
 name|long
 name|port
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|onoff
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -885,7 +900,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|checkport
@@ -960,21 +975,23 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|showports
-argument_list|()
+parameter_list|()
 block|{
 specifier|register
-expr|struct
+name|struct
 name|pitem
-operator|*
+modifier|*
 name|p
-block|; 	struct
+decl_stmt|;
+name|struct
 name|servent
-operator|*
+modifier|*
 name|sp
-block|;
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -1052,10 +1069,11 @@ name|port
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+end_function
 
 begin_struct
-unit|}  static
+specifier|static
 struct|struct
 name|hitem
 block|{
@@ -1072,22 +1090,23 @@ name|hosts
 struct|;
 end_struct
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|selecthost
-argument_list|(
-argument|in
-argument_list|,
-argument|onoff
-argument_list|)
-expr|struct
-name|in_addr
-operator|*
+parameter_list|(
 name|in
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|,
+name|onoff
+parameter_list|)
+name|struct
+name|in_addr
+modifier|*
+name|in
+decl_stmt|;
+name|int
+name|onoff
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1251,7 +1270,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|checkhost
@@ -1334,21 +1353,23 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|showhosts
-argument_list|()
+parameter_list|()
 block|{
 specifier|register
-expr|struct
+name|struct
 name|hitem
-operator|*
+modifier|*
 name|p
-block|; 	struct
+decl_stmt|;
+name|struct
 name|hostent
-operator|*
+modifier|*
 name|hp
-block|;
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -1415,8 +1436,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+end_function
 
-unit|}
 end_unit
 
