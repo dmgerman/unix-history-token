@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -211,32 +211,6 @@ end_endif
 
 begin_comment
 comment|/*  * exec system call  */
-end_comment
-
-begin_struct
-struct|struct
-name|execve_args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argp
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|envp
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_expr_stmt
