@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.8 1996/02/05 16:06:47 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.9 1996/04/29 21:02:29 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -75,6 +75,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -101,6 +107,13 @@ define|#
 directive|define
 name|TMPSUFF
 value|".ctmtmp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARCMD
+value|"tar -rf %s -T -"
 end_define
 
 begin_comment
@@ -238,10 +251,12 @@ name|char
 modifier|*
 name|Key
 decl_stmt|;
+comment|/* CTM key for operation */
 name|int
 modifier|*
 name|List
 decl_stmt|;
+comment|/* List of operations */
 block|}
 struct|;
 end_struct
@@ -254,6 +269,42 @@ name|Syntax
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_struct
+struct|struct
+name|CTM_Filter
+block|{
+name|struct
+name|CTM_Filter
+modifier|*
+name|Next
+decl_stmt|;
+comment|/* next filter in the list */
+name|int
+name|Action
+decl_stmt|;
+comment|/* enable or disable */
+name|regex_t
+name|CompiledRegex
+decl_stmt|;
+comment|/* compiled regex */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CTM_FILTER_DISABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTM_FILTER_ENABLE
+value|1
+end_define
 
 begin_define
 define|#
@@ -379,6 +430,22 @@ name|Buffer
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|EXTERN
+name|u_char
+modifier|*
+name|BackupFile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|u_char
+modifier|*
+name|TarCmd
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Paranoid -- Just in case they should be after us...  *  0 not at all.  *  1 normal.  *  2 somewhat.  *  3 you bet!.  *  * Verbose -- What to tell mom...  *  0 Nothing which wouldn't surprise.  *  1 Normal.  *  2 Show progress '.'.  *  3 Show progress names, and actions.  *  4 even more...  *  and so on  *  * ExitCode -- our Epitaph  *  0 Perfect, all input digested, no problems  *  1 Bad input, no point in retrying.  *  2 Pilot error, commandline problem&c  *  4 Out of resources.  *  8 Destination-tree not correct.  * 16 Destination-tree not correct, can force.  * 32 Internal problems.  *  */
 end_comment
@@ -421,6 +488,20 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
+name|KeepIt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|ListIt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|SetTime
 decl_stmt|;
 end_decl_stmt
@@ -433,6 +514,24 @@ name|Times
 index|[
 literal|2
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|CTM_Filter
+modifier|*
+name|FilterList
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|CTM_Filter
+modifier|*
+name|LastFilter
 decl_stmt|;
 end_decl_stmt
 
@@ -497,6 +596,13 @@ define|#
 directive|define
 name|Exit_Version
 value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|Exit_NoMatch
+value|256
 end_define
 
 begin_function_decl
@@ -704,6 +810,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|Pass2
+parameter_list|(
+name|FILE
+modifier|*
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|PassB
 parameter_list|(
 name|FILE
 modifier|*
