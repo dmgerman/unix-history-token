@@ -1251,9 +1251,6 @@ argument_list|)
 comment|/* Deal with un-resolved Pentium4 issues */
 if|if
 condition|(
-operator|!
-name|has_pse_bug
-operator|&&
 name|cpu
 operator|==
 name|CPU_686
@@ -1655,40 +1652,12 @@ argument_list|)
 comment|/* Deal with un-resolved Pentium4 issues */
 if|if
 condition|(
-operator|!
 name|has_pse_bug
-operator|&&
-name|cpu
-operator|==
-name|CPU_686
-operator|&&
-operator|(
-name|cpu_id
-operator|&
-literal|0xf00
-operator|)
-operator|==
-literal|0xf00
-operator|&&
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-literal|"GenuineIntel"
-argument_list|)
-operator|==
-literal|0
 condition|)
-block|{
-name|has_pse_bug
-operator|=
-literal|1
-expr_stmt|;
 name|pseflag
 operator|=
 literal|0
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * The 4MB page version of the initial 	 * kernel page mapping. 	 */
