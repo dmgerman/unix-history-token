@@ -826,6 +826,12 @@ literal|"BSD/OS"
 block|}
 block|,
 block|{
+literal|0xA0
+block|,
+literal|"Suspend to Disk"
+block|}
+block|,
+block|{
 literal|0xA5
 block|,
 literal|"FreeBSD/NetBSD/386BSD"
