@@ -1647,13 +1647,17 @@ name|fc
 operator|->
 name|bdev
 argument_list|,
-literal|"split transaction timeout dst=0x%x tl=0x%x\n"
+literal|"split transaction timeout dst=0x%x tl=0x%x state=%d\n"
 argument_list|,
 name|xfer
 operator|->
 name|dst
 argument_list|,
 name|i
+argument_list|,
+name|xfer
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 name|xfer
@@ -5390,7 +5394,14 @@ name|hand
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"act.hand == NULL\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|xfer
@@ -10057,7 +10068,11 @@ name|firewire_debug
 condition|)
 name|printf
 argument_list|(
-literal|"not sent yet\n"
+literal|"not sent yet tl=%x\n"
+argument_list|,
+name|xfer
+operator|->
+name|tl
 argument_list|)
 expr_stmt|;
 break|break;
