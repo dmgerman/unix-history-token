@@ -7783,6 +7783,14 @@ literal|"Mach64-LB"
 expr_stmt|;
 break|break;
 case|case
+literal|0x4c46
+case|:
+name|chip
+operator|=
+literal|"Rage128-LF Mobility"
+expr_stmt|;
+break|break;
+case|case
 literal|0x4c4d
 case|:
 name|chip
