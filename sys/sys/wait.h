@@ -314,53 +314,11 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_KERNEL
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|rusage
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|int
-name|kern_wait
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|pid_t
-name|pid
-parameter_list|,
-name|int
-modifier|*
-name|status
-parameter_list|,
-name|int
-name|options
-parameter_list|,
-name|struct
-name|rusage
-modifier|*
-name|rup
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
+end_ifndef
 
 begin_include
 include|#
@@ -454,7 +412,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_endif
