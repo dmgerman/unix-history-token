@@ -2830,6 +2830,10 @@ name|IEEE80211_ELEMID_TIM
 case|:
 break|break;
 case|case
+name|IEEE80211_ELEMID_IBSSPARMS
+case|:
+break|break;
+case|case
 name|IEEE80211_ELEMID_XRATES
 case|:
 name|xrates
