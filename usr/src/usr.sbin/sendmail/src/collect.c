@@ -29,12 +29,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	2.2	%G%"
+literal|"@(#)collect.c	2.2.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  MAKETEMP -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		none ** **	Returns: **		Name of temp file. ** **	Side Effects: **		Temp file is created and filled. ** **	Called By: **		main ** **	Notes: **		This is broken off from main largely so that the **		temp buffer can be deallocated. */
+comment|/* **  MAKETEMP -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. ** **	Called By: **		main ** **	Notes: **		This is broken off from main largely so that the **		temp buffer can be deallocated. */
 end_comment
 
 begin_decl_stmt
@@ -74,7 +74,13 @@ begin_function
 name|char
 modifier|*
 name|maketemp
-parameter_list|()
+parameter_list|(
+name|from
+parameter_list|)
+name|char
+modifier|*
+name|from
+decl_stmt|;
 block|{
 specifier|register
 name|FILE
@@ -128,6 +134,12 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
 name|mktemp
 argument_list|(
@@ -420,9 +432,78 @@ operator|++
 expr_stmt|;
 block|}
 else|else
+block|{
 name|GotHdr
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|from
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"From "
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+name|from
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|MsgSize
+operator|+=
+name|strlen
+argument_list|(
+name|from
+argument_list|)
+operator|+
+literal|5
+expr_stmt|;
+name|p
+operator|=
+name|index
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|5
+index|]
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fputs
+argument_list|(
+name|p
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|MsgSize
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+continue|continue;
+block|}
+block|}
 block|}
 if|if
 condition|(
