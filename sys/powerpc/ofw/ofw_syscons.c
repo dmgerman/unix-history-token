@@ -1655,12 +1655,14 @@ name|vm_offset_t
 operator|)
 name|ofwfb_static_window
 expr_stmt|;
-comment|/* Enable future font-loading... */
+comment|/* Enable future font-loading and flag color support */
 name|adp
 operator|->
 name|va_flags
 operator||=
 name|V_ADP_FONT
+operator||
+name|V_ADP_COLOR
 expr_stmt|;
 name|ofwfb_blank_display
 argument_list|(
