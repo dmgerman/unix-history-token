@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pt_conf.c,v 1.4 1998/07/06 07:19:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ block|{
 literal|"tcp"
 block|,
 name|portal_tcp
+block|}
+block|,
+block|{
+literal|"tcplisten"
+block|,
+name|portal_tcplisten
 block|}
 block|,
 block|{

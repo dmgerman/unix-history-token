@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pt_tcp.c,v 1.7 1998/07/06 07:19:27 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,6 +467,7 @@ name|sp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|s_port
 operator|=
 operator|(
@@ -476,6 +477,7 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
+block|}
 else|else
 block|{
 name|s_port
@@ -523,6 +525,9 @@ literal|"port number for %s is %d\n"
 argument_list|,
 name|port
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ntohs
 argument_list|(
 name|s_port
