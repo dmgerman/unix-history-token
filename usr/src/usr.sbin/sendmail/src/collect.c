@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -380,6 +380,35 @@ name|bool
 name|isheader
 parameter_list|()
 function_decl|;
+comment|/* if the line is too long, throw the rest away */
+if|if
+condition|(
+name|index
+argument_list|(
+name|buf
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getc
+argument_list|(
+name|InChannel
+argument_list|)
+operator|)
+operator|!=
+literal|'\n'
+condition|)
+continue|continue;
+comment|/* give an error? */
+block|}
 name|fixcrlf
 argument_list|(
 name|buf
