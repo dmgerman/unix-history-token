@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mixer.c,v 1.4.2.1 1997/09/30 06:09:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -380,7 +380,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_READ_DEVMASK"
@@ -403,7 +402,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_READ_RECMASK"
@@ -426,7 +424,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_READ_RECSRC"
@@ -679,7 +676,6 @@ operator|)
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"invalid recording source %s"
@@ -737,7 +733,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_WRITE_RECSRC"
