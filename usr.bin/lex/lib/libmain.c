@@ -4,7 +4,7 @@ comment|/* libmain - flex run-time support library "main" function */
 end_comment
 
 begin_comment
-comment|/* $Header: /home/daffy/u0/vern/flex/RCS/libmain.c,v 1.3 93/04/14 22:41:55 vern Exp $ */
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/libmain.c,v 1.4 95/09/27 12:47:55 vern Exp $ */
 end_comment
 
 begin_function_decl
@@ -32,9 +32,16 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-return|return
+while|while
+condition|(
 name|yylex
 argument_list|()
+operator|!=
+literal|0
+condition|)
+empty_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function
