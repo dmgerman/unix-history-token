@@ -3531,15 +3531,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s %s\n%s %s\n"
+literal|"%s %s\n%s\n"
 argument_list|,
-literal|"usage: join [-a fileno | -v fileno ]"
+literal|"usage: join [-a fileno | -v fileno ] [-e string] [-1 field]"
 argument_list|,
-literal|"[-e string] [-j fileno field]"
+literal|"[-2 field]"
 argument_list|,
-literal|"            [-1 field] [-2 field]"
-argument_list|,
-literal|"[-o list] [-t char] file1 file2"
+literal|"            [-o list] [-t char] file1 file2"
 argument_list|)
 expr_stmt|;
 name|exit
