@@ -1228,7 +1228,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* u_char; set/get IP6 multicast hops */
+comment|/* int; set/get IP6 multicast hops */
 end_comment
 
 begin_define
@@ -1239,7 +1239,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* u_char; set/get IP6 multicast i/f  */
+comment|/* u_int; set/get IP6 multicast i/f  */
 end_comment
 
 begin_define
@@ -1250,7 +1250,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* u_char; set/get IP6 multicast loopback */
+comment|/* u_int; set/get IP6 multicast loopback */
 end_comment
 
 begin_define
