@@ -495,6 +495,10 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|pw
 operator|->
 name|pw_gecos
@@ -506,8 +510,12 @@ name|bp
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
 comment|/* gecos */
+goto|goto
+name|fmt
+goto|;
 if|if
 condition|(
 name|pw
@@ -523,6 +531,10 @@ name|pw_fields
 operator||=
 name|_PWF_GECOS
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|pw
 operator|->
 name|pw_dir
@@ -534,8 +546,12 @@ name|bp
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
 comment|/* directory */
+goto|goto
+name|fmt
+goto|;
 if|if
 condition|(
 name|pw
