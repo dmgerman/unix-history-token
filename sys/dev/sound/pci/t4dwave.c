@@ -696,6 +696,12 @@ operator|-
 literal|1
 return|;
 block|}
+name|i
+operator|=
+name|j
+operator|=
+literal|0
+expr_stmt|;
 name|regno
 operator|&=
 literal|0x7f
@@ -1024,6 +1030,10 @@ operator|-
 literal|1
 return|;
 block|}
+name|i
+operator|=
+literal|0
+expr_stmt|;
 name|regno
 operator|&=
 literal|0x7f
