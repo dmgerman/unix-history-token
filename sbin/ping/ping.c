@@ -3907,6 +3907,27 @@ name|sig
 name|__unused
 decl_stmt|;
 block|{
+comment|/* 	 * When doing reverse DNS lookups, the finish_up flag might not 	 * be noticed for a while.  Just exit if we get a second SIGINT. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|options
+operator|&
+name|F_NUMERIC
+operator|)
+operator|&&
+name|finish_up
+condition|)
+name|_exit
+argument_list|(
+name|nreceived
+condition|?
+literal|0
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
 name|finish_up
 operator|=
 literal|1
