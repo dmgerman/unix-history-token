@@ -4253,7 +4253,7 @@ operator|&
 name|XL_FLAG_WEIRDRESET
 operator|)
 condition|?
-literal|0xFF
+name|XL_RESETOPT_DISADVFD
 else|:
 literal|0
 operator|)
