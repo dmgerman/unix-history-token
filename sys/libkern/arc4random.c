@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/libkern.h>
 end_include
 
@@ -52,19 +64,6 @@ literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|read_random
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -126,18 +125,12 @@ name|r
 decl_stmt|,
 name|n
 decl_stmt|;
+comment|/* r = read_random(key, sizeof(key)); */
 name|r
 operator|=
-name|read_random
-argument_list|(
-name|key
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|key
-argument_list|)
-argument_list|)
+literal|0
 expr_stmt|;
+comment|/* XXX MarkM - revisit this when /dev/random is done */
 comment|/* if r == 0 || -1, just use what was on the stack */
 if|if
 condition|(
