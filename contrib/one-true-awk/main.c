@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20021129"
+literal|"version 20021213"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<locale.h>
 end_include
 
 begin_include
@@ -222,13 +216,6 @@ name|fs
 init|=
 name|NULL
 decl_stmt|;
-name|setlocale
-argument_list|(
-name|LC_ALL
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
 name|cmdname
 operator|=
 name|argv
