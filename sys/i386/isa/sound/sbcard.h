@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * file: sbcard.h  */
+comment|/*  * file: sbcard.h  *  * $FreeBSD$  *  */
 end_comment
 
 begin_decl_stmt
@@ -15,6 +15,101 @@ end_decl_stmt
 begin_comment
 comment|/*  * sound blaster registers  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DSP_RESET
+value|(sbc_base + 0x600)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_READ
+value|(sbc_base + 0xA00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_WRITE
+value|(sbc_base + 0xC00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_COMMAND
+value|(sbc_base + 0xC00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_STATUS
+value|(sbc_base + 0xC00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_DATA_AVAIL
+value|(sbc_base + 0xE00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_DATA_AVL16
+value|(sbc_base + 0xF00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIXER_ADDR
+value|(sbc_base + 0x400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIXER_DATA
+value|(sbc_base + 0x500)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3_LEFT
+value|(sbc_base + 0x000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3_RIGHT
+value|(sbc_base + 0x200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3_BOTH
+value|(sbc_base + 0x800)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -99,6 +194,11 @@ directive|define
 name|OPL3_BOTH
 value|(sbc_base + 0x8)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * DSP Commands. There are many, and in many cases they are used explicitly  */
