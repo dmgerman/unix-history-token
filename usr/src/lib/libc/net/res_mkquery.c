@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	5.5 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,15 @@ include|#
 directive|include
 file|<arpa/resolv.h>
 end_include
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|sprintf
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Form all types of queries.  * Returns the size of the result or -1.  */
