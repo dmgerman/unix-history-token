@@ -1669,7 +1669,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: touch [-acfm] [-r file] [-t time] file ...\n"
+literal|"usage: touch [-acfm] [-r file]"
+literal|" [-t [[CC]YY]MMDDhhmm[.SS]] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
