@@ -5098,16 +5098,6 @@ modifier|*
 name|retval
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|FIFO
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-else|#
-directive|else
 name|struct
 name|vattr
 name|vattr
@@ -5286,9 +5276,6 @@ name|vattr
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* FIFO */
 block|}
 end_function
 
