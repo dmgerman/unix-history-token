@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.48 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.49 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.48 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.49 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3101,6 +3101,10 @@ name|ADDRESS
 modifier|*
 name|ctladdr
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -3176,6 +3180,94 @@ argument_list|(
 literal|"readqf: no control file %s"
 argument_list|,
 name|qf
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+comment|/* 	**  Check the queue file for plausibility to avoid attacks. 	*/
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|qfp
+argument_list|)
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* must have been being processed by someone else */
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+if|if
+condition|(
+name|st
+operator|.
+name|st_uid
+operator|!=
+literal|0
+operator|||
+operator|(
+name|st
+operator|.
+name|st_mode
+operator|&
+literal|07777
+operator|)
+operator|!=
+name|FileMode
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"%s: bogus queue file, uid=%d, mode=%o"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|st
+operator|.
+name|st_uid
+argument_list|,
+name|st
+operator|.
+name|st_mode
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|LOG
+name|fclose
+argument_list|(
+name|qfp
 argument_list|)
 expr_stmt|;
 return|return
