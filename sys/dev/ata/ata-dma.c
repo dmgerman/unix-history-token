@@ -1329,11 +1329,6 @@ case|case
 literal|0x05711106
 case|:
 comment|/* VIA Apollo 82c586 / 82c686 */
-name|via_status
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
 name|devno
 operator|=
 operator|(
@@ -1498,11 +1493,6 @@ index|]
 operator|=
 name|ATA_MODE_UDMA4
 expr_stmt|;
-name|via_status
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1584,11 +1574,6 @@ literal|1
 index|]
 operator|=
 name|ATA_MODE_UDMA2
-expr_stmt|;
-name|via_status
-argument_list|(
-name|scp
-argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -1714,21 +1699,11 @@ index|]
 operator|=
 name|ATA_MODE_WDMA2
 expr_stmt|;
-name|via_status
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
 block|}
-name|via_status
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
 break|break;
 case|case
@@ -3785,12 +3760,6 @@ end_endif
 begin_comment
 comment|/* NPCI> 0 */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<dev/ata/ata-status.c>
-end_include
 
 end_unit
 
