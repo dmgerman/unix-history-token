@@ -141,8 +141,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 parameter_list|)
 block|{
 name|struct
