@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.76 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.77 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1715,22 +1715,22 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-comment|/* 	 * XXX 	 * Sync the mounted file system associated with the file 	 * descriptor. 	 */
-name|ITIMES
-argument_list|(
-name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
-argument_list|)
-expr_stmt|;
-comment|/* LFS */
 return|return
 operator|(
-literal|0
+name|lfs_update
+argument_list|(
+name|vp
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|,
+name|waitfor
+operator|==
+name|MNT_WAIT
+argument_list|)
 operator|)
 return|;
 block|}
