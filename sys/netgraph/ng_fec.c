@@ -255,6 +255,21 @@ name|ifnet
 modifier|*
 name|fec_if
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|fec_if_input
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|fec_idx
 decl_stmt|;
@@ -386,7 +401,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|mbuf
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -626,32 +640,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ng_ether_input_p - see sys/netgraph/ng_ether.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|ng_ether_input_p
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Netgraph methods */
@@ -1574,6 +1562,22 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+comment|/* Save original input vector */
+name|new
+operator|->
+name|fec_if_input
+operator|=
+name|bifp
+operator|->
+name|if_input
+expr_stmt|;
+comment|/* Override it with our own */
+name|bifp
+operator|->
+name|if_input
+operator|=
+name|ng_fec_input
+expr_stmt|;
 comment|/* Add to the queue */
 name|new
 operator|->
@@ -1846,6 +1850,15 @@ argument_list|)
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
+expr_stmt|;
+comment|/* Restore input vector */
+name|bifp
+operator|->
+name|if_input
+operator|=
+name|p
+operator|->
+name|fec_if_input
 expr_stmt|;
 comment|/* Delete port */
 name|TAILQ_REMOVE
@@ -2929,7 +2942,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine spies on mbufs passing through ether_input(). If  * they come from one of the interfaces that are aggregated into  * our bundle, we fix up the ifnet pointer and increment our  * packet counters so that it looks like the frames are actually  * coming from us.  */
+comment|/*  * This routine spies on mbufs received by underlying network device  * drivers. When we add an interface to our bundle, we override its  * if_input routine with a pointer to ng_fec_input(). This means we  * get to look at all the device's packets before sending them to the  * real ether_input() for processing by the stack. Once we verify the  * packet comes from an interface that's been aggregated into  * our bundle, we fix up the rcvif pointer and increment our  * packet counters so that it looks like the frames are actually  * coming from us.  */
 end_comment
 
 begin_function
@@ -2944,7 +2957,6 @@ name|ifp
 parameter_list|,
 name|struct
 name|mbuf
-modifier|*
 modifier|*
 name|m0
 parameter_list|)
@@ -2963,11 +2975,6 @@ name|struct
 name|ng_fec_bundle
 modifier|*
 name|b
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
 decl_stmt|;
 name|struct
 name|ifnet
@@ -3029,11 +3036,6 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-name|m
-operator|=
-operator|*
-name|m0
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|p
@@ -3049,7 +3051,7 @@ name|p
 operator|->
 name|fec_if
 operator|==
-name|m
+name|m0
 operator|->
 name|m_pkthdr
 operator|.
@@ -3065,8 +3067,20 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* Pretend this is our frame. */
-name|m
+comment|/* 	 * Check for a BPF tap on the underlying interface. This 	 * is mainly a debugging aid: it allows tcpdump-ing of an 	 * individual interface in a bundle to work, which it 	 * otherwise would not. BPF tapping of our own aggregate 	 * interface will occur once we call ether_input(). 	 */
+name|BPF_MTAP
+argument_list|(
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
+comment|/* Convince the system that this is our frame. */
+name|m0
 operator|->
 name|m_pkthdr
 operator|.
@@ -3083,7 +3097,7 @@ name|bifp
 operator|->
 name|if_ibytes
 operator|+=
-name|m
+name|m0
 operator|->
 name|m_pkthdr
 operator|.
@@ -3095,20 +3109,16 @@ expr|struct
 name|ether_header
 argument_list|)
 expr_stmt|;
-comment|/* Check for a BPF tap */
-if|if
-condition|(
+call|(
+modifier|*
 name|bifp
 operator|->
-name|if_bpf
-operator|!=
-name|NULL
-condition|)
-name|BPF_MTAP
+name|if_input
+call|)
 argument_list|(
 name|bifp
 argument_list|,
-name|m
+name|m0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4231,12 +4241,6 @@ name|unit
 expr_stmt|;
 name|ifp
 operator|->
-name|if_output
-operator|=
-name|ng_fec_output
-expr_stmt|;
-name|ifp
-operator|->
 name|if_start
 operator|=
 name|ng_fec_start
@@ -4372,17 +4376,6 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-comment|/* Grab hold of the ether_input pipe. */
-if|if
-condition|(
-name|ng_ether_input_p
-operator|==
-name|NULL
-condition|)
-name|ng_ether_input_p
-operator|=
-name|ng_fec_input
-expr_stmt|;
 comment|/* Attach the interface */
 name|ether_ifattach
 argument_list|(
@@ -4402,6 +4395,13 @@ name|priv
 operator|->
 name|fec_ch
 argument_list|)
+expr_stmt|;
+comment|/* Override output method with our own */
+name|ifp
+operator|->
+name|if_output
+operator|=
+name|ng_fec_output
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -4778,16 +4778,6 @@ name|ifname
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ng_ether_input_p
-operator|!=
-name|NULL
-condition|)
-name|ng_ether_input_p
-operator|=
-name|NULL
-expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 operator|&
