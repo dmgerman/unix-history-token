@@ -403,6 +403,13 @@ name|i
 operator|++
 control|)
 block|{
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|accept
