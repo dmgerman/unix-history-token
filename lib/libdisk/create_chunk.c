@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.33 1999/01/08 00:32:19 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.34 1999/01/14 21:48:13 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -1547,6 +1547,31 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
+name|bmaj
+operator|=
+literal|0
+operator|,
+name|cmaj
+operator|=
+literal|3
+operator|,
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|p
+argument_list|,
+literal|"ad"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+comment|/* XXX change if "ad' moves */
 name|bmaj
 operator|=
 literal|0
