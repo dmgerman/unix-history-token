@@ -856,6 +856,11 @@ name|found_orion
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|found_pcibios_flaming_death
+init|=
+literal|0
+decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
@@ -1232,6 +1237,46 @@ condition|)
 block|{
 name|bus
 operator|++
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+comment|/* 	 * This is just freaking brilliant!  Some BIOS writers have 	 * decided that we must be forcibly prevented from using 	 * PCIBIOS to query the host->pci bridges.  If you try and 	 * access configuration registers, it pretends there is 	 * no pci device at that bus:device:function address. 	 */
+if|if
+condition|(
+operator|!
+name|found
+operator|&&
+name|pci_pcibios_active
+argument_list|()
+operator|&&
+operator|!
+name|found_pcibios_flaming_death
+condition|)
+block|{
+comment|/* retry with the old mechanism, or fail */
+if|if
+condition|(
+name|pci_kill_pcibios
+argument_list|()
+operator|==
+literal|0
+condition|)
+return|return;
+name|printf
+argument_list|(
+literal|"nexus_pcib_identify: found broken PCIBIOS - disabling it and retrying.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"nexus_pcib_identify: it is bogusly censoring host->pci bridges.\n"
+argument_list|)
+expr_stmt|;
+name|found_pcibios_flaming_death
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|retry
