@@ -2317,7 +2317,7 @@ decl_stmt|;
 name|char
 name|msgBuf
 index|[
-literal|160
+literal|80
 index|]
 decl_stmt|;
 comment|/*  * Put packet back for processing.  */
@@ -2401,17 +2401,7 @@ name|sprintf
 argument_list|(
 name|msgBuf
 argument_list|,
-literal|"failed to write packet back (%s)"
-argument_list|,
-name|FormatPacket
-argument_list|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|packetBuf
-argument_list|)
+literal|"failed to write packet back"
 argument_list|)
 expr_stmt|;
 name|Warn
