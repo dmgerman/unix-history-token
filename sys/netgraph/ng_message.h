@@ -720,7 +720,7 @@ struct|struct
 name|typeinfo
 block|{
 name|char
-name|typename
+name|type_name
 index|[
 name|NG_TYPELEN
 operator|+
