@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.9 (Berkeley) %G%"
+literal|"@(#)login.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -938,6 +938,11 @@ name|char
 operator|*
 operator|)
 literal|0
+operator|||
+operator|*
+name|ttyn
+operator|==
+literal|'\0'
 condition|)
 name|ttyn
 operator|=
