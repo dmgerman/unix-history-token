@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -517,6 +517,30 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTRACE
+comment|/*  	 * release trace file 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_tracep
+condition|)
+name|vrele
+argument_list|(
+name|p
+operator|->
+name|p_tracep
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Clear curproc after we've done all operations 	 * that could block, and before tearing down 	 * the rest of the process state. 	 */
+name|curproc
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -537,25 +561,6 @@ argument_list|,
 name|M_SUBPROC
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KTRACE
-comment|/*  	 * release trace file 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_tracep
-condition|)
-name|vrele
-argument_list|(
-name|p
-operator|->
-name|p_tracep
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Remove proc from allproc queue and pidhash chain. 	 * Place onto zombproc.  Unlink from parent's child list. 	 */
 if|if
 condition|(
@@ -613,10 +618,6 @@ operator|->
 name|p_stat
 operator|=
 name|SZOMB
-expr_stmt|;
-name|curproc
-operator|=
-name|NULL
 expr_stmt|;
 for|for
 control|(
