@@ -153,7 +153,7 @@ return|;
 else|else
 return|return
 operator|(
-name|NULL
+literal|"(Empty error message)"
 operator|)
 return|;
 block|}
