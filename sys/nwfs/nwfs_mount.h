@@ -180,6 +180,9 @@ name|struct
 name|ncp_nlstables
 name|nls
 decl_stmt|;
+name|int
+name|tz
+decl_stmt|;
 block|}
 struct|;
 end_struct
