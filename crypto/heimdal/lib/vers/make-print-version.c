@@ -62,7 +62,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|char
 modifier|*
 name|krb4_version
