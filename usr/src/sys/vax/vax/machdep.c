@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.31	81/04/13	*/
+comment|/*	machdep.c	4.32	81/04/17	*/
 end_comment
 
 begin_include
@@ -748,6 +748,39 @@ name|TBIA
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialize callouts 	 */
+name|callfree
+operator|=
+name|callout
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|ncallout
+condition|;
+name|i
+operator|++
+control|)
+name|callout
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|.
+name|c_next
+operator|=
+operator|&
+name|callout
+index|[
+name|i
+index|]
 expr_stmt|;
 comment|/* 	 * Initialize memory allocator and swap 	 * and user page table maps. 	 * 	 * THE USER PAGE TABLE MAP IS CALLED ``kernelmap'' 	 * WHICH IS A VERY UNDESCRIPTIVE AND INCONSISTENT NAME. 	 */
 name|meminit
