@@ -1330,7 +1330,7 @@ name|p
 operator|=
 name|path
 argument_list|(
-literal|"config.c"
+literal|"config.c.new"
 argument_list|)
 argument_list|,
 literal|"w"
@@ -1353,6 +1353,13 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|fo
+argument_list|,
+literal|"#include \"opt_config.h\"\n"
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fo
@@ -1468,7 +1475,7 @@ name|fprintf
 argument_list|(
 name|fo
 argument_list|,
-literal|"\n#endif INCLUDE_CONFIG_FILE"
+literal|"\n#endif /* INCLUDE_CONFIG_FILE */\n"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1479,6 +1486,19 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|fo
+argument_list|)
+expr_stmt|;
+name|moveifchanged
+argument_list|(
+name|path
+argument_list|(
+literal|"config.c.new"
+argument_list|)
+argument_list|,
+name|path
+argument_list|(
+literal|"config.c"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
