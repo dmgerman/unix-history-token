@@ -1926,9 +1926,9 @@ name|MGET
 argument_list|(
 name|mp
 argument_list|,
-name|type
-argument_list|,
 name|how
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 if|if
@@ -2042,9 +2042,9 @@ name|MGET
 argument_list|(
 name|mp
 argument_list|,
-name|type
-argument_list|,
 name|how
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 if|if
