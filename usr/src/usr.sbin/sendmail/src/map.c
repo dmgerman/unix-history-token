@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.20 (Berkeley) %G%"
+literal|"@(#)map.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,6 +418,37 @@ begin_comment
 comment|/* **  MAP_REWRITE -- rewrite a database key, interpolating %n indications. ** **	It also adds the map_app string.  It can be used as a utility **	in the map_lookup method. ** **	Parameters: **		map -- the map that causes this. **		s -- the string to rewrite, NOT necessarily null terminated. **		slen -- the length of s. **		av -- arguments to interpolate into buf. ** **	Returns: **		Pointer to rewritten result. ** **	Side Effects: **		none. */
 end_comment
 
+begin_struct
+struct|struct
+name|rwbuf
+block|{
+name|int
+name|rwb_len
+decl_stmt|;
+comment|/* size of buffer */
+name|char
+modifier|*
+name|rwb_buf
+decl_stmt|;
+comment|/* ptr to buffer */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|rwbuf
+name|RwBufs
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* buffers for rewriting output */
+end_comment
+
 begin_function
 name|char
 modifier|*
@@ -469,25 +500,17 @@ name|char
 modifier|*
 name|ap
 decl_stmt|;
+specifier|register
+name|struct
+name|rwbuf
+modifier|*
+name|rwb
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 name|int
 name|len
-decl_stmt|;
-specifier|static
-name|int
-name|buflen
-init|=
-operator|-
-literal|1
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|buf
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -550,6 +573,19 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|rwb
+operator|=
+name|RwBufs
+expr_stmt|;
+if|if
+condition|(
+name|av
+operator|==
+name|NULL
+condition|)
+name|rwb
+operator|++
+expr_stmt|;
 comment|/* count expected size of output (can safely overestimate) */
 name|i
 operator|=
@@ -689,39 +725,53 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|buflen
+name|rwb
+operator|->
+name|rwb_len
 operator|<
 operator|++
 name|len
 condition|)
 block|{
 comment|/* need to malloc additional space */
-name|buflen
+name|rwb
+operator|->
+name|rwb_len
 operator|=
 name|len
 expr_stmt|;
 if|if
 condition|(
-name|buf
+name|rwb
+operator|->
+name|rwb_buf
 operator|!=
 name|NULL
 condition|)
 name|free
 argument_list|(
-name|buf
+name|rwb
+operator|->
+name|rwb_buf
 argument_list|)
 expr_stmt|;
-name|buf
+name|rwb
+operator|->
+name|rwb_buf
 operator|=
 name|xalloc
 argument_list|(
-name|buflen
+name|rwb
+operator|->
+name|rwb_len
 argument_list|)
 expr_stmt|;
 block|}
 name|bp
 operator|=
-name|buf
+name|rwb
+operator|->
+name|rwb_buf
 expr_stmt|;
 if|if
 condition|(
@@ -932,11 +982,15 @@ name|printf
 argument_list|(
 literal|"map_rewrite => %s\n"
 argument_list|,
-name|buf
+name|rwb
+operator|->
+name|rwb_buf
 argument_list|)
 expr_stmt|;
 return|return
-name|buf
+name|rwb
+operator|->
+name|rwb_buf
 return|;
 block|}
 end_function
