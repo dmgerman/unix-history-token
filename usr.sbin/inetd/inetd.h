@@ -293,11 +293,6 @@ range|:
 literal|1
 decl_stmt|;
 name|u_int
-name|se_ctladdrinitok
-range|:
-literal|1
-decl_stmt|;
-name|u_int
 name|se_reset
 range|:
 literal|1
@@ -314,13 +309,6 @@ define|#
 directive|define
 name|se_nomapped
 value|se_flags.se_nomapped
-end_define
-
-begin_define
-define|#
-directive|define
-name|se_ctladdrinitok
-value|se_flags.se_ctladdrinitok
 end_define
 
 begin_define
