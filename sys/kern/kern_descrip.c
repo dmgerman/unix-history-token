@@ -1947,11 +1947,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_retval
@@ -1971,6 +1966,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|F_SETFL
@@ -1986,11 +1986,6 @@ expr_stmt|;
 name|FILE_LOCK
 argument_list|(
 name|fp
-argument_list|)
-expr_stmt|;
-name|FILEDESC_UNLOCK
-argument_list|(
-name|fdp
 argument_list|)
 expr_stmt|;
 name|fhold_locked
@@ -2022,6 +2017,11 @@ expr_stmt|;
 name|FILE_UNLOCK
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
 argument_list|)
 expr_stmt|;
 name|tmp
