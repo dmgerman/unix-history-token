@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.15 (Berkeley) %G%"
+literal|"@(#)local2.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7019,6 +7019,23 @@ operator|.
 name|op
 operator|!=
 name|PCONV
+operator|&&
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|!=
+name|CALL
+operator|&&
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|!=
+name|UNARY
+name|CALL
 operator|&&
 name|tlen
 argument_list|(
