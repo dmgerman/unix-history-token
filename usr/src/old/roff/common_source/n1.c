@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	4.9 %G%"
+literal|"@(#)n1.c	4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"tdef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_include
@@ -1335,11 +1341,18 @@ literal|0
 condition|)
 block|{
 name|char
-modifier|*
 name|local
-init|=
-literal|"/usr/local/lib/tmac/tmac.\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+index|[
+name|NS
+index|]
 decl_stmt|;
+name|strcpy
+argument_list|(
+name|local
+argument_list|,
+name|_PATH_LOCAL_TMAC
+argument_list|)
+expr_stmt|;
 name|strcat
 argument_list|(
 name|local

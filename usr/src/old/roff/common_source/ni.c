@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ni.c	4.3 %G%"
+literal|"@(#)ni.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,7 +199,12 @@ begin_decl_stmt
 name|int
 name|nfi
 init|=
-literal|19
+sizeof|sizeof
+argument_list|(
+name|_PATH_TMAC
+argument_list|)
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -216,7 +221,7 @@ index|[
 name|NS
 index|]
 init|=
-name|_PATH_TABLPR
+name|_PATH_TERM
 decl_stmt|;
 end_decl_stmt
 
@@ -224,7 +229,12 @@ begin_decl_stmt
 name|int
 name|tti
 init|=
-literal|17
+sizeof|sizeof
+argument_list|(
+name|_PATH_TERM
+argument_list|)
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
