@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	4.8	82/06/12	*/
+comment|/*	route.h	4.9	83/05/12	*/
 end_comment
 
 begin_comment
@@ -36,28 +36,6 @@ directive|endif
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * The route ``routetoif'' is a special atom passed to the output routines  * to implement the SO_DONTROUTE option.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|route
-name|routetoif
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * We distinguish between routes to hosts and routes to networks,  * preferring the former if available.  For each route we infer  * the interface to use from the gateway address supplied when  * the route was entered.  Routes that forward packets through  * gateways are marked so that the output routines know to address the  * gateway rather than the ultimate destination.  */
