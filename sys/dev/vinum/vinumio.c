@@ -2095,7 +2095,7 @@ operator|==
 name|DL_OURS
 condition|)
 block|{
-comment|/* not ours */
+comment|/* one of ours */
 for|for
 control|(
 name|i
@@ -2185,7 +2185,7 @@ literal|'/'
 condition|)
 block|{
 comment|/* we know a device name for it */
-comment|/* 		     * set an error, but don't take the drive down: 		     * that would cause unneeded error messages. 		     */
+comment|/* 		     * set an error, but don't take the 		     * drive down: that would cause unneeded 		     * error messages. 		     */
 name|drive
 operator|->
 name|lasterror
@@ -2448,50 +2448,6 @@ operator|)
 condition|)
 block|{
 comment|/* paranoia */
-if|if
-condition|(
-name|vol
-operator|->
-name|preferred_plex
-operator|>=
-literal|0
-condition|)
-comment|/* preferences, */
-name|snprintf
-argument_list|(
-name|s
-argument_list|,
-name|configend
-operator|-
-name|s
-argument_list|,
-literal|"volume %s state %s readpol prefer %s"
-argument_list|,
-name|vol
-operator|->
-name|name
-argument_list|,
-name|volume_state
-argument_list|(
-name|vol
-operator|->
-name|state
-argument_list|)
-argument_list|,
-name|vinum_conf
-operator|.
-name|plex
-index|[
-name|vol
-operator|->
-name|preferred_plex
-index|]
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-else|else
-comment|/* default round-robin */
 name|snprintf
 argument_list|(
 name|s
@@ -2512,6 +2468,33 @@ name|vol
 operator|->
 name|state
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vol
+operator|->
+name|preferred_plex
+operator|>=
+literal|0
+condition|)
+comment|/* preferences, */
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+literal|" readpol prefer %s"
+argument_list|,
+name|vinum_conf
+operator|.
+name|plex
+index|[
+name|vol
+operator|->
+name|preferred_plex
+index|]
+operator|.
+name|name
 argument_list|)
 expr_stmt|;
 while|while
@@ -4456,6 +4439,9 @@ name|VF_NEWBORN
 expr_stmt|;
 comment|/* which is no longer newly born */
 name|gooddrives
+operator|++
+expr_stmt|;
+name|founddrive
 operator|++
 expr_stmt|;
 block|}
