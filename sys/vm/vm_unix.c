@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysproto.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -40,13 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
+file|<sys/sysproto.h>
 end_include
 
 begin_include
