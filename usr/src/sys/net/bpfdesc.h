@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpfdesc.h	7.3 (Berkeley) %G%  *  * @(#) $Header: bpfdesc.h,v 1.9 91/10/27 21:22:38 mccanne Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpfdesc.h	7.4 (Berkeley) %G%  *  * @(#) $Header: bpfdesc.h,v 1.9 91/10/27 21:22:38 mccanne Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -67,8 +67,7 @@ name|bd_dcount
 decl_stmt|;
 comment|/* number of packets dropped */
 name|struct
-name|proc
-modifier|*
+name|selinfo
 name|bd_selproc
 decl_stmt|;
 comment|/* process that last selected us */
@@ -80,10 +79,6 @@ name|u_char
 name|bd_state
 decl_stmt|;
 comment|/* idle, waiting, or timed out */
-name|u_char
-name|bd_selcoll
-decl_stmt|;
-comment|/* true if selects collide */
 name|u_char
 name|bd_immediate
 decl_stmt|;
