@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.18	81/02/27	*/
+comment|/*	machdep.c	4.19	81/02/27	*/
 end_comment
 
 begin_include
@@ -180,7 +180,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.18) 81/02/27 02:39:23 \n"
+literal|"VM/UNIX (Berkeley Version 4.19) 81/02/27 17:44:47 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -367,10 +367,16 @@ literal|32
 expr_stmt|;
 name|nswbuf
 operator|=
+operator|(
 name|nbuf
 operator|/
 literal|2
+operator|)
+operator|&
+operator|~
+literal|1
 expr_stmt|;
+comment|/* force even */
 comment|/* 	 * Allocate space for system data structures. 	 */
 name|v
 operator|=
@@ -440,6 +446,25 @@ name|swbuf
 argument_list|,
 expr|struct
 name|buf
+argument_list|,
+name|nswbuf
+argument_list|)
+expr_stmt|;
+name|valloc
+argument_list|(
+name|swsize
+argument_list|,
+name|short
+argument_list|,
+name|nswbuf
+argument_list|)
+expr_stmt|;
+comment|/* note: nswbuf is even */
+name|valloc
+argument_list|(
+name|swpf
+argument_list|,
+name|int
 argument_list|,
 name|nswbuf
 argument_list|)
@@ -519,6 +544,8 @@ argument_list|,
 expr|struct
 name|map
 argument_list|,
+name|nswapmap
+operator|=
 name|nproc
 operator|*
 literal|4
@@ -596,6 +623,9 @@ operator|(
 name|int
 operator|)
 name|ecmap
+operator|&
+operator|~
+literal|0x80000000
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.9	%G%	*/
+comment|/*	init_main.c	4.10	%G%	*/
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"../h/vlimit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/clist.h"
 end_include
 
 begin_comment
@@ -724,22 +730,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This is the set of buffers proper, whose heads  * were declared in buf.h.  There can exist buffer  * headers not pointing here that are used purely  * as arguments to the I/O routines to describe  * I/O to be done-- e.g. swap headers swbuf[] for  * swapping.  *  * These are actually allocated kernel map slots and space is  * allocated in locore.s for them.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|buffers
-index|[
-name|NBUF
-index|]
-index|[
-name|BSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Initialize the buffer I/O system by freeing  * all buffers and setting all device buffer lists to empty.  */
 end_comment
 
@@ -831,7 +821,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NBUF
+name|nbuf
 condition|;
 name|i
 operator|++
@@ -858,9 +848,10 @@ operator|.
 name|b_addr
 operator|=
 name|buffers
-index|[
+operator|+
 name|i
-index|]
+operator|*
+name|BSIZE
 expr_stmt|;
 name|bp
 operator|->
@@ -988,12 +979,15 @@ name|struct
 name|buf
 modifier|*
 name|sp
+init|=
+name|swbuf
+decl_stmt|;
 name|bswlist
 operator|.
 name|av_forw
-init|=
+operator|=
 name|sp
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1002,7 +996,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NSWBUF
+name|nswbuf
 operator|-
 literal|1
 condition|;

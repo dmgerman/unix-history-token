@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.5	%G%	*/
+comment|/*	vfs_vnops.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -993,12 +993,6 @@ name|struct
 name|file
 modifier|*
 name|lastf
-init|=
-operator|&
-name|file
-index|[
-literal|0
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1038,6 +1032,16 @@ operator|(
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
+name|lastf
+operator|==
+literal|0
+condition|)
+name|lastf
+operator|=
+name|file
+expr_stmt|;
 for|for
 control|(
 name|fp
@@ -1066,11 +1070,7 @@ for|for
 control|(
 name|fp
 operator|=
-operator|&
 name|file
-index|[
-literal|0
-index|]
 init|;
 name|fp
 operator|<

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.13	%G%	*/
+comment|/*	kern_clock.c	4.14	%G%	*/
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/callo.h"
+file|"../h/callout.h"
 end_include
 
 begin_include
@@ -151,7 +151,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|callo
+name|callout
 modifier|*
 name|p1
 decl_stmt|;
@@ -311,7 +311,7 @@ operator|+
 literal|1
 operator|)
 operator|/
-name|HZ
+name|hz
 operator|>
 name|u
 operator|.
@@ -587,7 +587,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|callo
+name|callout
 modifier|*
 name|p1
 decl_stmt|,
@@ -770,7 +770,7 @@ condition|(
 name|lbolt
 operator|%
 operator|(
-name|HZ
+name|hz
 operator|/
 literal|4
 operator|)
@@ -793,7 +793,7 @@ if|if
 condition|(
 name|lbolt
 operator|>=
-name|HZ
+name|hz
 condition|)
 block|{
 if|if
@@ -806,7 +806,7 @@ condition|)
 return|return;
 name|lbolt
 operator|-=
-name|HZ
+name|hz
 expr_stmt|;
 operator|++
 name|time
@@ -994,7 +994,7 @@ operator|/
 operator|(
 name|float
 operator|)
-name|HZ
+name|hz
 operator|)
 expr_stmt|;
 name|pp
@@ -1218,7 +1218,7 @@ name|vm_utime
 operator|>
 literal|600
 operator|*
-name|HZ
+name|hz
 condition|)
 name|pp
 operator|->
@@ -1276,7 +1276,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * timeout is called to arrange that  * fun(arg) is called in tim/HZ seconds.  * An entry is sorted into the callout  * structure. The time in each structure  * entry is the number of HZ's more  * than the previous entry.  * In this way, decrementing the  * first entry has the effect of  * updating all entries.  *  * The panic is there because there is nothing  * intelligent to be done if an entry won't fit.  */
+comment|/*  * timeout is called to arrange that  * fun(arg) is called in tim/hz seconds.  * An entry is sorted into the callout  * structure. The time in each structure  * entry is the number of hz's more  * than the previous entry.  * In this way, decrementing the  * first entry has the effect of  * updating all entries.  *  * The panic is there because there is nothing  * intelligent to be done if an entry won't fit.  */
 end_comment
 
 begin_macro
@@ -1310,7 +1310,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|callo
+name|callout
 modifier|*
 name|p1
 decl_stmt|,
@@ -1384,7 +1384,7 @@ operator|=
 name|callout
 operator|+
 operator|(
-name|ncall
+name|ncallout
 operator|-
 literal|2
 operator|)
