@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: link.h,v 1.17 1997/12/06 17:59:52 jdp Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: link.h,v 1.18 1998/02/06 16:46:44 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -18,6 +18,126 @@ define|#
 directive|define
 name|_LINK_H_
 end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|FREEBSD_ELF
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ELF__
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|FREEBSD_AOUT
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_struct
+struct|struct
+name|link_map
+block|{
+name|caddr_t
+name|l_addr
+decl_stmt|;
+comment|/* Base Address of library */
+ifdef|#
+directive|ifdef
+name|__mips__
+name|caddr_t
+name|l_offs
+decl_stmt|;
+comment|/* Load Offset of library */
+endif|#
+directive|endif
+specifier|const
+name|char
+modifier|*
+name|l_name
+decl_stmt|;
+comment|/* Absolute Path to Library */
+specifier|const
+name|void
+modifier|*
+name|l_ld
+decl_stmt|;
+comment|/* Pointer to .dynamic in memory */
+name|struct
+name|link_map
+modifier|*
+name|l_next
+decl_stmt|,
+modifier|*
+name|l_prev
+decl_stmt|;
+comment|/* linked list of of mapped libs */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|r_debug
+block|{
+name|int
+name|r_version
+decl_stmt|;
+comment|/* not used */
+name|struct
+name|link_map
+modifier|*
+name|r_map
+decl_stmt|;
+comment|/* list of loaded images */
+name|void
+function_decl|(
+modifier|*
+name|r_brk
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* pointer to break point */
+enum|enum
+block|{
+name|RT_CONSISTENT
+block|,
+comment|/* things are stable */
+name|RT_ADD
+block|,
+comment|/* adding a shared library */
+name|RT_DELETE
+comment|/* removing a shared library */
+block|}
+name|r_state
+enum|;
+block|}
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__ELF__ */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -980,6 +1100,15 @@ directive|define
 name|_PATH_LD_HINTS
 value|"/var/run/ld.so.hints"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__ELF__ */
+end_comment
 
 begin_endif
 endif|#
