@@ -524,7 +524,9 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
-name|uma_zone_t
+name|struct
+name|uma_zone
+modifier|*
 name|nfsmount_zone
 decl_stmt|;
 end_decl_stmt
