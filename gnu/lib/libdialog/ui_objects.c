@@ -428,6 +428,9 @@ name|ret
 condition|)
 block|{
 case|case
+name|KEY_DOWN
+case|:
+case|case
 name|SEL_CR
 case|:
 case|case
@@ -460,6 +463,9 @@ expr_stmt|;
 comment|/* beginning of the list */
 block|}
 break|break;
+case|case
+name|KEY_UP
+case|:
 case|case
 name|SEL_BACKTAB
 case|:
@@ -659,6 +665,9 @@ name|ret
 condition|)
 block|{
 case|case
+name|KEY_DOWN
+case|:
+case|case
 name|SEL_CR
 case|:
 case|case
@@ -699,6 +708,9 @@ expr_stmt|;
 comment|/* beginning of the list */
 block|}
 break|break;
+case|case
+name|KEY_UP
+case|:
 case|case
 name|SEL_BACKTAB
 case|:
