@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_subr.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *    */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_subr.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: cfs_subr.c,v 1.2 1998/09/02 19:09:53 rvb Exp $  *    */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: cfs_subr.c,v $  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.11  1998/08/28 18:12:18  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:16  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:41  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/01/31  20:53:12  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.7  98/01/23  11:53:42  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.6.2.3  98/01/23  11:21:05  rvb  * Sync with 2.2.5  *   * Revision 1.6.2.2  97/12/16  12:40:06  rvb  * Sync with 1.3  *   * Revision 1.6.2.1  97/12/06  17:41:21  rvb  * Sync with peters coda.h  *   * Revision 1.6  97/12/05  10:39:17  rvb  * Read CHANGES  *   * Revision 1.5.4.8  97/11/26  15:28:58  rvb  * Cant make downcall pbuf == union cfs_downcalls yet  *   * Revision 1.5.4.7  97/11/20  11:46:42  rvb  * Capture current cfs_venus  *   * Revision 1.5.4.6  97/11/18  10:27:16  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.5.4.5  97/11/13  22:03:00  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.5.4.4  97/11/12  12:09:39  rvb  * reorg pass1  *   * Revision 1.5.4.3  97/11/06  21:02:38  rvb  * first pass at ^c ^z  *   * Revision 1.5.4.2  97/10/29  16:06:27  rvb  * Kill DYING  *   * Revision 1.5.4.1  97/10/28 23:10:16  rvb  *>64Meg; venus can be killed!  *  * Revision 1.5  97/08/05  11:08:17  lily  * Removed cfsnc_replace, replaced it with a cfs_find, unhash, and  * rehash.  This fixes a cnode leak and a bug in which the fid is  * not actually replaced.  (cfs_namecache.c, cfsnc.h, cfs_subr.c)  *   * Revision 1.4  96/12/12  22:10:59  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.   * There may be more  *   * Revision 1.3  1996/12/05 16:20:15  bnoble  * Minor debugging aids  *  * Revision 1.2  1996/01/02 16:57:01  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:27  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:07:59  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:07:58  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.8  1995/03/03  17:00:04  dcs  * Fixed kernel bug involving sleep and upcalls. Basically if you killed  * a job waiting on venus, the venus upcall queues got trashed. Depending  * on luck, you could kill the kernel or not.  * (mods to cfs_subr.c and cfs_mach.d)  *  * Revision 2.7  95/03/02  22:45:21  dcs  * Sun4 compatibility  *   * Revision 2.6  95/02/17  16:25:17  dcs  * These versions represent several changes:  * 1. Allow venus to restart even if outstanding references exist.  * 2. Have only one ctlvp per client, as opposed to one per mounted cfs device.d  * 3. Allow ody_expand to return many members, not just one.  *   * Revision 2.5  94/11/09  15:56:26  dcs  * Had the thread sleeping on the wrong thing!  *   * Revision 2.4  94/10/14  09:57:57  dcs  * Made changes 'cause sun4s have braindead compilers  *   * Revision 2.3  94/10/12  16:46:26  dcs  * Cleaned kernel/venus interface by removing XDR junk, plus  * so cleanup to allow this code to be more easily ported.  *   * Revision 1.2  92/10/27  17:58:22  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.4  92/09/30  14:16:26  mja  * 	Incorporated Dave Steere's fix for the GNU-Emacs bug.  * 	Also, included his cfs_flush routine in place of the former cfsnc_flush.  * 	[91/02/07            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * 	Hack to allow users to keep coda venus calls uninterruptible. THis  * 	basically prevents the Gnu-emacs bug from appearing, in which a call  * 	was being interrupted, and return EINTR, but gnu didn't check for the  * 	error and figured the file was buggered.  * 	[90/12/09            dcs]  *   * Revision 2.3  90/08/10  10:23:20  mrt  * 	Removed include of vm/vm_page.h as it no longer exists.  * 	[90/08/10            mrt]  *   * Revision 2.2  90/07/05  11:26:35  mrt  * 	Initialize name cache on first call to vcopen.  * 	[90/05/23            dcs]  *   * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.5  90/05/31  17:01:35  dcs  * Prepare for merge with facilities kernel.  *   * Revision 1.2  90/03/19  15:56:25  dcs  * Initialize name cache on first call to vcopen.  *   * Revision 1.1  90/03/15  10:43:26  jjk  * Initial revision  *   */
+comment|/*  * HISTORY  * $Log: cfs_subr.c,v $  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.11  1998/08/28 18:12:18  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:16  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:41  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/01/31  20:53:12  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.7  98/01/23  11:53:42  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.6.2.3  98/01/23  11:21:05  rvb  * Sync with 2.2.5  *   * Revision 1.6.2.2  97/12/16  12:40:06  rvb  * Sync with 1.3  *   * Revision 1.6.2.1  97/12/06  17:41:21  rvb  * Sync with peters coda.h  *   * Revision 1.6  97/12/05  10:39:17  rvb  * Read CHANGES  *   * Revision 1.5.4.8  97/11/26  15:28:58  rvb  * Cant make downcall pbuf == union cfs_downcalls yet  *   * Revision 1.5.4.7  97/11/20  11:46:42  rvb  * Capture current cfs_venus  *   * Revision 1.5.4.6  97/11/18  10:27:16  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.5.4.5  97/11/13  22:03:00  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.5.4.4  97/11/12  12:09:39  rvb  * reorg pass1  *   * Revision 1.5.4.3  97/11/06  21:02:38  rvb  * first pass at ^c ^z  *   * Revision 1.5.4.2  97/10/29  16:06:27  rvb  * Kill DYING  *   * Revision 1.5.4.1  97/10/28 23:10:16  rvb  *>64Meg; venus can be killed!  *  * Revision 1.5  97/08/05  11:08:17  lily  * Removed cfsnc_replace, replaced it with a cfs_find, unhash, and  * rehash.  This fixes a cnode leak and a bug in which the fid is  * not actually replaced.  (cfs_namecache.c, cfsnc.h, cfs_subr.c)  *   * Revision 1.4  96/12/12  22:10:59  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.   * There may be more  *   * Revision 1.3  1996/12/05 16:20:15  bnoble  * Minor debugging aids  *  * Revision 1.2  1996/01/02 16:57:01  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:27  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:07:59  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:07:58  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.8  1995/03/03  17:00:04  dcs  * Fixed kernel bug involving sleep and upcalls. Basically if you killed  * a job waiting on venus, the venus upcall queues got trashed. Depending  * on luck, you could kill the kernel or not.  * (mods to cfs_subr.c and cfs_mach.d)  *  * Revision 2.7  95/03/02  22:45:21  dcs  * Sun4 compatibility  *   * Revision 2.6  95/02/17  16:25:17  dcs  * These versions represent several changes:  * 1. Allow venus to restart even if outstanding references exist.  * 2. Have only one ctlvp per client, as opposed to one per mounted cfs device.d  * 3. Allow ody_expand to return many members, not just one.  *   * Revision 2.5  94/11/09  15:56:26  dcs  * Had the thread sleeping on the wrong thing!  *   * Revision 2.4  94/10/14  09:57:57  dcs  * Made changes 'cause sun4s have braindead compilers  *   * Revision 2.3  94/10/12  16:46:26  dcs  * Cleaned kernel/venus interface by removing XDR junk, plus  * so cleanup to allow this code to be more easily ported.  *   * Revision 1.2  92/10/27  17:58:22  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.4  92/09/30  14:16:26  mja  * 	Incorporated Dave Steere's fix for the GNU-Emacs bug.  * 	Also, included his cfs_flush routine in place of the former cfsnc_flush.  * 	[91/02/07            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * 	Hack to allow users to keep coda venus calls uninterruptible. THis  * 	basically prevents the Gnu-emacs bug from appearing, in which a call  * 	was being interrupted, and return EINTR, but gnu didn't check for the  * 	error and figured the file was buggered.  * 	[90/12/09            dcs]  *   * Revision 2.3  90/08/10  10:23:20  mrt  * 	Removed include of vm/vm_page.h as it no longer exists.  * 	[90/08/10            mrt]  *   * Revision 2.2  90/07/05  11:26:35  mrt  * 	Initialize name cache on first call to vcopen.  * 	[90/05/23            dcs]  *   * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.5  90/05/31  17:01:35  dcs  * Prepare for merge with facilities kernel.  *   * Revision 1.2  90/03/19  15:56:25  dcs  * Initialize name cache on first call to vcopen.  *   * Revision 1.1  90/03/15  10:43:26  jjk  * Initial revision  *   */
 end_comment
 
 begin_comment
@@ -1015,22 +1015,17 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_macro
+begin_function
+name|void
 name|cfs_checkunmounting
-argument_list|(
-argument|mp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1136,10 +1131,10 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_function
-name|int
+name|void
 name|cfs_cacheprint
 parameter_list|(
 name|whoIam
@@ -1177,7 +1172,10 @@ argument_list|)
 expr_stmt|;
 name|cfsnc_name
 argument_list|(
+name|VTOC
+argument_list|(
 name|cfs_ctlvp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
