@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuq.c	4.3 (Berkeley) %G%"
+literal|"@(#)uuq.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,7 +295,7 @@ begin_decl_stmt
 name|float
 name|baudrate
 init|=
-literal|800.
+literal|1200.
 decl_stmt|;
 end_decl_stmt
 
@@ -444,11 +444,11 @@ argument_list|(
 name|sysname
 argument_list|)
 operator|>
-literal|7
+name|SYSNSIZE
 condition|)
 name|sysname
 index|[
-literal|7
+name|SYSNSIZE
 index|]
 operator|=
 literal|'\0'
@@ -538,9 +538,14 @@ argument_list|)
 expr_stmt|;
 name|baudrate
 operator|*=
+literal|0.7
+expr_stmt|;
+comment|/* reduce speed because of protocol overhead */
+name|baudrate
+operator|*=
 literal|6.
 expr_stmt|;
-comment|/* convert to chars/minute */
+comment|/* convert to chars/minute (60/10) */
 name|gather
 argument_list|()
 expr_stmt|;
@@ -1093,7 +1098,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't examine spooling area\n"
+literal|"can't examine spooling area"
 argument_list|)
 expr_stmt|;
 name|exit
