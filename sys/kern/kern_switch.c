@@ -223,6 +223,7 @@ name|kg_last_assigned
 operator|==
 name|td
 condition|)
+block|{
 if|if
 condition|(
 name|TAILQ_PREV
@@ -254,6 +255,7 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 			 *  If we have started running an upcall, 			 * Then TDF_UNBOUND WAS set because the thread was  			 * created without a KSE. Now that we have one, 			 * and it is our time to run, we make sure 			 * that BOUND semantics apply for the rest of 			 * the journey to userland, and into the UTS. 			 */
 ifdef|#
 directive|ifdef
@@ -395,6 +397,14 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|kg
 operator|=
 name|ke
