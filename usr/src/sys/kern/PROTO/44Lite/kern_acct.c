@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	from: @(#)kern_acct.c	8.1 (Berkeley) 6/14/93  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	from: @(#)kern_acct.c	8.4 (Berkeley) 6/2/94  */
 end_comment
 
 begin_include
@@ -125,7 +125,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Periodically check the file system to see if accounting  * should be turned on or off.  */
+comment|/*  * Periodically check the file system to see if accounting  * should be turned on or off. Beware the case where the vnode  * has been vgone()'d out from underneath us, e.g. when the file  * system containing the accounting file has been forcibly unmounted.  */
 end_comment
 
 begin_comment
@@ -212,6 +212,35 @@ condition|(
 name|savacctp
 condition|)
 block|{
+if|if
+condition|(
+name|savacctp
+operator|->
+name|v_type
+operator|==
+name|VBAD
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|vn_close
+argument_list|(
+name|savacctp
+argument_list|,
+name|FWRITE
+argument_list|,
+name|NOCRED
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|savacctp
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+block|}
 operator|(
 name|void
 operator|)
@@ -273,6 +302,35 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|acctp
+operator|->
+name|v_type
+operator|==
+name|VBAD
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|vn_close
+argument_list|(
+name|acctp
+argument_list|,
+name|FWRITE
+argument_list|,
+name|NOCRED
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|acctp
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+block|}
 operator|(
 name|void
 operator|)
