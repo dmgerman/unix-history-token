@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.13	(Berkeley)	83/05/03"
+literal|"@(#)restore.c	3.14	(Berkeley)	83/05/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -849,6 +849,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * A file on the tape has a name which is the same as a name 	 * corresponding to a different file in the previous dump. 	 * Since all files to be deleted have already been removed, 	 * this file must live under a new name in this dump level. 	 * For the time being it is given a temporary name in anticipation 	 * that it will be renamed when it is later found by inode number 	 * (see INOFND case below). The entry is then treated as a new 	 * file. 	 */
+case|case
+name|ONTAPE
+operator||
+name|NAMEFND
+case|:
+case|case
+name|ONTAPE
+operator||
+name|NAMEFND
+operator||
+name|MODECHG
+case|:
+name|mktempname
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+comment|/* fall through */
 comment|/* 	 * A previously non-existent file. 	 * Add it to the file system, and request its extraction. 	 * If it is a directory, create it immediately. 	 * (Since the name is unused there can be no conflict) 	 */
 case|case
 name|ONTAPE
@@ -1060,47 +1079,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * A file on the tape has a name which is the same as a name 	 * corresponding to a different file in the previous dump. 	 * Since all files to be deleted have already been removed, 	 * this file must live under a new name in this dump level. 	 * For the time being it is given a temporary name in anticipation 	 * that it will be renamed when it is later found by inode number 	 * (see INOFND case above). 	 * This then falls into the simple case of a previously known 	 * file which is to be updated. 	 */
-case|case
-name|ONTAPE
-operator||
-name|NAMEFND
-case|:
-case|case
-name|ONTAPE
-operator||
-name|NAMEFND
-operator||
-name|MODECHG
-case|:
-name|mktempname
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
-name|np
-operator|=
-name|addentry
-argument_list|(
-name|name
-argument_list|,
-name|ino
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|NODE
-condition|)
-name|newnode
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
-comment|/* fall through */
+comment|/* 	 * A previously known file which is to be updated. 	 */
 case|case
 name|ONTAPE
 operator||
