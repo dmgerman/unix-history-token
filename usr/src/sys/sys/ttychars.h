@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttychars.h	7.3 (Berkeley) 10/18/88  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ttychars.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * 4.3 COMPATIBILITY FILE  *  * User visible structures and constants  * related to terminal handling.  */
+comment|/*  * 4.3 COMPATIBILITY FILE  *  * User visible structures and constants related to terminal handling.  */
 end_comment
 
 begin_ifndef
