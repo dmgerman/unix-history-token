@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.9 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 name|msg
 decl_stmt|,
@@ -96,7 +96,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|,
@@ -109,7 +109,7 @@ name|n
 decl_stmt|,
 name|c
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|eom
 decl_stmt|;
@@ -403,7 +403,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 name|exp_dn
 decl_stmt|,
@@ -419,7 +419,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 modifier|*
 name|dnptrs
@@ -433,7 +433,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|,
@@ -446,7 +446,7 @@ name|c
 decl_stmt|,
 name|l
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 modifier|*
 name|cpp
@@ -461,7 +461,7 @@ decl_stmt|,
 modifier|*
 name|eob
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|msg
 decl_stmt|;
@@ -795,23 +795,28 @@ comment|/*  * Skip over a compressed domain name. Return the size or -1.  */
 end_comment
 
 begin_macro
-name|dn_skip
+name|dn_skipname
 argument_list|(
 argument|comp_dn
+argument_list|,
+argument|eom
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 name|comp_dn
+decl_stmt|,
+modifier|*
+name|eom
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 specifier|register
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|;
@@ -825,11 +830,17 @@ name|comp_dn
 expr_stmt|;
 while|while
 condition|(
+name|cp
+operator|<
+name|eom
+operator|&&
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 comment|/* 		 * check for indirection 		 */
@@ -895,7 +906,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 name|exp_dn
 decl_stmt|,
@@ -905,7 +916,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 modifier|*
 name|dnptrs
@@ -919,7 +930,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|char
+name|u_char
 modifier|*
 name|dn
 decl_stmt|,
@@ -934,7 +945,7 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|sp
 decl_stmt|;
@@ -1079,12 +1090,8 @@ operator|<<
 literal|8
 operator|)
 operator||
-operator|(
 operator|*
 name|cp
-operator|&
-literal|0xff
-operator|)
 operator|)
 expr_stmt|;
 block|}
@@ -1126,7 +1133,7 @@ name|_getshort
 parameter_list|(
 name|msgp
 parameter_list|)
-name|char
+name|u_char
 modifier|*
 name|msgp
 decl_stmt|;
@@ -1188,7 +1195,7 @@ name|_getlong
 parameter_list|(
 name|msgp
 parameter_list|)
-name|char
+name|u_char
 modifier|*
 name|msgp
 decl_stmt|;
@@ -1264,7 +1271,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|register
-name|char
+name|u_char
 modifier|*
 name|msgp
 decl_stmt|;
@@ -1306,7 +1313,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|register
-name|char
+name|u_char
 modifier|*
 name|msgp
 decl_stmt|;
