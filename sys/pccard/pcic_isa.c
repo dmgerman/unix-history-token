@@ -1167,6 +1167,18 @@ name|iores
 operator|=
 name|r
 expr_stmt|;
+name|sc
+operator|->
+name|csc_route
+operator|=
+name|isa_parallel
+expr_stmt|;
+name|sc
+operator|->
+name|func_route
+operator|=
+name|isa_parallel
+expr_stmt|;
 return|return
 operator|(
 name|pcic_attach
@@ -1240,7 +1252,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_alloc_resource
 argument_list|,
-name|bus_generic_alloc_resource
+name|pcic_alloc_resource
 argument_list|)
 block|,
 name|DEVMETHOD
