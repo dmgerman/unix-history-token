@@ -141,12 +141,9 @@ parameter_list|)
 block|{
 switch|switch
 condition|(
-name|SCARG
-argument_list|(
 name|args
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 condition|)
 block|{
 case|case
@@ -184,12 +181,9 @@ argument_list|(
 operator|&
 name|val
 argument_list|,
-name|SCARG
-argument_list|(
 name|args
-argument_list|,
+operator|->
 name|arg
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -275,12 +269,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|SCARG
-argument_list|(
 name|args
-argument_list|,
+operator|->
 name|arg
-argument_list|)
 argument_list|,
 literal|7
 argument_list|,
@@ -317,12 +308,9 @@ argument_list|(
 literal|"IBCS2: 'sysi86' function %d(0x%x) "
 literal|"not implemented yet\n"
 argument_list|,
-name|SCARG
-argument_list|(
 name|args
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 argument_list|,
 name|args
 operator|->
