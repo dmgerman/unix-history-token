@@ -172,6 +172,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|vendor
