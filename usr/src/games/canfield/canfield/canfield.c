@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c 4.4 %G%"
+literal|"@(#)canfield.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_define
@@ -718,6 +724,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|secondsperdollar
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
 name|valuepercardup
 value|5
 end_define
@@ -751,9 +764,9 @@ name|information
 decl_stmt|;
 comment|/* cost of information */
 name|long
-name|costs
+name|thinktime
 decl_stmt|;
-comment|/* total costs */
+comment|/* cost of thinking time */
 name|long
 name|wins
 decl_stmt|;
@@ -784,6 +797,12 @@ decl_stmt|,
 name|infullgame
 init|=
 name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|acctstart
 decl_stmt|;
 end_decl_stmt
 
@@ -1096,28 +1115,9 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<=
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|move
 argument_list|(
 name|tboxrow
-operator|+
-name|i
 argument_list|,
 name|boxcol
 argument_list|)
@@ -1127,12 +1127,11 @@ argument_list|(
 literal|"                            "
 argument_list|)
 expr_stmt|;
-block|}
 name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|2
+literal|1
 argument_list|,
 name|boxcol
 argument_list|)
@@ -1146,7 +1145,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|3
+literal|2
 argument_list|,
 name|boxcol
 argument_list|)
@@ -1160,7 +1159,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|4
+literal|3
 argument_list|,
 name|boxcol
 argument_list|)
@@ -1174,7 +1173,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|5
+literal|4
 argument_list|,
 name|boxcol
 argument_list|)
@@ -1188,7 +1187,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|6
+literal|5
 argument_list|,
 name|boxcol
 argument_list|)
@@ -1202,7 +1201,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|7
+literal|6
 argument_list|,
 name|boxcol
 argument_list|)
@@ -1216,7 +1215,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|8
+literal|7
 argument_list|,
 name|boxcol
 argument_list|)
@@ -1224,6 +1223,20 @@ expr_stmt|;
 name|printw
 argument_list|(
 literal|"| Information              |"
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+name|tboxrow
+operator|+
+literal|8
+argument_list|,
+name|boxcol
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"| Think time               |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -4928,9 +4941,19 @@ end_macro
 
 begin_block
 block|{
-name|this
-operator|.
-name|costs
+name|long
+name|thiscosts
+decl_stmt|,
+name|totalcosts
+decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
+specifier|register
+name|long
+name|dollars
+decl_stmt|;
+name|thiscosts
 operator|=
 name|this
 operator|.
@@ -4951,10 +4974,12 @@ operator|+
 name|this
 operator|.
 name|information
-expr_stmt|;
-name|total
+operator|+
+name|this
 operator|.
-name|costs
+name|thinktime
+expr_stmt|;
+name|totalcosts
 operator|=
 name|total
 operator|.
@@ -4975,6 +5000,10 @@ operator|+
 name|total
 operator|.
 name|information
+operator|+
+name|total
+operator|.
+name|thinktime
 expr_stmt|;
 name|this
 operator|.
@@ -4984,9 +5013,7 @@ name|this
 operator|.
 name|wins
 operator|-
-name|this
-operator|.
-name|costs
+name|thiscosts
 expr_stmt|;
 name|total
 operator|.
@@ -4996,10 +5023,50 @@ name|total
 operator|.
 name|wins
 operator|-
+name|totalcosts
+expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|dollars
+operator|=
+operator|(
+name|now
+operator|-
+name|acctstart
+operator|)
+operator|/
+name|secondsperdollar
+expr_stmt|;
+if|if
+condition|(
+name|dollars
+operator|>
+literal|0
+condition|)
+block|{
+name|this
+operator|.
+name|thinktime
+operator|+=
+name|dollars
+expr_stmt|;
 name|total
 operator|.
-name|costs
+name|thinktime
+operator|+=
+name|dollars
 expr_stmt|;
+name|acctstart
+operator|+=
+name|dollars
+operator|*
+name|secondsperdollar
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|status
@@ -5011,7 +5078,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|4
+literal|3
 argument_list|,
 name|boxcol
 operator|+
@@ -5029,6 +5096,30 @@ argument_list|,
 name|total
 operator|.
 name|hand
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+name|tboxrow
+operator|+
+literal|4
+argument_list|,
+name|boxcol
+operator|+
+literal|13
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"%4d%9d"
+argument_list|,
+name|this
+operator|.
+name|inspection
+argument_list|,
+name|total
+operator|.
+name|inspection
 argument_list|)
 expr_stmt|;
 name|move
@@ -5048,11 +5139,11 @@ literal|"%4d%9d"
 argument_list|,
 name|this
 operator|.
-name|inspection
+name|game
 argument_list|,
 name|total
 operator|.
-name|inspection
+name|game
 argument_list|)
 expr_stmt|;
 name|move
@@ -5072,11 +5163,11 @@ literal|"%4d%9d"
 argument_list|,
 name|this
 operator|.
-name|game
+name|runs
 argument_list|,
 name|total
 operator|.
-name|game
+name|runs
 argument_list|)
 expr_stmt|;
 name|move
@@ -5096,11 +5187,11 @@ literal|"%4d%9d"
 argument_list|,
 name|this
 operator|.
-name|runs
+name|information
 argument_list|,
 name|total
 operator|.
-name|runs
+name|information
 argument_list|)
 expr_stmt|;
 name|move
@@ -5120,11 +5211,11 @@ literal|"%4d%9d"
 argument_list|,
 name|this
 operator|.
-name|information
+name|thinktime
 argument_list|,
 name|total
 operator|.
-name|information
+name|thinktime
 argument_list|)
 expr_stmt|;
 name|move
@@ -5142,13 +5233,9 @@ name|printw
 argument_list|(
 literal|"%4d%9d"
 argument_list|,
-name|this
-operator|.
-name|costs
+name|thiscosts
 argument_list|,
-name|total
-operator|.
-name|costs
+name|totalcosts
 argument_list|)
 expr_stmt|;
 name|move
@@ -7112,7 +7199,9 @@ literal|"information is toggled on, you are only  charged  for  cards\n"
 block|,
 literal|"that  became  visible  since it was last turned on. Thus the\n"
 block|,
-literal|"maximum cost of information is $34.\n\n"
+literal|"maximum cost of information is $34.  Playing time is charged\n"
+block|,
+literal|"at a rate of $1 per minute.\n\n"
 block|,
 literal|"push any key when you are finished: "
 block|,
@@ -7315,6 +7404,12 @@ name|srandom
 argument_list|(
 name|getpid
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|acctstart
 argument_list|)
 expr_stmt|;
 name|initdeck
@@ -7702,6 +7797,12 @@ end_macro
 
 begin_block
 block|{
+name|total
+operator|.
+name|thinktime
+operator|+=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|dbfd
