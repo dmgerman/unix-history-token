@@ -347,6 +347,7 @@ begin_struct
 struct|struct
 name|camcontrol_opts
 block|{
+specifier|const
 name|char
 modifier|*
 name|optname
@@ -706,16 +707,6 @@ name|arglist
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|bus
-decl_stmt|,
-name|target
-decl_stmt|,
-name|lun
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|camcontrol_optret
 name|getoption
@@ -732,6 +723,7 @@ name|cam_argmask
 modifier|*
 name|argnum
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -930,7 +922,7 @@ name|lun
 parameter_list|,
 name|cam_argmask
 modifier|*
-name|arglist
+name|arglst
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1272,6 +1264,7 @@ name|cam_argmask
 modifier|*
 name|argnum
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1348,10 +1341,6 @@ expr_stmt|;
 operator|*
 name|subopt
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|opts
 operator|->
 name|subopt
@@ -4406,7 +4395,7 @@ name|lun
 parameter_list|,
 name|cam_argmask
 modifier|*
-name|arglist
+name|arglst
 parameter_list|)
 block|{
 name|char
@@ -4478,7 +4467,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 operator|*
-name|arglist
+name|arglst
 operator||=
 name|CAM_ARG_BUS
 expr_stmt|;
@@ -4527,7 +4516,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 operator|*
-name|arglist
+name|arglst
 operator||=
 name|CAM_ARG_TARGET
 expr_stmt|;
@@ -4576,7 +4565,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 operator|*
-name|arglist
+name|arglst
 operator||=
 name|CAM_ARG_LUN
 expr_stmt|;
@@ -10966,6 +10955,7 @@ operator|<<
 literal|1
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -11087,6 +11077,7 @@ operator|<<
 literal|1
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -11185,6 +11176,7 @@ operator|<<
 literal|1
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -14428,12 +14420,14 @@ name|char
 modifier|*
 name|tstr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mainopt
 init|=
 literal|"C:En:t:u:v"
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|subopt
@@ -14460,6 +14454,19 @@ name|devopen
 init|=
 literal|1
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+name|int
+name|bus
+decl_stmt|,
+name|target
+decl_stmt|,
+name|lun
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 name|cmdlist
 operator|=
 name|CAM_CMD_NONE

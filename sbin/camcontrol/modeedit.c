@@ -609,6 +609,7 @@ specifier|static
 name|int
 name|load_format
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pagedb_path
@@ -694,63 +695,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|mode_edit
-parameter_list|(
-name|struct
-name|cam_device
-modifier|*
-name|device
-parameter_list|,
-name|int
-name|page
-parameter_list|,
-name|int
-name|page_control
-parameter_list|,
-name|int
-name|dbd
-parameter_list|,
-name|int
-name|edit
-parameter_list|,
-name|int
-name|binary
-parameter_list|,
-name|int
-name|retry_count
-parameter_list|,
-name|int
-name|timeout
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mode_list
-parameter_list|(
-name|struct
-name|cam_device
-modifier|*
-name|device
-parameter_list|,
-name|int
-name|page_control
-parameter_list|,
-name|int
-name|dbd
-parameter_list|,
-name|int
-name|retry_count
-parameter_list|,
-name|int
-name|timeout
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -779,6 +723,7 @@ parameter_list|(
 name|void
 modifier|*
 name|hook
+name|__unused
 parameter_list|,
 name|int
 name|letter
@@ -899,6 +844,7 @@ parameter_list|(
 name|void
 modifier|*
 name|hook
+name|__unused
 parameter_list|,
 name|int
 name|letter
@@ -1015,6 +961,7 @@ parameter_list|(
 name|void
 modifier|*
 name|hook
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -1212,7 +1159,7 @@ name|RESOLUTION_MAX
 parameter_list|(
 name|size
 parameter_list|)
-value|((resolution * (size) == 32)? 		\ 	0xffffffff: (1<< (resolution * (size))) - 1)
+value|((resolution * (size) == 32)? 		\ 	(int)0xffffffff: (1<< (resolution * (size))) - 1)
 name|assert
 argument_list|(
 name|newvalue
@@ -1465,11 +1412,11 @@ block|{
 comment|/* Convert trailing spaces to nulls. */
 name|char
 modifier|*
-name|convertend
+name|convertend2
 decl_stmt|;
 for|for
 control|(
-name|convertend
+name|convertend2
 operator|=
 name|cval
 operator|+
@@ -1477,23 +1424,23 @@ name|dest
 operator|->
 name|size
 init|;
-name|convertend
+name|convertend2
 operator|>=
 name|cval
 condition|;
-name|convertend
+name|convertend2
 operator|--
 control|)
 block|{
 if|if
 condition|(
 operator|*
-name|convertend
+name|convertend2
 operator|==
 literal|' '
 condition|)
 operator|*
-name|convertend
+name|convertend2
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1501,7 +1448,7 @@ elseif|else
 if|if
 condition|(
 operator|*
-name|convertend
+name|convertend2
 operator|!=
 literal|'\0'
 condition|)
@@ -1748,6 +1695,7 @@ specifier|static
 name|int
 name|load_format
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pagedb_path
@@ -3185,6 +3133,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|editor
@@ -3476,7 +3425,7 @@ modifier|*
 name|mph
 decl_stmt|;
 name|int
-name|index
+name|indx
 decl_stmt|;
 comment|/* Index for scanning mode params. */
 name|mode_sense
@@ -3527,17 +3476,17 @@ expr_stmt|;
 comment|/* Print the raw mode page data with newlines each 8 bytes. */
 for|for
 control|(
-name|index
+name|indx
 operator|=
 literal|0
 init|;
-name|index
+name|indx
 operator|<
 name|mph
 operator|->
 name|page_length
 condition|;
-name|index
+name|indx
 operator|++
 control|)
 block|{
@@ -3547,13 +3496,13 @@ literal|"%02x%c"
 argument_list|,
 name|mode_pars
 index|[
-name|index
+name|indx
 index|]
 argument_list|,
 operator|(
 operator|(
 operator|(
-name|index
+name|indx
 operator|+
 literal|1
 operator|)
@@ -3654,6 +3603,7 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|pagedb_path
@@ -3928,6 +3878,7 @@ name|pagename
 modifier|*
 name|nameentry
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pagedb_path

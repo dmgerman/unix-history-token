@@ -288,6 +288,7 @@ parameter_list|(
 name|void
 modifier|*
 name|hook
+name|__unused
 parameter_list|,
 name|int
 name|letter
