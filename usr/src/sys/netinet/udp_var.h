@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_var.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_var.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -160,7 +160,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* allow replies to netmask requests */
+comment|/* checksum UDP packets */
 end_comment
 
 begin_define
