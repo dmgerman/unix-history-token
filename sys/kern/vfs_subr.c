@@ -366,18 +366,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vholdl
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|vinactive
 parameter_list|(
 name|struct
@@ -8619,7 +8607,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vholdl
 parameter_list|(
