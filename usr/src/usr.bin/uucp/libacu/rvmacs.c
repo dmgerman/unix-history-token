@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rvmacs.c	4.1 (Berkeley) %G%"
+literal|"@(#)rvmacs.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,17 @@ name|RVMACS
 end_ifdef
 
 begin_comment
-comment|/*  * Racal-Vadic 'RV820' MACS system with 831 adaptor.  * A typical 300 baud L-devices entry is  *	ACU tty10 tty11,48 300 rvmacs  * where tty10 is the communication line (D_Line),  * tty11 is the dialer line (D_calldev),  * the '4' is the dialer address + modem type (viz. dialer 0, Bell 103),  * the '8' is the communication port,  * We assume the dialer speed is 1200 baud.  */
+comment|/*  * Racal-Vadic 'RV820' MACS system with 831 adaptor.  * A typical 300 baud L-devices entry is  *	ACU tty10 tty11,48 300 rvmacs  * where tty10 is the communication line (D_Line),  * tty11 is the dialer line (D_calldev),  * the '4' is the dialer address + modem type (viz. dialer 0, Bell 103),  * the '8' is the communication port,  * We assume the dialer speed is 1200 baud unless MULTISPEED is defined.  * We extended the semantics of the L-devices entry to allow you  * to set the speed at which the computer talks to the dialer:  *	ACU cul0 cua0,0<,2400 1200 rvmacs  * This is interpreted as above, except that the number following the second  * comma in the third field is taken to be the speed at which the computer  * must communicate with the dialer.  (If omitted, it defaults to the value  * in the fourth field.)  Note -- just after the call completes and you get  * carrier, the line speed is reset to the speed indicated in the fourth field.  * To get this ability, define "MULTISPEED", as below.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MULTISPEED
+end_define
+
+begin_comment
+comment|/* for dialers which work at various speeds */
 end_comment
 
 begin_define
@@ -236,6 +246,53 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTISPEED
+name|baudrate
+operator|=
+name|dev
+operator|->
+name|D_speed
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pp
+operator|=
+name|index
+argument_list|(
+name|p
+argument_list|,
+literal|','
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|baudrate
+operator|=
+name|atoi
+argument_list|(
+name|pp
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|5
+argument_list|,
+literal|"Using speed %d baud\n"
+argument_list|,
+name|baudrate
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|MULTISPEED
 if|if
 condition|(
 name|setjmp
@@ -365,6 +422,19 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTISPEED
+name|fixline
+argument_list|(
+name|va
+argument_list|,
+name|baudrate
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|!MULTISPEED
 name|sg
 operator|.
 name|sg_flags
@@ -393,6 +463,9 @@ operator|&
 name|sg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|MULTISPEED
 name|pc
 argument_list|(
 name|va
