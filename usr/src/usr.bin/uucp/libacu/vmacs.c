@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmacs.c	4.3 (Berkeley) %G%"
+literal|"@(#)vmacs.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ name|VMACS
 end_ifdef
 
 begin_comment
-comment|/*  * Racal-Vadic 'RV811' MACS system with 831 adaptor.  *  * A typical 300 baud L-devices entry is  *	ACU /dev/tty10 /dev/tty11,48,1200 300 vmacs  * where tty10 is the communication line (D_Line),  * tty11 is the dialer line (D_calldev),  * the '4' is the dialer address + modem type (viz. dialer 0, Bell 103),  * and the '8' is the communication port  * (Note: Based on RVMACS version for 820 dialer.  This version  *  developed by Doug Kingston @ BRL, 13 December 83.)  */
+comment|/*  *  * A typical 300 baud L-devices entry is  *	ACU /dev/tty10 /dev/tty11,48,1200 300 vmacs  * where tty10 is the communication line (D_Line),  * tty11 is the dialer line (D_calldev),  * the '4' is the dialer address + modem type (viz. dialer 0, Bell 103),  * and the '8' is the communication port  * (Note: Based on RVMACS version for 820 dialer.  This version  *  developed by Doug Kingston @ BRL, 13 December 83.)  */
 end_comment
 
 begin_define
@@ -890,12 +890,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|VMACS
-end_endif
 
 end_unit
 

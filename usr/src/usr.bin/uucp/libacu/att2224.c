@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)att2224.c	1.1 (Berkeley) %G%"
+literal|"@(#)att2224.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ATT2224
-end_ifdef
 
 begin_macro
 name|attopn
@@ -757,12 +751,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|ATT2224
-end_endif
 
 end_unit
 

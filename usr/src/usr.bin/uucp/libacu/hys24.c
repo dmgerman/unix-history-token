@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hys24.c	1.1 (Berkeley) %G%"
+literal|"@(#)hys24.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,12 +26,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAYES2400
-end_ifdef
 
 begin_comment
 comment|/*  *	hyspopn24(telno, flds, dev) connect to hayes smartmodem (pulse call)  *	hystopn24(telno, flds, dev) connect to hayes smartmodem (tone call)  *	char *flds[], *dev[];  *  *	return codes:  *>0  -  file number  -  ok  *		CF_DIAL,CF_DEVICE  -  failed  */
@@ -609,12 +603,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|HAYES2400
-end_endif
 
 end_unit
 

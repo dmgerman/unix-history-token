@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)va811.c	4.1 (Berkeley) %G%"
+literal|"@(#)va811.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VA811S
-end_ifdef
 
 begin_comment
 comment|/*  * Racal-Vadic VA811 dialer with 831 adaptor.  * A typical 300 baud L-devices entry is  *	ACU /dev/tty10 unused 300 va811s  * where tty10 is the communication line (D_Line),  * and 300 is the line speed.  * This is almost identical to RVMACS except that we don't need to  * send addresses and modem types, and don't need the fork.  *	Joe Kelsey, fluke!joe, vax4.1526, Apr 11 1984.  */
@@ -652,12 +646,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|VA811S
-end_endif
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hysq.c	4.1 (Berkeley) %G%"
+literal|"@(#)hysq.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAYESQ
-end_ifdef
 
 begin_comment
 comment|/*  * New dialout routine to work with Hayes' SMART MODEM  * 13-JUL-82, Mike Mitchell  * Modified 23-MAR-83 to work with Tom Truscott's (rti!trt)  * version of UUCP	(ncsu!mcm)  *  * The modem should be set to NOT send any result codes to  * the system (switch 3 up, 4 down). This end will figure out  * what is wrong.  *  * I had lots of problems with the modem sending  * result codes since I am using the same modem for both incomming and  * outgoing calls.  I'd occasionally miss the result code (getty would  * grab it), and the connect would fail.  Worse yet, the getty would  * think the result code was a user name, and send garbage to it while  * it was in the command state.  I turned off ALL result codes, and hope  * for the best.  99% of the time the modem is in the correct state.  * Occassionally it doesn't connect, or the phone was busy, etc., and  * uucico sits there trying to log in.  It eventually times out, calling  * clsacu() in the process, so it resets itself for the next attempt.  */
@@ -629,12 +623,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|HAYESQ
-end_endif
 
 end_unit
 

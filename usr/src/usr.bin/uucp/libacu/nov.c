@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nov.c	4.1 (Berkeley) %G%"
+literal|"@(#)nov.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOVATION
-end_ifdef
 
 begin_comment
 comment|/***  *	novopn(telno, flds, dev) connect to novation Smart-Cat  *	(similar to hayes smartmodem)  *	char *flds[], *dev[];  *  *	return codes:  *>0  -  file number  -  ok  *		CF_DIAL,CF_DEVICE  -  failed  */
@@ -533,12 +527,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|NOVATION
-end_endif
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vad.c	4.2 (Berkeley) %G%"
+literal|"@(#)vad.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VADIC
-end_ifdef
 
 begin_comment
 comment|/*  *	vadopn: establish dial-out connection through a Racal-Vadic 3450.  *	Returns descriptor open to tty for reading and writing.  *	Negative values (-1...-7) denote errors in connmsg.  *	Be sure to disconnect tty when done, via HUPCL or stty 0.  */
@@ -708,12 +702,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|VADIC
-end_endif
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)va820.c	4.3 (Berkeley) %G%"
+literal|"@(#)va820.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VA820
-end_ifdef
 
 begin_comment
 comment|/*  * Racal-Vadic 'RV820' with 831 adaptor.  * BUGS:  * dialer baud rate is hardcoded  */
@@ -885,12 +879,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|VA820
-end_endif
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pen.c	4.2 (Berkeley) %G%"
+literal|"@(#)pen.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,12 +29,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PENRIL
-end_ifdef
 
 begin_macro
 name|penopn
@@ -560,12 +554,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|PENRIL
-end_endif
 
 end_unit
 

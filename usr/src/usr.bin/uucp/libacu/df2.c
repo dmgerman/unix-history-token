@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df2.c	4.2 (Berkeley) %G%"
+literal|"@(#)df2.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DF02
-end_ifdef
 
 begin_comment
 comment|/*  *	df2opn(ph, flds, dev)	dial remote machine  *  *	return codes:  *		file descriptor  -  succeeded  *		FAIL  -  failed  */
@@ -756,12 +750,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|DF02
-end_endif
 
 end_unit
 

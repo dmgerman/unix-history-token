@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cds224.c	1.1 (Berkeley) %G%"
+literal|"@(#)cds224.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,12 +26,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CDS224
-end_ifdef
 
 begin_comment
 comment|/*  *	conopn: establish dial-out connection through a Concord CDS 224.  *	Returns descriptor open to tty for reading and writing.  *	Negative values (-1...-7) denote errors in connmsg.  *	Be sure to disconnect tty when done, via HUPCL or stty 0.  */
@@ -573,12 +567,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|CDS224
-end_endif
 
 end_unit
 

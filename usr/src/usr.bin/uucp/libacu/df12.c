@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df12.c	4.1 (Berkeley) %G%"
+literal|"@(#)df12.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DF112
-end_ifdef
 
 begin_comment
 comment|/*  *	df12popn(telno, flds, dev) connect to df12 modem (pulse call)  *	df12topn(telno, flds, dev) connect to df12 modem (tone call)  *	char *flds[], *dev[];  *  *	return codes:  *>0  -  file number  -  ok  *		CF_DIAL,CF_NODEV  -  failed  */
@@ -719,12 +713,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|DF112
-end_endif
 
 end_unit
 
