@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	6.1	83/07/29	*/
+comment|/*	uda.c	6.2	84/10/04	*/
 end_comment
 
 begin_comment
@@ -212,6 +212,10 @@ name|mscp
 modifier|*
 name|mp
 decl_stmt|;
+specifier|static
+name|int
+name|udainit
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -247,6 +251,15 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Initialise cudbuf.i_unit so that controllers 		 * on UNIBUSes other than 0 can be used. 		 */
+name|cudbuf
+operator|.
+name|i_unit
+operator|=
+name|io
+operator|->
+name|i_unit
+expr_stmt|;
 name|cudbuf
 operator|.
 name|i_ma
@@ -282,6 +295,13 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|udainit
+operator|==
+literal|0
+condition|)
+block|{
 name|udaddr
 operator|->
 name|udaip
@@ -480,6 +500,11 @@ literal|"ra: open error, ONLIN"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+name|udainit
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
