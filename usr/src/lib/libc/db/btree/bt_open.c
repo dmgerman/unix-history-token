@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.12 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,9 +353,21 @@ else|else
 block|{
 name|b
 operator|.
+name|compare
+operator|=
+name|__bt_defcmp
+expr_stmt|;
+name|b
+operator|.
 name|flags
 operator|=
 literal|0
+expr_stmt|;
+name|b
+operator|.
+name|lorder
+operator|=
+name|BYTE_ORDER
 expr_stmt|;
 name|b
 operator|.
@@ -365,21 +377,15 @@ name|DEFMINKEYPAGE
 expr_stmt|;
 name|b
 operator|.
-name|compare
-operator|=
-name|__bt_defcmp
-expr_stmt|;
-name|b
-operator|.
 name|prefix
 operator|=
 name|__bt_defpfx
 expr_stmt|;
 name|b
 operator|.
-name|lorder
+name|psize
 operator|=
-name|BYTE_ORDER
+literal|0
 expr_stmt|;
 block|}
 comment|/* Allocate and initialize DB and BTREE structures. */
