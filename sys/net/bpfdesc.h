@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -154,9 +160,51 @@ name|mtx
 name|bd_mtx
 decl_stmt|;
 comment|/* mutex for this descriptor */
+name|struct
+name|callout
+name|bd_callout
+decl_stmt|;
+comment|/* for BPF timeouts with select */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Values for bd_state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_IDLE
+value|0
+end_define
+
+begin_comment
+comment|/* no select in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_WAITING
+value|1
+end_define
+
+begin_comment
+comment|/* waiting for read timeout in select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_TIMED_OUT
+value|2
+end_define
+
+begin_comment
+comment|/* read timeout has expired in select */
+end_comment
 
 begin_define
 define|#
