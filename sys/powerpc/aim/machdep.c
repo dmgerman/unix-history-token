@@ -1070,19 +1070,6 @@ name|kmdp
 operator|=
 name|preload_search_by_type
 argument_list|(
-literal|"elf32 kernel"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kmdp
-operator|==
-name|NULL
-condition|)
-name|kmdp
-operator|=
-name|preload_search_by_type
-argument_list|(
 literal|"elf kernel"
 argument_list|)
 expr_stmt|;
