@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp_defs.h,v 1.7 1995/08/10 06:49:35 paulus Exp $	*/
+comment|/*	$Id: ppp_defs.h,v 1.2 1997/04/30 05:42:20 paulus Exp $	*/
 end_comment
 
 begin_comment
@@ -163,6 +163,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPP_AT
+value|0x29
+end_define
+
+begin_comment
+comment|/* AppleTalk Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PPP_VJC_COMP
 value|0x2d
 end_define
@@ -202,6 +213,17 @@ end_define
 
 begin_comment
 comment|/* IP Control Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_ATCP
+value|0x8029
+end_define
+
+begin_comment
+comment|/* AppleTalk Control Protocol */
 end_comment
 
 begin_define
@@ -259,6 +281,17 @@ begin_comment
 comment|/* Cryptographic Handshake Auth. Protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PPP_CBCP
+value|0xc029
+end_define
+
+begin_comment
+comment|/* Callback Control Protocol */
+end_comment
+
 begin_comment
 comment|/*  * Values for FCS calculations.  */
 end_comment
@@ -296,62 +329,6 @@ name|c
 parameter_list|)
 value|(((fcs)>> 8) ^ fcstab[((fcs) ^ (c))& 0xff])
 end_define
-
-begin_comment
-comment|/*  * A 32-bit unsigned integral type.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__BIT_TYPES_DEFINED__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_BITYPES
-argument_list|)
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UINT32_T
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|UINT32_T
-name|u_int32_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|u_int32_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Extended asyncmap - allows any character to be escaped.  */
@@ -398,27 +375,33 @@ begin_struct
 struct|struct
 name|pppstat
 block|{
-name|u_int
+name|unsigned
+name|int
 name|ppp_ibytes
 decl_stmt|;
 comment|/* bytes received */
-name|u_int
+name|unsigned
+name|int
 name|ppp_ipackets
 decl_stmt|;
 comment|/* packets received */
-name|u_int
+name|unsigned
+name|int
 name|ppp_ierrors
 decl_stmt|;
 comment|/* receive errors */
-name|u_int
+name|unsigned
+name|int
 name|ppp_obytes
 decl_stmt|;
 comment|/* bytes sent */
-name|u_int
+name|unsigned
+name|int
 name|ppp_opackets
 decl_stmt|;
 comment|/* packets sent */
-name|u_int
+name|unsigned
+name|int
 name|ppp_oerrors
 decl_stmt|;
 comment|/* transmit errors */
@@ -430,35 +413,43 @@ begin_struct
 struct|struct
 name|vjstat
 block|{
-name|u_int
+name|unsigned
+name|int
 name|vjs_packets
 decl_stmt|;
 comment|/* outbound packets */
-name|u_int
+name|unsigned
+name|int
 name|vjs_compressed
 decl_stmt|;
 comment|/* outbound compressed packets */
-name|u_int
+name|unsigned
+name|int
 name|vjs_searches
 decl_stmt|;
 comment|/* searches for connection state */
-name|u_int
+name|unsigned
+name|int
 name|vjs_misses
 decl_stmt|;
 comment|/* times couldn't find conn. state */
-name|u_int
+name|unsigned
+name|int
 name|vjs_uncompressedin
 decl_stmt|;
 comment|/* inbound uncompressed packets */
-name|u_int
+name|unsigned
+name|int
 name|vjs_compressedin
 decl_stmt|;
 comment|/* inbound compressed packets */
-name|u_int
+name|unsigned
+name|int
 name|vjs_errorin
 decl_stmt|;
 comment|/* inbound unknown type packets */
-name|u_int
+name|unsigned
+name|int
 name|vjs_tossed
 decl_stmt|;
 comment|/* inbound packets tossed because of error */
@@ -488,31 +479,38 @@ begin_struct
 struct|struct
 name|compstat
 block|{
-name|u_int
+name|unsigned
+name|int
 name|unc_bytes
 decl_stmt|;
 comment|/* total uncompressed bytes */
-name|u_int
+name|unsigned
+name|int
 name|unc_packets
 decl_stmt|;
 comment|/* total uncompressed packets */
-name|u_int
+name|unsigned
+name|int
 name|comp_bytes
 decl_stmt|;
 comment|/* compressed bytes */
-name|u_int
+name|unsigned
+name|int
 name|comp_packets
 decl_stmt|;
 comment|/* compressed packets */
-name|u_int
+name|unsigned
+name|int
 name|inc_bytes
 decl_stmt|;
 comment|/* incompressible bytes */
-name|u_int
+name|unsigned
+name|int
 name|inc_packets
 decl_stmt|;
 comment|/* incompressible packets */
-name|u_int
+name|unsigned
+name|int
 name|ratio
 decl_stmt|;
 comment|/* recent compression ratio<< 8 */

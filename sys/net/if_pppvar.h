@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: if_pppvar.h,v 1.1 1994/12/15 22:28:09 paulus Exp $	*/
+comment|/*	$Id: if_pppvar.h,v 1.5 1997/04/30 05:42:08 paulus Exp $	*/
 end_comment
 
 begin_comment
@@ -139,24 +139,11 @@ modifier|*
 name|sc_npqtail
 decl_stmt|;
 comment|/* ptr to last next ptr in npqueue */
-ifdef|#
-directive|ifdef
-name|VJC
 name|struct
-name|vjcompress
-name|sc_comp
+name|pppstat
+name|sc_stats
 decl_stmt|;
-comment|/* vjc control buffer */
-endif|#
-directive|endif
-name|u_int
-name|sc_bytessent
-decl_stmt|;
-comment|/* count of octets sent */
-name|u_int
-name|sc_bytesrcvd
-decl_stmt|;
-comment|/* count of octets received */
+comment|/* count of bytes/pkts sent/rcvd */
 name|caddr_t
 name|sc_bpf
 decl_stmt|;
@@ -199,6 +186,33 @@ name|time_t
 name|sc_last_recv
 decl_stmt|;
 comment|/* time (secs) last NP pkt rcvd */
+ifdef|#
+directive|ifdef
+name|PPP_FILTER
+name|struct
+name|bpf_program
+name|sc_pass_filt
+decl_stmt|;
+comment|/* filter for packets to pass */
+name|struct
+name|bpf_program
+name|sc_active_filt
+decl_stmt|;
+comment|/* filter for "non-idle" packets */
+endif|#
+directive|endif
+comment|/* PPP_FILTER */
+ifdef|#
+directive|ifdef
+name|VJC
+name|struct
+name|vjcompress
+modifier|*
+name|sc_comp
+decl_stmt|;
+comment|/* vjc control buffer */
+endif|#
+directive|endif
 comment|/* Device-dependent part for async lines. */
 name|ext_accm
 name|sc_asyncmap
@@ -322,6 +336,21 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ppp_restart
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ppp_softc
+operator|*
+name|sc
 operator|)
 argument_list|)
 decl_stmt|;
