@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lprint.c,v 1.8 1997/07/02 06:34:49 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,7 +238,8 @@ name|vputc
 name|__P
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1494,13 +1495,13 @@ name|int
 name|ch
 decl_stmt|,
 name|cnt
-decl_stmt|,
-name|lastc
 decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|,
+name|lastc
 decl_stmt|;
 name|int
 name|fd
@@ -1820,7 +1821,8 @@ parameter_list|(
 name|ch
 parameter_list|)
 specifier|register
-name|int
+name|unsigned
+name|char
 name|ch
 decl_stmt|;
 block|{
