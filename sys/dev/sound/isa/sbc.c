@@ -1213,6 +1213,13 @@ block|}
 block|,
 comment|/* ESS1869 */
 block|{
+literal|0xabb0110e
+block|,
+literal|"ESS ES1869 (Compaq OEM)"
+block|}
+block|,
+comment|/* CPQb0ab */
+block|{
 literal|0xacb0110e
 block|,
 literal|"ESS ES1869 (Compaq OEM)"
