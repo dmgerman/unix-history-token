@@ -529,21 +529,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_kse
-operator|->
-name|ke_mdstorage
-condition|)
-name|cpu_free_kse_mdstorage
-argument_list|(
-name|td
-operator|->
-name|td_kse
-argument_list|)
-expr_stmt|;
 comment|/* Are we a task leader? */
 name|PROC_LOCK
 argument_list|(
