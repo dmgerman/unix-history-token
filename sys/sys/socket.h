@@ -716,43 +716,53 @@ value|31
 end_define
 
 begin_comment
-comment|/* Used by BPF to not rewrite headers #define	AF_NETGRAPH	32		/* Netgraph sockets */
+comment|/* Used by BPF to not rewrite headers 					 * in interface output routine 					 */
 end_comment
 
-begin_expr_stmt
-operator|*
-name|in
-name|interface
-name|output
-name|routine
-operator|*
-operator|/
+begin_define
+define|#
+directive|define
+name|AF_NETGRAPH
+value|32
+end_define
+
+begin_comment
+comment|/* Netgraph sockets */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|AF_MAX
-value|32
+value|33
+end_define
+
+begin_comment
 comment|/*  * Structure used by kernel to store most  * addresses.  */
-expr|struct
+end_comment
+
+begin_struct
+struct|struct
 name|sockaddr
 block|{
 name|u_char
 name|sa_len
-block|;
+decl_stmt|;
 comment|/* total length */
 name|u_char
 name|sa_family
-block|;
+decl_stmt|;
 comment|/* address family */
 name|char
 name|sa_data
 index|[
 literal|14
 index|]
-block|;
+decl_stmt|;
 comment|/* actually longer; address value */
 block|}
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_define
 define|#
