@@ -136,6 +136,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_IO
+value|12
+end_define
+
+begin_comment
+comment|/* do I/O to/from stopped process. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_GETREGS
 value|33
 end_define
@@ -218,6 +229,80 @@ end_include
 
 begin_comment
 comment|/* machine-specific requests, if any */
+end_comment
+
+begin_struct
+struct|struct
+name|ptrace_io_desc
+block|{
+name|int
+name|piod_op
+decl_stmt|;
+comment|/* I/O operation */
+name|void
+modifier|*
+name|piod_offs
+decl_stmt|;
+comment|/* child offset */
+name|void
+modifier|*
+name|piod_addr
+decl_stmt|;
+comment|/* parent offset */
+name|size_t
+name|piod_len
+decl_stmt|;
+comment|/* request length */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Operations in piod_op.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIOD_READ_D
+value|1
+end_define
+
+begin_comment
+comment|/* Read from D space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIOD_WRITE_D
+value|2
+end_define
+
+begin_comment
+comment|/* Write to D space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIOD_READ_I
+value|3
+end_define
+
+begin_comment
+comment|/* Read from I space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIOD_WRITE_I
+value|4
+end_define
+
+begin_comment
+comment|/* Write to I space */
 end_comment
 
 begin_ifdef
