@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	2.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	2.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -134,11 +134,12 @@ begin_struct
 struct|struct
 name|union_node
 block|{
-name|struct
-name|union_node
-modifier|*
-name|un_next
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|union_node
+argument_list|)
+name|un_cache
+expr_stmt|;
 comment|/* Hash chain */
 name|struct
 name|vnode
@@ -227,28 +228,6 @@ end_define
 begin_comment
 comment|/* Keep upper node locked on vput */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCKUVP
-parameter_list|(
-name|un
-parameter_list|)
-define|\
-value|(((un)->un_flags& UN_ULOCK) ? \ 		  (0) : \ 		  (((un)->un_flags |= UN_ULOCK), VOP_LOCK((un)->un_uppervp)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNLOCKUVP
-parameter_list|(
-name|un
-parameter_list|)
-define|\
-value|((un)->un_flags&= ~UN_ULOCK)
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -419,6 +398,44 @@ name|union_lowervp
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|union_newlower
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|union_node
+operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|union_newupper
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|union_node
+operator|*
+operator|,
 expr|struct
 name|vnode
 operator|*
