@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.2 (Berkeley) %G%"
+literal|"@(#)trees.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1943,9 +1943,9 @@ argument|return(p); 	}  NODE * makety( p, t, d, s ) register NODE *p; TWORD t; {
 comment|/* make p into type t by inserting a conversion */
 argument|if( p->in.type == ENUMTY&& p->in.op == ICON ) econvert(p); 	if( t == p->in.type ){ 		p->fn.cdim = d; 		p->fn.csiz = s; 		return( p ); 		}  	if( t& TMASK ){
 comment|/* non-simple type */
-argument|return( block( PCONV, p, NIL, t, d, s ) ); 		}  	if( p->in.op == ICON ){ 		if( t==DOUBLE||t==FLOAT ){ 			p->in.op = FCON; 			if( ISUNSIGNED(p->in.type) ){ 				p->fpn.dval =
+argument|return( clocal( block( PCONV, p, NIL, t, d, s ) ) ); 		}  	if( p->in.op == ICON ){ 		if( t==DOUBLE||t==FLOAT ){ 			p->in.op = FCON; 			if( ISUNSIGNED(p->in.type) ){ 				p->fpn.dval =
 comment|/* (unsigned CONSZ) */
-argument|p->tn.lval; 				} 			else { 				p->fpn.dval = p->tn.lval; 				}  			p->in.type = p->fn.csiz = t; 			return( clocal(p) ); 			} 		}  	return( block( SCONV, p, NIL, t, d, s ) );  	}  NODE * block( o, l, r, t, d, s ) register NODE *l, *r; TWORD t; {  	register NODE *p;  	p = talloc(); 	p->in.op = o; 	p->in.left = l; 	p->in.right = r; 	p->in.type = t; 	p->fn.cdim = d; 	p->fn.csiz = s; 	return(p); 	}  icons(p) register NODE *p; {
+argument|p->tn.lval; 				} 			else { 				p->fpn.dval = p->tn.lval; 				}  			p->in.type = p->fn.csiz = t; 			return( clocal(p) ); 			} 		}  	return( clocal( block( SCONV, p, NIL, t, d, s ) ) );  	}  NODE * block( o, l, r, t, d, s ) register NODE *l, *r; TWORD t; {  	register NODE *p;  	p = talloc(); 	p->in.op = o; 	p->in.left = l; 	p->in.right = r; 	p->in.type = t; 	p->fn.cdim = d; 	p->fn.csiz = s; 	return(p); 	}  icons(p) register NODE *p; {
 comment|/* if p is an integer constant, return its value */
 argument|int val;  	if( p->in.op != ICON ){ 		uerror(
 literal|"constant expected"
