@@ -1688,7 +1688,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* It is desirable to send routing updates 				 * regularly.  So schedule the next update 				 * 30 seconds after the previous one was 				 * secheduled, instead of 30 seconds after 				 * the previous update was finished. 				 * Even if we just started after discovering 				 * a 2nd interface or were otherwise delayed, 				 * pick a 30-second aniversary of the 				 * original broadcast time. 				 */
+comment|/* It is desirable to send routing updates 				 * regularly.  So schedule the next update 				 * 30 seconds after the previous one was 				 * scheduled, instead of 30 seconds after 				 * the previous update was finished. 				 * Even if we just started after discovering 				 * a 2nd interface or were otherwise delayed, 				 * pick a 30-second aniversary of the 				 * original broadcast time. 				 */
 name|n
 operator|=
 literal|1
