@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look_up.c	6.1 (Berkeley) %G%"
+literal|"@(#)look_up.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,14 @@ argument_list|(
 operator|&
 name|response
 argument_list|)
+expr_stmt|;
+name|response
+operator|.
+name|addr
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
 expr_stmt|;
 if|if
 condition|(
