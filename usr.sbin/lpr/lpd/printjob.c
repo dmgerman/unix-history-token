@@ -5385,14 +5385,16 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 name|int
-name|sizerr
+name|closedpr
 decl_stmt|,
 name|resp
 decl_stmt|,
-name|closedpr
+name|sizerr
+decl_stmt|,
+name|statrc
 decl_stmt|;
-if|if
-condition|(
+name|statrc
+operator|=
 name|lstat
 argument_list|(
 name|file
@@ -5400,10 +5402,33 @@ argument_list|,
 operator|&
 name|stb
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|statrc
 operator|<
 literal|0
-operator|||
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: error from lstat(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+return|return
 operator|(
+name|ERROR
+operator|)
+return|;
+block|}
 name|f
 operator|=
 name|open
@@ -5412,15 +5437,33 @@ name|file
 argument_list|,
 name|O_RDONLY
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|f
 operator|<
 literal|0
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: error from open(%s,O_RDONLY): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ERROR
 operator|)
 return|;
+block|}
 comment|/* 	 * Check to see if data file is a symbolic link. If so, it should 	 * still point to the same file or someone is trying to print something 	 * he shouldn't. 	 */
 if|if
 condition|(
@@ -5493,7 +5536,7 @@ name|LPF_INPUT
 index|]
 condition|)
 block|{
-comment|/* 			 * We're sending something with an ifilter, we have to 			 * run the ifilter and store the output as a 			 * temporary file (tfile)... the protocol requires us 			 * to send the file size 			 */
+comment|/* 			 * We're sending something with an ifilter.  We have to 			 * run the ifilter and store the output as a temporary 			 * spool file (tfile...), because the protocol requires 			 * us to send the file size before we start sending any 			 * of the data. 			 */
 name|char
 modifier|*
 name|av
@@ -5935,8 +5978,8 @@ name|FILTERERR
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|statrc
+operator|=
 name|fstat
 argument_list|(
 name|tfd
@@ -5944,15 +5987,34 @@ argument_list|,
 operator|&
 name|stb
 argument_list|)
+expr_stmt|;
+comment|/* to find size of tfile */
+if|if
+condition|(
+name|statrc
 operator|<
 literal|0
 condition|)
-comment|/* the size of tfile */
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: error processing 'if', fstat(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|tfile
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ERROR
 operator|)
 return|;
+block|}
 name|f
 operator|=
 name|tfd
@@ -6101,8 +6163,8 @@ name|ofilter
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|statrc
+operator|=
 name|fstat
 argument_list|(
 name|tfd
@@ -6110,11 +6172,28 @@ argument_list|,
 operator|&
 name|stb
 argument_list|)
+expr_stmt|;
+comment|/* to find size of tfile */
+if|if
+condition|(
+name|statrc
 operator|<
 literal|0
 condition|)
 block|{
-comment|/* the size of tfile */
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: error processing 'of', fstat(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|tfile
+argument_list|)
+expr_stmt|;
 name|openpr
 argument_list|(
 name|pp
