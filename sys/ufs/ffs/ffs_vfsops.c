@@ -6312,6 +6312,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * FFS supports recursive locking. 	 */
+name|fs
+operator|=
+name|ump
+operator|->
+name|um_fs
+expr_stmt|;
 name|vp
 operator|->
 name|v_vnlock
@@ -6325,6 +6331,14 @@ operator|->
 name|v_data
 operator|=
 name|ip
+expr_stmt|;
+name|vp
+operator|->
+name|v_bsize
+operator|=
+name|fs
+operator|->
+name|fs_bsize
 expr_stmt|;
 name|ip
 operator|->
@@ -6343,10 +6357,6 @@ operator|->
 name|i_fs
 operator|=
 name|fs
-operator|=
-name|ump
-operator|->
-name|um_fs
 expr_stmt|;
 name|ip
 operator|->
