@@ -93,12 +93,6 @@ name|AACIO_STATS
 value|_IOWR('T', 101, union aac_statrequest)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AAC_COMPAT_LINUX
-end_ifdef
-
 begin_comment
 comment|/*  * Ioctl commands likely to be submitted from a Linux management application.  * These bit encodings are actually descended from Windows NT.  Ick.  */
 end_comment
@@ -578,11 +572,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
