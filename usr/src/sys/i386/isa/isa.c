@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)isa.c	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)isa.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -191,6 +191,18 @@ name|netmask
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * The problem is... if netmask == 0, then the loopback 	 * code can do some really ugly things. 	 * workaround for this: if netmask == 0, set it to 0x8000, which 	 * is the value used by splsoftclock.  this is nasty, but it 	 * should work until this interrupt system goes away. -- cgd 	 */
+if|if
+condition|(
+name|netmask
+operator|==
+literal|0
+condition|)
+name|netmask
+operator|=
+literal|0x8000
+expr_stmt|;
+comment|/* same as for softclock.  XXX */
 comment|/* biomask |= ttymask ;  can some tty devices use buffers? */
 name|printf
 argument_list|(
