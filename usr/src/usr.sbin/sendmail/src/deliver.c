@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.13 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1301,6 +1301,33 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|host
+index|[
+literal|0
+index|]
+operator|==
+literal|'['
+condition|)
+block|{
+name|Nmx
+operator|=
+literal|1
+expr_stmt|;
+name|MxHosts
+index|[
+literal|0
+index|]
+operator|=
+name|host
+expr_stmt|;
+name|rcode
+operator|=
+name|EX_OK
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
