@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	4.6 83/05/25"
+literal|"@(#)rwho.c	4.7 (Berkeley) 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,13 +35,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<rwhod.h>
+file|"../etc/rwhod/rwhod.h"
 end_include
 
 begin_decl_stmt
