@@ -222,6 +222,10 @@ argument_list|)
 name|snp_list
 expr_stmt|;
 comment|/* List glue. */
+name|int
+name|snp_unit
+decl_stmt|;
+comment|/* Device number. */
 name|dev_t
 name|snp_target
 decl_stmt|;
@@ -959,7 +963,11 @@ name|tty_input
 goto|;
 name|printf
 argument_list|(
-literal|"Snoop: attempt to write to bad tty.\n"
+literal|"snp%d: attempt to write to bad tty\n"
+argument_list|,
+name|snp
+operator|->
+name|snp_unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -1560,7 +1568,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Snoop: more data to down interface.\n"
+literal|"snp%d: more data to down interface\n"
+argument_list|,
+name|snp
+operator|->
+name|snp_unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -1580,7 +1592,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Snoop: buffer overflow.\n"
+literal|"snp%d: buffer overflow\n"
+argument_list|,
+name|snp
+operator|->
+name|snp_unit
 argument_list|)
 expr_stmt|;
 comment|/* 		 * On overflow we just repeat the standart close 		 * procedure...yes , this is waste of space but.. Then next 		 * read from device will fail if one would recall he is 		 * snooping and retry... 		 */
@@ -2031,6 +2047,15 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+name|snp
+operator|->
+name|snp_unit
+operator|=
+name|dev2unit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 return|return
@@ -2205,7 +2230,11 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"Snoop: bad attached tty data.\n"
+literal|"snp%d: bad attached tty data\n"
+argument_list|,
+name|snp
+operator|->
+name|snp_unit
 argument_list|)
 expr_stmt|;
 name|snp
