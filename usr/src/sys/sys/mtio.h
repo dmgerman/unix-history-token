@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	mtio.h	4.2	%G%	*/
+end_comment
+
+begin_comment
 comment|/*  * Structures and definitions for mag tape io control commands  */
 end_comment
 
@@ -102,6 +106,17 @@ end_define
 
 begin_comment
 comment|/* rewind and put the drive offline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTNOP
+value|7
+end_define
+
+begin_comment
+comment|/* no operation, sets status only */
 end_comment
 
 begin_comment
