@@ -858,7 +858,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Standard lock, unlock and islocked functions.  *  * These depend on the lock structure being the first element in the  * inode, ie: vp->v_data points to the the lock!  */
+comment|/*  * Standard lock, unlock and islocked functions.  */
 end_comment
 
 begin_function
