@@ -281,6 +281,14 @@ block|,
 block|{
 name|DC_VENDORID_DAVICOM
 block|,
+name|DC_DEVICEID_DM9009
+block|,
+literal|"Davicom DM9009 10/100BaseTX"
+block|}
+block|,
+block|{
+name|DC_VENDORID_DAVICOM
+block|,
 name|DC_DEVICEID_DM9100
 block|,
 literal|"Davicom DM9100 10/100BaseTX"
@@ -8313,6 +8321,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|DC_DEVICEID_DM9009
+case|:
 case|case
 name|DC_DEVICEID_DM9100
 case|:

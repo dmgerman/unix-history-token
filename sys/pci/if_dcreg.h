@@ -4044,6 +4044,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DC_DEVICEID_DM9009
+value|0x9009
+end_define
+
+begin_define
+define|#
+directive|define
 name|DC_DEVICEID_DM9100
 value|0x9100
 end_define
