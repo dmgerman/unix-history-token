@@ -3217,7 +3217,7 @@ block|}
 endif|#
 directive|endif
 comment|/* sun&& d_ino */
-comment|/* Skip the '.' and '..' entries by checking for them 		 * specifically instead of assuming readdir() reuturns them in 		 * that order when first going through a directory.  This is 		 * needed for XFS over NFS filesystems since SGI does not 		 * guarantee that these are * the first two entries returned 		 * from readdir(). 		 */
+comment|/* Skip the '.' and '..' entries by checking for them 		 * specifically instead of assuming readdir() reuturns them in 		 * that order when first going through a directory.  This is 		 * needed for XFS over NFS filesystems since SGI does not 		 * guarantee that these are the first two entries returned 		 * from readdir(). 		 */
 if|if
 condition|(
 name|ISDOT
