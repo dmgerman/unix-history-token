@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	1.3	%G%"
+literal|"@(#)arpadate.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,12 +19,11 @@ begin_comment
 comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		none ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. */
 end_comment
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|arpadate
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -54,6 +53,12 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
 name|time
 argument_list|(
 operator|&
@@ -209,7 +214,7 @@ name|b
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
