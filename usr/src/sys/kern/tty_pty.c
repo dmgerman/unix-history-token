@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.21	82/03/23	*/
+comment|/*	tty_pty.c	4.22	82/07/21	*/
 end_comment
 
 begin_comment
@@ -75,6 +75,14 @@ directive|include
 file|"../h/proc.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|NPTY
+operator|==
+literal|1
+end_if
+
 begin_undef
 undef|#
 directive|undef
@@ -91,6 +99,11 @@ end_define
 begin_comment
 comment|/* crude XXX */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
