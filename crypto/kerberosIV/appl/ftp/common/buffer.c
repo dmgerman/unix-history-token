@@ -18,13 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"roken.h"
 end_include
 
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: buffer.c,v 1.1 1997/05/18 19:59:24 assar Exp $"
+literal|"$Id: buffer.c,v 1.2 1997/12/14 23:51:45 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

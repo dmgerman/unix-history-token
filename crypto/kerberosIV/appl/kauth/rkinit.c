@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rkinit.c,v 1.19 1997/04/01 08:17:33 joda Exp $"
+literal|"$Id: rkinit.c,v 1.21 1998/06/09 19:24:26 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -75,18 +75,10 @@ literal|"gethostbyname '%s' failed: %s\n"
 argument_list|,
 name|hostname
 argument_list|,
-ifdef|#
-directive|ifdef
-name|HAVE_H_ERRNO
 name|hstrerror
 argument_list|(
 name|h_errno
 argument_list|)
-else|#
-directive|else
-literal|"unknown error"
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
 return|return
@@ -481,6 +473,11 @@ name|pack_args
 argument_list|(
 name|buf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
 name|princ
 argument_list|,
 name|lifetime
@@ -490,6 +487,24 @@ argument_list|,
 name|tktfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inlen
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"cannot marshall arguments to %s"
+argument_list|,
+name|hostname
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|write_encrypted

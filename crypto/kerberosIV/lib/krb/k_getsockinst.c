@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: k_getsockinst.c,v 1.10 1997/05/02 14:29:17 assar Exp $"
+literal|"$Id: k_getsockinst.c,v 1.11 1998/06/09 19:25:20 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -110,7 +110,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|inst
 argument_list|,
@@ -120,15 +120,6 @@ name|h_name
 argument_list|,
 name|inst_size
 argument_list|)
-expr_stmt|;
-name|inst
-index|[
-name|inst_size
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|k_ricercar
 argument_list|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb_lib.c,v 1.11 1997/05/07 01:36:08 assar Exp $"
+literal|"$Id: krb_lib.c,v 1.13 1998/11/22 09:41:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -216,10 +216,12 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+comment|/* could have wild card */
 name|char
 modifier|*
 name|inst
 parameter_list|,
+comment|/* could have wild card */
 name|Principal
 modifier|*
 name|principal
@@ -228,13 +230,11 @@ name|unsigned
 name|int
 name|max
 parameter_list|,
+comment|/* max number of name structs to return */
 name|int
 modifier|*
 name|more
 parameter_list|)
-comment|/* could have wild card */
-comment|/* could have wild card */
-comment|/* max number of name structs to return */
 comment|/* more tuples than room for */
 block|{
 name|int
@@ -402,6 +402,8 @@ name|CACHE
 if|if
 condition|(
 name|found
+operator|>
+literal|0
 condition|)
 block|{
 name|kerb_cache_put_principal
@@ -440,11 +442,6 @@ name|n
 parameter_list|)
 comment|/* number of principal structs to write */
 block|{
-name|struct
-name|tm
-modifier|*
-name|tp
-decl_stmt|;
 comment|/* set mod date */
 name|principal
 operator|->
@@ -460,17 +457,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* and mod date string */
-name|tp
-operator|=
-name|k_localtime
-argument_list|(
-operator|&
-name|principal
-operator|->
-name|mod_date
-argument_list|)
-expr_stmt|;
-name|snprintf
+name|strftime
 argument_list|(
 name|principal
 operator|->
@@ -483,26 +470,41 @@ operator|->
 name|mod_date_txt
 argument_list|)
 argument_list|,
-literal|"%4d-%2d-%2d"
+literal|"%Y-%m-%d"
 argument_list|,
-name|tp
+name|k_localtime
+argument_list|(
+operator|&
+name|principal
 operator|->
-name|tm_year
-operator|+
-literal|1900
-argument_list|,
-name|tp
-operator|->
-name|tm_mon
-operator|+
-literal|1
-argument_list|,
-name|tp
-operator|->
-name|tm_mday
+name|mod_date
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* January is 0, not 1 */
+name|strftime
+argument_list|(
+name|principal
+operator|->
+name|exp_date_txt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|principal
+operator|->
+name|exp_date_txt
+argument_list|)
+argument_list|,
+literal|"%Y-%m-%d"
+argument_list|,
+name|k_localtime
+argument_list|(
+operator|&
+name|principal
+operator|->
+name|exp_date
+argument_list|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -645,10 +647,12 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+comment|/* could have wild card */
 name|char
 modifier|*
 name|inst
 parameter_list|,
+comment|/* could have wild card */
 name|Dba
 modifier|*
 name|dba
@@ -657,13 +661,11 @@ name|unsigned
 name|int
 name|max
 parameter_list|,
+comment|/* max number of name structs to return */
 name|int
 modifier|*
 name|more
 parameter_list|)
-comment|/* could have wild card */
-comment|/* could have wild card */
-comment|/* max number of name structs to return */
 comment|/* more tuples than room for */
 block|{
 name|int

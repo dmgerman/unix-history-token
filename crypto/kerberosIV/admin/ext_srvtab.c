@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ext_srvtab.c,v 1.13 1997/05/02 14:27:33 assar Exp $"
+literal|"$Id: ext_srvtab.c,v 1.17 1998/06/09 19:24:13 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -47,31 +47,6 @@ name|REALM_SZ
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s [-n] [-r realm] instance [instance ...]\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -117,11 +92,20 @@ end_function
 begin_function
 specifier|static
 name|void
-name|Die
+name|usage
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: %s [-n] [-r realm] instance [instance ...]\n"
+argument_list|,
+name|__progname
+argument_list|)
+expr_stmt|;
 name|StampOutSecrets
 argument_list|()
 expr_stmt|;
@@ -169,13 +153,15 @@ operator|!=
 name|n
 condition|)
 block|{
-name|printf
+name|StampOutSecrets
+argument_list|()
+expr_stmt|;
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Error writing output file.  Terminating.\n"
 argument_list|)
-expr_stmt|;
-name|Die
-argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -251,6 +237,16 @@ name|realm
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_ATEXIT
+name|atexit
+argument_list|(
+name|StampOutSecrets
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Parse commandline arguments */
 if|if
 condition|(
@@ -323,7 +319,7 @@ argument_list|()
 expr_stmt|;
 else|else
 block|{
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|realm
 argument_list|,
@@ -331,6 +327,8 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|,
+name|REALM_SZ
 argument_list|)
 expr_stmt|;
 comment|/*  		     * This is to humor the broken way commandline 		     * argument parsing is done.  Later, this 		     * program ignores everything that starts with -. 		     */
@@ -454,6 +452,10 @@ argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
+block|{
+name|StampOutSecrets
+argument_list|()
+expr_stmt|;
 name|errx
 argument_list|(
 literal|1
@@ -461,6 +463,7 @@ argument_list|,
 literal|"couldn't get local realm"
 argument_list|)
 expr_stmt|;
+block|}
 name|umask
 argument_list|(
 literal|077

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: prot.h,v 1.7 1997/03/23 03:52:27 joda Exp $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * Include file with authentication protocol information.  */
+comment|/*  * $Id: prot.h,v 1.8 1997/12/05 00:18:02 joda Exp $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * Include file with authentication protocol information.  */
 end_comment
 
 begin_ifndef
@@ -52,127 +52,6 @@ define|#
 directive|define
 name|MAX_TXT_LEN
 value|1000
-end_define
-
-begin_comment
-comment|/* Macro's to obtain various fields from a packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|pkt_version
-parameter_list|(
-name|packet
-parameter_list|)
-value|(unsigned int) *(packet->dat)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_msg_type
-parameter_list|(
-name|packet
-parameter_list|)
-value|(unsigned int) *(packet->dat+1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_a_name
-parameter_list|(
-name|packet
-parameter_list|)
-value|(packet->dat+2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_a_inst
-parameter_list|(
-name|packet
-parameter_list|)
-define|\
-value|(packet->dat+3+strlen((char *)pkt_a_name(packet)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_a_realm
-parameter_list|(
-name|packet
-parameter_list|)
-define|\
-value|(pkt_a_inst(packet)+1+strlen((char *)pkt_a_inst(packet)))
-end_define
-
-begin_comment
-comment|/* Macro to obtain realm from application request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|apreq_realm
-parameter_list|(
-name|auth
-parameter_list|)
-value|(auth->dat + 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_time_ws
-parameter_list|(
-name|packet
-parameter_list|)
-value|(char *) \         (packet->dat+5+strlen((char *)pkt_a_name(packet)) + \ 	 strlen((char *)pkt_a_inst(packet)) + \ 	 strlen((char *)pkt_a_realm(packet)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_no_req
-parameter_list|(
-name|packet
-parameter_list|)
-value|(unsigned short) \         *(packet->dat+9+strlen((char *)pkt_a_name(packet)) + \ 	  strlen((char *)pkt_a_inst(packet)) + \ 	  strlen((char *)pkt_a_realm(packet)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_x_date
-parameter_list|(
-name|packet
-parameter_list|)
-value|(char *) \         (packet->dat+10+strlen((char *)pkt_a_name(packet)) + \ 	 strlen((char *)pkt_a_inst(packet)) + \ 	 strlen((char *)pkt_a_realm(packet)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_err_code
-parameter_list|(
-name|packet
-parameter_list|)
-value|( (char *) \         (packet->dat+9+strlen((char *)pkt_a_name(packet)) + \ 	 strlen((char *)pkt_a_inst(packet)) + \ 	 strlen((char *)pkt_a_realm(packet))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|pkt_err_text
-parameter_list|(
-name|packet
-parameter_list|)
-define|\
-value|(packet->dat+13+strlen((char *)pkt_a_name(packet)) + \ 	 strlen((char *)pkt_a_inst(packet)) + \ 	 strlen((char *)pkt_a_realm(packet)))
 end_define
 
 begin_comment
@@ -243,77 +122,77 @@ begin_define
 define|#
 directive|define
 name|AUTH_MSG_KDC_REQUEST
-value|1<<1
+value|(1<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_KDC_REPLY
-value|2<<1
+value|(2<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_APPL_REQUEST
-value|3<<1
+value|(3<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_APPL_REQUEST_MUTUAL
-value|4<<1
+value|(4<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_ERR_REPLY
-value|5<<1
+value|(5<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_PRIVATE
-value|6<<1
+value|(6<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_SAFE
-value|7<<1
+value|(7<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_APPL_ERR
-value|8<<1
+value|(8<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_KDC_FORWARD
-value|9<<1
+value|(9<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_KDC_RENEW
-value|10<<1
+value|(10<<1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AUTH_MSG_DIE
-value|63<<1
+value|(63<<1)
 end_define
 
 begin_comment

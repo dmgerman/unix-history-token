@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kip.c,v 1.15 1997/05/11 10:54:51 assar Exp $"
+literal|"$Id: kip.c,v 1.17 1998/05/01 05:20:11 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -21,7 +21,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -118,18 +120,10 @@ literal|"gethostbyname '%s': %s"
 argument_list|,
 name|host
 argument_list|,
-ifdef|#
-directive|ifdef
-name|HAVE_H_ERRNO
 name|hstrerror
 argument_list|(
 name|h_errno
 argument_list|)
-else|#
-directive|else
-literal|"unknown error"
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
 return|return
@@ -187,11 +181,6 @@ operator|++
 name|p
 control|)
 block|{
-name|int
-name|one
-init|=
-literal|1
-decl_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -249,6 +238,12 @@ name|defined
 argument_list|(
 name|HAVE_SETSOCKOPT
 argument_list|)
+block|{
+name|int
+name|one
+init|=
+literal|1
+decl_stmt|;
 name|setsockopt
 argument_list|(
 name|s
@@ -270,6 +265,7 @@ name|one
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if
@@ -558,13 +554,6 @@ name|int
 name|other
 decl_stmt|,
 name|this
-decl_stmt|;
-name|struct
-name|ifreq
-name|ifreq
-decl_stmt|;
-name|int
-name|sock
 decl_stmt|;
 name|other
 operator|=

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: logwtmp.c,v 1.10 1997/05/25 15:17:56 assar Exp $"
+literal|"$Id: logwtmp.c,v 1.13 1999/03/01 09:49:37 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -206,7 +206,7 @@ end_endif
 
 begin_function
 name|void
-name|logwtmp
+name|ftpd_logwtmp
 parameter_list|(
 name|char
 modifier|*
@@ -230,13 +230,16 @@ decl_stmt|;
 specifier|static
 name|int
 name|fd
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WTMPX_FILE
+specifier|static
+name|int
 name|fdx
 decl_stmt|;
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|utmp
 name|ut
@@ -266,7 +269,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_UT_TYPE
+name|HAVE_STRUCT_UTMP_UT_TYPE
 if|if
 condition|(
 name|name
@@ -323,7 +326,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_UT_PID
+name|HAVE_STRUCT_UTMP_UT_PID
 name|ut
 operator|.
 name|ut_pid
@@ -335,7 +338,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|HAVE_UT_HOST
+name|HAVE_STRUCT_UTMP_UT_HOST
 name|strncpy
 argument_list|(
 name|ut
@@ -416,7 +419,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_UT_SYSLEN
+name|HAVE_STRUCT_UTMPX_UT_SYSLEN
 name|utx
 operator|.
 name|ut_syslen
@@ -454,6 +457,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -482,6 +490,7 @@ name|tv
 operator|.
 name|tv_usec
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|name

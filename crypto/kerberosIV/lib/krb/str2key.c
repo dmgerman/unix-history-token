@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: str2key.c,v 1.10 1997/03/23 03:53:19 joda Exp $"
+literal|"$Id: str2key.c,v 1.12.2.1 1999/08/19 13:35:01 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|mklower
 parameter_list|(
@@ -67,13 +68,16 @@ end_comment
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|afs_cmu_StringToKey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cell
@@ -122,13 +126,16 @@ name|password
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|password
 argument_list|,
 name|cell
 argument_list|,
-literal|8
+sizeof|sizeof
+argument_list|(
+name|password
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|passlen
@@ -215,15 +222,11 @@ operator|*
 operator|)
 name|key
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|crypt
 argument_list|(
 name|password
 argument_list|,
-literal|"#~"
+literal|"p1"
 argument_list|)
 operator|+
 literal|2
@@ -306,13 +309,16 @@ end_comment
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|afs_transarc_StringToKey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cell
@@ -340,7 +346,7 @@ decl_stmt|;
 name|int
 name|passlen
 decl_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|password
 argument_list|,
@@ -370,7 +376,7 @@ argument_list|)
 operator|-
 literal|1
 condition|)
-name|strncat
+name|strcat_truncate
 argument_list|(
 name|password
 argument_list|,
@@ -380,8 +386,6 @@ sizeof|sizeof
 argument_list|(
 name|password
 argument_list|)
-operator|-
-name|passlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -515,10 +519,12 @@ begin_function
 name|void
 name|afs_string_to_key
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cell
@@ -532,11 +538,9 @@ name|char
 name|realm
 index|[
 name|REALM_SZ
-operator|+
-literal|1
 index|]
 decl_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|realm
 argument_list|,
@@ -544,13 +548,6 @@ name|cell
 argument_list|,
 name|REALM_SZ
 argument_list|)
-expr_stmt|;
-name|realm
-index|[
-name|REALM_SZ
-index|]
-operator|=
-literal|0
 expr_stmt|;
 name|mklower
 argument_list|(

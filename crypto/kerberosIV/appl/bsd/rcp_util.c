@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rcp_util.c,v 1.7 1996/11/17 20:23:05 assar Exp $"
+literal|"$Id: rcp_util.c,v 1.8 1998/09/28 11:45:21 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -227,6 +227,18 @@ return|;
 case|case
 literal|0
 case|:
+if|if
+condition|(
+name|do_osfc2_magic
+argument_list|(
+name|userid
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|setuid
 argument_list|(
 name|userid

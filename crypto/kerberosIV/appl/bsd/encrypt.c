@@ -12,34 +12,10 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: encrypt.c,v 1.3 1996/04/30 13:50:54 bg Exp $"
+literal|"$Id: encrypt.c,v 1.4 1999/06/17 18:47:26 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_undef
-undef|#
-directive|undef
-name|BSIZE
-end_undef
-
-begin_comment
-comment|/* used in des_read and des_write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXWRITE
-value|(1024*16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BSIZE
-value|(MAXWRITE+4)
-end_define
 
 begin_comment
 comment|/* replacements for htonl and ntohl since I have no idea what to do  * when faced with machines with 8 byte longs. */
@@ -137,7 +113,7 @@ name|unsigned
 name|char
 name|net
 index|[
-name|BSIZE
+name|DES_RW_BSIZE
 index|]
 decl_stmt|;
 comment|/* extra unencrypted data     * for when a block of 100 comes in but is des_read one byte at    * a time. */
@@ -145,7 +121,7 @@ specifier|static
 name|char
 name|unnet
 index|[
-name|BSIZE
+name|DES_RW_BSIZE
 index|]
 decl_stmt|;
 specifier|static
@@ -259,11 +235,11 @@ if|if
 condition|(
 name|len
 operator|>
-name|MAXWRITE
+name|DES_RW_MAXWRITE
 condition|)
 name|len
 operator|=
-name|MAXWRITE
+name|DES_RW_MAXWRITE
 expr_stmt|;
 comment|/* first - get the length */
 name|net_num
@@ -354,7 +330,7 @@ condition|(
 operator|(
 name|num
 operator|>
-name|MAXWRITE
+name|DES_RW_MAXWRITE
 operator|)
 operator|||
 operator|(
@@ -557,7 +533,7 @@ block|{
 name|char
 name|tmpbuf
 index|[
-name|BSIZE
+name|DES_RW_BSIZE
 index|]
 decl_stmt|;
 if|if
@@ -838,7 +814,7 @@ decl_stmt|;
 name|char
 name|outbuf
 index|[
-name|BSIZE
+name|DES_RW_BSIZE
 operator|+
 name|HDRSIZE
 index|]
@@ -883,7 +859,7 @@ if|if
 condition|(
 name|len
 operator|>
-name|MAXWRITE
+name|DES_RW_MAXWRITE
 condition|)
 block|{
 name|j
@@ -926,10 +902,10 @@ operator|-
 name|i
 operator|)
 operator|>
-name|MAXWRITE
+name|DES_RW_MAXWRITE
 operator|)
 condition|?
-name|MAXWRITE
+name|DES_RW_MAXWRITE
 else|:
 operator|(
 name|len

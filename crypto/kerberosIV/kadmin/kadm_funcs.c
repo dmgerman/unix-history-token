@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_funcs.c,v 1.16 1997/05/02 14:28:49 assar Exp $"
+literal|"$Id: kadm_funcs.c,v 1.17 1998/06/09 19:24:53 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -367,7 +367,7 @@ index|[
 name|MAX_K_NAME_SZ
 index|]
 decl_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|admin
 argument_list|,
@@ -379,9 +379,14 @@ name|rinstance
 argument_list|,
 name|rrealm
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|admin
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|victim
 argument_list|,
@@ -396,6 +401,11 @@ operator|->
 name|instance
 argument_list|,
 name|NULL
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|victim
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -515,7 +525,7 @@ argument_list|,
 name|valsin
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_i
 operator|.
@@ -528,7 +538,7 @@ argument_list|,
 name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_i
 operator|.
@@ -766,7 +776,7 @@ name|server_parm
 operator|.
 name|master_key_version
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_i
 operator|.
@@ -780,11 +790,9 @@ name|data_i
 operator|.
 name|mod_name
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_i
 operator|.
@@ -798,8 +806,6 @@ name|data_i
 operator|.
 name|mod_instance
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|numfound
@@ -990,7 +996,7 @@ index|[
 name|MAX_K_NAME_SZ
 index|]
 decl_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|admin
 argument_list|,
@@ -1002,9 +1008,14 @@ name|rinstance
 argument_list|,
 name|rrealm
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|admin
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|victim
 argument_list|,
@@ -1019,6 +1030,11 @@ operator|->
 name|instance
 argument_list|,
 name|NULL
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|victim
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1234,7 +1250,7 @@ index|[
 name|MAX_K_NAME_SZ
 index|]
 decl_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|admin
 argument_list|,
@@ -1246,9 +1262,14 @@ name|rinstance
 argument_list|,
 name|rrealm
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|admin
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|victim
 argument_list|,
@@ -1263,6 +1284,11 @@ operator|->
 name|instance
 argument_list|,
 name|NULL
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|victim
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1461,7 +1487,7 @@ index|[
 name|MAX_K_NAME_SZ
 index|]
 decl_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|admin
 argument_list|,
@@ -1473,9 +1499,14 @@ name|rinstance
 argument_list|,
 name|rrealm
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|admin
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|victim
 argument_list|,
@@ -1490,6 +1521,11 @@ operator|->
 name|instance
 argument_list|,
 name|NULL
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|victim
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1604,7 +1640,7 @@ argument_list|,
 name|valsin2
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_o
 operator|.
@@ -1617,7 +1653,7 @@ argument_list|,
 name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_o
 operator|.
@@ -1812,7 +1848,7 @@ name|temp_key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_o
 operator|.
@@ -1826,11 +1862,9 @@ name|data_o
 operator|.
 name|mod_name
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_o
 operator|.
@@ -1844,8 +1878,6 @@ name|data_o
 operator|.
 name|mod_instance
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|more
@@ -2062,7 +2094,7 @@ index|[
 name|MAX_K_NAME_SZ
 index|]
 decl_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|admin
 argument_list|,
@@ -2073,6 +2105,11 @@ argument_list|,
 name|rinstance
 argument_list|,
 name|rrealm
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|admin
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2225,7 +2262,7 @@ name|server_parm
 operator|.
 name|master_key_version
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_o
 operator|.
@@ -2239,11 +2276,9 @@ name|data_o
 operator|.
 name|mod_name
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|data_o
 operator|.
@@ -2257,8 +2292,6 @@ name|data_o
 operator|.
 name|mod_instance
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|more

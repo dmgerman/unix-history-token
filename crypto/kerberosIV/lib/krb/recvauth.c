@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: recvauth.c,v 1.17 1997/03/23 03:53:16 joda Exp $"
+literal|"$Id: recvauth.c,v 1.19 1998/06/09 19:25:25 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -169,6 +169,16 @@ literal|21
 argument_list|)
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|options
+operator|&
+name|KOPT_IGNORE_PROTOCOL
+operator|)
+condition|)
+block|{
 comment|/* read the protocol version number */
 if|if
 condition|(
@@ -195,6 +205,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 comment|/* read the application version string */
 if|if
 condition|(
@@ -401,6 +412,11 @@ literal|1
 argument_list|,
 name|cs
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cs
+argument_list|)
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
@@ -452,6 +468,8 @@ argument_list|(
 name|priv_len
 argument_list|,
 name|tmp_buf
+argument_list|,
+literal|4
 argument_list|,
 literal|4
 argument_list|)

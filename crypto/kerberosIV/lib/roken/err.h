@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan   * (R
 end_comment
 
 begin_comment
-comment|/* $Id: err.h,v 1.13 1997/05/02 14:29:30 assar Exp $ */
+comment|/* $Id: err.h,v 1.14 1997/11/12 00:08:57 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -93,12 +93,6 @@ name|void
 name|warnerr
 parameter_list|(
 name|int
-name|doexit
-parameter_list|,
-name|int
-name|eval
-parameter_list|,
-name|int
 name|doerrno
 parameter_list|,
 specifier|const
@@ -115,7 +109,7 @@ function_decl|(format
 parameter_list|(
 name|printf
 parameter_list|,
-function_decl|4
+function_decl|2
 operator|,
 function_decl|0
 end_function_decl

@@ -8,7 +8,7 @@ comment|/* ticket_memory.h - Storage for tickets in memory  * Author: d93-jka@na
 end_comment
 
 begin_comment
-comment|/* $Id: ticket_memory.h,v 1.6 1997/04/20 06:25:12 assar Exp $ */
+comment|/* $Id: ticket_memory.h,v 1.7 1998/06/03 02:31:05 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -69,6 +69,9 @@ name|cred_vec
 index|[
 name|CRED_VEC_SZ
 index|]
+decl_stmt|;
+name|time_t
+name|kdc_diff
 decl_stmt|;
 block|}
 name|tktmem

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb_dbm.c,v 1.27 1997/05/02 14:29:09 assar Exp $"
+literal|"$Id: krb_dbm.c,v 1.36 1998/11/07 14:25:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -125,23 +125,6 @@ begin_comment
 comment|/*  * Utility routine: generate name of database file.  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|gen_dbsuffix
-parameter_list|(
-name|char
-modifier|*
-name|db_name
-parameter_list|,
-name|char
-modifier|*
-name|sfx
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|char
@@ -183,31 +166,31 @@ argument_list|,
 name|sfx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dbsuffix
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"gen_dbsuffix: out of memory\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|dbsuffix
 return|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|void
-name|decode_princ_key
-parameter_list|(
-name|datum
-modifier|*
-name|key
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|char
-modifier|*
-name|instance
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -227,7 +210,7 @@ modifier|*
 name|instance
 parameter_list|)
 block|{
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|name
 argument_list|,
@@ -238,7 +221,7 @@ argument_list|,
 name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|instance
 argument_list|,
@@ -255,42 +238,8 @@ argument_list|,
 name|INST_SZ
 argument_list|)
 expr_stmt|;
-name|name
-index|[
-name|ANAME_SZ
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|instance
-index|[
-name|INST_SZ
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|void
-name|encode_princ_contents
-parameter_list|(
-name|datum
-modifier|*
-name|contents
-parameter_list|,
-name|Principal
-modifier|*
-name|principal
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -470,21 +419,13 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_function
 specifier|static
 name|int
 name|kerb_dbl_init
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|int
-name|kerb_dbl_init
-parameter_list|()
 block|{
 if|if
 condition|(
@@ -561,21 +502,13 @@ return|;
 block|}
 end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|void
 name|kerb_dbl_fini
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|void
-name|kerb_dbl_fini
-parameter_list|()
 block|{
 name|close
 argument_list|(
@@ -597,17 +530,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|int
-name|kerb_dbl_lock
-parameter_list|(
-name|int
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -663,7 +585,7 @@ name|KERB_DBL_EXCLUSIVE
 case|:
 name|flock_mode
 operator|=
-name|K_LOCK_EX
+name|LOCK_EX
 expr_stmt|;
 break|break;
 case|case
@@ -671,7 +593,7 @@ name|KERB_DBL_SHARED
 case|:
 name|flock_mode
 operator|=
-name|K_LOCK_SH
+name|LOCK_SH
 expr_stmt|;
 break|break;
 default|default:
@@ -694,11 +616,11 @@ name|non_blocking
 condition|)
 name|flock_mode
 operator||=
-name|K_LOCK_NB
+name|LOCK_NB
 expr_stmt|;
 if|if
 condition|(
-name|k_flock
+name|flock
 argument_list|(
 name|dblfd
 argument_list|,
@@ -719,21 +641,13 @@ return|;
 block|}
 end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|void
 name|kerb_dbl_unlock
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|void
-name|kerb_dbl_unlock
-parameter_list|()
 block|{
 if|if
 condition|(
@@ -762,11 +676,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|k_flock
+name|flock
 argument_list|(
 name|dblfd
 argument_list|,
-name|K_LOCK_UN
+name|LOCK_UN
 argument_list|)
 operator|<
 literal|0
@@ -786,7 +700,7 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"k_flock"
+literal|"flock"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -801,16 +715,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_function_decl
-name|int
-name|kerb_db_set_lockmode
-parameter_list|(
-name|int
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -839,19 +743,12 @@ begin_comment
 comment|/*  * initialization for data base routines.  */
 end_comment
 
-begin_function_decl
+begin_function
 name|int
 name|kerb_db_init
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|int
-name|kerb_db_init
-parameter_list|()
 block|{
 name|init
 operator|=
@@ -869,36 +766,18 @@ begin_comment
 comment|/*  * gracefully shut down database--must be called by ANY program that does  * a kerb_db_init   */
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|kerb_db_fini
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|kerb_db_fini
-parameter_list|()
 block|{ }
 end_function
 
 begin_comment
 comment|/*  * Set the "name" of the current database to some alternate value.  *  * Passing a null pointer as "name" will set back to the default.  * If the alternate database doesn't exist, nothing is changed.  */
 end_comment
-
-begin_function_decl
-name|int
-name|kerb_db_set_name
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -965,19 +844,12 @@ begin_comment
 comment|/*  * Return the last modification time of the database.  */
 end_comment
 
-begin_function_decl
+begin_function
 name|time_t
 name|kerb_get_db_age
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|time_t
-name|kerb_get_db_age
-parameter_list|()
 block|{
 name|struct
 name|stat
@@ -1037,18 +909,6 @@ begin_comment
 comment|/*  * Remove the semaphore file; indicates that database is currently  * under renovation.  *  * This is only for use when moving the database out from underneath  * the server (for example, during slave updates).  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|time_t
-name|kerb_start_update
-parameter_list|(
-name|char
-modifier|*
-name|db_name
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|time_t
@@ -1106,21 +966,6 @@ name|age
 return|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|int
-name|kerb_end_update
-parameter_list|(
-name|char
-modifier|*
-name|db_name
-parameter_list|,
-name|time_t
-name|age
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -1286,21 +1131,13 @@ return|;
 block|}
 end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|time_t
 name|kerb_start_read
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|time_t
-name|kerb_start_read
-parameter_list|()
 block|{
 return|return
 name|kerb_get_db_age
@@ -1308,17 +1145,6 @@ argument_list|()
 return|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|int
-name|kerb_end_read
-parameter_list|(
-name|time_t
-name|age
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -1863,7 +1689,7 @@ name|code
 operator|=
 name|kerb_dbl_lock
 argument_list|(
-name|KERB_DBL_SHARED
+name|KERB_DBL_EXCLUSIVE
 argument_list|)
 operator|)
 operator|!=
@@ -2081,6 +1907,16 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 operator|*
 name|more
 operator|=
@@ -2610,6 +2446,8 @@ operator|->
 name|instance
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|dbm_store
 argument_list|(
 operator|(
@@ -2624,7 +2462,13 @@ name|contents
 argument_list|,
 name|DBM_REPLACE
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+name|found
+return|;
+comment|/* XXX some better mechanism to report 			     failure should exist */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2670,21 +2514,6 @@ end_function
 begin_comment
 comment|/*  * Update a name in the data base.  Returns number of names  * successfully updated.  */
 end_comment
-
-begin_function_decl
-name|int
-name|kerb_db_put_principal
-parameter_list|(
-name|Principal
-modifier|*
-name|principal
-parameter_list|,
-name|unsigned
-name|int
-name|max
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -2743,17 +2572,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function_decl
-name|void
-name|kerb_db_get_stat
-parameter_list|(
-name|DB_stat
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -2838,17 +2656,6 @@ comment|/* update local copy too */
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|kerb_db_put_stat
-parameter_list|(
-name|DB_stat
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|kerb_db_put_stat
@@ -2859,25 +2666,6 @@ name|s
 parameter_list|)
 block|{ }
 end_function
-
-begin_function_decl
-name|void
-name|delta_stat
-parameter_list|(
-name|DB_stat
-modifier|*
-name|a
-parameter_list|,
-name|DB_stat
-modifier|*
-name|b
-parameter_list|,
-name|DB_stat
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -3029,40 +2817,12 @@ name|DB_stat
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
 comment|/*  * look up a dba in the data base returns number of dbas found , and  * whether there were more than requested.   */
 end_comment
-
-begin_function_decl
-name|int
-name|kerb_db_get_dba
-parameter_list|(
-name|char
-modifier|*
-name|dba_name
-parameter_list|,
-name|char
-modifier|*
-name|dba_inst
-parameter_list|,
-name|Dba
-modifier|*
-name|dba
-parameter_list|,
-name|unsigned
-name|int
-name|max
-parameter_list|,
-name|int
-modifier|*
-name|more
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -3072,10 +2832,12 @@ name|char
 modifier|*
 name|dba_name
 parameter_list|,
+comment|/* could have wild card */
 name|char
 modifier|*
 name|dba_inst
 parameter_list|,
+comment|/* could have wild card */
 name|Dba
 modifier|*
 name|dba
@@ -3083,13 +2845,11 @@ parameter_list|,
 name|unsigned
 name|max
 parameter_list|,
+comment|/* max number of name structs to return */
 name|int
 modifier|*
 name|more
 parameter_list|)
-comment|/* could have wild card */
-comment|/* could have wild card */
-comment|/* max number of name structs to return */
 comment|/* where there more than 'max' tuples? */
 block|{
 operator|*
@@ -3164,6 +2924,15 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db
+operator|==
+name|NULL
+condition|)
+return|return
+name|errno
+return|;
 for|for
 control|(
 name|key

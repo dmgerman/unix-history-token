@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sendauth.c,v 1.15 1997/04/18 14:11:36 joda Exp $"
+literal|"$Id: sendauth.c,v 1.17 1998/06/09 19:25:26 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -212,6 +212,10 @@ index|[
 name|INST_SZ
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|i
+decl_stmt|;
 name|ret
 operator|=
 name|krb_net_read
@@ -298,27 +302,23 @@ name|options
 operator|&
 name|KOPT_DONT_CANON
 condition|)
-name|strncpy
-argument_list|(
-name|inst
-argument_list|,
+name|i
+operator|=
 name|instance
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|inst
-argument_list|)
-argument_list|)
 expr_stmt|;
 else|else
-name|strncpy
-argument_list|(
-name|inst
-argument_list|,
+name|i
+operator|=
 name|krb_get_phost
 argument_list|(
 name|instance
 argument_list|)
+expr_stmt|;
+name|strcpy_truncate
+argument_list|(
+name|inst
+argument_list|,
+name|i
 argument_list|,
 sizeof|sizeof
 argument_list|(

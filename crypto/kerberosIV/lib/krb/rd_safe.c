@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_safe.c,v 1.24 1997/04/19 23:18:20 joda Exp $"
+literal|"$Id: rd_safe.c,v 1.25 1997/12/05 00:17:09 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -24,7 +24,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lsb_addr_comp.h"
+file|"krb-archaeology.h"
 end_include
 
 begin_comment

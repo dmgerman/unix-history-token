@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: popen.c,v 1.16 1997/06/01 03:14:06 assar Exp $"
+literal|"$Id: popen.c,v 1.18 1998/06/09 19:24:24 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -242,13 +242,18 @@ literal|"ftp"
 argument_list|)
 operator|)
 condition|)
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|home
 argument_list|,
 name|pwd
 operator|->
 name|pw_dir
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|home
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -276,11 +281,16 @@ argument_list|,
 name|X_OK
 argument_list|)
 condition|)
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|newpath
 argument_list|,
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newpath
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -423,6 +433,10 @@ name|NULL
 operator|)
 return|;
 comment|/* break up string into pieces */
+name|foo
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|argc
@@ -439,10 +453,6 @@ operator|=
 name|NULL
 control|)
 block|{
-name|foo
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 operator|!

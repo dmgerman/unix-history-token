@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.20 1997/04/20 16:14:55 joda Exp $"
+literal|"$Id: main.c,v 1.25 1999/05/08 02:22:09 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -99,6 +99,11 @@ name|autologin
 operator|=
 literal|1
 expr_stmt|;
+name|passivemode
+operator|=
+literal|0
+expr_stmt|;
+comment|/* passive mode not active */
 while|while
 condition|(
 operator|(
@@ -110,7 +115,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dgintv"
+literal|"dginptv"
 argument_list|)
 operator|)
 operator|!=
@@ -158,6 +163,14 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'p'
+case|:
+name|passivemode
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 name|trace
@@ -176,7 +189,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ftp [-dgintv] [host [port]]\n"
+literal|"usage: ftp [-dginptv] [host [port]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -221,11 +234,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* proxy not active */
-name|passivemode
-operator|=
-literal|0
-expr_stmt|;
-comment|/* passive mode not active */
 name|crflag
 operator|=
 literal|1
@@ -253,18 +261,23 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|home
-operator|=
-name|homedir
-expr_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
-name|home
+name|homedir
 argument_list|,
 name|pw
 operator|->
 name|pw_dir
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|homedir
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|home
+operator|=
+name|homedir
 expr_stmt|;
 block|}
 if|if
@@ -579,6 +592,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|sec_end
+argument_list|()
+expr_stmt|;
 name|SIGRETURN
 argument_list|(
 literal|0
@@ -792,7 +808,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|line
 argument_list|,
@@ -803,18 +819,6 @@ argument_list|(
 name|line
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|line
-index|[
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 name|add_history
 argument_list|(
@@ -1275,6 +1279,9 @@ operator|==
 name|margvlen
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|margv
 operator|=
 operator|(
@@ -1333,6 +1340,28 @@ literal|1
 argument_list|,
 literal|"cannot realloc argv array"
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|margvlen
+init|;
+name|i
+operator|<
+name|margvlen
+operator|+
+literal|20
+condition|;
+operator|++
+name|i
+control|)
+name|margv
+index|[
+name|i
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 name|margvlen
 operator|+=

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: logging.c,v 1.14 1997/05/11 09:01:40 assar Exp $"
+literal|"$Id: logging.c,v 1.16 1998/07/24 06:13:35 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -219,13 +219,15 @@ name|krb_log_func_t
 name|func
 parameter_list|)
 block|{
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|f
 operator|->
 name|filename
 argument_list|,
 name|filename
+argument_list|,
+name|MaxPathLen
 argument_list|)
 expr_stmt|;
 name|f
@@ -321,7 +323,9 @@ begin_function
 specifier|static
 name|void
 name|init_std_log
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int

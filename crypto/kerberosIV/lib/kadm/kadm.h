@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: kadm.h,v 1.12 1996/11/17 20:04:39 assar Exp $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * Definitions for Kerberos administration server& client  */
+comment|/*  * $Id: kadm.h,v 1.17 1998/10/23 14:25:55 joda Exp $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * Definitions for Kerberos administration server& client  */
 end_comment
 
 begin_ifndef
@@ -240,6 +240,17 @@ name|FLDSZ
 value|4
 end_define
 
+begin_comment
+comment|/* XXX enable new extended kadm fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTENDED_KADM
+value|1
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -278,6 +289,29 @@ decl_stmt|;
 name|u_int8_t
 name|max_life
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EXTENDED_KADM
+name|u_int32_t
+name|mod_date
+decl_stmt|;
+name|char
+name|mod_name
+index|[
+name|ANAME_SZ
+index|]
+decl_stmt|;
+name|char
+name|mod_instance
+index|[
+name|INST_SZ
+index|]
+decl_stmt|;
+name|u_int8_t
+name|key_version
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|Kadm_vals
 typedef|;
@@ -286,17 +320,6 @@ end_typedef
 begin_comment
 comment|/* The basic values structure in Kadm */
 end_comment
-
-begin_comment
-comment|/* Kadm_vals structure for passing db fields into the server routines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLDSZ
-value|4
-end_define
 
 begin_comment
 comment|/* Need to define fields types here */
@@ -343,6 +366,45 @@ directive|define
 name|KADM_DESKEY
 value|26
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EXTENDED_KADM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KADM_MODDATE
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|KADM_MODNAME
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|KADM_MODINST
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|KADM_KVNO
+value|22
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* To set a field entry f in a fields structure d */
@@ -672,6 +734,27 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|kadm_change_pw2
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|kadm_mod
 name|__P
 argument_list|(
@@ -760,6 +843,20 @@ name|Kadm_vals
 operator|*
 operator|,
 name|Principal
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|kadm_check_pw
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
 operator|*
 operator|)
 argument_list|)
