@@ -2213,11 +2213,15 @@ control|)
 block|{
 name|status
 index|[
+name|scroll
+operator|+
 name|i
 index|]
 operator|=
 name|ditems
 index|[
+name|scroll
+operator|+
 name|i
 index|]
 operator|.
@@ -2225,6 +2229,8 @@ name|checked
 condition|?
 name|ditems
 index|[
+name|scroll
+operator|+
 name|i
 index|]
 operator|.
@@ -2233,6 +2239,8 @@ argument_list|(
 operator|&
 name|ditems
 index|[
+name|scroll
+operator|+
 name|i
 index|]
 argument_list|)
