@@ -1161,6 +1161,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* XXX: change is unsigned */
 if|if
 condition|(
 name|change
@@ -1241,6 +1242,7 @@ name|dq_curinodes
 operator|+
 name|change
 expr_stmt|;
+comment|/* XXX: ncurinodes is unsigned */
 if|if
 condition|(
 name|ncurinodes
