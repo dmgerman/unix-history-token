@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.28 (Berkeley) %G%"
+literal|"@(#)csh.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4049,6 +4049,10 @@ expr_stmt|;
 comment|/* 	     * If we are at the end of the input buffer then we are going to 	     * read fresh stuff. Otherwise, we are rereading input and don't 	     * need or want to prompt. 	     */
 if|if
 condition|(
+name|aret
+operator|==
+name|F_SEEK
+operator|&&
 name|fseekp
 operator|==
 name|feobp

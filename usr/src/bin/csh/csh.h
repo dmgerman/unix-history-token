@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1053,6 +1053,72 @@ name|B
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * This structure allows us to seek inside aliases  */
+end_comment
+
+begin_struct
+struct|struct
+name|Ain
+block|{
+name|int
+name|type
+decl_stmt|;
+define|#
+directive|define
+name|I_SEEK
+value|-1
+comment|/* Invalid seek */
+define|#
+directive|define
+name|A_SEEK
+value|0
+comment|/* Alias seek */
+define|#
+directive|define
+name|F_SEEK
+value|1
+comment|/* File seek */
+define|#
+directive|define
+name|E_SEEK
+value|2
+comment|/* Eval seek */
+name|off_t
+name|f_seek
+decl_stmt|;
+name|Char
+modifier|*
+modifier|*
+name|a_seek
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|aret
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* What was the last character returned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEEKEQ
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)->type == (b)->type&& \ 		      (a)->f_seek == (b)->f_seek&& \ 		      (a)->a_seek == (b)->a_seek)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1093,7 +1159,8 @@ comment|/*  * The shell finds commands in loops by reseeking the input  * For wh
 end_comment
 
 begin_decl_stmt
-name|off_t
+name|struct
+name|Ain
 name|lineloc
 decl_stmt|;
 end_decl_stmt
@@ -1572,11 +1639,13 @@ begin_struct
 struct|struct
 name|whyle
 block|{
-name|off_t
+name|struct
+name|Ain
 name|w_start
 decl_stmt|;
 comment|/* Point to restart loop */
-name|off_t
+name|struct
+name|Ain
 name|w_end
 decl_stmt|;
 comment|/* End of loop (0 if unknown) */
