@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bzero.c	5.3 (Berkeley) %G%"
+literal|"@(#)bzero.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,32 +37,33 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * bzero -- vax movc5 instruction  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|bzero
-argument_list|(
+parameter_list|(
 name|b
-argument_list|,
+parameter_list|,
 name|length
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|b
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
-name|int
+name|size_t
 name|length
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 while|while
 condition|(
@@ -76,7 +77,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
