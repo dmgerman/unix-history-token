@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -60,49 +60,38 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/quota.h>
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/inode.h>
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufsmount.h>
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs_extern.h>
+file|<ufs/ufs/ufs_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs.h>
+file|<ufs/lfs/lfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs_extern.h>
+file|<ufs/lfs/lfs_extern.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|prtactive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 => print out reclaim of active vnodes */
-end_comment
 
 begin_function
 name|int
@@ -148,7 +137,8 @@ name|ipp
 decl_stmt|;
 block|{
 specifier|register
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -158,21 +148,10 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-name|struct
-name|inode
-modifier|*
-name|nip
 decl_stmt|;
 name|struct
 name|mount
@@ -182,7 +161,7 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|nvp
+name|vp
 decl_stmt|;
 name|dev_t
 name|dev
@@ -190,12 +169,23 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|printf
+name|mntp
+operator|=
+name|ITOV
 argument_list|(
-literal|"lfs_iget ino %d\n"
-argument_list|,
-name|ino
+name|pip
 argument_list|)
+operator|->
+name|v_mount
+expr_stmt|;
+name|fs
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mntp
+argument_list|)
+operator|->
+name|um_lfs
 expr_stmt|;
 if|if
 condition|(
@@ -236,15 +226,8 @@ literal|0
 operator|)
 return|;
 comment|/* Allocate new vnode/inode. */
-name|mntp
-operator|=
-name|ITOV
-argument_list|(
-name|pip
-argument_list|)
-operator|->
-name|v_mount
-expr_stmt|;
+if|if
+condition|(
 name|error
 operator|=
 name|lfs_vcreate
@@ -254,12 +237,8 @@ argument_list|,
 name|ino
 argument_list|,
 operator|&
-name|nvp
+name|vp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 condition|)
 block|{
 operator|*
@@ -277,7 +256,7 @@ name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|nvp
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Put it onto its hash chain and lock it so that other requests for 	 * this inode will block if they arrive while we are sleeping waiting 	 * for old data structures to be purged or for the contents of the 	 * disk portion of this inode to be read. 	 */
@@ -287,15 +266,6 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* Read in the disk contents for the inode, copy into the inode. */
-name|fs
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|mntp
-argument_list|)
-operator|->
-name|um_lfs
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -330,7 +300,7 @@ name|bp
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * The inode does not contain anything useful, so it would 		 * be misleading to leave it on its hash chain.  Iput() will 		 * take care of putting it back on the free list. 		 */
+comment|/* 		 * The inode does not contain anything useful, so it would 		 * be misleading to leave it on its hash chain.  Iput() will 		 * return it to the free list. 		 */
 name|remque
 argument_list|(
 name|ip
@@ -393,7 +363,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the vnode from the inode, check for aliases. */
+comment|/* 	 * Initialize the vnode from the inode, check for aliases.  In all 	 * cases re-init ip, the underlying vnode/inode may have changed. 	 */
 if|if
 condition|(
 name|error
@@ -402,10 +372,8 @@ name|ufs_vinit
 argument_list|(
 name|mntp
 argument_list|,
-name|ip
-argument_list|,
 operator|&
-name|nip
+name|vp
 argument_list|)
 condition|)
 block|{
@@ -428,7 +396,10 @@ block|}
 operator|*
 name|ipp
 operator|=
-name|nip
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -524,7 +495,8 @@ name|flags
 decl_stmt|;
 block|{
 specifier|register
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
