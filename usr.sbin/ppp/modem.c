@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.36 1997/05/10 03:39:54 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.37 1997/05/14 01:14:32 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -127,17 +127,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Current DCD status */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|connect_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* connection time */
 end_comment
 
 begin_decl_stmt
@@ -845,13 +834,6 @@ name|LcpDown
 argument_list|()
 expr_stmt|;
 block|}
-name|lostCarrier
-operator|++
-expr_stmt|;
-name|connect_time
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
@@ -864,10 +846,6 @@ name|void
 name|ModemTimeout
 parameter_list|()
 block|{
-specifier|static
-name|int
-name|waiting
-decl_stmt|;
 name|int
 name|ombits
 init|=
@@ -881,13 +859,6 @@ argument_list|(
 operator|&
 name|ModemTimer
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Online
-condition|)
-name|connect_time
-operator|++
 expr_stmt|;
 name|StartTimer
 argument_list|(
@@ -903,28 +874,10 @@ block|{
 if|if
 condition|(
 name|modem
-operator|<
+operator|>=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|waiting
-condition|)
-name|DownConnection
-argument_list|()
-expr_stmt|;
-name|waiting
-operator|=
-literal|1
-expr_stmt|;
-return|return;
-block|}
-name|waiting
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -957,6 +910,12 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+block|}
+else|else
+name|mbits
+operator|=
+literal|0
+expr_stmt|;
 name|change
 operator|=
 name|ombits
@@ -1004,6 +963,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|reconnectRequired
+operator|=
+literal|1
+expr_stmt|;
 name|DownConnection
 argument_list|()
 expr_stmt|;
@@ -1038,10 +1001,6 @@ expr_stmt|;
 name|connect_count
 operator|++
 expr_stmt|;
-name|connect_time
-operator|=
-literal|0
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1067,10 +1026,6 @@ name|void
 name|StartModemTimer
 parameter_list|()
 block|{
-name|connect_time
-operator|=
-literal|0
-expr_stmt|;
 name|StopTimer
 argument_list|(
 operator|&

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.50 1997/05/14 01:18:51 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.51 1997/05/17 16:08:46 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -275,6 +275,15 @@ begin_function_decl
 specifier|static
 name|void
 name|TerminalStop
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|ex_desc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -768,11 +777,7 @@ if|if
 condition|(
 name|mode
 operator|&
-operator|(
 name|MODE_AUTO
-operator||
-name|MODE_BACKGROUND
-operator|)
 condition|)
 name|DeleteIfRoutes
 argument_list|(
@@ -865,9 +870,12 @@ name|LogPrintf
 argument_list|(
 name|LOG_PHASE_BIT
 argument_list|,
-literal|"PPP Terminated %d.\n"
+literal|"PPP Terminated (%s).\n"
 argument_list|,
+name|ex_desc
+argument_list|(
 name|excode
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|LogClose
@@ -1017,6 +1025,10 @@ expr_stmt|;
 name|LcpClose
 argument_list|()
 expr_stmt|;
+name|reconnectCount
+operator|=
+literal|0
+expr_stmt|;
 name|Cleanup
 argument_list|(
 name|EX_TERM
@@ -1096,6 +1108,100 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|ex_desc
+parameter_list|(
+name|int
+name|ex
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|num
+index|[
+literal|12
+index|]
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|desc
+index|[]
+init|=
+block|{
+literal|"normal"
+block|,
+literal|"start"
+block|,
+literal|"sock"
+block|,
+literal|"modem"
+block|,
+literal|"dial"
+block|,
+literal|"dead"
+block|,
+literal|"done"
+block|,
+literal|"reboot"
+block|,
+literal|"errdead"
+block|,
+literal|"hangup"
+block|,
+literal|"term"
+block|,
+literal|"nodial"
+block|,
+literal|"nologin"
+block|}
+decl_stmt|;
+if|if
+condition|(
+name|ex
+operator|>=
+literal|0
+operator|&&
+name|ex
+operator|<
+sizeof|sizeof
+argument_list|(
+name|desc
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|desc
+argument_list|)
+condition|)
+return|return
+name|desc
+index|[
+name|ex
+index|]
+return|;
+name|snprintf
+argument_list|(
+name|num
+argument_list|,
+sizeof|sizeof
+name|num
+argument_list|,
+literal|"%d"
+argument_list|,
+name|ex
+argument_list|)
+expr_stmt|;
+return|return
+name|num
+return|;
 block|}
 end_function
 
@@ -1193,6 +1299,8 @@ condition|)
 name|mode
 operator||=
 name|MODE_BACKGROUND
+operator||
+name|MODE_AUTO
 expr_stmt|;
 elseif|else
 if|if
@@ -1507,8 +1615,6 @@ operator||
 name|MODE_DIRECT
 operator||
 name|MODE_DEDICATED
-operator||
-name|MODE_BACKGROUND
 operator|)
 condition|)
 name|mode
@@ -1557,41 +1663,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Destination system must be specified in auto or ddial mode.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_START
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|mode
-operator|&
-name|MODE_BACKGROUND
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Background mode\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dstsystem
-operator|==
-name|NULL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Destination system must be specified in background mode.\n"
+literal|"Destination system must be specified in"
+literal|" auto, background or ddial mode.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1769,7 +1842,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Must specify dstaddr with auto or ddial mode.\n"
+literal|"Must specify dstaddr with"
+literal|" auto, background or ddial mode.\n"
 argument_list|)
 expr_stmt|;
 name|Cleanup
@@ -1834,9 +1908,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-comment|/*        *  Create server socket and listen at there.        */
+comment|/* Create server socket and listen at there. */
 name|server
 operator|=
 name|socket
@@ -1956,7 +2028,6 @@ literal|"Unable to listen to socket - OS overload?\n"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|DupLog
 argument_list|()
 expr_stmt|;
@@ -2044,6 +2115,12 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Child exit, no status.\n"
+argument_list|)
+expr_stmt|;
 name|LogPrintf
 argument_list|(
 name|LOG_PHASE_BIT
@@ -2051,6 +2128,7 @@ argument_list|,
 literal|"Parent: Child exit, no status.\n"
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2058,6 +2136,12 @@ name|c
 operator|==
 name|EX_NORMAL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"PPP enabled.\n"
+argument_list|)
+expr_stmt|;
 name|LogPrintf
 argument_list|(
 name|LOG_PHASE_BIT
@@ -2065,7 +2149,19 @@ argument_list|,
 literal|"Parent: PPP enabled.\n"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+name|printf
+argument_list|(
+literal|"Child failed %d.\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|c
+argument_list|)
+expr_stmt|;
 name|LogPrintf
 argument_list|(
 name|LOG_PHASE_BIT
@@ -2078,6 +2174,7 @@ operator|)
 name|c
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|BGFiledes
@@ -3158,11 +3255,7 @@ if|if
 condition|(
 name|mode
 operator|&
-operator|(
 name|MODE_DIRECT
-operator||
-name|MODE_BACKGROUND
-operator|)
 condition|)
 block|{
 name|modem
@@ -3227,7 +3320,7 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-name|lostCarrier
+name|reconnectRequired
 operator|=
 literal|0
 expr_stmt|;
@@ -3297,7 +3390,7 @@ name|dial_up
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/*      * If we lost carrier and want to re-establish the connection      * due to the "set reconnect" value, we'd better bring the line      * back up now.      */
+comment|/*      * If we lost carrier and want to re-establish the connection      * due to the "set reconnect" value, we'd better bring the line      * back up.      */
 if|if
 condition|(
 name|LcpFsm
@@ -3305,16 +3398,21 @@ operator|.
 name|state
 operator|<=
 name|ST_CLOSED
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|dial_up
 operator|!=
 name|TRUE
 operator|&&
-name|lostCarrier
+name|reconnectRequired
 condition|)
+block|{
 if|if
 condition|(
-name|lostCarrier
+operator|++
+name|reconnectCount
 operator|<=
 name|VarReconnectTries
 condition|)
@@ -3325,7 +3423,7 @@ name|LOG_PHASE_BIT
 argument_list|,
 literal|"Connection lost, re-establish (%d/%d)\n"
 argument_list|,
-name|lostCarrier
+name|reconnectCount
 argument_list|,
 name|VarReconnectTries
 argument_list|)
@@ -3342,6 +3440,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|VarReconnectTries
+condition|)
 name|LogPrintf
 argument_list|(
 name|LOG_PHASE_BIT
@@ -3351,7 +3453,24 @@ argument_list|,
 name|VarReconnectTries
 argument_list|)
 expr_stmt|;
-name|lostCarrier
+name|reconnectCount
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+condition|)
+name|Cleanup
+argument_list|(
+name|EX_DEAD
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|reconnectRequired
 operator|=
 literal|0
 expr_stmt|;
