@@ -247,12 +247,12 @@ begin_decl_stmt
 name|int
 name|exitcode
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0=overwritten, 1=not updated, else error */
+comment|/* status code */
 end_comment
 
 begin_comment
