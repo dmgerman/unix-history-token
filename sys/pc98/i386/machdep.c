@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_smp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_user_ldt.h"
 end_include
 
@@ -169,12 +163,6 @@ begin_include
 include|#
 directive|include
 file|<sys/msgbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/random.h>
 end_include
 
 begin_include
@@ -438,6 +426,12 @@ begin_include
 include|#
 directive|include
 file|<machine/vm86.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/random.h>
 end_include
 
 begin_include
@@ -5212,12 +5206,6 @@ name|_default_ldt
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_decl_stmt
 name|union
 name|descriptor
@@ -5225,7 +5213,7 @@ name|gdt
 index|[
 name|NGDT
 operator|*
-name|NCPU
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -5233,30 +5221,6 @@ end_decl_stmt
 begin_comment
 comment|/* global descriptor table */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|union
-name|descriptor
-name|gdt
-index|[
-name|NGDT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* global descriptor table */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
