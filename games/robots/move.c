@@ -555,13 +555,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|flushok
-argument_list|(
-name|stdscr
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
+comment|/* flushok(stdscr, FALSE); */
 goto|goto
 name|ret
 goto|;

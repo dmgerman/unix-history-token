@@ -132,13 +132,7 @@ name|Waiting
 operator|=
 name|FALSE
 expr_stmt|;
-name|flushok
-argument_list|(
-name|stdscr
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
+comment|/* flushok(stdscr, TRUE); */
 name|Score
 operator|=
 literal|0
