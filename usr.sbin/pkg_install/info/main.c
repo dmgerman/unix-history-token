@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"abcdDe:fgGhiIkl:LmoO:pPqQrRst:vVW:x"
+literal|"abcdDe:EfgGhiIkl:LmoO:pPqQrRst:vVW:xX"
 decl_stmt|;
 end_decl_stmt
 
@@ -298,6 +298,14 @@ name|SHOW_MTREE
 expr_stmt|;
 break|break;
 case|case
+literal|'E'
+case|:
+name|Flags
+operator||=
+name|SHOW_PKGNAME
+expr_stmt|;
+break|break;
+case|case
 literal|'I'
 case|:
 name|Flags
@@ -510,6 +518,14 @@ name|MATCH_REGEX
 expr_stmt|;
 break|break;
 case|case
+literal|'X'
+case|:
+name|MatchType
+operator|=
+name|MATCH_EREGEX
+expr_stmt|;
+break|break;
+case|case
 literal|'e'
 case|:
 name|CheckPkg
@@ -667,6 +683,10 @@ name|MatchType
 operator|!=
 name|MATCH_REGEX
 operator|&&
+name|MatchType
+operator|!=
+name|MATCH_EREGEX
+operator|&&
 operator|!
 name|isfile
 argument_list|(
@@ -802,7 +822,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_info [-bcdDfgGiIkLmopPqQrRsvVx] [-e package] [-l prefix]"
+literal|"usage: pkg_info [-bcdDEfgGiIjLmopPqQrRsvVxX] [-e package] [-l prefix]"
 argument_list|,
 literal|"                [-t template] -a | pkg-name ..."
 argument_list|,

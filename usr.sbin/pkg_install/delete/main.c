@@ -53,7 +53,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"adDfGhinp:rvx"
+literal|"adDfGhinp:rvxX"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,6 +262,14 @@ case|:
 name|MatchType
 operator|=
 name|MATCH_REGEX
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|MatchType
+operator|=
+name|MATCH_EREGEX
 expr_stmt|;
 break|break;
 case|case
@@ -511,7 +519,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_delete [-dDfGinrvx] [-p prefix] pkg-name ..."
+literal|"usage: pkg_delete [-dDfGinrvxX] [-p prefix] pkg-name ..."
 argument_list|,
 literal|"       pkg_delete -a [flags]"
 argument_list|)

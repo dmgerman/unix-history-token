@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"dhl:L:s:tv"
+literal|"dhl:L:s:XtTv"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,14 @@ modifier|*
 name|MatchName
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|RegexExtended
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +171,52 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|argc
+operator|==
+literal|4
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-T"
+argument_list|)
+condition|)
+block|{
+name|cmp
+operator|=
+name|version_match
+argument_list|(
+name|argv
+index|[
+literal|3
+index|]
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|cmp
+operator|==
+literal|1
+condition|?
+literal|0
+else|:
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 while|while
 condition|(
@@ -232,6 +286,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'T'
+case|:
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"Invalid -T usage."
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|RegexExtended
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 case|case
@@ -271,11 +344,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_version [-hv] [-l limchar] [-L limchar] [-s string] index"
+literal|"usage: pkg_version [-hv] [-l limchar] [-L limchar] [[-X] -s string] index"
 argument_list|,
 literal|"       pkg_version -t v1 v2"
+argument_list|,
+literal|"       pkg_version -T name pattern"
 argument_list|)
 expr_stmt|;
 name|exit

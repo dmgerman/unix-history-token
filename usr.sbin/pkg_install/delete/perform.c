@@ -247,6 +247,9 @@ return|return
 literal|0
 return|;
 case|case
+name|MATCH_EREGEX
+case|:
+case|case
 name|MATCH_REGEX
 case|:
 name|warnx
