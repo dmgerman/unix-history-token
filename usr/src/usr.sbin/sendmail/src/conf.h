@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.53 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2511,6 +2511,47 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Stardent Titan 3000 running TitanOS 4.2. ** **	Must be compiled in "cc -43" mode. ** **	From Kate HedStrom<kate@ahab.rutgers.edu>. ** **	Note the tweaking below after the BSD defines are set. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|titan
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
@@ -2784,6 +2825,31 @@ directive|define
 name|GIDSET_T
 value|int
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Tweaking for systems that (for example) claim to be BSD but **  don't have all the standard BSD routines (boo hiss). */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|titan
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|HASINITGROUPS
+end_undef
+
+begin_comment
+comment|/* doesn't have initgroups(3) call */
+end_comment
 
 begin_endif
 endif|#
