@@ -9494,6 +9494,12 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+name|vp
+operator|->
+name|v_bsize
+operator|=
+name|bsize
+expr_stmt|;
 block|}
 name|offset
 operator|=

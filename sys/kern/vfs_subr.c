@@ -3580,6 +3580,7 @@ name|mp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|insmntque
 argument_list|(
 name|vp
@@ -3597,6 +3598,7 @@ name|mnt_stat
 operator|.
 name|f_iosize
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
