@@ -2268,6 +2268,53 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+comment|/* if we haven't yet started and nothing is buffered, else start*/
+if|if
+condition|(
+operator|!
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHN_F_TRIGGERED
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|sndbuf_getready
+argument_list|(
+name|bs
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|ret
+operator|=
+name|chn_start
+argument_list|(
+name|c
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+block|}
+else|else
+block|{
+return|return
+literal|0
+return|;
+block|}
+block|}
 for|for
 control|(
 init|;
@@ -2577,7 +2624,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * this routine tries to flush the dma transfer. It is called  * on a close. We immediately abort any read DMA  * operation, and then wait for the play buffer to drain.  *  * called from: dsp_close  */
+comment|/*  * this routine tries to flush the dma transfer. It is called  * on a close of a playback channel.  * first, if there is data in the buffer, but the dma has not yet  * begun, we need to start it.  * next, we wait for the play buffer to drain  * finally, we stop the dma.  *  * called from: dsp_close, not valid for record channels.  */
 end_comment
 
 begin_function
@@ -2631,7 +2678,7 @@ operator|==
 name|PCMDIR_PLAY
 argument_list|,
 operator|(
-literal|"chn_wrupdate on bad channel"
+literal|"chn_flush on bad channel"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2639,7 +2686,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"chn_flush c->flags 0x%08x\n"
+literal|"chn_flush: c->flags 0x%08x\n"
 argument_list|,
 name|c
 operator|->
@@ -2647,6 +2694,7 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* if we haven't yet started and nothing is buffered, else start*/
 if|if
 condition|(
 operator|!
@@ -2658,9 +2706,41 @@ operator|&
 name|CHN_F_TRIGGERED
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|sndbuf_getready
+argument_list|(
+name|bs
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|ret
+operator|=
+name|chn_start
+argument_list|(
+name|c
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+block|}
+else|else
+block|{
 return|return
 literal|0
 return|;
+block|}
+block|}
 name|c
 operator|->
 name|flags
@@ -2761,11 +2841,29 @@ expr_stmt|;
 if|if
 condition|(
 name|resid
-operator|>=
+operator|==
 name|resid_p
 condition|)
 name|count
 operator|--
+expr_stmt|;
+if|if
+condition|(
+name|resid
+operator|>
+name|resid_p
+condition|)
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"chn_flush: buffer length increasind %d -> %d\n"
+argument_list|,
+name|resid_p
+argument_list|,
+name|resid
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|resid_p
 operator|=
@@ -2783,7 +2881,17 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"chn_flush: timeout\n"
+literal|"chn_flush: timeout, hw %d, sw %d\n"
+argument_list|,
+name|sndbuf_getready
+argument_list|(
+name|b
+argument_list|)
+argument_list|,
+name|sndbuf_getready
+argument_list|(
+name|bs
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3623,7 +3731,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* could add a feeder for volume changing if channel returns -1 */
+comment|/* should add a feeder for volume changing if channel returns -1 */
 name|c
 operator|->
 name|volume
@@ -5343,7 +5451,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"not mapped, feederflags %x\n"
+literal|"feederflags %x\n"
 argument_list|,
 name|flags
 argument_list|)
@@ -5468,7 +5576,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"build fmtchain from %x to %x: "
+literal|"build fmtchain from 0x%x to 0x%x: "
 argument_list|,
 name|c
 operator|->
@@ -5559,7 +5667,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"can't add feeder %p, output %x, err %d\n"
+literal|"can't add feeder %p, output 0x%x, err %d\n"
 argument_list|,
 name|fc
 argument_list|,
@@ -5581,7 +5689,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"added feeder %p, output %x\n"
+literal|"added feeder %p, output 0x%x\n"
 argument_list|,
 name|fc
 argument_list|,
@@ -5671,7 +5779,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|u_int32_t *x = chn_getcaps(c)->fmtlist; 			printf("acceptable formats for %s:\n", c->name); 			while (*x) { 				printf("[%8x] ", *x); 				x++; 			}
+block|u_int32_t *x = chn_getcaps(c)->fmtlist; 			printf("acceptable formats for %s:\n", c->name); 			while (*x) { 				printf("[0x%8x] ", *x); 				x++; 			}
 endif|#
 directive|endif
 name|hwfmt
