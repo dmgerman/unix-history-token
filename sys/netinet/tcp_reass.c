@@ -8475,15 +8475,14 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|headlocked
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"headlocked should be 0"
-operator|)
+condition|)
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_UNLOCK
