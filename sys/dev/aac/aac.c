@@ -12023,6 +12023,12 @@ name|aac_sc
 operator|=
 name|sc
 expr_stmt|;
+name|caminf
+operator|->
+name|sim_dev
+operator|=
+name|child
+expr_stmt|;
 name|device_set_ivars
 argument_list|(
 name|child
