@@ -960,7 +960,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SIGUNUSED
+name|LINUX_SIGSYS
 value|31
 end_define
 

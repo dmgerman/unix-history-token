@@ -786,7 +786,7 @@ name|LINUX_SIGBUS
 block|,
 name|LINUX_SIGSEGV
 block|,
-literal|0
+name|LINUX_SIGSYS
 block|,
 name|LINUX_SIGPIPE
 block|,
@@ -897,7 +897,7 @@ name|SIGIO
 block|,
 name|SIGURG
 block|,
-literal|0
+name|SIGSYS
 block|}
 decl_stmt|;
 end_decl_stmt
