@@ -244,6 +244,11 @@ name|int
 name|iobase
 decl_stmt|;
 comment|/* IO base address of card */
+name|void
+modifier|*
+name|lance_mem
+decl_stmt|;
+comment|/* Base of memory allocated to card */
 name|struct
 name|mds
 modifier|*
@@ -661,6 +666,17 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|struct
+name|is_softc
+modifier|*
+name|is
+init|=
+operator|&
+name|is_softc
+index|[
+name|unit
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|unit
@@ -818,6 +834,13 @@ name|if_watchdog
 operator|=
 name|is_watchdog
 expr_stmt|;
+comment|/*  	 * XXX - Set is->lance_mem to NULL so first pass  	 * through init_mem it won't try and free memory 	 * This is getting messy and needs redoing. 	 * Yes, I know NULL != 0 but it does what I want :-)  	 */
+name|is
+operator|->
+name|lance_mem
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Set up DMA */
 name|isa_dmacascade
 argument_list|(
@@ -831,7 +854,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/*          * Search down the ifa address list looking for the AF_LINK type entry          */
+comment|/* 	 * Search down the ifa address list looking  	 * for the AF_LINK type entry 	 */
 name|ifa
 operator|=
 name|ifp
@@ -870,7 +893,7 @@ name|ifa
 operator|->
 name|ifa_next
 expr_stmt|;
-comment|/*          * If we find an AF_LINK type entry, we will fill 	 * in the hardware address for this interface.          */
+comment|/* 	 * If we find an AF_LINK type entry, we will fill 	 * in the hardware address for this interface. 	 */
 if|if
 condition|(
 operator|(
@@ -888,7 +911,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*                  * Fill in the link level address for this interface                  */
+comment|/* 		 * Fill in the link level address for this interface 		 */
 name|sdl
 operator|=
 operator|(
@@ -1043,16 +1066,31 @@ name|unit
 index|]
 decl_stmt|;
 comment|/* Allocate memory */
-comment|/* 	 * XXX hopefully have better way to get dma'able memory later, 	 * this code assumes that the physical memory address returned 	 * from malloc will be below 16Mb. The Lance's address registers 	 * are only 16 bits wide! 	 */
+comment|/* 	 * XXX - hopefully have better way to get dma'able memory later, 	 * this code assumes that the physical memory address returned 	 * from malloc will be below 16Mb. The Lance's address registers 	 * are only 16 bits wide! 	 */
 define|#
 directive|define
 name|MAXMEM
 value|((NRBUF+NTBUF)*(BUFSIZE) + (NRBUF+NTBUF)*sizeof(struct mds) + 8)
-name|temp
+comment|/*  	 * XXX - If we've been here before then free  	 * the previously allocated memory 	 */
+if|if
+condition|(
+name|is
+operator|->
+name|lance_mem
+condition|)
+name|free
+argument_list|(
+name|is
+operator|->
+name|lance_mem
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|is
+operator|->
+name|lance_mem
 operator|=
-operator|(
-name|u_long
-operator|)
 name|malloc
 argument_list|(
 name|MAXMEM
@@ -1061,6 +1099,32 @@ name|M_TEMP
 argument_list|,
 name|M_NOWAIT
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|is
+operator|->
+name|lance_mem
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"is%d : Couldn't allocate memory for card\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|temp
+operator|=
+operator|(
+name|u_long
+operator|)
+name|is
+operator|->
+name|lance_mem
 expr_stmt|;
 comment|/* Align message descriptors on quad word boundary  		(this is essential) */
 name|temp
@@ -1326,40 +1390,6 @@ operator|*
 operator|)
 name|temp
 expr_stmt|;
-if|#
-directive|if
-name|ISDEBUG
-operator|>
-literal|4
-name|printf
-argument_list|(
-literal|"rd = %x,td = %x, rbuf = %x, tbuf = %x,td+1=%x\n"
-argument_list|,
-name|is
-operator|->
-name|rd
-argument_list|,
-name|is
-operator|->
-name|td
-argument_list|,
-name|is
-operator|->
-name|rbuf
-argument_list|,
-name|is
-operator|->
-name|tbuf
-argument_list|,
-name|is
-operator|->
-name|td
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -4309,6 +4339,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISDEBUG
+end_ifdef
+
 begin_macro
 name|recv_print
 argument_list|(
@@ -4642,6 +4678,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ISDEBUG */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NIS> 0 */
+end_comment
 
 end_unit
 
