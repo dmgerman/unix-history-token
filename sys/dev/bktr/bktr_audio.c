@@ -14,6 +14,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_bktr.h"
+end_include
+
+begin_comment
+comment|/* Include any kernel config options */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1772,6 +1782,17 @@ name|bktr_ptr_t
 name|bktr
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|BKTR_NEW_MSP34XX_DRIVER
+comment|/* Just wake up the (maybe) sleeping thread, it'll do everything for us */
+name|msp_wake_thread
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|int
 name|auto_detect
 decl_stmt|,
@@ -2505,6 +2526,9 @@ block|}
 comment|/* uncomment the following line to enable the MSP34xx 1Khz Tone Generator */
 comment|/* turn your speaker volume down low before trying this */
 comment|/* msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x0014, 0x7f40); */
+endif|#
+directive|endif
+comment|/* BKTR_NEW_MSP34XX_DRIVER */
 block|}
 end_function
 

@@ -2119,6 +2119,14 @@ name|need_to_allocate_memory
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BKTR_NEW_MSP34XX_DRIVER
+name|int
+name|err
+decl_stmt|;
+endif|#
+directive|endif
 comment|/***************************************/
 comment|/* *** OS Specific memory routines *** */
 comment|/***************************************/
@@ -2794,6 +2802,53 @@ name|audio_mux_present
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+ifdef|#
+directive|ifdef
+name|BKTR_NEW_MSP34XX_DRIVER
+comment|/* get hint on short programming of the msp34xx, so we know */
+comment|/* if the decision what thread to start should be overwritten */
+if|if
+condition|(
+operator|(
+name|err
+operator|=
+name|resource_int_value
+argument_list|(
+literal|"bktr"
+argument_list|,
+name|unit
+argument_list|,
+literal|"mspsimple"
+argument_list|,
+operator|&
+operator|(
+name|bktr
+operator|->
+name|mspsimple
+operator|)
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|bktr
+operator|->
+name|mspsimple
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* fall back to default */
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|probeCard
 argument_list|(
 name|bktr
@@ -2809,6 +2864,34 @@ argument_list|(
 name|bktr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BKTR_NEW_MSP34XX_DRIVER
+comment|/* setup the kenrel thread */
+name|err
+operator|=
+name|msp_attach
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+comment|/* error doing kernel thread stuff, disable msp3400c */
+name|bktr
+operator|->
+name|card
+operator|.
+name|msp3400c
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

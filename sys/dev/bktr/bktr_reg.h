@@ -3034,6 +3034,28 @@ name|int
 name|msp_source_selected
 decl_stmt|;
 comment|/* 0 = TV source, 1 = Line In source, 2 = FM Radio Source */
+ifdef|#
+directive|ifdef
+name|BKTR_NEW_MSP34XX_DRIVER
+comment|/* msp3400c related data */
+name|void
+modifier|*
+name|msp3400c_info
+decl_stmt|;
+name|int
+name|stereo_once
+decl_stmt|;
+name|int
+name|amsound
+decl_stmt|;
+name|int
+name|mspsimple
+decl_stmt|;
+name|int
+name|dolby
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
