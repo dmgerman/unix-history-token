@@ -1761,18 +1761,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|LIST_REMOVE
-argument_list|(
-name|tt
-argument_list|,
-name|list
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|tt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|maxrec
@@ -1786,8 +1774,6 @@ name|maxrec
 condition|)
 return|return;
 block|}
-else|else
-block|{
 name|tt
 operator|->
 name|logout
@@ -1796,7 +1782,6 @@ name|bp
 operator|->
 name|ut_time
 expr_stmt|;
-block|}
 block|}
 block|}
 name|tm
