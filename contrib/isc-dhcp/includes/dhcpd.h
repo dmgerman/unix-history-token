@@ -1137,7 +1137,7 @@ decl_stmt|;
 name|int
 name|max_message_size
 decl_stmt|;
-name|u_int32_t
+name|TIME
 name|expiry
 decl_stmt|,
 name|renewal
@@ -11880,7 +11880,7 @@ begin_function_decl
 name|void
 name|set_time
 parameter_list|(
-name|u_int32_t
+name|TIME
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -81,6 +81,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
 name|TIME
 name|cur_time
 decl_stmt|;

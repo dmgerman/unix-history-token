@@ -78,7 +78,7 @@ begin_function
 name|void
 name|set_time
 parameter_list|(
-name|u_int32_t
+name|TIME
 name|t
 parameter_list|)
 block|{
@@ -265,9 +265,6 @@ endif|#
 directive|endif
 name|isc_result_t
 name|status
-decl_stmt|;
-name|TIME
-name|cur_time
 decl_stmt|;
 name|tvp
 operator|=
