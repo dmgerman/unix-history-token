@@ -7640,6 +7640,15 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|ack
+operator|=
+name|XE_INB
+argument_list|(
+name|XE_GPR2
+argument_list|)
+operator|&
+name|XE_MII_RDD
+expr_stmt|;
 name|XE_MII_SET
 argument_list|(
 name|XE_MII_CLK
@@ -7649,15 +7658,6 @@ name|DELAY
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
-name|ack
-operator|=
-name|XE_INB
-argument_list|(
-name|XE_GPR2
-argument_list|)
-operator|&
-name|XE_MII_RDD
 expr_stmt|;
 comment|/*    * Now try reading data bits. If the ack failed, we still    * need to clock through 16 cycles to keep the PHY(s) in sync.    */
 if|if
