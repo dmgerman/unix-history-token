@@ -978,11 +978,6 @@ begin_comment
 comment|/* interface address */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -991,8 +986,13 @@ value|13
 end_define
 
 begin_comment
-comment|/* volatile metadata associated to pkts */
+comment|/* deprecated: use m_tag's instead */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2365,21 +2365,6 @@ begin_comment
 comment|/* IPV6 input processing */
 end_comment
 
-begin_comment
-comment|/*  * As a temporary and low impact solution to replace the even uglier  * approach used so far in some parts of the network stack (which relies  * on global variables), packet tag-like annotations are stored in MT_TAG  * mbufs (or lookalikes) prepended to the actual mbuf chain.  *  *	m_type	= MT_TAG  *	m_flags = m_tag_id  *	m_next	= next buffer in chain.  *  * BE VERY CAREFUL not to pass these blocks to the mbuf handling routines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_m_tag_id
-value|m_hdr.mh_flags
-end_define
-
-begin_comment
-comment|/* Packet tags used in the FreeBSD network stack. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2433,17 +2418,6 @@ end_define
 
 begin_comment
 comment|/* MAC label */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKET_TAG_IPFASTFWD_OURS
-value|20
-end_define
-
-begin_comment
-comment|/* IP fastforward dropback */
 end_comment
 
 begin_comment
