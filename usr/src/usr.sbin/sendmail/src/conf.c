@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -273,24 +273,24 @@ begin_decl_stmt
 name|int
 name|QueueLA
 init|=
-literal|12
+literal|8
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if load average> 12, just queue */
+comment|/* load avg> QueueLA -> just queue */
 end_comment
 
 begin_decl_stmt
 name|int
 name|RefuseLA
 init|=
-literal|25
+literal|12
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if load average> 25, refuse connections */
+comment|/* load avg> RefuseLA -> refuse connections */
 end_comment
 
 begin_escape
