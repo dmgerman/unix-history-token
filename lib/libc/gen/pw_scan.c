@@ -415,10 +415,6 @@ operator|*
 name|ep
 operator|!=
 literal|'\0'
-operator|||
-name|ep
-operator|==
-name|p
 condition|)
 block|{
 if|if
@@ -573,10 +569,6 @@ operator|*
 name|ep
 operator|!=
 literal|'\0'
-operator|||
-name|ep
-operator|==
-name|p
 condition|)
 block|{
 if|if
