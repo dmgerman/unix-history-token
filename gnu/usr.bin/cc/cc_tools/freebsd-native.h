@@ -69,6 +69,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GPLUSPLUS_BACKWARD_INCLUDE_DIR
+value|PREFIX"/include/g++/backward"
+end_define
+
+begin_define
+define|#
+directive|define
 name|GCC_INCLUDE_DIR
 value|PREFIX"/include"
 end_define
