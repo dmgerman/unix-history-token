@@ -930,19 +930,19 @@ literal|0
 block|,
 comment|/* EEProm size */
 block|{
-literal|0x00
+literal|0x400
 block|,
-literal|0x00
+literal|0xE00
 block|,
-literal|0x00
+literal|0x400
 block|,
-literal|0x00
+literal|0xC00
 block|,
-literal|0
+literal|1
 block|}
 block|,
 comment|/* audio MUX values */
-literal|0x00
+literal|0xE00
 block|}
 block|,
 comment|/* GPIO mask */
