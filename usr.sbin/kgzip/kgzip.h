@@ -9,6 +9,28 @@ directive|include
 file|"kgz.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|F_AOUT
+value|1
+end_define
+
+begin_comment
+comment|/* Format: a.out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_ELF
+value|2
+end_define
+
+begin_comment
+comment|/* Format: ELF32 */
+end_comment
+
 begin_comment
 comment|/* Used by I/O routines */
 end_comment
@@ -42,6 +64,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Default loader */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|format
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output format */
 end_comment
 
 begin_function_decl
