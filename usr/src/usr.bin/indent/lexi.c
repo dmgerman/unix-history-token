@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.6 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,7 +295,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 literal|3
 block|,
