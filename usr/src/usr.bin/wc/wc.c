@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wc.c	5.4 (Berkeley) %G%"
+literal|"@(#)wc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,6 +170,9 @@ specifier|register
 name|int
 name|ch
 decl_stmt|;
+name|int
+name|total
+decl_stmt|;
 comment|/* 	 * wc is unusual in that its flags are on by default, so, 	 * if you don't get any arguments, you have to turn them 	 * all on. 	 */
 if|if
 condition|(
@@ -288,28 +291,15 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* should print "stdin" as the file name, here */
-if|if
-condition|(
-name|argc
-operator|<=
-literal|1
-condition|)
-block|{
+name|total
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|*
 name|argv
-operator|||
-operator|!
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-literal|"-"
-argument_list|)
 condition|)
 block|{
 name|cnt
@@ -328,60 +318,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|cnt
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %s\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-block|}
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * cat allows "-" as stdin anywhere in the arg list, 	 * might as well here, too.  Again, should use "stdin" 	 * as the file name. 	 */
 do|do
 block|{
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-literal|"-"
-argument_list|)
-condition|)
-block|{
-name|cnt
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|cnt
 argument_list|(
 operator|*
@@ -396,7 +334,9 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
+operator|++
+name|total
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -405,6 +345,13 @@ operator|++
 name|argv
 condition|)
 do|;
+if|if
+condition|(
+name|total
+operator|>
+literal|1
+condition|)
+block|{
 if|if
 condition|(
 name|doline
@@ -443,6 +390,7 @@ argument_list|(
 literal|" total"
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -637,9 +585,7 @@ name|printf
 argument_list|(
 literal|" %7ld"
 argument_list|,
-name|sbuf
-operator|.
-name|st_size
+name|charct
 argument_list|)
 expr_stmt|;
 block|}
