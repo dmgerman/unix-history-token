@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.11 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1042,6 +1042,16 @@ condition|(
 name|q
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
 operator|&&
 name|deliver
 argument_list|(
