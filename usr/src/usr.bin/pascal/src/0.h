@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.16 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.17 %G%"; */
 end_comment
 
 begin_define
@@ -834,6 +834,17 @@ begin_comment
 comment|/* or'ed in if variable is in a register */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NNLOCAL
+value|0040
+end_define
+
+begin_comment
+comment|/* named local variable, not used in symbol table */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -1024,6 +1035,13 @@ define|#
 directive|define
 name|GLOBALVAR
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAMEDLOCALVAR
+value|4
 end_define
 
 begin_escape
@@ -1751,7 +1769,7 @@ value|!compat
 end_define
 
 begin_comment
-comment|/*  * Parts records which declaration parts have been seen.  * The grammar allows the "label" "const" "type" "var" and routine  * parts to be repeated and to be in any order, so that  * they can be detected semantically to give better  * error diagnostics.  */
+comment|/*  * Parts records which declaration parts have been seen.  * The grammar allows the "label" "const" "type" "var" and routine  * parts to be repeated and to be in any order, so that  * they can be detected semantically to give better  * error diagnostics.  *  * The flag NONLOCALVAR indicates that a non-local var has actually  * been used hence the display must be saved; NONLOCALGOTO indicates  * that a non-local goto has been done hence that a setjmp must be done.  */
 end_comment
 
 begin_decl_stmt
@@ -1767,35 +1785,49 @@ begin_define
 define|#
 directive|define
 name|LPRT
-value|1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPRT
-value|2
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|TPRT
-value|4
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|VPRT
-value|8
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|RPRT
-value|16
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|NONLOCALVAR
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|NONLOCALGOTO
+value|0x0040
 end_define
 
 begin_comment

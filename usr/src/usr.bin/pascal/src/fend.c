@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.14 %G%"
+literal|"@(#)fend.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,12 +211,6 @@ argument_list|()
 decl_stmt|;
 name|int
 name|toplabel
-init|=
-name|getlab
-argument_list|()
-decl_stmt|;
-name|int
-name|botlabel
 init|=
 name|getlab
 argument_list|()
@@ -936,14 +930,18 @@ argument_list|,
 name|savlabel
 argument_list|)
 expr_stmt|;
-name|putjbr
-argument_list|(
-name|botlabel
-argument_list|)
-expr_stmt|;
 name|putlab
 argument_list|(
 name|toplabel
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	subl2	$LF%d,sp"
+argument_list|,
+literal|0
+argument_list|,
+name|ftnno
 argument_list|)
 expr_stmt|;
 if|if
@@ -1018,7 +1016,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     *	save old display  	     */
+comment|/* 	     *	if there are nested procedures we must save the display. 	     */
+if|if
+condition|(
+name|parts
+index|[
+name|cbn
+index|]
+operator|&
+name|NONLOCALVAR
+condition|)
+block|{
+comment|/* 		 *	save old display  		 */
 name|putprintf
 argument_list|(
 literal|"	movq	%s+%d,%d(%s)"
@@ -1040,7 +1049,7 @@ argument_list|,
 name|P2FPNAME
 argument_list|)
 expr_stmt|;
-comment|/* 	     *	set up new display by saving AP and FP in appropriate 	     *	slot in display structure. 	     */
+comment|/* 		 *	set up new display by saving AP and FP in appropriate 		 *	slot in display structure. 		 */
 name|putprintf
 argument_list|(
 literal|"	movq	%s,%s+%d"
@@ -1060,6 +1069,7 @@ name|dispsave
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	     *	set underflow checking if runtime tests 	     */
 if|if
 condition|(
@@ -1195,7 +1205,36 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     *  set up goto vector in case of non-local goto to this frame 	     */
+comment|/* 	     *  set up goto vector if potential non-local goto to this frame 	     */
+if|if
+condition|(
+operator|(
+name|cbn
+operator|<
+literal|2
+operator|&&
+operator|(
+name|parts
+index|[
+name|cbn
+index|]
+operator|&
+name|LPRT
+operator|)
+operator|)
+operator|||
+operator|(
+name|parts
+index|[
+name|cbn
+index|]
+operator|&
+name|NONLOCALGOTO
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|putleaf
 argument_list|(
 name|P2ICON
@@ -1285,6 +1324,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+comment|/* 		 *	on non-local goto, setjmp returns with address to 		 *	be branched to. 		 */
 name|putprintf
 argument_list|(
 literal|"	jmp	(r0)"
@@ -1297,6 +1337,7 @@ argument_list|(
 name|skip
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|PC
@@ -2647,7 +2688,7 @@ endif|OBJ
 ifdef|#
 directive|ifdef
 name|PC
-comment|/* 		 *	if there were file variables declared at this level 		 *	call pclose(&__disply[ cbn ] ) to clean them up. 		 */
+comment|/* 		 *	if there were file variables declared at this level 		 *	call PCLOSE( ap ) to clean them up. 		 */
 if|if
 condition|(
 name|dfiles
@@ -2676,25 +2717,22 @@ argument_list|,
 literal|"_PCLOSE"
 argument_list|)
 expr_stmt|;
-name|putRV
+name|putleaf
 argument_list|(
-name|DISPLAYNAME
+name|P2REG
 argument_list|,
 literal|0
 argument_list|,
-name|cbn
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dispsave
-argument_list|)
+name|P2AP
 argument_list|,
-name|NGLOBAL
+name|ADDTYPE
+argument_list|(
+name|P2CHAR
 argument_list|,
 name|P2PTR
-operator||
-name|P2CHAR
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|putop
@@ -2956,7 +2994,18 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 *	restore old display entry from save area 		 */
+comment|/* 		 *	if there are nested procedures we must save the display. 		 */
+if|if
+condition|(
+name|parts
+index|[
+name|cbn
+index|]
+operator|&
+name|NONLOCALVAR
+condition|)
+block|{
+comment|/* 		     *	restore old display entry from save area 		     */
 name|putprintf
 argument_list|(
 literal|"	movq	%d(%s),%s+%d"
@@ -2978,6 +3027,7 @@ name|dispsave
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|stabrbrac
 argument_list|(
 name|cbn
@@ -3019,28 +3069,9 @@ name|savmask
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|putlab
-argument_list|(
-name|botlabel
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"	subl2	$LF%d,sp"
-argument_list|,
-literal|0
-argument_list|,
-name|ftnno
-argument_list|)
-expr_stmt|;
 name|putrbracket
 argument_list|(
 name|ftnno
-argument_list|)
-expr_stmt|;
-name|putjbr
-argument_list|(
-name|toplabel
 argument_list|)
 expr_stmt|;
 comment|/* 		 *  put down the entry point for formal calls 		 *  the arguments for FCALL have been passed to us 		 *  as hidden parameters after the regular arguments. 		 */
@@ -3172,7 +3203,7 @@ argument_list|)
 expr_stmt|;
 name|putjbr
 argument_list|(
-name|botlabel
+name|toplabel
 argument_list|)
 expr_stmt|;
 block|}

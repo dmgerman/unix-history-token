@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clas.c 1.5 %G%"
+literal|"@(#)clas.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -782,6 +782,8 @@ operator||
 name|NPARAM
 operator||
 name|NLOCAL
+operator||
+name|NNLOCAL
 operator|)
 condition|)
 block|{
@@ -796,6 +798,12 @@ name|NPARAM
 case|:
 return|return
 name|PARAMVAR
+return|;
+case|case
+name|NNLOCAL
+case|:
+return|return
+name|NAMEDLOCALVAR
 return|;
 case|case
 name|NLOCAL
