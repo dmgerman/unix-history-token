@@ -234,18 +234,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|cpu_reset_real
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -253,18 +250,15 @@ directive|ifdef
 name|SMP
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|cpu_reset_proxy
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -856,37 +850,35 @@ begin_comment
 comment|/*  * Intercept the return address from a freshly forked process that has NOT  * been scheduled yet.  *  * This is needed to make kernel threads stay in kernel mode.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|cpu_set_fork_handler
-parameter_list|(
+argument_list|(
 name|td
-parameter_list|,
+argument_list|,
 name|func
-parameter_list|,
+argument_list|,
 name|arg
-parameter_list|)
-name|struct
+argument_list|)
+decl|struct
 name|thread
 modifier|*
 name|td
 decl_stmt|;
-function_decl|void
-parameter_list|(
-function_decl|*func
-end_function_decl
+end_decl_stmt
 
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
+begin_function_decl
 name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void

@@ -201,19 +201,16 @@ begin_comment
 comment|/*  * XXX perfmon_init_dev(void *) is a split from the perfmon_init() funtion.   * This solves a problem for DEVFS users.  It loads the "perfmon" driver after  * the DEVFS subsystem has been kicked into action.  The SI_ORDER_ANY is to  * assure that it is the most lowest priority task which, guarantees the  * above.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|perfmon_init_dev
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|SYSINIT

@@ -433,50 +433,44 @@ define|\
 value|((int)((io_apic_versions[(A)]& IOART_VER_MAXREDIR)>> MAXREDIRSHIFT) + 1)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|trigger
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|apic
-operator|,
+parameter_list|,
 name|int
 name|pin
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|*
+modifier|*
 name|flags
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|polarity
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|apic
-operator|,
+parameter_list|,
 name|int
 name|pin
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|*
+modifier|*
 name|flags
-operator|,
+parameter_list|,
 name|int
 name|level
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -2177,29 +2171,23 @@ name|READY
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|acquire_apic_timer
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|release_apic_timer
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Acquire the APIC timer for exclusive use.  */
