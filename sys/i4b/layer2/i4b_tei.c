@@ -61,6 +61,12 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/random.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -146,26 +152,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/i4b_ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/random.h>
 end_include
 
 begin_endif
