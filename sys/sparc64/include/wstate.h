@@ -99,23 +99,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WSTATE_MASK
-value|7
+name|WSTATE_NORMAL_MASK
+value|3
 end_define
 
 begin_comment
-comment|/* for WSTATE.NORMAL */
+comment|/* wstate normal minus transition */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WSTATE_USERSHIFT
+name|WSTATE_OTHER_SHIFT
 value|3
 end_define
 
 begin_comment
-comment|/* for WSTATE.OTHER / user */
+comment|/* for wstate other / user */
 end_comment
 
 begin_define
