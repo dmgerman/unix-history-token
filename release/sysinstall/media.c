@@ -445,8 +445,8 @@ condition|)
 comment|/* Interactive? */
 name|msgConfirm
 argument_list|(
-literal|"No CDROM devices found!  Please check that your system's\n"
-literal|"configuration is correct and that the CDROM drive is of a supported\n"
+literal|"No CD/DVD devices found!  Please check that your system's\n"
+literal|"configuration is correct and that the CD/DVD drive is of a supported\n"
 literal|"type.  For more information, consult the hardware guide\n"
 literal|"in the Doc menu."
 argument_list|)

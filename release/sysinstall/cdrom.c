@@ -257,7 +257,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"The CD in your drive looks more like an Audio CD than a FreeBSD release."
+literal|"The disc in your drive looks more like an Audio disc than a FreeBSD release."
 argument_list|)
 expr_stmt|;
 return|return
@@ -320,9 +320,9 @@ if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Warning: The CD currently in the drive is either not a FreeBSD\n"
-literal|"CD or it is an older (pre 2.1.5) FreeBSD CD which does not\n"
-literal|"have a version number on it.  Do you wish to use this CD anyway?"
+literal|"Warning: The disc currently in the drive is either not a FreeBSD\n"
+literal|"disc or it is an older (pre 2.1.5) FreeBSD CD which does not\n"
+literal|"have a version number on it.  Do you wish to use this disc anyway?"
 argument_list|)
 operator|!=
 literal|0
@@ -393,7 +393,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to find a %s/cdrom.inf file.\n"
-literal|"Either this is not a FreeBSD CDROM, there is a problem with\n"
+literal|"Either this is not a FreeBSD disc, there is a problem with\n"
 literal|"the CDROM driver or something is wrong with your hardware.\n"
 literal|"Please fix this problem (check the console logs on VTY2) and\n"
 literal|"try again."
@@ -433,12 +433,12 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Warning: The version of the FreeBSD CD currently in the drive\n"
+literal|"Warning: The version of the FreeBSD disc currently in the drive\n"
 literal|"(%s) does not match the version of the boot floppy\n"
 literal|"(%s).\n\n"
 literal|"If this is intentional, to avoid this message in the future\n"
 literal|"please visit the Options editor to set the boot floppy version\n"
-literal|"string to match that of the CD before selecting it as your\n"
+literal|"string to match that of the disc before selecting it as your\n"
 literal|"installation media."
 argument_list|,
 name|cp
@@ -453,7 +453,7 @@ if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Would you like to try and use this CDROM anyway?"
+literal|"Would you like to try and use this disc anyway?"
 argument_list|)
 operator|!=
 literal|0
@@ -535,9 +535,9 @@ endif|#
 directive|endif
 name|msgConfirm
 argument_list|(
-literal|"Fatal: The FreeBSD install CD currently in the drive\n"
+literal|"Fatal: The FreeBSD install CD/DVD currently in the drive\n"
 literal|"is for the %s architecture, not the machine you're using.\n\n"
-literal|"Please use the correct installation CD for your machine type."
+literal|"Please use the correct installation CD/DVD for your machine type."
 argument_list|,
 name|cp
 argument_list|)
@@ -636,7 +636,7 @@ literal|0
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Could not unmount the CDROM from %s: %s"
+literal|"Could not unmount the CDROM/DVD from %s: %s"
 argument_list|,
 name|mountpoint
 argument_list|,

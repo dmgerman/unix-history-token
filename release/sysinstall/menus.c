@@ -1112,9 +1112,9 @@ name|mediaSetFloppy
 block|}
 block|,
 block|{
-literal|" Media, CDROM"
+literal|" Media, CDROM/DVD"
 block|,
-literal|"Select CDROM installation media."
+literal|"Select CDROM/DVD installation media."
 block|,
 name|NULL
 block|,
@@ -2313,12 +2313,12 @@ name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"Choose a CDROM type"
+literal|"Choose a CD/DVD type"
 block|,
-literal|"FreeBSD can be installed directly from a CDROM containing a valid\n"
+literal|"FreeBSD can be installed directly from a CD/DVD containing a valid\n"
 literal|"FreeBSD distribution.  If you are seeing this menu it is because\n"
-literal|"more than one CDROM drive was found on your system.  Please select one\n"
-literal|"of the following CDROM drives as your installation drive."
+literal|"more than one CD/DVD drive was found on your system.  Please select one\n"
+literal|"of the following CD/DVD drives as your installation drive."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -3943,7 +3943,7 @@ literal|"Choose Installation Media"
 block|,
 literal|"FreeBSD can be installed from a variety of different installation\n"
 literal|"media, ranging from floppies to an Internet FTP server.  If you're\n"
-literal|"installing FreeBSD from a supported CDROM drive then this is generally\n"
+literal|"installing FreeBSD from a supported CD/DVD drive then this is generally\n"
 literal|"the best media to use if you have no overriding reason for using other\n"
 literal|"media."
 block|,
@@ -3953,9 +3953,9 @@ literal|"media"
 block|,
 block|{
 block|{
-literal|"1 CDROM"
+literal|"1 CD/DVD"
 block|,
-literal|"Install from a FreeBSD CDROM"
+literal|"Install from a FreeBSD CD/DVD"
 block|,
 name|NULL
 block|,
