@@ -17,6 +17,14 @@ name|in_dotrap
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|sig_atomic_t
+name|gotwinch
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|trapcmd

@@ -285,6 +285,13 @@ begin_comment
 comment|/* Used while handling SIGCHLD traps. */
 end_comment
 
+begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|gotwinch
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -1030,10 +1037,6 @@ condition|(
 name|rootshell
 operator|&&
 name|iflag
-operator|&&
-name|el
-operator|!=
-name|NULL
 condition|)
 name|action
 operator|=
@@ -1503,10 +1506,9 @@ name|signo
 operator|==
 name|SIGWINCH
 condition|)
-name|el_resize
-argument_list|(
-name|el
-argument_list|)
+name|gotwinch
+operator|=
+literal|1
 expr_stmt|;
 endif|#
 directive|endif
