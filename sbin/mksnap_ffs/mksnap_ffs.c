@@ -81,6 +81,15 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|usage
@@ -90,7 +99,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mksnap_ffs mountpoint file\n"
+literal|"usage: mksnap_ffs mountpoint snapshot_name\n"
 argument_list|)
 expr_stmt|;
 name|exit
