@@ -1801,7 +1801,7 @@ operator|->
 name|isp_mdvec
 operator|->
 name|dv_ispfw
-operator|!=
+operator|==
 name|NULL
 operator|)
 operator|||
@@ -1822,12 +1822,6 @@ block|}
 if|if
 condition|(
 name|dodnld
-operator|&&
-name|isp
-operator|->
-name|isp_mdvec
-operator|->
-name|dv_ispfw
 condition|)
 block|{
 name|u_int16_t
