@@ -2796,9 +2796,12 @@ operator|!
 name|found
 condition|)
 block|{
+name|DEB
+argument_list|(
 name|printf
 argument_list|(
 literal|"b004probe(): no B004-board found.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
