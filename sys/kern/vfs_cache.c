@@ -70,66 +70,6 @@ file|<sys/filedesc.h>
 end_include
 
 begin_comment
-comment|/*  * This structure describes the elements in the cache of recent  * names looked up by namei.  */
-end_comment
-
-begin_struct
-struct|struct
-name|namecache
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_hash
-expr_stmt|;
-comment|/* hash chain */
-name|LIST_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_src
-expr_stmt|;
-comment|/* source vnode list */
-name|TAILQ_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_dst
-expr_stmt|;
-comment|/* destination vnode list */
-name|struct
-name|vnode
-modifier|*
-name|nc_dvp
-decl_stmt|;
-comment|/* vnode of parent of name */
-name|struct
-name|vnode
-modifier|*
-name|nc_vp
-decl_stmt|;
-comment|/* vnode the name refers to */
-name|u_char
-name|nc_flag
-decl_stmt|;
-comment|/* flag bits */
-name|u_char
-name|nc_nlen
-decl_stmt|;
-comment|/* length of name */
-name|char
-name|nc_name
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* segment name */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Name caching works as follows:  *  * Names found by directory scans are retained in a cache  * for future reference.  It is managed LRU, so frequently  * used names will hang around.  Cache is indexed by hash value  * obtained from (vp, name) where vp refers to the directory  * containing name.  *  * If it is a "negative" entry, (i.e. for a name that is known NOT to  * exist) the vnode pointer will be NULL.  *  * Upon reaching the last segment of a path, if the reference  * is for DELETE, or NOCACHE is set (rewrite), and the  * name is located in the cache, it will be dropped.  */
 end_comment
 
