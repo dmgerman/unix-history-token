@@ -87,6 +87,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_PPSRATECHECK
+end_define
+
+begin_define
+define|#
+directive|define
 name|WITH_CONVERT_AND_STRIP_IP_LEN
 end_define
 
