@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kt.c,v 4.9 89/10/25 19:03:35 qjb Exp $  *	$Id: in_tkt.c,v 1.1.1.1 1994/09/30 14:50:01 csgr Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kt.c,v 4.9 89/10/25 19:03:35 qjb Exp $  *	$Id: in_tkt.c,v 1.6 1995/07/18 16:38:49 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: in_tkt.c,v 1.1.1.1 1994/09/30 14:50:01 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: in_tkt.c,v 1.6 1995/07/18 16:38:49 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -38,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -87,41 +95,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|krb_debug
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * in_tkt() is used to initialize the ticket store.  It creates the  * file to contain the tickets and writes the given user's name "pname"  * and instance "pinst" in the file.  in_tkt() returns KSUCCESS on  * success, or KFAILURE if something goes wrong.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|in_tkt
-argument_list|(
-argument|pname
-argument_list|,
-argument|pinst
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|pname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|pinst
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|tktfile
@@ -410,7 +399,7 @@ name|krb_debug
 condition|)
 name|printf
 argument_list|(
-literal|"swapped UID's %d and %d\n"
+literal|"swapped UID's %ld and %ld\n"
 argument_list|,
 name|metoo
 argument_list|,
@@ -501,7 +490,7 @@ name|krb_debug
 condition|)
 name|printf
 argument_list|(
-literal|"swapped UID's %d and %d\n"
+literal|"swapped UID's %ld and %ld\n"
 argument_list|,
 name|me
 argument_list|,
@@ -709,7 +698,7 @@ endif|#
 directive|endif
 comment|/* TKT_SHMEM */
 block|}
-end_block
+end_function
 
 end_unit
 

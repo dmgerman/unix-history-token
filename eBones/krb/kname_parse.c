@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kname_parse.c,v 4.4 88/12/01 14:07:29 jtkohl Exp $  *	$Id: kname_parse.c,v 1.2 1994/07/19 19:25:39 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kname_parse.c,v 4.4 88/12/01 14:07:29 jtkohl Exp $  *	$Id: kname_parse.c,v 1.3 1995/07/18 16:38:54 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kname_parse.c,v 1.2 1994/07/19 19:25:39 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: kname_parse.c,v 1.3 1995/07/18 16:38:54 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -92,39 +94,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This file contains four routines for handling Kerberos names.  *  * kname_parse() breaks a Kerberos name into its name, instance,  * and realm components.  *  * k_isname(), k_isinst(), and k_isrealm() check a given string to see if  * it's a syntactically legitimate respective part of a Kerberos name,  * returning 1 if it is, 0 if it isn't.  *  * Definition of "syntactically legitimate" names is according to  * the Project Athena Technical Plan Section E.2.1, page 7 "Specifying  * names", version dated 21 Dec 1987.  * /  /*  * kname_parse() takes a Kerberos name "fullname" of the form:  *  *		username[.instance][@realm]  *  * and returns the three components ("name", "instance", and "realm"  * in the example above) in the given arguments "np", "ip", and "rp".  *  * If successful, it returns KSUCCESS.  If there was an error,  * KNAME_FMT is returned.  */
+comment|/*  * This file contains four routines for handling Kerberos names.  *  * kname_parse() breaks a Kerberos name into its name, instance,  * and realm components.  *  * k_isname(), k_isinst(), and k_isrealm() check a given string to see if  * it's a syntactically legitimate respective part of a Kerberos name,  * returning 1 if it is, 0 if it isn't.  *  * Definition of "syntactically legitimate" names is according to  * the Project Athena Technical Plan Section E.2.1, page 7 "Specifying  * names", version dated 21 Dec 1987.  */
 end_comment
 
-begin_macro
-name|kname_parse
-argument_list|(
-argument|np
-argument_list|,
-argument|ip
-argument_list|,
-argument|rp
-argument_list|,
-argument|fullname
-argument_list|)
-end_macro
+begin_comment
+comment|/*  * kname_parse() takes a Kerberos name "fullname" of the form:  *  *		username[.instance][@realm]  *  * and returns the three components ("name", "instance", and "realm"  * in the example above) in the given arguments "np", "ip", and "rp".  *  * If successful, it returns KSUCCESS.  If there was an error,  * KNAME_FMT is returned.  */
+end_comment
 
-begin_decl_stmt
+begin_function
+name|int
+name|kname_parse
+parameter_list|(
 name|char
 modifier|*
 name|np
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 name|ip
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 name|rp
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 name|fullname
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -191,11 +187,13 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|rnext
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -413,27 +411,20 @@ return|return
 name|KSUCCESS
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * k_isname() returns 1 if the given name is a syntactically legitimate  * Kerberos name; returns 0 if it's not.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|k_isname
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -469,11 +460,13 @@ literal|0
 return|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -520,27 +513,20 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * k_isinst() returns 1 if the given name is a syntactically legitimate  * Kerberos instance; returns 0 if it's not.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|k_isinst
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -567,11 +553,13 @@ literal|0
 return|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -618,27 +606,20 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * k_isrealm() returns 1 if the given name is a syntactically legitimate  * Kerberos realm; returns 0 if it's not.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|k_isrealm
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -674,11 +655,13 @@ literal|0
 return|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -718,7 +701,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

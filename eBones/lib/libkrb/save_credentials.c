@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: save_credentials.c,v 4.9 89/05/31 17:45:43 jtkohl Exp $  *	$Id: save_credentials.c,v 1.2 1994/07/19 19:26:19 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: save_credentials.c,v 4.9 89/05/31 17:45:43 jtkohl Exp $  *	$Id: save_credentials.c,v 1.3 1995/07/18 16:39:40 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: save_credentials.c,v 1.2 1994/07/19 19:26:19 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: save_credentials.c,v 1.3 1995/07/18 16:39:40 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -44,111 +46,37 @@ begin_comment
 comment|/*  * This routine takes a ticket and associated info and calls  * tf_save_cred() to store them in the ticket cache.  The peer  * routine for extracting a ticket and associated info from the  * ticket cache is krb_get_cred().  When changes are made to  * this routine, the corresponding changes should be made  * in krb_get_cred() as well.  *  * Returns KSUCCESS if all goes well, otherwise an error returned  * by the tf_init() or tf_save_cred() routines.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|save_credentials
-argument_list|(
-argument|service
-argument_list|,
-argument|instance
-argument_list|,
-argument|realm
-argument_list|,
-argument|session
-argument_list|,
-argument|lifetime
-argument_list|,
-argument|kvno
-argument_list|,
-argument|ticket
-argument_list|,
-argument|issue_date
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|service
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service name */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|instance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Instance */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|realm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Auth domain */
-end_comment
-
-begin_decl_stmt
-name|C_Block
+parameter_list|,
+name|des_cblock
 name|session
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Session key */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|lifetime
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Lifetime */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|kvno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Key version number */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|KTEXT
 name|ticket
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The ticket itself */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|long
 name|issue_date
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The issue time */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|tf_status
@@ -209,7 +137,7 @@ name|tf_status
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This is where a cache would be implemented, if it were necessary.  *  *	from: krb_cache.c,v 4.5 89/01/24 18:12:34 jon Exp $  *	$Id: krb_cache.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This is where a cache would be implemented, if it were necessary.  *  *	from: krb_cache.c,v 4.5 89/01/24 18:12:34 jon Exp $  *	$Id: krb_cache.c,v 1.3 1995/07/18 16:37:12 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,20 +15,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: krb_cache.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: krb_cache.c,v 1.3 1995/07/18 16:37:12 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -84,15 +86,6 @@ include|#
 directive|include
 file|<krb_db.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strncpy
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -156,41 +149,27 @@ begin_function
 name|int
 name|kerb_cache_get_principal
 parameter_list|(
-name|serv
-parameter_list|,
-name|inst
-parameter_list|,
-name|principal
-parameter_list|,
-name|max
-parameter_list|)
 name|char
 modifier|*
 name|serv
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|char
 modifier|*
 name|inst
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|Principal
 modifier|*
 name|principal
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* max number of name structs to return */
+parameter_list|)
 block|{
 name|int
 name|found
 init|=
 literal|0
-decl_stmt|;
-name|u_long
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -244,7 +223,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cache get %s %s found %s %s sid = %d\n"
+literal|"cache get %s %s found %s %s\n"
 argument_list|,
 name|serv
 argument_list|,
@@ -293,25 +272,15 @@ begin_function
 name|int
 name|kerb_cache_put_principal
 parameter_list|(
-name|principal
-parameter_list|,
-name|max
-parameter_list|)
 name|Principal
 modifier|*
 name|principal
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* max number of principal structs to 				 * insert */
+parameter_list|)
 block|{
-name|int
-name|found
-init|=
-literal|0
-decl_stmt|;
 name|u_long
 name|i
 decl_stmt|;
@@ -412,41 +381,27 @@ begin_function
 name|int
 name|kerb_cache_get_dba
 parameter_list|(
-name|serv
-parameter_list|,
-name|inst
-parameter_list|,
-name|dba
-parameter_list|,
-name|max
-parameter_list|)
 name|char
 modifier|*
 name|serv
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|char
 modifier|*
 name|inst
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|Dba
 modifier|*
 name|dba
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* max number of name structs to return */
+parameter_list|)
 block|{
 name|int
 name|found
 init|=
 literal|0
-decl_stmt|;
-name|u_long
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -499,7 +454,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cache get %s %s found %s %s sid = %d\n"
+literal|"cache get %s %s found %s %s\n"
 argument_list|,
 name|serv
 argument_list|,
@@ -548,25 +503,15 @@ begin_function
 name|int
 name|kerb_cache_put_dba
 parameter_list|(
-name|dba
-parameter_list|,
-name|max
-parameter_list|)
 name|Dba
 modifier|*
 name|dba
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* max number of dba structs to insert */
+parameter_list|)
 block|{
-name|int
-name|found
-init|=
-literal|0
-decl_stmt|;
 name|u_long
 name|i
 decl_stmt|;

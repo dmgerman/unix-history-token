@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_ticket.c,v 4.11 89/03/22 14:43:23 jtkohl Exp $  *	$Id: create_ticket.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_ticket.c,v 4.11 89/03/22 14:43:23 jtkohl Exp $  *	$Id: create_ticket.c,v 1.3 1995/07/18 16:38:12 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: create_ticket.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: create_ticket.c,v 1.3 1995/07/18 16:38:12 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -66,85 +68,49 @@ begin_function
 name|int
 name|krb_create_ticket
 parameter_list|(
-name|tkt
-parameter_list|,
-name|flags
-parameter_list|,
-name|pname
-parameter_list|,
-name|pinstance
-parameter_list|,
-name|prealm
-parameter_list|,
-name|paddress
-parameter_list|,
-name|session
-parameter_list|,
-name|life
-parameter_list|,
-name|time_sec
-parameter_list|,
-name|sname
-parameter_list|,
-name|sinstance
-parameter_list|,
-name|key
-parameter_list|)
 name|KTEXT
 name|tkt
-decl_stmt|;
-comment|/* Gets filled in by the ticket */
+parameter_list|,
 name|unsigned
 name|char
 name|flags
-decl_stmt|;
-comment|/* Various Kerberos flags */
+parameter_list|,
 name|char
 modifier|*
 name|pname
-decl_stmt|;
-comment|/* Principal's name */
+parameter_list|,
 name|char
 modifier|*
 name|pinstance
-decl_stmt|;
-comment|/* Principal's instance */
+parameter_list|,
 name|char
 modifier|*
 name|prealm
-decl_stmt|;
-comment|/* Principal's authentication domain */
+parameter_list|,
 name|long
 name|paddress
-decl_stmt|;
-comment|/* Net address of requesting entity */
+parameter_list|,
 name|char
 modifier|*
 name|session
-decl_stmt|;
-comment|/* Session key inserted in ticket */
+parameter_list|,
 name|short
 name|life
-decl_stmt|;
-comment|/* Lifetime of the ticket */
+parameter_list|,
 name|long
 name|time_sec
-decl_stmt|;
-comment|/* Issue time and date */
+parameter_list|,
 name|char
 modifier|*
 name|sname
-decl_stmt|;
-comment|/* Service Name */
+parameter_list|,
 name|char
 modifier|*
 name|sinstance
-decl_stmt|;
-comment|/* Instance Name */
-name|C_Block
+parameter_list|,
+name|des_cblock
 name|key
-decl_stmt|;
-comment|/* Service's secret key */
+parameter_list|)
 block|{
 name|Key_schedule
 name|key_s
@@ -447,6 +413,10 @@ directive|ifndef
 name|NOENCRYPTION
 name|key_sched
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|,
 name|key_s
@@ -455,7 +425,7 @@ expr_stmt|;
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|tkt
@@ -463,7 +433,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|tkt
@@ -479,6 +449,10 @@ name|length
 argument_list|,
 name|key_s
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|,
 name|ENCRYPT

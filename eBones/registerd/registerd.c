@@ -104,7 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/des.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<des.h>
 end_include
 
 begin_include

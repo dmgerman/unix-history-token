@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: fgetst.c,v 4.0 89/01/23 10:08:31 jtkohl Exp $  *	$Id: fgetst.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: fgetst.c,v 4.0 89/01/23 10:08:31 jtkohl Exp $  *	$Id: fgetst.c,v 1.3 1995/07/18 16:38:23 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: fgetst.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: fgetst.c,v 1.3 1995/07/18 16:38:23 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -38,39 +40,21 @@ begin_comment
 comment|/*  * fgetst takes a file descriptor, a character pointer, and a count.  * It reads from the file it has either read "count" characters, or  * until it reads a null byte.  When finished, what has been read exists  * in "s". If "count" characters were actually read, the last is changed  * to a null, so the returned string is always null-terminated.  fgetst  * returns the number of characters read, including the null terminator.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fgetst
-argument_list|(
-argument|f
-argument_list|,
-argument|s
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|FILE
 modifier|*
 name|f
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|register
+parameter_list|,
 name|char
 modifier|*
 name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|count
@@ -120,7 +104,7 @@ name|count
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ksrvutil.c,v 1.2 1995/01/23 22:54:08 wollman Exp $"
+literal|"$Id: ksrvutil.c,v 1.1 1995/07/18 16:40:11 mark Exp $"
 decl_stmt|;
 end_decl_stmt
 

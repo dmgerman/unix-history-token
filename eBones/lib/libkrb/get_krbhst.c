@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_krbhst.c,v 4.8 89/01/22 20:00:29 rfrench Exp $  *	$Id: get_krbhst.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_krbhst.c,v 4.8 89/01/22 20:00:29 rfrench Exp $  *	$Id: get_krbhst.c,v 1.3 1995/07/18 16:38:32 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: get_krbhst.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: get_krbhst.c,v 1.3 1995/07/18 16:38:32 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -50,38 +52,21 @@ begin_comment
 comment|/*  * Given a Kerberos realm, find a host on which the Kerberos authenti-  * cation server can be found.  *  * krb_get_krbhst takes a pointer to be filled in, a pointer to the name  * of the realm for which a server is desired, and an integer, n, and  * returns (in h) the nth entry from the configuration file (KRB_CONF,  * defined in "krb.h") associated with the specified realm.  *  * On end-of-file, krb_get_krbhst returns KFAILURE.  If n=1 and the  * configuration file does not exist, krb_get_krbhst will return KRB_HOST  * (also defined in "krb.h").  If all goes well, the routine returnes  * KSUCCESS.  *  * The KRB_CONF file contains the name of the local realm in the first  * line (not used by this routine), followed by lines indicating realm/host  * entries.  The words "admin server" following the hostname indicate that  * the host provides an administrative database server.  *  * For example:  *  *	ATHENA.MIT.EDU  *	ATHENA.MIT.EDU kerberos-1.mit.edu admin server  *	ATHENA.MIT.EDU kerberos-2.mit.edu  *	LCS.MIT.EDU kerberos.lcs.mit.edu admin server  *  * This is a temporary hack to allow us to find the nearest system running  * kerberos.  In the long run, this functionality will be provided by a  * nameserver.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|krb_get_krbhst
-argument_list|(
-argument|h
-argument_list|,
-argument|r
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|h
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|r
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -252,7 +237,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

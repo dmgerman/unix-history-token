@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Shared memory segment functions for session keys.  Derived from code  * contributed by Dan Kolkowitz (kolk@jessica.stanford.edu).  *  *	from: tf_shm.c,v 4.2 89/10/25 23:26:46 qjb Exp $  *	$Id: tf_shm.c,v 1.1.1.1 1994/09/30 14:50:04 csgr Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Shared memory segment functions for session keys.  Derived from code  * contributed by Dan Kolkowitz (kolk@jessica.stanford.edu).  *  *	from: tf_shm.c,v 4.2 89/10/25 23:26:46 qjb Exp $  *	$Id: tf_shm.c,v 1.3 1995/07/18 16:39:48 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,20 +15,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: tf_shm.c,v 1.1.1.1 1994/09/30 14:50:04 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: tf_shm.c,v 1.3 1995/07/18 16:39:48 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -84,20 +86,6 @@ begin_comment
 comment|/* room for 1k keys */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|krb_debug
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * krb_create_shmtkt:  *  * create a shared memory segment for session keys, leaving its id  * in the specified filename.  */
 end_comment
@@ -106,12 +94,10 @@ begin_function
 name|int
 name|krb_shm_create
 parameter_list|(
-name|file_name
-parameter_list|)
 name|char
 modifier|*
 name|file_name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|retval
@@ -573,12 +559,10 @@ begin_function
 name|int
 name|krb_shm_dest
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|shmid

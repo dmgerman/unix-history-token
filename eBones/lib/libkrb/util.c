@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * Miscellaneous debug printing utilities  *  *	from: util.c,v 4.8 89/01/17 22:02:08 wesommer Exp $  *	$Id: util.c,v 1.2 1994/07/19 19:26:31 g89r4222 Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * Miscellaneous debug printing utilities  *  *	from: util.c,v 4.8 89/01/17 22:02:08 wesommer Exp $  *	$Id: util.c,v 1.3 1995/07/18 16:39:54 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,20 +15,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: util.c,v 1.2 1994/07/19 19:26:31 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: util.c,v 1.3 1995/07/18 16:39:54 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -65,21 +67,14 @@ begin_comment
 comment|/*  * Print some of the contents of the given authenticator structure  * (AUTH_DAT defined in "krb.h").  Fields printed are:  *  * pname, pinst, prealm, netaddr, flags, cksum, timestamp, session  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ad_print
-argument_list|(
-argument|x
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|AUTH_DAT
 modifier|*
 name|x
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|in_addr
@@ -96,7 +91,7 @@ name|address
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n%s %s %s %s flags %u cksum 0x%X\n\ttkt_tm 0x%X sess_key"
+literal|"\n%s %s %s %s flags %u cksum 0x%lX\n\ttkt_tm 0x%lX sess_key"
 argument_list|,
 name|x
 operator|->
@@ -147,6 +142,10 @@ else|#
 directive|else
 name|des_cblock_print_file
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|x
 operator|->
 name|session
@@ -158,7 +157,7 @@ endif|#
 directive|endif
 comment|/* skip reply for now */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print in hex the 8 bytes of the given session key.  *  * Printed format is:  " 0x { x, x, x, x, x, x, x, x }"  */

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_ciph.c,v 4.8 89/05/18 21:24:26 jis Exp $  *	$Id: create_ciph.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_ciph.c,v 4.8 89/05/18 21:24:26 jis Exp $  *	$Id: create_ciph.c,v 1.3 1995/07/18 16:38:07 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: create_ciph.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: create_ciph.c,v 1.3 1995/07/18 16:38:07 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -50,137 +52,45 @@ begin_comment
 comment|/*  * This routine is used by the authentication server to create  * a packet for its client, containing a ticket for the requested  * service (given in "tkt"), and some information about the ticket,  *  * Returns KSUCCESS no matter what.  *  * The length of the cipher is stored in c->length; the format of  * c->dat is as follows:  *  * 			variable  * type			or constant	   data  * ----			-----------	   ----  *  *  * 8 bytes		session		session key for client, service  *  * string		service		service name  *  * string		instance	service instance  *  * string		realm		KDC realm  *  * unsigned char	life		ticket lifetime  *  * unsigned char	kvno		service key version number  *  * unsigned char	tkt->length	length of following ticket  *  * data			tkt->dat	ticket for service  *  * 4 bytes		kdc_time	KDC's timestamp  *  *<=7 bytes		null		   null pad to 8 byte multiple  *  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|create_ciph
-argument_list|(
-argument|c
-argument_list|,
-argument|session
-argument_list|,
-argument|service
-argument_list|,
-argument|instance
-argument_list|,
-argument|realm
-argument_list|,
-argument|life
-argument_list|,
-argument|kvno
-argument_list|,
-argument|tkt
-argument_list|,
-argument|kdc_time
-argument_list|,
-argument|key
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|KTEXT
 name|c
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Text block to hold ciphertext */
-end_comment
-
-begin_decl_stmt
-name|C_Block
+parameter_list|,
+name|des_cblock
 name|session
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Session key to send to user */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|service
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service name on ticket */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|instance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Instance name on ticket */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|realm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Realm of this KDC */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|unsigned
 name|long
 name|life
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Lifetime of the ticket */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|kvno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Key version number for service */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|KTEXT
 name|tkt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The ticket for the service */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|unsigned
 name|long
 name|kdc_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* KDC time */
-end_comment
-
-begin_decl_stmt
-name|C_Block
+parameter_list|,
+name|des_cblock
 name|key
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Key to encrypt ciphertext with */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -393,6 +303,10 @@ directive|ifndef
 name|NOENCRYPTION
 name|key_sched
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|,
 name|key_s
@@ -401,7 +315,7 @@ expr_stmt|;
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|c
@@ -409,7 +323,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|c
@@ -425,6 +339,10 @@ name|length
 argument_list|,
 name|key_s
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|,
 name|ENCRYPT
@@ -439,7 +357,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

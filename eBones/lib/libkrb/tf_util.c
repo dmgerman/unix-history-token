@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: tf_util.c,v 4.9 90/03/10 19:19:45 jon Exp $  *	$Id: tf_util.c,v 1.1.1.1 1994/09/30 14:50:04 csgr Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: tf_util.c,v 4.9 90/03/10 19:19:45 jon Exp $  *	$Id: tf_util.c,v 1.3 1995/07/18 16:39:50 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: tf_util.c,v 1.1.1.1 1994/09/30 14:50:04 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: tf_util.c,v 1.3 1995/07/18 16:39:50 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -28,10 +25,27 @@ begin_comment
 comment|/* lint */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -115,17 +129,6 @@ begin_comment
 comment|/* seconds to sleep before 					 * retry if ticket file is 					 * locked */
 end_comment
 
-begin_extern
-extern|extern  errno;
-end_extern
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|krb_debug
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -200,30 +203,33 @@ begin_comment
 comment|/*  * fd must be initialized to something that won't ever occur as a real  * file descriptor. Since open(2) returns only non-negative numbers as  * valid file descriptors, and tf_init always stuffs the return value  * from open in here even if it is an error flag, we must  * 	a. Initialize fd to a negative number, to indicate that it is  * 	   not initially valid.  *	b. When checking for a valid fd, assume that negative values  *	   are invalid (ie. when deciding whether tf_init has been  *	   called.)  *	c. In tf_close, be sure it gets reinitialized to a negative  *	   number.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|fd
-operator|=
+init|=
 operator|-
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|curpos
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Position in tfbfr */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|lastpos
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* End of tfbfr */
@@ -261,23 +267,17 @@ begin_comment
 comment|/*  * tf_init() should be called before the other ticket file routines.  * It takes the name of the ticket file to use, "tf_name", and a  * read/write flag "rw" as arguments.  *  * It tries to open the ticket file, checks the mode, and if everything  * is okay, locks the file.  If it's opened for reading, the lock is  * shared.  If it's opened for writing, the lock is exclusive.  *  * Returns KSUCCESS if all went well, otherwise one of the following:  *  * NO_TKT_FIL   - file wasn't there  * TKT_FIL_ACC  - file was in wrong mode, etc.  * TKT_FIL_LCK  - couldn't lock the file, even after a retry  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tf_init
-argument_list|(
-argument|tf_name
-argument_list|,
-argument|rw
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|tf_name
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|,
+name|int
+name|rw
+parameter_list|)
 block|{
 name|int
 name|wflag
@@ -810,27 +810,20 @@ return|return
 name|KSUCCESS
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * tf_get_pname() reads the principal's name from the ticket file. It  * should only be called after tf_init() has been called.  The  * principal's name is filled into the "p" parameter.  If all goes well,  * KSUCCESS is returned.  If tf_init() wasn't called, TKT_FIL_INI is  * returned.  If the name was null, or EOF was encountered, or the name  * was longer than ANAME_SZ, TKT_FIL_FMT is returned.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tf_get_pname
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -873,27 +866,20 @@ return|return
 name|KSUCCESS
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * tf_get_pinst() reads the principal's instance from a ticket file.  * It should only be called after tf_init() and tf_get_pname() have been  * called.  The instance is filled into the "inst" parameter.  If all  * goes well, KSUCCESS is returned.  If tf_init() wasn't called,  * TKT_FIL_INI is returned.  If EOF was encountered, or the instance  * was longer than ANAME_SZ, TKT_FIL_FMT is returned.  Note that the  * instance may be null.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tf_get_pinst
-argument_list|(
-argument|inst
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|inst
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -935,27 +921,115 @@ return|return
 name|KSUCCESS
 return|;
 block|}
-end_block
+end_function
+
+begin_comment
+comment|/*  * tf_close() closes the ticket file and sets "fd" to -1. If "fd" is  * not a valid file descriptor, it just returns.  It also clears the  * buffer used to read tickets.  *  * The return value is not defined.  */
+end_comment
+
+begin_function
+name|void
+name|tf_close
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|fd
+operator|<
+literal|0
+operator|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|TKT_SHMEM
+if|if
+condition|(
+name|shmdt
+argument_list|(
+name|krb_shm_addr
+argument_list|)
+condition|)
+block|{
+comment|/* what kind of error? */
+if|if
+condition|(
+name|krb_debug
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"shmdt 0x%x: errno %d"
+argument_list|,
+name|krb_shm_addr
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|krb_shm_addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|TKT_SHMEM
+operator|(
+name|void
+operator|)
+name|flock
+argument_list|(
+name|fd
+argument_list|,
+name|LOCK_UN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* see declaration of fd above */
+block|}
+name|bzero
+argument_list|(
+name|tfbfr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tfbfr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * tf_get_cred() reads a CREDENTIALS record from a ticket file and fills  * in the given structure "c".  It should only be called after tf_init(),  * tf_get_pname(), and tf_get_pinst() have been called. If all goes well,  * KSUCCESS is returned.  Possible error codes are:  *  * TKT_FIL_INI  - tf_init wasn't called first  * TKT_FIL_FMT  - bad format  * EOF          - end of file encountered  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tf_get_cred
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|CREDENTIALS
 modifier|*
 name|c
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|KTEXT
 name|ticket
@@ -1280,125 +1354,24 @@ return|return
 name|KSUCCESS
 return|;
 block|}
-end_block
-
-begin_comment
-comment|/*  * tf_close() closes the ticket file and sets "fd" to -1. If "fd" is  * not a valid file descriptor, it just returns.  It also clears the  * buffer used to read tickets.  *  * The return value is not defined.  */
-end_comment
-
-begin_macro
-name|tf_close
-argument_list|()
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|fd
-operator|<
-literal|0
-operator|)
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|TKT_SHMEM
-if|if
-condition|(
-name|shmdt
-argument_list|(
-name|krb_shm_addr
-argument_list|)
-condition|)
-block|{
-comment|/* what kind of error? */
-if|if
-condition|(
-name|krb_debug
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"shmdt 0x%x: errno %d"
-argument_list|,
-name|krb_shm_addr
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|krb_shm_addr
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|TKT_SHMEM
-operator|(
-name|void
-operator|)
-name|flock
-argument_list|(
-name|fd
-argument_list|,
-name|LOCK_UN
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* see declaration of fd above */
-block|}
-name|bzero
-argument_list|(
-name|tfbfr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tfbfr
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * tf_gets() is an internal routine.  It takes a string "s" and a count  * "n", and reads from the file until either it has read "n" characters,  * or until it reads a null byte. When finished, what has been read exists  * in "s". If it encounters EOF or an error, it closes the ticket file.  *  * Possible return values are:  *  * n            the number of bytes read (including null terminator)  *              when all goes well  *  * 0            end of file or read error  *  * TOO_BIG      if "count" characters are read and no null is  *		encountered. This is an indication that the ticket  *		file is seriously ill.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|tf_gets
-argument_list|(
-name|s
-argument_list|,
-name|n
-argument_list|)
-specifier|register
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|,
+name|int
+name|n
+parameter_list|)
 block|{
 specifier|register
 name|count
@@ -1516,38 +1489,28 @@ return|return
 name|TOO_BIG
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * tf_read() is an internal routine.  It takes a string "s" and a count  * "n", and reads from the file until "n" bytes have been read.  When  * finished, what has been read exists in "s".  If it encounters EOF or  * an error, it closes the ticket file.  *  * Possible return values are:  *  * n		the number of bytes read when all goes well  *  * 0		on end of file or read error  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|tf_read
-argument_list|(
-name|s
-argument_list|,
-name|n
-argument_list|)
-specifier|register
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|register
+parameter_list|,
+name|int
 name|n
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
-specifier|register
+name|int
 name|count
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 name|count
@@ -1620,7 +1583,7 @@ return|return
 name|n
 return|;
 block|}
-end_block
+end_function
 
 begin_function_decl
 name|char
@@ -1634,111 +1597,37 @@ begin_comment
 comment|/*  * tf_save_cred() appends an incoming ticket to the end of the ticket  * file.  You must call tf_init() before calling tf_save_cred().  *  * The "service", "instance", and "realm" arguments specify the  * server's name; "session" contains the session key to be used with  * the ticket; "kvno" is the server key version number in which the  * ticket is encrypted, "ticket" contains the actual ticket, and  * "issue_date" is the time the ticket was requested (local host's time).  *  * Returns KSUCCESS if all goes well, TKT_FIL_INI if tf_init() wasn't  * called previously, and KFAILURE for anything else that went wrong.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tf_save_cred
-argument_list|(
-argument|service
-argument_list|,
-argument|instance
-argument_list|,
-argument|realm
-argument_list|,
-argument|session
-argument_list|,
-argument|lifetime
-argument_list|,
-argument|kvno
-argument_list|,
-argument|ticket
-argument_list|,
-argument|issue_date
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|service
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service name */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|instance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Instance */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|realm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Auth domain */
-end_comment
-
-begin_decl_stmt
-name|C_Block
+parameter_list|,
+name|des_cblock
 name|session
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Session key */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|lifetime
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Lifetime */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|kvno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Key version number */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|KTEXT
 name|ticket
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The ticket itself */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|long
 name|issue_date
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The issue time */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|off_t
 name|lseek
@@ -2132,7 +2021,7 @@ name|KFAILURE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: decomp_ticket.c,v 4.12 89/05/16 18:44:46 jtkohl Exp $  *	$Id: decomp_ticket.c,v 1.2 1994/07/19 19:25:05 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: decomp_ticket.c,v 4.12 89/05/16 18:44:46 jtkohl Exp $  *	$Id: decomp_ticket.c,v 1.3 1995/07/18 16:38:15 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: decomp_ticket.c,v 1.2 1994/07/19 19:25:05 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: decomp_ticket.c,v 1.3 1995/07/18 16:38:15 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -62,180 +64,61 @@ begin_comment
 comment|/*  * This routine takes a ticket and pointers to the variables that  * should be filled in based on the information in the ticket.  It  * fills in values for its arguments.  *  * Note: if the client realm field in the ticket is the null string,  * then the "prealm" variable is filled in with the local realm (as  * defined by KRB_REALM).  *  * If the ticket byte order is different than the host's byte order  * (as indicated by the byte order bit of the "flags" field), then  * the KDC timestamp "time_sec" is byte-swapped.  The other fields  * potentially affected by byte order, "paddress" and "session" are  * not byte-swapped.  *  * The routine returns KFAILURE if any of the "pname", "pinstance",  * or "prealm" fields is too big, otherwise it returns KSUCCESS.  *  * The corresponding routine to generate tickets is create_ticket.  * When changes are made to this routine, the corresponding changes  * should also be made to that file.  *  * See create_ticket.c for the format of the ticket packet.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|decomp_ticket
-argument_list|(
-argument|tkt
-argument_list|,
-argument|flags
-argument_list|,
-argument|pname
-argument_list|,
-argument|pinstance
-argument_list|,
-argument|prealm
-argument_list|,
-argument|paddress
-argument_list|,
-argument|session
-argument_list|,
-argument|life
-argument_list|,
-argument|time_sec
-argument_list|,
-argument|sname
-argument_list|,
-argument|sinstance
-argument_list|,
-argument|key
-argument_list|,
-argument|key_s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|KTEXT
 name|tkt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The ticket to be decoded */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|flags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Kerberos ticket flags */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|pname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Authentication name */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|pinstance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Principal's instance */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|prealm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Principal's authentication domain */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|unsigned
 name|long
 modifier|*
 name|paddress
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Net address of entity                                  * requesting ticket */
-end_comment
-
-begin_decl_stmt
-name|C_Block
+parameter_list|,
+name|des_cblock
 name|session
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Session key inserted in ticket */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|life
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Lifetime of the ticket */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|unsigned
 name|long
 modifier|*
 name|time_sec
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Issue time and date */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|sname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service name */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|sinstance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service instance */
-end_comment
-
-begin_decl_stmt
-name|C_Block
+parameter_list|,
+name|des_cblock
 name|key
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service's secret key                                  * (to decrypt the ticket) */
-end_comment
-
-begin_decl_stmt
-name|Key_schedule
+parameter_list|,
+name|des_key_schedule
 name|key_s
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The precomputed key schedule */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -264,7 +147,7 @@ name|NOENCRYPTION
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|tkt
@@ -272,7 +155,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|tkt
@@ -288,6 +171,10 @@ name|length
 argument_list|,
 name|key_s
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|,
 name|DECRYPT
@@ -598,7 +485,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: log.c,v 4.7 88/12/01 14:15:14 jtkohl Exp $  *	$Id: log.c,v 1.2 1994/07/19 19:25:53 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: log.c,v 4.7 88/12/01 14:15:14 jtkohl Exp $  *	$Id: log.c,v 1.3 1995/07/18 16:39:09 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: log.c,v 1.2 1994/07/19 19:25:53 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: log.c,v 1.3 1995/07/18 16:39:09 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -76,86 +78,54 @@ begin_comment
 comment|/*  * log() is used to add entries to the logfile (see set_logfile()  * below).  Note that it is probably not portable since it makes  * assumptions about what the compiler will do when it is called  * with less than the correct number of arguments which is the  * way it is usually called.  *  * The log entry consists of a timestamp and the given arguments  * printed according to the given "format".  *  * The log file is opened and closed for each log entry.  *  * The return value is undefined.  */
 end_comment
 
-begin_decl_stmt
-name|__BEGIN_DECLS
-name|char
-modifier|*
-name|month_sname
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*VARARGS1 */
+end_comment
 
 begin_function
-name|__END_DECLS
-comment|/*VARARGS1 */
 name|void
 name|log
 parameter_list|(
-name|format
-parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|,
-name|a3
-parameter_list|,
-name|a4
-parameter_list|,
-name|a5
-parameter_list|,
-name|a6
-parameter_list|,
-name|a7
-parameter_list|,
-name|a8
-parameter_list|,
-name|a9
-parameter_list|,
-name|a0
-parameter_list|)
 name|char
 modifier|*
 name|format
-decl_stmt|;
+parameter_list|,
 name|int
 name|a1
-decl_stmt|,
+parameter_list|,
+name|int
 name|a2
-decl_stmt|,
+parameter_list|,
+name|int
 name|a3
-decl_stmt|,
+parameter_list|,
+name|int
 name|a4
-decl_stmt|,
+parameter_list|,
+name|int
 name|a5
-decl_stmt|,
+parameter_list|,
+name|int
 name|a6
-decl_stmt|,
+parameter_list|,
+name|int
 name|a7
-decl_stmt|,
+parameter_list|,
+name|int
 name|a8
-decl_stmt|,
+parameter_list|,
+name|int
 name|a9
-decl_stmt|,
+parameter_list|,
+name|int
 name|a0
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
 name|logfile
-decl_stmt|,
-modifier|*
-name|fopen
-argument_list|()
 decl_stmt|;
 name|long
-name|time
-argument_list|()
-decl_stmt|,
 name|now
 decl_stmt|;
 name|struct
@@ -282,21 +252,14 @@ begin_comment
 comment|/*  * set_logfile() changes the name of the file to which  * messages are logged.  If set_logfile() is not called,  * the logfile defaults to KRBLOG, defined in "krb.h".  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|set_logfile
-argument_list|(
-argument|filename
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|filename
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|log_name
 operator|=
@@ -307,35 +270,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * new_log() appends a log entry containing the give time "t" and the  * string "string" to the logfile (see set_logfile() above).  The file  * is opened once and left open.  The routine returns 1 on failure, 0  * on success.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|new_log
-argument_list|(
-argument|t
-argument_list|,
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|long
 name|t
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|string
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|FILE
@@ -462,7 +413,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

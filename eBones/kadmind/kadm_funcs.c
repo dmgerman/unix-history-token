@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kadm_funcs.c,v 1.1 1995/01/20 03:12:55 wollman Exp $"
+literal|"$Id: kadm_funcs.c,v 1.1 1995/07/18 16:37:02 mark Exp $"
 decl_stmt|;
 end_decl_stmt
 

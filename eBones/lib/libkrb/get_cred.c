@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_cred.c,v 4.10 89/05/31 17:46:22 jtkohl Exp $  *	$Id: get_cred.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_cred.c,v 4.10 89/05/31 17:46:22 jtkohl Exp $  *	$Id: get_cred.c,v 1.3 1995/07/18 16:38:28 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: get_cred.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: get_cred.c,v 1.3 1995/07/18 16:38:28 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -44,64 +46,26 @@ begin_comment
 comment|/*  * krb_get_cred takes a service name, instance, and realm, and a  * structure of type CREDENTIALS to be filled in with ticket  * information.  It then searches the ticket file for the appropriate  * ticket and fills in the structure with the corresponding  * information from the file.  If successful, it returns KSUCCESS.  * On failure it returns a Kerberos error code.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|krb_get_cred
-argument_list|(
-argument|service
-argument_list|,
-argument|instance
-argument_list|,
-argument|realm
-argument_list|,
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|service
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service name */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|instance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Instance */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|realm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Auth domain */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|CREDENTIALS
 modifier|*
 name|c
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Credentials struct */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|tf_status
@@ -244,7 +208,7 @@ name|tf_status
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

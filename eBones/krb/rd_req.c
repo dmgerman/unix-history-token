@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: der: rd_req.c,v 4.16 89/03/22 14:52:06 jtkohl Exp $  *	$Id: rd_req.c,v 1.2 1994/07/19 19:26:13 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: der: rd_req.c,v 4.16 89/03/22 14:52:06 jtkohl Exp $  *	$Id: rd_req.c,v 1.3 1995/07/18 16:39:33 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: rd_req.c,v 1.2 1994/07/19 19:26:13 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: rd_req.c,v 1.3 1995/07/18 16:39:33 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,17 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#
@@ -57,13 +65,6 @@ include|#
 directive|include
 file|<strings.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|krb_ap_req_debug
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -170,17 +171,13 @@ begin_function
 name|int
 name|krb_set_key
 parameter_list|(
-name|key
-parameter_list|,
-name|cvt
-parameter_list|)
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|int
 name|cvt
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -208,6 +205,10 @@ name|string_to_key
 argument_list|(
 name|key
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|ky
 argument_list|)
 expr_stmt|;
@@ -229,6 +230,10 @@ return|return
 operator|(
 name|des_key_sched
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|ky
 argument_list|,
 name|serv_key
@@ -244,86 +249,32 @@ begin_comment
 comment|/*  * krb_rd_req() takes an AUTH_MSG_APPL_REQUEST or  * AUTH_MSG_APPL_REQUEST_MUTUAL message created by krb_mk_req(),  * checks its integrity and returns a judgement as to the requestor's  * identity.  *  * The "authent" argument is a pointer to the received message.  * The "service" and "instance" arguments name the receiving server,  * and are used to get the service's ticket to decrypt the ticket  * in the message, and to compare against the server name inside the  * ticket.  "from_addr" is the network address of the host from which  * the message was received; this is checked against the network  * address in the ticket.  If "from_addr" is zero, the check is not  * performed.  "ad" is an AUTH_DAT structure which is  * filled in with information about the sender's identity according  * to the authenticator and ticket sent in the message.  Finally,  * "fn" contains the name of the file containing the server's key.  * (If "fn" is NULL, the server's key is assumed to have been set  * by krb_set_key().  If "fn" is the null string ("") the default  * file KEYFILE, defined in "krb.h", is used.)  *  * krb_rd_req() returns RD_AP_OK if the authentication information  * was genuine, or one of the following error codes (defined in  * "krb.h"):  *  *	RD_AP_VERSION		- wrong protocol version number  *	RD_AP_MSG_TYPE		- wrong message type  *	RD_AP_UNDEC		- couldn't decipher the message  *	RD_AP_INCON		- inconsistencies found  *	RD_AP_BADD		- wrong network address  *	RD_AP_TIME		- client time (in authenticator)  *				  too far off server time  *	RD_AP_NYV		- Kerberos time (in ticket) too  *				  far off server time  *	RD_AP_EXP		- ticket expired  *  * For the message format, see krb_mk_req().  *  * Mutual authentication is not implemented.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|krb_rd_req
-argument_list|(
-name|authent
-argument_list|,
-name|service
-argument_list|,
-name|instance
-argument_list|,
-name|from_addr
-argument_list|,
-name|ad
-argument_list|,
-name|fn
-argument_list|)
-specifier|register
+parameter_list|(
 name|KTEXT
 name|authent
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* The received message */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|service
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service name */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|instance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service instance */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|long
 name|from_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Net address of originating host */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|AUTH_DAT
 modifier|*
 name|ad
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Structure to be filled in */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|fn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Filename to get keys from */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|KTEXT_ST
@@ -667,6 +618,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|status
 operator|=
 name|krb_set_key
@@ -679,6 +631,7 @@ name|skey
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -997,6 +950,10 @@ directive|ifndef
 name|NOENCRYPTION
 name|key_sched
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|ad
 operator|->
 name|session
@@ -1007,7 +964,7 @@ expr_stmt|;
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|req_id
@@ -1015,7 +972,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|req_id
@@ -1031,6 +988,10 @@ name|length
 argument_list|,
 name|seskey_sched
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|ad
 operator|->
 name|session
@@ -1500,7 +1461,7 @@ name|RD_AP_OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

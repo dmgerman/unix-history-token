@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_krbrlm.c,v 4.8 89/01/22 20:02:54 rfrench Exp $  *	$Id: get_krbrlm.c,v 1.2 1994/07/19 19:25:19 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_krbrlm.c,v 4.8 89/01/22 20:02:54 rfrench Exp $  *	$Id: get_krbrlm.c,v 1.3 1995/07/18 16:38:34 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: get_krbrlm.c,v 1.2 1994/07/19 19:25:19 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: get_krbrlm.c,v 1.3 1995/07/18 16:38:34 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -50,37 +52,21 @@ begin_comment
 comment|/*  * krb_get_lrealm takes a pointer to a string, and a number, n.  It fills  * in the string, r, with the name of the nth realm specified on the  * first line of the kerberos config file (KRB_CONF, defined in "krb.h").  * It returns 0 (KSUCCESS) on success, and KFAILURE on failure.  If the  * config file does not exist, and if n=1, a successful return will occur  * with r = KRB_REALM (also defined in "krb.h").  *  * NOTE: for archaic& compatibility reasons, this routine will only return  * valid results when n = 1.  *  * For the format of the KRB_CONF file, see comments describing the routine  * krb_get_krbhst().  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|krb_get_lrealm
-argument_list|(
-argument|r
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|r
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|FILE
 modifier|*
 name|cnffile
-decl_stmt|,
-modifier|*
-name|fopen
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -182,7 +168,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

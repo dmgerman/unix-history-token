@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: tkt_string.c,v 4.6 89/01/05 12:31:51 raeburn Exp $  *	$Id: tkt_string.c,v 1.2 1994/07/19 19:26:29 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: tkt_string.c,v 4.6 89/01/05 12:31:51 raeburn Exp $  *	$Id: tkt_string.c,v 1.3 1995/07/18 16:39:52 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: tkt_string.c,v 1.2 1994/07/19 19:26:29 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: tkt_string.c,v 1.3 1995/07/18 16:39:52 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -28,10 +25,21 @@ begin_comment
 comment|/* lint */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -57,14 +65,6 @@ include|#
 directive|include
 file|<sys/param.h>
 end_include
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * This routine is used to generate the name of the file that holds  * the user's cache of server tickets and associated session keys.  *  * If it is set, krb_ticket_string contains the ticket file name.  * Otherwise, the filename is constructed as follows:  *  * If it is set, the environment variable "KRBTKFILE" will be used as  * the ticket file name.  Otherwise TKT_ROOT (defined in "krb.h") and  * the user's uid are concatenated to produce the ticket file name  * (e.g., "/tmp/tkt123").  A pointer to the string containing the ticket  * file name is returned.  */
@@ -105,12 +105,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|env
 operator|=
 name|getenv
 argument_list|(
 literal|"KRBTKFILE"
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|(
@@ -153,7 +155,7 @@ name|sprintf
 argument_list|(
 name|krb_ticket_string
 argument_list|,
-literal|"%s%d"
+literal|"%s%ld"
 argument_list|,
 name|TKT_ROOT
 argument_list|,
@@ -177,12 +179,10 @@ begin_function
 name|void
 name|krb_set_tkt_string
 parameter_list|(
-name|val
-parameter_list|)
 name|char
 modifier|*
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void

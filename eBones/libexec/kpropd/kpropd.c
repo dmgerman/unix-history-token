@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987 by the Massachusetts Institute of Technology.  *   * For copying and distribution information, please see the file  * MIT.Copyright.  *  * kprop/kpropd have been abandonded by Project Athena (for good reason)  * however they still form the basis for one of the better ways for  * distributing kerberos databases.  This version of kpropd has been  * adapted from the MIT distribution to work properly in a 4.4BSD  * environment.  *   * $Revision: 4.5 $ $Date: 92/10/23 15:45:46 $ $State: Exp $  * $Source$  *   * Log: kpropd.c,v  * Revision 4.5  92/10/23  15:45:46  tytso Make it possible  * to specify the location of the kdb_util program.  *   * Revision 4.4  91/06/15  03:20:51  probe Fixed<sys/types.h> inclusion  *   * Revision 4.3  89/05/16  15:06:04  wesommer Fix operator precedence stuff.  * Programmer: John Kohl.  *   * Revision 4.2  89/03/23  10:24:00  jtkohl NOENCRYPTION changes  *   * Revision 4.1  89/01/24  20:33:48  root name change  *   * Revision 4.0  89/01/24  18:45:06  wesommer Original version; programmer:  * wesommer auditor: jon  *   * Revision 4.5  88/01/08  18:07:46  jon formatting and rcs header changes */
+comment|/*  * Copyright 1987 by the Massachusetts Institute of Technology.  *   * For copying and distribution information, please see the file  * MIT.Copyright.  *  * kprop/kpropd have been abandonded by Project Athena (for good reason)  * however they still form the basis for one of the better ways for  * distributing kerberos databases.  This version of kpropd has been  * adapted from the MIT distribution to work properly in a 4.4BSD  * environment.  *   * $Revision: 1.1.1.1 $ $Date: 1995/08/03 07:37:19 $ $State: Exp $  * $Source: /usr/cvs/src/eBones/kpropd/kpropd.c,v $  *   * Log: kpropd.c,v  * Revision 4.5  92/10/23  15:45:46  tytso Make it possible  * to specify the location of the kdb_util program.  *   * Revision 4.4  91/06/15  03:20:51  probe Fixed<sys/types.h> inclusion  *   * Revision 4.3  89/05/16  15:06:04  wesommer Fix operator precedence stuff.  * Programmer: John Kohl.  *   * Revision 4.2  89/03/23  10:24:00  jtkohl NOENCRYPTION changes  *   * Revision 4.1  89/01/24  20:33:48  root name change  *   * Revision 4.0  89/01/24  18:45:06  wesommer Original version; programmer:  * wesommer auditor: jon  *   * Revision 4.5  88/01/08  18:07:46  jon formatting and rcs header changes */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 name|rcsid_kpropd_c
 index|[]
 init|=
-literal|"$Header: /afs/net.mit.edu/project/krb4/src/slave/RCS/kpropd.c,v 4.5 92/10/23 15:45:46 tytso Exp $"
+literal|"$Header: /usr/cvs/src/eBones/kpropd/kpropd.c,v 1.1.1.1 1995/08/03 07:37:19 mark Exp $"
 decl_stmt|;
 end_decl_stmt
 

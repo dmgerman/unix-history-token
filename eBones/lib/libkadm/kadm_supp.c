@@ -3,44 +3,45 @@ begin_comment
 comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Support functions for Kerberos administration server& clients  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
 
-begin_endif
-unit|static char rcsid_kadm_supp_c[] = "Header: /afs/athena.mit.edu/astaff/project/kerberos/src/lib/kadm/RCS/kadm_supp.c,v 4.1 89/09/26 09:21:07 jtkohl Exp ";
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kadm_supp.c,v 1.1 1995/01/20 02:02:54 wollman Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
+unit|static char rcsid_kadm_supp_c[] = "Header: /afs/athena.mit.edu/astaff/project/kerberos/src/lib/kadm/RCS/kadm_supp.c,v 4.1 89/09/26 09:21:07 jtkohl Exp "; static const char rcsid[] = 	"$Id: kadm_supp.c,v 1.1 1995/07/18 16:40:28 mark Exp $";
 endif|#
 directive|endif
 endif|lint
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*   kadm_supp.c   this holds the support routines for the kerberos administration server      error: prints out a kadm error message, returns     fatal: prints out a kadm fatal error message, exits     prin_vals: prints out data associated with a Principal in the vals            structure */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -58,21 +59,14 @@ begin_comment
 comment|/* prin_vals:   recieves    : a vals structure */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prin_vals
-argument_list|(
-argument|vals
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|Kadm_vals
 modifier|*
 name|vals
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -113,7 +107,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   Attribs: %.2x  key: %u %u\n"
+literal|"   Attribs: %.2x  key: %lu %lu\n"
 argument_list|,
 name|vals
 operator|->
@@ -129,7 +123,7 @@ name|key_high
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -137,20 +131,13 @@ directive|ifdef
 name|notdef
 end_ifdef
 
-begin_macro
+begin_function
+name|int
 name|nierror
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|extern
 name|char
@@ -174,7 +161,7 @@ name|s
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -185,41 +172,22 @@ begin_comment
 comment|/* kadm_prin_to_vals takes a fields arguments, a Kadm_vals and a Principal,    it copies the fields in Principal specified by fields into Kadm_vals,    i.e from old to new */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kadm_prin_to_vals
-argument_list|(
-argument|fields
-argument_list|,
-argument|new
-argument_list|,
-argument|old
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|u_char
 name|fields
-index|[
-name|FLDSZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+index|[]
+parameter_list|,
 name|Kadm_vals
 modifier|*
 name|new
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|Principal
 modifier|*
 name|old
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|bzero
 argument_list|(
@@ -429,43 +397,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|kadm_vals_to_prin
-argument_list|(
-argument|fields
-argument_list|,
-argument|new
-argument_list|,
-argument|old
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|u_char
 name|fields
-index|[
-name|FLDSZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+index|[]
+parameter_list|,
 name|Principal
 modifier|*
 name|new
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|Kadm_vals
 modifier|*
 name|old
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|bzero
 argument_list|(
@@ -611,7 +560,7 @@ name|key_high
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

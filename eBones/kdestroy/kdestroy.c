@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This program causes Kerberos tickets to be destroyed.  * Options are:  *  *   -q[uiet]	- no bell even if tickets not destroyed  *   -f[orce]	- no message printed at all  *  *	from: kdestroy.c,v 4.5 88/03/18 15:16:02 steiner Exp $  *	$Id: kdestroy.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This program causes Kerberos tickets to be destroyed.  * Options are:  *  *   -q[uiet]	- no bell even if tickets not destroyed  *   -f[orce]	- no message printed at all  *  *	from: kdestroy.c,v 4.5 88/03/18 15:16:02 steiner Exp $  *	$Id: kdestroy.c,v 1.3 1995/07/18 16:37:44 mark Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdestroy.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $"
+literal|"$Id: kdestroy.c,v 1.3 1995/07/18 16:37:44 mark Exp $"
 decl_stmt|;
 end_decl_stmt
 

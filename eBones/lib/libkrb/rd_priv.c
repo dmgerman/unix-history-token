@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'private msg', decrypting it,  * checking its integrity, and returning a pointer to the application  * data contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...).  If  * the return value is RD_AP_TIME, then either the times are too far  * out of synch, OR the packet was modified.  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_priv.c,v 4.14 89/04/28 11:59:42 jtkohl Exp $  *	$Id: rd_priv.c,v 1.1.1.1 1994/09/30 14:50:03 csgr Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'private msg', decrypting it,  * checking its integrity, and returning a pointer to the application  * data contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...).  If  * the return value is RD_AP_TIME, then either the times are too far  * out of synch, OR the packet was modified.  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_priv.c,v 4.14 89/04/28 11:59:42 jtkohl Exp $  *	$Id: rd_priv.c,v 1.3 1995/07/18 16:39:31 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: rd_priv.c,v 1.1.1.1 1994/09/30 14:50:03 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[]= "$Id: rd_priv.c,v 1.3 1995/07/18 16:39:31 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* system include files */
@@ -36,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -90,29 +98,6 @@ directive|include
 file|"lsb_addr_comp.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|errmsg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|krb_debug
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* static storage */
 end_comment
@@ -162,52 +147,33 @@ begin_function
 name|long
 name|krb_rd_priv
 parameter_list|(
-name|in
-parameter_list|,
-name|in_length
-parameter_list|,
-name|schedule
-parameter_list|,
-name|key
-parameter_list|,
-name|sender
-parameter_list|,
-name|receiver
-parameter_list|,
-name|m_data
-parameter_list|)
 name|u_char
 modifier|*
 name|in
-decl_stmt|;
-comment|/* pointer to the msg received */
+parameter_list|,
 name|u_long
 name|in_length
-decl_stmt|;
-comment|/* length of "in" msg */
-name|Key_schedule
+parameter_list|,
+name|des_key_schedule
 name|schedule
-decl_stmt|;
-comment|/* precomputed key schedule */
-name|C_Block
+parameter_list|,
+name|des_cblock
 name|key
-decl_stmt|;
-comment|/* encryption key for seed and ivec */
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|sender
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|receiver
-decl_stmt|;
+parameter_list|,
 name|MSG_DAT
 modifier|*
 name|m_data
-decl_stmt|;
-comment|/*various input/output data from msg */
+parameter_list|)
 block|{
 specifier|register
 name|u_char
@@ -374,13 +340,13 @@ name|NOENCRYPTION
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|q
 argument_list|,
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|q
@@ -392,6 +358,10 @@ name|c_length
 argument_list|,
 name|schedule
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|,
 name|DECRYPT
@@ -758,7 +728,7 @@ name|krb_debug
 condition|)
 name|printf
 argument_list|(
-literal|"\ndelta_t = %d"
+literal|"\ndelta_t = %ld"
 argument_list|,
 name|delta_t
 argument_list|)

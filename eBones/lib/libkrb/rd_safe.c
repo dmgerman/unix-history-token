@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'safe msg', checking its  * integrity, and returning a pointer to the application data  * contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...)  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_safe.c,v 4.12 89/01/23 15:16:16 steiner Exp $  *	$Id: rd_safe.c,v 1.1.1.1 1994/09/30 14:50:03 csgr Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'safe msg', checking its  * integrity, and returning a pointer to the application data  * contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...)  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_safe.c,v 4.12 89/01/23 15:16:16 steiner Exp $  *	$Id: rd_safe.c,v 1.3 1995/07/18 16:39:34 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: rd_safe.c,v 1.1.1.1 1994/09/30 14:50:03 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: rd_safe.c,v 1.3 1995/07/18 16:39:34 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* system include files */
@@ -36,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -89,29 +97,6 @@ include|#
 directive|include
 file|"lsb_addr_comp.h"
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|errmsg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|krb_debug
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* static storage */
@@ -167,49 +152,30 @@ begin_function
 name|long
 name|krb_rd_safe
 parameter_list|(
-name|in
-parameter_list|,
-name|in_length
-parameter_list|,
-name|key
-parameter_list|,
-name|sender
-parameter_list|,
-name|receiver
-parameter_list|,
-name|m_data
-parameter_list|)
 name|u_char
 modifier|*
 name|in
-decl_stmt|;
-comment|/* pointer to the msg received */
+parameter_list|,
 name|u_long
 name|in_length
-decl_stmt|;
-comment|/* length of "in" msg */
-name|C_Block
-modifier|*
+parameter_list|,
+name|des_cblock
 name|key
-decl_stmt|;
-comment|/* encryption key for seed and ivec */
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|sender
-decl_stmt|;
-comment|/* sender's address */
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|receiver
-decl_stmt|;
-comment|/* receiver's address -- me */
+parameter_list|,
 name|MSG_DAT
 modifier|*
 name|m_data
-decl_stmt|;
-comment|/* where to put message information */
+parameter_list|)
 block|{
 specifier|register
 name|u_char
@@ -727,6 +693,10 @@ else|#
 directive|else
 name|quad_cksum
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|q
 argument_list|,
 name|calc_cksum
@@ -737,6 +707,10 @@ name|q
 argument_list|,
 literal|2
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|)
 expr_stmt|;
@@ -748,7 +722,7 @@ name|krb_debug
 condition|)
 name|printf
 argument_list|(
-literal|"\ncalc_cksum = %u, received cksum = %u"
+literal|"\ncalc_cksum = %lu, received cksum = %lu"
 argument_list|,
 operator|(
 name|long

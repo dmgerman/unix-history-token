@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_svc_in_tkt.c,v 4.9 89/07/18 16:33:34 jtkohl Exp $  *	$Id: get_svc_in_tkt.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_svc_in_tkt.c,v 4.9 89/07/18 16:33:34 jtkohl Exp $  *	$Id: get_svc_in_tkt.c,v 1.3 1995/07/18 16:38:41 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: get_svc_in_tkt.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: get_svc_in_tkt.c,v 1.3 1995/07/18 16:38:41 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -142,31 +144,29 @@ begin_comment
 comment|/*  * krb_get_svc_in_tkt() passes its arguments on to krb_get_in_tkt(),  * plus two additional arguments: a pointer to the srvtab_to_key()  * function to be used to get the key from the key file and a NULL  * for the decryption procedure indicating that krb_get_in_tkt should  * use the default method of decrypting the response from the KDC.  *  * It returns the return value of the krb_get_in_tkt() call.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|krb_get_svc_in_tkt
-argument_list|(
-argument|user
-argument_list|,
-argument|instance
-argument_list|,
-argument|realm
-argument_list|,
-argument|service
-argument_list|,
-argument|sinstance
-argument_list|,
-argument|life
-argument_list|,
-argument|srvtab
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|user
+parameter_list|,
+name|instance
+parameter_list|,
+name|realm
+parameter_list|,
+name|service
+parameter_list|,
+name|sinstance
+parameter_list|,
+name|life
+parameter_list|,
+name|srvtab
+parameter_list|)
 name|char
 modifier|*
 name|user
 decl_stmt|,
-modifier|*
+decl|*
 name|instance
 decl_stmt|,
 modifier|*
@@ -178,7 +178,7 @@ decl_stmt|,
 modifier|*
 name|sinstance
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int

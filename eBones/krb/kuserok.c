@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * kuserok: check if a kerberos principal has  * access to a local account  *  *	from: kuserok.c,v 4.5 89/01/23 09:25:21 jtkohl Exp $  *	$Id: kuserok.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * kuserok: check if a kerberos principal has  * access to a local account  *  *	from: kuserok.c,v 4.5 89/01/23 09:25:21 jtkohl Exp $  *	$Id: kuserok.c,v 1.3 1995/07/18 16:39:07 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,20 +15,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kuserok.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: kuserok.c,v 1.3 1995/07/18 16:39:07 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -35,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -180,30 +188,18 @@ directive|endif
 endif|ATHENA_COMPAT
 end_endif
 
-begin_macro
+begin_function
+name|int
 name|kuserok
-argument_list|(
-argument|kdata
-argument_list|,
-argument|luser
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|AUTH_DAT
 modifier|*
 name|kdata
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|luser
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|stat
@@ -629,6 +625,7 @@ expr_stmt|;
 comment|/* nuke the newline if it exists */
 if|if
 condition|(
+operator|(
 name|newline
 operator|=
 name|index
@@ -637,6 +634,7 @@ name|linebuf
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|newline
@@ -739,7 +737,7 @@ name|isok
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

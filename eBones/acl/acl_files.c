@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Copyright 1987,1989 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  *	from: acl_files.c,v 4.4 89/12/19 13:30:53 jtkohl Exp $  *	$Id: acl_files.c,v 1.1.1.1 1994/09/30 14:49:48 csgr Exp $  */
+comment|/*  *  * Copyright 1987,1989 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  *	from: acl_files.c,v 4.4 89/12/19 13:30:53 jtkohl Exp $  *	$Id: acl_files.c,v 1.3 1995/07/18 16:34:49 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,20 +15,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: acl_files.c,v 1.1.1.1 1994/09/30 14:49:48 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: acl_files.c,v 1.3 1995/07/18 16:34:49 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_comment
@@ -33,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -74,7 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"krb.h"
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<krb.h>
 end_include
 
 begin_decl_stmt
@@ -178,26 +192,9 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|calloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* extern time_t time(); */
+end_comment
 
 begin_comment
 comment|/* Canonicalize a principal name */
@@ -215,30 +212,18 @@ begin_comment
 comment|/* Canonicalized form is put in canon, which must be big enough to hold    MAX_PRINCIPAL_SIZE characters */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|acl_canonicalize_principal
-argument_list|(
-argument|principal
-argument_list|,
-argument|canon
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|principal
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|canon
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -486,7 +471,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Get a lock to modify acl_file */
@@ -510,12 +495,10 @@ name|FILE
 modifier|*
 name|acl_lock_file
 parameter_list|(
-name|acl_file
-parameter_list|)
 name|char
 modifier|*
 name|acl_file
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat
@@ -725,18 +708,14 @@ specifier|static
 name|int
 name|acl_commit
 parameter_list|(
-name|acl_file
-parameter_list|,
-name|f
-parameter_list|)
 name|char
 modifier|*
 name|acl_file
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|new
@@ -834,18 +813,14 @@ specifier|static
 name|int
 name|acl_abort
 parameter_list|(
-name|acl_file
-parameter_list|,
-name|f
-parameter_list|)
 name|char
 modifier|*
 name|acl_file
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|new
@@ -947,17 +922,13 @@ begin_function
 name|int
 name|acl_initialize
 parameter_list|(
-name|acl_file
-parameter_list|,
-name|perm
-parameter_list|)
 name|char
 modifier|*
 name|acl_file
-decl_stmt|;
+parameter_list|,
 name|int
 name|perm
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -1049,19 +1020,15 @@ begin_comment
 comment|/* Modifies its argument */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|nuke_whitespace
-argument_list|(
-argument|buf
-argument_list|)
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|buf
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1110,7 +1077,7 @@ literal|'\0'
 expr_stmt|;
 comment|/* Terminate the string */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Hash table stuff */
@@ -1230,20 +1197,16 @@ begin_comment
 comment|/* Destroy a hash table */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|destroy_hash
-argument_list|(
-argument|h
-argument_list|)
-expr|struct
+parameter_list|(
+name|struct
 name|hashtbl
-operator|*
+modifier|*
 name|h
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1299,7 +1262,7 @@ name|h
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Compute hash value for a string */
@@ -1310,13 +1273,10 @@ specifier|static
 name|unsigned
 name|hashval
 parameter_list|(
-name|s
-parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -1363,29 +1323,20 @@ begin_comment
 comment|/* Add an element to a hash table */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|add_hash
-argument_list|(
-argument|h
-argument_list|,
-argument|el
-argument_list|)
-expr|struct
+parameter_list|(
+name|struct
 name|hashtbl
-operator|*
+modifier|*
 name|h
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|el
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|unsigned
 name|hv
@@ -1631,35 +1582,26 @@ name|entries
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Returns nonzero if el is in h */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|check_hash
-argument_list|(
-argument|h
-argument_list|,
-argument|el
-argument_list|)
-expr|struct
+parameter_list|(
+name|struct
 name|hashtbl
-operator|*
+modifier|*
 name|h
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|el
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|unsigned
 name|hv
@@ -1726,7 +1668,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_struct
 struct|struct
@@ -1804,12 +1746,10 @@ specifier|static
 name|int
 name|acl_load
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2273,30 +2213,18 @@ begin_comment
 comment|/* Principal is not canonicalized, and no wildcarding is done */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|acl_exact_match
-argument_list|(
-argument|acl
-argument_list|,
-argument|principal
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|acl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|principal
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|idx
@@ -2328,7 +2256,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Returns nonzero if it can be determined that acl contains principal */
@@ -2338,30 +2266,18 @@ begin_comment
 comment|/* Recognizes wildcards in acl of the form    name.*@realm, *.*@realm, and *.*@* */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|acl_check
-argument_list|(
-argument|acl
-argument_list|,
-argument|principal
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|acl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|principal
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -2483,7 +2399,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Adds principal to acl */
@@ -2493,30 +2409,18 @@ begin_comment
 comment|/* Wildcards are interpreted literally */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|acl_add
-argument_list|(
-argument|acl
-argument_list|,
-argument|principal
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|acl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|principal
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|idx
@@ -2708,7 +2612,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Removes principal from acl */
@@ -2718,30 +2622,18 @@ begin_comment
 comment|/* Wildcards are interpreted literally */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|acl_delete
-argument_list|(
-argument|acl
-argument_list|,
-argument|principal
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|acl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|principal
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|idx
@@ -2916,7 +2808,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

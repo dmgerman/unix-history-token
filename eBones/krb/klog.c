@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: klog.c,v 4.6 88/12/01 14:06:05 jtkohl Exp $  *	$Id: klog.c,v 1.2 1994/07/19 19:25:37 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: klog.c,v 4.6 88/12/01 14:06:05 jtkohl Exp $  *	$Id: klog.c,v 1.3 1995/07/18 16:38:52 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: klog.c,v 1.2 1994/07/19 19:25:37 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: klog.c,v 1.3 1995/07/18 16:38:52 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -92,66 +94,47 @@ name|char
 modifier|*
 name|klog
 parameter_list|(
-name|type
-parameter_list|,
-name|format
-parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|,
-name|a3
-parameter_list|,
-name|a4
-parameter_list|,
-name|a5
-parameter_list|,
-name|a6
-parameter_list|,
-name|a7
-parameter_list|,
-name|a8
-parameter_list|,
-name|a9
-parameter_list|,
-name|a0
-parameter_list|)
 name|int
 name|type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|format
-decl_stmt|;
+parameter_list|,
 name|int
 name|a1
-decl_stmt|,
+parameter_list|,
+name|int
 name|a2
-decl_stmt|,
+parameter_list|,
+name|int
 name|a3
-decl_stmt|,
+parameter_list|,
+name|int
 name|a4
-decl_stmt|,
+parameter_list|,
+name|int
 name|a5
-decl_stmt|,
+parameter_list|,
+name|int
 name|a6
-decl_stmt|,
+parameter_list|,
+name|int
 name|a7
-decl_stmt|,
+parameter_list|,
+name|int
 name|a8
-decl_stmt|,
+parameter_list|,
+name|int
 name|a9
-decl_stmt|,
+parameter_list|,
+name|int
 name|a0
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
 name|logfile
-decl_stmt|,
-modifier|*
-name|fopen
-argument_list|()
 decl_stmt|;
 name|long
 name|time
@@ -159,11 +142,6 @@ argument_list|()
 decl_stmt|,
 name|now
 decl_stmt|;
-name|char
-modifier|*
-name|month_sname
-parameter_list|()
-function_decl|;
 name|struct
 name|tm
 modifier|*
@@ -425,21 +403,14 @@ begin_comment
 comment|/*  * kset_logfile() changes the name of the file to which  * messages are logged.  If kset_logfile() is not called,  * the logfile defaults to KRBLOG, defined in "krb.h".  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kset_logfile
-argument_list|(
-argument|filename
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|filename
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|log_name
 operator|=
@@ -450,7 +421,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

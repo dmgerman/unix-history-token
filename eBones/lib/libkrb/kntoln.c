@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kntoln.c,v 4.7 89/01/23 09:25:15 jtkohl Exp $  *	$Id: kntoln.c,v 1.2 1994/07/19 19:25:40 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kntoln.c,v 4.7 89/01/23 09:25:15 jtkohl Exp $  *	$Id: kntoln.c,v 1.3 1995/07/18 16:38:56 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: kntoln.c,v 1.2 1994/07/19 19:25:40 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: kntoln.c,v 1.3 1995/07/18 16:38:56 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -44,30 +46,18 @@ begin_comment
 comment|/*  * krb_kntoln converts an auth name into a local name by looking up  * the auth name in the /etc/aname file.  The format of the aname  * file is:  *  * +-----+-----+-----+-----+------+----------+-------+-------+  * | anl | inl | rll | lnl | name | instance | realm | lname |  * +-----+-----+-----+-----+------+----------+-------+-------+  * | 1by | 1by | 1by | 1by | name | instance | realm | lname |  * +-----+-----+-----+-----+------+----------+-------+-------+  *  * If the /etc/aname file can not be opened it will set the  * local name to the auth name.  Thus, in this case it performs as  * the identity function.  *  * The name instance and realm are passed to krb_kntoln through  * the AUTH_DAT structure (ad).  *  * Now here's what it *really* does:  *  * Given a Kerberos name in an AUTH_DAT structure, check that the  * instance is null, and that the realm is the same as the local  * realm, and return the principal's name in "lname".  Return  * KSUCCESS if all goes well, otherwise KFAILURE.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|krb_kntoln
-argument_list|(
-argument|ad
-argument_list|,
-argument|lname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|AUTH_DAT
 modifier|*
 name|ad
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|lname
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -152,7 +142,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

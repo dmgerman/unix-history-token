@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_tf_fullname.c,v 4.3 90/03/10 22:40:20 jon Exp $  *	$Id: get_tf_fullname.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_tf_fullname.c,v 4.3 90/03/10 22:40:20 jon Exp $  *	$Id: get_tf_fullname.c,v 1.3 1995/07/18 16:38:42 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: get_tf_fullname.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: get_tf_fullname.c,v 1.3 1995/07/18 16:38:42 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -54,48 +56,26 @@ begin_comment
 comment|/*  * krb_get_tf_fullname() takes four arguments: the name of the  * ticket file, and variables for name, instance, and realm to be  * returned in.  Since the realm of a ticket file is not really fully  * supported, the realm used will be that of the the first ticket in  * the file as this is the one that was obtained with a password by  * krb_get_in_tkt().  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|krb_get_tf_fullname
-argument_list|(
-argument|ticket_file
-argument_list|,
-argument|name
-argument_list|,
-argument|instance
-argument_list|,
-argument|realm
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|ticket_file
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|instance
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|realm
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|tf_status
@@ -247,7 +227,7 @@ name|tf_status
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_auth_reply.c,v 4.10 89/01/13 17:47:38 steiner Exp $  *	$Id: create_auth_reply.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_auth_reply.c,v 4.10 89/01/13 17:47:38 steiner Exp $  *	$Id: create_auth_reply.c,v 1.3 1995/07/18 16:38:06 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: create_auth_reply.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: create_auth_reply.c,v 1.3 1995/07/18 16:38:06 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,17 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#

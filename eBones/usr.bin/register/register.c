@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/des.h>
+file|<des.h>
 end_include
 
 begin_include
@@ -157,7 +157,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PROTO
+name|PROTOCOL
 value|"tcp"
 end_define
 
@@ -327,7 +327,7 @@ name|getservbyname
 argument_list|(
 name|SERVICE
 argument_list|,
-name|PROTO
+name|PROTOCOL
 argument_list|)
 operator|)
 operator|==

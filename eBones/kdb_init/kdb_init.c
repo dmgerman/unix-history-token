@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * program to initialize the database,  reports error if database file  * already exists.  *  *	from: kdb_init.c,v 4.0 89/01/24 21:50:45 jtkohl Exp $  *	$Id: kdb_init.c,v 1.1.1.1 1994/09/30 14:49:56 csgr Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * program to initialize the database,  reports error if database file  * already exists.  *  *	from: kdb_init.c,v 4.0 89/01/24 21:50:45 jtkohl Exp $  *	$Id: kdb_init.c,v 1.4 1995/07/18 16:37:35 mark Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdb_init.c,v 1.1.1.1 1994/09/30 14:49:56 csgr Exp $"
+literal|"$Id: kdb_init.c,v 1.4 1995/07/18 16:37:35 mark Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -560,18 +560,6 @@ index|[
 literal|255
 index|]
 decl_stmt|;
-name|void
-name|read_pw_string
-parameter_list|()
-function_decl|;
-name|void
-name|string_to_key
-parameter_list|()
-function_decl|;
-name|void
-name|random_key
-parameter_list|()
-function_decl|;
 name|struct
 name|tm
 modifier|*

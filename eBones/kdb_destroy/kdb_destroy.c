@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kdb_destroy.c,v 4.0 89/01/24 21:49:02 jtkohl Exp $  *	$Id: kdb_destroy.c,v 1.3 1995/08/02 23:08:14 pst Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kdb_destroy.c,v 4.0 89/01/24 21:49:02 jtkohl Exp $  *	$Id: kdb_destroy.c,v 1.5 1995/08/04 06:35:45 mark Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdb_destroy.c,v 1.3 1995/08/02 23:08:14 pst Exp $"
+literal|"$Id: kdb_destroy.c,v 1.5 1995/08/04 06:35:45 mark Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,11 +49,19 @@ directive|include
 file|"krb_db.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|dbm_pagfno
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#

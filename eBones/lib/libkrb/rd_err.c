@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'safe msg',  * checking its integrity, and returning a pointer to the application  * data contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...)  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_err.c,v 4.5 89/01/13 17:26:38 steiner Exp $  *	$Id: rd_err.c,v 1.2 1994/07/19 19:26:10 g89r4222 Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'safe msg',  * checking its integrity, and returning a pointer to the application  * data contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...)  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_err.c,v 4.5 89/01/13 17:26:38 steiner Exp $  *	$Id: rd_err.c,v 1.3 1995/07/18 16:39:29 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: rd_err.c,v 1.2 1994/07/19 19:26:10 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: rd_err.c,v 1.3 1995/07/18 16:39:29 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* system include files */
@@ -36,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -86,32 +94,21 @@ begin_function
 name|int
 name|krb_rd_err
 parameter_list|(
-name|in
-parameter_list|,
-name|in_length
-parameter_list|,
-name|code
-parameter_list|,
-name|m_data
-parameter_list|)
 name|u_char
 modifier|*
 name|in
-decl_stmt|;
-comment|/* pointer to the msg received */
+parameter_list|,
 name|u_long
 name|in_length
-decl_stmt|;
-comment|/* of in msg */
+parameter_list|,
 name|long
 modifier|*
 name|code
-decl_stmt|;
-comment|/* received error code */
+parameter_list|,
 name|MSG_DAT
 modifier|*
 name|m_data
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|u_char

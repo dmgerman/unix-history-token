@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_pw_tkt.c,v 4.6 89/01/13 18:19:11 steiner Exp $  *	$Id: get_pw_tkt.c,v 1.2 1994/07/19 19:25:23 g89r4222 Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_pw_tkt.c,v 4.6 89/01/13 18:19:11 steiner Exp $  *	$Id: get_pw_tkt.c,v 1.3 1995/07/18 16:38:37 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: get_pw_tkt.c,v 1.2 1994/07/19 19:25:23 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: get_pw_tkt.c,v 1.3 1995/07/18 16:38:37 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -38,48 +40,26 @@ begin_comment
 comment|/*  * Get a ticket for the password-changing server ("changepw.KRB_MASTER").  *  * Given the name, instance, realm, and current password of the  * principal for which the user wants a password-changing-ticket,  * return either:  *  *	GT_PW_BADPW if current password was wrong,  *	GT_PW_NULL  if principal had a NULL password,  *	or the result of the krb_get_pw_in_tkt() call.  *  * First, try to get a ticket for "user.instance@realm" to use the  * "changepw.KRB_MASTER" server (KRB_MASTER is defined in "krb.h").  * The requested lifetime for the ticket is "1", and the current  * password is the "cpw" argument given.  *  * If the password was bad, give up.  *  * If the principal had a NULL password in the Kerberos database  * (indicating that the principal is known to Kerberos, but hasn't  * got a password yet), try instead to get a ticket for the principal  * "default.changepw@realm" to use the "changepw.KRB_MASTER" server.  * Use the password "changepwkrb" instead of "cpw".  Return GT_PW_NULL  * if all goes well, otherwise the error.  *  * If this routine succeeds, a ticket and session key for either the  * principal "user.instance@realm" or "default.changepw@realm" to use  * the password-changing server will be in the user's ticket file.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|get_pw_tkt
-argument_list|(
-argument|user
-argument_list|,
-argument|instance
-argument_list|,
-argument|realm
-argument_list|,
-argument|cpw
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|user
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|instance
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|realm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|cpw
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|kerror
@@ -161,7 +141,7 @@ name|kerror
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

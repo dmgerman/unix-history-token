@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: netwrite.c,v 4.1 88/11/15 16:48:58 jtkohl Exp $";  *	$Id: netwrite.c,v 1.2 1994/07/19 19:26:04 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: netwrite.c,v 4.1 88/11/15 16:48:58 jtkohl Exp $";  *	$Id: netwrite.c,v 1.3 1995/07/18 16:39:22 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,21 +15,35 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: netwrite.c,v 1.2 1994/07/19 19:26:04 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: netwrite.c,v 1.3 1995/07/18 16:39:22 mark Exp $";
 endif|#
 directive|endif
 endif|lint
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<krb.h>
+end_include
 
 begin_comment
 comment|/*  * krb_net_write() writes "len" bytes from "buf" to the file  * descriptor "fd".  It returns the number of bytes written or  * a write() error.  (The calling interface is identical to  * write(2).)  *  * XXX must not use non-blocking I/O  */
@@ -33,23 +53,16 @@ begin_function
 name|int
 name|krb_net_write
 parameter_list|(
-name|fd
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|cc

@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/des.h>
+file|<des.h>
 end_include
 
 begin_include
@@ -106,17 +106,6 @@ include|#
 directive|include
 file|"register_proto.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|random_key
-argument_list|()
-decl_stmt|,
-name|herror
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_admhst.c,v 4.0 89/01/23 10:08:55 jtkohl Exp $  *	$Id: get_admhst.c,v 1.2 1994/07/19 19:25:13 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_admhst.c,v 4.0 89/01/23 10:08:55 jtkohl Exp $  *	$Id: get_admhst.c,v 1.3 1995/07/18 16:38:27 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: get_admhst.c,v 1.2 1994/07/19 19:25:13 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: get_admhst.c,v 1.3 1995/07/18 16:38:27 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -50,38 +52,21 @@ begin_comment
 comment|/*  * Given a Kerberos realm, find a host on which the Kerberos database  * administration server can be found.  *  * krb_get_admhst takes a pointer to be filled in, a pointer to the name  * of the realm for which a server is desired, and an integer n, and  * returns (in h) the nth administrative host entry from the configuration  * file (KRB_CONF, defined in "krb.h") associated with the specified realm.  *  * On error, get_admhst returns KFAILURE. If all goes well, the routine  * returns KSUCCESS.  *  * For the format of the KRB_CONF file, see comments describing the routine  * krb_get_krbhst().  *  * This is a temporary hack to allow us to find the nearest system running  * a Kerberos admin server.  In the long run, this functionality will be  * provided by a nameserver.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|krb_get_admhst
-argument_list|(
-argument|h
-argument_list|,
-argument|r
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|h
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|r
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -274,7 +259,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

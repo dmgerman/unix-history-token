@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Source: /home/ncvs/src/eBones/kdb/krb_lib.c,v $  * $Author: csgr $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  */
+comment|/*  * $Source: /usr/cvs/src/eBones/kdb/krb_lib.c,v $  * $Author: mark $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,26 +15,28 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: krb_lib.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: krb_lib.c,v 1.3 1995/07/18 16:37:17 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -117,33 +125,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strncpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 specifier|static
 name|init
@@ -187,7 +168,7 @@ name|sscanf
 argument_list|(
 name|dbg
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 operator|&
 name|kerb_debug
@@ -225,7 +206,7 @@ comment|/*  * finalization routine for database -- NOTE: MUST be called by any  
 end_comment
 
 begin_function
-name|int
+name|void
 name|kerb_fini
 parameter_list|()
 block|{
@@ -243,40 +224,26 @@ begin_function
 name|int
 name|kerb_get_principal
 parameter_list|(
-name|name
-parameter_list|,
-name|inst
-parameter_list|,
-name|principal
-parameter_list|,
-name|max
-parameter_list|,
-name|more
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|char
 modifier|*
 name|inst
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|Principal
 modifier|*
 name|principal
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* max number of name structs to return */
+parameter_list|,
 name|int
 modifier|*
 name|more
-decl_stmt|;
-comment|/* more tuples than room for */
+parameter_list|)
 block|{
 name|int
 name|found
@@ -469,34 +436,18 @@ begin_comment
 comment|/* principals */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kerb_put_principal
-argument_list|(
-argument|principal
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|Principal
 modifier|*
 name|principal
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|unsigned
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of principal structs to write */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|long
 name|time
@@ -707,46 +658,32 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
 name|kerb_get_dba
 parameter_list|(
-name|name
-parameter_list|,
-name|inst
-parameter_list|,
-name|dba
-parameter_list|,
-name|max
-parameter_list|,
-name|more
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|char
 modifier|*
 name|inst
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|Dba
 modifier|*
 name|dba
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* max number of name structs to return */
+parameter_list|,
 name|int
 modifier|*
 name|more
-decl_stmt|;
-comment|/* more tuples than room for */
+parameter_list|)
 block|{
 name|int
 name|found

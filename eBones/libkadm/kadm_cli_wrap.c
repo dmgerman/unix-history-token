@@ -3,39 +3,28 @@ begin_comment
 comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Kerberos administration server client-side routines  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
 
-begin_endif
-unit|static char rcsid_kadm_cli_wrap_c[] = "from: Id: kadm_cli_wrap.c,v 4.6 89/12/30 20:09:45 qjb Exp";
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kadm_cli_wrap.c,v 1.1 1995/01/20 02:02:51 wollman Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
+unit|static char rcsid_kadm_cli_wrap_c[] = "from: Id: kadm_cli_wrap.c,v 4.6 89/12/30 20:09:45 qjb Exp"; static const char rcsid[] = 	"$Id: kadm_cli_wrap.c,v 1.1 1995/07/18 16:40:23 mark Exp $";
 endif|#
 directive|endif
 endif|lint
+end_endif
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 begin_comment
@@ -46,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -89,6 +90,84 @@ include|#
 directive|include
 file|<krb_err.h>
 end_include
+
+begin_function_decl
+name|int
+name|kadm_cli_out
+parameter_list|(
+name|u_char
+modifier|*
+name|dat
+parameter_list|,
+name|int
+name|dat_len
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+name|ret_dat
+parameter_list|,
+name|int
+modifier|*
+name|ret_siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kadm_cli_send
+parameter_list|(
+name|u_char
+modifier|*
+name|st_dat
+parameter_list|,
+name|int
+name|st_siz
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+name|ret_dat
+parameter_list|,
+name|int
+modifier|*
+name|ret_siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kadm_cli_keyd
+parameter_list|(
+name|des_cblock
+modifier|*
+name|s_k
+parameter_list|,
+name|des_key_schedule
+name|s_s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kadm_cli_conn
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kadm_cli_disconn
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -151,10 +230,11 @@ name|sess_sched
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|clear_secrets
-argument_list|()
+parameter_list|()
 block|{
 name|bzero
 argument_list|(
@@ -169,7 +249,7 @@ argument_list|(
 name|sess_key
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -183,48 +263,31 @@ argument_list|(
 name|sess_sched
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 return|return;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/*  * kadm_init_link  *	receives    : name, inst, realm  *  * initializes client parm, the Kadm_Client structure which holds the  * data about the connection between the server and client, the services  * used, the locations and other fun things  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_init_link
-argument_list|(
-argument|n
-argument_list|,
-argument|i
-argument_list|,
-argument|r
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 name|n
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 name|i
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 name|r
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|servent
@@ -423,7 +486,7 @@ return|return
 name|KADM_SUCCESS
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* procedure kadm_init_link */
@@ -433,24 +496,13 @@ begin_comment
 comment|/*  * kadm_change_pw  * recieves    : key  *  * Replaces the password (i.e. des key) of the caller with that specified in  * key. Returns no actual data from the master server, since this is called  * by a user  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_change_pw
-argument_list|(
-argument|newkey
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|des_cblock
 name|newkey
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The DES form of the users key */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|stsize
@@ -653,27 +705,20 @@ name|retc
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * kadm_add  * 	receives    : vals  * 	returns     : vals  *  * Adds and entry containing values to the database returns the values of the  * entry, so if you leave certain fields blank you will be able to determine  * the default values they are set to  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_add
-argument_list|(
-argument|vals
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|Kadm_vals
 modifier|*
 name|vals
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -850,36 +895,24 @@ name|retc
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * kadm_mod  * 	receives    : KTEXT, {values, values}  *	returns     : CKSUM,  RETCODE, {values}  *	acl         : su, sms (as register or dealloc)  *  * Modifies all entries corresponding to the first values so they match the  * second values. returns the values for the changed entries in vals2  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_mod
-argument_list|(
-argument|vals1
-argument_list|,
-argument|vals2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|Kadm_vals
 modifier|*
 name|vals1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|Kadm_vals
 modifier|*
 name|vals2
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -1123,38 +1156,26 @@ name|retc
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * kadm_get  * 	receives   : KTEXT, {values, flags}  *	returns    : CKSUM, RETCODE, {count, values, values, values}  *	acl        : su  *  * gets the fields requested by flags from all entries matching values returns  * this data for each matching recipient, after a count of how many such  * matches there were  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_get
-argument_list|(
-argument|vals
-argument_list|,
-argument|fl
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|Kadm_vals
 modifier|*
 name|vals
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|u_char
 name|fl
 index|[
 literal|4
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|loop
@@ -1371,70 +1392,32 @@ name|retc
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * kadm_cli_send  *	recieves   : opcode, packet, packet length, serv_name, serv_inst  *	returns    : return code from the packet build, the server, or  *			 something else  *  * It assembles a packet as follows:  *	 8 bytes    : VERSION STRING  *	 4 bytes    : LENGTH OF MESSAGE DATA and OPCODE  *		    : KTEXT  *		    : OPCODE       \  *		    : DATA> Encrypted (with make priv)  *		    : ......       /  *  * If it builds the packet and it is small enough, then it attempts to open the  * connection to the admin server.  If the connection is succesfully open  * then it sends the data and waits for a reply.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_cli_send
-argument_list|(
-argument|st_dat
-argument_list|,
-argument|st_siz
-argument_list|,
-argument|ret_dat
-argument_list|,
-argument|ret_siz
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|u_char
 modifier|*
 name|st_dat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the actual data */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|st_siz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* length of said data */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|u_char
 modifier|*
 modifier|*
 name|ret_dat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* to give return info */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|ret_siz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* length of returned info */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|act_len
@@ -1510,6 +1493,7 @@ name|retdat
 operator|=
 name|kadm_cli_keyd
 argument_list|(
+operator|&
 name|sess_key
 argument_list|,
 name|sess_sched
@@ -1621,10 +1605,14 @@ name|cksum
 operator|=
 name|quad_cksum
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|priv_pak
 argument_list|,
 operator|(
-name|u_long
+name|des_cblock
 operator|*
 operator|)
 literal|0
@@ -1636,6 +1624,7 @@ name|priv_len
 argument_list|,
 literal|0
 argument_list|,
+operator|&
 name|sess_key
 argument_list|)
 expr_stmt|;
@@ -1643,6 +1632,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|retdat
 operator|=
 name|krb_mk_req
@@ -1667,6 +1657,7 @@ name|long
 operator|)
 name|cksum
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* authenticator? */
@@ -1923,6 +1914,7 @@ block|}
 comment|/* need to decode the ret_dat */
 if|if
 condition|(
+operator|(
 name|retdat
 operator|=
 name|krb_rd_priv
@@ -1953,6 +1945,7 @@ argument_list|,
 operator|&
 name|mdat
 argument_list|)
+operator|)
 condition|)
 name|RET_N_FREE2
 argument_list|(
@@ -2144,42 +2137,23 @@ return|return
 name|retdat
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* takes in the sess_key and key_schedule and sets them appropriately */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_cli_keyd
-argument_list|(
-argument|s_k
-argument_list|,
-argument|s_s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|des_cblock
+modifier|*
 name|s_k
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* session key */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|des_key_schedule
 name|s_s
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* session key schedule */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|CREDENTIALS
 name|cred
@@ -2191,6 +2165,7 @@ decl_stmt|;
 comment|/* want .sname and .sinst here.... */
 if|if
 condition|(
+operator|(
 name|stat
 operator|=
 name|krb_get_cred
@@ -2210,6 +2185,7 @@ argument_list|,
 operator|&
 name|cred
 argument_list|)
+operator|)
 condition|)
 return|return
 name|stat
@@ -2271,6 +2247,7 @@ else|#
 directive|else
 if|if
 condition|(
+operator|(
 name|stat
 operator|=
 name|key_sched
@@ -2279,6 +2256,7 @@ name|s_k
 argument_list|,
 name|s_s
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -2293,7 +2271,7 @@ return|return
 name|KADM_SUCCESS
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* This code "works" */
@@ -2310,12 +2288,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+name|int
 name|kadm_cli_conn
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* this connects and sets my_addr */
 name|int
@@ -2538,14 +2514,12 @@ return|return
 name|KADM_SUCCESS
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|kadm_cli_disconn
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -2569,55 +2543,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|kadm_cli_out
-argument_list|(
-argument|dat
-argument_list|,
-argument|dat_len
-argument_list|,
-argument|ret_dat
-argument_list|,
-argument|ret_siz
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|u_char
 modifier|*
 name|dat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|dat_len
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|u_char
 modifier|*
 modifier|*
 name|ret_dat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|ret_siz
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|u_short
 name|dlen
 decl_stmt|;
@@ -2708,6 +2656,7 @@ return|;
 comment|/* XXX */
 if|if
 condition|(
+operator|(
 name|retval
 operator|=
 name|krb_net_read
@@ -2728,6 +2677,7 @@ argument_list|(
 name|u_short
 argument_list|)
 argument_list|)
+operator|)
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -2790,6 +2740,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|retval
 operator|=
 name|krb_net_read
@@ -2810,6 +2761,7 @@ name|int
 operator|)
 name|dlen
 argument_list|)
+operator|)
 operator|!=
 name|dlen
 condition|)
@@ -2846,7 +2798,7 @@ return|return
 name|KADM_SUCCESS
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

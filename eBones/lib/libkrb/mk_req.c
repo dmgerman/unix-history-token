@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: der: mk_req.c,v 4.17 89/07/07 15:20:35 jtkohl Exp $  *	$Id: mk_req.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: der: mk_req.c,v 4.17 89/07/07 15:20:35 jtkohl Exp $  *	$Id: mk_req.c,v 1.3 1995/07/18 16:39:15 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: mk_req.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: mk_req.c,v 1.3 1995/07/18 16:39:15 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -59,13 +61,6 @@ file|<strings.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|krb_ap_req_debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|timeval
@@ -92,73 +87,28 @@ begin_comment
 comment|/*  * krb_mk_req takes a text structure in which an authenticator is to  * be built, the name of a service, an instance, a realm,  * and a checksum.  It then retrieves a ticket for  * the desired service and creates an authenticator in the text  * structure passed as the first argument.  krb_mk_req returns  * KSUCCESS on success and a Kerberos error code on failure.  *  * The peer procedure on the other end is krb_rd_req.  When making  * any changes to this routine it is important to make corresponding  * changes to krb_rd_req.  *  * The authenticator consists of the following:  *  * authent->dat  *  * unsigned char	KRB_PROT_VERSION	protocol version no.  * unsigned char	AUTH_MSG_APPL_REQUEST	message type  * (least significant  * bit of above)	HOST_BYTE_ORDER		local byte ordering  * unsigned char	kvno from ticket	server's key version  * string		realm			server's realm  * unsigned char	tl			ticket length  * unsigned char	idl			request id length  * text			ticket->dat		ticket for server  * text			req_id->dat		request id  *  * The ticket information is retrieved from the ticket cache or  * fetched from Kerberos.  The request id (called the "authenticator"  * in the papers on Kerberos) contains the following:  *  * req_id->dat  *  * string		cr.pname		{name, instance, and  * string		cr.pinst		realm of principal  * string		myrealm			making this request}  * 4 bytes		checksum		checksum argument given  * unsigned char	tv_local.tf_usec	time (milliseconds)  * 4 bytes		tv_local.tv_sec		time (seconds)  *  * req_id->length = 3 strings + 3 terminating nulls + 5 bytes for time,  *                  all rounded up to multiple of 8.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|krb_mk_req
-argument_list|(
-name|authent
-argument_list|,
-name|service
-argument_list|,
-name|instance
-argument_list|,
-name|realm
-argument_list|,
-name|checksum
-argument_list|)
-specifier|register
+parameter_list|(
 name|KTEXT
 name|authent
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Place to build the authenticator */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|service
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Name of the service */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|instance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Service instance */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|realm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Authentication domain of service */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|long
 name|checksum
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Checksum of data (optional) */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|KTEXT_ST
@@ -358,6 +308,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|retval
 operator|=
 name|get_ad_tkt
@@ -370,6 +321,7 @@ name|realm
 argument_list|,
 name|lifetime
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -378,6 +330,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|retval
 operator|=
 name|krb_get_cred
@@ -391,6 +344,7 @@ argument_list|,
 operator|&
 name|cr
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -542,7 +496,7 @@ name|krb_ap_req_debug
 condition|)
 name|printf
 argument_list|(
-literal|"Issue date: %d\n"
+literal|"Issue date: %ld\n"
 argument_list|,
 name|cr
 operator|.
@@ -789,6 +743,10 @@ directive|ifndef
 name|NOENCRYPTION
 name|key_sched
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|cr
 operator|.
 name|session
@@ -799,7 +757,7 @@ expr_stmt|;
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|req_id
@@ -807,7 +765,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|C_Block
+name|des_cblock
 operator|*
 operator|)
 name|req_id
@@ -823,6 +781,10 @@ name|length
 argument_list|,
 name|key_s
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|cr
 operator|.
 name|session
@@ -955,7 +917,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * krb_set_lifetime sets the default lifetime for additional tickets  * obtained via krb_mk_req().  *  * It returns the previous value of the default lifetime.  */
@@ -965,11 +927,9 @@ begin_function
 name|int
 name|krb_set_lifetime
 parameter_list|(
-name|newval
-parameter_list|)
 name|int
 name|newval
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|olife

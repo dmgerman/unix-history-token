@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: k_gethostname.c,v 4.1 88/12/01 14:04:42 jtkohl Exp $  *	$Id: k_gethostname.c,v 1.2 1994/07/19 19:25:36 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: k_gethostname.c,v 4.1 88/12/01 14:04:42 jtkohl Exp $  *	$Id: k_gethostname.c,v 1.3 1995/07/18 16:38:51 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: k_gethostname.c,v 1.2 1994/07/19 19:25:36 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: k_gethostname.c,v 1.3 1995/07/18 16:38:51 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,17 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -116,23 +124,17 @@ begin_comment
 comment|/*  * Return the local host's name in "name", up to "namelen" characters.  * "name" will be null-terminated if "namelen" is big enough.  * The return code is 0 on success, -1 on failure.  (The calling  * interface is identical to gethostname(2).)  *  * Currently defined for BSD 4.2 and PC.  The BSD version just calls  * gethostname(); the PC code was taken from "kinit.c", and may or may  * not work.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|k_gethostname
-argument_list|(
-argument|name
-argument_list|,
-argument|namelen
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|,
+name|int
+name|namelen
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -259,7 +261,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 end_unit
 

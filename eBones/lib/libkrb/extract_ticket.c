@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: extract_ticket.c,v 4.6 88/10/07 06:08:15 shanzer Exp $  *	$Id: extract_ticket.c,v 1.2 1994/07/19 19:25:08 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: extract_ticket.c,v 4.6 88/10/07 06:08:15 shanzer Exp $  *	$Id: extract_ticket.c,v 1.3 1995/07/18 16:38:21 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Id: extract_ticket.c,v 1.2 1994/07/19 19:25:08 g89r4222 Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char *rcsid = "$Id: extract_ticket.c,v 1.3 1995/07/18 16:38:21 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -50,100 +52,35 @@ begin_comment
 comment|/*  * This routine is obsolete.  *  * This routine accepts the ciphertext returned by kerberos and  * extracts the nth ticket.  It also fills in the variables passed as  * session, liftime and kvno.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|extract_ticket
-argument_list|(
-argument|cipher
-argument_list|,
-argument|n
-argument_list|,
-argument|session
-argument_list|,
-argument|lifetime
-argument_list|,
-argument|kvno
-argument_list|,
-argument|realm
-argument_list|,
-argument|ticket
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|KTEXT
 name|cipher
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The ciphertext */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Which ticket */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|session
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The session key for this tkt */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|lifetime
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The life of this ticket */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|kvno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The kvno for the service */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|realm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Realm in which tkt issued */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|KTEXT
 name|ticket
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The ticket itself */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -316,7 +253,7 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

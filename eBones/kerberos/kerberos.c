@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kerberos.c,v 4.19 89/11/01 17:18:07 qjb Exp $  *	$Id: kerberos.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kerberos.c,v 4.19 89/11/01 17:18:07 qjb Exp $  *	$Id: kerberos.c,v 1.4 1995/07/18 16:37:51 mark Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kerberos.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $"
+literal|"$Id: kerberos.c,v 1.4 1995/07/18 16:37:51 mark Exp $"
 decl_stmt|;
 end_decl_stmt
 

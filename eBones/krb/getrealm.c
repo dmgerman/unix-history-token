@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * routine to convert hostname into realm name.  *  *	from: getrealm.c,v 4.6 90/01/02 13:35:56 jtkohl Exp $  *	$Id: getrealm.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * routine to convert hostname into realm name.  *  *	from: getrealm.c,v 4.6 90/01/02 13:35:56 jtkohl Exp $  *	$Id: getrealm.c,v 1.3 1995/07/18 16:38:46 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,20 +15,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: getrealm.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: getrealm.c,v 1.3 1995/07/18 16:38:46 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -98,12 +100,10 @@ name|char
 modifier|*
 name|krb_realmofhost
 parameter_list|(
-name|host
-parameter_list|)
 name|char
 modifier|*
 name|host
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: krb_dbm.c,v 4.9 89/04/18 16:15:13 wesommer Exp $  *	$Id: krb_dbm.c,v 1.3 1995/05/30 06:40:38 rgrimes Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: krb_dbm.c,v 4.9 89/04/18 16:15:13 wesommer Exp $  *	$Id: krb_dbm.c,v 1.4 1995/08/03 17:15:42 mark Exp $ */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,20 +15,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: krb_dbm.c,v 1.3 1995/05/30 06:40:38 rgrimes Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: krb_dbm.c,v 1.4 1995/08/03 17:15:42 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_if
@@ -42,7 +44,32 @@ end_if
 begin_define
 define|#
 directive|define
-name|NDBM
+name|NDBM_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DBM_
 end_define
 
 begin_endif
@@ -54,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -119,7 +158,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NDBM
+name|NDBM_
 end_ifdef
 
 begin_include
@@ -134,7 +173,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*NDBM*/
+comment|/*NDBM_*/
 end_comment
 
 begin_include
@@ -149,7 +188,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*NDBM*/
+comment|/*NDBM_*/
 end_comment
 
 begin_comment
@@ -177,7 +216,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|DB
+name|DBM_
 end_define
 
 begin_endif
@@ -224,22 +263,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 specifier|static
@@ -351,7 +374,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NDBM
+name|NDBM_
 end_ifndef
 
 begin_typedef
@@ -467,18 +490,14 @@ name|char
 modifier|*
 name|gen_dbsuffix
 parameter_list|(
+name|char
+modifier|*
 name|db_name
 parameter_list|,
+name|char
+modifier|*
 name|sfx
 parameter_list|)
-name|char
-modifier|*
-name|db_name
-decl_stmt|;
-name|char
-modifier|*
-name|sfx
-decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -535,12 +554,10 @@ begin_comment
 comment|/*  * initialization for data base routines.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kerb_db_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|init
 operator|=
@@ -552,40 +569,31 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * gracefully shut down database--must be called by ANY program that does  * a kerb_db_init  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kerb_db_fini
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{ }
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set the "name" of the current database to some alternate value.  *  * Passing a null pointer as "name" will set back to the default.  * If the alternate database doesn't exist, nothing is changed.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kerb_db_set_name
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|DBM
 modifier|*
@@ -637,7 +645,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the last modification time of the database.  */
@@ -711,12 +719,10 @@ specifier|static
 name|long
 name|kerb_start_update
 parameter_list|(
-name|db_name
-parameter_list|)
 name|char
 modifier|*
 name|db_name
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -771,17 +777,13 @@ specifier|static
 name|long
 name|kerb_end_update
 parameter_list|(
-name|db_name
-parameter_list|,
-name|age
-parameter_list|)
 name|char
 modifier|*
 name|db_name
-decl_stmt|;
+parameter_list|,
 name|long
 name|age
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -978,11 +980,9 @@ specifier|static
 name|long
 name|kerb_end_read
 parameter_list|(
-name|age
-parameter_list|)
 name|u_long
 name|age
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1012,21 +1012,14 @@ begin_comment
 comment|/*  * Create the database, assuming it's not there.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kerb_db_create
-argument_list|(
-argument|db_name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|db_name
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1050,7 +1043,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|NDBM
+name|NDBM_
 name|DBM
 modifier|*
 name|db
@@ -1231,40 +1224,33 @@ return|return
 name|ret
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * "Atomically" rename the database in a way that locks out read  * access in the middle of the rename.  *  * Not perfect; if we crash in the middle of an update, we don't  * necessarily know to complete the transaction the rename, but...  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kerb_db_rename
-argument_list|(
-argument|from
-argument_list|,
-argument|to
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|from
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|to
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
+name|int
+name|ok
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DB
+name|DBM_
 name|char
 modifier|*
 name|fromdb
@@ -1354,12 +1340,9 @@ argument_list|(
 name|to
 argument_list|)
 decl_stmt|;
-name|int
-name|ok
-decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DB
+name|DBM_
 if|if
 condition|(
 name|rename
@@ -1421,7 +1404,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DB
+name|DBM_
 name|free
 argument_list|(
 name|fromdb
@@ -1474,43 +1457,30 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/*  * look up a principal in the data base returns number of principals  * found , and whether there were more than requested.  */
+comment|/*  * look up a principal in the data base returns number of principals  * found , and whether there were more than requested.     char   *name		 could have wild card     char   *inst		 could have wild card     Principal *principal     unsigned int max		 max number of name structs to return     int    *more		 where there more than 'max' tuples?  */
+name|int
 name|kerb_db_get_principal
-argument_list|(
-argument|name
-argument_list|,
-argument|inst
-argument_list|,
-argument|principal
-argument_list|,
-argument|max
-argument_list|,
-argument|more
-argument_list|)
+parameter_list|(
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|char
 modifier|*
 name|inst
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|Principal
 modifier|*
 name|principal
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* max number of name structs to return */
+parameter_list|,
 name|int
 modifier|*
 name|more
-decl_stmt|;
-comment|/* where there more than 'max' tuples? */
+parameter_list|)
 block|{
 name|int
 name|found
@@ -1961,21 +1931,17 @@ operator|)
 return|;
 block|}
 comment|/*  * Update a name in the data base.  Returns number of names  * successfully updated.  */
+name|int
 name|kerb_db_put_principal
-argument_list|(
-argument|principal
-argument_list|,
-argument|max
-argument_list|)
+parameter_list|(
 name|Principal
 modifier|*
 name|principal
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* number of principal structs to 				 * update */
+parameter_list|)
 block|{
 name|int
 name|found
@@ -2170,23 +2136,18 @@ specifier|static
 name|void
 name|encode_princ_key
 parameter_list|(
-name|key
-parameter_list|,
-name|name
-parameter_list|,
-name|instance
-parameter_list|)
 name|datum
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|instance
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -2247,23 +2208,18 @@ specifier|static
 name|void
 name|decode_princ_key
 parameter_list|(
-name|key
-parameter_list|,
-name|name
-parameter_list|,
-name|instance
-parameter_list|)
 name|datum
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|instance
-decl_stmt|;
+parameter_list|)
 block|{
 name|strncpy
 argument_list|(
@@ -2312,18 +2268,14 @@ specifier|static
 name|void
 name|encode_princ_contents
 parameter_list|(
-name|contents
-parameter_list|,
-name|principal
-parameter_list|)
 name|datum
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|,
 name|Principal
 modifier|*
 name|principal
-decl_stmt|;
+parameter_list|)
 block|{
 name|contents
 operator|->
@@ -2350,18 +2302,14 @@ specifier|static
 name|void
 name|decode_princ_contents
 parameter_list|(
-name|contents
-parameter_list|,
-name|principal
-parameter_list|)
 name|datum
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|,
 name|Principal
 modifier|*
 name|principal
-decl_stmt|;
+parameter_list|)
 block|{
 name|bcopy
 argument_list|(
@@ -2383,14 +2331,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|void
 name|kerb_db_get_stat
-argument_list|(
-argument|s
-argument_list|)
+parameter_list|(
 name|DB_stat
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|gettimeofday
 argument_list|(
@@ -2464,33 +2411,29 @@ literal|0
 expr_stmt|;
 comment|/* update local copy too */
 block|}
+name|void
 name|kerb_db_put_stat
-argument_list|(
-argument|s
-argument_list|)
+parameter_list|(
 name|DB_stat
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{ }
+name|void
 name|delta_stat
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|,
-argument|c
-argument_list|)
+parameter_list|(
 name|DB_stat
 modifier|*
 name|a
-decl_stmt|,
+parameter_list|,
+name|DB_stat
 modifier|*
 name|b
-decl_stmt|,
+parameter_list|,
+name|DB_stat
 modifier|*
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* c = a - b then b = a for the next time */
 name|c
@@ -2625,45 +2568,31 @@ name|DB_stat
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * look up a dba in the data base returns number of dbas found , and  * whether there were more than requested.  */
+name|int
 name|kerb_db_get_dba
-argument_list|(
-argument|dba_name
-argument_list|,
-argument|dba_inst
-argument_list|,
-argument|dba
-argument_list|,
-argument|max
-argument_list|,
-argument|more
-argument_list|)
+parameter_list|(
 name|char
 modifier|*
 name|dba_name
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|char
 modifier|*
 name|dba_inst
-decl_stmt|;
-comment|/* could have wild card */
+parameter_list|,
 name|Dba
 modifier|*
 name|dba
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|max
-decl_stmt|;
-comment|/* max number of name structs to return */
+parameter_list|,
 name|int
 modifier|*
 name|more
-decl_stmt|;
-comment|/* where there more than 'max' tuples? */
+parameter_list|)
 block|{
 operator|*
 name|more
@@ -2676,24 +2605,20 @@ literal|0
 operator|)
 return|;
 block|}
+name|int
 name|kerb_db_iterate
-argument_list|(
-argument|func
-argument_list|,
-argument|arg
-argument_list|)
+parameter_list|(
 name|int
 function_decl|(
 modifier|*
 name|func
 function_decl|)
 parameter_list|()
-function_decl|;
+parameter_list|,
 name|char
 modifier|*
 name|arg
-decl_stmt|;
-comment|/* void *, really */
+parameter_list|)
 block|{
 name|datum
 name|key
@@ -2841,8 +2766,9 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
+name|int
 name|kerb_dbl_init
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2911,18 +2837,13 @@ name|inited
 operator|++
 expr_stmt|;
 block|}
-end_block
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
-
-begin_function
-unit|}  static
+block|}
+specifier|static
 name|void
 name|kerb_dbl_fini
 parameter_list|()
@@ -2946,18 +2867,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|kerb_dbl_lock
 parameter_list|(
-name|mode
-parameter_list|)
 name|int
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|flock_mode
@@ -3058,9 +2974,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|kerb_dbl_unlock
@@ -3131,17 +3044,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|kerb_db_set_lockmode
 parameter_list|(
-name|mode
-parameter_list|)
 name|int
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|old

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Source: /home/ncvs/src/eBones/kadmin/kadmin.c,v $  * $Author: wollman $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Kerberos database administrator's tool.  *  * The default behavior of kadmin is if the -m option is given  * on the commandline, multiple requests are allowed to be given  * with one entry of the admin password (until the tickets expire).  * If you do not want this to be an available option, compile with  * NO_MULTIPLE defined.  */
+comment|/*  * $Source: /usr/cvs/src/eBones/kadmin/kadmin.c,v $  * $Author: mark $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Kerberos database administrator's tool.  *  * The default behavior of kadmin is if the -m option is given  * on the commandline, multiple requests are allowed to be given  * with one entry of the admin password (until the tickets expire).  * If you do not want this to be an available option, compile with  * NO_MULTIPLE defined.  */
 end_comment
 
 begin_ifndef

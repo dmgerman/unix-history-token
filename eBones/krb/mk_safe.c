@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine constructs a Kerberos 'safe msg', i.e. authenticated  * using a private session key to seed a checksum. Msg is NOT  * encrypted.  *  *      Note-- bcopy is used to avoid alignment problems on IBM RT  *  *      Returns either<0 ===> error, or resulting size of message  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: mk_safe.c,v 4.12 89/03/22 14:50:49 jtkohl Exp $  *	$Id: mk_safe.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine constructs a Kerberos 'safe msg', i.e. authenticated  * using a private session key to seed a checksum. Msg is NOT  * encrypted.  *  *      Note-- bcopy is used to avoid alignment problems on IBM RT  *  *      Returns either<0 ===> error, or resulting size of message  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: mk_safe.c,v 4.12 89/03/22 14:50:49 jtkohl Exp $  *	$Id: mk_safe.c,v 1.3 1995/07/18 16:39:17 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,17 +15,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: mk_safe.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: mk_safe.c,v 1.3 1995/07/18 16:39:17 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* system include files */
@@ -36,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -164,49 +172,30 @@ begin_function
 name|long
 name|krb_mk_safe
 parameter_list|(
-name|in
-parameter_list|,
-name|out
-parameter_list|,
-name|length
-parameter_list|,
-name|key
-parameter_list|,
-name|sender
-parameter_list|,
-name|receiver
-parameter_list|)
 name|u_char
 modifier|*
 name|in
-decl_stmt|;
-comment|/* application data */
+parameter_list|,
 name|u_char
 modifier|*
 name|out
-decl_stmt|;
-comment|/* 				 * put msg here, leave room for header! 				 * breaks if in and out (header stuff) 				 * overlap 				 */
+parameter_list|,
 name|u_long
 name|length
-decl_stmt|;
-comment|/* of in data */
-name|C_Block
-modifier|*
+parameter_list|,
+name|des_cblock
 name|key
-decl_stmt|;
-comment|/* encryption key for seed and ivec */
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|sender
-decl_stmt|;
-comment|/* sender address */
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|receiver
-decl_stmt|;
-comment|/* receiver address */
+parameter_list|)
 block|{
 specifier|register
 name|u_char
@@ -525,6 +514,10 @@ name|cksum
 operator|=
 name|quad_cksum
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|q
 argument_list|,
 name|big_cksum
@@ -535,6 +528,10 @@ name|q
 argument_list|,
 literal|2
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|)
 expr_stmt|;
@@ -546,7 +543,7 @@ name|krb_debug
 condition|)
 name|printf
 argument_list|(
-literal|"\ncksum = %u"
+literal|"\ncksum = %lu"
 argument_list|,
 name|cksum
 argument_list|)

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: $Header: /home/ncvs/src/eBones/kdb/print_princ.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $  *	$Id: print_princ.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: $Header: /usr/cvs/src/eBones/kdb/print_princ.c,v 1.3 1995/07/18 16:37:19 mark Exp $  *	$Id: print_princ.c,v 1.3 1995/07/18 16:37:19 mark Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -9,20 +15,16 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: print_princ.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: print_princ.c,v 1.3 1995/07/18 16:37:19 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -68,35 +70,14 @@ name|debug
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strncpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|tm
-modifier|*
-name|localtime
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|long
+name|kerb_debug
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|tm
 modifier|*
@@ -104,27 +85,14 @@ name|time_p
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|long
-name|kerb_debug
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
+begin_function
+name|void
 name|krb_print_principal
-argument_list|(
-argument|a_n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|Principal
 modifier|*
 name|a_n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 comment|/* run-time database does not contain string versions */
 name|time_p
@@ -206,7 +174,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n\tkey_ver %d  k_low 0x%08x  k_high 0x%08x  akv %d  exists %d\n"
+literal|"\n\tkey_ver %d  k_low 0x%08lx  k_high 0x%08lx  akv %d  exists %d\n"
 argument_list|,
 name|a_n
 operator|->
@@ -224,6 +192,9 @@ name|a_n
 operator|->
 name|kdc_key_ver
 argument_list|,
+operator|(
+name|int
+operator|)
 name|a_n
 operator|->
 name|old
@@ -235,7 +206,7 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
