@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.2 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
+comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.3 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
 end_comment
 
 begin_ifndef
@@ -1594,15 +1594,23 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
+name|error
+operator|=
 name|suser
-argument_list|()
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_acflag
+argument_list|)
 condition|)
 return|return
 operator|(
-name|u
-operator|.
-name|u_error
+name|error
 operator|)
 return|;
 if|if
