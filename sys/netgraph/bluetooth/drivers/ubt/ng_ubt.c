@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdevs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -157,6 +151,12 @@ begin_include
 include|#
 directive|include
 file|<netgraph/bluetooth/drivers/ubt/ng_ubt_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"usbdevs.h"
 end_include
 
 begin_comment
