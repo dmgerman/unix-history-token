@@ -4804,6 +4804,11 @@ name|aac_fibmap
 argument_list|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Not enough contiguous memory available.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
