@@ -227,7 +227,7 @@ name|CISTPL_TYPE
 parameter_list|(
 name|tpl
 parameter_list|)
-value|tpl[0]
+value|bus_space_read_1(bst, bsh, tpl + 0)
 end_define
 
 begin_define
@@ -237,7 +237,7 @@ name|CISTPL_LEN
 parameter_list|(
 name|tpl
 parameter_list|)
-value|tpl[2]
+value|bus_space_read_1(bst, bsh, tpl + 2)
 end_define
 
 begin_define
@@ -249,7 +249,7 @@ name|tpl
 parameter_list|,
 name|pos
 parameter_list|)
-value|tpl[4 + ((pos)<<1)]
+value|bus_space_read_1(bst, bsh, tpl+ 4 + ((pos)<<1))
 end_define
 
 begin_endif
