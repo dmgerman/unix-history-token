@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)seekdir.c 1.2 %G%"
+literal|"@(#)seekdir.c 4.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
