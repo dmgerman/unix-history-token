@@ -3551,7 +3551,7 @@ index|[
 name|KERNEL2_SR
 index|]
 operator|=
-name|KERNEL_SEGMENT
+name|KERNEL2_SEGMENT
 expr_stmt|;
 end_expr_stmt
 
@@ -3789,6 +3789,28 @@ operator|,
 literal|"r"
 operator|(
 name|KERNEL_SEGMENT
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_asm
+asm|__asm __volatile ("mtsr %0,%1"
+end_asm
+
+begin_expr_stmt
+operator|::
+literal|"n"
+operator|(
+name|KERNEL2_SR
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|KERNEL2_SEGMENT
 operator|)
 end_expr_stmt
 
