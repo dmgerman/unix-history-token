@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.42 (Berkeley) %G%"
+literal|"@(#)ps.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1598,12 +1598,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ki
-operator|->
-name|ki_u
-operator|=
-name|usp
-expr_stmt|;
 name|up
 operator|=
 name|kvm_getu
@@ -1641,6 +1635,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|ki
+operator|->
+name|ki_u
+operator|=
+name|usp
+expr_stmt|;
 comment|/* 		 * save important fields 		 */
 ifdef|#
 directive|ifdef
@@ -1720,6 +1720,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+else|else
+name|free
+argument_list|(
+name|usp
+argument_list|)
+expr_stmt|;
 block|}
 name|pscomp
 argument_list|(
