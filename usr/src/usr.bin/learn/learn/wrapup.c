@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wrapup.c	4.1	(Berkeley)	%G%"
+literal|"@(#)wrapup.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,14 +54,7 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* this routine does not use 'system' because it wants 	 interrupts turned off */
-name|int
-name|retval
-decl_stmt|,
-name|pid
-decl_stmt|,
-name|pidw
-decl_stmt|;
+comment|/* this routine does not use 'system' because it wants interrupts turned off */
 name|signal
 argument_list|(
 name|SIGINT
@@ -76,12 +69,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|pid
-operator|=
 name|fork
 argument_list|()
-operator|)
 operator|==
 literal|0
 condition|)
@@ -93,13 +82,50 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|vax
+if|if
+condition|(
+name|fork
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|open
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|execl
+argument_list|(
+literal|"/bin/stty"
+argument_list|,
+literal|"stty"
+argument_list|,
+literal|"new"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|execl
 argument_list|(
 literal|"/bin/rm"
 argument_list|,
 literal|"rm"
 argument_list|,
-literal|"-r"
+literal|"-rf"
 argument_list|,
 name|dir
 argument_list|,
@@ -112,18 +138,23 @@ literal|"/usr/bin/rm"
 argument_list|,
 literal|"rm"
 argument_list|,
-literal|"-r"
+literal|"-rf"
 argument_list|,
 name|dir
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+literal|"bin/rm"
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't find 'rm' command.\n"
+literal|"Wrapup:  can't find 'rm' command.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -132,18 +163,38 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|n
+operator|&&
+name|todo
+condition|)
+name|printf
+argument_list|(
+literal|"To take up where you left off type \"learn %s %s\".\n"
+argument_list|,
+name|sname
+argument_list|,
+name|todo
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Bye.\n"
 argument_list|)
 expr_stmt|;
-comment|/* not only does this reassure user but  			it stalls for time while deleting directory */
+comment|/* not only does this reassure user but it 				stalls for time while deleting directory */
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-comment|/* printf("Wantd %d got %d val %d\n",pid, pidw, retval); */
+name|wait
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|n

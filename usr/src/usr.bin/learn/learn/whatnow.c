@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whatnow.c	4.1	(Berkeley)	%G%"
+literal|"@(#)whatnow.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,21 @@ directive|include
 file|"lrnref.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|togo
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|review
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|whatnow
 argument_list|()
@@ -40,6 +55,72 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|again
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|review
+condition|)
+name|printf
+argument_list|(
+literal|"\nOK.  That was lesson %s.\n\n"
+argument_list|,
+name|todo
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|level
+argument_list|,
+name|togo
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|skip
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nOK.  That was lesson %s.\n"
+argument_list|,
+name|todo
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Skipping to next lesson.\n\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|level
+argument_list|,
+name|todo
+argument_list|)
+expr_stmt|;
+name|skip
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|todo
@@ -122,11 +203,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nGood.  Lesson %s (%d)\n\n"
+literal|"\nGood.  That was lesson %s.\n\n"
 argument_list|,
 name|level
-argument_list|,
-name|speed
 argument_list|)
 expr_stmt|;
 name|fflush
