@@ -175,6 +175,12 @@ directive|include
 file|"opt_vfs_aio.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VFS_AIO
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|long
@@ -1187,65 +1193,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|filt_aioattach
-parameter_list|(
-name|struct
-name|knote
-modifier|*
-name|kn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|filt_aiodetach
-parameter_list|(
-name|struct
-name|knote
-modifier|*
-name|kn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|filt_aio
-parameter_list|(
-name|struct
-name|knote
-modifier|*
-name|kn
-parameter_list|,
-name|long
-name|hint
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|struct
-name|filterops
-name|aio_filtops
-init|=
-block|{
-literal|0
-block|,
-name|filt_aioattach
-block|,
-name|filt_aiodetach
-block|,
-name|filt_aio
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
@@ -2183,6 +2130,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VFS_AIO */
+end_comment
+
 begin_comment
 comment|/*  * Rundown the jobs for a given process.    */
 end_comment
@@ -2197,6 +2153,12 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|VFS_AIO
+return|return;
+else|#
+directive|else
 name|int
 name|s
 decl_stmt|;
@@ -2773,8 +2735,17 @@ name|p_aioinfo
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* VFS_AIO */
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VFS_AIO
+end_ifdef
 
 begin_comment
 comment|/*  * Select a job to run (called by an AIO daemon).  */
@@ -5313,6 +5284,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VFS_AIO */
+end_comment
+
 begin_comment
 comment|/*  * Wake up aio requests that may be serviceable now.  */
 end_comment
@@ -5332,6 +5312,12 @@ modifier|*
 name|sb
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|VFS_AIO
+return|return;
+else|#
+directive|else
 name|struct
 name|aiocblist
 modifier|*
@@ -5576,8 +5562,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* VFS_AIO */
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VFS_AIO
+end_ifdef
 
 begin_comment
 comment|/*  * Queue a new AIO request.  Choosing either the threaded or direct physio VCHR  * technique is done in this code.  */
@@ -6937,6 +6932,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VFS_AIO */
+end_comment
 
 begin_comment
 comment|/*  * Support the aio_return system call, as a side-effect, kernel resources are  * released.  */
@@ -10559,6 +10563,12 @@ comment|/* VFS_AIO */
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VFS_AIO
+end_ifdef
+
 begin_comment
 comment|/*  * This is a wierd hack so that we can post a signal.  It is safe to do so from  * a timeout routine, but *not* from an interrupt routine.  */
 end_comment
@@ -10988,6 +10998,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VFS_AIO */
+end_comment
 
 begin_function
 name|int
@@ -11445,6 +11464,53 @@ comment|/* VFS_AIO */
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VFS_AIO
+end_ifndef
+
+begin_function
+specifier|static
+name|int
+name|filt_aioattach
+parameter_list|(
+name|struct
+name|knote
+modifier|*
+name|kn
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|filterops
+name|aio_filtops
+init|=
+block|{
+literal|0
+block|,
+name|filt_aioattach
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function
 specifier|static
 name|int
@@ -11634,6 +11700,32 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|struct
+name|filterops
+name|aio_filtops
+init|=
+block|{
+literal|0
+block|,
+name|filt_aioattach
+block|,
+name|filt_aiodetach
+block|,
+name|filt_aio
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VFS_AIO */
+end_comment
 
 end_unit
 
