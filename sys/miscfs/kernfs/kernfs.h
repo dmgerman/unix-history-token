@@ -76,13 +76,6 @@ name|kernfs_vnodeop_p
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|dev_t
-name|rrootdev
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
