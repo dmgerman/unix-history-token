@@ -116,11 +116,11 @@ name|short
 name|f_type
 decl_stmt|;
 comment|/* descriptor type */
-name|short
+name|int
 name|f_count
 decl_stmt|;
 comment|/* reference count */
-name|short
+name|int
 name|f_msgcount
 decl_stmt|;
 comment|/* references from message queue */
