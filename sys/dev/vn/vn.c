@@ -3046,12 +3046,6 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|vn_cdevsw
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 break|break;
