@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.7 1995/11/29 10:47:24 julian Exp $  */
+comment|/*  * $Id: asc.c,v 1.8 1995/11/29 14:39:31 julian Exp $  */
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -137,13 +131,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
