@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.64.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.65 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -120,15 +120,81 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fs.h"
+file|"lfs.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|chmod1
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|chown1
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|uid_t
+operator|,
+name|gid_t
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|maknode
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|nameidata
+operator|*
+operator|,
+expr|struct
+name|inode
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Create a regular file  */
 end_comment
 
 begin_macro
-name|ufs_create
+name|lfs_create
 argument_list|(
 argument|ndp
 argument_list|,
@@ -226,7 +292,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_mknod
+name|lfs_mknod
 argument_list|(
 argument|ndp
 argument_list|,
@@ -376,67 +442,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Open called.  *  * Nothing to do.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
-name|ufs_open
-argument_list|(
-argument|vp
-argument_list|,
-argument|mode
-argument_list|,
-argument|cred
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * Close called  *  * Update the times on the inode.  */
 end_comment
 
@@ -445,7 +450,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_close
+name|lfs_close
 argument_list|(
 argument|vp
 argument_list|,
@@ -541,7 +546,7 @@ comment|/*  * Check mode permission on inode pointer. Mode is READ, WRITE or EXE
 end_comment
 
 begin_macro
-name|ufs_access
+name|lfs_access
 argument_list|(
 argument|vp
 argument_list|,
@@ -783,7 +788,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_getattr
+name|lfs_getattr
 argument_list|(
 argument|vp
 argument_list|,
@@ -1095,7 +1100,7 @@ comment|/*  * Set attribute vnode op. called from several syscalls  */
 end_comment
 
 begin_expr_stmt
-name|ufs_setattr
+name|lfs_setattr
 argument_list|(
 name|vp
 argument_list|,
@@ -1559,39 +1564,32 @@ begin_comment
 comment|/*  * Change the mode on a file.  * Inode must be locked before calling.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|int
 name|chmod1
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|mode
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1751,52 +1749,42 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Perform chown operation on inode ip;  * inode must be locked prior to call.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|int
 name|chown1
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|uid
-argument_list|,
+parameter_list|,
 name|gid
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|uid_t
 name|uid
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|gid_t
 name|gid
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2470,7 +2458,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Vnode op for reading.  */
@@ -2481,7 +2469,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_read
+name|lfs_read
 argument_list|(
 argument|vp
 argument_list|,
@@ -2932,7 +2920,7 @@ comment|/*  * Vnode op for writing.  */
 end_comment
 
 begin_expr_stmt
-name|ufs_write
+name|lfs_write
 argument_list|(
 name|vp
 argument_list|,
@@ -3548,7 +3536,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_ioctl
+name|lfs_ioctl
 argument_list|(
 argument|vp
 argument_list|,
@@ -3621,7 +3609,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_select
+name|lfs_select
 argument_list|(
 argument|vp
 argument_list|,
@@ -3687,7 +3675,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_mmap
+name|lfs_mmap
 argument_list|(
 argument|vp
 argument_list|,
@@ -3748,7 +3736,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_fsync
+name|lfs_fsync
 argument_list|(
 argument|vp
 argument_list|,
@@ -3865,7 +3853,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_seek
+name|lfs_seek
 argument_list|(
 argument|vp
 argument_list|,
@@ -3916,7 +3904,7 @@ comment|/*  * ufs remove  * Hard to avoid races here, especially  * in unlinking
 end_comment
 
 begin_macro
-name|ufs_remove
+name|lfs_remove
 argument_list|(
 argument|ndp
 argument_list|,
@@ -4035,7 +4023,7 @@ comment|/*  * link vnode call  */
 end_comment
 
 begin_expr_stmt
-name|ufs_link
+name|lfs_link
 argument_list|(
 name|vp
 argument_list|,
@@ -4246,7 +4234,7 @@ comment|/*  * Rename system call.  * 	rename("foo", "bar");  * is essentially  *
 end_comment
 
 begin_expr_stmt
-name|ufs_rename
+name|lfs_rename
 argument_list|(
 name|fndp
 argument_list|,
@@ -5664,7 +5652,7 @@ comment|/*  * Mkdir system call  */
 end_comment
 
 begin_macro
-name|ufs_mkdir
+name|lfs_mkdir
 argument_list|(
 argument|ndp
 argument_list|,
@@ -6240,7 +6228,7 @@ comment|/*  * Rmdir system call.  */
 end_comment
 
 begin_expr_stmt
-name|ufs_rmdir
+name|lfs_rmdir
 argument_list|(
 name|ndp
 argument_list|,
@@ -6458,7 +6446,7 @@ comment|/*  * symlink -- make a symbolic link  */
 end_comment
 
 begin_macro
-name|ufs_symlink
+name|lfs_symlink
 argument_list|(
 argument|ndp
 argument_list|,
@@ -6599,7 +6587,7 @@ comment|/*  * Vnode op for read and write  */
 end_comment
 
 begin_macro
-name|ufs_readdir
+name|lfs_readdir
 argument_list|(
 argument|vp
 argument_list|,
@@ -6772,7 +6760,7 @@ comment|/*  * Return target name of a symbolic link  */
 end_comment
 
 begin_macro
-name|ufs_readlink
+name|lfs_readlink
 argument_list|(
 argument|vp
 argument_list|,
@@ -6834,7 +6822,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ufs_abortop
+name|lfs_abortop
 argument_list|(
 argument|ndp
 argument_list|)
@@ -6888,7 +6876,7 @@ comment|/*  * Lock an inode.  */
 end_comment
 
 begin_macro
-name|ufs_lock
+name|lfs_lock
 argument_list|(
 argument|vp
 argument_list|)
@@ -6933,7 +6921,7 @@ comment|/*  * Unlock an inode.  */
 end_comment
 
 begin_macro
-name|ufs_unlock
+name|lfs_unlock
 argument_list|(
 argument|vp
 argument_list|)
@@ -6994,7 +6982,7 @@ comment|/*  * Check for a locked inode.  */
 end_comment
 
 begin_macro
-name|ufs_islocked
+name|lfs_islocked
 argument_list|(
 argument|vp
 argument_list|)
@@ -7039,7 +7027,7 @@ comment|/*  * Get access to bmap  */
 end_comment
 
 begin_macro
-name|ufs_bmap
+name|lfs_bmap
 argument_list|(
 argument|vp
 argument_list|,
@@ -7145,7 +7133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|ufs_strategy
+name|lfs_strategy
 argument_list|(
 name|bp
 argument_list|)
@@ -7510,7 +7498,7 @@ comment|/*  * Print out the contents of an inode.  */
 end_comment
 
 begin_macro
-name|ufs_print
+name|lfs_print
 argument_list|(
 argument|vp
 argument_list|)
@@ -7638,578 +7626,35 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Read wrapper for special devices.  */
-end_comment
-
-begin_macro
-name|ufsspec_read
-argument_list|(
-argument|vp
-argument_list|,
-argument|uio
-argument_list|,
-argument|ioflag
-argument_list|,
-argument|cred
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ioflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-comment|/* 	 * Set access flag. 	 */
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-operator|->
-name|i_flag
-operator||=
-name|IACC
-expr_stmt|;
-return|return
-operator|(
-name|spec_read
-argument_list|(
-name|vp
-argument_list|,
-name|uio
-argument_list|,
-name|ioflag
-argument_list|,
-name|cred
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Write wrapper for special devices.  */
-end_comment
-
-begin_macro
-name|ufsspec_write
-argument_list|(
-argument|vp
-argument_list|,
-argument|uio
-argument_list|,
-argument|ioflag
-argument_list|,
-argument|cred
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ioflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-comment|/* 	 * Set update and change flags. 	 */
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-operator|->
-name|i_flag
-operator||=
-name|IUPD
-operator||
-name|ICHG
-expr_stmt|;
-return|return
-operator|(
-name|spec_write
-argument_list|(
-name|vp
-argument_list|,
-name|uio
-argument_list|,
-name|ioflag
-argument_list|,
-name|cred
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Close wrapper for special devices.  *  * Update the times on the inode then do device close.  */
-end_comment
-
-begin_macro
-name|ufsspec_close
-argument_list|(
-argument|vp
-argument_list|,
-argument|fflag
-argument_list|,
-argument|cred
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
-init|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_usecount
-operator|>
-literal|1
-operator|&&
-operator|!
-operator|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-name|ILOCKED
-operator|)
-condition|)
-name|ITIMES
-argument_list|(
-name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|spec_close
-argument_list|(
-name|vp
-argument_list|,
-name|fflag
-argument_list|,
-name|cred
-argument_list|,
-name|p
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FIFO
-end_ifdef
-
-begin_comment
-comment|/*  * Read wrapper for fifo's  */
-end_comment
-
-begin_macro
-name|ufsfifo_read
-argument_list|(
-argument|vp
-argument_list|,
-argument|uio
-argument_list|,
-argument|ioflag
-argument_list|,
-argument|cred
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ioflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-comment|/* 	 * Set access flag. 	 */
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-operator|->
-name|i_flag
-operator||=
-name|IACC
-expr_stmt|;
-return|return
-operator|(
-name|fifo_read
-argument_list|(
-name|vp
-argument_list|,
-name|uio
-argument_list|,
-name|ioflag
-argument_list|,
-name|cred
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Write wrapper for fifo's.  */
-end_comment
-
-begin_macro
-name|ufsfifo_write
-argument_list|(
-argument|vp
-argument_list|,
-argument|uio
-argument_list|,
-argument|ioflag
-argument_list|,
-argument|cred
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ioflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-comment|/* 	 * Set update and change flags. 	 */
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-operator|->
-name|i_flag
-operator||=
-name|IUPD
-operator||
-name|ICHG
-expr_stmt|;
-return|return
-operator|(
-name|fifo_write
-argument_list|(
-name|vp
-argument_list|,
-name|uio
-argument_list|,
-name|ioflag
-argument_list|,
-name|cred
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Close wrapper for fifo's.  *  * Update the times on the inode then do device close.  */
-end_comment
-
-begin_macro
-name|ufsfifo_close
-argument_list|(
-argument|vp
-argument_list|,
-argument|fflag
-argument_list|,
-argument|cred
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
-init|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_usecount
-operator|>
-literal|1
-operator|&&
-operator|!
-operator|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-name|ILOCKED
-operator|)
-condition|)
-name|ITIMES
-argument_list|(
-name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|fifo_close
-argument_list|(
-name|vp
-argument_list|,
-name|fflag
-argument_list|,
-name|cred
-argument_list|,
-name|p
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FIFO */
-end_comment
-
-begin_comment
 comment|/*  * Allocate a new inode.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|maknode
-argument_list|(
-argument|mode
-argument_list|,
-argument|ndp
-argument_list|,
-argument|ipp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mode
+parameter_list|,
+name|ndp
+parameter_list|,
+name|ipp
+parameter_list|)
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|nameidata
 modifier|*
 name|ndp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|inode
 modifier|*
 modifier|*
 name|ipp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -8625,14 +8070,14 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Advisory record locking support  */
 end_comment
 
 begin_macro
-name|ufs_advlock
+name|lfs_advlock
 argument_list|(
 argument|vp
 argument_list|,
@@ -8981,13 +8426,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Global vfs data structures for ufs  */
+comment|/*  * Global vfs data structures for lfs  */
 end_comment
 
 begin_decl_stmt
 name|struct
 name|vnodeops
-name|ufs_vnodeops
+name|lfs_vnodeops
 init|=
 block|{
 name|ufs_lookup
@@ -9090,312 +8535,6 @@ name|ufs_advlock
 block|,
 comment|/* advlock */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|vnodeops
-name|spec_inodeops
-init|=
-block|{
-name|spec_lookup
-block|,
-comment|/* lookup */
-name|spec_create
-block|,
-comment|/* create */
-name|spec_mknod
-block|,
-comment|/* mknod */
-name|spec_open
-block|,
-comment|/* open */
-name|ufsspec_close
-block|,
-comment|/* close */
-name|ufs_access
-block|,
-comment|/* access */
-name|ufs_getattr
-block|,
-comment|/* getattr */
-name|ufs_setattr
-block|,
-comment|/* setattr */
-name|ufsspec_read
-block|,
-comment|/* read */
-name|ufsspec_write
-block|,
-comment|/* write */
-name|spec_ioctl
-block|,
-comment|/* ioctl */
-name|spec_select
-block|,
-comment|/* select */
-name|spec_mmap
-block|,
-comment|/* mmap */
-name|spec_fsync
-block|,
-comment|/* fsync */
-name|spec_seek
-block|,
-comment|/* seek */
-name|spec_remove
-block|,
-comment|/* remove */
-name|spec_link
-block|,
-comment|/* link */
-name|spec_rename
-block|,
-comment|/* rename */
-name|spec_mkdir
-block|,
-comment|/* mkdir */
-name|spec_rmdir
-block|,
-comment|/* rmdir */
-name|spec_symlink
-block|,
-comment|/* symlink */
-name|spec_readdir
-block|,
-comment|/* readdir */
-name|spec_readlink
-block|,
-comment|/* readlink */
-name|spec_abortop
-block|,
-comment|/* abortop */
-name|ufs_inactive
-block|,
-comment|/* inactive */
-name|ufs_reclaim
-block|,
-comment|/* reclaim */
-name|ufs_lock
-block|,
-comment|/* lock */
-name|ufs_unlock
-block|,
-comment|/* unlock */
-name|spec_bmap
-block|,
-comment|/* bmap */
-name|spec_strategy
-block|,
-comment|/* strategy */
-name|ufs_print
-block|,
-comment|/* print */
-name|ufs_islocked
-block|,
-comment|/* islocked */
-name|spec_advlock
-block|,
-comment|/* advlock */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FIFO
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|vnodeops
-name|fifo_inodeops
-init|=
-block|{
-name|fifo_lookup
-block|,
-comment|/* lookup */
-name|fifo_create
-block|,
-comment|/* create */
-name|fifo_mknod
-block|,
-comment|/* mknod */
-name|fifo_open
-block|,
-comment|/* open */
-name|ufsfifo_close
-block|,
-comment|/* close */
-name|ufs_access
-block|,
-comment|/* access */
-name|ufs_getattr
-block|,
-comment|/* getattr */
-name|ufs_setattr
-block|,
-comment|/* setattr */
-name|ufsfifo_read
-block|,
-comment|/* read */
-name|ufsfifo_write
-block|,
-comment|/* write */
-name|fifo_ioctl
-block|,
-comment|/* ioctl */
-name|fifo_select
-block|,
-comment|/* select */
-name|fifo_mmap
-block|,
-comment|/* mmap */
-name|fifo_fsync
-block|,
-comment|/* fsync */
-name|fifo_seek
-block|,
-comment|/* seek */
-name|fifo_remove
-block|,
-comment|/* remove */
-name|fifo_link
-block|,
-comment|/* link */
-name|fifo_rename
-block|,
-comment|/* rename */
-name|fifo_mkdir
-block|,
-comment|/* mkdir */
-name|fifo_rmdir
-block|,
-comment|/* rmdir */
-name|fifo_symlink
-block|,
-comment|/* symlink */
-name|fifo_readdir
-block|,
-comment|/* readdir */
-name|fifo_readlink
-block|,
-comment|/* readlink */
-name|fifo_abortop
-block|,
-comment|/* abortop */
-name|ufs_inactive
-block|,
-comment|/* inactive */
-name|ufs_reclaim
-block|,
-comment|/* reclaim */
-name|ufs_lock
-block|,
-comment|/* lock */
-name|ufs_unlock
-block|,
-comment|/* unlock */
-name|fifo_bmap
-block|,
-comment|/* bmap */
-name|fifo_strategy
-block|,
-comment|/* strategy */
-name|ufs_print
-block|,
-comment|/* print */
-name|ufs_islocked
-block|,
-comment|/* islocked */
-name|fifo_advlock
-block|,
-comment|/* advlock */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FIFO */
-end_comment
-
-begin_decl_stmt
-name|enum
-name|vtype
-name|iftovt_tab
-index|[
-literal|16
-index|]
-init|=
-block|{
-name|VNON
-block|,
-name|VFIFO
-block|,
-name|VCHR
-block|,
-name|VNON
-block|,
-name|VDIR
-block|,
-name|VNON
-block|,
-name|VBLK
-block|,
-name|VNON
-block|,
-name|VREG
-block|,
-name|VNON
-block|,
-name|VLNK
-block|,
-name|VNON
-block|,
-name|VSOCK
-block|,
-name|VNON
-block|,
-name|VNON
-block|,
-name|VBAD
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vttoif_tab
-index|[
-literal|9
-index|]
-init|=
-block|{
-literal|0
-block|,
-name|IFREG
-block|,
-name|IFDIR
-block|,
-name|IFBLK
-block|,
-name|IFCHR
-block|,
-name|IFLNK
-block|,
-name|IFSOCK
-block|,
-name|IFIFO
-block|,
-name|IFMT
-block|, }
 decl_stmt|;
 end_decl_stmt
 
