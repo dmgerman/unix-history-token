@@ -5778,7 +5778,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/* 			 * If this packet is too small for the chip's minimum, 			 * break out to to cluster it. 			 */
+comment|/* 			 * If this packet is too small for the chip's minimum, 			 * break out to cluster it. 			 */
 if|if
 condition|(
 name|m
