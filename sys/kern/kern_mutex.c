@@ -1738,7 +1738,7 @@ condition|(
 name|i
 operator|++
 operator|<
-literal|1000000
+literal|10000000
 condition|)
 continue|continue;
 if|if
@@ -1746,7 +1746,7 @@ condition|(
 name|i
 operator|++
 operator|<
-literal|6000000
+literal|60000000
 condition|)
 name|DELAY
 argument_list|(
