@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sep
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: aha1542.c,v $  * Revision 1.4  1993/08/06  11:58:59  rgrimes  * Fixed **probing for scsi devices** message to have a controller and unit  * message on the begining of it:  * aha0: **probing for scsi devices**  *  * Revision 1.3  1993/07/29  11:55:31  nate  * Syncing our sources back with Julian's, and removing PATCHKIT headers.  *  * Large Bustek changes, most everything else is minimal.  *  * Revision 1.2  1993/07/15  17:52:58  davidg  * Modified attach printf's so that the output is compatible with the "new"  * way of doing things. There still remain several drivers that need to  * be updated.  Also added a compile-time option to pccons to switch the  * control and caps-lock keys (REVERSE_CAPS_CTRL) - added for my personal  * sanity.  *  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.3  93/05/22  16:51:18  julian  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  julian  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  julian  * Initial revision  *   * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
+comment|/*  * HISTORY  * $Log:	aha1542.c,v $  * Revision 1.4  93/08/07  13:17:25  julian  * replaced private timeout stuff with system timeout calls  *   * Revision 1.3  93/05/22  16:51:18  root  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  root  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  root  * Initial revision  *   * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
 end_comment
 
 begin_comment
@@ -276,6 +276,13 @@ endif|#
 directive|endif
 endif|__386BSD__
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|hz
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1064,19 +1071,6 @@ modifier|*
 name|mbx
 decl_stmt|;
 comment|/* pointer to mail box */
-name|long
-name|int
-name|delta
-decl_stmt|;
-comment|/* difference from previous*/
-name|struct
-name|aha_ccb
-modifier|*
-name|later
-decl_stmt|,
-modifier|*
-name|sooner
-decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
@@ -1095,49 +1089,6 @@ value|2
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-name|struct
-name|aha_ccb
-modifier|*
-name|aha_soonest
-init|=
-operator|(
-expr|struct
-name|aha_ccb
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|aha_ccb
-modifier|*
-name|aha_latest
-init|=
-operator|(
-expr|struct
-name|aha_ccb
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|int
-name|aha_furtherest
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* longest time in the timeout queue */
-end_comment
 
 begin_comment
 comment|/*  * opcode fields  */
@@ -1773,13 +1724,28 @@ directive|endif
 endif|OSF
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AHADEBUG
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|aha_debug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*AHADEBUG*/
+end_comment
 
 begin_decl_stmt
 name|int
@@ -2690,6 +2656,11 @@ comment|/* !defined(OSF) */
 ifdef|#
 directive|ifdef
 name|__386BSD__
+name|printf
+argument_list|(
+literal|"\n  **"
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 else|__386BSD__
@@ -2753,9 +2724,7 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|"aha%d: **probing for scsi devices**\n"
-argument_list|,
-name|unit
+literal|" probing for scsi devices**\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2791,19 +2760,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(OSF) */
-if|if
-condition|(
-operator|!
-name|unit
-condition|)
-comment|/* only one for all boards */
-block|{
-name|aha_timeout
+ifdef|#
+directive|ifdef
+name|__386BSD__
+name|printf
 argument_list|(
-literal|0
+literal|"aha%d"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
+endif|__386BSD__
 return|return;
 block|}
 end_block
@@ -2857,6 +2826,9 @@ decl_stmt|;
 specifier|register
 name|i
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -2868,6 +2840,9 @@ argument_list|(
 literal|"ahaintr "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 comment|/***********************************************\ 	* First acknowlege the interrupt, Then if it's	* 	* not telling about a completed operation	* 	* just return. 					* 	\***********************************************/
 name|stat
 operator|=
@@ -2883,6 +2858,9 @@ argument_list|,
 name|AHA_IRST
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -2894,6 +2872,9 @@ argument_list|(
 literal|"int "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 if|if
 condition|(
 operator|!
@@ -2908,6 +2889,9 @@ operator|(
 literal|1
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -2919,6 +2903,9 @@ argument_list|(
 literal|"b "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 if|#
 directive|if
 name|defined
@@ -3031,6 +3018,9 @@ block|{
 case|case
 name|AHA_MBI_ABORT
 case|:
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|aha_debug
@@ -3040,6 +3030,9 @@ argument_list|(
 literal|"abort"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 name|ccb
 operator|->
 name|host_stat
@@ -3059,6 +3052,9 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|aha_debug
@@ -3068,6 +3064,9 @@ argument_list|(
 literal|"unknown ccb for abort "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 comment|/* may have missed it */
 comment|/* no such ccb known for abort */
 case|case
@@ -3081,6 +3080,9 @@ literal|"Impossible mbxi status"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|aha_debug
@@ -3169,14 +3171,19 @@ name|ccb
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 block|}
 if|if
 condition|(
 name|ccb
 condition|)
 block|{
-name|aha_remove_timeout
+name|untimeout
 argument_list|(
+name|aha_timeout
+argument_list|,
 name|ccb
 argument_list|)
 expr_stmt|;
@@ -3241,6 +3248,9 @@ name|unsigned
 name|int
 name|opri
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -3256,6 +3266,9 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 if|if
 condition|(
 operator|!
@@ -3292,28 +3305,6 @@ name|flags
 operator|=
 name|CCB_FREE
 expr_stmt|;
-if|if
-condition|(
-name|ccb
-operator|->
-name|sooner
-operator|||
-name|ccb
-operator|->
-name|later
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"yikes, still in timeout queue\n"
-argument_list|)
-expr_stmt|;
-name|aha_remove_timeout
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
-block|}
 comment|/***********************************************\ 	* If there were none, wake abybody waiting for	* 	* one to come free, starting with queued entries* 	\***********************************************/
 if|if
 condition|(
@@ -3373,6 +3364,9 @@ name|aha_ccb
 modifier|*
 name|rc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -3388,6 +3382,9 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 if|if
 condition|(
 operator|!
@@ -3525,6 +3522,9 @@ name|ccb
 operator|->
 name|xfer
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -3536,6 +3536,9 @@ argument_list|(
 literal|"aha_done "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 comment|/***********************************************\ 	* Otherwise, put the results of the operation	* 	* into the xfer and call whoever started it	* 	\***********************************************/
 if|if
 condition|(
@@ -3657,6 +3660,9 @@ name|error
 operator|=
 name|XS_DRIVER_STUFFUP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|aha_debug
@@ -3674,6 +3680,9 @@ name|host_stat
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 block|}
 block|}
 else|else
@@ -3713,6 +3722,9 @@ name|XS_BUSY
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|aha_debug
@@ -3730,6 +3742,9 @@ name|target_stat
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 name|xs
 operator|->
 name|error
@@ -3879,6 +3894,9 @@ operator|>=
 name|AHA_RESET_TIMEOUT
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|aha_debug
@@ -3888,6 +3906,9 @@ argument_list|(
 literal|"aha_init: No answer from adaptec board\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 return|return
 operator|(
 name|ENXIO
@@ -3898,6 +3919,13 @@ comment|/***********************************************\ 	* Assume we have a bo
 ifdef|#
 directive|ifdef
 name|__386BSD__
+name|printf
+argument_list|(
+literal|"aha%d reading board settings, "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|PRNT
@@ -3924,12 +3952,6 @@ value|printf(x)
 endif|#
 directive|endif
 endif|__386BSD__
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-comment|/* for Bustek 545 */
 name|aha_cmd
 argument_list|(
 name|unit
@@ -4540,6 +4562,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -4551,6 +4576,9 @@ argument_list|(
 literal|"aha_scsi_cmd "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 comment|/***********************************************\ 	* get a ccb (mbox-out) to use. If the transfer	* 	* is from a buf (possibly from interrupt time)	* 	* then we can't allow it to sleep		* 	\***********************************************/
 name|flags
 operator|=
@@ -4869,6 +4897,9 @@ name|seg_len
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -4888,6 +4919,9 @@ operator|->
 name|iov_base
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 name|sg
 operator|++
 expr_stmt|;
@@ -4905,6 +4939,9 @@ block|}
 else|else
 block|{
 comment|/***********************************************\ 			* Set up the scatter gather block		* 			\***********************************************/
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -4924,6 +4961,9 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 name|datalen
 operator|=
 name|xs
@@ -4976,6 +5016,9 @@ name|seg_addr
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -4989,6 +5032,9 @@ argument_list|,
 name|thisphys
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 comment|/* do it at least once */
 name|nextphys
 operator|=
@@ -5081,6 +5127,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/***************************************\ 				* next page isn't contiguous, finish the seg* 				\***************************************/
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -5094,6 +5143,9 @@ argument_list|,
 name|bytes_this_seg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 name|lto3b
 argument_list|(
 name|bytes_this_seg
@@ -5129,6 +5181,9 @@ operator|->
 name|data_length
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -5140,6 +5195,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 if|if
 condition|(
 name|datalen
@@ -5234,6 +5292,9 @@ operator|->
 name|scsi_cmd_length
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -5334,6 +5395,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 if|if
 condition|(
 operator|!
@@ -5350,13 +5414,21 @@ name|splbio
 argument_list|()
 expr_stmt|;
 comment|/* stop instant timeouts */
-name|aha_add_timeout
+name|timeout
 argument_list|(
+name|aha_timeout
+argument_list|,
 name|ccb
 argument_list|,
+operator|(
 name|xs
 operator|->
 name|timeout
+operator|*
+name|hz
+operator|)
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 name|aha_startmbx
@@ -5372,6 +5444,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -5383,6 +5458,9 @@ argument_list|(
 literal|"sent "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 return|return
 operator|(
 name|SUCCESSFULLY_QUEUED
@@ -5396,6 +5474,9 @@ operator|->
 name|mbx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -5407,6 +5488,9 @@ argument_list|(
 literal|"cmd_sent, waiting "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*AHADEBUG*/
 comment|/***********************************************\ 	* If we can't use interrupts, poll on completion* 	\***********************************************/
 block|{
 name|int
@@ -5838,7 +5922,13 @@ name|speed
 operator|++
 expr_stmt|;
 block|}
-comment|/* XXX			printf("%d nSEC ok, use ",retval); */
+name|printf
+argument_list|(
+literal|"%d nSEC ok, use "
+argument_list|,
+name|retval
+argument_list|)
+expr_stmt|;
 name|retval2
 operator|=
 name|aha_bus_speed_check
@@ -5856,7 +5946,11 @@ name|HAD_ERROR
 condition|)
 comment|/* retval is slowest already */
 block|{
-comment|/* XXX				printf("marginal "); */
+name|printf
+argument_list|(
+literal|"marginal "
+argument_list|)
+expr_stmt|;
 name|retval2
 operator|=
 name|retval
@@ -5867,7 +5961,13 @@ condition|(
 name|retval2
 condition|)
 block|{
-comment|/* XXX				printf("%d nSEC ",retval2); */
+name|printf
+argument_list|(
+literal|"%d nSEC "
+argument_list|,
+name|retval2
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|retval2
@@ -5876,7 +5976,13 @@ return|;
 block|}
 else|else
 block|{
-comment|/* XXX				printf(".. slower failed, abort.\n",retval); */
+name|printf
+argument_list|(
+literal|".. slower failed, abort.\n"
+argument_list|,
+name|retval
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6161,392 +6267,15 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  *                +----------+    +----------+    +----------+  * aha_soonest--->|    later |--->|     later|--->|     later|-->0  *                | [Delta]  |    | [Delta]  |    | [Delta]  |  *           0<---|sooner    |<---|sooner    |<---|sooner    |<---aha_latest  *                +----------+    +----------+    +----------+  *  *     aha_furtherest = sum(Delta[1..n])  */
-end_comment
-
-begin_macro
-name|aha_add_timeout
-argument_list|(
-argument|ccb
-argument_list|,
-argument|time
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|aha_ccb
-modifier|*
-name|ccb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|time
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|timeprev
-decl_stmt|;
-name|struct
-name|aha_ccb
-modifier|*
-name|prev
-decl_stmt|;
-name|int
-name|s
-init|=
-name|splbio
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|prev
-operator|=
-name|aha_latest
-condition|)
-comment|/* yes, an assign */
-block|{
-name|timeprev
-operator|=
-name|aha_furtherest
-expr_stmt|;
-block|}
-else|else
-block|{
-name|timeprev
-operator|=
-literal|0
-expr_stmt|;
-block|}
-while|while
-condition|(
-name|prev
-operator|&&
-operator|(
-name|timeprev
-operator|>
-name|time
-operator|)
-condition|)
-block|{
-name|timeprev
-operator|-=
-name|prev
-operator|->
-name|delta
-expr_stmt|;
-name|prev
-operator|=
-name|prev
-operator|->
-name|sooner
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|prev
-condition|)
-block|{
-name|ccb
-operator|->
-name|delta
-operator|=
-name|time
-operator|-
-name|timeprev
-expr_stmt|;
-if|if
-condition|(
-name|ccb
-operator|->
-name|later
-operator|=
-name|prev
-operator|->
-name|later
-condition|)
-comment|/* yes an assign */
-block|{
-name|ccb
-operator|->
-name|later
-operator|->
-name|sooner
-operator|=
-name|ccb
-expr_stmt|;
-name|ccb
-operator|->
-name|later
-operator|->
-name|delta
-operator|-=
-name|ccb
-operator|->
-name|delta
-expr_stmt|;
-block|}
-else|else
-block|{
-name|aha_furtherest
-operator|=
-name|time
-expr_stmt|;
-name|aha_latest
-operator|=
-name|ccb
-expr_stmt|;
-block|}
-name|ccb
-operator|->
-name|sooner
-operator|=
-name|prev
-expr_stmt|;
-name|prev
-operator|->
-name|later
-operator|=
-name|ccb
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|ccb
-operator|->
-name|later
-operator|=
-name|aha_soonest
-condition|)
-comment|/* yes, an assign*/
-block|{
-name|ccb
-operator|->
-name|later
-operator|->
-name|sooner
-operator|=
-name|ccb
-expr_stmt|;
-name|ccb
-operator|->
-name|later
-operator|->
-name|delta
-operator|-=
-name|time
-expr_stmt|;
-block|}
-else|else
-block|{
-name|aha_furtherest
-operator|=
-name|time
-expr_stmt|;
-name|aha_latest
-operator|=
-name|ccb
-expr_stmt|;
-block|}
-name|ccb
-operator|->
-name|delta
-operator|=
-name|time
-expr_stmt|;
-name|ccb
-operator|->
-name|sooner
-operator|=
-operator|(
-expr|struct
-name|aha_ccb
-operator|*
-operator|)
-literal|0
-expr_stmt|;
-name|aha_soonest
-operator|=
-name|ccb
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|aha_remove_timeout
-argument_list|(
-argument|ccb
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|aha_ccb
-modifier|*
-name|ccb
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|s
-init|=
-name|splbio
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|ccb
-operator|->
-name|sooner
-condition|)
-block|{
-name|ccb
-operator|->
-name|sooner
-operator|->
-name|later
-operator|=
-name|ccb
-operator|->
-name|later
-expr_stmt|;
-block|}
-else|else
-block|{
-name|aha_soonest
-operator|=
-name|ccb
-operator|->
-name|later
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ccb
-operator|->
-name|later
-condition|)
-block|{
-name|ccb
-operator|->
-name|later
-operator|->
-name|sooner
-operator|=
-name|ccb
-operator|->
-name|sooner
-expr_stmt|;
-name|ccb
-operator|->
-name|later
-operator|->
-name|delta
-operator|+=
-name|ccb
-operator|->
-name|delta
-expr_stmt|;
-block|}
-else|else
-block|{
-name|aha_latest
-operator|=
-name|ccb
-operator|->
-name|sooner
-expr_stmt|;
-name|aha_furtherest
-operator|-=
-name|ccb
-operator|->
-name|delta
-expr_stmt|;
-block|}
-name|ccb
-operator|->
-name|sooner
-operator|=
-name|ccb
-operator|->
-name|later
-operator|=
-operator|(
-expr|struct
-name|aha_ccb
-operator|*
-operator|)
-literal|0
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ONETICK
-value|500
-end_define
-
-begin_comment
-comment|/* milliseconds */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLEEPTIME
-value|((hz * ONETICK) / 1000)
-end_define
-
 begin_macro
 name|aha_timeout
 argument_list|(
-argument|arg
+argument|struct aha_ccb *ccb
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|int
-name|arg
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-name|struct
-name|aha_ccb
-modifier|*
-name|ccb
-decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
@@ -6556,23 +6285,6 @@ init|=
 name|splbio
 argument_list|()
 decl_stmt|;
-while|while
-condition|(
-name|ccb
-operator|=
-name|aha_soonest
-condition|)
-block|{
-if|if
-condition|(
-name|ccb
-operator|->
-name|delta
-operator|<=
-name|ONETICK
-condition|)
-comment|/***********************************************\ 		* It has timed out, we need to do some work	* 		\***********************************************/
-block|{
 name|unit
 operator|=
 name|ccb
@@ -6594,13 +6306,7 @@ operator|->
 name|targ
 argument_list|)
 expr_stmt|;
-comment|/***************************************\ 			* Unlink it from the queue		* 			\***************************************/
-name|aha_remove_timeout
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
-comment|/***************************************\ 			* If The ccb's mbx is not free, then	* 			* the board has gone south		* 			\***************************************/
+comment|/***************************************\ 	* If The ccb's mbx is not free, then	* 	* the board has gone south		* 	\***************************************/
 if|if
 condition|(
 name|ccb
@@ -6623,7 +6329,7 @@ name|Debugger
 argument_list|()
 expr_stmt|;
 block|}
-comment|/***************************************\ 			* If it has been through before, then	* 			* a previous abort has failed, don't	* 			* try abort again			* 			\***************************************/
+comment|/***************************************\ 	* If it has been through before, then	* 	* a previous abort has failed, don't	* 	* try abort again			* 	\***************************************/
 if|if
 condition|(
 name|ccb
@@ -6678,13 +6384,15 @@ name|mbx
 argument_list|)
 expr_stmt|;
 comment|/* 2 secs for the abort */
-name|aha_add_timeout
+name|timeout
 argument_list|(
+name|aha_timeout
+argument_list|,
 name|ccb
 argument_list|,
-literal|2000
-operator|+
-name|ONETICK
+literal|2
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -6694,35 +6402,9 @@ operator|=
 name|CCB_ABORTED
 expr_stmt|;
 block|}
-block|}
-else|else
-comment|/***********************************************\ 		* It has not timed out, adjust and leave	* 		\***********************************************/
-block|{
-name|ccb
-operator|->
-name|delta
-operator|-=
-name|ONETICK
-expr_stmt|;
-name|aha_furtherest
-operator|-=
-name|ONETICK
-expr_stmt|;
-break|break;
-block|}
-block|}
 name|splx
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-name|timeout
-argument_list|(
-name|aha_timeout
-argument_list|,
-name|arg
-argument_list|,
-name|SLEEPTIME
 argument_list|)
 expr_stmt|;
 block|}
