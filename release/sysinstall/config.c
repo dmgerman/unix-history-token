@@ -1697,13 +1697,14 @@ block|{
 name|Boolean
 name|name_set
 init|=
-operator|(
-name|Boolean
-operator|)
 name|variable_get
 argument_list|(
 name|VAR_NAMESERVER
 argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -2403,8 +2404,8 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Extreme security settings have been selected.\n\n"
-literal|"Sendmail, SSHd, and NFS services have been disabled, and\n"
-literal|"securelevels have been enabled.\n"
+literal|"Sendmail and sshd have been enabled, securelevels are\n"
+literal|"disabled, and NFS server settings have been left intact.\n\n"
 literal|"PLEASE NOTE that this still does not save you from having\n"
 literal|"to properly secure your system in other ways or exercise\n"
 literal|"due diligence in your administration, this simply picks\n"
@@ -2482,8 +2483,8 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Moderate security settings have been selected.\n\n"
-literal|"Sendmail and SSHd have been enabled, securelevels are\n"
-literal|"disabled, and NFS server settings have been left intact.\n"
+literal|"Sendmail, sshd, and NFS services have been disabled, and\n"
+literal|"securelevels have been enabled.\n\n"
 literal|"PLEASE NOTE that this still does not save you from having\n"
 literal|"to properly secure your system in other ways or exercise\n"
 literal|"due diligence in your administration, this simply picks\n"
