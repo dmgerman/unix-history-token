@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.86 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.87 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.86 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.87 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2282,6 +2282,11 @@ name|waitfor
 argument_list|(
 name|pid
 argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|CurChildren
+operator|++
 expr_stmt|;
 endif|#
 directive|endif

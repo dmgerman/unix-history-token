@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.123 (Berkeley) %G%"
+literal|"@(#)main.c	8.124 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6178,6 +6178,15 @@ literal|"*** $j not in $=w ***"
 argument_list|)
 expr_stmt|;
 block|}
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"CurChildren = %d"
+argument_list|,
+name|CurChildren
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
