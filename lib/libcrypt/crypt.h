@@ -58,24 +58,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-name|crypt_sha
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|pw
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|salt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|void
 name|_crypt_to64
