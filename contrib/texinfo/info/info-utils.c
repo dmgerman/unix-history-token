@@ -10,54 +10,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"info.h"
 end_include
-
-begin_comment
-comment|/* For "NULL".  Yechhh! */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_STRING_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_STRING_H */
-end_comment
 
 begin_include
 include|#
@@ -444,15 +398,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		    Finding and Building Menus			    */
+comment|/*                  Finding and Building Menus                      */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -924,7 +878,7 @@ argument_list|,
 name|refdef
 argument_list|)
 expr_stmt|;
-comment|/* When searching for menu items, if no colon, there is no 	 menu item on this line. */
+comment|/* When searching for menu items, if no colon, there is no          menu item on this line. */
 if|if
 condition|(
 name|offset
@@ -1075,7 +1029,7 @@ name|binding
 operator|->
 name|buffer
 expr_stmt|;
-comment|/* If this reference entry continues with another ':' then the 	 nodename is the same as the label. */
+comment|/* If this reference entry continues with another ':' then the          nodename is the same as the label. */
 if|if
 condition|(
 operator|*
@@ -1088,7 +1042,7 @@ name|entry
 operator|->
 name|nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|entry
 operator|->
@@ -1098,7 +1052,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This entry continues with a specific nodename.  Parse the 	     nodename from the specification. */
+comment|/* This entry continues with a specific nodename.  Parse the              nodename from the specification. */
 name|refdef
 operator|+=
 name|skip_whitespace_and_newlines
@@ -1133,7 +1087,7 @@ name|entry
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_parsed_filename
 argument_list|)
@@ -1146,7 +1100,7 @@ name|entry
 operator|->
 name|nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|info_parsed_nodename
 argument_list|)
@@ -1964,15 +1918,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		    Functions Static To This File		    */
+comment|/*                  Functions Static To This File                   */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment

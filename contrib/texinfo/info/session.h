@@ -13,20 +13,20 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|_SESSION_H_
+name|SESSION_H
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|_SESSION_H_
+name|SESSION_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"general.h"
+file|"info.h"
 end_include
 
 begin_include
@@ -118,7 +118,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Try to get first menu item, or failing that, the 			   "Next:" pointer, or failing that, the "Up:" and 			   "Next:" of the up. */
+comment|/* Try to get first menu item, or failing that, the                            "Next:" pointer, or failing that, the "Up:" and                            "Next:" of the up. */
 end_comment
 
 begin_define
@@ -694,7 +694,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SESSION_H_ */
+comment|/* SESSION_H */
 end_comment
 
 end_unit

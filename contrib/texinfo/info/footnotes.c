@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* footnotes.c -- Some functions for manipulating footnotes. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* footnotes.c -- Some functions for manipulating footnotes.    $Id: footnotes.c,v 1.4 1997/07/24 21:23:33 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -646,7 +642,7 @@ decl_stmt|,
 modifier|*
 name|win
 decl_stmt|;
-comment|/* Always make this window be the last one appearing in the list.  Find 	 the last window in the chain. */
+comment|/* Always make this window be the last one appearing in the list.  Find          the last window in the chain. */
 for|for
 control|(
 name|win
@@ -670,7 +666,7 @@ operator|->
 name|next
 control|)
 empty_stmt|;
-comment|/* Try to split this window, and make the split window the one to 	 contain the footnotes. */
+comment|/* Try to split this window, and make the split window the one to          contain the footnotes. */
 name|old_active
 operator|=
 name|active_window
@@ -708,14 +704,17 @@ argument_list|(
 name|new_footnotes
 argument_list|)
 expr_stmt|;
-comment|/* If we are hacking automatic footnotes, and there are footnotes 	     but we couldn't display them, print a message to that effect. */
+comment|/* If we are hacking automatic footnotes, and there are footnotes              but we couldn't display them, print a message to that effect. */
 if|if
 condition|(
 name|auto_footnotes_p
 condition|)
 name|inform_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Footnotes could not be displayed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -796,15 +795,14 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_show_footnotes
 argument_list|,
+argument|_(
 literal|"Show the footnotes associated with this node in another window"
+argument|)
 argument_list|)
 end_macro
 
 begin_block
 block|{
-name|int
-name|result
-decl_stmt|;
 comment|/* A negative argument means just make the window go away. */
 if|if
 condition|(
@@ -820,7 +818,7 @@ init|=
 name|find_footnotes_window
 argument_list|()
 decl_stmt|;
-comment|/* If there is an old footnotes window, and it isn't the only window 	 on the screen, delete it. */
+comment|/* If there is an old footnotes window, and it isn't the only window          on the screen, delete it. */
 if|if
 condition|(
 name|fn_win

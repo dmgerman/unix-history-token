@@ -7,26 +7,22 @@ begin_comment
 comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_INFOMAP_H_
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INFOMAP_H
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_INFOMAP_H_
+name|INFOMAP_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"general.h"
+file|"info.h"
 end_include
 
 begin_define
@@ -273,7 +269,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_INFOMAP_H_ */
+comment|/* not INFOMAP_H */
 end_comment
 
 end_unit

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* indices.c -- Commands for dealing with an Info file Index. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* indices.c -- Commands for dealing with an Info file Index.    $Id: indices.c,v 1.6 1997/07/24 21:25:53 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -244,7 +240,7 @@ name|assoc
 operator|->
 name|name
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|node
 operator|->
@@ -516,6 +512,7 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|tag
 operator|=
 name|file_buffer
@@ -524,6 +521,7 @@ name|tags
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++
@@ -576,7 +574,7 @@ continue|continue;
 comment|/* Remember the filename and nodename of this index. */
 name|initial_index_filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|file_buffer
 operator|->
@@ -585,7 +583,7 @@ argument_list|)
 expr_stmt|;
 name|initial_index_nodename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|tag
 operator|->
@@ -599,7 +597,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* If we have a menu, add this index's nodename and range 		 to our list of index_nodenames. */
+comment|/* If we have a menu, add this index's nodename and range                  to our list of index_nodenames. */
 if|if
 condition|(
 name|menu
@@ -665,7 +663,7 @@ index|]
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|file_buffer
 operator|->
@@ -685,11 +683,51 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_index_search
 argument_list|,
+argument|_(
 literal|"Look up a string in the index for this file"
+argument|)
 argument_list|)
 end_macro
 
 begin_block
+block|{
+name|do_info_index_search
+argument_list|(
+name|window
+argument_list|,
+name|count
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/* Look up SEARCH_STRING in the index for this file.  If SEARCH_STRING    is NULL, prompt user for input.  */
+end_comment
+
+begin_function
+name|void
+name|do_info_index_search
+parameter_list|(
+name|window
+parameter_list|,
+name|count
+parameter_list|,
+name|search_string
+parameter_list|)
+name|WINDOW
+modifier|*
+name|window
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+name|char
+modifier|*
+name|search_string
+decl_stmt|;
 block|{
 name|FILE_BUFFER
 modifier|*
@@ -752,7 +790,10 @@ argument_list|)
 expr_stmt|;
 name|window_message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Finding index entries..."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|index_index
@@ -772,19 +813,41 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No indices found."
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Okay, there is an index.  Let the user select one of the members of it. */
+comment|/* Okay, there is an index.  Look for SEARCH_STRING, or, if it is      empty, prompt for one.  */
+if|if
+condition|(
+name|search_string
+operator|&&
+operator|*
+name|search_string
+condition|)
+name|line
+operator|=
+name|xstrdup
+argument_list|(
+name|search_string
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|line
 operator|=
 name|info_read_maybe_completing
 argument_list|(
 name|window
 argument_list|,
+name|_
+argument_list|(
 literal|"Index entry: "
+argument_list|)
 argument_list|,
 name|index_index
 argument_list|)
@@ -869,6 +932,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+block|}
 comment|/* The user typed either a completed index label, or a partial string.      Find an exact match, or, failing that, the first index entry containing      the partial string.  So, we just call info_next_index_match () with minor      manipulation of INDEX_OFFSET. */
 block|{
 name|int
@@ -944,14 +1008,252 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
+
+begin_function
+name|int
+name|index_entry_exists
+parameter_list|(
+name|window
+parameter_list|,
+name|string
+parameter_list|)
+name|WINDOW
+modifier|*
+name|window
+decl_stmt|;
+name|char
+modifier|*
+name|string
+decl_stmt|;
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|FILE_BUFFER
+modifier|*
+name|fb
+decl_stmt|;
+comment|/* If there is no previous search string, the user hasn't built an index      yet. */
+if|if
+condition|(
+operator|!
+name|string
+condition|)
+return|return
+literal|0
+return|;
+name|fb
+operator|=
+name|file_buffer_of_window
+argument_list|(
+name|window
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|initial_index_filename
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|initial_index_filename
+argument_list|,
+name|fb
+operator|->
+name|filename
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|info_free_references
+argument_list|(
+name|index_index
+argument_list|)
+expr_stmt|;
+name|index_index
+operator|=
+name|info_indices_of_file_buffer
+argument_list|(
+name|fb
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* If there is no index, that is an error. */
+if|if
+condition|(
+operator|!
+name|index_index
+condition|)
+return|return
+literal|0
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+operator|(
+name|i
+operator|>
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|index_index
+index|[
+name|i
+index|]
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|string
+argument_list|,
+name|index_index
+index|[
+name|i
+index|]
+operator|->
+name|label
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* If that failed, look for the next substring match. */
+if|if
+condition|(
+operator|(
+name|i
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+operator|!
+name|index_index
+index|[
+name|i
+index|]
+operator|)
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+operator|(
+name|i
+operator|>
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|index_index
+index|[
+name|i
+index|]
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|string_in_line
+argument_list|(
+name|string
+argument_list|,
+name|index_index
+index|[
+name|i
+index|]
+operator|->
+name|label
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|i
+operator|>
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|index_index
+index|[
+name|i
+index|]
+operator|)
+condition|)
+name|string_in_line
+argument_list|(
+name|string
+argument_list|,
+name|index_index
+index|[
+name|i
+index|]
+operator|->
+name|label
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* If that failed, return 0. */
+if|if
+condition|(
+operator|(
+name|i
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+operator|!
+name|index_index
+index|[
+name|i
+index|]
+operator|)
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+end_function
 
 begin_macro
 name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_next_index_match
 argument_list|,
+argument|_(
 literal|"Go to the next matching index item from the last `\\[index-search]' command"
+argument|)
 argument_list|)
 end_macro
 
@@ -979,7 +1281,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No previous index search string."
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -993,7 +1298,10 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No index entries."
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1176,13 +1484,19 @@ condition|)
 block|{
 name|info_error
 argument_list|(
+name|_
+argument_list|(
 literal|"No %sindex entries containing \"%s\"."
+argument_list|)
 argument_list|,
 name|index_offset
 operator|>
 literal|0
 condition|?
+name|_
+argument_list|(
 literal|"more "
+argument_list|)
 else|:
 literal|""
 argument_list|,
@@ -1206,7 +1520,10 @@ name|char
 modifier|*
 name|name
 init|=
+name|_
+argument_list|(
 literal|"CAN'T SEE THIS"
+argument_list|)
 decl_stmt|;
 name|char
 modifier|*
@@ -1267,7 +1584,7 @@ block|}
 comment|/* If we had a partial match, indicate to the user which part of the        string matched. */
 name|match
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|index_index
 index|[
@@ -1382,7 +1699,10 @@ name|format
 operator|=
 name|replace_in_documentation
 argument_list|(
+name|_
+argument_list|(
 literal|"Found \"%s\" in %s. (`\\[next-index-match]' tries to find next.)"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|window_message_in_echo_area
@@ -1537,15 +1857,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		   Info APROPOS: Search every known index.	    */
+comment|/*                 Info APROPOS: Search every known index.          */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
@@ -1608,11 +1928,6 @@ name|NODE
 modifier|*
 name|dir_node
 decl_stmt|;
-name|int
-name|printed
-init|=
-literal|0
-decl_stmt|;
 name|dir_node
 operator|=
 name|info_get_node
@@ -1638,7 +1953,9 @@ condition|(
 operator|!
 name|dir_menu
 condition|)
-return|return;
+return|return
+name|NULL
+return|;
 comment|/* For every menu item in DIR, get the associated node's file buffer and      read the indices of that file buffer.  Gather all of the indices into      one large one. */
 for|for
 control|(
@@ -1696,7 +2013,7 @@ name|this_item
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|dir_node
 operator|->
@@ -1708,7 +2025,7 @@ name|this_item
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|dir_node
 operator|->
@@ -1716,7 +2033,7 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Find this node.  If we cannot find it, try using the label of the 	 entry as a file (i.e., "(LABEL)Top"). */
+comment|/* Find this node.  If we cannot find it, try using the label of the          entry as a file (i.e., "(LABEL)Top"). */
 name|this_node
 operator|=
 name|info_get_node
@@ -1809,7 +2126,10 @@ name|inform
 condition|)
 name|message_in_echo_area
 argument_list|(
+name|_
+argument_list|(
 literal|"Scanning indices of \"%s\"..."
+argument_list|)
 argument_list|,
 name|files_name
 argument_list|)
@@ -1875,7 +2195,7 @@ index|]
 operator|->
 name|filename
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|this_fb
 operator|->
@@ -2034,7 +2354,7 @@ define|#
 directive|define
 name|APROPOS_NONE
 define|\
-value|"No available info files reference \"%s\" in their indices."
+value|_("No available info files reference \"%s\" in their indices.")
 end_define
 
 begin_function
@@ -2147,7 +2467,9 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_index_apropos
 argument_list|,
+argument|_(
 literal|"Grovel all known info file's indices for a string and build a menu"
+argument|)
 argument_list|)
 end_macro
 
@@ -2163,7 +2485,10 @@ name|info_read_in_echo_area
 argument_list|(
 name|window
 argument_list|,
+name|_
+argument_list|(
 literal|"Index apropos: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|window
@@ -2242,7 +2567,10 @@ argument_list|()
 expr_stmt|;
 name|printf_to_message_buffer
 argument_list|(
+name|_
+argument_list|(
 literal|"\n* Menu: Nodes whoses indices contain \"%s\":\n"
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -2355,7 +2683,7 @@ argument_list|,
 name|apropos_list_nodename
 argument_list|)
 expr_stmt|;
-comment|/* Even though this is an internal node, we don't want the window 	 system to treat it specially.  So we turn off the internalness 	 of it here. */
+comment|/* Even though this is an internal node, we don't want the window          system to treat it specially.  So we turn off the internalness          of it here. */
 name|apropos_node
 operator|->
 name|flags
@@ -2378,7 +2706,7 @@ argument_list|(
 name|window
 argument_list|)
 expr_stmt|;
-comment|/* If a window is visible and showing an apropos list already, 	   re-use it. */
+comment|/* If a window is visible and showing an apropos list already,            re-use it. */
 for|for
 control|(
 name|new
@@ -2422,7 +2750,7 @@ operator|)
 condition|)
 break|break;
 block|}
-comment|/* If we couldn't find an existing window, try to use the next window 	   in the chain. */
+comment|/* If we couldn't find an existing window, try to use the next window            in the chain. */
 if|if
 condition|(
 operator|!
@@ -2438,7 +2766,7 @@ name|window
 operator|->
 name|next
 expr_stmt|;
-comment|/* If we still don't have a window, make a new one to contain 	   the list. */
+comment|/* If we still don't have a window, make a new one to contain            the list. */
 if|if
 condition|(
 operator|!

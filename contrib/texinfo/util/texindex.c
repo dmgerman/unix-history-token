@@ -1,38 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Prepare TeX index dribble output into an actual index.    $Id: texindex.c,v 1.6 1996/10/04 18:21:30 karl Exp $     Copyright (C) 1987, 91, 92, 96 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307. */
+comment|/* Prepare TeX index dribble output into an actual index.    $Id: texindex.c,v 1.22 1998/02/22 23:00:09 karl Exp $     Copyright (C) 1987, 91, 92, 96, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307. */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"system.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<getopt.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"getopt.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|TEXINDEX_VERSION_STRING
-value|"GNU Texindex (Texinfo 3.9) 2.1"
-end_define
 
 begin_if
 if|#
@@ -81,146 +62,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_STRING_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_STRING_H */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_STRCHR
-argument_list|)
-end_if
-
-begin_function_decl
-name|char
-modifier|*
-name|strrchr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_STRCHR */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|STDC_HEADERS
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !STDC_HEADERS */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|realloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !STDC_HEADERS */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_UNISTD_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !HAVE_UNISTD_H */
-end_comment
-
-begin_function_decl
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_UNISTD_H */
-end_comment
 
 begin_if
 if|#
@@ -310,100 +151,6 @@ begin_comment
 comment|/* !VMS */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYS_FCNTL_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_FCNTL_H */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_AIX
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_VERSION
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !AIX&& _POSIX_VERSION */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_SYS_FCNTL_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_FCNTL_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_AIX&& _POSIX_VERSION */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -466,44 +213,6 @@ end_endif
 begin_comment
 comment|/* !SEEK_SET */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|errno
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|strerror
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* When sorting in core, this structure describes one line    and the position and length of its first keyfield.  */
@@ -942,7 +651,7 @@ value|500000
 end_define
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -1001,6 +710,32 @@ name|argv
 index|[
 literal|0
 index|]
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SETLOCALE
+comment|/* Set locale via LC_ALL.  */
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Set the text message domain.  */
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
 expr_stmt|;
 comment|/* Describe the kind of sorting to do. */
 comment|/* The first keyfield uses the first braced field and folds case. */
@@ -1290,6 +1025,10 @@ argument_list|(
 name|TI_NO_ERROR
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* Avoid bogus warnings.  */
 block|}
 end_function
 
@@ -1350,7 +1089,10 @@ operator|*
 operator|)
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"keep temporary files around after processing"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1369,7 +1111,10 @@ operator|*
 operator|)
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"do not keep temporary files around after processing (default)"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1387,7 +1132,10 @@ literal|0
 block|,
 literal|"FILE"
 block|,
+name|N_
+argument_list|(
 literal|"send output to FILE"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1413,7 +1161,10 @@ operator|*
 operator|)
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"display version information and exit"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1435,7 +1186,10 @@ operator|*
 operator|)
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"display this help and exit"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1497,7 +1251,10 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
+name|_
+argument_list|(
 literal|"Usage: %s [OPTION]... FILE...\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1506,7 +1263,10 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
+name|_
+argument_list|(
 literal|"Generate a sorted index for each TeX output FILE.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Avoid trigraph nonsense.  */
@@ -1514,14 +1274,20 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
+name|_
+argument_list|(
 literal|"Usually FILE... is `foo.??\' for a document `foo.texi'.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
+name|_
+argument_list|(
 literal|"\nOptions:\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1600,6 +1366,8 @@ name|f
 argument_list|,
 literal|"\t%s\n"
 argument_list|,
+name|_
+argument_list|(
 name|texindex_options
 index|[
 name|i
@@ -1607,11 +1375,15 @@ index|]
 operator|.
 name|doc_string
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 name|puts
 argument_list|(
-literal|"\nEmail bug reports to bug-texinfo@prep.ai.mit.edu."
+name|_
+argument_list|(
+literal|"\nEmail bug reports to bug-texinfo@gnu.org."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1647,9 +1419,6 @@ name|int
 name|arg_index
 init|=
 literal|1
-decl_stmt|;
-name|int
-name|optc
 decl_stmt|;
 name|char
 modifier|*
@@ -1794,14 +1563,23 @@ operator|==
 literal|0
 condition|)
 block|{
-name|puts
+name|printf
 argument_list|(
-name|TEXINDEX_VERSION_STRING
+literal|"texindex (GNU %s) %s\n"
+argument_list|,
+name|PACKAGE
+argument_list|,
+name|VERSION
 argument_list|)
 expr_stmt|;
-name|puts
+name|printf
 argument_list|(
-literal|"Copyright (C) 1996 Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING."
+name|_
+argument_list|(
+literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
+argument_list|)
+argument_list|,
+literal|"1998"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4210,7 +3988,10 @@ condition|)
 block|{
 name|error
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: not a texinfo index file"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
@@ -4275,7 +4056,7 @@ index|]
 operator|=
 name|outname
 expr_stmt|;
-comment|/* Copy lines into this temp file as long as it does not make file 	 "too big" or until there are no more lines.  */
+comment|/* Copy lines into this temp file as long as it does not make file          "too big" or until there are no more lines.  */
 while|while
 condition|(
 name|tempsize
@@ -4354,7 +4135,10 @@ condition|)
 block|{
 name|error
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: not a texinfo index file"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
@@ -4564,7 +4348,10 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"failure reopening %s"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
@@ -4644,7 +4431,10 @@ condition|)
 block|{
 name|error
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: not a texinfo index file"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
@@ -4721,7 +4511,10 @@ condition|)
 block|{
 name|error
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: not a texinfo index file"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
@@ -5410,7 +5203,7 @@ name|initial
 operator|=
 name|p
 expr_stmt|;
-comment|/* Get length of inner pair of braces starting at `p', 	 including that inner pair of braces.  */
+comment|/* Get length of inner pair of braces starting at `p',          including that inner pair of braces.  */
 name|initiallength
 operator|=
 name|find_braced_end
@@ -5591,7 +5384,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* If this primary has a different initial, include an entry for 	 the initial. */
+comment|/* If this primary has a different initial, include an entry for          the initial. */
 if|if
 condition|(
 name|initiallength
@@ -5626,13 +5419,11 @@ argument_list|,
 name|ostream
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fputs
 argument_list|(
-name|ostream
-argument_list|,
 literal|"}\n"
 argument_list|,
-name|initial
+name|ostream
 argument_list|)
 expr_stmt|;
 if|if
@@ -5786,7 +5577,10 @@ name|lastsecondary
 condition|)
 name|error
 argument_list|(
+name|_
+argument_list|(
 literal|"entry %s follows an entry with a secondary name"
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6766,7 +6560,7 @@ name|i
 expr_stmt|;
 block|}
 block|}
-comment|/* Output that line, unless it matches the previous one and we 	 don't want duplicates. */
+comment|/* Output that line, unless it matches the previous one and we          don't want duplicates. */
 if|if
 condition|(
 operator|!
@@ -6807,7 +6601,7 @@ name|prev_out
 operator|=
 name|best
 expr_stmt|;
-comment|/* Now make the line the previous of its file, and fetch a new 	 line from that file.  */
+comment|/* Now make the line the previous of its file, and fetch a new          line from that file.  */
 name|exch
 operator|=
 name|prevline
@@ -7165,7 +6959,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"%s; for file `%s'.\n"
+argument_list|)
 argument_list|,
 name|s
 argument_list|,
@@ -7452,6 +7249,53 @@ begin_comment
 comment|/* HAVE_STRCHR */
 end_comment
 
+begin_function
+name|void
+name|memory_error
+parameter_list|(
+name|callers_name
+parameter_list|,
+name|bytes_wanted
+parameter_list|)
+name|char
+modifier|*
+name|callers_name
+decl_stmt|;
+name|int
+name|bytes_wanted
+decl_stmt|;
+block|{
+name|char
+name|printable_string
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|printable_string
+argument_list|,
+name|_
+argument_list|(
+literal|"Virtual memory exhausted in %s ()!  Needed %d bytes."
+argument_list|)
+argument_list|,
+name|callers_name
+argument_list|,
+name|bytes_wanted
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+name|printable_string
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Just like malloc, but kills the program in case of fatal error. */
 end_comment
@@ -7583,58 +7427,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_macro
-name|memory_error
-argument_list|(
-argument|callers_name
-argument_list|,
-argument|bytes_wanted
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|callers_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|bytes_wanted
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|char
-name|printable_string
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|printable_string
-argument_list|,
-literal|"Virtual memory exhausted in %s ()!  Needed %d bytes."
-argument_list|,
-name|callers_name
-argument_list|,
-name|bytes_wanted
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-name|printable_string
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_block
 
 end_unit
 

@@ -7,59 +7,23 @@ begin_comment
 comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     This file has appeared in prior works by the Free Software Foundation;    thus it carries copyright dates from 1988 through 1993.     Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
-begin_comment
-comment|/* Function pointers can be declared as (Function *)foo. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FUNCTION_DEF
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TILDE_H
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__FUNCTION_DEF
+name|TILDE_H
 end_define
 
-begin_typedef
-typedef|typedef
-name|int
-name|Function
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-name|VFunction
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|CFunction
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FUNCTION_DEF */
-end_comment
+begin_include
+include|#
+directive|include
+file|"info.h"
+end_include
 
 begin_comment
 comment|/* If non-null, this contains the address of a function to call if the    standard meaning for expanding a tilde fails.  The function is called    with the text (sans tilde, as in "foo"), and returns a malloc()'ed string    which is the expansion, or a NULL pointer if there is no expansion. */
@@ -124,6 +88,15 @@ name|tilde_expand_word
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not TILDE_H */
+end_comment
 
 end_unit
 

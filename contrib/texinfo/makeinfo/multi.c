@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* multi.c -- Multitable stuff for makeinfo.    $Id: multi.c,v 1.7 1996/10/01 21:42:20 karl Exp $     Copyright (C) 1996 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* multi.c -- multitable stuff for makeinfo.    $Id: multi.c,v 1.9 1997/07/24 22:01:00 karl Exp $     Copyright (C) 1996, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"system.h"
 end_include
 
 begin_include
@@ -30,7 +30,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Output environments.  This is a hack grafted onto existing  * structure.  The "output environment" used to consist of the  * global variables `output_paragraph', `fill_column', etc.  * Routines like add_char would manipulate these variables.  *  * Now, when formatting a multitable, we maintain separate environments  * for each column.  That way we can build up the columns separately  * and write them all out at once.  The "current" output environment"  * is still kept in those global variables, so that the old output  * routines don't have to change.  But we provide routines to save  * and restore these variables in an "environment table".  The  * `select_output_environment' function switches from one output  * environment to another.  *  * Environment #0 (i.e. element #0 of the table) is the regular  * environment that is used when we're not formatting a multitable.  *  * Environment #N (where N = 1,2,3,...) is the env. for column #N of  * the table, when a multitable is active.  */
+comment|/*  * Output environments.  This is a hack grafted onto existing  * structure.  The "output environment" used to consist of the  * global variables `output_paragraph', `fill_column', etc.  * Routines like add_char would manipulate these variables.  *  * Now, when formatting a multitable, we maintain separate environments  * for each column.  That way we can build up the columns separately  * and write them all out at once.  The "current" output environment"  * is still kept in those global variables, so that the old output  * routines don't have to change.  But we provide routines to save  * and restore these variables in an "environment table".  The  * `select_output_environment' function switches from one output  * environment to another.  *  * Environment #0 (i.e., element #0 of the table) is the regular  * environment that is used when we're not formatting a multitable.  *  * Environment #N (where N = 1,2,3,...) is the env. for column #N of  * the table, when a multitable is active.  */
 end_comment
 
 begin_comment
@@ -115,6 +115,137 @@ end_decl_stmt
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Output a row.  Have to keep `output_position' up-to-date for each    character we output, or the tags table will be off, leading to    chopped-off output files and undefined nodes (because they're in the    wrong file, etc.).  Perhaps it would be better to accumulate this    value somewhere and add it once at the end of the table, or return it    as the value, but this seems simplest.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|out_char
+parameter_list|(
+name|ch
+parameter_list|)
+name|int
+name|ch
+decl_stmt|;
+block|{
+specifier|extern
+name|int
+name|output_position
+decl_stmt|;
+name|putc
+argument_list|(
+name|ch
+argument_list|,
+name|output_stream
+argument_list|)
+expr_stmt|;
+name|output_position
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|draw_horizontal_separator
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|s
+decl_stmt|;
+for|for
+control|(
+name|s
+operator|=
+literal|0
+init|;
+name|s
+operator|<
+name|envs
+index|[
+literal|0
+index|]
+operator|.
+name|current_indent
+condition|;
+name|s
+operator|++
+control|)
+name|out_char
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsep
+condition|)
+name|out_char
+argument_list|(
+literal|'+'
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<=
+name|last_column
+condition|;
+name|i
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<=
+name|envs
+index|[
+name|i
+index|]
+operator|.
+name|fill_column
+condition|;
+name|j
+operator|++
+control|)
+name|out_char
+argument_list|(
+literal|'-'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsep
+condition|)
+name|out_char
+argument_list|(
+literal|'+'
+argument_list|)
+expr_stmt|;
+block|}
+name|out_char
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|void
 name|do_multitable
@@ -185,6 +316,7 @@ index|[
 literal|200
 index|]
 decl_stmt|;
+comment|/* naughty, should be no fixed limits */
 name|int
 name|i
 init|=
@@ -226,12 +358,16 @@ name|sscanf
 argument_list|(
 name|params
 argument_list|,
-literal|"%s%n"
+literal|"%200s"
 argument_list|,
 name|command
-argument_list|,
-operator|&
+argument_list|)
+expr_stmt|;
 name|nchars
+operator|=
+name|strlen
+argument_list|(
+name|command
 argument_list|)
 expr_stmt|;
 name|params
@@ -280,7 +416,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Clobber old environments and create new ones, 	   starting at #1.  Environment #0 is the normal standard output, 	   so we don't mess with it. */
+comment|/* Clobber old environments and create new ones, starting at #1.            Environment #0 is the normal output, so don't mess with it. */
 for|for
 control|(
 init|;
@@ -298,13 +434,10 @@ name|sscanf
 argument_list|(
 name|params
 argument_list|,
-literal|"%f%n"
+literal|"%f"
 argument_list|,
 operator|&
 name|columnfrac
-argument_list|,
-operator|&
-name|nchars
 argument_list|)
 operator|<
 literal|1
@@ -312,9 +445,55 @@ condition|)
 goto|goto
 name|done
 goto|;
+comment|/* Unfortunately, can't use %n since some m68k-hp-bsd libc              doesn't support it.  So skip whitespace (preceding the              number) and then non-whitespace (the number).  */
+while|while
+condition|(
+operator|*
 name|params
-operator|+=
-name|nchars
+operator|&&
+operator|(
+operator|*
+name|params
+operator|==
+literal|' '
+operator|||
+operator|*
+name|params
+operator|==
+literal|'\t'
+operator|)
+condition|)
+name|params
+operator|++
+expr_stmt|;
+comment|/* Hmm, but what what @columnfractions 3foo.  Well, I suppose              it's invalid input anyway.  */
+while|while
+condition|(
+operator|*
+name|params
+operator|&&
+operator|*
+name|params
+operator|!=
+literal|' '
+operator|&&
+operator|*
+name|params
+operator|!=
+literal|'\t'
+operator|&&
+operator|*
+name|params
+operator|!=
+literal|'\n'
+operator|&&
+operator|*
+name|params
+operator|!=
+literal|'@'
+condition|)
+name|params
+operator|++
 expr_stmt|;
 name|setup_output_environment
 argument_list|(
@@ -326,7 +505,11 @@ call|)
 argument_list|(
 name|columnfrac
 operator|*
+operator|(
 name|fill_column
+operator|-
+name|current_indent
+operator|)
 operator|+
 literal|.5
 argument_list|)
@@ -375,7 +558,7 @@ name|params
 operator|++
 expr_stmt|;
 block|}
-comment|/* This gives us two spaces between columns.  Seems reasonable.          Really should expand the text, though, so a template of          `@code{foo}' has a width of three, not ten.  Also have to match          braces, then.  */
+comment|/* This gives us two spaces between columns.  Seems reasonable.          Really should expand the text, though, so a template of          `@code{foo}' has a width of five, not ten.  Also have to match          braces, then.  How to take into account current_indent here?  */
 name|setup_output_environment
 argument_list|(
 name|i
@@ -392,7 +575,10 @@ else|else
 block|{
 name|warning
 argument_list|(
+name|_
+argument_list|(
 literal|"ignoring stray text `%s' after @multitable"
+argument_list|)
 argument_list|,
 name|params
 argument_list|)
@@ -595,7 +781,7 @@ comment|/* advance to the next environment number */
 end_comment
 
 begin_function
-name|int
+name|void
 name|nselect_next_environment
 parameter_list|()
 block|{
@@ -608,14 +794,15 @@ condition|)
 block|{
 name|line_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Too many columns in multitable item (max %d)"
+argument_list|)
 argument_list|,
 name|last_column
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 name|select_output_environment
 argument_list|(
@@ -639,15 +826,33 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* do anything needed at the beginning of processing a    multitable column. */
+end_comment
+
+begin_function
+name|void
+name|init_column
+parameter_list|()
+block|{
+comment|/* don't indent 1st paragraph in the item */
+name|cm_noindent
+argument_list|()
+expr_stmt|;
+comment|/* throw away possible whitespace after @item or @tab command */
+name|skip_whitespace
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* start a new item (row) of a multitable */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|multitable_item
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -658,7 +863,10 @@ block|{
 comment|/* impossible, I think. */
 name|error
 argument_list|(
+name|_
+argument_list|(
 literal|"multitable item not in active multitable"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -692,7 +900,10 @@ condition|)
 block|{
 name|line_error
 argument_list|(
+name|_
+argument_list|(
 literal|"Cannot select column #%d in multitable"
+argument_list|)
 argument_list|,
 name|current_env_no
 argument_list|)
@@ -710,60 +921,6 @@ return|return
 literal|0
 return|;
 block|}
-end_block
-
-begin_comment
-comment|/* do anything needed at the beginning of processing a    multitable column. */
-end_comment
-
-begin_macro
-name|init_column
-argument_list|()
-end_macro
-
-begin_block
-block|{
-comment|/* don't indent 1st paragraph in the item */
-name|cm_noindent
-argument_list|()
-expr_stmt|;
-comment|/* throw away possible whitespace after @item or @tab command */
-name|skip_whitespace
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/* Output a row.  Have to keep `output_position' up-to-date for each    character we output, or the tags table will be off, leading to    chopped-off output files and undefined nodes (because they're in the    wrong file, etc.).  Perhaps it would be better to accumulate this    value somewhere and add it once at the end of the table, or return it    as the value, but this seems simplest.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|out_char
-parameter_list|(
-name|ch
-parameter_list|)
-name|int
-name|ch
-decl_stmt|;
-block|{
-specifier|extern
-name|int
-name|output_position
-decl_stmt|;
-name|putc
-argument_list|(
-name|ch
-argument_list|,
-name|output_stream
-argument_list|)
-expr_stmt|;
-name|output_position
-operator|++
-expr_stmt|;
-block|}
 end_function
 
 begin_function
@@ -776,6 +933,8 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|s
 decl_stmt|,
 name|remaining
 decl_stmt|;
@@ -923,6 +1082,29 @@ operator|!
 name|remaining
 condition|)
 break|break;
+for|for
+control|(
+name|s
+operator|=
+literal|0
+init|;
+name|s
+operator|<
+name|envs
+index|[
+literal|0
+index|]
+operator|.
+name|current_indent
+condition|;
+name|s
+operator|++
+control|)
+name|out_char
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vsep
@@ -946,6 +1128,29 @@ name|i
 operator|++
 control|)
 block|{
+for|for
+control|(
+name|s
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|envs
+index|[
+name|i
+index|]
+operator|.
+name|current_indent
+condition|;
+name|s
+operator|++
+control|)
+name|out_char
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -1081,80 +1286,6 @@ directive|undef
 name|CHAR_ADDR
 end_undef
 
-begin_function
-name|int
-name|draw_horizontal_separator
-parameter_list|()
-block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-if|if
-condition|(
-name|vsep
-condition|)
-name|out_char
-argument_list|(
-literal|'+'
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<=
-name|last_column
-condition|;
-name|i
-operator|++
-control|)
-block|{
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<=
-name|envs
-index|[
-name|i
-index|]
-operator|.
-name|fill_column
-condition|;
-name|j
-operator|++
-control|)
-name|out_char
-argument_list|(
-literal|'-'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vsep
-condition|)
-name|out_char
-argument_list|(
-literal|'+'
-argument_list|)
-expr_stmt|;
-block|}
-name|out_char
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* select a new column in current row of multitable */
 end_comment
@@ -1171,7 +1302,10 @@ name|multitable_active
 condition|)
 name|error
 argument_list|(
+name|_
+argument_list|(
 literal|"ignoring @tab outside of multitable"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nselect_next_environment
@@ -1192,9 +1326,6 @@ name|void
 name|end_multitable
 parameter_list|()
 block|{
-name|int
-name|i
-decl_stmt|;
 name|output_multitable_row
 argument_list|()
 expr_stmt|;
@@ -1223,7 +1354,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf ("** Multicolumn output from last row:\n");   for (i = 1; i<= last_column; i++) {     select_output_environment (i);     printf ("* column #%d: output = %s\n", i, output_paragraph);   }
+block|printf (_("** Multicolumn output from last row:\n"));   for (i = 1; i<= last_column; i++) {     select_output_environment (i);     printf (_("* column #%d: output = %s\n"), i, output_paragraph);   }
 endif|#
 directive|endif
 block|}

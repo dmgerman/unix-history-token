@@ -1,34 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* window.c -- Windows in Info. */
-end_comment
-
-begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* window.c -- Windows in Info.    $Id: window.c,v 1.5 1998/02/23 22:43:38 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
+file|"info.h"
 end_include
 
 begin_include
@@ -470,7 +448,7 @@ operator|<=
 name|WINDOW_MIN_SIZE
 condition|)
 block|{
-comment|/* If only one window, make the size of it be zero, and return 	 immediately. */
+comment|/* If only one window, make the size of it be zero, and return          immediately. */
 if|if
 condition|(
 operator|!
@@ -725,7 +703,7 @@ name|height
 operator|+=
 name|delta_each
 expr_stmt|;
-comment|/* If the previous height of this window was zero, it was the only 	 window, and it was not visible.  Thus we need to compensate for 	 the echo_area. */
+comment|/* If the previous height of this window was zero, it was the only          window, and it was not visible.  Thus we need to compensate for          the echo_area. */
 if|if
 condition|(
 name|win
@@ -746,7 +724,7 @@ operator|->
 name|height
 operator|)
 expr_stmt|;
-comment|/* If this is not the first window in the chain, then change the 	 first row of it.  We cannot just add delta_each to the first row, 	 since this window's first row is the sum of the collective increases 	 that have gone before it.  So we just add one to the location of the 	 previous window's modeline. */
+comment|/* If this is not the first window in the chain, then change the          first row of it.  We cannot just add delta_each to the first row,          since this window's first row is the sum of the collective increases          that have gone before it.  So we just add one to the location of the          previous window's modeline. */
 if|if
 condition|(
 name|win
@@ -1494,7 +1472,7 @@ operator|<
 name|WINDOW_MIN_HEIGHT
 condition|)
 return|return;
-comment|/* If we have two neighboring windows, choose the smaller one to get 	 larger. */
+comment|/* If we have two neighboring windows, choose the smaller one to get          larger. */
 if|if
 condition|(
 name|next
@@ -1614,7 +1592,7 @@ operator|>
 name|total_avail
 condition|)
 return|return;
-comment|/* If there aren't two neighboring windows, or if one of the neighbors 	 is larger than the other one by at least AMOUNT, grow that one. */
+comment|/* If there aren't two neighboring windows, or if one of the neighbors          is larger than the other one by at least AMOUNT, grow that one. */
 if|if
 condition|(
 operator|(
@@ -1677,7 +1655,7 @@ block|{
 name|int
 name|change
 decl_stmt|;
-comment|/* This window has two neighbors.  They both must be shrunk in to 	     make enough space for WINDOW to grow.  Make them both the same 	     size. */
+comment|/* This window has two neighbors.  They both must be shrunk in to              make enough space for WINDOW to grow.  Make them both the same              size. */
 if|if
 condition|(
 name|prev_avail
@@ -1727,7 +1705,7 @@ operator|-=
 name|change
 expr_stmt|;
 block|}
-comment|/* Both neighbors are the same size.  Split the difference in 	     AMOUNT between them. */
+comment|/* Both neighbors are the same size.  Split the difference in              AMOUNT between them. */
 while|while
 condition|(
 name|amount
@@ -2147,7 +2125,7 @@ argument_list|(
 name|window
 argument_list|)
 expr_stmt|;
-comment|/* If the pagetop hasn't changed maybe we can do some scrolling now 	 to speed up the display.  Many of the line starts will be the same, 	 so scrolling here is a very good optimization.*/
+comment|/* If the pagetop hasn't changed maybe we can do some scrolling now          to speed up the display.  Many of the line starts will be the same,          so scrolling here is a very good optimization.*/
 if|if
 condition|(
 name|old_pagetop
@@ -2361,7 +2339,7 @@ operator|==
 name|active_window
 condition|)
 block|{
-comment|/* If there isn't a next window, then there must be a previous one, 	 since we cannot delete the last window.  If there is a next window, 	 prefer to use that as the active window. */
+comment|/* If there isn't a next window, then there must be a previous one,          since we cannot delete the last window.  If there is a next window,          prefer to use that as the active window. */
 if|if
 condition|(
 name|next
@@ -2438,7 +2416,7 @@ block|{
 name|int
 name|diff
 decl_stmt|;
-comment|/* Try to adjust the visible part of the node so that as little 	 text as possible has to move. */
+comment|/* Try to adjust the visible part of the node so that as little          text as possible has to move. */
 name|diff
 operator|=
 name|window_to_fix
@@ -2634,7 +2612,7 @@ name|ISO_Latin_p
 condition|)
 name|printable_limit
 operator|=
-literal|160
+literal|255
 expr_stmt|;
 if|if
 condition|(
@@ -3068,7 +3046,7 @@ continue|continue;
 block|}
 else|else
 block|{
-comment|/* If this character would position the cursor at the start of 		 the next printed screen line, then do the next line. */
+comment|/* If this character would position the cursor at the start of                  the next printed screen line, then do the next line. */
 if|if
 condition|(
 name|c
@@ -3095,8 +3073,8 @@ break|break;
 block|}
 else|else
 block|{
-comment|/* This character passes the window width border.  Postion 		     the cursor after the printed character, but remember this 		     line start as where this character is.  A bit tricky. */
-comment|/* If this window doesn't wrap lines, proceed to the next 		     physical line here. */
+comment|/* This character passes the window width border.  Postion                      the cursor after the printed character, but remember this                      line start as where this character is.  A bit tricky. */
+comment|/* If this window doesn't wrap lines, proceed to the next                      physical line here. */
 if|if
 condition|(
 name|window
@@ -3338,7 +3316,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* The user-settable variable "scroll-step" is used to attempt 	 to make point visible, iff it is non-zero.  If that variable 	 is zero, then the line containing point is centered within 	 the window. */
+comment|/* The user-settable variable "scroll-step" is used to attempt          to make point visible, iff it is non-zero.  If that variable          is zero, then the line containing point is centered within          the window. */
 if|if
 condition|(
 name|window_scroll_step
@@ -4118,7 +4096,10 @@ name|N_UpdateTags
 condition|)
 name|update_message
 operator|=
+name|_
+argument_list|(
 literal|"--*** Tags out of Date ***"
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -4158,7 +4139,10 @@ literal|10
 operator|+
 name|strlen
 argument_list|(
+name|_
+argument_list|(
 literal|"-----Info: (), lines ----, "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|modeline_len
@@ -4194,7 +4178,10 @@ name|sprintf
 argument_list|(
 name|modeline
 argument_list|,
+name|_
+argument_list|(
 literal|"-%s---Info: %s, %d lines --%s--"
+argument_list|)
 argument_list|,
 operator|(
 name|window
@@ -4222,7 +4209,10 @@ name|sprintf
 argument_list|(
 name|modeline
 argument_list|,
+name|_
+argument_list|(
 literal|"-%s%s-Info: (%s)%s, %d lines --%s--"
+argument_list|)
 argument_list|,
 operator|(
 name|window
@@ -4280,7 +4270,10 @@ argument_list|(
 name|modeline
 argument_list|)
 argument_list|,
+name|_
+argument_list|(
 literal|" Subfile: %s"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
@@ -4581,15 +4574,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
-comment|/*		   Manipulating Home-Made Nodes			    */
+comment|/*                 Manipulating Home-Made Nodes                     */
 end_comment
 
 begin_comment
-comment|/*								    */
+comment|/*                                                                  */
 end_comment
 
 begin_comment
