@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpagesize.c	5.1 (Berkeley) %G%"
+literal|"@(#)getpagesize.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,25 +49,10 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|int
 name|getpagesize
-argument_list|(
-name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|getpagesize
-argument_list|()
-endif|#
-directive|endif
+parameter_list|()
 block|{
 name|int
 name|mib
@@ -75,9 +60,10 @@ index|[
 literal|2
 index|]
 decl_stmt|,
-name|size
-decl_stmt|,
 name|value
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 name|mib
 index|[
@@ -132,7 +118,7 @@ name|value
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

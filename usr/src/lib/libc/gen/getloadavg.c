@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getloadavg.c	6.6 (Berkeley) %G%"
+literal|"@(#)getloadavg.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,14 +98,15 @@ name|loadavg
 name|loadinfo
 decl_stmt|;
 name|int
-name|size
-decl_stmt|,
 name|i
 decl_stmt|,
 name|mib
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 name|mib
 index|[

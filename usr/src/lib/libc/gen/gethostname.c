@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostname.c	5.2 (Berkeley) %G%"
+literal|"@(#)gethostname.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,27 +49,10 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|long
 name|gethostname
 parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|namelen
-parameter_list|)
-else|#
-directive|else
-function|long gethostname
-parameter_list|(
 name|name
 parameter_list|,
 name|namelen
@@ -81,14 +64,15 @@ decl_stmt|;
 name|int
 name|namelen
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|mib
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 name|mib
 index|[
@@ -104,6 +88,10 @@ index|]
 operator|=
 name|KERN_HOSTNAME
 expr_stmt|;
+name|size
+operator|=
+name|namelen
+expr_stmt|;
 if|if
 condition|(
 name|sysctl
@@ -115,7 +103,7 @@ argument_list|,
 name|name
 argument_list|,
 operator|&
-name|namelen
+name|size
 argument_list|,
 name|NULL
 argument_list|,
