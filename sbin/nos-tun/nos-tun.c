@@ -243,7 +243,7 @@ argument_list|)
 operator|)
 operator|==
 operator|(
-name|u_long
+name|in_addr_t
 operator|)
 operator|-
 literal|1
