@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bpf.c	7.3 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.23 91/01/30 18:22:13 mccanne Exp $";  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bpf.c	7.4 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.23 91/01/30 18:22:13 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -3263,25 +3263,16 @@ operator|->
 name|bif_hdrlen
 decl_stmt|;
 comment|/* 	 * Figure out how many bytes to move.  If the packet is 	 * greater or equal to the snapshot length, transfer that 	 * much.  Otherwise, transfer the whole packet (unless 	 * we hit the buffer size limit). 	 */
-if|if
-condition|(
-name|snaplen
-operator|<=
-name|pktlen
-condition|)
 name|totlen
 operator|=
+name|hdrlen
+operator|+
+name|MIN
+argument_list|(
 name|snaplen
-operator|+
-name|hdrlen
-expr_stmt|;
-else|else
-block|{
-name|totlen
-operator|=
+argument_list|,
 name|pktlen
-operator|+
-name|hdrlen
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3297,7 +3288,6 @@ name|d
 operator|->
 name|bd_bufsize
 expr_stmt|;
-block|}
 comment|/* 	 * Round up the end of the previous packet to the next longword. 	 */
 name|curlen
 operator|=
