@@ -962,6 +962,17 @@ comment|/****************************************  *  * Register definitions.  *
 end_comment
 
 begin_comment
+comment|/*   * Command parameter that disables threshold interrupts  *   PIO (3c509) cards use 2044.  The fifo word-oriented and 2044--2047 work.  *  "busmastering" cards need 8188.  * The implicit two-bit upshift done by busmastering cards means  * a value of 2047 disables threshold interrupts on both.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EP_THRESH_DISABLE
+value|2047
+end_define
+
+begin_comment
 comment|/*  * Command register. All windows.  *  * 16 bit register.  *     15-11:  5-bit code for command to be executed.  *     10-0:   11-bit arg if any. For commands with no args;  *	      this can be set to anything.  */
 end_comment
 
