@@ -359,7 +359,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|get_ether_addr
+name|arp_EtherAddr
 argument_list|(
 name|s
 argument_list|,
@@ -369,6 +369,8 @@ operator|&
 name|arpmsg
 operator|.
 name|hwa
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -759,7 +761,7 @@ comment|/*    * Get the hardware address of an interface on the same subnet as o
 if|if
 condition|(
 operator|!
-name|get_ether_addr
+name|arp_EtherAddr
 argument_list|(
 name|s
 argument_list|,
@@ -769,6 +771,8 @@ operator|&
 name|dls
 operator|.
 name|sdl
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -1019,12 +1023,12 @@ comment|/* RTM_VERSION */
 end_comment
 
 begin_comment
-comment|/*  * get_ether_addr - get the hardware address of an interface on the  * the same subnet as ipaddr.  */
+comment|/*  * arp_EtherAddr - get the hardware address of an interface on the  * the same subnet as ipaddr.  */
 end_comment
 
 begin_function
 name|int
-name|get_ether_addr
+name|arp_EtherAddr
 parameter_list|(
 name|int
 name|s
@@ -1037,6 +1041,9 @@ name|struct
 name|sockaddr_dl
 modifier|*
 name|hwaddr
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 block|{
 name|int
@@ -1150,7 +1157,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"get_ether_addr: sysctl: estimate: %s\n"
+literal|"arp_EtherAddr: sysctl: estimate: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1526,7 +1533,11 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
+name|verbose
+condition|?
 name|LogPHASE
+else|:
+name|LogDEBUG
 argument_list|,
 literal|"Found interface %.*s for %s\n"
 argument_list|,

@@ -52,7 +52,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|get_ether_addr
+name|arp_EtherAddr
 parameter_list|(
 name|int
 parameter_list|,
@@ -62,6 +62,8 @@ parameter_list|,
 name|struct
 name|sockaddr_dl
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

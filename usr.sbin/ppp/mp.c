@@ -5691,7 +5691,7 @@ return|;
 block|}
 if|if
 condition|(
-name|get_ether_addr
+name|arp_EtherAddr
 argument_list|(
 name|s
 argument_list|,
@@ -5699,6 +5699,8 @@ name|addr
 argument_list|,
 operator|&
 name|hwaddr
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 block|{
