@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mt.c	4.7 (Berkeley) 83/02/09"
+literal|"@(#)mt.c	4.8 (Berkeley) 83/05/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,25 +225,9 @@ decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|<
+operator|>
 literal|2
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: mt [ -f device ] command [ count ]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|&&
 operator|(
 name|equal
 argument_list|(
@@ -265,10 +249,6 @@ argument_list|,
 literal|"-f"
 argument_list|)
 operator|)
-operator|&&
-name|argc
-operator|>
-literal|2
 condition|)
 block|{
 name|argc
@@ -305,6 +285,26 @@ name|tape
 operator|=
 name|DEFTAPE
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: mt [ -f device ] command [ count ]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|cp
 operator|=
 name|argv
