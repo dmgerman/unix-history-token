@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.13	84/05/03	*/
+comment|/*	defs.h	4.14	84/06/28	*/
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|2
+value|3
 end_define
 
 begin_define
@@ -293,6 +293,20 @@ name|REMOVE
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|FOLLOW
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGNLNKS
+value|0x40
+end_define
+
 begin_comment
 comment|/* expand type definitions */
 end_comment
@@ -454,6 +468,34 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|linkbuf
+block|{
+name|ino_t
+name|inum
+decl_stmt|;
+name|dev_t
+name|devnum
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+name|char
+name|pathname
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|struct
+name|linkbuf
+modifier|*
+name|nextp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -541,6 +583,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* file name for logging changes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|linkbuf
+modifier|*
+name|ihead
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of files with more than one link */
 end_comment
 
 begin_decl_stmt

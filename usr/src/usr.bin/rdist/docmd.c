@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.20 (Berkeley) 84/05/03"
+literal|"@(#)docmd.c	4.21 (Berkeley) 84/06/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -404,6 +404,10 @@ name|int
 name|n
 decl_stmt|,
 name|ddir
+decl_stmt|,
+name|opts
+init|=
+name|options
 decl_stmt|;
 if|if
 condition|(
@@ -642,6 +646,12 @@ operator|->
 name|sc_options
 argument_list|)
 expr_stmt|;
+name|opts
+operator|=
+name|sc
+operator|->
+name|sc_options
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -736,6 +746,7 @@ condition|(
 operator|!
 name|nflag
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -744,6 +755,53 @@ argument_list|(
 name|tmpfile
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+name|ihead
+operator|!=
+name|NULL
+condition|;
+name|ihead
+operator|=
+name|ihead
+operator|->
+name|nextp
+control|)
+block|{
+name|free
+argument_list|(
+name|ihead
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+name|IGNLNKS
+operator|)
+operator|||
+name|ihead
+operator|->
+name|count
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|log
+argument_list|(
+name|lfp
+argument_list|,
+literal|"%s: Warning: missing links\n"
+argument_list|,
+name|ihead
+operator|->
+name|pathname
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_block
 
@@ -1083,7 +1141,17 @@ operator|(
 literal|1
 operator|)
 return|;
+name|error
+argument_list|(
+literal|"connection failed: version numbers don't match (local %d, remote %d)\n"
+argument_list|,
+name|VERSION
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
 block|}
+else|else
 name|error
 argument_list|(
 literal|"connection failed: version numbers don't match\n"
