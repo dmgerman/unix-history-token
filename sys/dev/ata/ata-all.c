@@ -992,6 +992,27 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* unlock the channel */
+name|ch
+operator|->
+name|running
+operator|=
+name|NULL
+expr_stmt|;
+name|ATA_UNLOCK_CH
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+name|ch
+operator|->
+name|locking
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_LF_UNLOCK
+argument_list|)
+expr_stmt|;
 comment|/* detach devices on this channel */
 if|if
 condition|(
@@ -1593,6 +1614,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+comment|/* unlock the channel */
 name|ch
 operator|->
 name|running
@@ -1602,6 +1624,15 @@ expr_stmt|;
 name|ATA_UNLOCK_CH
 argument_list|(
 name|ch
+argument_list|)
+expr_stmt|;
+name|ch
+operator|->
+name|locking
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_LF_UNLOCK
 argument_list|)
 expr_stmt|;
 comment|/* identify what is present on the channel now */
