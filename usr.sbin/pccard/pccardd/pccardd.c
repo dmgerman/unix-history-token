@@ -528,6 +528,14 @@ block|}
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|doverbose
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *	mainline code for cardd  */
 end_comment
@@ -557,11 +565,6 @@ name|int
 name|count
 decl_stmt|,
 name|dodebug
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|doverbose
 init|=
 literal|0
 decl_stmt|;

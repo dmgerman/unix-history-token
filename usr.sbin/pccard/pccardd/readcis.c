@@ -706,27 +706,8 @@ control|)
 block|{
 if|#
 directive|if
-name|DEBUG
-name|printf
-argument_list|(
-literal|"tuple code = 0x%02x, data is\n"
-argument_list|,
-name|tp
-operator|->
-name|code
-argument_list|)
-expr_stmt|;
-name|dump
-argument_list|(
-name|tp
-operator|->
-name|data
-argument_list|,
-name|tp
-operator|->
-name|length
-argument_list|)
-expr_stmt|;
+literal|0
+block|printf("tuple code = 0x%02x, data is\n", tp->code); 			dump(tp->data, tp->length);
 endif|#
 directive|endif
 switch|switch
