@@ -7,6 +7,12 @@ begin_comment
 comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
 begin_comment
 comment|/* **************************************************************** */
 end_comment
@@ -83,6 +89,26 @@ begin_comment
 comment|/* HAVE_STDLIB_H */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -102,50 +128,29 @@ end_include
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<readline/history.h>
+file|"history.h"
 end_include
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|digit
+name|digit_p
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|digit
+name|digit_p
 parameter_list|(
 name|c
 parameter_list|)
 value|((c)>= '0'&& (c)<= '9')
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|isletter
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|isletter
-parameter_list|(
-name|c
-parameter_list|)
-value|(((c)>= 'A'&& (c)<= 'Z') || ((c)>= 'a'&& (c)<= 'z'))
 end_define
 
 begin_endif
@@ -189,7 +194,7 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|((c) ? (char *)strchr ((s), (c)) : 0)
+value|((c) ? (char *)strchr ((s), (c)) != (char *)NULL : 0)
 end_define
 
 begin_endif
@@ -210,7 +215,7 @@ name|isident
 parameter_list|(
 name|c
 parameter_list|)
-value|((isletter(c) || digit(c) || c == '_'))
+value|((pure_alphabetic (c) || digit_p (c) || c == '_'))
 end_define
 
 begin_endif
@@ -233,7 +238,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|{int temp = x; x = y; y = temp;}
+value|do {int temp = x; x = y; y = temp;} while (0)
 end_define
 
 begin_endif
@@ -656,12 +661,6 @@ name|c
 argument_list|,
 name|vi_textmod
 argument_list|)
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 operator|)
 return|;
 block|}
@@ -736,12 +735,16 @@ begin_macro
 name|rl_vi_yank_arg
 argument_list|(
 argument|count
+argument_list|,
+argument|key
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|count
+decl_stmt|,
+name|key
 decl_stmt|;
 end_decl_stmt
 
@@ -2148,8 +2151,20 @@ end_block
 
 begin_macro
 name|rl_vi_insert_beg
-argument_list|()
+argument_list|(
+argument|count
+argument_list|,
+argument|key
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2169,8 +2184,20 @@ end_block
 
 begin_macro
 name|rl_vi_append_mode
-argument_list|()
+argument_list|(
+argument|count
+argument_list|,
+argument|key
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2196,8 +2223,20 @@ end_block
 
 begin_macro
 name|rl_vi_append_eol
-argument_list|()
+argument_list|(
+argument|count
+argument_list|,
+argument|key
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2261,8 +2300,20 @@ end_comment
 
 begin_macro
 name|rl_vi_insertion_mode
-argument_list|()
+argument_list|(
+argument|count
+argument_list|,
+argument|key
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2311,8 +2362,20 @@ end_function
 
 begin_macro
 name|rl_vi_movement_mode
-argument_list|()
+argument_list|(
+argument|count
+argument_list|,
+argument|key
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2626,8 +2689,18 @@ begin_macro
 name|rl_vi_column
 argument_list|(
 argument|count
+argument_list|,
+argument|key
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2708,7 +2781,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|digit
+name|digit_p
 argument_list|(
 name|c
 argument_list|)
@@ -3064,7 +3137,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|numeric
+name|digit_p
 argument_list|(
 name|c
 argument_list|)
@@ -3480,12 +3553,16 @@ begin_macro
 name|rl_vi_delete
 argument_list|(
 argument|count
+argument_list|,
+argument|key
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|count
+decl_stmt|,
+name|key
 decl_stmt|;
 end_decl_stmt
 
@@ -3561,8 +3638,20 @@ end_comment
 
 begin_macro
 name|rl_vi_comment
-argument_list|()
+argument_list|(
+argument|count
+argument_list|,
+argument|key
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3611,8 +3700,20 @@ end_block
 
 begin_macro
 name|rl_vi_first_print
-argument_list|()
+argument_list|(
+argument|count
+argument_list|,
+argument|key
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4027,8 +4128,20 @@ end_comment
 
 begin_macro
 name|rl_vi_match
-argument_list|()
+argument_list|(
+argument|ignore
+argument_list|,
+argument|key
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|ignore
+decl_stmt|,
+name|key
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

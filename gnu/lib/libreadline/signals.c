@@ -7,6 +7,12 @@ begin_comment
 comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
 begin_include
 include|#
 directive|include
@@ -55,54 +61,6 @@ include|#
 directive|include
 file|<signal.h>
 end_include
-
-begin_comment
-comment|/* This is needed to include support for TIOCGWINSZ and window resizing. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OSF1
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BSD386
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_386BSD
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__BSD_4_4__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|AIX
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OSF1 || BSD386 || _386BSD || __BSD_4_4__ || AIX */
-end_comment
 
 begin_if
 if|#
@@ -215,6 +173,30 @@ directive|include
 file|"rldefs.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GWINSZ_IN_SYS_IOCTL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GWINSZ_IN_SYS_IOCTL */
+end_comment
+
 begin_comment
 comment|/* Some standard library routines. */
 end_comment
@@ -222,13 +204,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<readline/history.h>
+file|"history.h"
 end_include
 
 begin_function_decl

@@ -7,6 +7,12 @@ begin_comment
 comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
 begin_include
 include|#
 directive|include
@@ -174,13 +180,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<readline/history.h>
+file|"history.h"
 end_include
 
 begin_if
@@ -252,13 +258,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|rl_blink_matching_paren
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|_rl_convert_meta_chars_to_ascii
 decl_stmt|;
 end_decl_stmt
@@ -276,6 +275,31 @@ name|int
 name|_rl_complete_show_all
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PAREN_MATCHING
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_blink_matching_paren
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PAREN_MATCHING */
+end_comment
 
 begin_if
 if|#
@@ -412,47 +436,11 @@ end_function_decl
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|BSD386
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NetBSD
-argument_list|)
-operator|&&
-expr|\
-operator|!
-name|defined
-argument_list|(
-name|FreeBSD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_386BSD
+name|HAVE_STRCASECMP
 argument_list|)
 end_if
-
-begin_decl_stmt
-specifier|static
-name|int
-name|stricmp
-argument_list|()
-decl_stmt|,
-name|strnicmp
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -467,6 +455,22 @@ directive|define
 name|strnicmp
 value|strncasecmp
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|stricmp
+argument_list|()
+decl_stmt|,
+name|strnicmp
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -2065,6 +2069,16 @@ operator|=
 name|DEFAULT_INPUTRC
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|*
+name|filename
+condition|)
+name|filename
+operator|=
+name|DEFAULT_INPUTRC
+expr_stmt|;
 name|openname
 operator|=
 name|tilde_expand
@@ -2257,9 +2271,14 @@ operator|*
 name|line
 argument_list|)
 condition|)
+block|{
 name|line
 operator|++
 expr_stmt|;
+name|i
+operator|--
+expr_stmt|;
+block|}
 comment|/* If the line is not a comment, then parse it. */
 if|if
 condition|(
@@ -4000,6 +4019,12 @@ operator|&
 name|_rl_meta_flag
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PAREN_MATCHING
+argument_list|)
 block|{
 literal|"blink-matching-paren"
 block|,
@@ -4007,6 +4032,8 @@ operator|&
 name|rl_blink_matching_paren
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"convert-meta"
 block|,
@@ -4986,9 +5013,13 @@ begin_function
 name|void
 name|rl_list_funmap_names
 parameter_list|(
+name|count
+parameter_list|,
 name|ignore
 parameter_list|)
 name|int
+name|count
+decl_stmt|,
 name|ignore
 decl_stmt|;
 block|{
@@ -5156,7 +5187,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|CTRL_P
+name|CTRL_CHAR
 argument_list|(
 name|key
 argument_list|)
@@ -5401,7 +5432,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|CTRL_P
+name|CTRL_CHAR
 argument_list|(
 name|key
 argument_list|)
@@ -6080,26 +6111,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|BSD386
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NetBSD
-argument_list|)
-operator|&&
-expr|\
-operator|!
-name|defined
-argument_list|(
-name|FreeBSD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_386BSD
+name|HAVE_STRCASECMP
 argument_list|)
 end_if
 
@@ -6261,7 +6273,7 @@ return|return
 operator|(
 operator|*
 name|string1
-operator||
+operator|-
 operator|*
 name|string2
 operator|)
@@ -6273,6 +6285,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !HAVE_STRCASECMP */
+end_comment
 
 begin_comment
 comment|/* Determine if s2 occurs in s1.  If so, return a pointer to the    match in s1.  The compare is case insensitive. */
@@ -6341,11 +6357,9 @@ if|if
 condition|(
 name|strnicmp
 argument_list|(
-operator|&
 name|s1
-index|[
+operator|+
 name|i
-index|]
 argument_list|,
 name|s2
 argument_list|,

@@ -23,11 +23,37 @@ begin_comment
 comment|/* Copyright (C) 1987,1989 Free Software Foundation, Inc.     This file contains the Readline Library (the Library), a set of    routines for providing Emacs style line input to programs that ask    for it.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -38,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<readline/history.h>
+file|"history.h"
 end_include
 
 begin_define
@@ -638,6 +664,15 @@ name|search_string_index
 operator|=
 literal|0
 expr_stmt|;
+name|prev_line_found
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|/* XXX */
 comment|/* Normalize DIRECTION into 1 or -1. */
 name|direction
 operator|=
@@ -871,17 +906,25 @@ argument_list|(
 name|lines
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 default|default:
 if|if
 condition|(
+name|CTRL_CHAR
+argument_list|(
 name|c
-operator|<
-literal|32
+argument_list|)
+operator|||
+name|META_CHAR
+argument_list|(
+name|c
+argument_list|)
 operator|||
 name|c
-operator|>
-literal|126
+operator|==
+name|RUBOUT
 condition|)
 block|{
 name|rl_execute_next
@@ -999,12 +1042,7 @@ block|}
 else|else
 name|line_index
 operator|+=
-name|reverse
-condition|?
-operator|-
-literal|1
-else|:
-literal|1
+name|direction
 expr_stmt|;
 block|}
 if|if
@@ -1023,18 +1061,15 @@ expr_stmt|;
 comment|/* At limit for direction? */
 if|if
 condition|(
-operator|(
 name|reverse
-operator|&&
+condition|?
+operator|(
 name|i
 operator|<
 literal|0
 operator|)
-operator|||
+else|:
 operator|(
-operator|!
-name|reverse
-operator|&&
 name|i
 operator|==
 name|hlen
@@ -1120,7 +1155,8 @@ name|i
 operator|=
 name|last_found_line
 expr_stmt|;
-break|break;
+continue|continue;
+comment|/* XXX - was break */
 block|}
 comment|/* We have found the search string.  Just display it.  But don't 	 actually move there in the history list until the user accepts 	 the location. */
 if|if

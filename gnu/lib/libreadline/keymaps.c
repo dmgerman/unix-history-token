@@ -7,6 +7,12 @@ begin_comment
 comment|/* Copyright (C) 1988,1989 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 1, or (at your option) any    later version.     Readline is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with Readline; see the file COPYING.  If not, write to the Free    Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
 begin_if
 if|#
 directive|if
@@ -51,7 +57,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<readline/keymaps.h>
+file|"keymaps.h"
 end_include
 
 begin_include
@@ -60,11 +66,14 @@ directive|include
 file|"emacs_keymap.c"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VI_MODE
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#

@@ -7,6 +7,69 @@ begin_comment
 comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
+begin_include
+include|#
+directive|include
+file|"rlconf.h"
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PAREN_MATCHING
+argument_list|)
+end_if
+
+begin_macro
+name|rl_insert_close
+argument_list|(
+argument|count
+argument_list|,
+argument|invoking_key
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|,
+name|invoking_key
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|rl_insert
+argument_list|(
+name|count
+argument_list|,
+name|invoking_key
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* PAREN_MATCHING */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -39,10 +102,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* FD_SET */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline.h"
 end_include
 
 begin_decl_stmt
@@ -474,6 +541,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PAREN_MATCHING */
+end_comment
 
 end_unit
 

@@ -7,6 +7,12 @@ begin_comment
 comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
 begin_include
 include|#
 directive|include
@@ -280,7 +286,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline.h"
 end_include
 
 begin_comment
@@ -965,6 +971,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Non-zero means that the results of the matches are to be quoted using    double quotes (or an application-specific quoting mechanism) if the    filename contains any characters in rl_word_break_chars.  This is    ALWAYS non-zero on entry, and can only be changed within a completion    entry finder function. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rl_filename_quoting_desired
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* This function, if defined, is called by the completer when real    filename completion is done, after all the matching names have been    generated. It is passed a (char**) known as matches in the code below.    It consists of a NULL-terminated array of pointers to potential    matching strings.  The 1st element (matches[0]) is the maximal    substring that is common to all matches. This function can re-arrange    the list of matches as required, but all elements of the array must be    free()'d if they are deleted. The main intent of this function is    to implement FIGNORE a la SunOS csh. */
 end_comment
 
@@ -1501,19 +1519,11 @@ name|quote_char
 init|=
 literal|'\0'
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SHELL
-argument_list|)
 name|int
 name|found_quote
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|rl_line_buffer
@@ -1551,10 +1561,14 @@ operator|*
 operator|)
 name|filename_completion_function
 expr_stmt|;
-comment|/* Only the completion entry function can change this. */
+comment|/* Only the completion entry function can change these. */
 name|rl_filename_completion_desired
 operator|=
 literal|0
+expr_stmt|;
+name|rl_filename_quoting_desired
+operator|=
+literal|1
 expr_stmt|;
 comment|/* We now look backwards for the start of a filename/variable word. */
 name|end
@@ -1613,6 +1627,10 @@ block|{
 name|pass_next
 operator|=
 literal|1
+expr_stmt|;
+name|found_quote
+operator||=
+literal|4
 expr_stmt|;
 continue|continue;
 block|}
@@ -1673,12 +1691,7 @@ name|scan
 operator|+
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SHELL
-argument_list|)
+comment|/* Shell-like quoting conventions. */
 if|if
 condition|(
 name|quote_char
@@ -1700,8 +1713,6 @@ name|found_quote
 operator||=
 literal|2
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 block|}
@@ -1717,7 +1728,7 @@ name|quoted
 init|=
 literal|0
 decl_stmt|;
-comment|/* We didn't find an unclosed quoted substring up which to do 	     completion, so use the word break characters to find the 	     substring on which to complete. */
+comment|/* We didn't find an unclosed quoted substring upon which to do 	     completion, so use the word break characters to find the 	     substring on which to complete. */
 while|while
 condition|(
 operator|--
@@ -1731,6 +1742,18 @@ index|[
 name|rl_point
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|rl_completer_word_break_characters
+argument_list|,
+name|scan
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 if|#
 directive|if
 name|defined
@@ -1741,47 +1764,23 @@ comment|/* Don't let word break characters in quoted substrings break 		 words f
 if|if
 condition|(
 name|found_quote
-condition|)
-block|{
-if|if
-condition|(
-name|strchr
+operator|&&
+name|char_is_quoted
 argument_list|(
-name|rl_completer_quote_characters
+name|rl_line_buffer
 argument_list|,
-name|scan
+name|rl_point
 argument_list|)
 condition|)
-block|{
-name|quoted
-operator|=
-operator|!
-name|quoted
-expr_stmt|;
 continue|continue;
-block|}
-if|if
-condition|(
-name|quoted
-condition|)
-continue|continue;
-block|}
 endif|#
 directive|endif
 comment|/* SHELL */
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|rl_completer_word_break_characters
-argument_list|,
-name|scan
-argument_list|)
-condition|)
+comment|/* Convoluted code, but it avoids an n^2 algorithm with calls 	      	 to char_is_quoted. */
 break|break;
 block|}
 block|}
-comment|/* If we are at a word break, then advance past it. */
+comment|/* If we are at an unquoted word break, then advance past it. */
 name|scan
 operator|=
 name|rl_line_buffer
@@ -1789,6 +1788,38 @@ index|[
 name|rl_point
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SHELL
+argument_list|)
+if|if
+condition|(
+operator|(
+name|found_quote
+operator|==
+literal|0
+operator|||
+name|char_is_quoted
+argument_list|(
+name|rl_line_buffer
+argument_list|,
+name|rl_point
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|&&
+name|strchr
+argument_list|(
+name|rl_completer_word_break_characters
+argument_list|,
+name|scan
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|strchr
@@ -1798,6 +1829,8 @@ argument_list|,
 name|scan
 argument_list|)
 condition|)
+endif|#
+directive|endif
 block|{
 comment|/* If the character that caused the word break was a quoting 	     character, then remember it as the delimiter. */
 if|if
@@ -1981,6 +2014,9 @@ block|{
 specifier|register
 name|int
 name|i
+decl_stmt|;
+name|int
+name|should_quote
 decl_stmt|;
 comment|/* It seems to me that in all the cases we handle we would like 	 to ignore duplicate possiblilities.  Scan for the text to 	 insert being identical to the other completions. */
 if|if
@@ -2316,8 +2352,8 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|if
-condition|(
+name|should_quote
+operator|=
 name|matches
 index|[
 literal|0
@@ -2325,10 +2361,47 @@ index|]
 operator|&&
 name|rl_completer_quote_characters
 operator|&&
+name|rl_filename_completion_desired
+operator|&&
+name|rl_filename_quoting_desired
+expr_stmt|;
+if|if
+condition|(
+name|should_quote
+condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SHELL
+argument_list|)
+name|should_quote
+operator|=
+name|should_quote
+operator|&&
+operator|(
 operator|!
 name|quote_char
+operator|||
+name|quote_char
+operator|==
+literal|'"'
+operator|)
+expr_stmt|;
+else|#
+directive|else
+name|should_quote
+operator|=
+name|should_quote
 operator|&&
-name|rl_filename_completion_desired
+operator|!
+name|quote_char
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|should_quote
 condition|)
 block|{
 name|int
@@ -2339,8 +2412,8 @@ operator|=
 name|NO_MATCH
 expr_stmt|;
 comment|/* If there is a single match, see if we need to quote it. 		 This also checks whether the common prefix of several 		 matches needs to be quoted.  If the common prefix should 		 not be checked, add !matches[1] to the if clause. */
-if|if
-condition|(
+name|should_quote
+operator|=
 name|rl_strpbrk
 argument_list|(
 name|matches
@@ -2350,12 +2423,18 @@ index|]
 argument_list|,
 name|rl_completer_word_break_characters
 argument_list|)
+operator|!=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 name|defined
 argument_list|(
 name|SHELL
 argument_list|)
+name|should_quote
+operator|=
+name|should_quote
 operator|||
 name|rl_strpbrk
 argument_list|(
@@ -2364,10 +2443,16 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|"$`"
+literal|"#$`"
 argument_list|)
+operator|!=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|should_quote
 condition|)
 name|do_replace
 operator|=
@@ -2393,7 +2478,6 @@ name|defined
 argument_list|(
 name|SHELL
 argument_list|)
-comment|/* XXX - experimental */
 comment|/* Quote the replacement, since we found an 		     embedded word break character in a potential 		     match. */
 name|char
 modifier|*
@@ -2480,6 +2564,32 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* If we're completing on a quoted string where the user 		     has already supplied the opening quote, we don't want 		     the quote in the replacement text, and we reset 		     QUOTE_CHAR to 0 to avoid an extra closing quote. */
+if|if
+condition|(
+name|quote_char
+operator|==
+literal|'"'
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|replacement
+argument_list|,
+name|rtext
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|rlen
+operator|--
+expr_stmt|;
+name|quote_char
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
 name|strcpy
 argument_list|(
 name|replacement
@@ -3529,8 +3639,27 @@ end_function
 
 begin_block
 block|{
-return|return
-operator|(
+name|int
+name|result
+decl_stmt|;
+name|result
+operator|=
+operator|*
+operator|*
+name|s1
+operator|-
+operator|*
+operator|*
+name|s2
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+literal|0
+condition|)
+name|result
+operator|=
 name|strcmp
 argument_list|(
 operator|*
@@ -3539,7 +3668,9 @@ argument_list|,
 operator|*
 name|s2
 argument_list|)
-operator|)
+expr_stmt|;
+return|return
+name|result
 return|;
 block|}
 end_block
@@ -3729,10 +3860,6 @@ name|char
 modifier|*
 name|value
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 literal|2
@@ -4155,10 +4282,6 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|low
@@ -4283,13 +4406,13 @@ name|int
 name|filename_len
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|entry
 init|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|NULL
@@ -4542,18 +4665,6 @@ comment|/* Otherwise, if these match up to the length of filename, then 	     it
 if|if
 condition|(
 operator|(
-operator|(
-name|int
-operator|)
-name|D_NAMLEN
-argument_list|(
-name|entry
-argument_list|)
-operator|)
-operator|>=
-name|filename_len
-operator|&&
-operator|(
 name|entry
 operator|->
 name|d_name
@@ -4565,6 +4676,20 @@ name|filename
 index|[
 literal|0
 index|]
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|int
+operator|)
+name|D_NAMLEN
+argument_list|(
+name|entry
+argument_list|)
+operator|)
+operator|>=
+name|filename_len
 operator|)
 operator|&&
 operator|(
@@ -4721,10 +4846,6 @@ argument_list|)
 decl_stmt|;
 name|temp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 literal|2
@@ -4779,10 +4900,6 @@ else|else
 block|{
 name|temp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 literal|1

@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline.h"
 end_include
 
 begin_if
@@ -288,7 +288,11 @@ comment|/* Control-z */
 block|{
 name|ISFUNC
 block|,
-name|rl_abort
+operator|(
+name|Function
+operator|*
+operator|)
+literal|0x0
 block|}
 block|,
 comment|/* Control-[ */

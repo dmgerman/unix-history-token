@@ -26,6 +26,54 @@ end_define
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_comment
+comment|/* for _POSIX_VERSION */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_UNISTD_H */
+end_comment
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
@@ -67,6 +115,11 @@ name|defined
 argument_list|(
 name|__linux__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_TERMCAP_H
+argument_list|)
 end_if
 
 begin_include
@@ -81,7 +134,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __linux__ */
+comment|/* __linux__ || HAVE_TERMCAP_H */
 end_comment
 
 begin_comment
@@ -151,9 +204,15 @@ argument_list|(
 name|sgi
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|DGUX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_TERMIO_H
 argument_list|)
 end_if
 
@@ -203,7 +262,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USG || hpux || Xenix || sgi || DUGX */
+comment|/* USG || hpux || Xenix || sgi || DUGX || HAVE_TERMIO_H */
 end_comment
 
 begin_endif
@@ -553,32 +612,6 @@ directive|include
 file|<dirent.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|direct
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|direct
-value|dirent
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !direct */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -678,6 +711,32 @@ end_endif
 
 begin_comment
 comment|/* !USG */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|dirent
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|dirent
+value|direct
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !dirent */
 end_comment
 
 begin_endif
@@ -977,6 +1036,62 @@ begin_comment
 comment|/* HAVE_VARARGS_H */
 end_comment
 
+begin_comment
+comment|/* This is needed to include support for TIOCGWINSZ and window resizing. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OSF1
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BSD386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NetBSD
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__BSD_4_4__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FreeBSD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_386BSD
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|AIX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GWINSZ_IN_SYS_IOCTL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -1073,6 +1188,36 @@ parameter_list|(
 name|data
 parameter_list|)
 value|(Function *)(data)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|savestring
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|xmalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|savestring
+parameter_list|(
+name|x
+parameter_list|)
+value|strcpy (xmalloc (1 + strlen (x)), (x))
 end_define
 
 begin_endif

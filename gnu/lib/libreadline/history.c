@@ -11,6 +11,32 @@ begin_comment
 comment|/* The goal is to make the implementation transparent, so that you    don't have to know what data types are used, just what functions    you can call.  I think I have done that. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -176,7 +202,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<readline/history.h>
+file|"history.h"
 end_include
 
 begin_if
@@ -319,13 +345,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|digit
+name|digit_p
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|digit
+name|digit_p
 parameter_list|(
 name|c
 parameter_list|)
@@ -551,6 +577,7 @@ comment|/* Non-zero means that we have enforced a limit on the amount of    hist
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|history_stifled
 init|=
@@ -730,6 +757,22 @@ name|size
 operator|=
 name|history_size
 expr_stmt|;
+name|state
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|history_stifled
+condition|)
+name|state
+operator|->
+name|flags
+operator||=
+name|HS_STIFLED
+expr_stmt|;
 return|return
 operator|(
 name|state
@@ -776,6 +819,18 @@ operator|=
 name|state
 operator|->
 name|size
+expr_stmt|;
+if|if
+condition|(
+name|state
+operator|->
+name|flags
+operator|&
+name|HS_STIFLED
+condition|)
+name|history_stifled
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -1850,6 +1905,19 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|history_is_stifled
+parameter_list|()
+block|{
+return|return
+operator|(
+name|history_stifled
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Return the string that should be used in the place of this    filename.  This only matters when you don't specify the    filename to read_history (), or write_history (). */
 end_comment
@@ -2529,6 +2597,8 @@ argument_list|(
 name|filename
 argument_list|,
 name|O_WRONLY
+operator||
+name|O_TRUNC
 argument_list|,
 literal|0666
 argument_list|)
@@ -3417,7 +3487,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|digit
+name|digit_p
 argument_list|(
 name|string
 index|[
@@ -3433,7 +3503,7 @@ name|which
 operator|=
 literal|0
 init|;
-name|digit
+name|digit_p
 argument_list|(
 name|string
 index|[
@@ -4042,8 +4112,6 @@ name|char
 modifier|*
 name|hist_error
 parameter_list|(
-name|ret
-parameter_list|,
 name|s
 parameter_list|,
 name|start
@@ -4054,14 +4122,8 @@ name|errtype
 parameter_list|)
 name|char
 modifier|*
-name|ret
-decl_stmt|,
-decl|*
 name|s
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 name|start
 decl_stmt|,
@@ -4069,9 +4131,6 @@ name|current
 decl_stmt|,
 name|errtype
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -4082,24 +4141,88 @@ name|emsg
 decl_stmt|;
 name|int
 name|ll
+decl_stmt|,
+name|elen
 decl_stmt|;
 name|ll
 operator|=
-literal|1
-operator|+
-operator|(
 name|current
 operator|-
 name|start
-operator|)
 expr_stmt|;
+switch|switch
+condition|(
+name|errtype
+condition|)
+block|{
+case|case
+name|EVENT_NOT_FOUND
+case|:
+name|emsg
+operator|=
+literal|"event not found"
+expr_stmt|;
+name|elen
+operator|=
+literal|15
+expr_stmt|;
+break|break;
+case|case
+name|BAD_WORD_SPEC
+case|:
+name|emsg
+operator|=
+literal|"bad word specifier"
+expr_stmt|;
+name|elen
+operator|=
+literal|18
+expr_stmt|;
+break|break;
+case|case
+name|SUBST_FAILED
+case|:
+name|emsg
+operator|=
+literal|"substitution failed"
+expr_stmt|;
+name|elen
+operator|=
+literal|19
+expr_stmt|;
+break|break;
+case|case
+name|BAD_MODIFIER
+case|:
+name|emsg
+operator|=
+literal|"unrecognized history modifier"
+expr_stmt|;
+name|elen
+operator|=
+literal|29
+expr_stmt|;
+break|break;
+default|default:
+name|emsg
+operator|=
+literal|"unknown expansion error"
+expr_stmt|;
+name|elen
+operator|=
+literal|23
+expr_stmt|;
+break|break;
+block|}
 name|temp
 operator|=
 name|xmalloc
 argument_list|(
-literal|1
-operator|+
 name|ll
+operator|+
+name|elen
+operator|+
+literal|3
 argument_list|)
 expr_stmt|;
 name|strncpy
@@ -4118,73 +4241,35 @@ index|[
 name|ll
 index|]
 operator|=
-literal|0
+literal|':'
 expr_stmt|;
-switch|switch
-condition|(
-name|errtype
-condition|)
-block|{
-case|case
-name|EVENT_NOT_FOUND
-case|:
-name|emsg
-operator|=
-literal|"event not found"
-expr_stmt|;
-break|break;
-case|case
-name|BAD_WORD_SPEC
-case|:
-name|emsg
-operator|=
-literal|"bad word specifier"
-expr_stmt|;
-break|break;
-case|case
-name|SUBST_FAILED
-case|:
-name|emsg
-operator|=
-literal|"substitution failed"
-expr_stmt|;
-break|break;
-case|case
-name|BAD_MODIFIER
-case|:
-name|emsg
-operator|=
-literal|"unrecognized history modifier"
-expr_stmt|;
-break|break;
-default|default:
-name|emsg
-operator|=
-literal|"unknown expansion error"
-expr_stmt|;
-break|break;
-block|}
-name|sprintf
-argument_list|(
-name|ret
-argument_list|,
-literal|"%s: %s"
-argument_list|,
 name|temp
-argument_list|,
-name|emsg
-argument_list|)
+index|[
+name|ll
+operator|+
+literal|1
+index|]
+operator|=
+literal|' '
 expr_stmt|;
-name|free
+name|strcpy
 argument_list|(
 name|temp
+operator|+
+name|ll
+operator|+
+literal|2
+argument_list|,
+name|emsg
 argument_list|)
 expr_stmt|;
 return|return
-name|ret
+operator|(
+name|temp
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Get a history substitution string from STR starting at *IPTR    and return it.  The length is returned in LENPTR.     A backslash can quote the delimiter.  If the string is the    empty string, the previous pattern is used.  If there is    no previous pattern for the lhs, the last history search    string is used.     If IS_RHS is 1, we ignore empty strings and set the pattern    to "" anyway.  subst_lhs is not changed if the lhs is empty;    subst_rhs is allowed to be set to the empty string. */
@@ -4825,10 +4910,11 @@ operator|!
 name|event
 condition|)
 block|{
+operator|*
+name|ret_string
+operator|=
 name|hist_error
 argument_list|(
-name|result
-argument_list|,
 name|string
 argument_list|,
 name|start
@@ -4838,10 +4924,10 @@ argument_list|,
 name|EVENT_NOT_FOUND
 argument_list|)
 expr_stmt|;
-operator|*
-name|ret_string
-operator|=
+name|free
+argument_list|(
 name|result
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4880,10 +4966,11 @@ operator|&
 name|error_pointer
 condition|)
 block|{
+operator|*
+name|ret_string
+operator|=
 name|hist_error
 argument_list|(
-name|result
-argument_list|,
 name|string
 argument_list|,
 name|starting_index
@@ -4893,10 +4980,10 @@ argument_list|,
 name|BAD_WORD_SPEC
 argument_list|)
 expr_stmt|;
-operator|*
-name|ret_string
-operator|=
+name|free
+argument_list|(
 name|result
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4995,10 +5082,11 @@ name|c
 condition|)
 block|{
 default|default:
+operator|*
+name|ret_string
+operator|=
 name|hist_error
 argument_list|(
-name|result
-argument_list|,
 name|string
 argument_list|,
 name|i
@@ -5012,10 +5100,10 @@ argument_list|,
 name|BAD_MODIFIER
 argument_list|)
 expr_stmt|;
-operator|*
-name|ret_string
-operator|=
+name|free
+argument_list|(
 name|result
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -5332,10 +5420,11 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|*
+name|ret_string
+operator|=
 name|hist_error
 argument_list|(
-name|result
-argument_list|,
 name|string
 argument_list|,
 name|starting_index
@@ -5345,10 +5434,10 @@ argument_list|,
 name|SUBST_FAILED
 argument_list|)
 expr_stmt|;
-operator|*
-name|ret_string
-operator|=
+name|free
+argument_list|(
 name|result
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -5420,10 +5509,11 @@ operator|>
 name|l_temp
 condition|)
 block|{
+operator|*
+name|ret_string
+operator|=
 name|hist_error
 argument_list|(
-name|result
-argument_list|,
 name|string
 argument_list|,
 name|starting_index
@@ -5433,10 +5523,10 @@ argument_list|,
 name|SUBST_FAILED
 argument_list|)
 expr_stmt|;
-operator|*
-name|ret_string
-operator|=
+name|free
+argument_list|(
 name|result
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -5613,10 +5703,11 @@ literal|0
 condition|)
 continue|continue;
 comment|/* don't want to increment i */
+operator|*
+name|ret_string
+operator|=
 name|hist_error
 argument_list|(
-name|result
-argument_list|,
 name|string
 argument_list|,
 name|starting_index
@@ -5626,10 +5717,10 @@ argument_list|,
 name|SUBST_FAILED
 argument_list|)
 expr_stmt|;
-operator|*
-name|ret_string
-operator|=
+name|free
+argument_list|(
 name|result
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -5738,7 +5829,7 @@ name|result
 argument_list|,
 name|n
 operator|+
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -5783,7 +5874,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do \ 	  { \ 	    int sl = strlen (s); \ 	    j += sl; \ 	    while (j>= result_len) \ 	      result = xrealloc (result, result_len += 128); \ 	    strcpy (result + j - sl, s); \ 	  } \ 	while (0)
+value|do \ 	  { \ 	    int sl = strlen (s); \ 	    j += sl; \ 	    if (j>= result_len) \ 	      { \ 	        while (j>= result_len) \ 	          result_len += 128; \ 	        result = xrealloc (result, result_len); \ 	      } \ 	    strcpy (result + j - sl, s); \ 	  } \ 	while (0)
 end_define
 
 begin_define
@@ -5794,7 +5885,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|do \ 	  { \ 	    if (j>= result_len) \ 	      result = xrealloc (result, result_len += 64); \ 	    result[j++] = c; \ 	    result[j] = '\0'; \ 	  } \ 	while (0)
+value|do \ 	  { \ 	    if (j>= result_len - 1) \ 	      result = xrealloc (result, result_len += 64); \ 	    result[j++] = c; \ 	    result[j] = '\0'; \ 	  } \ 	while (0)
 end_define
 
 begin_function
@@ -5853,6 +5944,28 @@ name|char
 modifier|*
 name|temp
 decl_stmt|;
+comment|/* Setting the history expansion character to 0 inhibits all      history expansion. */
+if|if
+condition|(
+name|history_expansion_char
+operator|==
+literal|0
+condition|)
+block|{
+operator|*
+name|output
+operator|=
+name|savestring
+argument_list|(
+name|hstring
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* Prepare the buffer for printing error messages. */
 name|result
 operator|=
@@ -6328,9 +6441,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NO_BANG_HASH_MODIFIERS
+argument_list|)
 comment|/* There is something that is listed as a `word specifier' in csh 	     documentation which means `the expanded text to this point'. 	     That is not a word specifier, it is an event specifier.  If we 	     don't want to allow modifiers with `!#', just stick the current 	     output line in again. */
 if|if
 condition|(
@@ -6718,7 +6834,14 @@ name|i
 index|]
 operator|==
 literal|'-'
-operator|||
+condition|)
+name|first
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|spec
 index|[
 name|i
@@ -6733,7 +6856,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|digit
+name|digit_p
 argument_list|(
 name|spec
 index|[
@@ -6750,7 +6873,7 @@ name|first
 operator|=
 literal|0
 init|;
-name|digit
+name|digit_p
 argument_list|(
 name|spec
 index|[
@@ -6847,7 +6970,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|digit
+name|digit_p
 argument_list|(
 name|spec
 index|[
@@ -6862,7 +6985,7 @@ name|last
 operator|=
 literal|0
 init|;
-name|digit
+name|digit_p
 argument_list|(
 name|spec
 index|[

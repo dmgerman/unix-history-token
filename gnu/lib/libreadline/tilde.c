@@ -90,7 +90,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<readline/tilde.h>
+file|"tilde.h"
 end_include
 
 begin_include

@@ -12,18 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<readline/history.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -44,6 +32,36 @@ include|#
 directive|include
 file|<sys/errno.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<readline/readline.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<readline/history.h>
+end_include
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getwd
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|xmalloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The names of functions that actually do the manipulation. */
@@ -230,6 +248,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Forward declarations. */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|stripwhite
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|COMMAND
+modifier|*
+name|find_command
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* The name of this program, as taken from argv[0]. */
 end_comment
 
@@ -247,10 +285,50 @@ end_comment
 begin_decl_stmt
 name|int
 name|done
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|char
+modifier|*
+name|dupstr
+parameter_list|(
+name|s
+parameter_list|)
+name|int
+name|s
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|r
+decl_stmt|;
+name|r
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|r
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|r
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|main
@@ -268,6 +346,13 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|line
+decl_stmt|,
+modifier|*
+name|s
+decl_stmt|;
 name|progname
 operator|=
 name|argv
@@ -280,16 +365,15 @@ argument_list|()
 expr_stmt|;
 comment|/* Bind our completer. */
 comment|/* Loop reading and executing lines until the user quits. */
-while|while
-condition|(
-operator|!
+for|for
+control|(
+init|;
 name|done
-condition|)
+operator|==
+literal|0
+condition|;
+control|)
 block|{
-name|char
-modifier|*
-name|line
-decl_stmt|;
 name|line
 operator|=
 name|readline
@@ -302,16 +386,10 @@ condition|(
 operator|!
 name|line
 condition|)
-block|{
-name|done
+break|break;
+comment|/* Remove leading and trailing whitespace from the line.          Then, if there is anything left, add it to the history list          and execute it. */
+name|s
 operator|=
-literal|1
-expr_stmt|;
-comment|/* Encountered EOF at top level. */
-block|}
-else|else
-block|{
-comment|/* Remove leading and trailing whitespace from the line. 	     Then, if there is anything left, add it to the history list 	     and execute it. */
 name|stripwhite
 argument_list|(
 name|line
@@ -320,25 +398,20 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|line
+name|s
 condition|)
 block|{
 name|add_history
 argument_list|(
-name|line
+name|s
 argument_list|)
 expr_stmt|;
 name|execute_line
 argument_list|(
-name|line
+name|s
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|line
-condition|)
 name|free
 argument_list|(
 name|line
@@ -357,31 +430,22 @@ begin_comment
 comment|/* Execute a command line. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|execute_line
-argument_list|(
-argument|line
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|)
 name|char
 modifier|*
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
 name|i
 decl_stmt|;
 name|COMMAND
-modifier|*
-name|find_command
-argument_list|()
-decl_stmt|,
 modifier|*
 name|command
 decl_stmt|;
@@ -401,7 +465,6 @@ index|[
 name|i
 index|]
 operator|&&
-operator|!
 name|whitespace
 argument_list|(
 name|line
@@ -416,6 +479,27 @@ expr_stmt|;
 name|word
 operator|=
 name|line
+operator|+
+name|i
+expr_stmt|;
+while|while
+condition|(
+name|line
+index|[
+name|i
+index|]
+operator|&&
+operator|!
+name|whitespace
+argument_list|(
+name|line
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+name|i
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -454,7 +538,12 @@ argument_list|,
 name|word
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 comment|/* Get argument to command, if any. */
 while|while
@@ -477,6 +566,8 @@ operator|+
 name|i
 expr_stmt|;
 comment|/* Call the function. */
+return|return
+operator|(
 operator|(
 operator|*
 operator|(
@@ -488,9 +579,10 @@ operator|)
 operator|(
 name|word
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Look up NAME as the name of a command, and return a pointer to that    command.  Return a NULL pointer if NAME isn't a command name. */
@@ -566,93 +658,94 @@ block|}
 end_function
 
 begin_comment
-comment|/* Strip whitespace from the start and end of STRING. */
+comment|/* Strip whitespace from the start and end of STRING.  Return a pointer    into STRING. */
 end_comment
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|stripwhite
-argument_list|(
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|string
+parameter_list|)
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
-name|int
-name|i
-init|=
-literal|0
+name|char
+modifier|*
+name|s
+decl_stmt|,
+modifier|*
+name|t
 decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|s
+operator|=
+name|string
+init|;
 name|whitespace
 argument_list|(
-name|string
-index|[
-name|i
-index|]
+operator|*
+name|s
 argument_list|)
-condition|)
-name|i
+condition|;
+name|s
 operator|++
-expr_stmt|;
+control|)
+empty_stmt|;
 if|if
 condition|(
-name|i
+operator|*
+name|s
+operator|==
+literal|0
 condition|)
-name|strcpy
-argument_list|(
-name|string
-argument_list|,
-name|string
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-name|i
+return|return
+operator|(
+name|s
+operator|)
+return|;
+name|t
 operator|=
+name|s
+operator|+
 name|strlen
 argument_list|(
-name|string
+name|s
 argument_list|)
 operator|-
 literal|1
 expr_stmt|;
 while|while
 condition|(
-name|i
+name|t
 operator|>
-literal|0
+name|s
 operator|&&
 name|whitespace
 argument_list|(
-name|string
-index|[
-name|i
-index|]
+operator|*
+name|t
 argument_list|)
 condition|)
-name|i
+name|t
 operator|--
 expr_stmt|;
-name|string
-index|[
+operator|*
 operator|++
-name|i
-index|]
+name|t
 operator|=
 literal|'\0'
 expr_stmt|;
+return|return
+name|s
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **************************************************************** */
@@ -674,6 +767,23 @@ begin_comment
 comment|/* **************************************************************** */
 end_comment
 
+begin_function_decl
+name|char
+modifier|*
+name|command_generator
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+modifier|*
+name|fileman_completion
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Tell the GNU Readline library how to complete.  We want to try to complete    on command names if this is the first word in the line, or on filenames    if not. */
 end_comment
@@ -685,12 +795,6 @@ end_macro
 
 begin_block
 block|{
-name|char
-modifier|*
-modifier|*
-name|fileman_completion
-parameter_list|()
-function_decl|;
 comment|/* Allow conditional parsing of the ~/.inputrc file. */
 name|rl_readline_name
 operator|=
@@ -700,7 +804,7 @@ comment|/* Tell the completer that we want a crack first. */
 name|rl_attempted_completion_function
 operator|=
 operator|(
-name|Function
+name|CPPFunction
 operator|*
 operator|)
 name|fileman_completion
@@ -739,11 +843,6 @@ modifier|*
 modifier|*
 name|matches
 decl_stmt|;
-name|char
-modifier|*
-name|command_generator
-parameter_list|()
-function_decl|;
 name|matches
 operator|=
 operator|(
@@ -858,7 +957,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|dupstr
+argument_list|(
 name|name
+argument_list|)
 operator|)
 return|;
 block|}
@@ -936,7 +1038,7 @@ name|arg
 condition|)
 name|arg
 operator|=
-literal|"*"
+literal|""
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -947,11 +1049,14 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|system
 argument_list|(
 name|syscom
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -981,21 +1086,26 @@ argument_list|,
 name|arg
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|sprintf
 argument_list|(
 name|syscom
 argument_list|,
-literal|"cat %s | more"
+literal|"more %s"
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|system
 argument_list|(
 name|syscom
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1020,6 +1130,11 @@ argument_list|(
 literal|"rename"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -1053,7 +1168,11 @@ argument_list|,
 name|arg
 argument_list|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|stat
@@ -1073,7 +1192,11 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|printf
 argument_list|(
@@ -1084,7 +1207,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s has %d link%s, and is %d bytes in length.\n"
+literal|"%s has %d link%s, and is %d byte%s in length.\n"
 argument_list|,
 name|arg
 argument_list|,
@@ -1107,11 +1230,23 @@ argument_list|,
 name|finfo
 operator|.
 name|st_size
+argument_list|,
+operator|(
+name|finfo
+operator|.
+name|st_size
+operator|==
+literal|1
+operator|)
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"      Created on: %s"
+literal|"Inode Last Change at: %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1124,7 +1259,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Last access at: %s"
+literal|"      Last access at: %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1137,7 +1272,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Last modified at: %s"
+literal|"    Last modified at: %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1148,6 +1283,11 @@ name|st_mtime
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1172,6 +1312,11 @@ argument_list|(
 literal|"delete"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -1342,6 +1487,11 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1375,16 +1525,26 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|perror
 argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|com_pwd
 argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1413,15 +1573,35 @@ name|dir
 index|[
 literal|1024
 index|]
+decl_stmt|,
+modifier|*
+name|s
 decl_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|getwd
 argument_list|(
 name|dir
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Error getting pwd: %s\n"
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|printf
 argument_list|(
 literal|"Current directory is %s\n"
@@ -1429,6 +1609,9 @@ argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 
@@ -1456,6 +1639,11 @@ name|done
 operator|=
 literal|1
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1546,13 +1734,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/*  * Local variables:  * compile-command: "cc -g -I../.. -L.. -o fileman fileman.c -lreadline -ltermcap"  * end:  */
-end_comment
 
 end_unit
 

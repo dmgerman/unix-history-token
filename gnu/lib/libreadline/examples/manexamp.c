@@ -55,19 +55,13 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|do_gets
+name|rl_gets
 parameter_list|()
 block|{
 comment|/* If the buffer has already been allocated, return the memory      to the free pool. */
 if|if
 condition|(
 name|line_read
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 condition|)
 block|{
 name|free

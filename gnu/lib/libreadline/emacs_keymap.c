@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline.h"
 end_include
 
 begin_comment
@@ -2426,11 +2426,7 @@ comment|/* Meta-- */
 block|{
 name|ISFUNC
 block|,
-operator|(
-name|Function
-operator|*
-operator|)
-literal|0x0
+name|rl_yank_last_arg
 block|}
 block|,
 comment|/* Meta-. */
@@ -2769,10 +2765,15 @@ comment|/* Some more punctuation. */
 block|{
 name|ISFUNC
 block|,
-name|rl_arrow_keys
+operator|(
+name|Function
+operator|*
+operator|)
+literal|0x0
 block|}
 block|,
 comment|/* Meta-[ */
+comment|/* was rl_arrow_keys */
 block|{
 name|ISFUNC
 block|,
@@ -2805,11 +2806,7 @@ comment|/* Meta-^ */
 block|{
 name|ISFUNC
 block|,
-operator|(
-name|Function
-operator|*
-operator|)
-literal|0x0
+name|rl_yank_last_arg
 block|}
 block|,
 comment|/* Meta-_ */
@@ -2958,10 +2955,15 @@ comment|/* Meta-n */
 block|{
 name|ISFUNC
 block|,
-name|rl_arrow_keys
+operator|(
+name|Function
+operator|*
+operator|)
+literal|0x0
 block|}
 block|,
 comment|/* Meta-o */
+comment|/* was rl_arrow_keys */
 block|{
 name|ISFUNC
 block|,
