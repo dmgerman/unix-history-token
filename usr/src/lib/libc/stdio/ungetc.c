@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ungetc.c	5.4 (Berkeley) %G%"
+literal|"@(#)ungetc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,7 +374,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fflush
+name|__sflush
 argument_list|(
 name|fp
 argument_list|)
