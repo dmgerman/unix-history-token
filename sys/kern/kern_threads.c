@@ -468,6 +468,9 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+name|DROP_GIANT_NOSWITCH
+argument_list|()
+expr_stmt|;
 name|p
 operator|->
 name|p_priority
@@ -498,6 +501,9 @@ name|sched_lock
 argument_list|,
 name|MTX_SPIN
 argument_list|)
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(
