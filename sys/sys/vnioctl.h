@@ -10,8 +10,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_PATH_VNTAB
-value|"/etc/vntab"
+name|FDISKFILE
+value|"/etc/fdisks"
 end_define
 
 begin_comment

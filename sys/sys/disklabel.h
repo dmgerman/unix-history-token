@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)disklabel.h	8.1 (Berkeley) 6/2/93  */
+comment|/*  * Copyright (c) 1987, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)disklabel.h	8.2 (Berkeley) 7/10/94  */
 end_comment
 
 begin_comment
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|DISKMAGIC
-value|((u_long) 0x82564557)
+value|((u_int32_t)0x82564557)
 end_define
 
 begin_comment
@@ -149,15 +149,15 @@ begin_struct
 struct|struct
 name|disklabel
 block|{
-name|u_long
+name|u_int32_t
 name|d_magic
 decl_stmt|;
 comment|/* the magic number */
-name|short
+name|u_int16_t
 name|d_type
 decl_stmt|;
 comment|/* drive type */
-name|short
+name|u_int16_t
 name|d_subtype
 decl_stmt|;
 comment|/* controller/d_type specific */
@@ -232,71 +232,71 @@ endif|#
 directive|endif
 comment|/* ! KERNEL or STANDALONE */
 comment|/* disk geometry: */
-name|u_long
+name|u_int32_t
 name|d_secsize
 decl_stmt|;
 comment|/* # of bytes per sector */
-name|u_long
+name|u_int32_t
 name|d_nsectors
 decl_stmt|;
 comment|/* # of data sectors per track */
-name|u_long
+name|u_int32_t
 name|d_ntracks
 decl_stmt|;
 comment|/* # of tracks per cylinder */
-name|u_long
+name|u_int32_t
 name|d_ncylinders
 decl_stmt|;
 comment|/* # of data cylinders per unit */
-name|u_long
+name|u_int32_t
 name|d_secpercyl
 decl_stmt|;
 comment|/* # of data sectors per cylinder */
-name|u_long
+name|u_int32_t
 name|d_secperunit
 decl_stmt|;
 comment|/* # of data sectors per unit */
-comment|/* 	 * Spares (bad sector replacements) below 	 * are not counted in d_nsectors or d_secpercyl. 	 * Spare sectors are assumed to be physical sectors 	 * which occupy space at the end of each track and/or cylinder. 	 */
-name|u_short
+comment|/* 	 * Spares (bad sector replacements) below are not counted in 	 * d_nsectors or d_secpercyl.  Spare sectors are assumed to 	 * be physical sectors which occupy space at the end of each 	 * track and/or cylinder. 	 */
+name|u_int16_t
 name|d_sparespertrack
 decl_stmt|;
 comment|/* # of spare sectors per track */
-name|u_short
+name|u_int16_t
 name|d_sparespercyl
 decl_stmt|;
 comment|/* # of spare sectors per cylinder */
-comment|/* 	 * Alternate cylinders include maintenance, replacement, 	 * configuration description areas, etc. 	 */
-name|u_long
+comment|/* 	 * Alternate cylinders include maintenance, replacement, configuration 	 * description areas, etc. 	 */
+name|u_int32_t
 name|d_acylinders
 decl_stmt|;
 comment|/* # of alt. cylinders per unit */
 comment|/* hardware characteristics: */
-comment|/* 	 * d_interleave, d_trackskew and d_cylskew describe perturbations 	 * in the media format used to compensate for a slow controller. 	 * Interleave is physical sector interleave, set up by the formatter 	 * or controller when formatting.  When interleaving is in use, 	 * logically adjacent sectors are not physically contiguous, 	 * but instead are separated by some number of sectors. 	 * It is specified as the ratio of physical sectors traversed 	 * per logical sector.  Thus an interleave of 1:1 implies contiguous 	 * layout, while 2:1 implies that logical sector 0 is separated 	 * by one sector from logical sector 1. 	 * d_trackskew is the offset of sector 0 on track N 	 * relative to sector 0 on track N-1 on the same cylinder. 	 * Finally, d_cylskew is the offset of sector 0 on cylinder N 	 * relative to sector 0 on cylinder N-1. 	 */
-name|u_short
+comment|/* 	 * d_interleave, d_trackskew and d_cylskew describe perturbations 	 * in the media format used to compensate for a slow controller. 	 * Interleave is physical sector interleave, set up by the 	 * formatter or controller when formatting.  When interleaving is 	 * in use, logically adjacent sectors are not physically 	 * contiguous, but instead are separated by some number of 	 * sectors.  It is specified as the ratio of physical sectors 	 * traversed per logical sector.  Thus an interleave of 1:1 	 * implies contiguous layout, while 2:1 implies that logical 	 * sector 0 is separated by one sector from logical sector 1. 	 * d_trackskew is the offset of sector 0 on track N relative to 	 * sector 0 on track N-1 on the same cylinder.  Finally, d_cylskew 	 * is the offset of sector 0 on cylinder N relative to sector 0 	 * on cylinder N-1. 	 */
+name|u_int16_t
 name|d_rpm
 decl_stmt|;
 comment|/* rotational speed */
-name|u_short
+name|u_int16_t
 name|d_interleave
 decl_stmt|;
 comment|/* hardware sector interleave */
-name|u_short
+name|u_int16_t
 name|d_trackskew
 decl_stmt|;
 comment|/* sector 0 skew, per track */
-name|u_short
+name|u_int16_t
 name|d_cylskew
 decl_stmt|;
 comment|/* sector 0 skew, per cylinder */
-name|u_long
+name|u_int32_t
 name|d_headswitch
 decl_stmt|;
 comment|/* head switch time, usec */
-name|u_long
+name|u_int32_t
 name|d_trkseek
 decl_stmt|;
 comment|/* track-to-track seek, usec */
-name|u_long
+name|u_int32_t
 name|d_flags
 decl_stmt|;
 comment|/* generic flags */
@@ -304,7 +304,7 @@ define|#
 directive|define
 name|NDDATA
 value|5
-name|u_long
+name|u_int32_t
 name|d_drivedata
 index|[
 name|NDDATA
@@ -315,31 +315,31 @@ define|#
 directive|define
 name|NSPARE
 value|5
-name|u_long
+name|u_int32_t
 name|d_spare
 index|[
 name|NSPARE
 index|]
 decl_stmt|;
 comment|/* reserved for future use */
-name|u_long
+name|u_int32_t
 name|d_magic2
 decl_stmt|;
 comment|/* the magic number (again) */
-name|u_short
+name|u_int16_t
 name|d_checksum
 decl_stmt|;
 comment|/* xor of data incl. partitions */
 comment|/* filesystem and partition information: */
-name|u_short
+name|u_int16_t
 name|d_npartitions
 decl_stmt|;
 comment|/* number of partitions in following */
-name|u_long
+name|u_int32_t
 name|d_bbsize
 decl_stmt|;
 comment|/* size of boot area at sn0, bytes */
-name|u_long
+name|u_int32_t
 name|d_sbsize
 decl_stmt|;
 comment|/* max size of fs superblock, bytes */
@@ -347,33 +347,33 @@ struct|struct
 name|partition
 block|{
 comment|/* the partition table */
-name|u_long
+name|u_int32_t
 name|p_size
 decl_stmt|;
 comment|/* number of sectors in partition */
-name|u_long
+name|u_int32_t
 name|p_offset
 decl_stmt|;
 comment|/* starting sector */
-name|u_long
+name|u_int32_t
 name|p_fsize
 decl_stmt|;
 comment|/* filesystem basic fragment size */
-name|u_char
+name|u_int8_t
 name|p_fstype
 decl_stmt|;
 comment|/* filesystem type, see below */
-name|u_char
+name|u_int8_t
 name|p_frag
 decl_stmt|;
 comment|/* filesystem fragments per block */
 union|union
 block|{
-name|u_short
+name|u_int16_t
 name|cpg
 decl_stmt|;
 comment|/* UFS: FS cylinders per group */
-name|u_short
+name|u_int16_t
 name|sgs
 decl_stmt|;
 comment|/* LFS: FS segment shift */
@@ -530,7 +530,7 @@ literal|"type 9"
 block|,
 literal|"floppy"
 block|,
-literal|0
+name|NULL
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -747,7 +747,7 @@ literal|"ISO9660"
 block|,
 literal|"boot"
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -906,7 +906,7 @@ name|LOCORE
 end_ifndef
 
 begin_comment
-comment|/*  * Structure used to perform a format  * or other raw operation, returning data  * and/or register values.  * Register identification and format  * are device- and driver-dependent.  */
+comment|/*  * Structure used to perform a format or other raw operation, returning  * data and/or register values.  Register identification and format  * are device- and driver-dependent.  */
 end_comment
 
 begin_struct
@@ -936,7 +936,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure used internally to retrieve  * information about a partition on a disk.  */
+comment|/*  * Structure used internally to retrieve information about a partition  * on a disk.  */
 end_comment
 
 begin_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.3 (Berkeley) 1/21/94  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  */
 end_comment
 
 begin_ifndef
@@ -91,7 +91,7 @@ name|dtom
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct mbuf *)((int)(x)& ~(MSIZE-1)))
+value|((struct mbuf *)((long)(x)& ~(MSIZE-1)))
 end_define
 
 begin_define
@@ -101,7 +101,7 @@ name|mtocl
 parameter_list|(
 name|x
 parameter_list|)
-value|(((u_int)(x) - (u_int)mbutl)>> MCLSHIFT)
+value|(((u_long)(x) - (u_long)mbutl)>> MCLSHIFT)
 end_define
 
 begin_define
@@ -111,7 +111,7 @@ name|cltom
 parameter_list|(
 name|x
 parameter_list|)
-value|((caddr_t)((u_int)mbutl + ((u_int)(x)<< MCLSHIFT)))
+value|((caddr_t)((u_long)mbutl + ((u_long)(x)<< MCLSHIFT)))
 end_define
 
 begin_comment
@@ -134,14 +134,14 @@ modifier|*
 name|mh_nextpkt
 decl_stmt|;
 comment|/* next chain in queue/record */
-name|int
-name|mh_len
-decl_stmt|;
-comment|/* amount of data in this mbuf */
 name|caddr_t
 name|mh_data
 decl_stmt|;
 comment|/* location of data */
+name|int
+name|mh_len
+decl_stmt|;
+comment|/* amount of data in this mbuf */
 name|short
 name|mh_type
 decl_stmt|;
@@ -162,16 +162,16 @@ begin_struct
 struct|struct
 name|pkthdr
 block|{
-name|int
-name|len
-decl_stmt|;
-comment|/* total packet length */
 name|struct
 name|ifnet
 modifier|*
 name|rcvif
 decl_stmt|;
 comment|/* rcv interface */
+name|int
+name|len
+decl_stmt|;
+comment|/* total packet length */
 block|}
 struct|;
 end_struct
@@ -672,7 +672,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|MBUFLOCK( \ 	  if (mclfree == 0) \ 		(void)m_clalloc(1, (how)); \ 	  if ((p) = (caddr_t)mclfree) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 	  } \ 	)
+value|MBUFLOCK( \ 	  if (mclfree == 0) \ 		(void)m_clalloc(1, (how)); \ 	  if (((p) = (caddr_t)mclfree) != 0) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 	  } \ 	)
 end_define
 
 begin_define
@@ -1203,6 +1203,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|m_adj
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|m_clalloc
 name|__P
@@ -1245,6 +1261,18 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|m_reclaim
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
