@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hys.c	4.4 (Berkeley) %G%"
+literal|"@(#)hys.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,10 @@ define|#
 directive|define
 name|DROPDTR
 end_define
+
+begin_comment
+comment|/*  * The "correct" switch settings for a USR Courier 2400 are  * 	Dialin/out:	0 0 1 1 0 0 0 1 0 0  *	Dialout only:	0 0 1 1 1 1 0 1 0 0  * where 0 = off and 1 = on  */
+end_comment
 
 begin_endif
 endif|#
@@ -206,12 +210,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|dh
-init|=
-operator|-
-literal|1
-decl_stmt|;
 extern|extern errno;
 name|char
 name|dcname
@@ -233,6 +231,16 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
+decl_stmt|;
+name|int
+name|dh
+init|=
+operator|-
+literal|1
+decl_stmt|,
+name|nrings
+init|=
+literal|0
 decl_stmt|;
 name|sprintf
 argument_list|(
@@ -275,7 +283,7 @@ name|dh
 operator|>=
 literal|0
 condition|)
-name|close
+name|hyscls
 argument_list|(
 name|dh
 argument_list|)
@@ -355,7 +363,7 @@ argument_list|,
 literal|"CHAT FAILED"
 argument_list|)
 expr_stmt|;
-name|close
+name|hyscls
 argument_list|(
 name|dh
 argument_list|)
@@ -408,9 +416,9 @@ name|write
 argument_list|(
 name|dh
 argument_list|,
-literal|"ATX6\r"
+literal|"ATX6S7=44\r"
 argument_list|,
-literal|5
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -458,6 +466,21 @@ literal|5
 argument_list|)
 expr_stmt|;
 else|else
+ifdef|#
+directive|ifdef
+name|USR2400
+name|write
+argument_list|(
+name|dh
+argument_list|,
+literal|"\rATD"
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|HAYES
 name|write
 argument_list|(
 name|dh
@@ -467,6 +490,9 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|HAYES
 name|write
 argument_list|(
 name|dh
@@ -528,13 +554,15 @@ argument_list|,
 name|alarmtr
 argument_list|)
 expr_stmt|;
-do|do
-block|{
 name|alarm
 argument_list|(
+literal|2
+operator|*
 name|MAXMSGTIME
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|cp
 operator|=
 name|cbuf
@@ -620,6 +648,11 @@ argument_list|,
 name|cbuf
 argument_list|)
 expr_stmt|;
+name|alarm
+argument_list|(
+name|MAXMSGTIME
+argument_list|)
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -633,6 +666,11 @@ literal|4
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|nrings
+operator|++
+operator|<
+literal|5
 condition|)
 do|;
 if|if
@@ -940,6 +978,15 @@ argument_list|(
 name|devSel
 argument_list|,
 literal|"HSM did not respond to ATZ"
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|fd
+argument_list|,
+literal|"ATH\r"
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 name|sleep
