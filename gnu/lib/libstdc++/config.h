@@ -701,9 +701,12 @@ begin_comment
 comment|/* Define to 1 if you have the `ceill' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CEILL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CEILL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `copysign' function. */
@@ -2819,17 +2822,23 @@ begin_comment
 comment|/* Define to 1 if you have the `__signbitf' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___SIGNBITF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE___SIGNBITF
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `__signbitl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___SIGNBITL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE___SIGNBITL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
