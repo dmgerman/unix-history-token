@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -261,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|NLOG
-value|16
+value|32
 end_define
 
 begin_struct
@@ -279,6 +279,9 @@ name|msg
 decl_stmt|;
 name|int
 name|target
+decl_stmt|;
+name|int
+name|resid
 decl_stmt|;
 block|}
 name|asc_log
@@ -364,7 +367,7 @@ name|ir
 parameter_list|,
 name|csr
 parameter_list|)
-value|((ir) | (ASC_PHASE(csr)<< 8))
+value|((ir) | (((csr)& 0x67)<< 8))
 end_define
 
 begin_comment
@@ -1338,6 +1341,17 @@ end_define
 
 begin_comment
 comment|/* true if try neg. synchronous offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARITY_ERR
+value|0x80
+end_define
+
+begin_comment
+comment|/* true if parity error seen */
 end_comment
 
 begin_comment
@@ -2435,63 +2449,7 @@ name|asc
 operator|->
 name|regs
 expr_stmt|;
-comment|/* 	 * Check to see if a reselection is in progress and if so, 	 * try to cancel it or respond to the reselection if it won. 	 */
-if|if
-condition|(
-name|asc
-operator|->
-name|state
-operator|==
-name|ASC_STATE_RESEL
-condition|)
-block|{
-name|regs
-operator|->
-name|asc_cmd
-operator|=
-name|ASC_CMD_DISABLE_SEL
-expr_stmt|;
-name|readback
-argument_list|(
-name|regs
-operator|->
-name|asc_cmd
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|!
-operator|(
-name|regs
-operator|->
-name|asc_status
-operator|&
-name|ASC_CSR_INT
-operator|)
-condition|)
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|asc_intr
-argument_list|(
-name|asc
-operator|-
-name|asc_softc
-argument_list|)
-expr_stmt|;
-comment|/* we will be busy if a reselecting device won */
-if|if
-condition|(
-name|asc
-operator|->
-name|state
-operator|==
-name|ASC_STATE_BUSY
-condition|)
-return|return;
-block|}
+comment|/* 	 * If a reselection is in progress, it is Ok to ignore it since 	 * the ASC will automatically cancel the command and flush 	 * the FIFO if the ASC is reselected before the command starts. 	 * If we try to use ASC_CMD_DISABLE_SEL, we can hang the system if 	 * a reselect occurs before starting the command. 	 */
 name|asc
 operator|->
 name|state
@@ -2682,6 +2640,14 @@ name|msg
 operator|=
 literal|0xff
 expr_stmt|;
+name|asc_logp
+operator|->
+name|resid
+operator|=
+name|scsicmd
+operator|->
+name|buflen
+expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -2700,24 +2666,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Init the chip and target state. 	 */
-name|regs
-operator|->
-name|asc_cmd
-operator|=
-name|ASC_CMD_FLUSH
-expr_stmt|;
-name|readback
-argument_list|(
-name|regs
-operator|->
-name|asc_cmd
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
 name|state
 operator|->
 name|flags
@@ -3164,6 +3112,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|asc_logp
+operator|->
+name|resid
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -3269,6 +3223,66 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* 	 * Check for parity error. 	 * Hardware will automatically set ATN 	 * to request the device for a MSG_OUT phase. 	 */
+if|if
+condition|(
+name|status
+operator|&
+name|ASC_CSR_PE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"asc%d: SCSI device %d: incomming parity error seen\n"
+argument_list|,
+name|asc
+operator|-
+name|asc_softc
+argument_list|,
+name|asc
+operator|->
+name|target
+argument_list|)
+expr_stmt|;
+name|asc
+operator|->
+name|st
+index|[
+name|asc
+operator|->
+name|target
+index|]
+operator|.
+name|flags
+operator||=
+name|PARITY_ERR
+expr_stmt|;
+block|}
+comment|/* 	 * Check for gross error. 	 * Probably a bug in a device driver. 	 */
+if|if
+condition|(
+name|status
+operator|&
+name|ASC_CSR_GE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"asc%d: SCSI device %d: gross error\n"
+argument_list|,
+name|asc
+operator|-
+name|asc_softc
+argument_list|,
+name|asc
+operator|->
+name|target
+argument_list|)
+expr_stmt|;
+goto|goto
+name|abort
+goto|;
+block|}
 comment|/* check for message in or out */
 if|if
 condition|(
@@ -3356,6 +3370,44 @@ break|break;
 case|case
 name|ASC_PHASE_MSG_OUT
 case|:
+comment|/* 			 * Check for parity error. 			 * Hardware will automatically set ATN 			 * to request the device for a MSG_OUT phase. 			 */
+if|if
+condition|(
+name|state
+operator|->
+name|flags
+operator|&
+name|PARITY_ERR
+condition|)
+block|{
+name|state
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PARITY_ERR
+expr_stmt|;
+name|state
+operator|->
+name|msg_out
+operator|=
+name|SCSI_MESSAGE_PARITY_ERROR
+expr_stmt|;
+comment|/* reset message in counter */
+name|state
+operator|->
+name|msglen
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|state
+operator|->
+name|msg_out
+operator|=
+name|SCSI_NO_OP
+expr_stmt|;
 name|regs
 operator|->
 name|asc_fifo
@@ -3363,12 +3415,6 @@ operator|=
 name|state
 operator|->
 name|msg_out
-expr_stmt|;
-name|state
-operator|->
-name|msg_out
-operator|=
-name|SCSI_NO_OP
 expr_stmt|;
 name|regs
 operator|->
@@ -3619,6 +3665,39 @@ name|asc
 operator|->
 name|script
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|asc_logp
+operator|==
+name|asc_log
+condition|)
+name|asc_log
+index|[
+name|NLOG
+operator|-
+literal|1
+index|]
+operator|.
+name|resid
+operator|=
+name|len
+expr_stmt|;
+else|else
+name|asc_logp
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|resid
+operator|=
+name|len
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -4036,6 +4115,51 @@ case|case
 literal|0
 case|:
 comment|/* device did not respond */
+comment|/* check for one of the starting scripts */
+switch|switch
+condition|(
+name|asc
+operator|->
+name|script
+operator|-
+name|asc_scripts
+condition|)
+block|{
+case|case
+name|SCRIPT_TRY_SYNC
+case|:
+case|case
+name|SCRIPT_SIMPLE
+case|:
+case|case
+name|SCRIPT_DATA_IN
+case|:
+case|case
+name|SCRIPT_DATA_OUT
+case|:
+if|if
+condition|(
+name|regs
+operator|->
+name|asc_flags
+operator|&
+name|ASC_FLAGS_FIFO_CNT
+condition|)
+block|{
+name|regs
+operator|->
+name|asc_cmd
+operator|=
+name|ASC_CMD_FLUSH
+expr_stmt|;
+name|readback
+argument_list|(
+name|regs
+operator|->
+name|asc_cmd
+argument_list|)
+expr_stmt|;
+block|}
 name|state
 operator|->
 name|error
@@ -4054,7 +4178,22 @@ name|ir
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+comment|/* FALLTHROUGH */
 default|default:
+name|printf
+argument_list|(
+literal|"asc%d: SCSI device %d: unexpected disconnect\n"
+argument_list|,
+name|asc
+operator|-
+name|asc_softc
+argument_list|,
+name|asc
+operator|->
+name|target
+argument_list|)
+expr_stmt|;
 comment|/* 			 * On rare occasions my RZ24 does a disconnect during 			 * data in phase and the following seems to keep it 			 * happy. 			 * XXX Should a scsi disk ever do this?? 			 */
 name|asc
 operator|->
@@ -4198,17 +4337,6 @@ name|msg
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|asc
-operator|->
-name|state
-operator|!=
-name|ASC_STATE_RESEL
-condition|)
-goto|goto
-name|abort
-goto|;
 name|asc
 operator|->
 name|state
@@ -4317,7 +4445,7 @@ condition|)
 goto|goto
 name|abort
 goto|;
-comment|/* must be just a ASC_INT_FC */
+comment|/* 	 * 'ir' must be just ASC_INT_FC. 	 * This is normal if canceling an ASC_ENABLE_SEL. 	 */
 name|done
 label|:
 name|MachEmptyWriteBuffer
@@ -4491,6 +4619,12 @@ argument_list|(
 literal|"asc_get_status: fifo cnt %d\n"
 argument_list|,
 name|data
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|asc_DumpLog
+argument_list|(
+literal|"get_status"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -4886,7 +5020,7 @@ index|]
 expr_stmt|;
 break|break;
 block|}
-comment|/* look for another device that is ready */
+comment|/* 	 * Look for another device that is ready. 	 * May want to keep last one started and increment for fairness 	 * rather than always starting at zero. 	 */
 for|for
 control|(
 name|i
@@ -7788,6 +7922,33 @@ operator|->
 name|target
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+operator|!
+operator|(
+name|state
+operator|->
+name|flags
+operator|&
+name|DISCONN
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"asc_disconnect: device %d: DISCONN not set!\n"
+argument_list|,
+name|asc
+operator|->
+name|target
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|asc
 operator|->
 name|target
@@ -8471,7 +8632,7 @@ name|status
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"asc%d tgt %d status %x ss %x ir %x cond %d:%x msg %x\n"
+literal|"asc%d tgt %d status %x ss %x ir %x cond %d:%x msg %x resid %d\n"
 argument_list|,
 name|status
 operator|>>
@@ -8517,6 +8678,10 @@ argument_list|,
 name|lp
 operator|->
 name|msg
+argument_list|,
+name|lp
+operator|->
+name|resid
 argument_list|)
 expr_stmt|;
 if|if
