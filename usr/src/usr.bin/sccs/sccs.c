@@ -29,9 +29,28 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c 1.3 delta %G% 00:27:33 get %H% %T%"
+literal|"@(#)sccs.c 1.4 delta %G% 11:18:42 get %H% %T%"
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|bitset
+parameter_list|(
+name|bit
+parameter_list|,
+name|word
+parameter_list|)
+value|((bit)& (word))
+end_define
+
+begin_typedef
+typedef|typedef
+name|char
+name|bool
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -56,7 +75,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* bits for sccspath */
+comment|/* bits for sccsflags */
 end_comment
 
 begin_define
@@ -70,6 +89,17 @@ begin_comment
 comment|/* no s. on front of args */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_PROT
+value|0002
+end_define
+
+begin_comment
+comment|/* protected (e.g., admin) */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|sccsprog
@@ -79,7 +109,7 @@ init|=
 block|{
 literal|"admin"
 block|,
-literal|0
+name|F_PROT
 block|,
 literal|"/usr/sccs/admin"
 block|,
@@ -121,7 +151,7 @@ literal|"/usr/sccs/prt"
 block|,
 literal|"rmdel"
 block|,
-literal|0
+name|F_PROT
 block|,
 literal|"/usr/sccs/rmdel"
 block|,
@@ -145,9 +175,33 @@ name|char
 modifier|*
 name|SccsPath
 init|=
-literal|"SCCS/s."
+literal|"SCCS"
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* pathname of SCCS files */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|IsAdmin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if set, this person is an administrator */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|RealUser
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if set, running as real user */
+end_comment
 
 begin_function
 name|main
@@ -195,6 +249,24 @@ name|sccsprog
 modifier|*
 name|cmd
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|200
+index|]
+decl_stmt|;
+name|int
+name|uid
+decl_stmt|;
+specifier|auto
+name|int
+name|xuid
+decl_stmt|;
+specifier|register
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 comment|/* 	**  Detect and decode flags intended for this program. 	*/
 while|while
 condition|(
@@ -235,6 +307,9 @@ name|getuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|RealUser
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
@@ -258,6 +333,110 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+comment|/* 	**  See if this user is an administrator. 	*/
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|V6
+name|uid
+operator|&=
+literal|0377
+expr_stmt|;
+endif|#
+directive|endif
+endif|V6
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|SccsPath
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"/ADMINFILE"
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|buf
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|!=
+name|NULL
+condition|)
+block|{
+while|while
+condition|(
+name|fgets
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+name|fp
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'A'
+condition|)
+block|{
+if|if
+condition|(
+name|sscanf
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|xuid
+argument_list|)
+operator|>
+literal|0
+operator|&&
+name|xuid
+operator|==
+name|uid
+condition|)
+name|IsAdmin
+operator|++
+expr_stmt|;
+block|}
+block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	**  Look up command. 	**	At this point, p and argv point to the command name. 	*/
 for|for
@@ -315,6 +494,40 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	**  Set protection as appropriate. 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|F_PROT
+argument_list|,
+name|cmd
+operator|->
+name|sccsflags
+argument_list|)
+operator|&&
+operator|!
+name|IsAdmin
+operator|&&
+operator|!
+name|RealUser
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Sccs: not authorized to use %s\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  Build new argument vector. 	*/
 name|av
 operator|=
@@ -343,15 +556,15 @@ name|argv
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|bitset
+argument_list|(
+name|F_NOSDOT
+argument_list|,
 name|cmd
 operator|->
 name|sccsflags
-operator|&
-name|F_NOSDOT
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 operator|*
 name|p
@@ -533,6 +746,13 @@ argument_list|(
 name|buf
 argument_list|,
 name|SccsPath
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"/s."
 argument_list|)
 expr_stmt|;
 name|strcat
