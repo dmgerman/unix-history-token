@@ -1063,7 +1063,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|cpu_devclass
+name|acpi_cpu_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -1076,7 +1076,7 @@ name|acpi
 argument_list|,
 name|acpi_cpu_driver
 argument_list|,
-name|cpu_devclass
+name|acpi_cpu_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -3691,7 +3691,7 @@ decl_stmt|;
 comment|/* Get set of CPU devices */
 name|devclass_get_devices
 argument_list|(
-name|cpu_devclass
+name|acpi_cpu_devclass
 argument_list|,
 operator|&
 name|cpu_devices
