@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker  *  * %sccs.include.noredist.c%  *  *	@(#)if_wereg.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker  *  * %sccs.include.noredist.c%  *  *	@(#)if_wereg.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -13,7 +13,7 @@ end_comment
 
 begin_union
 union|union
-name|wd_mem_sel
+name|we_mem_sel
 block|{
 struct|struct
 name|memory_decode
@@ -58,15 +58,15 @@ union|;
 end_union
 
 begin_comment
-comment|/*  * receive ring discriptor  *  * The National Semiconductor NS32490 Network interface controller uses  * the following receive ring headers.  The way this works is that the  * memory on the interface card is chopped up into 256 bytes blocks.  * A contiuguous portion of those blocks are marked for receive packets  * by setting start and end block #'s in the NIC.  For each packet that  * is put into the receive ring, one of these headers (4 bytes each) is  * tacked onto the front.  */
+comment|/*  * receive ring discriptor  *  * The National Semiconductor DS8390 Network interface controller uses  * the following receive ring headers.  The way this works is that the  * memory on the interface card is chopped up into 256 bytes blocks.  * A contiguous portion of those blocks are marked for receive packets  * by setting start and end block #'s in the NIC.  For each packet that  * is put into the receive ring, one of these headers (4 bytes each) is  * tacked onto the front.  */
 end_comment
 
 begin_struct
 struct|struct
-name|wd_ring
+name|we_ring
 block|{
 struct|struct
-name|wdr_status
+name|wer_status
 block|{
 comment|/* received packet status	*/
 name|u_char
@@ -111,15 +111,15 @@ literal|1
 decl_stmt|;
 comment|/* packet received intack	*/
 block|}
-name|wd_rcv_status
+name|we_rcv_status
 struct|;
 comment|/* received packet status	*/
 name|u_char
-name|wd_next_packet
+name|we_next_packet
 decl_stmt|;
 comment|/* pointer to next packet	*/
 name|u_short
-name|wd_count
+name|we_count
 decl_stmt|;
 comment|/* bytes in packet (length + 4)	*/
 block|}
@@ -132,7 +132,7 @@ end_comment
 
 begin_union
 union|union
-name|wd_command
+name|we_command
 block|{
 struct|struct
 name|command_decode
@@ -200,7 +200,7 @@ end_comment
 
 begin_union
 union|union
-name|wd_interrupt
+name|we_interrupt
 block|{
 struct|struct
 name|interrupt_decode
@@ -295,7 +295,7 @@ end_comment
 
 begin_union
 union|union
-name|wdt_status
+name|wet_status
 block|{
 struct|struct
 name|tstat
@@ -408,6 +408,17 @@ end_define
 
 begin_comment
 comment|/* WD8003E Identification	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WD_ETHER2
+value|0x05
+end_define
+
+begin_comment
+comment|/* WD8003EBT Identification	*/
 end_comment
 
 begin_define
