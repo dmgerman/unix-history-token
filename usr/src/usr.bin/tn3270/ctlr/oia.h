@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file describes the Operator Information Area in the 3270.  *  * Our OIA looks like that used by the 3270 PC and PC 3270 products.  *  * @(#)oia.h	1.6 (Berkeley) %G%  */
+comment|/*  * This file describes the Operator Information Area in the 3270.  *  * Our OIA looks like that used by the 3270 PC and PC 3270 products.  *  * @(#)oia.h	3.1 (Berkeley) %G%  */
 end_comment
 
 begin_define

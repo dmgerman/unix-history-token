@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ebc_disp.h	1.2 (Berkeley) %G%  */
+comment|/*  * @(#)ebc_disp.h	3.1 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt

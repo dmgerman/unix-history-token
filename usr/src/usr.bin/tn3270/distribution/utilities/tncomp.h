@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Where the fields fall on the formatted screen used by tncomp, tnrecv,  * and tnsend.  *  * @(#)tncomp.h	1.2 (Berkeley) %G%  */
+comment|/*  * Where the fields fall on the formatted screen used by tncomp, tnrecv,  * and tnsend.  *  * @(#)tncomp.h	3.1 (Berkeley) %G%  */
 end_comment
 
 begin_define

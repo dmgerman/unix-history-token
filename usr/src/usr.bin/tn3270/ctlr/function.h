@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The following are the various functions which the keyboard can ask  * the controller to perform.  *  * Note that this file (the following entries) are scanned by mkhit.c,  * and that the format must remain more-or-less consistent  * [ \t]*TOKEN  *  * @(#)function.h	1.5 (Berkeley) %G%  */
+comment|/*  * The following are the various functions which the keyboard can ask  * the controller to perform.  *  * Note that this file (the following entries) are scanned by mkhit.c,  * and that the format must remain more-or-less consistent  * [ \t]*TOKEN  *  * @(#)function.h	3.1 (Berkeley) %G%  */
 end_comment
 
 begin_enum

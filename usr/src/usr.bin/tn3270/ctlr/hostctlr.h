@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)hostctlr.h	1.4 (Berkeley) %G%  */
+comment|/*  * @(#)hostctlr.h	3.1 (Berkeley) %G%  */
 end_comment
 
 begin_define

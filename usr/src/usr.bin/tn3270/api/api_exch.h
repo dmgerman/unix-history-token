@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file describes the structures passed back and forth  * between the API client and API server on a Unix-based  * tn3270 implementation.  *  * @(#)api_exch.h	1.6 (Berkeley) %G%  */
+comment|/*  * This file describes the structures passed back and forth  * between the API client and API server on a Unix-based  * tn3270 implementation.  *  * @(#)api_exch.h	3.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment

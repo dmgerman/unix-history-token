@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	1.13 (Berkeley) %G%"
+literal|"@(#)termout.c	3.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
