@@ -7561,6 +7561,12 @@ name|error
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|sf
+operator|!=
+name|NULL
+condition|)
 name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&
