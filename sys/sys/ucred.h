@@ -45,6 +45,10 @@ name|u_int
 name|cr_ref
 decl_stmt|;
 comment|/* reference count */
+define|#
+directive|define
+name|cr_startcopy
+value|cr_uid
 name|uid_t
 name|cr_uid
 decl_stmt|;
@@ -94,6 +98,10 @@ modifier|*
 name|cr_prison
 decl_stmt|;
 comment|/* jail(4) */
+define|#
+directive|define
+name|cr_endcopy
+value|cr_mtx
 name|struct
 name|mtx
 name|cr_mtx
@@ -283,9 +291,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
+name|void
 name|crcopy
 name|__P
 argument_list|(
@@ -293,7 +299,12 @@ operator|(
 expr|struct
 name|ucred
 operator|*
-name|cr
+name|dest
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|src
 operator|)
 argument_list|)
 decl_stmt|;
@@ -346,8 +357,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|ucred
+modifier|*
 name|crhold
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ucred
+operator|*
+name|cr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|crshared
 name|__P
 argument_list|(
 operator|(

@@ -2144,6 +2144,13 @@ operator|=
 name|vp
 expr_stmt|;
 comment|/* 	 * Save the credential of the process that turned on quotas. 	 * Set up the time limits for this quota. 	 */
+name|ump
+operator|->
+name|um_cred
+index|[
+name|type
+index|]
+operator|=
 name|crhold
 argument_list|(
 name|td
@@ -2152,19 +2159,6 @@ name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
-expr_stmt|;
-name|ump
-operator|->
-name|um_cred
-index|[
-name|type
-index|]
-operator|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_ucred
 expr_stmt|;
 name|ump
 operator|->
