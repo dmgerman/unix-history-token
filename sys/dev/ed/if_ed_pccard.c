@@ -211,22 +211,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|ed
-argument_list|,
-name|pccard
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  *      PC-Card (PCMCIA) specific code.  */
 end_comment

@@ -224,22 +224,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|snc
-argument_list|,
-name|pccard
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  *      snc_pccard_detach - unload the driver and clear the table.  *      XXX TODO:  *      This is usually called when the card is ejected, but  *      can be caused by a modunload of a controller driver.  *      The idea is to reset the driver's view of the device  *      and ensure that any driver entry points such as  *      read and write do not hang.  */
 end_comment
