@@ -4786,7 +4786,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -t 0|1|2|3|4 (set TX speed)\n"
+literal|"\t%s -i iface -t 0-4 (set TX speed)\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4795,7 +4795,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -s 0|1|2|3 (set power save mode)\n"
+literal|"\t%s -i iface -s 0-3 (set power save mode)\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4804,7 +4804,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface [-v 1|2|3|4] -a AP (specify AP)\n"
+literal|"\t%s -i iface [-v 1-4] -a AP (specify AP)\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4840,7 +4840,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -e 0|1|2|3 (enable transmit key)\n"
+literal|"\t%s -i iface -e 0-4 (enable transmit key)\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4849,7 +4849,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface [-v 0|1|2|3|4|5|6|7] -k key (set key)\n"
+literal|"\t%s -i iface [-v 0-8] -k key (set key)\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4858,7 +4858,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -K 0|1|2 (no auth/open/shared secret)\n"
+literal|"\t%s -i iface -K 0-2 (no auth/open/shared secret)\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4867,7 +4867,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -W 0|1|2 (no WEP/full WEP/mixed cell)\n"
+literal|"\t%s -i iface -W 0-2 (no WEP/full WEP/mixed cell)\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4894,7 +4894,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface [-v 1|2|3] -n SSID "
+literal|"\t%s -i iface [-v 1-3] -n SSID "
 literal|"(specify SSID)\n"
 argument_list|,
 name|p
@@ -7218,6 +7218,11 @@ name|an_req
 name|areq
 decl_stmt|;
 name|struct
+name|an_ltv_genconfig
+modifier|*
+name|cfg
+decl_stmt|;
+name|struct
 name|an_ltv_key
 modifier|*
 name|k
@@ -7225,6 +7230,59 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|home
+decl_stmt|;
+name|areq
+operator|.
+name|an_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|areq
+argument_list|)
+expr_stmt|;
+name|areq
+operator|.
+name|an_type
+operator|=
+name|AN_RID_ACTUALCFG
+expr_stmt|;
+name|an_getval
+argument_list|(
+name|iface
+argument_list|,
+operator|&
+name|areq
+argument_list|)
+expr_stmt|;
+name|cfg
+operator|=
+operator|(
+expr|struct
+name|an_ltv_genconfig
+operator|*
+operator|)
+operator|&
+name|areq
+expr_stmt|;
+if|if
+condition|(
+name|cfg
+operator|->
+name|an_home_product
+operator|&
+name|AN_HOME_NETWORK
+condition|)
+name|home
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|home
+operator|=
+literal|0
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -7398,6 +7456,10 @@ name|printf
 argument_list|(
 literal|"\tThe active transmit key is %d\n"
 argument_list|,
+literal|4
+operator|*
+name|home
+operator|+
 name|k
 operator|->
 name|mac
