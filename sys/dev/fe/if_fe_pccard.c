@@ -1150,7 +1150,7 @@ block|{
 block|{
 name|FE_DLCR2
 block|,
-literal|0x50
+literal|0x10
 block|,
 literal|0x00
 block|}
