@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.65 (Berkeley) %G%"
+literal|"@(#)conf.c	8.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6342,8 +6342,9 @@ name|int
 name|type
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|HASFLOCK
 name|int
 name|action

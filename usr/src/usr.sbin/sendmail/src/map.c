@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.20 (Berkeley) %G%"
+literal|"@(#)map.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2504,10 +2504,7 @@ argument_list|(
 name|O_EXLOCK
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HASFLOCK
-argument_list|)
 name|omode
 operator||=
 name|O_EXLOCK
@@ -2655,10 +2652,7 @@ argument_list|(
 name|OLD_NEWDB
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HASFLOCK
-argument_list|)
 name|fd
 operator|=
 name|db
@@ -2940,10 +2934,7 @@ argument_list|(
 name|O_EXLOCK
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HASFLOCK
-argument_list|)
 name|omode
 operator||=
 name|O_EXLOCK
@@ -3091,10 +3082,7 @@ argument_list|(
 name|OLD_NEWDB
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HASFLOCK
-argument_list|)
 name|fd
 operator|=
 name|db
