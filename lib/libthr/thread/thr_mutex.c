@@ -410,17 +410,6 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|mutex
-operator|==
-name|NULL
-condition|)
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 operator|*
 name|mutex
 operator|==
@@ -817,17 +806,6 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
-if|if
-condition|(
-name|mutex
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 comment|/* 	 * If this mutex was statically initialized, don't bother 	 * initializing it in order to destroy it immediately. 	 */
 if|if
 condition|(
@@ -1185,18 +1163,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|mutex
-operator|==
-name|NULL
-condition|)
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
 comment|/* 	 * If the mutex is statically initialized, perform the dynamic 	 * initialization: 	 */
-elseif|else
 if|if
 condition|(
 operator|(
@@ -1259,18 +1226,7 @@ decl_stmt|;
 name|_thread_sigblock
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|mutex
-operator|==
-name|NULL
-condition|)
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
 comment|/* 	 * If the mutex is statically initialized, perform the dynamic 	 * initialization marking the mutex private (delete safe): 	 */
-elseif|else
 if|if
 condition|(
 operator|(
@@ -2107,18 +2063,7 @@ condition|)
 name|_thread_init
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|mutex
-operator|==
-name|NULL
-condition|)
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
 comment|/* 	 * If the mutex is statically initialized, perform the dynamic 	 * initialization: 	 */
-elseif|else
 if|if
 condition|(
 operator|(
@@ -2192,18 +2137,7 @@ expr_stmt|;
 name|_thread_sigblock
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|mutex
-operator|==
-name|NULL
-condition|)
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
 comment|/* 	 * If the mutex is statically initialized, perform the dynamic 	 * initialization marking it private (delete safe): 	 */
-elseif|else
 if|if
 condition|(
 operator|(
@@ -2288,17 +2222,6 @@ name|_thread_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize it if it's a valid statically inited mutex. 	 */
-if|if
-condition|(
-name|mutex
-operator|==
-name|NULL
-condition|)
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 operator|(
@@ -2593,18 +2516,6 @@ name|add_reference
 parameter_list|)
 block|{
 comment|/* 	 * Error checking. 	 */
-if|if
-condition|(
-operator|*
-name|mutex
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 if|if
 condition|(
 operator|(
