@@ -1962,12 +1962,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KERN_PROC_GID
+value|11
+end_define
+
+begin_comment
+comment|/* by effective group id */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KERN_PROC_INC_THREAD
 value|0x10
 end_define
 
 begin_comment
-comment|/* 					 * modifier for pid, pgrp, tty, 					 * uid, ruid, and proc 					 */
+comment|/* 					 * modifier for pid, pgrp, tty, 					 * uid, ruid, gid, rgid and proc 					 */
 end_comment
 
 begin_comment
