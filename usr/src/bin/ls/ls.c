@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.25 (Berkeley) %G%"
+literal|"@(#)ls.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1397,6 +1397,8 @@ argument_list|(
 name|dstats
 argument_list|,
 name|regcnt
+operator|||
+name|cnt
 argument_list|,
 name|regcnt
 operator|||
