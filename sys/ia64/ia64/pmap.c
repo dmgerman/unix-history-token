@@ -3496,7 +3496,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*************************************************** * Pmap allocation/deallocation routines.  ***************************************************/
+comment|/***************************************************  * Pmap allocation/deallocation routines.  ***************************************************/
 end_comment
 
 begin_comment
