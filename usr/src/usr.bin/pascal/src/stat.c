@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stat.c 1.5 %G%"
+literal|"@(#)stat.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -760,6 +760,12 @@ literal|2
 argument_list|,
 name|O_LINO
 argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+comment|/* 	     * put out line number information for pdx 	     */
+name|lineno
+argument_list|(
 name|line
 argument_list|)
 expr_stmt|;

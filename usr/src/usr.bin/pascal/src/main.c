@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.4 %G%"
+literal|"@(#)main.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,6 +475,11 @@ directive|ifdef
 name|OBJ
 name|opt
 argument_list|(
+literal|'g'
+argument_list|)
+operator|=
+name|opt
+argument_list|(
 literal|'p'
 argument_list|)
 operator|=
@@ -657,6 +662,9 @@ goto|goto
 name|usage
 goto|;
 continue|continue;
+case|case
+literal|'g'
+case|:
 case|case
 literal|'l'
 case|:
@@ -1370,6 +1378,10 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
+comment|/* 			 * remove symbol table temp files 			 */
+name|removenlfile
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 endif|OBJ
@@ -1400,6 +1412,10 @@ ifdef|#
 directive|ifdef
 name|OBJ
 name|pflush
+argument_list|()
+expr_stmt|;
+comment|/* 			 * copy symbol table temp files to obj file 			 */
+name|copynlfile
 argument_list|()
 expr_stmt|;
 endif|#

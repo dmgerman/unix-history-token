@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyget.c 1.1 %G%"
+literal|"@(#)yyget.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,6 +822,19 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ
+comment|/*  * For the debugger pdx, we need to note that we've changed files.  */
+name|newfile
+argument_list|(
+name|filename
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*  *	left over from before stdio  *  *	cp = malloc(518);  *	if (cp == -1) {  *		error("Ran out of memory (include)");  *		pexit(DIED);  *	}  *  */
 name|ip
 operator|->

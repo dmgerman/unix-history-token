@@ -3104,6 +3104,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|OBJ
+comment|/* 	 * save the namelist for the debugger pdx 	 */
+name|savenl
+argument_list|(
+name|fp
+operator|->
+name|ptr
+index|[
+literal|2
+index|]
+argument_list|,
+name|fp
+operator|->
+name|symbol
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Restore the 	 * (virtual) name list 	 * position 	 */
 name|nlfree
 argument_list|(

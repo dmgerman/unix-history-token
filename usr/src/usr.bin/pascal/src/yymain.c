@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yymain.c 1.2 %G%"
+literal|"@(#)yymain.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,15 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|OBJ
+comment|/*  * initialize symbol table temp files  */
+name|startnlfile
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize the scanner 	 */
 ifdef|#
 directive|ifdef
@@ -153,6 +162,12 @@ name|PI
 ifdef|#
 directive|ifdef
 name|OBJ
+comment|/* 	 * save outermost block of namelist 	 */
+name|savenl
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|magic2
 argument_list|()
 expr_stmt|;
@@ -600,15 +615,6 @@ expr_stmt|;
 name|pflush
 argument_list|()
 expr_stmt|;
-name|lseek
-argument_list|(
-name|ofil
-argument_list|,
-literal|0l
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|magichdr
 operator|.
 name|a_data
@@ -632,20 +638,6 @@ expr|struct
 name|exec
 argument_list|)
 expr_stmt|;
-name|write
-argument_list|(
-name|ofil
-argument_list|,
-operator|&
-name|magichdr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|exec
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|pxhd
 operator|.
 name|objsize
@@ -658,6 +650,21 @@ name|lc
 operator|)
 operator|-
 name|HEADER_BYTES
+expr_stmt|;
+name|pxhd
+operator|.
+name|symtabsize
+operator|=
+name|nlhdrsize
+argument_list|()
+expr_stmt|;
+name|magichdr
+operator|.
+name|a_data
+operator|+=
+name|pxhd
+operator|.
+name|symtabsize
 expr_stmt|;
 name|time
 argument_list|(
@@ -672,6 +679,29 @@ operator|.
 name|magicnum
 operator|=
 name|MAGICNUM
+expr_stmt|;
+name|lseek
+argument_list|(
+name|ofil
+argument_list|,
+literal|0l
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|ofil
+argument_list|,
+operator|&
+name|magichdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|exec
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|lseek
 argument_list|(
