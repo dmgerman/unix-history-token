@@ -73,6 +73,12 @@ directive|include
 file|<netinet/in_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -441,6 +447,34 @@ name|rt2
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* 	 * If the new route created successfully, and we are forwarding, 	 * and there is a cached route, free it.  Otherwise, we may end 	 * up using the wrong route. 	 */
+if|if
+condition|(
+name|ret
+operator|!=
+name|NULL
+operator|&&
+name|ipforwarding
+operator|&&
+name|ipforward_rt
+operator|.
+name|ro_rt
+condition|)
+block|{
+name|RTFREE
+argument_list|(
+name|ipforward_rt
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
+name|ipforward_rt
+operator|.
+name|ro_rt
+operator|=
+literal|0
+expr_stmt|;
 block|}
 return|return
 name|ret

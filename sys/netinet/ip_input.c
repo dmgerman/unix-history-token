@@ -1297,7 +1297,6 @@ comment|/*  * XXX watch out this one. It is perhaps used as a cache for  * the m
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|route
 name|ipforward_rt
