@@ -10061,6 +10061,8 @@ comment|/* element in job table */
 name|Job
 modifier|*
 name|job
+init|=
+name|NULL
 decl_stmt|;
 comment|/* job descriptor in that element */
 name|GNode
