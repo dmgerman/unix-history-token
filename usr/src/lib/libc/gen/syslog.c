@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.4 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -675,7 +675,7 @@ return|return;
 comment|/* output the message to the console */
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 expr_stmt|;
 if|if
@@ -740,6 +740,19 @@ argument_list|,
 literal|"\r"
 argument_list|)
 expr_stmt|;
+name|o
+operator|=
+name|outline
+operator|+
+name|index
+argument_list|(
+name|outline
+argument_list|,
+literal|'>'
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
 name|write
 argument_list|(
 name|LogFile
@@ -749,6 +762,12 @@ argument_list|,
 name|c
 operator|+
 literal|1
+operator|-
+operator|(
+name|o
+operator|-
+name|outline
+operator|)
 argument_list|)
 expr_stmt|;
 name|close
