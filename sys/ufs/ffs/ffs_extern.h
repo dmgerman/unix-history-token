@@ -318,12 +318,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|vfs_fhtovp_t
-name|ffs_fhtovp
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|ffs_flushfiles
@@ -558,18 +552,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|vfs_statfs_t
-name|ffs_statfs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vfs_sync_t
-name|ffs_sync
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|ffs_syncvnode
@@ -607,12 +589,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|vfs_unmount_t
-name|ffs_unmount
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -667,12 +643,6 @@ end_function_decl
 begin_decl_stmt
 name|vfs_vget_t
 name|ffs_vget
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vfs_vptofh_t
-name|ffs_vptofh
 decl_stmt|;
 end_decl_stmt
 
