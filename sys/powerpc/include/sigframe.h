@@ -18,27 +18,8 @@ end_define
 
 begin_struct
 struct|struct
-name|osigframe
-block|{
-name|struct
-name|osigcontext
-name|sf_sc
-decl_stmt|;
-name|osiginfo_t
-name|sf_si
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|sigframe
 block|{
-name|unsigned
-name|long
-name|__spare__
-decl_stmt|;
 name|ucontext_t
 name|sf_uc
 decl_stmt|;
