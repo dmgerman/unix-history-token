@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.23 1999/01/15 05:03:15 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.4.2.1 1999/01/25 04:17:04 grog Exp $  */
 end_comment
 
 begin_define
@@ -228,8 +228,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|char
 modifier|*
 name|buf
@@ -569,8 +567,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -640,8 +636,6 @@ name|int
 name|cleardrive
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -905,8 +899,6 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|vinumattach
 argument_list|(
 name|NULL
@@ -937,8 +929,6 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 if|if
 condition|(
 name|vinum_inactive
@@ -1027,8 +1017,6 @@ name|int
 name|ver
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|MOD_DISPATCH
 argument_list|(
 name|vinum
@@ -1087,8 +1075,6 @@ block|{
 literal|0
 block|}
 decl_stmt|;
-name|BROKEN_GDB
-expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1218,8 +1204,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -1660,8 +1644,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|unsigned
 name|int
 name|index
@@ -1952,8 +1934,6 @@ name|dev_t
 name|dev
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|volume
 modifier|*

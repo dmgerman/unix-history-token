@@ -4,7 +4,7 @@ comment|/* To do:   * Don't store drive configuration on the config DB: read eac
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.22 1998/12/30 05:07:24 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.1.2.1 1999/01/25 04:17:05 grog Exp $  */
 end_comment
 
 begin_define
@@ -216,8 +216,6 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|retval
 decl_stmt|;
@@ -453,8 +451,6 @@ name|s
 parameter_list|)
 block|{
 comment|/* no atoi in the kernel */
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|r
 init|=
@@ -538,8 +534,6 @@ modifier|*
 name|vol
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -592,8 +586,6 @@ modifier|*
 name|plex
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -646,8 +638,6 @@ modifier|*
 name|sd
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -700,8 +690,6 @@ modifier|*
 name|drive
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -755,8 +743,6 @@ name|int
 name|plexno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -826,8 +812,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -894,8 +878,6 @@ modifier|*
 name|op
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 if|if
 condition|(
 name|vinum_conf
@@ -933,8 +915,6 @@ name|int
 name|plexno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|volume
 modifier|*
@@ -1074,8 +1054,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1453,8 +1431,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|sd
 modifier|*
@@ -2128,8 +2104,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|driveno
 decl_stmt|;
@@ -2265,8 +2239,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|driveno
 decl_stmt|;
@@ -2443,8 +2415,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|driveno
 decl_stmt|;
@@ -2595,8 +2565,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|sdno
 decl_stmt|;
@@ -2750,8 +2718,6 @@ modifier|*
 name|drive
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|lockdrive
 argument_list|(
 name|drive
@@ -2826,8 +2792,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|sdno
 decl_stmt|;
@@ -2951,8 +2915,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|sd
 modifier|*
@@ -3455,8 +3417,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|plexno
 decl_stmt|;
@@ -3658,8 +3618,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|plexno
 decl_stmt|;
@@ -3784,8 +3742,6 @@ name|int
 name|plexno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|plex
 modifier|*
@@ -3863,8 +3819,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|volno
 decl_stmt|;
@@ -4003,8 +3957,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|volno
 decl_stmt|;
@@ -4135,8 +4087,6 @@ name|int
 name|volno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|volume
 modifier|*
@@ -4189,8 +4139,6 @@ name|int
 name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|enum
 name|drive_label_info
 name|partition_status
@@ -4632,8 +4580,6 @@ name|int
 name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|parameter
 decl_stmt|;
@@ -5267,8 +5213,6 @@ name|int
 name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|parameter
 decl_stmt|;
@@ -5829,8 +5773,6 @@ name|int
 name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|parameter
 decl_stmt|;
@@ -6380,8 +6322,6 @@ name|int
 name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|status
 decl_stmt|;
@@ -6536,8 +6476,6 @@ modifier|*
 name|keyset
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|status
 decl_stmt|;
@@ -8192,8 +8130,6 @@ name|int
 name|kernelstate
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|plexno
 decl_stmt|;
