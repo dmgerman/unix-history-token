@@ -1082,7 +1082,7 @@ name|__P
 argument_list|(
 operator|(
 name|usbd_device_handle
-name|pipe
+name|dev
 operator|,
 name|usb_device_request_t
 operator|*
@@ -1103,7 +1103,7 @@ name|__P
 argument_list|(
 operator|(
 name|usbd_device_handle
-name|pipe
+name|dev
 operator|,
 name|usb_device_request_t
 operator|*
@@ -1124,7 +1124,7 @@ name|__P
 argument_list|(
 operator|(
 name|usbd_device_handle
-name|pipe
+name|dev
 operator|,
 name|usb_device_request_t
 operator|*
