@@ -1161,12 +1161,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|atdev
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|resource_list_init
@@ -1197,6 +1198,20 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|child
+operator|==
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|atdev
+argument_list|,
+name|M_LEGACYDEV
+argument_list|)
+expr_stmt|;
+else|else
 comment|/* should we free this in legacy_child_detached? */
 name|device_set_ivars
 argument_list|(
