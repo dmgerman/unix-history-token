@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	8.2 (Berkeley) %G%"
+literal|"@(#)args.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -78,12 +84,36 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|u_long
-name|get_bsz
+name|int
+name|c_arg
 name|__P
 argument_list|(
 operator|(
-name|char
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|c_conv
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
 operator|*
 operator|)
 argument_list|)
@@ -234,6 +264,20 @@ begin_decl_stmt
 specifier|static
 name|void
 name|f_skip
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|get_bsz
 name|__P
 argument_list|(
 operator|(
@@ -275,6 +319,7 @@ name|args
 index|[]
 init|=
 block|{
+block|{
 literal|"bs"
 block|,
 name|f_bs
@@ -288,7 +333,9 @@ operator||
 name|C_OBS
 operator||
 name|C_OSYNC
+block|}
 block|,
+block|{
 literal|"cbs"
 block|,
 name|f_cbs
@@ -296,7 +343,9 @@ block|,
 name|C_CBS
 block|,
 name|C_CBS
+block|}
 block|,
+block|{
 literal|"conv"
 block|,
 name|f_conv
@@ -304,7 +353,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"count"
 block|,
 name|f_count
@@ -312,7 +363,9 @@ block|,
 name|C_COUNT
 block|,
 name|C_COUNT
+block|}
 block|,
+block|{
 literal|"files"
 block|,
 name|f_files
@@ -320,7 +373,9 @@ block|,
 name|C_FILES
 block|,
 name|C_FILES
+block|}
 block|,
+block|{
 literal|"ibs"
 block|,
 name|f_ibs
@@ -330,7 +385,9 @@ block|,
 name|C_BS
 operator||
 name|C_IBS
+block|}
 block|,
+block|{
 literal|"if"
 block|,
 name|f_if
@@ -338,7 +395,9 @@ block|,
 name|C_IF
 block|,
 name|C_IF
+block|}
 block|,
+block|{
 literal|"obs"
 block|,
 name|f_obs
@@ -348,7 +407,9 @@ block|,
 name|C_BS
 operator||
 name|C_OBS
+block|}
 block|,
+block|{
 literal|"of"
 block|,
 name|f_of
@@ -356,7 +417,9 @@ block|,
 name|C_OF
 block|,
 name|C_OF
+block|}
 block|,
+block|{
 literal|"seek"
 block|,
 name|f_seek
@@ -364,7 +427,9 @@ block|,
 name|C_SEEK
 block|,
 name|C_SEEK
+block|}
 block|,
+block|{
 literal|"skip"
 block|,
 name|f_skip
@@ -372,6 +437,7 @@ block|,
 name|C_SKIP
 block|,
 name|C_SKIP
+block|}
 block|, }
 struct|;
 end_struct
@@ -394,42 +460,22 @@ name|jcl
 parameter_list|(
 name|argv
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|arg
 modifier|*
 name|ap
-decl_stmt|;
-name|struct
-name|arg
+decl_stmt|,
 name|tmp
 decl_stmt|;
 name|char
 modifier|*
 name|arg
-decl_stmt|;
-specifier|static
-name|int
-name|c_arg
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|void
-operator|*
-operator|,
-specifier|const
-name|void
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 name|in
 operator|.
@@ -455,7 +501,7 @@ condition|(
 operator|(
 name|arg
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|oper
 argument_list|,
@@ -465,8 +511,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unknown operand %s"
 argument_list|,
 name|oper
@@ -484,8 +532,10 @@ operator|!
 operator|*
 name|arg
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"no value specified for %s"
 argument_list|,
 name|oper
@@ -536,8 +586,10 @@ name|c_arg
 argument_list|)
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unknown operand %s"
 argument_list|,
 name|tmp
@@ -553,8 +605,10 @@ name|ap
 operator|->
 name|noset
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: illegal argument combination or already set"
 argument_list|,
 name|tmp
@@ -621,7 +675,7 @@ operator||
 name|C_OBS
 operator|)
 condition|)
-name|warn
+name|warnx
 argument_list|(
 literal|"bs supersedes ibs and obs"
 argument_list|)
@@ -648,8 +702,10 @@ operator|&
 name|C_CBS
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"record operations require cbs"
 argument_list|)
 expr_stmt|;
@@ -659,8 +715,10 @@ name|cbsz
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"cbs cannot be zero"
 argument_list|)
 expr_stmt|;
@@ -723,8 +781,10 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"cbs meaningless if not doing record operations"
 argument_list|)
 expr_stmt|;
@@ -734,8 +794,10 @@ name|cbsz
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"cbs cannot be zero"
 argument_list|)
 expr_stmt|;
@@ -759,8 +821,10 @@ name|dbsz
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"buffer sizes cannot be zero"
 argument_list|)
 expr_stmt|;
@@ -779,8 +843,10 @@ name|dbsz
 operator|>
 name|INT_MAX
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"buffer sizes cannot be greater than %d"
 argument_list|,
 name|INT_MAX
@@ -808,8 +874,10 @@ name|out
 operator|.
 name|dbsz
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"seek offsets cannot be larger than %d"
 argument_list|,
 name|INT_MAX
@@ -1177,6 +1245,7 @@ name|clist
 index|[]
 init|=
 block|{
+block|{
 literal|"ascii"
 block|,
 name|C_ASCII
@@ -1184,7 +1253,9 @@ block|,
 name|C_EBCDIC
 block|,
 name|e2a_POSIX
+block|}
 block|,
+block|{
 literal|"block"
 block|,
 name|C_BLOCK
@@ -1192,7 +1263,9 @@ block|,
 name|C_UNBLOCK
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"ebcdic"
 block|,
 name|C_EBCDIC
@@ -1200,7 +1273,9 @@ block|,
 name|C_ASCII
 block|,
 name|a2e_POSIX
+block|}
 block|,
+block|{
 literal|"ibm"
 block|,
 name|C_EBCDIC
@@ -1208,7 +1283,9 @@ block|,
 name|C_ASCII
 block|,
 name|a2ibm_POSIX
+block|}
 block|,
+block|{
 literal|"lcase"
 block|,
 name|C_LCASE
@@ -1216,7 +1293,9 @@ block|,
 name|C_UCASE
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"noerror"
 block|,
 name|C_NOERROR
@@ -1224,7 +1303,9 @@ block|,
 literal|0
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"notrunc"
 block|,
 name|C_NOTRUNC
@@ -1232,7 +1313,9 @@ block|,
 literal|0
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"oldascii"
 block|,
 name|C_ASCII
@@ -1240,7 +1323,9 @@ block|,
 name|C_EBCDIC
 block|,
 name|e2a_32V
+block|}
 block|,
+block|{
 literal|"oldebcdic"
 block|,
 name|C_EBCDIC
@@ -1248,7 +1333,9 @@ block|,
 name|C_ASCII
 block|,
 name|a2e_32V
+block|}
 block|,
+block|{
 literal|"oldibm"
 block|,
 name|C_EBCDIC
@@ -1256,7 +1343,9 @@ block|,
 name|C_ASCII
 block|,
 name|a2ibm_32V
+block|}
 block|,
+block|{
 literal|"osync"
 block|,
 name|C_OSYNC
@@ -1264,7 +1353,9 @@ block|,
 name|C_BS
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"swab"
 block|,
 name|C_SWAB
@@ -1272,7 +1363,9 @@ block|,
 literal|0
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"sync"
 block|,
 name|C_SYNC
@@ -1280,7 +1373,9 @@ block|,
 literal|0
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"ucase"
 block|,
 name|C_UCASE
@@ -1288,7 +1383,9 @@ block|,
 name|C_LCASE
 block|,
 name|NULL
+block|}
 block|,
+block|{
 literal|"unblock"
 block|,
 name|C_UNBLOCK
@@ -1296,6 +1393,7 @@ block|,
 name|C_BLOCK
 block|,
 name|NULL
+block|}
 block|, }
 struct|;
 end_struct
@@ -1312,31 +1410,12 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|conv
 modifier|*
 name|cp
-decl_stmt|;
-name|struct
-name|conv
+decl_stmt|,
 name|tmp
-decl_stmt|;
-specifier|static
-name|int
-name|c_conv
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|void
-operator|*
-operator|,
-specifier|const
-name|void
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 while|while
 condition|(
@@ -1396,8 +1475,10 @@ name|c_conv
 argument_list|)
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unknown conversion %s"
 argument_list|,
 name|tmp
@@ -1413,8 +1494,10 @@ name|cp
 operator|->
 name|noset
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: illegal conversion combination"
 argument_list|,
 name|tmp
@@ -1512,14 +1595,14 @@ modifier|*
 name|val
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|expr
-decl_stmt|;
 name|u_long
 name|num
 decl_stmt|,
 name|t
+decl_stmt|;
+name|char
+modifier|*
+name|expr
 decl_stmt|;
 name|num
 operator|=
@@ -1542,14 +1625,11 @@ condition|)
 comment|/* Overflow. */
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|oper
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1559,8 +1639,10 @@ operator|==
 name|val
 condition|)
 comment|/* No digits. */
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: illegal numeric value"
 argument_list|,
 name|oper
@@ -1710,8 +1792,10 @@ name|num
 condition|)
 name|erange
 label|:
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|oper
@@ -1724,8 +1808,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: illegal numeric value"
 argument_list|,
 name|oper

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)position.c	8.1 (Berkeley) %G%"
+literal|"@(#)position.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,19 +55,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -91,7 +97,6 @@ name|void
 name|pos_in
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|bcnt
 decl_stmt|,
@@ -149,16 +154,13 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|in
 operator|.
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -263,8 +265,10 @@ name|files_cnt
 expr_stmt|;
 continue|continue;
 block|}
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"skip reached end of input"
 argument_list|)
 expr_stmt|;
@@ -285,16 +289,11 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|in
 operator|.
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|warned
@@ -302,25 +301,20 @@ operator|=
 literal|1
 expr_stmt|;
 name|summary
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 continue|continue;
 block|}
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|in
 operator|.
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -332,15 +326,14 @@ name|void
 name|pos_out
 parameter_list|()
 block|{
-specifier|register
+name|struct
+name|mtop
+name|t_op
+decl_stmt|;
 name|int
 name|cnt
 decl_stmt|,
 name|n
-decl_stmt|;
-name|struct
-name|mtop
-name|t_op
 decl_stmt|;
 comment|/* 	 * If not a tape, try seeking on the file.  Seeking on a pipe is 	 * going to fail, but don't protect the user -- they shouldn't 	 * have specified the seek operand. 	 */
 if|if
@@ -382,16 +375,13 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|out
 operator|.
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -438,16 +428,13 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|out
 operator|.
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -501,16 +488,13 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|out
 operator|.
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If reach EOF, fill with NUL characters; first, back up over 		 * the EOF mark.  Note, cnt has not yet been incremented, so 		 * the EOF read does not count as a seek'd block. 		 */
@@ -545,16 +529,13 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|out
 operator|.
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -593,16 +574,13 @@ name|dbsz
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|out
 operator|.
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

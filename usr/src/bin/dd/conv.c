@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c	8.1 (Berkeley) %G%"
+literal|"@(#)conv.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -61,11 +67,9 @@ name|void
 name|def
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|inp
@@ -201,13 +205,13 @@ specifier|static
 name|int
 name|intrunc
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|,
 name|cnt
+decl_stmt|,
+name|maxlen
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|inp
@@ -217,9 +221,6 @@ name|outp
 decl_stmt|,
 modifier|*
 name|t
-decl_stmt|;
-name|int
-name|maxlen
 decl_stmt|;
 comment|/* 	 * Record truncation can cross block boundaries.  If currently in a 	 * truncation state, keep tossing characters until reach a newline. 	 * Start at the beginning of the buffer, as the input buffer is always 	 * left empty. 	 */
 if|if
@@ -675,11 +676,9 @@ name|void
 name|unblock
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|inp
@@ -884,11 +883,9 @@ name|void
 name|unblock_close
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|t
@@ -900,7 +897,7 @@ operator|.
 name|dbcnt
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s: short input record"
 argument_list|,
