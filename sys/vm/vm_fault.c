@@ -3318,12 +3318,18 @@ name|dst_m
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Enter it in the pmap... 		 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|dst_m
 argument_list|,
 name|PG_ZERO
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|pmap_enter
 argument_list|(
