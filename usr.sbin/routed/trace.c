@@ -17,6 +17,12 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -29,14 +35,33 @@ literal|"@(#)trace.c	8.1 (Berkeley) 6/5/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$NetBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_empty
+empty|#ident "$Revision: 1.1.3.3 $"
+end_empty
 
 begin_define
 define|#
@@ -168,7 +193,7 @@ name|NUM_BUFS
 value|4
 specifier|static
 name|int
-name|i
+name|bufno
 decl_stmt|;
 specifier|static
 struct|struct
@@ -186,13 +211,13 @@ index|[
 name|NUM_BUFS
 index|]
 struct|;
-name|struct
-name|in_addr
-name|addr
-decl_stmt|;
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|struct
+name|in_addr
+name|addr
 decl_stmt|;
 name|addr
 operator|.
@@ -206,7 +231,7 @@ name|strcpy
 argument_list|(
 name|bufs
 index|[
-name|i
+name|bufno
 index|]
 operator|.
 name|str
@@ -217,10 +242,10 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|i
+name|bufno
 operator|=
 operator|(
-name|i
+name|bufno
 operator|+
 literal|1
 operator|)
@@ -230,6 +255,9 @@ expr_stmt|;
 return|return
 name|s
 return|;
+undef|#
+directive|undef
+name|NUM_BUFS
 block|}
 end_function
 
@@ -1136,16 +1164,35 @@ parameter_list|)
 comment|/* 0=show mask if nonstandard, */
 block|{
 comment|/*	1=always show mask, 2=never */
+define|#
+directive|define
+name|NUM_BUFS
+value|4
 specifier|static
+name|int
+name|bufno
+decl_stmt|;
+specifier|static
+struct|struct
+block|{
 name|char
-name|s
+name|str
 index|[
 literal|15
 operator|+
 literal|20
 index|]
 decl_stmt|;
+block|}
+name|bufs
+index|[
+name|NUM_BUFS
+index|]
+struct|;
 name|char
+modifier|*
+name|s
+decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
@@ -1155,18 +1202,32 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|strcpy
 argument_list|(
-name|s
+name|bufs
+index|[
+name|bufno
+index|]
+operator|.
+name|str
 argument_list|,
 name|naddr_ntoa
 argument_list|(
 name|addr
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|bufno
+operator|=
+operator|(
+name|bufno
+operator|+
+literal|1
+operator|)
+operator|%
+name|NUM_BUFS
 expr_stmt|;
 if|if
 condition|(
@@ -1267,6 +1328,9 @@ name|sp
 argument_list|,
 literal|" (mask %#x)"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mask
 argument_list|)
 expr_stmt|;
@@ -1275,6 +1339,9 @@ block|}
 return|return
 name|s
 return|;
+undef|#
+directive|undef
+name|NUM_BUFS
 block|}
 end_function
 
@@ -1878,6 +1945,8 @@ block|}
 if|if
 condition|(
 name|c
+operator|!=
+literal|'<'
 operator|||
 name|force
 condition|)
@@ -2042,7 +2111,7 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|"%-15s --> %s "
+literal|"%-15s-->%-15s "
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -2051,7 +2120,10 @@ operator|->
 name|int_addr
 argument_list|)
 argument_list|,
-operator|(
+name|addrname
+argument_list|(
+name|htonl
+argument_list|(
 operator|(
 name|ifp
 operator|->
@@ -2060,17 +2132,10 @@ operator|&
 name|IFF_POINTOPOINT
 operator|)
 condition|?
-name|naddr_ntoa
-argument_list|(
 name|ifp
 operator|->
 name|int_dstaddr
-argument_list|)
 else|:
-name|addrname
-argument_list|(
-name|htonl
-argument_list|(
 name|ifp
 operator|->
 name|int_net
@@ -2080,11 +2145,18 @@ name|ifp
 operator|->
 name|int_mask
 argument_list|,
-literal|0
+literal|1
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|int_metric
+operator|!=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -2296,9 +2368,12 @@ name|ftrace
 argument_list|,
 literal|"tag=%#x "
 argument_list|,
+name|ntohs
+argument_list|(
 name|rts
 operator|->
 name|rts_tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2419,7 +2494,10 @@ name|ftrace
 argument_list|,
 literal|"tag=%#x "
 argument_list|,
+name|ntohs
+argument_list|(
 name|tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2562,7 +2640,10 @@ name|ftrace
 argument_list|,
 literal|"tag=%#x "
 argument_list|,
+name|ntohs
+argument_list|(
 name|tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2876,9 +2957,12 @@ name|ftrace
 argument_list|,
 literal|"tag=%#x "
 argument_list|,
+name|ntohs
+argument_list|(
 name|rt
 operator|->
 name|rt_tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|trace_bits
@@ -3038,7 +3122,10 @@ name|ftrace
 argument_list|,
 literal|"tag=%#x "
 argument_list|,
+name|ntohs
+argument_list|(
 name|tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3233,9 +3320,12 @@ name|ftrace
 argument_list|,
 literal|"tag=%#x "
 argument_list|,
+name|ntohs
+argument_list|(
 name|rt
 operator|->
 name|rt_tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|trace_bits
@@ -3247,14 +3337,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rt
-operator|->
-name|rt_ifp
-operator|!=
-literal|0
-condition|)
 operator|(
 name|void
 operator|)
@@ -3267,8 +3349,16 @@ argument_list|,
 name|rt
 operator|->
 name|rt_ifp
+operator|!=
+literal|0
+condition|?
+name|rt
+operator|->
+name|rt_ifp
 operator|->
 name|int_name
+else|:
+literal|"?"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3374,8 +3464,8 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|"%s bad RIPv%d cmd=%d %s %s.%d%s%s"
-literal|" size=%d msg=%#x\n"
+literal|"%s bad RIPv%d cmd=%d %s"
+literal|" %s.%d size=%d\n"
 argument_list|,
 name|dir1
 argument_list|,
@@ -3406,8 +3496,6 @@ name|sin_port
 argument_list|)
 argument_list|,
 name|size
-argument_list|,
-name|msg
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3608,6 +3696,9 @@ name|ftrace
 argument_list|,
 literal|"mask=%#x "
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|ntohl
 argument_list|(
 name|n
@@ -3658,9 +3749,12 @@ name|ftrace
 argument_list|,
 literal|"tag=%#x"
 argument_list|,
+name|ntohs
+argument_list|(
 name|n
 operator|->
 name|n_tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3793,6 +3887,9 @@ operator|->
 name|n_dst
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|ntohl
 argument_list|(
 name|n
@@ -3893,6 +3990,9 @@ name|ftrace
 argument_list|,
 literal|"metric=%-2d "
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|ntohl
 argument_list|(
 name|n
@@ -3943,9 +4043,12 @@ name|ftrace
 argument_list|,
 literal|"tag=%#x"
 argument_list|,
+name|ntohs
+argument_list|(
 name|n
 operator|->
 name|n_tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(

@@ -17,6 +17,12 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -29,14 +35,33 @@ literal|"@(#)output.c	8.1 (Berkeley) 6/5/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$NetBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_empty
+empty|#ident "$Revision: 1.1.3.3 $"
+end_empty
 
 begin_include
 include|#
@@ -118,6 +143,9 @@ decl_stmt|;
 comment|/* adjust metrics by interface */
 name|int
 name|npackets
+decl_stmt|;
+name|int
+name|gen_limit
 decl_stmt|;
 name|u_int
 name|state
@@ -529,6 +557,13 @@ name|INADDR_RIP_GROUP
 argument_list|)
 expr_stmt|;
 block|}
+case|case
+name|NO_OUT_MULTICAST
+case|:
+case|case
+name|NO_OUT_RIPV2
+case|:
+break|break;
 block|}
 name|trace_rip
 argument_list|(
@@ -1133,8 +1168,10 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|>=
-literal|1024
+operator|>
+name|ws
+operator|.
+name|gen_limit
 condition|)
 block|{
 comment|/* Punt if we would have to generate an 				 * unreasonable number of routes. 				 */
@@ -1143,8 +1180,8 @@ directive|ifdef
 name|DEBUG
 name|msglog
 argument_list|(
-literal|"sending %s to %s as-is instead"
-literal|" of as %d routes"
+literal|"sending %s to %s as 1 instead"
+literal|" of %d routes"
 argument_list|,
 name|addrname
 argument_list|(
@@ -1155,7 +1192,7 @@ argument_list|)
 argument_list|,
 name|mask
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 argument_list|,
 name|naddr_ntoa
@@ -1170,6 +1207,8 @@ name|s_addr
 argument_list|)
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1184,6 +1223,12 @@ block|{
 name|mask
 operator|=
 name|v1_mask
+expr_stmt|;
+name|ws
+operator|.
+name|gen_limit
+operator|-=
+name|i
 expr_stmt|;
 block|}
 block|}
@@ -2046,6 +2091,12 @@ operator|.
 name|state
 operator|=
 literal|0
+expr_stmt|;
+name|ws
+operator|.
+name|gen_limit
+operator|=
+literal|1024
 expr_stmt|;
 name|ws
 operator|.

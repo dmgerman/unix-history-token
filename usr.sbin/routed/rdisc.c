@@ -17,16 +17,40 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
-specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)rdisc.c	8.1 (Berkeley) x/y/95"
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_decl_stmt
+specifier|static
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rdisc.c,v 1.2 1996/06/15 17:10:27 wollman Exp $"
+literal|"$NetBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,9 +59,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_empty
+empty|#ident "$Revision: 1.1.3.3 $"
+end_empty
 
 begin_include
 include|#
@@ -71,27 +95,27 @@ begin_struct
 struct|struct
 name|icmp_ad
 block|{
-name|u_char
+name|u_int8_t
 name|icmp_type
 decl_stmt|;
 comment|/* type of message */
-name|u_char
+name|u_int8_t
 name|icmp_code
 decl_stmt|;
 comment|/* type sub code */
-name|u_short
+name|u_int16_t
 name|icmp_cksum
 decl_stmt|;
 comment|/* ones complement cksum of struct */
-name|u_char
+name|u_int8_t
 name|icmp_ad_num
 decl_stmt|;
 comment|/* # of following router addresses */
-name|u_char
+name|u_int8_t
 name|icmp_ad_asize
 decl_stmt|;
 comment|/* 2--words in each advertisement */
-name|u_short
+name|u_int16_t
 name|icmp_ad_life
 decl_stmt|;
 comment|/* seconds of validity */
@@ -122,15 +146,15 @@ begin_struct
 struct|struct
 name|icmp_so
 block|{
-name|u_char
+name|u_int8_t
 name|icmp_type
 decl_stmt|;
 comment|/* type of message */
-name|u_char
+name|u_int8_t
 name|icmp_code
 decl_stmt|;
 comment|/* type sub code */
-name|u_short
+name|u_int16_t
 name|icmp_cksum
 decl_stmt|;
 comment|/* ones complement cksum of struct */
@@ -466,6 +490,9 @@ literal|0
 index|]
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ntohl
 argument_list|(
 name|wp
@@ -537,6 +564,63 @@ block|}
 end_function
 
 begin_comment
+comment|/* prepare Router Discovery socket.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|get_rdisc_sock
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|rdisc_sock
+operator|<
+literal|0
+condition|)
+block|{
+name|rdisc_sock
+operator|=
+name|socket
+argument_list|(
+name|AF_INET
+argument_list|,
+name|SOCK_RAW
+argument_list|,
+name|IPPROTO_ICMP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rdisc_sock
+operator|<
+literal|0
+condition|)
+name|BADERR
+argument_list|(
+literal|1
+argument_list|,
+literal|"rdisc_sock = socket()"
+argument_list|)
+expr_stmt|;
+name|fix_sock
+argument_list|(
+name|rdisc_sock
+argument_list|,
+literal|"rdisc_sock"
+argument_list|)
+expr_stmt|;
+name|fix_select
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/* Pick multicast group for router-discovery socket  */
 end_comment
 
@@ -561,10 +645,33 @@ decl_stmt|;
 if|if
 condition|(
 name|rdisc_sock
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* Create the raw socket so that we can hear at least 		 * broadcast router discovery packets. 		 */
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_NO_RDISC
+operator|)
 operator|==
-operator|-
-literal|1
+name|IS_NO_RDISC
 operator|||
+operator|!
+name|on
+condition|)
+return|return;
+name|get_rdisc_sock
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|!
 operator|(
 name|ifp
@@ -661,7 +768,7 @@ operator|!
 name|on
 condition|)
 block|{
-comment|/* stop listening to advertisements */
+comment|/* stop listening to advertisements 		 */
 if|if
 condition|(
 name|ifp
@@ -730,7 +837,7 @@ name|IS_ALL_HOSTS
 operator|)
 condition|)
 block|{
-comment|/* start listening to advertisements */
+comment|/* start listening to advertisements 		 */
 name|m
 operator|.
 name|imr_multiaddr
@@ -797,7 +904,7 @@ operator|!
 name|on
 condition|)
 block|{
-comment|/* stop listening to solicitations */
+comment|/* stop listening to solicitations 		 */
 if|if
 condition|(
 name|ifp
@@ -866,7 +973,7 @@ name|IS_ALL_ROUTERS
 operator|)
 condition|)
 block|{
-comment|/* start hearing solicitations */
+comment|/* start hearing solicitations 		 */
 name|m
 operator|.
 name|imr_multiaddr
@@ -2098,7 +2205,7 @@ condition|)
 block|{
 name|trace_pkt
 argument_list|(
-literal|"\tdiscard our own Router Discovery Ad\n"
+literal|"\tdiscard Router Discovery Ad pointing at us\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2123,7 +2230,7 @@ block|{
 name|trace_pkt
 argument_list|(
 literal|"\tdiscard Router Discovery Ad"
-literal|" from unreachable net\n"
+literal|" toward unreachable net\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2581,6 +2688,26 @@ name|s_addr
 operator|=
 name|dst
 expr_stmt|;
+name|sin
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_HAVE_SIN_LEN
+name|sin
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|flags
 operator|=
 name|MSG_DONTROUTE
@@ -2754,6 +2881,15 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|rdisc_sock
+operator|<
+literal|0
+condition|)
+name|get_rdisc_sock
+argument_list|()
+expr_stmt|;
 name|trace_rdisc
 argument_list|(
 name|msg

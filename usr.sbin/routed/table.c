@@ -17,6 +17,12 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -29,14 +35,33 @@ literal|"@(#)tables.c	8.1 (Berkeley) 6/5/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$NetBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_empty
+empty|#ident "$Revision: 1.1.3.3 $"
+end_empty
 
 begin_include
 include|#
@@ -112,6 +137,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|stopint
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|total_routes
 decl_stmt|;
 end_decl_stmt
 
@@ -2629,26 +2660,32 @@ define|#
 directive|define
 name|KS_ADD
 value|0x004
+comment|/* add to the kernel */
 define|#
 directive|define
 name|KS_CHANGE
 value|0x008
+comment|/* tell kernel to change the route */
 define|#
 directive|define
 name|KS_DEL_ADD
 value|0x010
+comment|/* delete& add to change the kernel */
 define|#
 directive|define
 name|KS_STATIC
 value|0x020
+comment|/* Static flag in kernel */
 define|#
 directive|define
 name|KS_GATEWAY
 value|0x040
+comment|/* G flag in kernel */
 define|#
 directive|define
 name|KS_DYNAMIC
 value|0x080
+comment|/* result of redirect */
 define|#
 directive|define
 name|KS_DELETED
@@ -2856,14 +2893,6 @@ name|KS_NEW
 expr_stmt|;
 name|k
 operator|->
-name|k_redirect_time
-operator|=
-name|now
-operator|.
-name|tv_sec
-expr_stmt|;
-name|k
-operator|->
 name|k_keep
 operator|=
 name|now
@@ -2882,7 +2911,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If it has a non-zero metric, check that it is still in the table, not  *	having been deleted by interfaces coming and going.  */
+comment|/* If a kernel route has a non-zero metric, check that it is still in the  *	daemon table, and not deleted by interfaces coming and going.  */
 end_comment
 
 begin_function
@@ -3281,45 +3310,44 @@ name|KS_STATIC
 expr_stmt|;
 if|if
 condition|(
+literal|0
+operator|!=
+operator|(
 name|rtm
 operator|->
 name|rtm_flags
 operator|&
+operator|(
 name|RTF_DYNAMIC
+operator||
+name|RTF_MODIFIED
+operator|)
+operator|)
 condition|)
 block|{
-name|k
-operator|->
-name|k_state
-operator||=
-name|KS_DYNAMIC
-expr_stmt|;
-name|k
-operator|->
-name|k_redirect_time
-operator|=
-name|now
-operator|.
-name|tv_sec
-expr_stmt|;
-comment|/* Routers are not supposed to listen to redirects, 		 * so delete it. 		 */
 if|if
 condition|(
 name|supplier
 condition|)
 block|{
+comment|/* Routers are not supposed to listen to redirects, 			 * so delete it. 			 */
 name|k
 operator|->
-name|k_keep
-operator|=
-name|now
-operator|.
-name|tv_sec
+name|k_state
+operator|&=
+operator|~
+name|KS_DYNAMIC
+expr_stmt|;
+name|k
+operator|->
+name|k_state
+operator||=
+name|KS_DELETE
 expr_stmt|;
 name|trace_act
 argument_list|(
 literal|"mark redirected %s --> %s for deletion"
-literal|"since this is a router\n"
+literal|" since this is a router\n"
 argument_list|,
 name|addrname
 argument_list|(
@@ -3343,8 +3371,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|k
+operator|->
+name|k_state
+operator||=
+name|KS_DYNAMIC
+expr_stmt|;
+name|k
+operator|->
+name|k_redirect_time
+operator|=
+name|now
+operator|.
+name|tv_sec
+expr_stmt|;
 block|}
-comment|/* If it is not a static route, quite until it is time to delete it. 	 */
+block|}
+comment|/* If it is not a static route, quit until the next comparison 	 * between the kernel and daemon tables, when it will be deleted. 	 */
 if|if
 condition|(
 operator|!
@@ -3391,7 +3436,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* if there is no interface, maybe it is new 		 */
+comment|/* if there is no known interface, 		 * maybe there is a new interface 		 */
 name|ifinit
 argument_list|()
 expr_stmt|;
@@ -4497,7 +4542,7 @@ name|sprintf
 argument_list|(
 name|strp
 argument_list|,
-literal|" %s"
+literal|": %s"
 argument_list|,
 name|addrname
 argument_list|(
@@ -4536,7 +4581,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"ignore %s for multicast %s\n"
+literal|"ignore multicast %s\n"
 argument_list|,
 name|str
 argument_list|)
@@ -4815,9 +4860,10 @@ operator|->
 name|ag_metric
 operator|==
 name|HOPCNT_INFINITY
-operator|&&
-literal|0
-operator|==
+condition|)
+block|{
+name|k
+operator|=
 name|kern_find
 argument_list|(
 name|htonl
@@ -4833,8 +4879,17 @@ name|ag_mask
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|==
+literal|0
 condition|)
 return|return;
+block|}
+else|else
+block|{
 name|k
 operator|=
 name|kern_add
@@ -4851,6 +4906,7 @@ operator|->
 name|ag_mask
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|k
@@ -4909,13 +4965,6 @@ name|KS_STATIC
 condition|)
 return|return;
 comment|/* modify existing kernel entry if necessary */
-name|k
-operator|->
-name|k_state
-operator|&=
-operator|~
-name|KS_DELETE
-expr_stmt|;
 if|if
 condition|(
 name|k
@@ -5061,6 +5110,37 @@ name|KS_DEL_ADD
 operator|)
 expr_stmt|;
 block|}
+comment|/* Deleting-and-adding is necessary to change aspects of a route. 	 * Just delete instead of deleting and then adding a bad route. 	 * Otherwise, we want to keep the route in the kernel. 	 */
+if|if
+condition|(
+name|k
+operator|->
+name|k_metric
+operator|==
+name|HOPCNT_INFINITY
+operator|&&
+operator|(
+name|k
+operator|->
+name|k_state
+operator|&
+name|KS_DEL_ADD
+operator|)
+condition|)
+name|k
+operator|->
+name|k_state
+operator||=
+name|KS_DELETE
+expr_stmt|;
+else|else
+name|k
+operator|->
+name|k_state
+operator|&=
+operator|~
+name|KS_DELETE
+expr_stmt|;
 undef|#
 directive|undef
 name|RT
@@ -5437,10 +5517,18 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|(
 name|k
 operator|->
 name|k_state
 operator|&
+operator|(
+name|KS_DELETE
+operator||
+name|KS_DYNAMIC
+operator|)
+operator|)
+operator|==
 name|KS_DELETE
 condition|)
 block|{
@@ -5492,12 +5580,32 @@ continue|continue;
 block|}
 if|if
 condition|(
+literal|0
+operator|!=
+operator|(
+name|k
+operator|->
+name|k_state
+operator|&
+operator|(
+name|KS_ADD
+operator||
+name|KS_CHANGE
+operator||
+name|KS_DEL_ADD
+operator|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|k
 operator|->
 name|k_state
 operator|&
 name|KS_DEL_ADD
 condition|)
+block|{
 name|rtioctl
 argument_list|(
 name|RTM_DELETE
@@ -5519,19 +5627,37 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|k
+operator|->
+name|k_state
+operator|&=
+operator|~
+name|KS_DYNAMIC
+expr_stmt|;
+block|}
 name|flags
 operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+literal|0
+operator|!=
 operator|(
 name|k
 operator|->
 name|k_state
 operator|&
+operator|(
 name|KS_GATEWAY
+operator||
+name|KS_DYNAMIC
 operator|)
-condition|?
+operator|)
+condition|)
+name|flags
+operator||=
 name|RTF_GATEWAY
-else|:
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -5613,6 +5739,7 @@ operator||
 name|KS_DEL_ADD
 operator|)
 expr_stmt|;
+block|}
 comment|/* Mark this route to be deleted in the next cycle. 			 * This deletes routes that disappear from the 			 * daemon table, since the normal aging code 			 * will clear the bit for routes that have not 			 * disappeared from the daemon table. 			 */
 name|k
 operator|->
@@ -5684,7 +5811,11 @@ operator|->
 name|k_state
 operator|&=
 operator|~
+operator|(
 name|KS_STATIC
+operator||
+name|KS_DYNAMIC
+operator|)
 expr_stmt|;
 name|k
 operator|->
@@ -5747,7 +5878,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Delete all routes generated from ICMP Redirects that use a given  * gateway, as well as all old redirected routes.  */
+comment|/* Delete all routes generated from ICMP Redirects that use a given gateway,  * as well as old redirected routes.  */
 end_comment
 
 begin_function
@@ -5846,6 +5977,13 @@ operator|->
 name|k_state
 operator||=
 name|KS_DELETE
+expr_stmt|;
+name|k
+operator|->
+name|k_state
+operator|&=
+operator|~
+name|KS_DYNAMIC
 expr_stmt|;
 name|need_kern
 operator|.
@@ -6273,31 +6411,17 @@ expr|struct
 name|rt_entry
 operator|*
 operator|)
-name|malloc
+name|rtmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|rt
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rt
-operator|==
-literal|0
-condition|)
-block|{
-name|BADERR
-argument_list|(
-literal|1
 argument_list|,
-literal|"rtadd malloc"
+literal|"rtadd"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|bzero
 argument_list|(
 name|rt
@@ -6489,6 +6613,20 @@ operator|->
 name|rt_seqno
 operator|=
 name|update_seqno
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|total_routes
+operator|==
+name|MAX_ROUTES
+condition|)
+name|msglog
+argument_list|(
+literal|"have maximum (%d) routes"
+argument_list|,
+name|total_routes
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7110,6 +7248,9 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+name|total_routes
+operator|--
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -7437,7 +7578,9 @@ name|rt
 operator|->
 name|rt_router
 argument_list|,
-literal|1
+name|rt
+operator|->
+name|rt_metric
 argument_list|,
 name|rt
 operator|->

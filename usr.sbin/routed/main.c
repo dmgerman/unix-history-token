@@ -26,6 +26,12 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -38,14 +44,33 @@ literal|"@(#)main.c	8.1 (Berkeley) 6/5/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$NetBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_empty
+empty|#ident "$Revision: 1.1.3.3 $"
+end_empty
 
 begin_include
 include|#
@@ -1205,38 +1230,6 @@ condition|)
 name|LOGERR
 argument_list|(
 literal|"setsockopt(SO_USELOOPBACK,0)"
-argument_list|)
-expr_stmt|;
-comment|/* prepare Router Discovery socket. 	 */
-name|rdisc_sock
-operator|=
-name|socket
-argument_list|(
-name|AF_INET
-argument_list|,
-name|SOCK_RAW
-argument_list|,
-name|IPPROTO_ICMP
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rdisc_sock
-operator|<
-literal|0
-condition|)
-name|BADERR
-argument_list|(
-literal|1
-argument_list|,
-literal|"rdisc_sock = socket()"
-argument_list|)
-expr_stmt|;
-name|fix_sock
-argument_list|(
-name|rdisc_sock
-argument_list|,
-literal|"rdisc_sock"
 argument_list|)
 expr_stmt|;
 name|fix_select
@@ -3143,6 +3136,53 @@ name|fix_select
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* die if malloc(3) fails  */
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|rtmalloc
+parameter_list|(
+name|size_t
+name|size
+parameter_list|,
+name|char
+modifier|*
+name|msg
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|p
+init|=
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+literal|0
+condition|)
+name|logbad
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc() failed in %s"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+return|return
+name|p
+return|;
 block|}
 end_function
 

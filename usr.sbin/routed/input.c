@@ -17,20 +17,40 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
-
-begin_comment
-comment|/* static char sccsid[] = "@(#)input.c	8.1 (Berkeley) 6/5/93"; */
-end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)input.c	8.1 (Berkeley) 6/5/93"
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_decl_stmt
+specifier|static
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$NetBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,9 +59,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_empty
+empty|#ident "$Revision: 1.1.3.3 $"
+end_empty
 
 begin_include
 include|#
@@ -701,7 +721,7 @@ name|RIP_PORT
 argument_list|)
 condition|)
 block|{
-comment|/* query */
+comment|/* query from `rtquery` or similar 					 */
 name|supply
 argument_list|(
 name|from
@@ -724,6 +744,7 @@ condition|(
 name|supplier
 condition|)
 block|{
+comment|/* a router trying to prime its 					 * tables. 					 */
 name|supply
 argument_list|(
 name|from
@@ -867,6 +888,18 @@ operator|->
 name|n_mask
 argument_list|)
 operator|)
+operator|||
+literal|0
+operator|!=
+operator|(
+name|ntohl
+argument_list|(
+name|dst
+argument_list|)
+operator|&
+operator|~
+name|mask
+operator|)
 condition|)
 name|mask
 operator|=
@@ -890,6 +923,10 @@ if|if
 condition|(
 operator|!
 name|rt
+operator|&&
+name|dst
+operator|!=
+name|RIP_DEFAULT
 condition|)
 name|rt
 operator|=
@@ -914,8 +951,34 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|rip
+operator|->
+name|rip_vers
+operator|==
+name|RIPv1
+condition|)
+block|{
+name|n
+operator|->
+name|n_mask
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|n
+operator|->
+name|n_mask
+operator|=
+name|mask
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|rt
+operator|==
+literal|0
 condition|)
 block|{
 name|n
@@ -937,19 +1000,21 @@ name|rt_metric
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|!=
-literal|0
-condition|)
 name|n
 operator|->
 name|n_metric
 operator|+=
+operator|(
+name|ifp
+operator|!=
+literal|0
+operator|)
+condition|?
 name|ifp
 operator|->
 name|int_metric
+else|:
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -970,18 +1035,9 @@ condition|(
 name|rip
 operator|->
 name|rip_vers
-operator|==
+operator|!=
 name|RIPv1
 condition|)
-block|{
-name|n
-operator|->
-name|n_mask
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
 block|{
 name|n
 operator|->
@@ -993,10 +1049,10 @@ name|rt_tag
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ifp
-operator|||
-operator|!
+operator|!=
+literal|0
+operator|&&
 name|on_net
 argument_list|(
 name|rt
@@ -1011,7 +1067,7 @@ name|ifp
 operator|->
 name|int_mask
 argument_list|)
-operator|||
+operator|&&
 name|rt
 operator|->
 name|rt_gate
@@ -1020,13 +1076,6 @@ name|ifp
 operator|->
 name|int_addr
 condition|)
-name|n
-operator|->
-name|n_nhop
-operator|=
-literal|0
-expr_stmt|;
-else|else
 name|n
 operator|->
 name|n_nhop
@@ -1198,6 +1247,10 @@ literal|'\0'
 expr_stmt|;
 name|trace_on
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|rip
 operator|->
 name|rip_tracefile
@@ -1529,7 +1582,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Authenticate the packet. 		 */
+comment|/* Authenticate the packet if we have a secret. 		 */
 if|if
 condition|(
 name|ifp
@@ -1540,8 +1593,10 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|n
 operator|>=
 name|lim
@@ -1564,7 +1619,41 @@ operator|->
 name|a_type
 operator|!=
 name|RIP_AUTH_PW
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+name|from
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|!=
+name|use_auth
+condition|)
+name|msglog
+argument_list|(
+literal|"missing password from %s"
+argument_list|,
+name|naddr_ntoa
+argument_list|(
+name|FROM_NADDR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|use_auth
+operator|=
+name|from
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
 literal|0
 operator|!=
 name|bcmp
@@ -1593,7 +1682,6 @@ operator|->
 name|int_passwd
 argument_list|)
 argument_list|)
-operator|)
 condition|)
 block|{
 if|if
@@ -1608,7 +1696,7 @@ name|use_auth
 condition|)
 name|msglog
 argument_list|(
-literal|"missing authentication from %s"
+literal|"bad password from %s"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -1625,6 +1713,7 @@ operator|.
 name|s_addr
 expr_stmt|;
 return|return;
+block|}
 block|}
 for|for
 control|(
@@ -2153,7 +2242,7 @@ if|if
 condition|(
 name|i
 operator|>=
-literal|1024
+literal|511
 condition|)
 block|{
 comment|/* Punt if we would have to generate 					 * an unreasonable number of routes. 					 */
@@ -2162,8 +2251,8 @@ directive|ifdef
 name|DEBUG
 name|msglog
 argument_list|(
-literal|"accept %s from %s as-is"
-literal|" instead of as %d routes"
+literal|"accept %s from %s as 1"
+literal|" instead of %d routes"
 argument_list|,
 name|addrname
 argument_list|(
@@ -2180,6 +2269,8 @@ name|FROM_NADDR
 argument_list|)
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2364,6 +2455,12 @@ operator|==
 name|HOPCNT_INFINITY
 condition|)
 return|return;
+if|if
+condition|(
+name|total_routes
+operator|<
+name|MAX_ROUTES
+condition|)
 name|rtadd
 argument_list|(
 name|dst
@@ -2464,18 +2561,24 @@ name|rts
 operator|->
 name|rts_metric
 decl_stmt|;
-comment|/* Keep poisoned routes around only long 		 * enough to pass the poison on. 		 */
-if|if
-condition|(
-name|old_metric
-operator|<
-name|HOPCNT_INFINITY
-condition|)
+comment|/* Keep poisoned routes around only long enough to pass 		 * the poison on.  Get a new timestamp for good routes. 		 */
 name|new_time
 operator|=
+operator|(
+operator|(
+name|old_metric
+operator|==
+name|HOPCNT_INFINITY
+operator|)
+condition|?
+name|rts
+operator|->
+name|rts_time
+else|:
 name|now
 operator|.
 name|tv_sec
+operator|)
 expr_stmt|;
 comment|/* If this is an update for the router we currently prefer, 		 * then note it. 		 */
 if|if
