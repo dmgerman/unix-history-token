@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inbound.c	3.1 (Berkeley) %G%"
+literal|"@(#)inbound.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,6 +498,129 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * ModifyMdt() - Turn a modified data tag bit on or off (watch  * out for unformatted screens).  */
+end_comment
+
+begin_macro
+name|ModifyMdt
+argument_list|(
+argument|x
+argument_list|,
+argument|on
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|x
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|on
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|i
+init|=
+name|x
+decl_stmt|;
+if|if
+condition|(
+name|IsStartField
+argument_list|(
+name|i
+argument_list|)
+condition|)
+block|{
+comment|/* If we are at a start field position... */
+if|if
+condition|(
+name|on
+condition|)
+block|{
+name|ModifyHost
+argument_list|(
+name|i
+argument_list|,
+operator||=
+name|ATTR_MDT
+argument_list|)
+expr_stmt|;
+comment|/* Turn it on */
+block|}
+else|else
+block|{
+name|ModifyHost
+argument_list|(
+name|i
+argument_list|,
+operator|&=
+operator|~
+name|ATTR_MDT
+argument_list|)
+expr_stmt|;
+comment|/* Turn it off */
+block|}
+block|}
+else|else
+block|{
+name|i
+operator|=
+name|WhereAttrByte
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+comment|/* Find beginning of field */
+if|if
+condition|(
+name|IsStartField
+argument_list|(
+name|i
+argument_list|)
+condition|)
+block|{
+comment|/* Is there one? */
+if|if
+condition|(
+name|on
+condition|)
+block|{
+name|ModifyHost
+argument_list|(
+name|i
+argument_list|,
+operator||=
+name|ATTR_MDT
+argument_list|)
+expr_stmt|;
+comment|/* Turn it on */
+block|}
+else|else
+block|{
+name|ModifyHost
+argument_list|(
+name|i
+argument_list|,
+operator|&=
+operator|~
+name|ATTR_MDT
+argument_list|)
+expr_stmt|;
+comment|/* Turn it off */
+block|}
+block|}
+comment|/* else, don't modify - this is an unformatted screen */
+block|}
+block|}
+end_block
 
 begin_comment
 comment|/* EraseEndOfField - erase all characters to the end of a field */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)screen.h	3.1 (Berkeley) %G%  */
+comment|/*  * @(#)screen.h	3.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -314,6 +314,14 @@ parameter_list|)
 value|(IsStartFieldPointer(p)? \ 				    GetHostPointer(p): \ 				    GetHost(WhereAttrByte((p)-&Host[0])))
 end_define
 
+begin_comment
+comment|/*  * The MDT functions need to protect against the case where the screen  * is unformatted (sigh).  */
+end_comment
+
+begin_comment
+comment|/* Turn off the Modified Data Tag */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -321,8 +329,13 @@ name|TurnOffMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|ModifyHost(WhereAttrByte(x),&= ~ATTR_MDT)
+define|\
+value|if (HasMdt(WhereAttrByte(x))) { \ 	ModifyMdt(x, 0); \     }
 end_define
+
+begin_comment
+comment|/* Turn on the Modified Data Tag */
+end_comment
 
 begin_define
 define|#
@@ -331,8 +344,13 @@ name|TurnOnMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|ModifyHost(WhereAttrByte(x), |= ATTR_MDT)
+define|\
+value|if (!HasMdt(WhereAttrByte(x))) { \ 	ModifyMdt(x, 1); \     }
 end_define
+
+begin_comment
+comment|/* If this location has the MDT bit turned on (implies start of field) ... */
+end_comment
 
 begin_define
 define|#
@@ -341,12 +359,9 @@ name|HasMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|(GetHost(x)&ATTR_MDT)
+define|\
+value|((GetHost(x)&(ATTR_MDT|ATTR_MASK)) == (ATTR_MDT|ATTR_MASK))
 end_define
-
-begin_comment
-comment|/* modified tag */
-end_comment
 
 begin_comment
 comment|/* 	 * Is the screen formatted?  Some algorithms change depending 	 * on whether there are any attribute bytes lying around. 	 */
