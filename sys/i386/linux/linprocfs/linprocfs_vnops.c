@@ -3478,7 +3478,7 @@ name|PROCFS_FILENO
 argument_list|(
 literal|0
 argument_list|,
-name|Puptime
+name|Pstat
 argument_list|)
 expr_stmt|;
 name|dp
