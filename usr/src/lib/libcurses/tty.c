@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	8.3 (Berkeley) %G%"
+literal|"@(#)tty.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,6 +391,10 @@ name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -430,6 +434,10 @@ name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -470,6 +478,10 @@ name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -510,6 +522,10 @@ name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -558,6 +574,10 @@ name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -609,6 +629,10 @@ name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -675,6 +699,10 @@ name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -747,6 +775,10 @@ name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -926,6 +958,10 @@ argument_list|,
 operator|&
 name|__orig_termios
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -957,6 +993,10 @@ argument_list|,
 operator|&
 name|savedtty
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
@@ -984,6 +1024,10 @@ argument_list|,
 operator|&
 name|savedtty
 argument_list|)
+condition|?
+name|ERR
+else|:
+name|OK
 operator|)
 return|;
 block|}
