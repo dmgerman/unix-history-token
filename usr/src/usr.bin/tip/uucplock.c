@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucplock.c	5.1 (Berkeley) %G%"
+literal|"@(#)uucplock.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|NAMESIZE
-value|15
+value|32
 end_define
 
 begin_define
