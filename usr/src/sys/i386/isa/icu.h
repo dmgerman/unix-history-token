@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)icu.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)icu.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTR
+name|INTR_HEAD
 parameter_list|(
 name|unit
 parameter_list|,
@@ -158,7 +158,37 @@ parameter_list|,
 name|offst
 parameter_list|)
 define|\
-value|cli ; \ 	pushl	$0 ; \ 	nop ; \ 	pushl	$ T_ASTFLT ; \ 	nop ; \ 	pushal ; \ 	nop ; \ 	movb	$0x20,%al ; \ 	outb	%al,$ IO_ICU1 ; \ 	outb	%al,$ IO_ICU2 ; \ 	pushl	%ds ; \ 	pushl	%es ; \ 	movw	$0x10, %ax ; \ 	movw	%ax, %ds ; \ 	movw	%ax,%es ; \ 	incl	_cnt+V_INTR ; \ 	incl	_isa_intr + offst * 4 ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	pushl	$ unit ; \ 	orw	mask ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	sti ;
+value|pushl	$ offst ; \ 	pushl	$ T_ASTFLT ; \ 	pushal ; \ 	movb	$0x20,%al ; \  #define INTR_TAIL(unit,mask,offst) \ 	outb	%al,$ IO_ICU1 ; \ 	pushl	%ds ; \ 	pushl	%es ; \ 	movw	$0x10, %ax ; \ 	movw	%ax, %ds ; \ 	movw	%ax,%es ; \ 	incl	_cnt+V_INTR ; \ 	incl	_isa_intr + offst * 4 ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	pushl	$ unit ; \ 	orw	mask ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	sti ;
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTR1
+parameter_list|(
+name|unit
+parameter_list|,
+name|mask
+parameter_list|,
+name|offst
+parameter_list|)
+define|\
+value|INTR_HEAD(unit,mask,offst) \ 	INTR_TAIL(unit,mask,offst)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTR2
+parameter_list|(
+name|unit
+parameter_list|,
+name|mask
+parameter_list|,
+name|offst
+parameter_list|)
+define|\
+value|INTR_HEAD(unit,mask,offst) \ 	outb	%al,$ IO_ICU2 ; \ 	INTR_TAIL(unit,mask,offst)
 end_define
 
 begin_comment
