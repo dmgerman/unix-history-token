@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	$KAME: des_setkey.c,v 1.7 2001/09/10 04:03:58 itojun Exp $	*/
 end_comment
 
@@ -18,6 +14,20 @@ end_comment
 begin_comment
 comment|/* set_key.c v 1.4 eay 24/9/91  * 1.4 Speed up by 400% :-)  * 1.3 added register declarations.  * 1.2 unrolled make_key_sched a bit more  * 1.1 added norm_expand_bits  * 1.0 First working version  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
