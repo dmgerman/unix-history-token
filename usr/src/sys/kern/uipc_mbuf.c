@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.20 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -166,13 +166,19 @@ name|m_clalloc
 argument_list|(
 name|ncl
 argument_list|,
-name|canwait
+name|nowait
 argument_list|)
 specifier|register
 name|int
 name|ncl
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|nowait
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -213,7 +219,8 @@ argument_list|(
 name|npg
 argument_list|)
 argument_list|,
-name|canwait
+operator|!
+name|nowait
 argument_list|)
 expr_stmt|;
 if|if
@@ -524,12 +531,12 @@ name|mbuf
 modifier|*
 name|m_get
 parameter_list|(
-name|canwait
+name|nowait
 parameter_list|,
 name|type
 parameter_list|)
 name|int
-name|canwait
+name|nowait
 decl_stmt|,
 name|type
 decl_stmt|;
@@ -544,7 +551,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|canwait
+name|nowait
 argument_list|,
 name|type
 argument_list|)
@@ -563,12 +570,12 @@ name|mbuf
 modifier|*
 name|m_gethdr
 parameter_list|(
-name|canwait
+name|nowait
 parameter_list|,
 name|type
 parameter_list|)
 name|int
-name|canwait
+name|nowait
 decl_stmt|,
 name|type
 decl_stmt|;
@@ -583,7 +590,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|canwait
+name|nowait
 argument_list|,
 name|type
 argument_list|)
@@ -602,12 +609,12 @@ name|mbuf
 modifier|*
 name|m_getclr
 parameter_list|(
-name|canwait
+name|nowait
 parameter_list|,
 name|type
 parameter_list|)
 name|int
-name|canwait
+name|nowait
 decl_stmt|,
 name|type
 decl_stmt|;
@@ -622,7 +629,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|canwait
+name|nowait
 argument_list|,
 name|type
 argument_list|)
