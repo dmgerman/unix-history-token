@@ -1575,7 +1575,7 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"/stand/sysinstall Main Menu"
+literal|"sysinstall Main Menu"
 block|,
 comment|/* title */
 literal|"Welcome to the FreeBSD installation and configuration tool.  Please\n"
