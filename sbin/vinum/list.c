@@ -4677,15 +4677,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|#
-directive|if
-name|VINUMDEBUG
 name|struct
 name|rqinfo
 name|rq
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ioctl
@@ -4708,6 +4703,27 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_HASDEBUG
+operator|)
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Kernel module does not have debug support\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"Flags: 0x%x\n"
@@ -4879,9 +4895,6 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|VINUMDEBUG
 if|if
 condition|(
 name|Verbose
@@ -5714,8 +5727,7 @@ break|break;
 block|}
 block|}
 block|}
-endif|#
-directive|endif
+block|}
 block|}
 end_function
 
