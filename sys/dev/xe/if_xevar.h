@@ -252,6 +252,36 @@ parameter_list|)
 value|bus_space_read_1(bst, bsh, tpl+ 4 + ((pos)<<1))
 end_define
 
+begin_function_decl
+name|int
+name|xe_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xe_activate
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|xe_deactivate
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
