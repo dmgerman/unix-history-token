@@ -4316,7 +4316,7 @@ begin_define
 define|#
 directive|define
 name|TOOLDIR_BASE_PREFIX
-value|"/usr/local/"
+value|"/usr/libexec/"
 end_define
 
 begin_endif
