@@ -5148,7 +5148,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((nextarg>= tablesize) ? \ 		__grow_type_table(nextarg,&typetable,&tablesize) : 0, \ 	(nextarg> tablemax) ? tablemax = nextarg : 0, \ 	typetable[nextarg++] = type)
+value|((nextarg>= tablesize) ? \ 		__grow_type_table(nextarg,&typetable,&tablesize) : (void)0, \ 	(nextarg> tablemax) ? tablemax = nextarg : 0, \ 	typetable[nextarg++] = type)
 define|#
 directive|define
 name|ADDSARG
