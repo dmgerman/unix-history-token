@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.1 (Berkeley) %G%"
+literal|"@(#)getopt.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ name|opterr
 init|=
 literal|1
 decl_stmt|,
-comment|/* useless, never set or used */
+comment|/* if error message should be printed */
 name|optind
 init|=
 literal|1
@@ -87,7 +87,7 @@ name|tell
 parameter_list|(
 name|s
 parameter_list|)
-value|fputs(*nargv,stderr);fputs(s,stderr); \ 		fputc(optopt,stderr);fputc('\n',stderr);return(BADCH);
+value|if (opterr) {fputs(*nargv,stderr);fputs(s,stderr); \ 		fputc(optopt,stderr);fputc('\n',stderr);return(BADCH);}
 end_define
 
 begin_macro
