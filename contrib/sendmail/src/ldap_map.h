@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  *  * By u
 end_comment
 
 begin_comment
-comment|/* **  Support for LDAP. ** **	Contributed by Booker C. Bense<bbense+ldap@stanford.edu>. **	Please go to him for support -- since I (Eric) don't run LDAP, I **	can't help you at all. ** **	@(#)ldap_map.h	8.10 (Berkeley) 9/14/1998 */
+comment|/* **  Support for LDAP. ** **	Contributed by Booker C. Bense<bbense+ldap@stanford.edu>. **	Please go to him for support -- since I (Eric) don't run LDAP, I **	can't help you at all. ** **	@(#)ldap_map.h	8.12 (Berkeley) 2/2/1999 */
 end_comment
 
 begin_ifndef
@@ -215,6 +215,68 @@ end_endif
 begin_comment
 comment|/* LDAP_REFERRALS */
 end_comment
+
+begin_comment
+comment|/* **  ldap_init(3) is broken in Umich 3.x and OpenLDAP 1.0/1.1. **  Use the lack of LDAP_OPT_SIZELIMIT to detect old API implementations **  and assume (falsely) that all old API implementations are broken. **  (OpenLDAP 1.2 and later have a working ldap_init(), add -DUSE_LDAP_INIT) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LDAP_OPT_SIZELIMIT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_LDAP_INIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_LDAP_INIT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  LDAP_OPT_SIZELIMIT is not defined under Umich 3.x nor OpenLDAP 1.x, **  hence ldap_set_option() must not exist. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LDAP_OPT_SIZELIMIT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_LDAP_SET_OPTION
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_LDAP_SET_OPTION
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

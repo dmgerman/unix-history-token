@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	8.12 (Berkeley) 5/19/1998"
+literal|"@(#)arpadate.c	8.14 (Berkeley) 2/2/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,14 +177,10 @@ name|TZNAME_MAX
 index|]
 decl_stmt|;
 comment|/* 	**  Get current time. 	**	This will be used if a null argument is passed and 	**	to resolve the timezone. 	*/
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
 name|t
-argument_list|)
+operator|=
+name|curtime
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -592,14 +588,41 @@ modifier|*
 name|tzname
 index|[]
 decl_stmt|;
+if|if
+condition|(
+name|lt
+operator|->
+name|tm_isdst
+operator|>
+literal|0
+condition|)
 name|tz
 operator|=
 name|tzname
 index|[
+literal|1
+index|]
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|lt
 operator|->
 name|tm_isdst
+operator|==
+literal|0
+condition|)
+name|tz
+operator|=
+name|tzname
+index|[
+literal|0
 index|]
+expr_stmt|;
+else|else
+name|tz
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 endif|#

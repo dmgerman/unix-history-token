@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.210 (Berkeley) 10/15/1998 (with queueing)"
+literal|"@(#)queue.c	8.211 (Berkeley) 1/25/1999 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.210 (Berkeley) 10/15/1998 (without queueing)"
+literal|"@(#)queue.c	8.211 (Berkeley) 1/25/1999 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1793,7 +1793,6 @@ name|BITMAP
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* don't output null headers */
 if|if
 condition|(
 name|h
@@ -1801,15 +1800,6 @@ operator|->
 name|h_value
 operator|==
 name|NULL
-operator|||
-name|h
-operator|->
-name|h_value
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
 condition|)
 continue|continue;
 comment|/* don't output resent headers on non-resent messages */

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.80 (Berkeley) 12/17/1998 (with name server)"
+literal|"@(#)domain.c	8.81 (Berkeley) 1/21/1999 (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.80 (Berkeley) 12/17/1998 (without name server)"
+literal|"@(#)domain.c	8.81 (Berkeley) 1/21/1999 (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1774,10 +1774,6 @@ block|{
 name|int
 name|nmx
 decl_stmt|;
-specifier|auto
-name|int
-name|rcode
-decl_stmt|;
 name|int
 name|saveopts
 init|=
@@ -1834,8 +1830,7 @@ name|mxhosts
 argument_list|,
 name|FALSE
 argument_list|,
-operator|&
-name|rcode
+name|statp
 argument_list|)
 expr_stmt|;
 name|_res

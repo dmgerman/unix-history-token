@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.134 (Berkeley) 11/29/1998"
+literal|"@(#)headers.c	8.136 (Berkeley) 1/26/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,6 +200,11 @@ name|struct
 name|hdrinfo
 modifier|*
 name|hi
+decl_stmt|;
+name|bool
+name|nullheader
+init|=
+name|FALSE
 decl_stmt|;
 name|BITMAP
 name|mopts
@@ -406,20 +411,49 @@ name|fvalue
 operator|=
 literal|'\0'
 expr_stmt|;
-name|fvalue
-operator|=
-name|p
-expr_stmt|;
 comment|/* strip field value on front */
 if|if
 condition|(
 operator|*
-name|fvalue
+name|p
 operator|==
 literal|' '
 condition|)
-name|fvalue
+name|p
 operator|++
+expr_stmt|;
+name|fvalue
+operator|=
+name|p
+expr_stmt|;
+comment|/* if the field is null, go ahead and use the default */
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+name|nullheader
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* security scan: long field names are end-of-header */
 if|if
@@ -951,6 +985,16 @@ name|h_flags
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|nullheader
+condition|)
+block|{
+comment|/* user-supplied value was null */
+return|return
+literal|0
+return|;
+block|}
 name|h
 operator|->
 name|h_value
@@ -4484,7 +4528,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		h -- the header to put. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		h -- the header to put. **		e -- envelope to use. **		flags -- MIME conversion flags. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -4523,6 +4567,8 @@ parameter_list|,
 name|hdr
 parameter_list|,
 name|e
+parameter_list|,
+name|flags
 parameter_list|)
 specifier|register
 name|MCI
@@ -4537,6 +4583,9 @@ specifier|register
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 specifier|register
@@ -4906,7 +4955,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* suppress Content-Transfer-Encoding: if we are MIMEing */
+comment|/* 		**  Suppress Content-Transfer-Encoding: if we are MIMEing 		**  and we are potentially converting from 8 bit to 7 bit 		**  MIME.  If converting, add a new CTE header in 		**  mime8to7(). 		*/
 if|if
 condition|(
 name|bitset
@@ -4929,6 +4978,14 @@ argument_list|,
 name|mci
 operator|->
 name|mci_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|M87F_NO8TO7
+argument_list|,
+name|flags
 argument_list|)
 condition|)
 block|{

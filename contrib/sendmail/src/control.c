@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)control.c	8.17 (Berkeley) 12/1/1998"
+literal|"@(#)control.c	8.18 (Berkeley) 1/17/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,18 +226,8 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|ControlSocket
-argument_list|)
-expr_stmt|;
-name|ControlSocket
-operator|=
-operator|-
-literal|1
+name|clrcontrol
+argument_list|()
 expr_stmt|;
 name|errno
 operator|=
@@ -309,6 +299,11 @@ name|errstring
 argument_list|(
 name|save_errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|closecontrolsocket
+argument_list|(
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|errno

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.91 (Berkeley) 8/19/1998"
+literal|"@(#)collect.c	8.93 (Berkeley) 1/26/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,12 +288,7 @@ specifier|volatile
 name|pbp
 decl_stmt|;
 name|int
-name|nhdrlines
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|hdrlinelen
+name|hdrslen
 init|=
 literal|0
 decl_stmt|;
@@ -805,10 +800,6 @@ block|{
 case|case
 name|IS_BOL
 case|:
-name|hdrlinelen
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -1192,14 +1183,14 @@ name|c
 expr_stmt|;
 if|if
 condition|(
-name|MaxHeaderLineLength
+name|MaxHeadersLength
 operator|>
 literal|0
 operator|&&
 operator|++
-name|hdrlinelen
+name|hdrslen
 operator|>
-name|MaxHeaderLineLength
+name|MaxHeadersLength
 condition|)
 block|{
 name|sm_syslog
@@ -1210,9 +1201,9 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"header line too long (%d max) from %s during message collect"
+literal|"headers too large (%d max) from %s during message collect"
 argument_list|,
-name|MaxHeaderLineLength
+name|MaxHeadersLength
 argument_list|,
 name|CurHostName
 operator|!=
@@ -1241,9 +1232,9 @@ literal|"5.6.0"
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"552 Header line too long (%d max)"
+literal|"552 Headers too large (%d max)"
 argument_list|,
-name|MaxHeaderLineLength
+name|MaxHeadersLength
 argument_list|)
 expr_stmt|;
 name|mstate
@@ -1366,68 +1357,6 @@ expr_stmt|;
 goto|goto
 name|nextstate
 goto|;
-block|}
-if|if
-condition|(
-name|MaxHeaderLines
-operator|>
-literal|0
-operator|&&
-operator|++
-name|nhdrlines
-operator|>
-name|MaxHeaderLines
-condition|)
-block|{
-name|sm_syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-literal|"too many header lines (%d max) from %s during message collect"
-argument_list|,
-name|MaxHeaderLines
-argument_list|,
-name|CurHostName
-operator|!=
-name|NULL
-condition|?
-name|CurHostName
-else|:
-literal|"localhost"
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|e
-operator|->
-name|e_flags
-operator||=
-name|EF_CLRQUEUE
-expr_stmt|;
-name|e
-operator|->
-name|e_status
-operator|=
-literal|"5.6.0"
-expr_stmt|;
-name|usrerr
-argument_list|(
-literal|"552 Too many header lines (%d max)"
-argument_list|,
-name|MaxHeaderLines
-argument_list|)
-expr_stmt|;
-name|mstate
-operator|=
-name|MS_DISCARD
-expr_stmt|;
-break|break;
 block|}
 comment|/* check for possible continuation line */
 do|do
