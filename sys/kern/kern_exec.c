@@ -1330,6 +1330,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* Close any file descriptors 0..2 that reference procfs */
+name|setugidsafety
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Make sure file descriptors 0..2 are in use. */
 name|error
 operator|=
@@ -1393,11 +1399,6 @@ operator|=
 name|attr
 operator|.
 name|va_gid
-expr_stmt|;
-name|setugidsafety
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 block|}
 else|else
