@@ -92,11 +92,12 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: perm.c,v 1.5 1997/02/22 19:54:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

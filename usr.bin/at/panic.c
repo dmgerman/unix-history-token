@@ -53,11 +53,12 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: panic.c,v 1.6 1997/02/22 19:54:06 peter Exp $"
+literal|"$Id: panic.c,v 1.7 1997/06/23 06:44:18 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
