@@ -205,7 +205,7 @@ end_define
 
 begin_struct
 struct|struct
-name|device
+name|midway_device
 block|{
 name|char
 name|dv_xname
@@ -239,7 +239,7 @@ name|en_softc
 block|{
 comment|/* bsd glue */
 name|struct
-name|device
+name|midway_device
 name|sc_dev
 decl_stmt|;
 comment|/* system device */
