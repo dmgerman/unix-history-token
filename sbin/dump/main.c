@@ -2893,7 +2893,7 @@ endif|#
 directive|endif
 literal|"nSu] [-B records] [-b blocksize] [-D dumpdates]\n"
 literal|"            [-d density] [-f file] [-h level] [-s feet] "
-literal|"[-T date] filesystem\n"
+literal|"[-T date] [-C cachesizeMB] filesystem\n"
 literal|"       dump -W | -w\n"
 argument_list|)
 expr_stmt|;
