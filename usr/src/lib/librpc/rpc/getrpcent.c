@@ -158,7 +158,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|char
 modifier|*
 name|index
