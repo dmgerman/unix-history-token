@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcivar.h,v 1.22 2000/04/25 09:20:55 augustss Exp $	*/
+comment|/*	$NetBSD: ohcivar.h,v 1.25 2001/01/28 19:01:20 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -364,6 +364,13 @@ decl_stmt|;
 comment|/* cookie from shutdown hook */
 endif|#
 directive|endif
+name|u_int
+name|sc_overrun_cnt
+decl_stmt|;
+name|struct
+name|timeval
+name|sc_overrun_ntc
+decl_stmt|;
 name|usb_callout_t
 name|sc_tmo_rhsc
 decl_stmt|;
