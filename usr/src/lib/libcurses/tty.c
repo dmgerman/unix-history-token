@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	8.5 (Berkeley) %G%"
+literal|"@(#)tty.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -940,7 +940,7 @@ name|cury
 argument_list|,
 name|curscr
 operator|->
-name|cury
+name|curx
 argument_list|,
 name|curscr
 operator|->
