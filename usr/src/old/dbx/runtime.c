@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runtime.c 1.4 %G%"
+literal|"@(#)runtime.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,6 +217,8 @@ name|reg
 argument_list|(
 name|PROGCTR
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 for|for
 control|(
