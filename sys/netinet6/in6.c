@@ -692,6 +692,9 @@ name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
+name|int
+name|need_loop
+decl_stmt|;
 comment|/* If there is no loopback entry, allocate one. */
 name|rt
 operator|=
@@ -706,8 +709,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|need_loop
+operator|=
+operator|(
 name|rt
 operator|==
 name|NULL
@@ -733,13 +737,7 @@ name|IFF_LOOPBACK
 operator|)
 operator|==
 literal|0
-condition|)
-name|in6_ifloop_request
-argument_list|(
-name|RTM_ADD
-argument_list|,
-name|ifa
-argument_list|)
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -748,6 +746,17 @@ condition|)
 name|rtfree
 argument_list|(
 name|rt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|need_loop
+condition|)
+name|in6_ifloop_request
+argument_list|(
+name|RTM_ADD
+argument_list|,
+name|ifa
 argument_list|)
 expr_stmt|;
 block|}
