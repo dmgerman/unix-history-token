@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rindex.c	5.7 (Berkeley) %G%"
+literal|"@(#)rindex.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,12 +52,25 @@ end_include
 begin_function
 name|char
 modifier|*
-name|rindex
+ifdef|#
+directive|ifdef
+name|STRRCHR
+name|strrchr
 parameter_list|(
 name|p
 parameter_list|,
 name|ch
 parameter_list|)
+else|#
+directive|else
+function|rindex
+parameter_list|(
+name|p
+parameter_list|,
+name|ch
+parameter_list|)
+endif|#
+directive|endif
 specifier|register
 name|char
 modifier|*
