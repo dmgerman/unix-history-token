@@ -980,6 +980,11 @@ name|tmp_addr
 operator|=
 name|addr
 expr_stmt|;
+name|vm_object_lock
+argument_list|(
+name|kernel_object
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1028,6 +1033,11 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|vm_object_unlock
+argument_list|(
+name|kernel_object
+argument_list|)
+expr_stmt|;
 name|vm_map_wire
 argument_list|(
 name|map
