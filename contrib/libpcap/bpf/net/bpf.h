@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h       7.1 (Berkeley) 5/7/91  *  * $FreeBSD$  * @(#) $Header: bpf.h,v 1.36 97/06/12 14:29:53 leres Exp $ (LBL)  */
+comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h       7.1 (Berkeley) 5/7/91  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/bpf/net/bpf.h,v 1.44 2000/12/21 10:29:24 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -431,11 +431,19 @@ begin_comment
 comment|/*  * Because the structure above is not a multiple of 4 bytes, some compilers  * will insist on inserting padding; hence, sizeof(struct bpf_hdr) won't work.  * Only the kernel needs to know about it; applications use bh_hdrlen.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -451,6 +459,10 @@ end_endif
 
 begin_comment
 comment|/*  * Data-link level type codes.  */
+end_comment
+
+begin_comment
+comment|/*  * These are the types that are the same on all platforms; on other  * platforms, a<net/bpf.h> should be supplied that defines the additional  * DLT_* codes appropriately for that platform (the BSDs, for example,  * should not just pick up this version of "bpf.h"; they should also define  * the additional DLT_* codes used by their kernels, as well as the values  * defined here - and, if the values they use for particular DLT_ types  * differ from those here, they should use their values, not the ones  * here).  */
 end_comment
 
 begin_define
@@ -574,6 +586,10 @@ begin_comment
 comment|/* FDDI */
 end_comment
 
+begin_comment
+comment|/*  * These are values from the traditional libpcap "bpf.h".  * Ports of this to particular platforms should replace these definitions  * with the ones appropriate to that platform, if the values are  * different on that platform.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -596,11 +612,15 @@ begin_comment
 comment|/* raw IP */
 end_comment
 
+begin_comment
+comment|/*  * These are values from BSD/OS's "bpf.h".  * These are not the same as the values from the traditional libpcap  * "bpf.h"; however, these values shouldn't be generated by any  * OS other than BSD/OS, so the correct values to use here are the  * BSD/OS values.  *  * Platforms that have already assigned these values to other  * DLT_ codes, however, should give these codes the values  * from that platform, so that programs that use these codes will  * continue to compile - even though they won't correctly read  * files of these types.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DLT_SLIP_BSDOS
-value|13
+value|15
 end_define
 
 begin_comment
@@ -611,15 +631,108 @@ begin_define
 define|#
 directive|define
 name|DLT_PPP_BSDOS
-value|14
+value|16
 end_define
 
 begin_comment
 comment|/* BSD/OS Point-to-point Protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DLT_ATM_CLIP
+value|19
+end_define
+
 begin_comment
-comment|/*  * The instruction encondings.  */
+comment|/* Linux Classical-IP over ATM */
+end_comment
+
+begin_comment
+comment|/*  * This value is defined by NetBSD; other platforms should refrain from  * using it for other purposes, so that NetBSD savefiles with a link  * type of 50 can be read as this type on all platforms.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PPP_SERIAL
+value|50
+end_define
+
+begin_comment
+comment|/* PPP over serial with HDLC encapsulation */
+end_comment
+
+begin_comment
+comment|/*  * This value was defined by libpcap 0.5; platforms that have defined  * it with a different value should define it here with that value -  * a link type of 104 in a save file will be mapped to DLT_C_HDLC,  * whatever value that happens to be, so programs will correctly  * handle files with that link type regardless of the value of  * DLT_C_HDLC.  *  * The name DLT_C_HDLC was used by BSD/OS; we use that name for source  * compatibility with programs written for BSD/OS.  *  * libpcap 0.5 defined it as DLT_CHDLC; we define DLT_CHDLC as well,  * for source compatibility with programs written for libpcap 0.5.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_C_HDLC
+value|104
+end_define
+
+begin_comment
+comment|/* Cisco HDLC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_CHDLC
+value|DLT_C_HDLC
+end_define
+
+begin_comment
+comment|/*  * Reserved for future use.  * Do not pick other numerical value for these unless you have also  * picked up the tcpdump.org top-of-CVS-tree version of "savefile.c",  * which will arrange that capture files for these DLT_ types have  * the same "network" value on all platforms, regardless of what  * value is chosen for their DLT_ type (thus allowing captures made  * on one platform to be read on other platforms, even if the two  * platforms don't use the same numerical values for all DLT_ types).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_11
+value|105
+end_define
+
+begin_comment
+comment|/* IEEE 802.11 wireless */
+end_comment
+
+begin_comment
+comment|/*  * Values between 106 and 107 are used in capture file headers as  * link-layer types corresponding to DLT_ types that might differ  * between platforms; don't use those values for new DLT_ new types.  */
+end_comment
+
+begin_comment
+comment|/*  * OpenBSD DLT_LOOP, for loopback devices; it's like DLT_NULL, except  * that the AF_ type in the link-layer header is in network byte order.  *  * OpenBSD defines it as 12, but that collides with DLT_RAW, so we  * define it as 108 here.  If OpenBSD picks up this file, it should  * define DLT_LOOP as 12 in its version, as per the comment above -  * and should not use 108 for any purpose.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LOOP
+value|108
+end_define
+
+begin_comment
+comment|/*  * Values between 109 and 112 are used in capture file headers as  * link-layer types corresponding to DLT_ types that might differ  * between platforms; don't use those values for new DLT_ new types.  */
+end_comment
+
+begin_comment
+comment|/*  * This is for Linux cooked sockets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LINUX_SLL
+value|113
+end_define
+
+begin_comment
+comment|/*  * The instruction encodings.  */
 end_comment
 
 begin_comment
@@ -1020,17 +1133,67 @@ parameter_list|)
 value|{ (u_short)(code), jt, jf, k }
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
 name|KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|)
+end_if
+
+begin_comment
+comment|/*  * Systems based on non-BSD kernels don't have ifnet's (or they don't mean  * anything if it is in<net/if.h>) and won't work like this.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
 
 begin_function_decl
 specifier|extern
+name|void
+name|bpf_tap
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
 name|u_int
-name|bpf_filter
-parameter_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bpf_mtap
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1038,9 +1201,32 @@ begin_function_decl
 specifier|extern
 name|void
 name|bpfattach
-parameter_list|()
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bpfilterattach
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function_decl
 specifier|extern
@@ -1058,16 +1244,59 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
+begin_function_decl
+specifier|extern
+name|void
+name|bpfattach
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bpfilterattach
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BSD&& (_KERNEL || KERNEL) */
+end_comment
 
 begin_if
 if|#
 directive|if
 name|__STDC__
 end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|bpf_validate
+parameter_list|(
+name|struct
+name|bpf_insn
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -1088,10 +1317,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|int
+name|bpf_validate
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u_int
+name|bpf_filter
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
