@@ -4886,6 +4886,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -4895,10 +4896,8 @@ name|sip
 argument_list|,
 name|fsize
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
@@ -5806,6 +5805,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -5818,10 +5818,8 @@ argument_list|(
 name|sf
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 ifdef|#
@@ -6321,7 +6319,7 @@ operator|*
 name|scp
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
 operator|==
 literal|0
@@ -6662,7 +6660,7 @@ argument_list|(
 name|ucontext_t
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
 operator|==
 literal|0

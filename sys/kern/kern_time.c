@@ -1230,7 +1230,7 @@ argument_list|(
 name|rmt
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
 condition|)
 return|return

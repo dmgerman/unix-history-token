@@ -2906,7 +2906,7 @@ name|cio
 operator|->
 name|pat_buf_len
 argument_list|,
-name|B_READ
+name|VM_PROT_READ
 argument_list|)
 condition|)
 block|{
@@ -3040,7 +3040,7 @@ name|cio
 operator|->
 name|match_buf_len
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
 condition|)
 block|{

@@ -2348,6 +2348,7 @@ argument_list|)
 operator|==
 name|FALSE
 operator|||
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -2361,10 +2362,8 @@ expr|struct
 name|osigframe
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
-operator|==
-name|FALSE
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
@@ -3308,6 +3307,7 @@ argument_list|)
 operator|==
 name|FALSE
 operator|||
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -3321,10 +3321,8 @@ expr|struct
 name|sigframe
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
-operator|==
-name|FALSE
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
@@ -3854,6 +3852,7 @@ name|sigcntxp
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -3867,10 +3866,8 @@ expr|struct
 name|osigcontext
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -4406,6 +4403,7 @@ name|mc_eflags
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -4418,10 +4416,8 @@ argument_list|(
 name|ucontext_t
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(

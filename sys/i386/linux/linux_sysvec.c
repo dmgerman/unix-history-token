@@ -1298,7 +1298,7 @@ operator|==
 name|FALSE
 operator|)
 operator|||
-operator|(
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -1312,11 +1312,8 @@ expr|struct
 name|linux_sigframe
 argument_list|)
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
-operator|==
-name|FALSE
-operator|)
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */

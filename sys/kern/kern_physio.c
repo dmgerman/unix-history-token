@@ -423,6 +423,10 @@ operator|->
 name|b_flags
 operator|&
 name|B_READ
+condition|?
+name|VM_PROT_WRITE
+else|:
+name|VM_PROT_READ
 argument_list|)
 condition|)
 block|{

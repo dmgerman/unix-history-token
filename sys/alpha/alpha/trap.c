@@ -3936,7 +3936,7 @@ name|size
 else|:
 literal|1
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
 condition|)
 block|{

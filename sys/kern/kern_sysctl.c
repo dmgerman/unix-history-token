@@ -3831,7 +3831,7 @@ name|req
 operator|.
 name|oldlen
 argument_list|,
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
 condition|)
 return|return
@@ -3862,7 +3862,7 @@ name|req
 operator|.
 name|newlen
 argument_list|,
-name|B_READ
+name|VM_PROT_READ
 argument_list|)
 condition|)
 return|return

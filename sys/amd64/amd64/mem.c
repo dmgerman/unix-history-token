@@ -829,9 +829,9 @@ name|uio_rw
 operator|==
 name|UIO_READ
 condition|?
-name|B_READ
+name|VM_PROT_READ
 else|:
-name|B_WRITE
+name|VM_PROT_WRITE
 argument_list|)
 condition|)
 return|return
