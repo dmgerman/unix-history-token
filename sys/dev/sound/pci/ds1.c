@@ -1529,6 +1529,10 @@ name|sc
 argument_list|,
 literal|0
 argument_list|)
+condition|?
+literal|0
+else|:
+literal|1
 return|;
 block|}
 end_function

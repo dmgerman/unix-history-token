@@ -1171,7 +1171,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
 block|}
 end_function
