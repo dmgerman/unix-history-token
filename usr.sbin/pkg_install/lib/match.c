@@ -966,16 +966,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|origin
 argument_list|,
 name|cp
-argument_list|,
-name|strlen
-argument_list|(
-name|origin
-argument_list|)
 argument_list|)
 operator|==
 literal|0
