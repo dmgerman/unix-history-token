@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.1 (Berkeley) 81/02/28"
+literal|"@(#)files.c	4.2 (Berkeley) 81/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ literal|"RC=f77"
 block|,
 literal|"RFLAGS="
 block|,
-literal|"EC=f77"
+literal|"FC=f77"
 block|,
 literal|"EFLAGS="
 block|,
