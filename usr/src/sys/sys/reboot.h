@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)reboot.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)reboot.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* name given for /etc/init */
+comment|/* name given for /etc/init (unused) */
 end_comment
 
 begin_define
@@ -118,7 +118,7 @@ comment|/* dump kernel memory before reboot */
 end_comment
 
 begin_comment
-comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  Except for that of the "magic  * number", each mask applies to the shifted value.  */
+comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  Except for that of the "magic  * number", each mask applies to the shifted value.  * Format:  *	 (4) (4) (4) (4)  (8)     (8)  *	--------------------------------  *	|MA | AD| CT| UN| PART  | TYPE |  *	--------------------------------  */
 end_comment
 
 begin_define
@@ -138,6 +138,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|B_ADAPTOR
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)>> B_ADAPTORSHIFT)& B_ADAPTORMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_CONTROLLERSHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_CONTROLLERMASK
+value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_CONTROLLER
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)>>B_CONTROLLERSHIFT)& B_CONTROLLERMASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|B_UNITSHIFT
 value|16
 end_define
@@ -146,7 +180,17 @@ begin_define
 define|#
 directive|define
 name|B_UNITMASK
-value|0xff
+value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_UNIT
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)>> B_UNITSHIFT)& B_UNITMASK)
 end_define
 
 begin_define
@@ -166,6 +210,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|B_PARTITION
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)>> B_PARTITIONSHIFT)& B_PARTITIONMASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|B_TYPESHIFT
 value|0
 end_define
@@ -180,15 +234,44 @@ end_define
 begin_define
 define|#
 directive|define
+name|B_TYPE
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)>> B_TYPESHIFT)& B_TYPEMASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|B_MAGICMASK
-value|0xf0000000
+value|((u_long)0xf0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|B_DEVMAGIC
-value|0xa0000000
+value|((u_long)0xa0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKEBOOTDEV
+parameter_list|(
+name|type
+parameter_list|,
+name|adaptor
+parameter_list|,
+name|controller
+parameter_list|,
+name|unit
+parameter_list|,
+name|partition
+parameter_list|)
+define|\
+value|(((type)<< B_TYPESHIFT) | ((adaptor)<< B_ADAPTORSHIFT) | \ 	((controller)<< B_CONTROLLERSHIFT) | ((unit)<< B_UNITSHIFT) | \ 	((partition)<< B_PARTITIONSHIFT) | B_DEVMAGIC)
 end_define
 
 end_unit
