@@ -1086,7 +1086,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|bus_space_read_region_1(busspace_isa_mem, s, 0, d, c)
+value|bus_space_read_region_1(busspace_isa_mem, (uintptr_t)(s), 0, d, c)
 end_define
 
 begin_define
@@ -1101,7 +1101,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|bus_space_write_region_1(busspace_isa_mem, d, 0, s, c)
+value|bus_space_write_region_1(busspace_isa_mem, (uintptr_t)(d), 0, s, c)
 end_define
 
 begin_define
@@ -1116,7 +1116,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|bus_space_copy_region_1(busspace_isa_mem, s, 0, d, 0, c)
+value|bus_space_copy_region_1(busspace_isa_mem, (uintptr_t)(s), 0, d, 0, c)
 end_define
 
 begin_define
@@ -1131,7 +1131,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|bus_space_set_region_1(busspace_isa_mem, d, 0, v, c)
+value|bus_space_set_region_1(busspace_isa_mem, (uintptr_t)(d), 0, v, c)
 end_define
 
 begin_define
@@ -1146,7 +1146,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|bus_space_set_region_2(busspace_isa_mem, d, 0, v, c)
+value|bus_space_set_region_2(busspace_isa_mem, (uintptr_t)(d), 0, v, c)
 end_define
 
 begin_function
