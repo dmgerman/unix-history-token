@@ -218,18 +218,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ipxpcb
-name|ipxpcb
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* head of list */
-end_comment
-
 begin_function_decl
 name|int
 name|ipx_pcballoc
