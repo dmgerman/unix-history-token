@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 3dfx driver for FreeBSD 4.x - Finished 11 May 2000, 12:25AM ET  *  * Copyright (C) 2000, by Coleman Kane<cokane@pohl.ececs.uc.edu>,   * based upon the 3dfx driver written for linux, by Daryll Straus, Jon Taylor,  * and Jens Axboe, located at http://linux.3dfx.com.  */
+comment|/*  * Copyright (c) 2000 by Coleman Kane<cokane@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Gardner Buchanan.  * 4. The name of Gardner Buchanan may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *   $FreeBSD$  */
+end_comment
+
+begin_comment
+comment|/* 3dfx driver for FreeBSD 4.x - Finished 11 May 2000, 12:25AM ET  *  * Copyright (C) 2000, by Coleman Kane<cokane@FreeBSD.org>,   * based upon the 3dfx driver written for linux, by Daryll Straus, Jon Taylor,  * and Jens Axboe, located at http://linux.3dfx.com.  */
 end_comment
 
 begin_comment
@@ -93,10 +97,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_comment
-comment|/*#include<sys/memrange.h>*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -178,6 +178,23 @@ include|#
 directive|include
 file|<sys/rman.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TDFX_LINUX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/tdfx/tdfx_linux.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -278,6 +295,29 @@ literal|"3DFX Graphics[/2D]/3D Accelerator(s)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TDFX_LINUX
+end_ifdef
+
+begin_expr_stmt
+name|LINUX_IOCTL_SET
+argument_list|(
+name|tdfx
+argument_list|,
+name|LINUX_IOCTL_TDFX_MIN
+argument_list|,
+name|LINUX_IOCTL_TDFX_MAX
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Char. Dev. file operations structure */
@@ -574,7 +614,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|device_printf
 argument_list|(
 name|dev
@@ -623,7 +663,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|device_printf
 argument_list|(
 name|dev
@@ -650,7 +690,7 @@ name|rid
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|device_printf
 argument_list|(
 name|dev
@@ -685,7 +725,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|device_printf
 argument_list|(
 name|dev
@@ -777,7 +817,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 if|if
 condition|(
 name|retval
@@ -810,7 +850,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|device_printf
 argument_list|(
 name|dev
@@ -1031,7 +1071,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|device_printf
 argument_list|(
 name|dev
@@ -1085,7 +1125,7 @@ expr_stmt|;
 comment|/* 		 * If, for some reason, we can't set the MTRR (N/A?) we may still continue 		 */
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 if|if
 condition|(
 name|retval
@@ -1125,7 +1165,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 else|else
 block|{
 name|device_printf
@@ -1199,7 +1239,7 @@ name|EBUSY
 return|;
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"3dfx: Opened by #%d\n"
@@ -1281,7 +1321,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"Closed by #%d\n"
@@ -1351,7 +1391,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"tdfx: tdfx_info (softc) is NULL\n"
@@ -1398,7 +1438,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"tdfx: offset %x out of range\n"
@@ -1506,7 +1546,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"tdfx: Bad device or internal struct in tdfx_query_fetch\n"
@@ -1901,7 +1941,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"tdfx: Bad struct or device in tdfx_query_update\n"
@@ -2478,7 +2518,7 @@ default|default:
 comment|/* In case we are thrown a bogus sub-command! */
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"Bad Sub-cmd: 0x%x\n"
@@ -2599,7 +2639,7 @@ name|data
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"IOCTL'd by #%d, cmd: 0x%x, data: 0x%x\n"
@@ -2701,7 +2741,7 @@ default|default:
 comment|/* Technically, we won't reach this from linux emu, but when glide 			 * finally gets ported, watch out! */
 ifdef|#
 directive|ifdef
-name|TDFX_VERBOSE
+name|DEBUG
 name|printf
 argument_list|(
 literal|"Bad IOCTL from #%d\n"
@@ -2722,6 +2762,136 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TDFX_LINUX
+end_ifdef
+
+begin_comment
+comment|/*  * Linux emulation IOCTL for /dev/tdfx  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|linux_ioctl_tdfx
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|linux_ioctl_args
+modifier|*
+name|args
+parameter_list|)
+block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|u_long
+name|cmd
+init|=
+name|args
+operator|->
+name|cmd
+operator|&
+literal|0xffff
+decl_stmt|;
+comment|/* The structure passed to ioctl has two shorts, one int       and one void*. */
+name|char
+name|d_pio
+index|[
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+index|]
+decl_stmt|;
+name|struct
+name|file
+modifier|*
+name|fp
+init|=
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_ofiles
+index|[
+name|args
+operator|->
+name|fd
+index|]
+decl_stmt|;
+comment|/* We simply copy the data and send it right to ioctl */
+name|copyin
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|args
+operator|->
+name|arg
+argument_list|,
+operator|&
+name|d_pio
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|d_pio
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|fo_ioctl
+argument_list|(
+name|fp
+argument_list|,
+name|cmd
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|d_pio
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+name|error
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TDFX_LINUX */
+end_comment
 
 begin_comment
 comment|/* This is the device driver struct. This is sent to the driver subsystem to  * register the method structure and the info strcut space for this particular  * instance of the driver.  */
