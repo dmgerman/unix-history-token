@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tzsetup.c,v 1.8 1997/10/27 07:49:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -935,6 +935,17 @@ literal|0
 index|]
 operator|==
 literal|'#'
+operator|||
+name|strspn
+argument_list|(
+name|s
+argument_list|,
+literal|" \t"
+argument_list|)
+operator|==
+name|len
+operator|-
+literal|1
 condition|)
 continue|continue;
 comment|/* Isolate the two-letter code. */
