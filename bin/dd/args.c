@@ -953,8 +953,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"bs must be between 1 and %zd"
+literal|"bs must be between 1 and %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1008,8 +1011,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"cbs must be between 1 and %zd"
+literal|"cbs must be between 1 and %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1167,8 +1173,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"ibs must be between 1 and %zd"
+literal|"ibs must be between 1 and %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1248,8 +1257,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"obs must be between 1 and %zd"
+literal|"obs must be between 1 and %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
