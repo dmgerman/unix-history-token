@@ -401,7 +401,7 @@ define|#
 directive|define
 name|USB_ATTACH_SETUP
 define|\
-value|usbd_device_set_desc(self, devinfo); \ 	sc->sc_dev = self
+value|sc->sc_dev = self; \ 	usbd_device_set_desc(self, devinfo)
 end_define
 
 begin_define
@@ -452,7 +452,7 @@ parameter_list|,
 name|sub
 parameter_list|)
 define|\
-value|(device_probe_and_attach((bdev)) == 0 ? ((dev)->softc = (bdev)) : 0)
+value|(device_probe_and_attach((bdev)) == 0 ?			\ 		((dev)->softc = device_get_softc(bdev)) : 0)
 end_define
 
 begin_comment
