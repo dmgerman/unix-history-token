@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)px_header.c 1.3 %G%"
+literal|"@(#)px_header.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"config.h"
 end_include
 
 begin_include
@@ -305,7 +311,7 @@ argument_list|)
 expr_stmt|;
 name|run
 argument_list|(
-name|PX_DEBUG
+name|px_debug
 argument_list|,
 name|largv
 argument_list|)
@@ -412,7 +418,7 @@ argument_list|)
 expr_stmt|;
 name|run
 argument_list|(
-name|PX_INTRP
+name|px_intrp
 argument_list|,
 name|largv
 argument_list|)
