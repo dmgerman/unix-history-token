@@ -730,7 +730,7 @@ return|return
 name|result
 return|;
 block|}
-comment|/* 		 * If we don't COW now, on a user wire, the user will never 		 * be able to write to the mapping.  If we don't make this 		 * restriction, the bookkeeping would be nearly impossible. 		 */
+comment|/* 		 * If we don't COW now, on a user wire, the user will never 		 * be able to write to the mapping.  If we don't make this 		 * restriction, the bookkeeping would be nearly impossible. 		 * 		 * XXX The following assignment modifies the map without 		 * holding a write lock on it. 		 */
 if|if
 condition|(
 operator|(
