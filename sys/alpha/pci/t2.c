@@ -314,7 +314,7 @@ expr_stmt|;
 comment|/* t2 puts high bits in the bottom of the register */
 name|s
 operator|=
-name|splhigh
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -362,7 +362,7 @@ operator|->
 name|hae0_1
 expr_stmt|;
 block|}
-name|splx
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)

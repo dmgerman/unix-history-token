@@ -100,7 +100,7 @@ name|KV
 parameter_list|(
 name|pa
 parameter_list|)
-value|ALPHA_PHYS_TO_K0SEG(pa)
+value|ALPHA_PHYS_TO_K0SEG((pa) + sable_lynx_base)
 end_define
 
 begin_decl_stmt
@@ -272,7 +272,7 @@ name|s
 parameter_list|,
 name|old_hae3
 parameter_list|)
-value|if((b)) {			\         do {							\ 		(s) = splhigh();				\ 		(old_hae3) = REGVAL(T2_HAE0_3);			\ 		alpha_mb();					\ 		REGVAL(T2_HAE0_3) = (old_hae3) | (1<<30);	\ 		alpha_mb();					\         } while(0);						\ }
+value|if((b)) {			\         do {							\ 		(s) = critical_enter();				\ 		(old_hae3) = REGVAL(T2_HAE0_3);			\ 		alpha_mb();					\ 		REGVAL(T2_HAE0_3) = (old_hae3) | (1<<30);	\ 		alpha_mb();					\         } while(0);						\ }
 end_define
 
 begin_define
@@ -286,7 +286,7 @@ name|s
 parameter_list|,
 name|old_hae3
 parameter_list|)
-value|if((b)) {	\         do {						\ 		alpha_mb();				\ 		REGVAL(T2_HAE0_3) = (old_hae3);		\ 		alpha_mb();				\ 		splx((s));				\         } while(0);					\ }
+value|if((b)) {	\         do {						\ 		alpha_mb();				\ 		REGVAL(T2_HAE0_3) = (old_hae3);		\ 		alpha_mb();				\ 		critical_exit((s));			\         } while(0);					\ }
 end_define
 
 begin_define
