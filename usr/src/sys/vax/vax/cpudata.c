@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpudata.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpudata.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -367,11 +367,9 @@ end_if
 
 begin_decl_stmt
 name|struct
-name|persbi
+name|nexusconnect
 name|sbi8600
-index|[
-literal|2
-index|]
+index|[]
 init|=
 block|{
 block|{
@@ -406,21 +404,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|caddr_t
-name|ioaaddr8600
+name|struct
+name|iobus
+name|io8600
 index|[]
 init|=
+block|{
 block|{
 name|IOA8600
 argument_list|(
 literal|0
 argument_list|)
 block|,
+name|IOAMAPSIZ
+block|,
+name|IO_ABUS
+block|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sbi8600
+index|[
+literal|0
+index|]
+block|}
+block|,
+block|{
 name|IOA8600
 argument_list|(
 literal|1
 argument_list|)
+block|,
+name|IOAMAPSIZ
+block|,
+name|IO_ABUS
+block|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sbi8600
+index|[
+literal|1
+index|]
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -437,7 +466,7 @@ end_if
 
 begin_decl_stmt
 name|struct
-name|persbi
+name|nexusconnect
 name|sbi780
 init|=
 block|{
@@ -457,12 +486,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
-name|ioa780
+name|struct
+name|iobus
+name|io780
 index|[]
 init|=
 block|{
-name|IOA_SBI780
+literal|0
+block|,
+literal|0
+block|,
+name|IO_SBI780
+block|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sbi780
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -480,7 +520,7 @@ end_if
 
 begin_decl_stmt
 name|struct
-name|persbi
+name|nexusconnect
 name|cmi750
 init|=
 block|{
@@ -500,12 +540,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
-name|ioa750
+name|struct
+name|iobus
+name|io750
 index|[]
 init|=
 block|{
-name|IOA_CMI750
+literal|0
+block|,
+literal|0
+block|,
+name|IO_CMI750
+block|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|cmi750
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -523,7 +574,7 @@ end_if
 
 begin_decl_stmt
 name|struct
-name|persbi
+name|nexusconnect
 name|xxx730
 init|=
 block|{
@@ -543,12 +594,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
-name|ioa730
+name|struct
+name|iobus
+name|io730
 index|[]
 init|=
 block|{
-name|IOA_XXX730
+literal|0
+block|,
+literal|0
+block|,
+name|IO_XXX730
+block|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|xxx730
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -571,19 +633,11 @@ name|VAX8600
 block|{
 name|VAX_8600
 block|,
-literal|4
+literal|6
 block|,
 literal|2
 block|,
-name|ioaaddr8600
-block|,
-literal|512
-block|,
-operator|(
-name|short
-operator|*
-operator|)
-literal|0
+name|io8600
 block|}
 block|,
 endif|#
@@ -598,15 +652,7 @@ literal|2
 block|,
 literal|1
 block|,
-operator|(
-name|caddr_t
-operator|*
-operator|)
-literal|0
-block|,
-literal|0
-block|,
-name|ioa780
+name|io780
 block|}
 block|,
 endif|#
@@ -621,15 +667,7 @@ literal|1
 block|,
 literal|1
 block|,
-operator|(
-name|caddr_t
-operator|*
-operator|)
-literal|0
-block|,
-literal|0
-block|,
-name|ioa750
+name|io750
 block|}
 block|,
 endif|#
@@ -644,15 +682,7 @@ literal|1
 block|,
 literal|1
 block|,
-operator|(
-name|caddr_t
-operator|*
-operator|)
-literal|0
-block|,
-literal|0
-block|,
-name|ioa730
+name|io730
 block|}
 block|,
 endif|#

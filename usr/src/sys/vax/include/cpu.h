@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -147,6 +147,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Vax CPU types.  * Similar types are grouped with their earliest example.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -182,6 +186,38 @@ name|VAX_MAX
 value|4
 end_define
 
+begin_comment
+comment|/*  * Main IO backplane types.  * This gives us a handle on how to do autoconfiguration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_SBI780
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IO_CMI750
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IO_XXX730
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IO_ABUS
+value|4
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -207,28 +243,48 @@ comment|/* relative speed of cpu */
 name|short
 name|pc_nioa
 decl_stmt|;
-comment|/* number of IO adaptors/SBI's */
-name|caddr_t
+comment|/* number of IO adaptors/nexus blocks */
+name|struct
+name|iobus
 modifier|*
-name|pc_ioaaddr
+name|pc_io
 decl_stmt|;
-comment|/* phys addresses of IO adaptors */
-name|int
-name|pc_ioasize
-decl_stmt|;
-comment|/* size of an IO adaptor */
-name|short
-modifier|*
-name|pc_ioatype
-decl_stmt|;
-comment|/* io adaptor types if no cfg reg */
+comment|/* descriptions of IO adaptors */
 block|}
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|persbi
+name|iobus
+block|{
+name|caddr_t
+name|io_addr
+decl_stmt|;
+comment|/* phys address of IO adaptor */
+name|int
+name|io_size
+decl_stmt|;
+comment|/* size of an IO space */
+name|short
+name|io_type
+decl_stmt|;
+comment|/* io adaptor types if no cfg reg */
+name|caddr_t
+name|io_details
+decl_stmt|;
+comment|/* specific to adaptor types */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Description of a main bus that maps "nexi", ala the 780 SBI.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nexusconnect
 block|{
 name|short
 name|psb_nnexus
@@ -287,79 +343,6 @@ name|percpu
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|VAX730
-end_if
-
-begin_decl_stmt
-name|struct
-name|persbi
-name|xxx730
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|VAX750
-end_if
-
-begin_decl_stmt
-name|struct
-name|persbi
-name|cmi750
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
-begin_decl_stmt
-name|struct
-name|persbi
-name|sbi780
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|VAX8600
-end_if
-
-begin_decl_stmt
-name|struct
-name|persbi
-name|sbi8600
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
