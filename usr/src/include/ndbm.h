@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ndbm.h	4.4	84/09/05	*/
+comment|/*	ndbm.h	4.5	85/01/09	*/
 end_comment
 
 begin_comment
@@ -142,6 +142,30 @@ parameter_list|(
 name|db
 parameter_list|)
 value|((db)->dbm_flags&= ~_DBM_IOERR)
+end_define
+
+begin_comment
+comment|/* for flock(2) and fstat(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dbm_dirfno
+parameter_list|(
+name|db
+parameter_list|)
+value|((db)->dbm_dirf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dbm_pagfno
+parameter_list|(
+name|db
+parameter_list|)
+value|((db)->dbm_pagf)
 end_define
 
 begin_typedef
