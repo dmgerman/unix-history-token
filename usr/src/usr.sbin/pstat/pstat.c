@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.8 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3374,6 +3374,10 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|num
+operator|=
+literal|0
+operator|,
 name|mp
 operator|=
 name|mountlist
