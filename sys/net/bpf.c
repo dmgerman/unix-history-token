@@ -195,6 +195,7 @@ file|<sys/sysctl.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_BPF

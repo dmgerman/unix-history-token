@@ -86,6 +86,7 @@ comment|/* for device_printf() */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_BUS

@@ -74,6 +74,7 @@ value|((struct ppb_data *)device_get_softc(dev))
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_PPBUSDEV
