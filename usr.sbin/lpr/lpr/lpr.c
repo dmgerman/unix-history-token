@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.9 1996/10/26 00:46:34 imp Exp $\n"
+literal|"\n$Id: lpr.c,v 1.10 1996/10/27 03:06:46 imp Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1347,7 +1347,7 @@ if|if
 condition|(
 name|argc
 operator|==
-literal|1
+literal|0
 condition|)
 name|jobname
 operator|=
@@ -1363,7 +1363,7 @@ name|rindex
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 literal|'/'
@@ -1376,7 +1376,7 @@ literal|1
 else|:
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 expr_stmt|;
 block|}
