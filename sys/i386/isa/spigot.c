@@ -485,6 +485,9 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|struct
 name|spigot_softc
 modifier|*
@@ -537,9 +540,9 @@ name|defined
 argument_list|(
 name|SPIGOT_UNSECURE
 argument_list|)
-comment|/* Since we can't map the i/o page, don't allow open unless suser */
-if|if
-condition|(
+comment|/* 	 * Don't allow open() unless the process has sufficient privileges, 	 * since mapping the i/o page and granting i/o privilege would 	 * require sufficient privilege soon and nothing much can be done 	 * without them. 	 */
+name|error
+operator|=
 name|suser
 argument_list|(
 name|p
@@ -551,7 +554,20 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
+literal|0
+condition|)
+return|return
+name|error
+return|;
+if|if
+condition|(
+name|securelevel
+operator|>
 literal|0
 condition|)
 return|return
@@ -826,6 +842,15 @@ literal|0
 condition|)
 return|return
 name|error
+return|;
+if|if
+condition|(
+name|securelevel
+operator|>
+literal|0
+condition|)
+return|return
+name|EPERM
 return|;
 endif|#
 directive|endif

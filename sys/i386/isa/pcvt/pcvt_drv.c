@@ -4946,7 +4946,7 @@ name|XSERVER
 operator|&&
 operator|!
 name|PCVT_USL_VT_COMPAT
-comment|/*----------------------------------------------------------------------*  *	initialize for X mode  *	i.e.: grant current process (the X server) all IO priviledges,  *	and mark in static variable so other hooks can test for it,  *	save all loaded fonts and screen pages to pageable buffers;  *	if parameter `on' is false, the same procedure is done reverse.  *----------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------*  *	initialize for X mode  *	i.e.: grant current process (the X server) all IO privileges,  *	and mark in static variable so other hooks can test for it,  *	save all loaded fonts and screen pages to pageable buffers;  *	if parameter `on' is false, the same procedure is done reverse.  *----------------------------------------------------------------------*/
 specifier|static
 name|int
 name|pcvt_xmode_set
@@ -5010,6 +5010,8 @@ endif|#
 directive|endif
 comment|/* PCVT_NETBSD> 9 */
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* X will only run on VGA and Hercules adaptors */
@@ -5065,9 +5067,9 @@ condition|(
 name|on
 condition|)
 block|{
-comment|/* 		 * Test whether the calling process has super-user priviledges. 		 * This prevents us from granting the potential security hole 		 * `IO priv' to any process (effective uid is checked). 		 */
-if|if
-condition|(
+comment|/* 		 * Test whether the calling process has super-user privileges 		 * and we're in insecure mode. 		 * This prevents us from granting the potential security hole 		 * `IO priv' to insufficiently privileged processes. 		 */
+name|error
+operator|=
 name|suser
 argument_list|(
 name|p
@@ -5079,7 +5081,22 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|securelevel
+operator|>
 literal|0
 condition|)
 return|return
