@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.25 (Berkeley) %G%"
+literal|"@(#)compress.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,13 +272,6 @@ name|verbose
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -362,16 +355,10 @@ argument_list|,
 literal|"uncompress"
 argument_list|)
 condition|)
-block|{
-name|progname
-operator|=
-literal|"uncompress"
-expr_stmt|;
 name|style
 operator|=
 name|DECOMPRESS
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -383,23 +370,11 @@ argument_list|,
 literal|"compress"
 argument_list|)
 condition|)
-block|{
-name|progname
-operator|=
-literal|"compress"
-expr_stmt|;
 name|style
 operator|=
 name|COMPRESS
 expr_stmt|;
-block|}
 else|else
-block|{
-name|progname
-operator|=
-operator|*
-name|argv
-expr_stmt|;
 name|errx
 argument_list|(
 literal|1
@@ -407,7 +382,6 @@ argument_list|,
 literal|"unknown program name"
 argument_list|)
 expr_stmt|;
-block|}
 name|bits
 operator|=
 name|cat
