@@ -58,25 +58,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLKF_USERMODE
+name|CLKF_CPL
 parameter_list|(
 name|cf
 parameter_list|)
-value|((CLKF_PC(cf)>> 61)< 5)
+value|((cf)->cf_tf.tf_special.psr& IA64_PSR_CPL)
 end_define
-
-begin_comment
-comment|/* Used by signaling code. */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|cpu_getstack
+name|CLKF_USERMODE
 parameter_list|(
-name|td
+name|cf
 parameter_list|)
-value|((td)->td_frame->tf_special.sp)
+value|(CLKF_CPL(cf) == IA64_PSR_CPL_USER)
 end_define
 
 begin_define
@@ -99,10 +95,6 @@ parameter_list|)
 value|((tf)->tf_special.psr& IA64_PSR_CPL)
 end_define
 
-begin_comment
-comment|/*  * User mode for use by ast() and VM faults. It's takes into account  * that the gateway page is kernel space when looking at the VA, but  * is to be treated as user space when running with user priveleges.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -110,8 +102,7 @@ name|TRAPF_USERMODE
 parameter_list|(
 name|tf
 parameter_list|)
-define|\
-value|((TRAPF_PC(tf)>> 61)< 5 || TRAPF_CPL(tf) == IA64_PSR_CPL_USER)
+value|(TRAPF_CPL(tf) == IA64_PSR_CPL_USER)
 end_define
 
 begin_comment
@@ -195,6 +186,20 @@ define|#
 directive|define
 name|get_cyclecount
 value|ia64_get_itc
+end_define
+
+begin_comment
+comment|/* Used by signaling code. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cpu_getstack
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_frame->tf_special.sp)
 end_define
 
 begin_function_decl

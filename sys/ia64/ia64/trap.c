@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* From: src/sys/alpha/alpha/trap.c,v 1.33 */
 end_comment
 
@@ -14,6 +10,20 @@ end_comment
 begin_comment
 comment|/*  * Copyright (c) 1994, 1995, 1996 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -1482,19 +1492,10 @@ name|sticks
 decl_stmt|;
 name|user
 operator|=
-operator|(
-operator|(
+name|TRAPF_USERMODE
+argument_list|(
 name|framep
-operator|->
-name|tf_special
-operator|.
-name|iip
-operator|>>
-literal|61
-operator|)
-operator|<
-literal|5
-operator|)
+argument_list|)
 condition|?
 literal|1
 else|:
@@ -1506,6 +1507,8 @@ condition|(
 name|vector
 operator|==
 name|IA64_VEC_BREAK
+operator|&&
+name|user
 operator|&&
 name|framep
 operator|->
@@ -2470,14 +2473,10 @@ name|out
 goto|;
 name|no_fault_in
 label|:
-comment|/* 		 * Additionally check the privilege level. We don't want to 		 * panic when we're in the gateway page, running at user 		 * level. This happens for the signal trampolines. Note that 		 * when that happens, user is defined as 0 above. We need to 		 * set user to 1 to force calling userret() and do_ast(). 		 */
 if|if
 condition|(
 operator|!
-name|TRAPF_USERMODE
-argument_list|(
-name|framep
-argument_list|)
+name|user
 condition|)
 block|{
 comment|/* Check for copyin/copyout fault. */
@@ -2533,11 +2532,6 @@ goto|goto
 name|dopanic
 goto|;
 block|}
-else|else
-name|user
-operator|=
-literal|1
-expr_stmt|;
 name|ucode
 operator|=
 name|va
