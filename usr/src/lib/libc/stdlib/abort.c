@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)abort.c	5.6 (Berkeley) %G%"
+literal|"@(#)abort.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_macro
@@ -59,6 +59,31 @@ operator|~
 literal|0L
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+operator|~
+name|sigmask
+argument_list|(
+name|SIGABRT
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* leave catch function active to give program a crack at it */
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
+name|SIGABRT
+argument_list|)
+expr_stmt|;
+comment|/* if we got here, it was no good; reset to default and stop */
 operator|(
 name|void
 operator|)
