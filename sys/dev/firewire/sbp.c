@@ -1531,34 +1531,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|SBPPRI
-value|((PZERO+8)|PCATCH)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOREACH_SDEV
-parameter_list|(
-name|tsdev
-parameter_list|,
-name|targets
-parameter_list|)
-define|\
-value|tsdev = NULL; \ 	for (i = 0; i< SBP_NUM_TARGETS; i++) { \ 		if (targets[i].fwdev == NULL) \ 			continue; \ 		for (j = 0; j< targets[i].num_lun; j++) { \ 			tsdev =&targets[i].luns[j]; \ 			if (tsdev->status == SBP_DEV_DEAD) \ 				continue;
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOREACH_SDEV_END
-define|\
-value|} \ 	}
-end_define
-
 begin_comment
 comment|/* cam related functions */
 end_comment
