@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.24 (Berkeley) %G%"
+literal|"@(#)lex.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,6 +393,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|fileno
+argument_list|(
+name|otf
+argument_list|)
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -420,6 +435,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|fileno
+argument_list|(
+name|itf
+argument_list|)
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|rm
 argument_list|(
 name|tempMesg

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)names.c	5.17 (Berkeley) %G%"
+literal|"@(#)names.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1021,6 +1021,18 @@ goto|goto
 name|cant
 goto|;
 block|}
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|image
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fout
