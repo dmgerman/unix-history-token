@@ -29,6 +29,17 @@ literal|"@(#)key.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2338,9 +2349,10 @@ name|EL_BUFSIZ
 index|]
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|fmt
+index|[]
 init|=
 literal|"%-15s->  %s\n"
 decl_stmt|;

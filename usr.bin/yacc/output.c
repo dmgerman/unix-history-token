@@ -377,6 +377,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|char
+name|line_format
+index|[]
+init|=
+literal|"#line %d \"%s\"\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|nvectors
 decl_stmt|;

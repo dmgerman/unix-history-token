@@ -6941,14 +6941,15 @@ modifier|*
 name|area
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|fmts
+index|[]
 init|=
 literal|"%s\n"
 decl_stmt|,
-modifier|*
 name|fmtd
+index|[]
 init|=
 literal|"%d\n"
 decl_stmt|;
