@@ -682,7 +682,7 @@ operator|*
 name|dst
 operator|++
 operator|=
-name|htoles
+name|htole16
 argument_list|(
 operator|*
 name|src

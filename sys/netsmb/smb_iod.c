@@ -1008,7 +1008,7 @@ name|rqp
 operator|->
 name|sr_rqtid
 operator|=
-name|htoles
+name|htole16
 argument_list|(
 name|ssp
 condition|?
@@ -1024,7 +1024,7 @@ name|rqp
 operator|->
 name|sr_rquid
 operator|=
-name|htoles
+name|htole16
 argument_list|(
 name|vcp
 condition|?

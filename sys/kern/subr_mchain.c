@@ -478,7 +478,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htobes
+name|htobe16
 argument_list|(
 name|x
 argument_list|)
@@ -520,7 +520,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htoles
+name|htole16
 argument_list|(
 name|x
 argument_list|)
@@ -562,7 +562,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htobel
+name|htobe32
 argument_list|(
 name|x
 argument_list|)
@@ -604,7 +604,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htolel
+name|htole32
 argument_list|(
 name|x
 argument_list|)
@@ -646,7 +646,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htobeq
+name|htobe64
 argument_list|(
 name|x
 argument_list|)
@@ -688,7 +688,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htoleq
+name|htole64
 argument_list|(
 name|x
 argument_list|)
@@ -1633,7 +1633,7 @@ condition|)
 operator|*
 name|x
 operator|=
-name|letohs
+name|le16toh
 argument_list|(
 name|v
 argument_list|)
@@ -1681,7 +1681,7 @@ condition|)
 operator|*
 name|x
 operator|=
-name|betohs
+name|be16toh
 argument_list|(
 name|v
 argument_list|)
@@ -1763,7 +1763,7 @@ condition|)
 operator|*
 name|x
 operator|=
-name|betohl
+name|be32toh
 argument_list|(
 name|v
 argument_list|)
@@ -1813,7 +1813,7 @@ condition|)
 operator|*
 name|x
 operator|=
-name|letohl
+name|le32toh
 argument_list|(
 name|v
 argument_list|)
@@ -1895,7 +1895,7 @@ condition|)
 operator|*
 name|x
 operator|=
-name|betohq
+name|be64toh
 argument_list|(
 name|v
 argument_list|)
@@ -1945,7 +1945,7 @@ condition|)
 operator|*
 name|x
 operator|=
-name|letohq
+name|le64toh
 argument_list|(
 name|v
 argument_list|)
