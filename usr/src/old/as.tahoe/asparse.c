@@ -3168,6 +3168,14 @@ condition|(
 name|exprisname
 condition|)
 block|{
+name|stpt
+operator|->
+name|s_type
+operator|=
+name|locxp
+operator|->
+name|e_xtype
+expr_stmt|;
 switch|switch
 condition|(
 name|stpt
