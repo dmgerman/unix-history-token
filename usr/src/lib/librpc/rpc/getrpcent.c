@@ -123,10 +123,6 @@ decl_stmt|;
 block|}
 modifier|*
 name|rpcdata
-struct|,
-modifier|*
-name|_rpcdata
-argument_list|()
 struct|;
 end_struct
 
