@@ -1873,12 +1873,9 @@ name|st
 operator|->
 name|st_mode
 expr_stmt|;
-comment|/* 	 * XXX TODO: Does this really work under all conditions? 	 * E.g., root restores a dir owned by someone else? XXX 	 */
-comment|/* Ensure we can write to this directory. */
+comment|/* 	 * Use conservative permissions when creating directories 	 * to close a few security races. 	 */
 name|writable_mode
 operator|=
-name|mode
-operator||
 literal|0700
 expr_stmt|;
 if|if
@@ -3136,7 +3133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns 0 if it successfully created necessary directories.  * Otherwise, returns ARCHIVE_WARN.  */
+comment|/*  * Returns 0 if it successfully created necessary directories.  * Otherwise, returns ARCHIVE_WARN.  *  * XXX TODO: Merge this with archive_extract_dir() above; that will  * allow us to deal with all directory-related security and  * permissions issues in one place. XXX  */
 end_comment
 
 begin_function
@@ -3164,6 +3161,9 @@ name|extract
 modifier|*
 name|extract
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 name|extract
 operator|=
 name|a
@@ -3183,7 +3183,6 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-comment|/* Prune a trailing '/' character. */
 name|p
 operator|=
 name|extract
@@ -3192,32 +3191,78 @@ name|mkdirpath
 operator|.
 name|s
 expr_stmt|;
-if|if
-condition|(
-name|p
-index|[
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+comment|/* Prune trailing "/." sequence. */
+if|if
+condition|(
+name|len
+operator|>
+literal|2
+operator|&&
+name|p
+index|[
+name|len
 operator|-
 literal|1
 index|]
 operator|==
-literal|'/'
-condition|)
+literal|'.'
+operator|&&
 name|p
 index|[
-name|strlen
-argument_list|(
+name|len
+operator|-
+literal|2
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
 name|p
-argument_list|)
+index|[
+name|len
 operator|-
 literal|1
 index|]
 operator|=
 literal|0
 expr_stmt|;
+name|len
+operator|--
+expr_stmt|;
+block|}
+comment|/* Prune a trailing '/' character. */
+if|if
+condition|(
+name|p
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+name|p
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|len
+operator|--
+expr_stmt|;
+block|}
 comment|/* Recursively try to build the path. */
 return|return
 operator|(
@@ -3308,6 +3353,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+comment|/* 	 * TODO: Change mode here to 0700 and add a fixup entry 	 * to change the mode to 0755 after the extract is finished. 	 */
 name|int
 name|mode
 init|=
