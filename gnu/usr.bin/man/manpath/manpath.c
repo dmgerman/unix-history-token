@@ -2012,6 +2012,17 @@ name|lp
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|len
+condition|)
+return|return
+name|strdup
+argument_list|(
+literal|""
+argument_list|)
+return|;
 name|manpathlist
 operator|=
 operator|(
