@@ -461,6 +461,11 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|wrefresh
+argument_list|(
+name|dialog
+argument_list|)
+expr_stmt|;
 block|}
 name|raw_pclose
 argument_list|(
