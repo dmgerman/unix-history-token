@@ -2799,7 +2799,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp65fr.freebsd.org"
+literal|"=ftp://ftp5.fr.freebsd.org"
 block|}
 block|,
 block|{
