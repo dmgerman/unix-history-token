@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fgGhiIkl:LmopqrRst:vVW:x"
+literal|"acdDe:fgGhiIkl:LmoO:pqrRst:vVW:x"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,6 +106,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|CheckPkg
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|LookUpOrigin
 init|=
 name|NULL
 decl_stmt|;
@@ -401,6 +410,30 @@ name|SHOW_ORIGIN
 expr_stmt|;
 break|break;
 case|case
+literal|'O'
+case|:
+name|LookUpOrigin
+operator|=
+name|strdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LookUpOrigin
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|2
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'V'
 case|:
 name|Flags
@@ -664,6 +697,10 @@ name|TAILQ_EMPTY
 argument_list|(
 name|whead
 argument_list|)
+operator|&&
+name|LookUpOrigin
+operator|==
+name|NULL
 condition|)
 name|warnx
 argument_list|(
@@ -697,11 +734,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: pkg_info [-cdDfGiIkLmopqrRsvVx] [-e package] [-l prefix]"
 argument_list|,
-literal|"                [-t template] [-W filename] [pkg-name ...]"
+literal|"                [-t template] [pkg-name ...]"
+argument_list|,
+literal|"       pkg_info [-q] -W filename"
+argument_list|,
+literal|"       pkg_info [-q] -O origin"
 argument_list|,
 literal|"       pkg_info -a [flags]"
 argument_list|)

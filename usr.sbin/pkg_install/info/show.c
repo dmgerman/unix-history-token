@@ -647,7 +647,24 @@ name|Quiet
 condition|?
 literal|"@pkgdep %s\n"
 else|:
-literal|"\t%s\n"
+literal|"Dependency: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_DEPORIGIN
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@comment DEPORIGIN:%s\n"
+else|:
+literal|"\tdependency origin: %s\n"
 argument_list|,
 name|p
 operator|->
@@ -699,6 +716,23 @@ condition|?
 literal|"@option %s\n"
 else|:
 literal|"\tOption \"%s\" controlling package installation behaviour\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_ORIGIN
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@comment ORIGIN:%s\n"
+else|:
+literal|"\tPackage origin: %s\n"
 argument_list|,
 name|p
 operator|->
@@ -1418,9 +1452,6 @@ modifier|*
 name|plist
 parameter_list|)
 block|{
-name|PackingList
-name|p
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1435,58 +1466,23 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|plist
-operator|->
-name|head
-init|;
-name|p
-operator|!=
-name|NULL
-condition|;
-name|p
-operator|=
-name|p
-operator|->
-name|next
-control|)
-if|if
-condition|(
-name|p
-operator|->
-name|type
-operator|==
-name|PLIST_COMMENT
-operator|&&
-operator|!
-name|strncmp
-argument_list|(
-name|p
-operator|->
-name|name
-argument_list|,
-literal|"ORIGIN:"
-argument_list|,
-literal|7
-argument_list|)
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|p
+name|plist
 operator|->
-name|name
-operator|+
-literal|7
+name|origin
+operator|!=
+name|NULL
+condition|?
+name|plist
+operator|->
+name|origin
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 end_function
 
