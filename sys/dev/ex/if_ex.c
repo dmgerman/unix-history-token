@@ -3280,7 +3280,7 @@ block|{
 if|if
 condition|(
 name|pkt_len
-operator|>
+operator|>=
 name|MINCLSIZE
 condition|)
 block|{
