@@ -176,7 +176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for ipc permission  */
+comment|/*  * Check for IPC permission.  *  * Note: The MAC Framework does not require any modifications to the  * ipcperm() function, as access control checks are performed throughout the  * implementation of each primitive.  Those entry point calls complement the  * ipcperm() discertionary checks.  */
 end_comment
 
 begin_function
