@@ -326,7 +326,7 @@ begin_define
 define|#
 directive|define
 name|MPU_ACK
-value|0xF7
+value|0xFE
 end_define
 
 begin_define
@@ -839,7 +839,7 @@ block|}
 else|else
 name|printk
 argument_list|(
-literal|"<MPU: Unknown event %02x> "
+literal|"<MPU: Unknown event %#x> "
 argument_list|,
 name|midic
 argument_list|)
@@ -1005,7 +1005,7 @@ break|break;
 default|default:
 name|printk
 argument_list|(
-literal|"Unknown MPU mark %02x\n"
+literal|"Unknown MPU mark %#x\n"
 argument_list|,
 name|midic
 argument_list|)
@@ -1261,7 +1261,7 @@ break|break;
 default|default:
 name|printk
 argument_list|(
-literal|"unknown MIDI sysmsg %0x\n"
+literal|"unknown MIDI sysmsg %#x\n"
 argument_list|,
 name|midic
 argument_list|)
@@ -1285,7 +1285,7 @@ name|ST_INIT
 expr_stmt|;
 name|printk
 argument_list|(
-literal|"MTC frame %x02\n"
+literal|"MTC frame %#x\n"
 argument_list|,
 name|midic
 argument_list|)
@@ -1316,7 +1316,7 @@ block|}
 else|else
 name|printk
 argument_list|(
-literal|"%02x "
+literal|"%#x "
 argument_list|,
 name|midic
 argument_list|)
@@ -2201,7 +2201,9 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"MPU-401: Send data timeout\n"
+literal|"MPU-401: Send data (%#x) timeout\n"
+argument_list|,
+name|midi_byte
 argument_list|)
 expr_stmt|;
 name|RESTORE_INTR
@@ -2327,7 +2329,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"MPU-401: Command (0x%x) timeout\n"
+literal|"MPU-401: Command (%#x) timeout\n"
 argument_list|,
 operator|(
 name|int
@@ -2409,6 +2411,18 @@ operator|->
 name|base
 argument_list|)
 condition|)
+if|if
+condition|(
+name|devc
+operator|->
+name|opened
+operator|&&
+name|devc
+operator|->
+name|mode
+operator|==
+name|MODE_SYNTH
+condition|)
 block|{
 if|if
 condition|(
@@ -2431,6 +2445,25 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* Device is not currently open. Use simplier method */
+if|if
+condition|(
+name|read_data
+argument_list|(
+name|devc
+operator|->
+name|base
+argument_list|)
+operator|==
+name|MPU_ACK
+condition|)
+name|ok
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2442,7 +2475,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/*       printk ("MPU: No ACK to command (0x%x)\n", (int) cmd->cmd); */
+comment|/*       printk ("MPU: No ACK to command (%#x)\n", (int) cmd->cmd); */
 return|return
 name|RET_ERROR
 argument_list|(
@@ -2517,7 +2550,7 @@ argument_list|)
 expr_stmt|;
 name|printk
 argument_list|(
-literal|"MPU: Command (0x%x), parm send failed.\n"
+literal|"MPU: Command (%#x), parm send failed.\n"
 argument_list|,
 operator|(
 name|int
@@ -2630,7 +2663,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* printk ("MPU: No response(%d) to command (0x%x)\n", i, (int) cmd->cmd); */
+comment|/* printk ("MPU: No response(%d) to command (%#x)\n", i, (int) cmd->cmd); */
 return|return
 name|RET_ERROR
 argument_list|(
@@ -3990,7 +4023,6 @@ name|always_detect
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|hw_config
 operator|->
 name|always_detect

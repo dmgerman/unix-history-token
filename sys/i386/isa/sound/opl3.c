@@ -4785,6 +4785,8 @@ argument_list|,
 name|voice
 argument_list|,
 name|value
+operator|-
+literal|8192
 argument_list|)
 expr_stmt|;
 block|}
