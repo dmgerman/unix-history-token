@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkhosts.c	4.2 (Berkeley) 84/02/02"
+literal|"@(#)mkhosts.c	4.3 (Berkeley) 84/05/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,35 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|access
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|R_OK
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|umask
 argument_list|(
 literal|0
@@ -218,6 +247,14 @@ operator|->
 name|db_maxbno
 operator|=
 literal|0
+expr_stmt|;
+name|sethostfile
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 name|sethostent
 argument_list|(
