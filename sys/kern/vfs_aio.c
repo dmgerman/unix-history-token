@@ -8615,11 +8615,9 @@ name|ki
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 name|s
 operator|=
 name|splnet
@@ -8824,6 +8822,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|done
+label|:
 if|if
 condition|(
 name|notcancelled
