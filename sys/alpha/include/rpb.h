@@ -313,12 +313,12 @@ directive|define
 name|SV_ST_FLAMINGO45
 value|0x00002000
 comment|/* Flamingo45;	3000/900 */
-comment|/*  * System types for ???  */
+comment|/*  * System types for ?  */
 define|#
 directive|define
 name|SV_ST_SABLE
 value|0x00000400
-comment|/* Sable (???) */
+comment|/* Sable (?) */
 comment|/*  * System types for the DEC 3000/300 (Pelican) Family  */
 define|#
 directive|define
