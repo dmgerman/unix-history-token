@@ -33,6 +33,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NETBSD_SYSCALLS
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -1295,6 +1301,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

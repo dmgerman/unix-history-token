@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mcount.c,v 1.9 1997/02/22 14:58:27 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NETBSD_SYSCALLS
+end_ifndef
 
 begin_include
 include|#
@@ -1085,6 +1091,11 @@ end_endif
 begin_comment
 comment|/* GUPROF */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
