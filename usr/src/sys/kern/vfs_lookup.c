@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.36	83/03/21	*/
+comment|/*	vfs_lookup.c	4.37	83/04/22	*/
 end_comment
 
 begin_include
@@ -1573,16 +1573,35 @@ name|dp
 operator|)
 return|;
 block|}
-comment|/* 	 * Check for symbolic link, which may require us 	 * to massage the name before we continue translation. 	 * To avoid deadlock have to unlock the current directory, 	 * but don't iput it because we may need it again (if 	 * the symbolic link is relative to .).  Instead save 	 * it (unlocked) as pdp. 	 */
+comment|/* 	 * Check for symbolic link, which may require us to massage the 	 * name before we continue translation.  We do not `iput' the 	 * directory because we may need it again if the symbolic link 	 * is relative to the current directory.  Instead we save it 	 * unlocked as "pdp".  We must get the target inode before unlocking 	 * the directory to insure that the inode will not be removed 	 * before we get it.  We prevent deadlock by always fetching 	 * inodes from the root, moving down the directory tree. Thus 	 * when following backward pointers ".." we must unlock the 	 * parent directory before getting the requested directory. 	 * There is a potential race condition here if both the current 	 * and parent directories are removed before the `iget' for the 	 * inode associated with ".." returns.  We hope that this occurs 	 * infrequently since we cannot avoid this race condition without 	 * implementing a sophistocated deadlock detection algorithm. 	 * Note also that this simple deadlock detection scheme will not 	 * work if the file system has any hard links other than ".." 	 * that point backwards in the directory structure. 	 */
 name|pdp
 operator|=
 name|dp
 expr_stmt|;
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_name
+argument_list|,
+literal|".."
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|iunlock
 argument_list|(
 name|pdp
 argument_list|)
 expr_stmt|;
+comment|/* race to get the inode */
 name|dp
 operator|=
 name|iget
@@ -1609,6 +1628,62 @@ condition|)
 goto|goto
 name|bad2
 goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|dp
+operator|->
+name|i_number
+operator|==
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_ino
+condition|)
+block|{
+name|dp
+operator|->
+name|i_count
+operator|++
+expr_stmt|;
+comment|/* we want ourself, ie "." */
+block|}
+else|else
+block|{
+name|dp
+operator|=
+name|iget
+argument_list|(
+name|dp
+operator|->
+name|i_dev
+argument_list|,
+name|fs
+argument_list|,
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_ino
+argument_list|)
+expr_stmt|;
+name|iunlock
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|bad2
+goto|;
+block|}
 name|fs
 operator|=
 name|dp
