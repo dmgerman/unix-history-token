@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -29,20 +29,26 @@ begin_struct
 struct|struct
 name|buf
 block|{
-name|struct
-name|queue_entry
+name|LIST_ENTRY
+argument_list|(
+argument|buf
+argument_list|)
 name|b_hash
-decl_stmt|;
+expr_stmt|;
 comment|/* Hash chain. */
-name|struct
-name|queue_entry
+name|LIST_ENTRY
+argument_list|(
+argument|buf
+argument_list|)
 name|b_vnbufs
-decl_stmt|;
+expr_stmt|;
 comment|/* Buffer's associated vnode. */
-name|struct
-name|queue_entry
+name|TAILQ_ENTRY
+argument_list|(
+argument|buf
+argument_list|)
 name|b_freelist
-decl_stmt|;
+expr_stmt|;
 comment|/* Free list position if not active. */
 name|struct
 name|buf
