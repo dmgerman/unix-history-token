@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)box.c	5.1 (Berkeley) %G%"
+literal|"@(#)box.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,14 +56,53 @@ end_decl_stmt
 
 begin_block
 block|{
-name|box
+name|move
 argument_list|(
 operator|*
 name|x0
 argument_list|,
 operator|*
 name|y0
+argument_list|)
+expr_stmt|;
+name|cont
+argument_list|(
+operator|*
+name|x0
 argument_list|,
+operator|*
+name|y1
+argument_list|)
+expr_stmt|;
+name|cont
+argument_list|(
+operator|*
+name|x1
+argument_list|,
+operator|*
+name|y1
+argument_list|)
+expr_stmt|;
+name|cont
+argument_list|(
+operator|*
+name|x1
+argument_list|,
+operator|*
+name|y0
+argument_list|)
+expr_stmt|;
+name|cont
+argument_list|(
+operator|*
+name|x0
+argument_list|,
+operator|*
+name|y0
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
 operator|*
 name|x1
 argument_list|,

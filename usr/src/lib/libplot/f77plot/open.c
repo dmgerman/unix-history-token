@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)open.c	5.1 (Berkeley) %G%"
+literal|"@(#)open.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,19 +24,6 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
-
-begin_macro
-name|openvt_
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|openvt
-argument_list|()
-expr_stmt|;
-block|}
-end_block
 
 begin_macro
 name|openpl_
