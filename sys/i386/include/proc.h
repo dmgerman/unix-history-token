@@ -53,14 +53,9 @@ begin_struct
 struct|struct
 name|mdthread
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|int
-name|dummy
+name|register_t
+name|md_savecrit
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
