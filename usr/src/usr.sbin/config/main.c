@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * main.c	1.3	81/02/26  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
+comment|/*  * main.c	1.4	81/03/09  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
 end_comment
 
 begin_include
@@ -133,6 +133,11 @@ name|headers
 argument_list|()
 expr_stmt|;
 comment|/* make a lot of .h files */
+name|printf
+argument_list|(
+literal|"Don't forget to run \"make depend\"\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
