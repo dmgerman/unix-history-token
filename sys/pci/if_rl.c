@@ -7075,7 +7075,7 @@ name|sc
 operator|->
 name|rl_ldata
 operator|.
-name|rl_mtag
+name|rl_rx_list_tag
 argument_list|,
 name|sc
 operator|->
@@ -7952,7 +7952,7 @@ name|sc
 operator|->
 name|rl_ldata
 operator|.
-name|rl_mtag
+name|rl_tx_list_tag
 argument_list|,
 name|sc
 operator|->
@@ -9790,7 +9790,7 @@ name|sc
 operator|->
 name|rl_ldata
 operator|.
-name|rl_mtag
+name|rl_tx_list_tag
 argument_list|,
 name|sc
 operator|->
