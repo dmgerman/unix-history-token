@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_input.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_input.c	7.7 (Berkeley) %G% */
+comment|/*	@(#)clnp_input.c	7.8 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -2200,7 +2200,7 @@ name|oidxp
 argument_list|,
 name|seg_off
 argument_list|,
-name|shp
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;

@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_options.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_options.c	7.5 (Berkeley) %G% */
+comment|/*	@(#)clnp_options.c	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -375,7 +375,7 @@ name|char
 modifier|*
 name|rec_start
 decl_stmt|;
-comment|/* beginning of first record rt option */
+comment|/* beginning of new rt recorded */
 name|opt
 operator|=
 name|CLNP_OFFTOOPT
@@ -400,7 +400,9 @@ name|rec_start
 operator|=
 name|opt
 operator|+
-literal|2
+name|off
+operator|-
+literal|1
 expr_stmt|;
 name|IFDEBUG
 argument_list|(
@@ -457,6 +459,15 @@ operator|!=
 literal|0xff
 condition|)
 block|{
+name|int
+name|new_addrlen
+init|=
+name|isoa
+operator|->
+name|isoa_len
+operator|+
+literal|1
+decl_stmt|;
 comment|/*  			 *	if there is insufficient room to store the next address, 			 *	then terminate recording. Plus 1 on isoa_len is for the 			 *	length byte itself 			 */
 if|if
 condition|(
@@ -464,13 +475,13 @@ name|oidx
 operator|->
 name|cni_recrt_len
 operator|-
+operator|(
 name|off
-operator|<
-name|isoa
-operator|->
-name|isoa_len
-operator|+
+operator|-
 literal|1
+operator|)
+operator|<
+name|new_addrlen
 condition|)
 block|{
 operator|*
@@ -486,49 +497,6 @@ comment|/* terminate recording */
 block|}
 else|else
 block|{
-name|int
-name|new_addrlen
-init|=
-name|isoa
-operator|->
-name|isoa_len
-operator|+
-literal|1
-decl_stmt|;
-name|IFDEBUG
-argument_list|(
-argument|D_OPTIONS
-argument_list|)
-name|printf
-argument_list|(
-literal|"clnp_dooptions: clnp_ypocb(x%x, x%x, %d)\n"
-argument_list|,
-name|rec_start
-argument_list|,
-name|rec_start
-operator|+
-name|new_addrlen
-argument_list|,
-name|off
-operator|-
-literal|3
-argument_list|)
-expr_stmt|;
-name|ENDDEBUG
-comment|/* move existing records over */
-name|clnp_ypocb
-argument_list|(
-name|rec_start
-argument_list|,
-name|rec_start
-operator|+
-name|new_addrlen
-argument_list|,
-name|off
-operator|-
-literal|3
-argument_list|)
-decl_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_OPTIONS
@@ -543,14 +511,6 @@ name|new_addrlen
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-comment|/* add new record */
-modifier|*
-name|rec_start
-init|=
-name|isoa
-operator|->
-name|isoa_len
-decl_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -559,14 +519,10 @@ operator|)
 name|isoa
 argument_list|,
 name|rec_start
-operator|+
-literal|1
 argument_list|,
-name|isoa
-operator|->
-name|isoa_len
+name|new_addrlen
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* update offset field */
 operator|*
 operator|(
@@ -574,9 +530,7 @@ name|opt
 operator|+
 literal|1
 operator|)
-operator|=
-name|off
-operator|+
+operator|+=
 name|new_addrlen
 expr_stmt|;
 name|IFDEBUG
@@ -1085,7 +1039,6 @@ block|{
 case|case
 name|CLNPOVAL_PAD
 case|:
-block|{
 comment|/* 				 *	Padding: increment pointer by length of padding 				 */
 if|if
 condition|(
@@ -1102,7 +1055,6 @@ name|opts
 operator|+=
 name|oplen
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|CLNPOVAL_SECURE
