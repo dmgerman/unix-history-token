@@ -105,11 +105,19 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -174,16 +182,6 @@ directive|ifndef
 name|BIOS_PADDRTOVADDR
 end_ifndef
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -193,26 +191,6 @@ name|x
 parameter_list|)
 value|(x)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BIOS_PADDRTOVADDR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) + KERNBASE)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
