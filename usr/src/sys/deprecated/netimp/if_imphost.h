@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.h	4.1	82/02/06	*/
+comment|/*	if_imphost.h	4.2	82/02/12	*/
 end_comment
 
 begin_comment
@@ -111,7 +111,7 @@ begin_function_decl
 name|struct
 name|host
 modifier|*
-name|h_lookup
+name|hostlookup
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -120,7 +120,7 @@ begin_function_decl
 name|struct
 name|host
 modifier|*
-name|h_enter
+name|hostenter
 parameter_list|()
 function_decl|;
 end_function_decl

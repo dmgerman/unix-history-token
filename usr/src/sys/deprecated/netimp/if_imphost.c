@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.1	82/02/06	*/
+comment|/*	if_imphost.c	4.2	82/02/12	*/
 end_comment
 
 begin_include
@@ -82,7 +82,7 @@ begin_function
 name|struct
 name|host
 modifier|*
-name|h_lookup
+name|hostlookup
 parameter_list|(
 name|addr
 parameter_list|)
@@ -114,12 +114,12 @@ argument_list|)
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|H_LOOKUP
+name|HOSTLOOKUP
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"h_lookup(%x)\n"
+literal|"hostlookup(%x)\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -168,7 +168,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"h_lookup: addr=%x\n"
+literal|"hostlookup: addr=%x\n"
 argument_list|,
 name|hp
 operator|->
@@ -211,7 +211,7 @@ begin_function
 name|struct
 name|host
 modifier|*
-name|h_enter
+name|hostenter
 parameter_list|(
 name|addr
 parameter_list|)
@@ -246,12 +246,12 @@ argument_list|)
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|H_ENTER
+name|HOSTENTER
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"h_enter(%x)\n"
+literal|"hostenter(%x)\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -304,7 +304,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"h_enter: addr=%x\n"
+literal|"hostenter: addr=%x\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -328,7 +328,7 @@ block|}
 comment|/* 	 * No current host structure, make one. 	 * If our search ran off the end of the 	 * chain of mbuf's, allocate another. 	 */
 name|printf
 argument_list|(
-literal|"h_enter: new host\n"
+literal|"hostenter: new host\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -431,7 +431,7 @@ comment|/*  * Free a reference to a host.  If this causes the  * host structure 
 end_comment
 
 begin_macro
-name|h_free
+name|hostfree
 argument_list|(
 argument|addr
 argument_list|)
@@ -469,12 +469,12 @@ argument_list|)
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|H_FREE
+name|HOSTFREE
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"h_free(%x)\n"
+literal|"hostfree(%x)\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -543,7 +543,7 @@ name|h_refcnt
 operator|==
 literal|0
 condition|)
-name|h_release
+name|hostrelease
 argument_list|(
 name|mtod
 argument_list|(
@@ -562,7 +562,7 @@ block|}
 block|}
 name|panic
 argument_list|(
-literal|"h_free"
+literal|"hostfree"
 argument_list|)
 expr_stmt|;
 block|}
@@ -573,7 +573,7 @@ comment|/*  * Reset a given network's host entries.  * This involves clearing al
 end_comment
 
 begin_macro
-name|h_reset
+name|hostreset
 argument_list|(
 argument|net
 argument_list|)
@@ -604,12 +604,12 @@ name|lp
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|H_RESET
+name|HOSTRESET
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"h_reset(%x)\n"
+literal|"hostreset(%x)\n"
 argument_list|,
 name|net
 argument_list|)
@@ -666,7 +666,7 @@ name|s_net
 operator|==
 name|net
 condition|)
-name|h_release
+name|hostrelease
 argument_list|(
 name|mtod
 argument_list|(
@@ -693,7 +693,7 @@ comment|/*  * Remove a host structure and release  * any resources it's accumula
 end_comment
 
 begin_macro
-name|h_release
+name|hostrelease
 argument_list|(
 argument|hm
 argument_list|,
@@ -728,12 +728,12 @@ name|m
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|H_RELEASE
+name|HOSTRELEASE
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"h_release(%x,%x)\n"
+literal|"hostrelease(%x,%x)\n"
 argument_list|,
 name|hm
 argument_list|,
@@ -741,7 +741,7 @@ name|hp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Discard any packets left on the waiting q 	 */
-while|while
+if|if
 condition|(
 name|m
 operator|=
@@ -750,13 +750,25 @@ operator|->
 name|h_q
 condition|)
 block|{
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
+name|hp
+operator|->
+name|h_q
+operator|->
+name|m_next
+operator|=
+literal|0
+expr_stmt|;
 name|hp
 operator|->
 name|h_q
 operator|=
-name|m
-operator|->
-name|m_act
+literal|0
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -767,11 +779,11 @@ block|}
 comment|/* 	 * We could compact the database here, but is 	 * it worth it?  For now we assume not and just 	 * handle the simple case. 	 */
 name|printf
 argument_list|(
-literal|"h_releasse: count=%d\n"
+literal|"hostrelease: count=%d\n"
 argument_list|,
 name|hm
 operator|->
-name|h_count
+name|hm_count
 argument_list|)
 expr_stmt|;
 if|if
@@ -814,7 +826,10 @@ name|m
 operator|->
 name|m_act
 expr_stmt|;
-name|m_freem
+operator|(
+name|void
+operator|)
+name|m_free
 argument_list|(
 name|m
 argument_list|)

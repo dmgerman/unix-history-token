@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.h	4.2	82/02/03	*/
+comment|/*	if_imp.h	4.3	82/02/12	*/
 end_comment
 
 begin_comment
@@ -9,69 +9,125 @@ end_comment
 
 begin_struct
 struct|struct
-name|imp_leader
+name|control_leader
 block|{
 name|u_char
-name|il_format
+name|dl_format
 decl_stmt|;
 comment|/* leader format */
 name|u_char
-name|il_network
+name|dl_network
 decl_stmt|;
 comment|/* src/dest network */
 name|u_char
-name|il_flags
+name|dl_flags
 decl_stmt|;
 comment|/* leader flags */
 name|u_char
-name|il_mtype
+name|dl_mtype
 decl_stmt|;
 comment|/* message type */
 name|u_char
-name|il_htype
+name|dl_htype
 decl_stmt|;
 comment|/* handling type */
 name|u_char
-name|il_host
+name|dl_host
 decl_stmt|;
 comment|/* host number */
 union|union
 block|{
 name|u_short
-name|il_short
+name|dl_short
 decl_stmt|;
 name|u_char
-name|il_char
+name|dl_char
 index|[
 literal|2
 index|]
 decl_stmt|;
 block|}
-name|ilun
+name|dlun
 union|;
 define|#
 directive|define
-name|il_imp
-value|ilun.il_short
+name|dl_imp
+value|dlun.dl_short
 comment|/* imp field */
 define|#
 directive|define
-name|il_impno
-value|ilun.il_char[1]
+name|dl_impno
+value|dlun.dl_char[1]
 comment|/* imp number */
 define|#
 directive|define
-name|il_lh
-value|ilun.il_char[0]
+name|dl_lh
+value|dlun.dl_char[0]
 comment|/* logical host */
 name|u_char
-name|il_link
+name|dl_link
 decl_stmt|;
 comment|/* link number */
 name|u_char
-name|il_subtype
+name|dl_subtype
 decl_stmt|;
 comment|/* message subtype */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|imp_leader
+block|{
+name|struct
+name|control_leader
+name|il_dl
+decl_stmt|;
+define|#
+directive|define
+name|il_format
+value|il_dl.dl_format
+define|#
+directive|define
+name|il_network
+value|il_dl.dl_network
+define|#
+directive|define
+name|il_flags
+value|il_dl.dl_flags
+define|#
+directive|define
+name|il_mtype
+value|il_dl.dl_mtype
+define|#
+directive|define
+name|il_htype
+value|il_dl.dl_htype
+define|#
+directive|define
+name|il_host
+value|il_dl.dl_host
+define|#
+directive|define
+name|il_imp
+value|il_dl.dl_imp
+define|#
+directive|define
+name|il_impno
+value|il_dl.dl_impno
+define|#
+directive|define
+name|il_lh
+value|il_dl.dl_lh
+define|#
+directive|define
+name|il_link
+value|il_dl.dl_link
+define|#
+directive|define
+name|il_subtype
+value|il_dl.dl_subtype
 name|u_short
 name|il_length
 decl_stmt|;
@@ -91,16 +147,16 @@ begin_comment
 comment|/* # of noops from imp to ignore */
 end_comment
 
+begin_comment
+comment|/* don't use 1019 here, 'cuz odd numbers and word counts are confusing */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IMP_MTU
-value|1019
+value|(sizeof (struct imp_leader) + 1018)
 end_define
-
-begin_comment
-comment|/* max message size (bytes) */
-end_comment
 
 begin_comment
 comment|/*  * IMP-host flags  */
@@ -793,6 +849,61 @@ end_define
 begin_comment
 comment|/* going down timer 30 secs */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IMPLEADERS
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|impleaders
+index|[
+name|IMPTYPE_READY
+operator|+
+literal|1
+index|]
+init|=
+block|{
+literal|"DATA"
+block|,
+literal|"BADLEADER"
+block|,
+literal|"DOWN"
+block|,
+literal|"bad"
+block|,
+literal|"NOOP"
+block|,
+literal|"RFNM"
+block|,
+literal|"HOSTDEAD"
+block|,
+literal|"HOSTUNREACH"
+block|,
+literal|"BADDATA"
+block|,
+literal|"INCOMPLETE"
+block|,
+literal|"RESET"
+block|,
+literal|"RETRY"
+block|,
+literal|"NOTIFY"
+block|,
+literal|"TRYING"
+block|,
+literal|"READY"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

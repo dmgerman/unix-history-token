@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.2	82/02/01	*/
+comment|/*	raw_cb.c	4.3	82/02/12	*/
 end_comment
 
 begin_include
@@ -137,6 +137,9 @@ operator|->
 name|sa_family
 condition|)
 block|{
+case|case
+name|AF_IMPLINK
+case|:
 case|case
 name|AF_INET
 case|:
