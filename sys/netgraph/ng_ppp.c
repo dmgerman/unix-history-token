@@ -637,6 +637,10 @@ name|int32_t
 name|seq
 decl_stmt|;
 comment|/* highest rec'd seq# - MSEQ */
+name|u_int32_t
+name|latency
+decl_stmt|;
+comment|/* calculated link latency */
 name|struct
 name|timeval
 name|lastWrite
@@ -7642,8 +7646,6 @@ index|]
 operator|=
 name|alink
 operator|->
-name|conf
-operator|.
 name|latency
 expr_stmt|;
 name|sortByLatency
@@ -8733,10 +8735,19 @@ index|[
 name|i
 index|]
 operator|.
+name|latency
+operator|=
+name|priv
+operator|->
+name|links
+index|[
+name|i
+index|]
+operator|.
 name|conf
 operator|.
 name|latency
-operator|+=
+operator|+
 operator|(
 operator|(
 name|hdrBytes
@@ -8870,14 +8881,10 @@ if|if
 condition|(
 name|link
 operator|->
-name|conf
-operator|.
 name|latency
 operator|!=
 name|link0
 operator|->
-name|conf
-operator|.
 name|latency
 operator|||
 name|link
