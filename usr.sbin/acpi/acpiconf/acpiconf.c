@@ -531,20 +531,25 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"State:\t\t\t%d\n"
-argument_list|,
+if|if
+condition|(
 name|battio
 operator|.
 name|bst
 operator|.
 name|state
+operator|!=
+name|ACPI_BATT_STAT_NOT_PRESENT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"State:\t\t\tPresent\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Present rate:\t\t%d\n"
+literal|"Present Rate:\t\t%d mWh\n"
 argument_list|,
 name|battio
 operator|.
@@ -555,7 +560,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Remaining capacity:\t%d mWh\n"
+literal|"Remaining Capacity:\t%d mWh\n"
 argument_list|,
 name|battio
 operator|.
@@ -566,17 +571,24 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Volt:\t\t\t%.3f V\n"
+literal|"Volt:\t\t\t%d mV\n"
 argument_list|,
 name|battio
 operator|.
 name|bst
 operator|.
 name|volt
-operator|*
-literal|.001
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"State:\t\t\tNot Present\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
