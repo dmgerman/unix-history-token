@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -577,7 +571,7 @@ expr_stmt|;
 comment|/* 	 * We need to introduce a delay in here or things tend to hang... 	 */
 name|delay
 argument_list|(
-literal|10
+literal|10000
 argument_list|)
 expr_stmt|;
 if|if
@@ -791,7 +785,7 @@ name|dn
 condition|)
 name|delay
 argument_list|(
-literal|1000
+literal|10000
 argument_list|)
 expr_stmt|;
 block|}
@@ -810,6 +804,32 @@ operator|=
 name|CP_WRITE
 argument_list|(
 name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dn
+condition|)
+name|delay
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CP_READ
+argument_list|(
+name|Uart
+operator|->
+name|mon_xmithost
+argument_list|)
+operator|&
+name|UART_VALID
+condition|)
+name|getbyte
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4215,7 +4235,7 @@ literal|0
 argument|, air->acp_ramsize,
 endif|#
 directive|endif
-argument|PROT_READ | PROT_WRITE, MAP_SHARED, 				fd, air->acp_ram); 			if (ram == (u_char *)-
+argument|PROT_READ | PROT_WRITE, MAP_SHARED | MAP_HASSEMAPHORE, 				fd, air->acp_ram); 			if (ram == (u_char *)-
 literal|1
 argument|) { 				perror (
 literal|"mmap ram"
@@ -4373,9 +4393,15 @@ argument|; i< MAX_CHECK; i++, sleep(
 literal|1
 argument|)) { 				u_long	hb1
 argument_list|,
-argument|hb2;  				if (CP_READ(Mon->mon_bstat) != BOOT_RUNNING) 					continue;  				hb1 = CP_READ(aap->aali_heartbeat); 				delay(
+argument|hb2
+argument_list|,
+argument|hb3;  				hb3 = CP_READ(Mon->mon_bstat); 				if (hb3 != BOOT_RUNNING) { 					if (verbose) 						printf(
+literal|"bstat %x\n"
+argument|, hb3); 					continue; 				}  				hb1 = CP_READ(aap->aali_heartbeat); 				delay(
 literal|1
-argument|); 				hb2 = CP_READ(aap->aali_heartbeat); 				if (hb1< hb2) 					break; 			     } 			}  			close ( fd ); 		} 	}
+argument|); 				hb2 = CP_READ(aap->aali_heartbeat); 				if (verbose) 					printf(
+literal|"hb %x %x\n"
+argument|, hb1, hb2); 				if (hb1< hb2) 					break; 			     } 			}  			close ( fd ); 		} 	}
 comment|/* 	 * Exit 	 */
 argument|exit (
 literal|0
