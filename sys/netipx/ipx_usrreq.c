@@ -577,15 +577,15 @@ name|struct
 name|sockaddr_ipx
 name|ipx_ipx
 decl_stmt|;
-if|if
-condition|(
-name|ipxp
-operator|==
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"No ipxpcb"
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ipx_input: NUL ipxpcb"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */

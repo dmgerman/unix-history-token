@@ -905,20 +905,17 @@ operator|.
 name|spxs_rcvtotal
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ipxp
-operator|==
-name|NULL
-condition|)
-block|{
-name|panic
+name|KASSERT
 argument_list|(
-literal|"No ipxpcb in spx_input\n"
+name|ipxp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"spx_input: NULL ipxpcb"
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|cb
 operator|=
 name|ipxtospxpcb
