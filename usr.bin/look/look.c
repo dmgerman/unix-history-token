@@ -155,6 +155,16 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+name|_path_words
+index|[]
+init|=
+name|_PATH_WORDS
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * FOLD and DICT convert characters to a normal form for comparison,  * according to the user specified flags.  *  * DICT expects integers because it uses a non-character value to  * indicate a character which should not participate in comparisons.  */
 end_comment
@@ -386,7 +396,7 @@ argument_list|)
 expr_stmt|;
 name|file
 operator|=
-name|_PATH_WORDS
+name|_path_words
 expr_stmt|;
 name|termchar
 operator|=
