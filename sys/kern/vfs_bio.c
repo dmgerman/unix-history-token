@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.179 1998/10/13 08:24:40 dg Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.180 1998/10/25 17:44:52 phk Exp $  */
 end_comment
 
 begin_comment
@@ -3614,9 +3614,35 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_ASYNC
+operator|)
+operator|==
+literal|0
+condition|)
 name|vm_page_unwire
 argument_list|(
 name|m
+argument_list|,
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_ASYNC
+operator|)
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We don't mess with busy pages, it is 		 * the responsibility of the process that 		 * busied the pages to deal with them. 		 */
@@ -3648,6 +3674,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_page_flag_clear
+argument_list|(
+name|m
+argument_list|,
+name|PG_ZERO
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If this is an async free -- we cannot place 			 * pages onto the cache queue.  If it is an 			 * async free, then we don't modify any queues. 			 * This is probably in error (for perf reasons), 			 * and we will eventually need to build 			 * a more complete infrastructure to support I/O 			 * rundown. 			 */
 if|if
 condition|(
@@ -3703,19 +3736,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-else|else
-name|vm_page_deactivate
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PG_ZERO
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3754,13 +3774,6 @@ operator|->
 name|act_count
 operator|=
 literal|0
-expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PG_ZERO
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -7667,6 +7680,8 @@ expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -11014,6 +11029,8 @@ expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vm_page_free
