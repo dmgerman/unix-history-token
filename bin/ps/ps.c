@@ -1569,7 +1569,7 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|/* 	 * scan requested variables, noting what structures are needed, 	 * and adjusting header widths as appropiate. 	 */
+comment|/* 	 * scan requested variables, noting what structures are needed, 	 * and adjusting header widths as appropriate. 	 */
 end_comment
 
 begin_expr_stmt
