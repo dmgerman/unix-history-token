@@ -1414,6 +1414,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|u_cansee
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ucred
+operator|*
+name|u1
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|u2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|getenv
