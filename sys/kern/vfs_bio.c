@@ -13843,8 +13843,6 @@ return|;
 block|}
 name|pa
 operator|=
-name|trunc_page
-argument_list|(
 name|pmap_extract
 argument_list|(
 name|pmap
@@ -13853,7 +13851,6 @@ operator|(
 name|vm_offset_t
 operator|)
 name|addr
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
