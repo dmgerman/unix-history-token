@@ -1662,6 +1662,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|sblock
 operator|.
 name|fs_flags
@@ -1673,6 +1674,19 @@ operator||
 name|FS_NEEDSFSCK
 operator|)
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_pendingblocks
+operator|=
+literal|0
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_pendinginodes
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|sbdirty
 argument_list|()
 expr_stmt|;
