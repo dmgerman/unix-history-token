@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ncal.c,v 1.5 1998/01/07 07:46:33 charnier Exp $"
+literal|"$Id: ncal.c,v 1.6 1998/01/15 10:23:34 helbig Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -559,9 +559,9 @@ block|,
 block|{
 literal|9999
 block|,
-literal|31
+literal|05
 block|,
-literal|12
+literal|31
 block|}
 block|,
 literal|"%e %B %Y"
@@ -4449,7 +4449,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute the day number of the first day in month.  * The day y-m-1 might be dropped due to Gregorian Reformation,  * so the answer is the smallest day number nd with sdate(nd) in  * the month m.  */
+comment|/*  * Compute the day number of the first  * existing date after the first day in month.  * (the first day in month and even the month might not exist!)  */
 end_comment
 
 begin_function
@@ -4487,8 +4487,6 @@ name|d
 operator|=
 literal|1
 expr_stmt|;
-for|for
-control|(
 name|nd
 operator|=
 name|sndays
@@ -4496,7 +4494,13 @@ argument_list|(
 operator|&
 name|dt
 argument_list|)
+expr_stmt|;
+for|for
+control|(
 init|;
+condition|;
+control|)
+block|{
 name|sdate
 argument_list|(
 name|nd
@@ -4504,20 +4508,40 @@ argument_list|,
 operator|&
 name|dt
 argument_list|)
-operator|->
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dt
+operator|.
 name|m
-operator|!=
+operator|>=
 name|m
-condition|;
-name|nd
-operator|++
-control|)
-empty_stmt|;
+operator|&&
+name|dt
+operator|.
+name|y
+operator|==
+name|y
+operator|)
+operator|||
+name|dt
+operator|.
+name|y
+operator|>
+name|y
+condition|)
 return|return
 operator|(
 name|nd
 operator|)
 return|;
+else|else
+name|nd
+operator|++
+expr_stmt|;
+block|}
+comment|/* NEVER REACHED */
 block|}
 end_function
 
