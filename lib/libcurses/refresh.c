@@ -1798,6 +1798,12 @@ operator|->
 name|ch
 operator|==
 literal|' '
+operator|&&
+name|nsp
+operator|->
+name|attr
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Check for clear to end-of-line. */
