@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kldunload.c,v 1.5 1998/01/05 07:10:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,7 +265,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Can't stat file"
+literal|"can't stat file"
 argument_list|)
 expr_stmt|;
 name|printf
