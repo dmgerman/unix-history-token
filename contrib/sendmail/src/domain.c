@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.180 2002/03/05 05:47:12 gshapiro Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.181 2002/05/24 23:48:42 gshapiro Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.180 2002/03/05 05:47:12 gshapiro Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.181 2002/05/24 23:48:42 gshapiro Exp $ (without name server)"
 argument_list|)
 end_macro
 

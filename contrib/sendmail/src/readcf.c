@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.604 2002/04/02 16:43:25 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.606 2002/05/09 21:09:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -13585,6 +13585,29 @@ operator||=
 name|SASL_SEC_FORWARD_SECRECY
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_SASL_OPT_M
+comment|/* to be activated in 8.13 */
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20101
+case|case
+literal|'m'
+case|:
+name|SASLOpts
+operator||=
+name|SASL_SEC_MUTUAL_AUTH
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* SASL>= 20101 */
+endif|#
+directive|endif
+comment|/* _FFR_SASL_OPT_M */
 case|case
 literal|'p'
 case|:

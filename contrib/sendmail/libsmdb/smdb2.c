@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb2.c,v 8.69 2001/09/12 21:19:12 gshapiro Exp $"
+literal|"@(#)$Id: smdb2.c,v 8.72 2002/05/24 23:09:11 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1816,7 +1816,7 @@ name|db_type
 argument_list|,
 name|db_flags
 argument_list|,
-literal|0644
+name|DBMMODE
 argument_list|,
 name|NULL
 argument_list|,
@@ -2112,7 +2112,7 @@ name|db_type
 argument_list|,
 name|db_flags
 argument_list|,
-literal|0644
+name|DBMMODE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2255,7 +2255,7 @@ decl_stmt|;
 name|char
 name|db_file_name
 index|[
-name|SMDB_MAX_NAME_LEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 operator|*
@@ -2269,7 +2269,8 @@ name|smdb_add_extension
 argument_list|(
 name|db_file_name
 argument_list|,
-name|SMDB_MAX_NAME_LEN
+sizeof|sizeof
+name|db_file_name
 argument_list|,
 name|db_name
 argument_list|,

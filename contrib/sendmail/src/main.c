@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.876 2002/02/27 23:49:52 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.882 2002/05/10 16:20:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -10787,6 +10787,41 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* set message size */
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%ld"
+argument_list|,
+name|MainEnvelope
+operator|.
+name|e_msgsize
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|MainEnvelope
+operator|.
+name|e_macro
+argument_list|,
+name|A_TEMP
+argument_list|,
+name|macid
+argument_list|(
+literal|"{msg_size}"
+argument_list|)
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 name|Errors
 operator|=
 name|savederrors

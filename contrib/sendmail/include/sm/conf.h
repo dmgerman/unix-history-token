@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.87 2002/04/02 08:11:52 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.88 2002/05/01 16:09:41 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -3953,6 +3953,42 @@ directive|ifndef
 name|HASFLOCK
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<standards.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|_XOPEN_SOURCE
+operator|+
+literal|0
+operator|>=
+literal|400
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|0
+end_define
+
+begin_comment
+comment|/* 5.0 and later has bad flock(2) call */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _XOPEN_SOURCE+0>= 400 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3962,6 +3998,15 @@ end_define
 
 begin_comment
 comment|/* has flock(2) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _XOPEN_SOURCE+0>= 400 */
 end_comment
 
 begin_endif

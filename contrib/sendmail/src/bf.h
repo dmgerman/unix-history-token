@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: bf.h,v 8.15 2001/05/31 21:02:53 ca Exp $  *  * Contributed by Exactis.com, Inc.  *  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: bf.h,v 8.16 2002/04/15 02:37:09 ca Exp $  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
 begin_ifndef
@@ -32,21 +32,6 @@ operator|,
 name|size_t
 operator|,
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|SM_FILE_T
-modifier|*
-name|bfdup
-name|__P
-argument_list|(
-operator|(
-name|SM_FILE_T
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mbdb.c,v 1.36 2002/03/25 18:08:20 gshapiro Exp $"
+literal|"@(#)$Id: mbdb.c,v 1.38 2002/04/05 22:59:56 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -537,6 +537,18 @@ condition|)
 block|{
 name|err
 operator|=
+name|EX_OK
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|mbdb_initialize
+operator|!=
+name|NULL
+condition|)
+name|err
+operator|=
 name|t
 operator|->
 name|mbdb_initialize
@@ -574,6 +586,14 @@ name|void
 name|sm_mbdb_terminate
 parameter_list|()
 block|{
+if|if
+condition|(
+name|SmMbdbType
+operator|->
+name|mbdb_terminate
+operator|!=
+name|NULL
+condition|)
 name|SmMbdbType
 operator|->
 name|mbdb_terminate
@@ -603,7 +623,21 @@ modifier|*
 name|user
 decl_stmt|;
 block|{
-return|return
+name|int
+name|ret
+init|=
+name|EX_NOUSER
+decl_stmt|;
+if|if
+condition|(
+name|SmMbdbType
+operator|->
+name|mbdb_lookup
+operator|!=
+name|NULL
+condition|)
+name|ret
+operator|=
 name|SmMbdbType
 operator|->
 name|mbdb_lookup
@@ -612,6 +646,9 @@ name|name
 argument_list|,
 name|user
 argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function

@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.129 2002/03/13 07:28:05 gshapiro Exp $"
+literal|"@(#)$Id: mime.c,v 8.130 2002/05/21 03:39:34 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1673,6 +1673,14 @@ name|hdr
 argument_list|)
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|M87F_NO8TO7
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 name|putline
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: shm.h,v 1.7 2001/04/20 15:21:55 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: shm.h,v 1.8 2002/04/10 23:11:35 ca Exp $  */
 end_comment
 
 begin_ifndef
@@ -69,17 +69,7 @@ begin_define
 define|#
 directive|define
 name|SM_SHM_NO_ID
-value|(-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SM_NO_SHM
-parameter_list|(
-name|id
-parameter_list|)
-value|((id)< 0)
+value|(-2)
 end_define
 
 begin_decl_stmt

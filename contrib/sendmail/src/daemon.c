@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.611 2002/03/18 23:08:50 gshapiro Exp $"
+literal|"@(#)$Id: daemon.c,v 8.612 2002/05/02 19:40:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -11718,6 +11718,20 @@ argument_list|(
 name|true
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|SM_CONF_SHM
+name|cleanup_shm
+argument_list|(
+name|DaemonPid
+operator|==
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SM_CONF_SHM */
 comment|/* 	**  Want to drop to the user who started the process in all cases 	**  *but* when running as "smmsp" for the clientmqueue queue run 	**  daemon.  In that case, UseMSP will be true, RunAsUid should not 	**  be root, and RealUid should be either 0 or RunAsUid. 	*/
 name|drop
 operator|=
@@ -11833,20 +11847,6 @@ name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|SM_CONF_SHM
-name|cleanup_shm
-argument_list|(
-name|DaemonPid
-operator|==
-name|getpid
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SM_CONF_SHM */
 comment|/* 	**  Need to allow signals before execve() to make them "harmless". 	**  However, the default action can be "terminate", so it isn't 	**  really harmless.  Setting signals to IGN will cause them to be 	**  ignored in the new process to, so that isn't a good alternative. 	*/
 name|SM_NOOP_SIGNAL
 argument_list|(
