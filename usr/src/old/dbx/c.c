@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c	5.2 (Berkeley) %G%"
+literal|"@(#)c.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2179,9 +2179,15 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+operator|--
 name|len
 operator|>
 literal|0
+name|and
+operator|*
+name|str
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|printchar
@@ -2191,8 +2197,21 @@ name|str
 operator|++
 argument_list|)
 expr_stmt|;
-name|len
-operator|--
+block|}
+if|if
+condition|(
+operator|*
+name|str
+operator|!=
+literal|'\0'
+condition|)
+block|{
+comment|/* XXX - pitch trailing null */
+name|printchar
+argument_list|(
+operator|*
+name|str
+argument_list|)
 expr_stmt|;
 block|}
 if|if
