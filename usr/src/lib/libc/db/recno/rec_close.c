@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_close.c	5.10 (Berkeley) %G%"
+literal|"@(#)rec_close.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,8 @@ condition|(
 name|__rec_sync
 argument_list|(
 name|dbp
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 name|RET_ERROR
@@ -144,7 +146,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_MEMMAPPED
+name|R_MEMMAPPED
 argument_list|)
 operator|&&
 name|munmap
@@ -169,7 +171,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RINMEM
+name|R_INMEM
 argument_list|)
 condition|)
 if|if
@@ -178,7 +180,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_CLOSEFP
+name|R_CLOSEFP
 argument_list|)
 condition|)
 block|{
@@ -240,11 +242,16 @@ name|int
 name|__rec_sync
 parameter_list|(
 name|dbp
+parameter_list|,
+name|flags
 parameter_list|)
 specifier|const
 name|DB
 modifier|*
 name|dbp
+decl_stmt|;
+name|u_int
+name|flags
 decl_stmt|;
 block|{
 name|struct
@@ -282,13 +289,29 @@ name|internal
 expr_stmt|;
 if|if
 condition|(
+name|flags
+operator|==
+name|R_RECNOSYNC
+condition|)
+return|return
+operator|(
+name|__bt_sync
+argument_list|(
+name|dbp
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
 name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RDONLY
+name|R_RDONLY
 operator||
-name|BTF_RINMEM
+name|R_INMEM
 argument_list|)
 operator|||
 operator|!
@@ -296,7 +319,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_MODIFIED
+name|R_MODIFIED
 argument_list|)
 condition|)
 return|return
@@ -312,7 +335,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_EOF
+name|R_EOF
 argument_list|)
 operator|&&
 name|t
@@ -552,7 +575,7 @@ name|CLR
 argument_list|(
 name|t
 argument_list|,
-name|BTF_MODIFIED
+name|R_MODIFIED
 argument_list|)
 expr_stmt|;
 return|return
