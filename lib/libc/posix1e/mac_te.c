@@ -34,7 +34,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  * TE labels simply consist of the typename.  The typename must not be  * the empty string, and must not exceed the length limit in the label.  */
+comment|/*  * TE labels simply consist of the typename.  The type length may  * be zero indicating that the text form did not include a type,  * but the string length must not exceed the length limit in the label.  */
 end_comment
 
 begin_function
@@ -66,20 +66,6 @@ name|m_te
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|string
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 if|if
 condition|(
 name|strlcpy
