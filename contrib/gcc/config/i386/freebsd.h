@@ -115,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|SIZE_TYPE
-value|"unsigned int"
+value|(TARGET_64BIT ? "long unsigned int" : "unsigned int")
 end_define
 
 begin_undef
@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|PTRDIFF_TYPE
-value|"int"
+value|(TARGET_64BIT ? "long int" : "int")
 end_define
 
 begin_undef
@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE_SIZE
-value|BITS_PER_WORD
+value|(TARGET_64BIT ? 32 : BITS_PER_WORD)
 end_define
 
 begin_undef
