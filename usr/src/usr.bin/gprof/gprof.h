@@ -498,14 +498,28 @@ begin_comment
 comment|/* text space of a.out in core */
 end_comment
 
+begin_comment
+comment|/*      *	option flags, from a to z.      */
+end_comment
+
 begin_decl_stmt
 name|int
-name|zflg
+name|aflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* zero time/called functions, too */
+comment|/* static functions, too */
+end_comment
+
+begin_decl_stmt
+name|int
+name|bflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* blurbs, too */
 end_comment
 
 begin_decl_stmt
@@ -520,12 +534,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|aflag
+name|zflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* static functions, too */
+comment|/* zero time/called functions, too */
 end_comment
 
 begin_comment
@@ -679,6 +693,12 @@ end_function_decl
 
 begin_expr_stmt
 name|asgnsamples
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|printblurb
 argument_list|()
 expr_stmt|;
 end_expr_stmt
