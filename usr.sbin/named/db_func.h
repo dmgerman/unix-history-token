@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* db_proc.h - prototypes for functions in db_*.c  *  * $Id: db_func.h,v 1.2 1995/05/30 03:48:36 rgrimes Exp $  */
+comment|/* db_proc.h - prototypes for functions in db_*.c  *  * $Id: db_func.h,v 1.3 1995/08/20 21:18:16 peter Exp $  */
 end_comment
 
 begin_comment
@@ -394,6 +394,8 @@ name|int
 operator|,
 name|FILE
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|,
@@ -693,24 +695,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|inet_etoa
-name|__P
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -918,6 +902,43 @@ specifier|const
 name|u_char
 operator|*
 name|data
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|setsignal
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+argument_list|)
+decl_stmt|,
+name|resignal
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
 operator|)
 argument_list|)
 decl_stmt|;

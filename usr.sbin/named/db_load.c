@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_load.c,v 1.3 1995/05/30 03:48:39 rgrimes Exp $"
+literal|"$Id: db_load.c,v 1.4 1995/08/20 21:18:22 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,12 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -605,6 +611,8 @@ name|int
 name|read_soa
 decl_stmt|,
 name|read_ns
+decl_stmt|,
+name|rrcount
 decl_stmt|;
 specifier|register
 name|char
@@ -662,13 +670,14 @@ name|class
 decl_stmt|,
 name|type
 decl_stmt|,
-name|ttl
-decl_stmt|,
 name|dbflags
 decl_stmt|,
 name|dataflags
 decl_stmt|,
 name|multiline
+decl_stmt|;
+name|u_int32_t
+name|ttl
 decl_stmt|;
 name|struct
 name|databuf
@@ -692,8 +701,6 @@ decl_stmt|,
 name|errs
 decl_stmt|,
 name|didinclude
-decl_stmt|,
-name|rrcount
 decl_stmt|;
 specifier|register
 name|u_int32_t
@@ -706,6 +713,9 @@ decl_stmt|;
 name|struct
 name|in_addr
 name|ina
+decl_stmt|;
+name|int
+name|escape
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -723,10 +733,6 @@ name|didinclude
 operator|=
 literal|0
 expr_stmt|;
-name|rrcount
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -734,6 +740,10 @@ name|def_domain
 condition|)
 block|{
 comment|/* This is not the result of a $INCLUDE. */
+name|rrcount
+operator|=
+literal|0
+expr_stmt|;
 name|read_soa
 operator|=
 literal|0
@@ -803,7 +813,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_WARNING
 argument_list|,
 literal|"%s: %m"
 argument_list|,
@@ -915,7 +925,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_WARNING
 argument_list|,
 literal|"%s: %m"
 argument_list|,
@@ -1019,6 +1029,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 comment|/* file name*/
@@ -1036,6 +1048,8 @@ name|tmporigin
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 name|strcpy
@@ -1112,6 +1126,8 @@ name|origin
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 break|break;
@@ -1167,6 +1183,8 @@ name|domain
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 break|break;
@@ -1275,6 +1293,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -1293,7 +1313,7 @@ name|buf
 expr_stmt|;
 name|ttl
 operator|=
-literal|0
+name|USE_MINIMUM
 expr_stmt|;
 if|if
 condition|(
@@ -1426,6 +1446,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 break|break;
@@ -1485,6 +1507,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1580,6 +1604,49 @@ condition|)
 block|{
 endif|#
 directive|endif
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|T_SOA
+case|:
+case|case
+name|T_MINFO
+case|:
+case|case
+name|T_RP
+case|:
+case|case
+name|T_NS
+case|:
+case|case
+name|T_CNAME
+case|:
+case|case
+name|T_MB
+case|:
+case|case
+name|T_MG
+case|:
+case|case
+name|T_MR
+case|:
+case|case
+name|T_PTR
+case|:
+name|escape
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|escape
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1597,6 +1664,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+name|escape
 argument_list|)
 condition|)
 break|break;
@@ -1779,6 +1848,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 name|i
@@ -2000,6 +2071,8 @@ name|data
 operator|)
 argument_list|,
 name|fp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 goto|goto
@@ -2956,6 +3029,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 goto|goto
@@ -3099,6 +3174,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 goto|goto
@@ -3160,6 +3237,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 goto|goto
@@ -3964,7 +4043,7 @@ operator|++
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_WARNING
 argument_list|,
 literal|"Zone \"%s\" (file %s): %s"
 argument_list|,
@@ -4156,6 +4235,8 @@ name|op
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -4288,7 +4369,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * getword(buf, size, fp)  *	get next word, skipping blanks& comments.  * parameters:  *	buf - destination  *	size - of destination  *	fp - file to read from  * return value:  *	0 = no word; perhaps EOL or EOF  *	1 = word was read  */
+comment|/* int  * getword(buf, size, fp, preserve)  *	get next word, skipping blanks& comments.  *	'\' '\n' outside of "quotes" is considered a blank.  * parameters:  *	buf - destination  *	size - of destination  *	fp - file to read from  *	preserve - should we preserve \ before \\ and \.?  * return value:  *	0 = no word; perhaps EOL or EOF  *	1 = word was read  */
 end_comment
 
 begin_function
@@ -4300,6 +4381,8 @@ parameter_list|,
 name|size
 parameter_list|,
 name|fp
+parameter_list|,
+name|preserve
 parameter_list|)
 name|char
 modifier|*
@@ -4312,11 +4395,16 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|int
+name|preserve
+decl_stmt|;
 block|{
 specifier|register
 name|char
 modifier|*
 name|cp
+init|=
+name|buf
 decl_stmt|;
 specifier|register
 name|int
@@ -4326,12 +4414,9 @@ name|empty_token
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|cp
-operator|=
-name|buf
-init|;
+comment|/* XXX global side effect. */
+while|while
+condition|(
 operator|(
 name|c
 operator|=
@@ -4342,8 +4427,7 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
-condition|;
-control|)
+condition|)
 block|{
 if|if
 condition|(
@@ -4352,6 +4436,7 @@ operator|==
 literal|';'
 condition|)
 block|{
+comment|/* Comment.  Skip to end of line. */
 while|while
 condition|(
 operator|(
@@ -4369,7 +4454,8 @@ name|c
 operator|!=
 literal|'\n'
 condition|)
-empty_stmt|;
+name|NULL
+expr_stmt|;
 name|c
 operator|=
 literal|'\n'
@@ -4382,6 +4468,7 @@ operator|==
 literal|'\n'
 condition|)
 block|{
+comment|/* 			 * Unescaped newline.  It's a terminator unless we're 			 * already midway into a token. 			 */
 if|if
 condition|(
 name|cp
@@ -4403,100 +4490,91 @@ break|break;
 block|}
 if|if
 condition|(
-name|isspace
-argument_list|(
 name|c
-argument_list|)
+operator|==
+literal|'"'
 condition|)
 block|{
+comment|/* "Quoted string."  Gather the whole string here. */
 while|while
 condition|(
-name|isspace
-argument_list|(
+operator|(
 name|c
 operator|=
 name|getc
 argument_list|(
 name|fp
 argument_list|)
-argument_list|)
+operator|)
+operator|!=
+name|EOF
+operator|&&
+name|c
+operator|!=
+literal|'"'
 operator|&&
 name|c
 operator|!=
 literal|'\n'
 condition|)
-empty_stmt|;
-name|ungetc
-argument_list|(
+block|{
+if|if
+condition|(
 name|c
-argument_list|,
+operator|==
+literal|'\\'
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|c
+operator|=
+name|getc
+argument_list|(
 name|fp
 argument_list|)
+operator|)
+operator|==
+name|EOF
+condition|)
+name|c
+operator|=
+literal|'\\'
 expr_stmt|;
+if|if
+condition|(
+name|preserve
+operator|&&
+operator|(
+name|c
+operator|==
+literal|'\\'
+operator|||
+name|c
+operator|==
+literal|'.'
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|cp
-operator|!=
+operator|>=
 name|buf
+operator|+
+name|size
+operator|-
+literal|1
 condition|)
-comment|/* Trailing whitespace */
 break|break;
-continue|continue;
-comment|/* Leading whitespace */
-block|}
-if|if
-condition|(
-name|c
-operator|==
-literal|'"'
-condition|)
-block|{
-while|while
-condition|(
-operator|(
-name|c
-operator|=
-name|getc
-argument_list|(
-name|fp
-argument_list|)
-operator|)
-operator|!=
-name|EOF
-operator|&&
-name|c
-operator|!=
-literal|'"'
-operator|&&
-name|c
-operator|!=
-literal|'\n'
-condition|)
-block|{
-if|if
-condition|(
-name|c
-operator|==
-literal|'\\'
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|c
-operator|=
-name|getc
-argument_list|(
-name|fp
-argument_list|)
-operator|)
-operator|==
-name|EOF
-condition|)
-name|c
+operator|*
+name|cp
+operator|++
 operator|=
 literal|'\\'
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -4525,6 +4603,7 @@ operator|=
 name|c
 expr_stmt|;
 block|}
+comment|/* 			 * Newline string terminators are 			 * not token terminators. 			 */
 if|if
 condition|(
 name|c
@@ -4537,6 +4616,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+comment|/* Sample following character, check for terminator. */
 if|if
 condition|(
 operator|(
@@ -4567,10 +4647,6 @@ name|isspace
 argument_list|(
 name|c
 argument_list|)
-operator|||
-name|c
-operator|==
-literal|'\n'
 condition|)
 block|{
 operator|*
@@ -4584,7 +4660,6 @@ literal|1
 operator|)
 return|;
 block|}
-else|else
 continue|continue;
 block|}
 if|if
@@ -4594,6 +4669,7 @@ operator|==
 literal|'\\'
 condition|)
 block|{
+comment|/* Do escape processing. */
 if|if
 condition|(
 operator|(
@@ -4613,13 +4689,83 @@ literal|'\\'
 expr_stmt|;
 if|if
 condition|(
+name|preserve
+operator|&&
+operator|(
 name|c
 operator|==
+literal|'\\'
+operator|||
+name|c
+operator|==
+literal|'.'
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|cp
+operator|>=
+name|buf
+operator|+
+name|size
+operator|-
+literal|1
+condition|)
+break|break;
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'\\'
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|isspace
+argument_list|(
+name|c
+argument_list|)
+condition|)
+block|{
+comment|/* Blank of some kind.  Skip run. */
+while|while
+condition|(
+name|isspace
+argument_list|(
+name|c
+operator|=
+name|getc
+argument_list|(
+name|fp
+argument_list|)
+argument_list|)
+operator|&&
+name|c
+operator|!=
 literal|'\n'
 condition|)
-name|lineno
-operator|++
+name|NULL
 expr_stmt|;
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+comment|/* Blank means terminator if the token is nonempty. */
+if|if
+condition|(
+name|cp
+operator|!=
+name|buf
+condition|)
+comment|/* Trailing whitespace */
+break|break;
+continue|continue;
+comment|/* Leading whitespace */
 block|}
 if|if
 condition|(
@@ -5507,6 +5653,8 @@ name|b
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|k
@@ -5644,6 +5792,8 @@ name|b
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 operator|||
 name|bracket
@@ -5985,6 +6135,8 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -6034,9 +6186,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ntp
-operator|==
-name|NULL
 condition|)
 block|{
 name|ntp
@@ -6053,6 +6204,18 @@ argument_list|(
 expr|struct
 name|netinfo
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ntp
+condition|)
+name|panic
+argument_list|(
+name|errno
+argument_list|,
+literal|"malloc(netinfo)"
 argument_list|)
 expr_stmt|;
 block|}

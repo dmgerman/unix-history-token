@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 8.4 1995/06/29 09:25:56 vixie Exp $  */
+comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 1.4 1995/08/20 21:19:08 peter Exp $  */
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ comment|/*#define VALIDATE*/
 end_comment
 
 begin_comment
-comment|/* validation procedure (anant@isi.edu) (DO NOT USE!)*/
+comment|/* validation procedure (anant@isi.edu) (BUGGY!)*/
 end_comment
 
 begin_comment
@@ -287,9 +287,11 @@ begin_comment
 comment|/* return NS and glue w/ authorative answers (mpa) */
 end_comment
 
-begin_comment
-comment|/*#define RFC1535*/
-end_comment
+begin_define
+define|#
+directive|define
+name|RFC1535
+end_define
 
 begin_comment
 comment|/* use RFC 1535 default for "search" list (vix) */
@@ -419,6 +421,16 @@ end_comment
 
 begin_comment
 comment|/* support for (draft) LOC record parsing (ckd) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SORT_RESPONSE
+end_define
+
+begin_comment
+comment|/* should we try to sort responses optimally? (vix) */
 end_comment
 
 begin_comment

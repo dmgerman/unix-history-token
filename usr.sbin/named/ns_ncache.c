@@ -230,6 +230,8 @@ name|validate
 argument_list|(
 name|dname
 argument_list|,
+name|dname
+argument_list|,
 operator|&
 name|from_addr
 argument_list|,

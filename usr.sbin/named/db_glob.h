@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_glob.h,v 1.1.1.1 1994/09/22 19:46:14 pst Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_glob.h,v 1.2 1995/05/30 03:48:37 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 5 minute minimum ttl */
+comment|/* no minimum ttl */
 end_comment
 
 begin_decl_stmt
@@ -42,9 +42,7 @@ name|int
 name|min_cache_ttl
 name|INIT
 argument_list|(
-literal|5
-operator|*
-literal|60
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt

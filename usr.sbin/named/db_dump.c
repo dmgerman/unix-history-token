@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 1.3 1995/05/30 03:48:35 rgrimes Exp $"
+literal|"$Id: db_dump.c,v 1.4 1995/08/20 21:18:14 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1323,6 +1323,14 @@ decl_stmt|;
 name|u_int
 name|cnt
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|zp
+operator|->
+name|z_origin
+condition|)
+continue|continue;
 name|fprintf
 argument_list|(
 name|fp
@@ -1332,6 +1340,21 @@ argument_list|,
 name|zp
 operator|->
 name|z_origin
+condition|?
+operator|(
+operator|*
+name|zp
+operator|->
+name|z_origin
+condition|?
+name|zp
+operator|->
+name|z_origin
+else|:
+literal|"."
+operator|)
+else|:
+literal|"Nil"
 argument_list|,
 name|zp
 operator|->
@@ -2330,11 +2353,15 @@ name|T_ISDN
 case|:
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|fprintf
@@ -2366,11 +2393,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 name|fprintf
 argument_list|(
@@ -2731,11 +2762,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 for|for

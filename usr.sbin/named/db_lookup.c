@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_lookup.c,v 1.2 1995/05/30 03:48:40 rgrimes Exp $"
+literal|"$Id: db_lookup.c,v 1.3 1995/08/20 21:18:24 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,6 +172,11 @@ name|parent
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|escaped
+init|=
+literal|0
+decl_stmt|;
 name|htp
 operator|=
 operator|*
@@ -202,9 +207,14 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+name|escaped
+operator|&&
+operator|(
 name|c
 operator|==
 literal|'.'
+operator|)
 condition|)
 block|{
 name|parent
@@ -342,6 +352,25 @@ name|c
 operator|)
 operator|&
 name|HASHMASK
+expr_stmt|;
+if|if
+condition|(
+name|escaped
+condition|)
+name|escaped
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'\\'
+condition|)
+name|escaped
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|cp

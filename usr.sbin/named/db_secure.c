@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_secure.c,v 1.2 1995/05/30 03:48:43 rgrimes Exp $"
+literal|"$Id: db_secure.c,v 1.3 1995/08/20 21:18:29 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -451,52 +457,13 @@ condition|(
 operator|!
 name|ntp
 condition|)
-block|{
-name|dprintf
+name|panic
 argument_list|(
-literal|1
+name|errno
 argument_list|,
-operator|(
-name|ddt
-operator|,
-literal|"build_secure_netlist (%s): malloc fail\n"
-operator|,
-name|zp
-operator|->
-name|z_origin
-operator|)
+literal|"malloc(netinfo)"
 argument_list|)
 expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"build_secure_netlist (%s): Out of Memory"
-argument_list|,
-name|zp
-operator|->
-name|z_origin
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|securezone
-condition|)
-block|{
-name|zp
-operator|->
-name|secure_nets
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 block|}
 if|if
 condition|(
@@ -823,10 +790,16 @@ name|u_long
 operator|)
 name|ntp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntp
 operator|->
 name|addr
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntp
 operator|->
 name|mask
