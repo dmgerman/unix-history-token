@@ -75,6 +75,32 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ELF__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|minbrk
+name|asm
+argument_list|(
+literal|".minbrk"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -86,6 +112,11 @@ literal|"minbrk"
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
