@@ -1485,7 +1485,7 @@ name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|m
