@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_lookup.c	8.6 (Berkeley) 4/1/94  * $Id$  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_lookup.c	8.6 (Berkeley) 4/1/94  * $Id: ufs_lookup.c,v 1.2 1994/08/02 07:54:58 davidg Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -340,8 +346,6 @@ operator|(
 name|ENOTDIR
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -356,6 +360,10 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -363,8 +371,6 @@ name|error
 operator|)
 return|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Before tediously performing a linear scan of the directory, 	 * check the name cache to see if the directory/name pair 	 * we are looking for is known already. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|cache_lookup
@@ -375,6 +381,10 @@ name|vpp
 argument_list|,
 name|cnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|int
@@ -553,14 +563,16 @@ name|pdp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -811,8 +823,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_BLKATOFF
@@ -831,6 +841,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -900,6 +914,7 @@ name|d_reclen
 operator|==
 literal|0
 operator|||
+operator|(
 name|dirchk
 operator|&&
 name|ufs_dirbadentry
@@ -910,6 +925,7 @@ name|ep
 argument_list|,
 name|entryoffsetinblock
 argument_list|)
+operator|)
 condition|)
 block|{
 name|int
@@ -1270,8 +1286,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Access for write is interpreted as allowing 		 * creation of files in the directory. 		 */
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1286,6 +1300,10 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1539,8 +1557,6 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Write access to directory required to delete files. 		 */
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1555,6 +1571,10 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1622,8 +1642,6 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_VGET
@@ -1639,6 +1657,10 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1730,8 +1752,6 @@ name|ISLASTCN
 operator|)
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1746,6 +1766,10 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1768,8 +1792,6 @@ operator|(
 name|EISDIR
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_VGET
@@ -1785,6 +1807,10 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1836,8 +1862,6 @@ name|pdp
 argument_list|)
 expr_stmt|;
 comment|/* race to get the inode */
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_VGET
@@ -1853,6 +1877,10 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_LOCK
@@ -1929,8 +1957,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_VGET
@@ -1946,6 +1972,10 @@ argument_list|,
 operator|&
 name|tdp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2044,7 +2074,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s: bad dir ino %d at offset %d: %s\n"
+literal|"%s: bad dir ino %ld at offset %ld: %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -2702,8 +2732,6 @@ operator|->
 name|i_count
 expr_stmt|;
 comment|/* 	 * Get the block containing the space for the new directory entry. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_BLKATOFF
@@ -2723,6 +2751,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3087,8 +3119,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * First entry in block: set d_ino to zero. 		 */
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_BLKATOFF
@@ -3113,6 +3143,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3147,8 +3181,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Collapse new free space into previous entry. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_BLKATOFF
@@ -3179,6 +3211,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3273,8 +3309,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_BLKATOFF
@@ -3299,6 +3333,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3894,8 +3932,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_VGET
@@ -3911,6 +3947,10 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vp
