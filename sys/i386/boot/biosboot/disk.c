@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.12 1995/05/21 03:27:13 phk Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.13 1995/05/30 07:58:31 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -259,9 +259,13 @@ literal|0
 decl_stmt|,
 name|di
 decl_stmt|;
-name|u_long
-name|bend
-decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Save space, already have hard error for cyl> 1023 in Bread */
+block|u_long bend;
+endif|#
+directive|endif
 name|di
 operator|=
 name|get_diskinfo
@@ -518,32 +522,13 @@ index|]
 operator|.
 name|p_size
 expr_stmt|;
-name|bend
-operator|=
-name|boff
-operator|+
-name|bsize
-operator|-
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|bend
-operator|/
-name|spc
-operator|>
-literal|1024
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"partition is out of reach from the bios\n"
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* Save space, already have hard error for cyl> 1023 in Bread */
+block|bend = boff + bsize - 1 ; 		if (bend / spc>= 1024) { 			printf("boot partition end>= cyl 1024, BIOS can't load kernel stored beyond this limit\n");
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DO_BAD144
@@ -872,6 +857,28 @@ name|sector
 operator|/
 name|spc
 expr_stmt|;
+if|if
+condition|(
+name|cyl
+operator|>
+literal|1023
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Error: C:%d> 1023 (BIOS limit)\n"
+argument_list|,
+name|cyl
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
+comment|/* loop forever */
+block|}
 name|head
 operator|=
 operator|(
