@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.2 (Berkeley) %G%"
+literal|"@(#)set.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +759,7 @@ name|c_cc
 index|[
 name|VERASE
 index|]
-operator|==
+operator|!=
 name|CERASE
 condition|)
 block|{
