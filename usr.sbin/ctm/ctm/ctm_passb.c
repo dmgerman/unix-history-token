@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<koshy@india.hp.com> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Joseph Koshy  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<koshy@india.hp.com> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Joseph Koshy  * ----------------------------------------------------------------------------  *  * $Id: ctm_passb.c,v 1.1 1996/08/30 10:21:00 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -170,8 +170,10 @@ operator|!
 name|b
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -770,8 +772,10 @@ name|b
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;

@@ -237,28 +237,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n"
+literal|"usage: mkctm [-options] name number timestamp prefix dir1 dir2\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tmkctm [-options] name number timestamp prefix"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" dir1 dir2"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n"
+literal|"options:\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -551,7 +537,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Couldn't stat %s\n"
+literal|"couldn't stat %s"
 argument_list|,
 name|name
 argument_list|)
@@ -1013,14 +999,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-name|buf1
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|3
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1085,14 +1070,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-name|buf2
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|3
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf2
 argument_list|)
 expr_stmt|;
 block|}
@@ -1141,14 +1125,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
-argument_list|(
-name|buf1
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|3
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1187,14 +1170,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
-argument_list|(
-name|buf2
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|3
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf2
 argument_list|)
 expr_stmt|;
 block|}
@@ -2039,14 +2021,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-name|buf2
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|3
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf2
 argument_list|)
 expr_stmt|;
 block|}
@@ -2088,14 +2069,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
-argument_list|(
-name|buf2
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|3
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf2
 argument_list|)
 expr_stmt|;
 block|}
@@ -3533,9 +3513,9 @@ directive|if
 literal|0
 block|if (regcomp(&reg_bogus, DEFAULT_BOGUS, REG_EXTENDED | REG_NEWLINE))
 comment|/* XXX use regerror to explain it */
-block|errx(1, "Default regular expression argument to -B is botched"); 	flag_bogus = 1;  	if (regcomp(&reg_ignore, DEFAULT_IGNORE, REG_EXTENDED | REG_NEWLINE))
+block|errx(1, "default regular expression argument to -B is botched"); 	flag_bogus = 1;  	if (regcomp(&reg_ignore, DEFAULT_IGNORE, REG_EXTENDED | REG_NEWLINE))
 comment|/* XXX use regerror to explain it */
-block|errx(1, "Default regular expression argument to -I is botched"); 	flag_ignore = 1;
+block|errx(1, "default regular expression argument to -I is botched"); 	flag_ignore = 1;
 endif|#
 directive|endif
 while|while
@@ -3585,7 +3565,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Damage limit must be positive"
+literal|"damage limit must be positive"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3632,7 +3612,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Regular expression argument to -I is botched"
+literal|"regular expression argument to -I is botched"
 argument_list|)
 expr_stmt|;
 name|flag_ignore
@@ -3683,7 +3663,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Regular expression argument to -B is botched"
+literal|"regular expression argument to -B is botched"
 argument_list|)
 expr_stmt|;
 name|flag_bogus
@@ -3711,6 +3691,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -3909,7 +3891,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Damage of %d would exceed %d files"
+literal|"damage of %d would exceed %d files"
 argument_list|,
 name|damage
 argument_list|,
@@ -3929,7 +3911,7 @@ name|errx
 argument_list|(
 literal|4
 argument_list|,
-literal|"No changes"
+literal|"no changes"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.c,v 1.13 1996/04/29 21:02:28 phk Exp $  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a  * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  *  * Options we have:  * -b<dir>		Base-dir  * -B<file>		Backup to tar-file.  * -t 			Tar command (default as in TARCMD).  * -c			Check it out, don't do anything.  * -F      		Force  * -q 			Tell us less.  * -T<tmpdir>.		Temporary files.  * -u			Set all file modification times to the timestamp  * -v 			Tell us more.  * -V<level>		Tell us more level = number of -v  * -k			Keep files and directories that would have been removed.  * -l			List actions.  *  * Options we don't actually use:  * -p			Less paranoid.  * -P			Paranoid.  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.c,v 1.14 1996/08/30 10:20:52 phk Exp $  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a  * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  *  * Options we have:  * -b<dir>		Base-dir  * -B<file>		Backup to tar-file.  * -t 			Tar command (default as in TARCMD).  * -c			Check it out, don't do anything.  * -F      		Force  * -q 			Tell us less.  * -T<tmpdir>.		Temporary files.  * -u			Set all file modification times to the timestamp  * -v 			Tell us more.  * -V<level>		Tell us more level = number of -v  * -k			Keep files and directories that would have been removed.  * -l			List actions.  *  * Options we don't actually use:  * -p			Less paranoid.  * -P			Paranoid.  */
 end_comment
 
 begin_define
@@ -64,17 +64,6 @@ literal|0
 decl_stmt|;
 name|int
 name|c
-decl_stmt|;
-specifier|extern
-name|int
-name|optopt
-decl_stmt|,
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 name|unsigned
 name|applied
@@ -324,11 +313,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Out of memory for expressions: \"%s\"\n"
+literal|"out of memory for expressions: \"%s\""
 argument_list|,
 name|optarg
 argument_list|)
@@ -398,11 +385,9 @@ name|errmsg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Regular expression: \"%s\"\n"
+literal|"regular expression: \"%s\""
 argument_list|,
 name|errmsg
 argument_list|)
@@ -469,11 +454,9 @@ break|break;
 case|case
 literal|':'
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Option '%c' requires an argument.\n"
+literal|"option '%c' requires an argument"
 argument_list|,
 name|optopt
 argument_list|)
@@ -485,11 +468,9 @@ break|break;
 case|case
 literal|'?'
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Option '%c' not supported.\n"
+literal|"option '%c' not supported"
 argument_list|,
 name|optopt
 argument_list|)
@@ -499,11 +480,9 @@ operator|++
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Option '%c' not yet implemented.\n"
+literal|"option '%c' not yet implemented"
 argument_list|,
 name|optopt
 argument_list|)
@@ -516,11 +495,9 @@ condition|(
 name|stat
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%d errors during option processing\n"
+literal|"%d errors during option processing"
 argument_list|,
 name|stat
 argument_list|)
@@ -678,11 +655,9 @@ name|Verbose
 operator|>
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: %s not found.\n"
+literal|"warning: %s not found"
 argument_list|,
 name|Buffer
 argument_list|)
@@ -767,11 +742,9 @@ name|Verbose
 operator|>
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Exit(%d)\n"
+literal|"exit(%d)"
 argument_list|,
 name|stat
 argument_list|)
@@ -930,8 +903,10 @@ operator|!
 name|f
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -962,8 +937,10 @@ operator|!
 name|f
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
@@ -1048,8 +1025,10 @@ operator|!
 name|f2
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
@@ -1199,8 +1178,10 @@ operator|!
 name|f
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -1250,8 +1231,10 @@ operator|!
 name|f
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -1356,8 +1339,10 @@ operator|!
 name|f
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
