@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)broadcast.c	1.1 (Berkeley) %G%"
+literal|"@(#)broadcast.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
