@@ -563,6 +563,10 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* PFIL_HOOKS */
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|args
 operator|.
 name|eh
@@ -882,6 +886,16 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+condition|)
 name|hlen
 operator|=
 name|len
