@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	8.1 (Berkeley) %G%"
+literal|"@(#)ls.c	5.77 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,23 +130,6 @@ include|#
 directive|include
 file|"extern.h"
 end_include
-
-begin_decl_stmt
-name|char
-modifier|*
-name|getbsize
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|*
-operator|,
-name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
