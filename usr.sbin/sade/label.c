@@ -4636,50 +4636,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
-name|flags
-operator|&
-name|CHUNK_IS_ROOT
-operator|)
-operator|&&
-operator|(
-name|tmp
-operator|->
-name|flags
-operator|&
-name|CHUNK_PAST_1024
-operator|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"This region cannot be used for your root partition as it starts\n"
-literal|"or extends past the 1024'th cylinder mark and is thus a\n"
-literal|"poor location to boot from.  Please choose another\n"
-literal|"location (or smaller size) for your root partition and try again!"
-argument_list|)
-expr_stmt|;
-name|Delete_Chunk
-argument_list|(
-name|label_chunk_info
-index|[
-name|here
-index|]
-operator|.
-name|c
-operator|->
-name|disk
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-name|clear_wins
-argument_list|()
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
 name|type
 operator|!=
 name|PART_SWAP
