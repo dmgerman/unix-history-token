@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lam.c	4.3	(Berkeley)	%G%"
+literal|"@(#)lam.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,9 +163,9 @@ parameter_list|()
 function_decl|;
 name|setbuf
 argument_list|(
-name|buf
-argument_list|,
 name|stdout
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 name|getargs
