@@ -240,6 +240,15 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* For p_rlimit. */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|blim
 operator|=
 name|p
@@ -455,6 +464,15 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* For p_rlimit. */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|limp
 operator|=
 operator|&
@@ -698,6 +716,15 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* For p_rlimit. */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|blim
 operator|=
 name|p
@@ -913,6 +940,15 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* For p_rlimit. */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|limp
 operator|=
 operator|&

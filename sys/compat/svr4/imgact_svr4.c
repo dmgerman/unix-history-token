@@ -335,6 +335,15 @@ operator|(
 name|EFAULT
 operator|)
 return|;
+comment|/* For p_rlimit below. */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/*      * text/data/bss must not exceed limits      */
 if|if
 condition|(
