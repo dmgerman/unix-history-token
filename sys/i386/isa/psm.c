@@ -1888,6 +1888,13 @@ operator|(
 literal|0
 operator|)
 return|;
+name|psm_softc
+index|[
+name|unit
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 name|sc
 operator|=
 name|malloc
@@ -2751,6 +2758,18 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+comment|/* shouldn't happen */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* initial operation mode */
 name|sc
 operator|->
@@ -2961,6 +2980,12 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+operator|||
 operator|(
 name|sc
 operator|->
