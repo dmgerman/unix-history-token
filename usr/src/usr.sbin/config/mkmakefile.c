@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.24 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3093,9 +3093,7 @@ literal|"%s: Makefile ../%s/symbols.sort"
 argument_list|,
 name|machinename
 argument_list|,
-name|fl
-operator|->
-name|f_needs
+name|machinename
 argument_list|)
 expr_stmt|;
 if|if
