@@ -75,6 +75,16 @@ parameter_list|)
 value|(1<< (_SIG_IDX(sig)& 31))
 end_define
 
+begin_define
+define|#
+directive|define
+name|_SIG_VALID
+parameter_list|(
+name|sig
+parameter_list|)
+value|((sig)< _SIG_MAXSIG&& (sig)> 0)
+end_define
+
 begin_comment
 comment|/*  * System defined signals.  */
 end_comment
