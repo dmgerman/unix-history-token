@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 25 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 27 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|MAX_EXTENDED_OPCODE
-value|0x87
+value|0x88
 end_define
 
 begin_define
@@ -194,6 +194,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_QWORD_OP
+value|ARGP_LIST1 (ARGP_QWORDDATA)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_SCOPE_OP
 value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_TERMLIST)
 end_define
@@ -209,6 +216,13 @@ begin_define
 define|#
 directive|define
 name|ARGP_PACKAGE_OP
+value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_BYTEDATA,      ARGP_DATAOBJLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_VAR_PACKAGE_OP
 value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_BYTEDATA,      ARGP_DATAOBJLIST)
 end_define
 
@@ -467,6 +481,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_CONCAT_RES_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_MOD_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_NOTIFY_OP
 value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_TERMARG)
 end_define
@@ -530,6 +558,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_QWORD_FIELD_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_LAND_OP
 value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
 end_define
@@ -567,6 +602,62 @@ define|#
 directive|define
 name|ARGP_LLESS_OP
 value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_TO_BUFFER_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_TO_DEC_STR_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_TO_HEX_STR_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_TO_INTEGER_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_TO_STRING_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_COPY_OP
+value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_SIMPLENAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_MID_OP
+value|ARGP_LIST4 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CONTINUE_OP
+value|ARG_NONE
 end_define
 
 begin_define
@@ -651,6 +742,13 @@ define|#
 directive|define
 name|ARGP_CREATE_FIELD_OP
 value|ARGP_LIST4 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LOAD_TABLE_OP
+value|ARGP_LIST6 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TERMARG,  ARGP_TERMARG,   ARGP_TERMARG)
 end_define
 
 begin_define
@@ -810,6 +908,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_DATA_REGION_OP
+value|ARGP_LIST4 (ARGP_NAMESTRING, ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_LNOTEQUAL_OP
 value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
 end_define
@@ -878,7 +983,7 @@ value|ARGP_LIST1 (ARGP_NAMESTRING)
 end_define
 
 begin_comment
-comment|/*  * All AML opcodes and the runtime arguments for each.  Used by the AML interpreter  Each list is compressed  * into a 32-bit number and stored in the master opcode table at the end of this file.  *  * (Used by AcpiAmlPrepOperands procedure)  */
+comment|/*  * All AML opcodes and the runtime arguments for each.  Used by the AML interpreter  Each list is compressed  * into a 32-bit number and stored in the master opcode table at the end of this file.  *  * (Used by AcpiAmlPrepOperands procedure and the ASL Compiler)  */
 end_comment
 
 begin_define
@@ -940,6 +1045,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGI_QWORD_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGI_SCOPE_OP
 value|ARGI_INVALID_OPCODE
 end_define
@@ -955,6 +1067,13 @@ begin_define
 define|#
 directive|define
 name|ARGI_PACKAGE_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_VAR_PACKAGE_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
@@ -1081,126 +1200,126 @@ begin_define
 define|#
 directive|define
 name|ARGI_REF_OF_OP
-value|ARGI_LIST1 (ARGI_REFERENCE)
+value|ARGI_LIST1 (ARGI_OBJECT_REF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_ADD_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_CONCAT_OP
-value|ARGI_LIST3 (ARGI_STRING,     ARGI_STRING,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_COMPUTEDATA,ARGI_COMPUTEDATA,   ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_SUBTRACT_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_INCREMENT_OP
-value|ARGI_LIST1 (ARGI_REFERENCE)
+value|ARGI_LIST1 (ARGI_INTEGER_REF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_DECREMENT_OP
-value|ARGI_LIST1 (ARGI_REFERENCE)
+value|ARGI_LIST1 (ARGI_INTEGER_REF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_MULTIPLY_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_DIVIDE_OP
-value|ARGI_LIST4 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF,    ARGI_TARGETREF)
+value|ARGI_LIST4 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF,    ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_SHIFT_LEFT_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_SHIFT_RIGHT_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_BIT_AND_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_BIT_NAND_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_BIT_OR_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_BIT_NOR_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_BIT_XOR_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_BIT_NOT_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_TARGETREF)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_FIND_SET_LEFT_BIT_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_TARGETREF)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_FIND_SET_RIGHT_BIT_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_TARGETREF)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
 end_define
 
 begin_define
@@ -1213,8 +1332,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGI_CONCAT_RES_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_BUFFER,        ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_MOD_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGI_NOTIFY_OP
-value|ARGI_LIST2 (ARGI_REFERENCE,  ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_DEVICE_REF, ARGI_INTEGER)
 end_define
 
 begin_define
@@ -1228,42 +1361,42 @@ begin_define
 define|#
 directive|define
 name|ARGI_INDEX_OP
-value|ARGI_LIST3 (ARGI_COMPLEXOBJ, ARGI_NUMBER,        ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_COMPLEXOBJ, ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_MATCH_OP
-value|ARGI_LIST6 (ARGI_PACKAGE,    ARGI_NUMBER,        ARGI_NUMBER,       ARGI_NUMBER,    ARGI_NUMBER,    ARGI_NUMBER)
+value|ARGI_LIST6 (ARGI_PACKAGE,    ARGI_INTEGER,       ARGI_INTEGER,      ARGI_INTEGER,   ARGI_INTEGER,   ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_DWORD_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_NUMBER,        ARGI_REFERENCE)
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_WORD_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_NUMBER,        ARGI_REFERENCE)
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_BYTE_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_NUMBER,        ARGI_REFERENCE)
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_BIT_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_NUMBER,        ARGI_REFERENCE)
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
 end_define
 
 begin_define
@@ -1276,43 +1409,106 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGI_QWORD_FIELD_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGI_LAND_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_LOR_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_LNOT_OP
-value|ARGI_LIST1 (ARGI_NUMBER)
+value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_LEQUAL_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_LGREATER_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_LLESS_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_TO_BUFFER_OP
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_FIXED_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_TO_DEC_STR_OP
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_FIXED_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_TO_HEX_STR_OP
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_FIXED_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_TO_INTEGER_OP
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_FIXED_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_TO_STRING_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_FIXED_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_COPY_OP
+value|ARGI_LIST2 (ARGI_ANYTYPE,    ARGI_SIMPLE_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_MID_OP
+value|ARGI_LIST4 (ARGI_BUFFERSTRING,ARGI_INTEGER,      ARGI_INTEGER,      ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CONTINUE_OP
+value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
@@ -1389,14 +1585,21 @@ begin_define
 define|#
 directive|define
 name|ARGI_COND_REF_OF_OP
-value|ARGI_LIST2 (ARGI_REFERENCE,  ARGI_TARGETREF)
+value|ARGI_LIST2 (ARGI_OBJECT_REF, ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_CREATE_FIELD_OP
-value|ARGI_LIST4 (ARGI_BUFFER,     ARGI_NUMBER,        ARGI_NUMBER,       ARGI_REFERENCE)
+value|ARGI_LIST4 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_INTEGER,      ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LOAD_TABLE_OP
+value|ARGI_LIST6 (ARGI_STRING,     ARGI_STRING,        ARGI_STRING,       ARGI_STRING,    ARGI_STRING, ARGI_TARGETREF)
 end_define
 
 begin_define
@@ -1410,21 +1613,21 @@ begin_define
 define|#
 directive|define
 name|ARGI_STALL_OP
-value|ARGI_LIST1 (ARGI_NUMBER)
+value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_SLEEP_OP
-value|ARGI_LIST1 (ARGI_NUMBER)
+value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_ACQUIRE_OP
-value|ARGI_LIST2 (ARGI_MUTEX,      ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_MUTEX,      ARGI_INTEGER)
 end_define
 
 begin_define
@@ -1438,7 +1641,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_WAIT_OP
-value|ARGI_LIST2 (ARGI_EVENT,      ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_EVENT,      ARGI_INTEGER)
 end_define
 
 begin_define
@@ -1459,14 +1662,14 @@ begin_define
 define|#
 directive|define
 name|ARGI_FROM_BCD_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_TARGETREF)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_TO_BCD_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_TARGETREF)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_FIXED_TARGET)
 end_define
 
 begin_define
@@ -1494,14 +1697,14 @@ begin_define
 define|#
 directive|define
 name|ARGI_FATAL_OP
-value|ARGI_LIST3 (ARGI_NUMBER,     ARGI_NUMBER,        ARGI_NUMBER)
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_REGION_OP
-value|ARGI_LIST2 (ARGI_NUMBER,     ARGI_NUMBER)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
 end_define
 
 begin_define
@@ -1551,6 +1754,13 @@ define|#
 directive|define
 name|ARGI_BANK_FIELD_OP
 value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_DATA_REGION_OP
+value|ARGI_LIST3 (ARGI_STRING,     ARGI_STRING,       ARGI_STRING)
 end_define
 
 begin_define
@@ -1645,7 +1855,7 @@ name|OPTYPE_CONSTANT
 operator||
 name|AML_NO_ARGS
 argument_list|,
-literal|"ZeroOp"
+literal|"Zero"
 argument_list|,
 name|ARGP_ZERO_OP
 argument_list|,
@@ -1662,7 +1872,7 @@ name|OPTYPE_CONSTANT
 operator||
 name|AML_NO_ARGS
 argument_list|,
-literal|"OneOp"
+literal|"One"
 argument_list|,
 name|ARGP_ONE_OP
 argument_list|,
@@ -2155,7 +2365,7 @@ name|OPTYPE_DYADIC2R
 operator||
 name|AML_HAS_ARGS
 argument_list|,
-literal|"Concat"
+literal|"Concatenate"
 argument_list|,
 name|ARGP_CONCAT_OP
 argument_list|,
@@ -2818,7 +3028,7 @@ name|OPTYPE_CONSTANT
 operator||
 name|AML_NO_ARGS
 argument_list|,
-literal|"OnesOp"
+literal|"Ones"
 argument_list|,
 name|ARGP_ONES_OP
 argument_list|,
@@ -3210,7 +3420,7 @@ name|OPTYPE_NAMED_OBJECT
 operator||
 name|AML_HAS_ARGS
 argument_list|,
-literal|"PowerRes"
+literal|"PowerResource"
 argument_list|,
 name|ARGP_POWER_RES_OP
 argument_list|,
@@ -3506,7 +3716,263 @@ name|ARG_NONE
 argument_list|,
 name|ARG_NONE
 argument_list|)
-block|, }
+block|,
+comment|/* ACPI 2.0 (new) opcodes */
+comment|/*  6E */
+comment|/* AML_QWORD_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_LITERAL
+operator||
+name|AML_NO_ARGS
+argument_list|,
+literal|"QwordConst"
+argument_list|,
+name|ARGP_QWORD_OP
+argument_list|,
+name|ARGI_QWORD_OP
+argument_list|)
+block|,
+comment|/*  6F */
+comment|/* AML_VAR_PACKAGE_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_DATA_TERM
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"VarPackage"
+argument_list|,
+name|ARGP_VAR_PACKAGE_OP
+argument_list|,
+name|ARGI_VAR_PACKAGE_OP
+argument_list|)
+block|,
+comment|/*  70 */
+comment|/* AML_CONCAT_RES_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_DYADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"ConcatRes"
+argument_list|,
+name|ARGP_CONCAT_RES_OP
+argument_list|,
+name|ARGI_CONCAT_RES_OP
+argument_list|)
+block|,
+comment|/*  71 */
+comment|/* AML_MOD_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_DYADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"Mod"
+argument_list|,
+name|ARGP_MOD_OP
+argument_list|,
+name|ARGI_MOD_OP
+argument_list|)
+block|,
+comment|/*  72 */
+comment|/* AML_QWORD_FIELD_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_CREATE_FIELD
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"CreateQWordField"
+argument_list|,
+name|ARGP_QWORD_FIELD_OP
+argument_list|,
+name|ARGI_QWORD_FIELD_OP
+argument_list|)
+block|,
+comment|/*  73 */
+comment|/* AML_TO_BUFFER_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"ToBuffer"
+argument_list|,
+name|ARGP_TO_BUFFER_OP
+argument_list|,
+name|ARGI_TO_BUFFER_OP
+argument_list|)
+block|,
+comment|/*  74 */
+comment|/* AML_TO_DEC_STR_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"ToDecString"
+argument_list|,
+name|ARGP_TO_DEC_STR_OP
+argument_list|,
+name|ARGI_TO_DEC_STR_OP
+argument_list|)
+block|,
+comment|/*  75 */
+comment|/* AML_TO_HEX_STR_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"ToHexString"
+argument_list|,
+name|ARGP_TO_HEX_STR_OP
+argument_list|,
+name|ARGI_TO_HEX_STR_OP
+argument_list|)
+block|,
+comment|/*  76 */
+comment|/* AML_TO_INTEGER_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"ToInteger"
+argument_list|,
+name|ARGP_TO_INTEGER_OP
+argument_list|,
+name|ARGI_TO_INTEGER_OP
+argument_list|)
+block|,
+comment|/*  77 */
+comment|/* AML_TO_STRING_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"ToString"
+argument_list|,
+name|ARGP_TO_STRING_OP
+argument_list|,
+name|ARGI_TO_STRING_OP
+argument_list|)
+block|,
+comment|/*  78 */
+comment|/* AML_COPY_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"Copy"
+argument_list|,
+name|ARGP_COPY_OP
+argument_list|,
+name|ARGI_COPY_OP
+argument_list|)
+block|,
+comment|/*  79 */
+comment|/* AML_MID_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"Mid"
+argument_list|,
+name|ARGP_MID_OP
+argument_list|,
+name|ARGI_MID_OP
+argument_list|)
+block|,
+comment|/*  7A */
+comment|/* AML_CONTINUE_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_CONTROL
+operator||
+name|AML_NO_ARGS
+argument_list|,
+literal|"Continue"
+argument_list|,
+name|ARGP_CONTINUE_OP
+argument_list|,
+name|ARGI_CONTINUE_OP
+argument_list|)
+block|,
+comment|/*  7B */
+comment|/* AML_LOAD_TABLE_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"LoadTable"
+argument_list|,
+name|ARGP_LOAD_TABLE_OP
+argument_list|,
+name|ARGI_LOAD_TABLE_OP
+argument_list|)
+block|,
+comment|/*  7C */
+comment|/* AML_DATA_REGION_OP */
+name|OP_INFO_ENTRY
+argument_list|(
+name|ACPI_OP_TYPE_OPCODE
+operator||
+name|OPTYPE_MONADIC2R
+operator||
+name|AML_HAS_ARGS
+argument_list|,
+literal|"DataOpRegion"
+argument_list|,
+name|ARGP_DATA_REGION_OP
+argument_list|,
+name|ARGI_DATA_REGION_OP
+argument_list|)
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
@@ -3524,6 +3990,7 @@ index|]
 init|=
 block|{
 comment|/*              0     1     2     3     4     5     6     7  */
+comment|/*              8     9     A     B     C     D     E     F  */
 comment|/* 0x00 */
 literal|0x00
 block|,
@@ -3554,7 +4021,7 @@ literal|0x06
 block|,
 literal|0x07
 block|,
-name|_UNK
+literal|0x6E
 block|,
 name|_UNK
 block|,
@@ -3565,7 +4032,7 @@ literal|0x09
 block|,
 literal|0x0a
 block|,
-name|_UNK
+literal|0x6F
 block|,
 literal|0x0b
 block|,
@@ -3805,9 +4272,9 @@ literal|0x2d
 block|,
 literal|0x2e
 block|,
-name|_UNK
+literal|0x70
 block|,
-name|_UNK
+literal|0x71
 block|,
 literal|0x2f
 block|,
@@ -3828,7 +4295,7 @@ literal|0x36
 block|,
 literal|0x37
 block|,
-name|_UNK
+literal|0x72
 block|,
 comment|/* 0x90 */
 literal|0x38
@@ -3843,26 +4310,26 @@ literal|0x3c
 block|,
 literal|0x3d
 block|,
-name|_UNK
+literal|0x73
 block|,
-name|_UNK
+literal|0x74
 block|,
 comment|/* 0x98 */
-name|_UNK
+literal|0x75
+block|,
+literal|0x76
 block|,
 name|_UNK
 block|,
 name|_UNK
 block|,
-name|_UNK
+literal|0x77
 block|,
-name|_UNK
+literal|0x78
 block|,
-name|_UNK
+literal|0x79
 block|,
-name|_UNK
-block|,
-name|_UNK
+literal|0x7A
 block|,
 comment|/* 0xA0 */
 literal|0x3e
@@ -4081,6 +4548,7 @@ index|]
 init|=
 block|{
 comment|/*              0     1     2     3     4     5     6     7  */
+comment|/*              8     9     A     B     C     D     E     F  */
 comment|/* 0x00 */
 name|_UNK
 block|,
@@ -4147,7 +4615,7 @@ name|_UNK
 block|,
 name|_UNK
 block|,
-name|_UNK
+literal|0x7B
 block|,
 comment|/* 0x20 */
 literal|0x4a
@@ -4369,17 +4837,12 @@ block|,
 literal|0x5e
 block|,
 literal|0x5f
+block|,
+comment|/* 0x88 */
+literal|0x7C
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*              0     1     2     3     4     5     6     7  */
-end_comment
-
-begin_comment
-comment|/* 0x00 */
-end_comment
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetOpcodeInfo  *  * PARAMETERS:  Opcode              - The AML opcode  *  * RETURN:      A pointer to the info about the opcode.  NULL if the opcode was  *              not found in the table.  *  * DESCRIPTION: Find AML opcode description based on the opcode.  *              NOTE: This procedure must ALWAYS return a valid pointer!  *  ******************************************************************************/
