@@ -1441,6 +1441,38 @@ name|tty_list
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|drainwait
+init|=
+literal|5
+operator|*
+literal|60
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|drainwait
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|drainwait
+argument_list|,
+literal|0
+argument_list|,
+literal|"Output drain timeout in seconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Initial open of tty, or (re)entry to standard tty line discipline.  */
 end_comment
@@ -1540,9 +1572,7 @@ name|tp
 operator|->
 name|t_timeout
 operator|=
-literal|5
-operator|*
-literal|60
+name|drainwait
 operator|*
 name|hz
 expr_stmt|;
