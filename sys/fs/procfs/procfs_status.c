@@ -628,8 +628,11 @@ argument_list|)
 operator|-
 name|ps
 argument_list|,
-literal|" %ld,%ld %ld,%ld %ld,%ld"
+literal|" %lld,%ld %lld,%ld %lld,%ld"
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|p
 operator|->
 name|p_stats
@@ -646,6 +649,9 @@ name|p_start
 operator|.
 name|tv_usec
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|ut
 operator|.
 name|tv_sec
@@ -654,6 +660,9 @@ name|ut
 operator|.
 name|tv_usec
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|st
 operator|.
 name|tv_sec

@@ -2959,8 +2959,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"microuptime() went backwards (%ld.%06ld -> %ld.%06ld)\n"
+literal|"microuptime() went backwards (%lld.%06ld -> %lld.%06ld)\n"
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|PCPU_GET
 argument_list|(
 name|switchtime
@@ -2975,6 +2978,9 @@ operator|.
 name|tv_usec
 argument_list|)
 argument_list|,
+operator|(
+name|quad_t
+operator|)
 name|tv
 operator|.
 name|tv_sec
