@@ -93,15 +93,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|ACPI_TABLE_HEADER
-modifier|*
-name|AcpiGbl_DbTablePtr
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMatchArgument  *  * PARAMETERS:  UserArgument            - User command line  *              Arguments               - Array of commands to match against  *  * RETURN:      Index into command array or ACPI_TYPE_NOT_FOUND if not found  *  * DESCRIPTION: Search command array for a command match  *  ******************************************************************************/
 end_comment

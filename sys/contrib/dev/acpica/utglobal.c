@@ -306,6 +306,24 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_DbDisasmIndent
+init|=
+literal|"...."
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_TABLE_HEADER
+modifier|*
+name|AcpiGbl_DbTablePtr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* System flags */
 end_comment

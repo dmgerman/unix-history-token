@@ -85,15 +85,6 @@ name|DB_FULL_OP_INFO
 value|"%5.5X #%4.4X [%2.2d]  "
 end_define
 
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_DbDisasmIndent
-init|=
-literal|"...."
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbBlockType  *  * PARAMETERS:  Op              - Object to be examined  *  * RETURN:      Status  *  * DESCRIPTION: Type of block for this op (parens or braces)  *  ******************************************************************************/
 end_comment
