@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.6 (Berkeley) %G%"
+literal|"@(#)inode.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
 
 begin_include
 include|#
@@ -53,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
