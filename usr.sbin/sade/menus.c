@@ -7650,16 +7650,6 @@ block|,
 literal|"passwd root"
 block|}
 block|,
-block|{
-literal|" Label"
-block|,
-literal|"The disk Label editor"
-block|,
-name|NULL
-block|,
-name|diskLabelEditor
-block|}
-block|,
 ifdef|#
 directive|ifdef
 name|__i386__
@@ -7675,6 +7665,16 @@ block|}
 block|,
 endif|#
 directive|endif
+block|{
+literal|" Label"
+block|,
+literal|"The disk Label editor"
+block|,
+name|NULL
+block|,
+name|diskLabelEditor
+block|}
+block|,
 block|{
 literal|" User Management"
 block|,
