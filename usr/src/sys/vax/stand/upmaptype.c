@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	upmaptype.c	4.4	83/03/10	*/
+comment|/*	upmaptype.c	4.5	83/07/20	*/
 end_comment
 
 begin_comment
@@ -150,6 +150,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|short
+name|up980_off
+index|[]
+init|=
+block|{
+literal|0
+block|,
+literal|100
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+literal|309
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|st
 name|upst
@@ -208,6 +237,19 @@ block|,
 name|upam_off
 block|,
 comment|/* Capricorn */
+literal|32
+block|,
+literal|5
+block|,
+literal|32
+operator|*
+literal|5
+block|,
+literal|823
+block|,
+name|up980_off
+block|,
+comment|/* DM980 */
 literal|0
 block|,
 literal|0
