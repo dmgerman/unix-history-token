@@ -173,6 +173,17 @@ begin_comment
 comment|/* get options */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPC_INFO
+value|3
+end_define
+
+begin_comment
+comment|/* get info */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
