@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_stack.c	5.1 (Berkeley) %G%"
+literal|"@(#)bt_stack.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,16 +74,16 @@ file|"btree.h"
 end_include
 
 begin_comment
-comment|/*  * When a page splits, a new record has to be inserted into its parent page.  * This page may have to split as well, all the way up to the root.  Since  * parent pointers in each page would be expensive, we maintain a stack of  * parent pages as we descend the tree.  *  * XXX  * This is a problem for multiple users -- if user a creates a stack, then user  * b splits the tree, then user a tries to split the tree, there's a new level  * in the tree that user b doesn't know about.  */
+comment|/*  * When a page splits, a new record has to be inserted into its parent page.  * This page may have to split as well, all the way up to the root.  Since  * parent pointers in each page would be expensive, we maintain a stack of  * parent pages as we descend the tree.  *  * XXX  * This is a concurrency problem -- if user a builds a stack, then user b  * splits the tree, then user a tries to split the tree, there's a new level  * in the tree that user a doesn't know about.  */
 end_comment
 
 begin_comment
-comment|/*  * BT_PUSH -- Push parent page info onto the stack (LIFO).  *  * Parameters:  *	t:	tree  *	pgno:	page  *	index:	page index  *  * Returns:  * 	RET_ERROR, RET_SUCCESS  */
+comment|/*  * __BT_PUSH -- Push parent page info onto the stack (LIFO).  *  * Parameters:  *	t:	tree  *	pgno:	page  *	index:	page index  *  * Returns:  * 	RET_ERROR, RET_SUCCESS  */
 end_comment
 
 begin_function
 name|int
-name|bt_push
+name|__bt_push
 parameter_list|(
 name|t
 parameter_list|,
