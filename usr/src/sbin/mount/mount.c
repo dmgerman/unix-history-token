@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.41 (Berkeley) %G%"
+literal|"@(#)mount.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1767,12 +1767,28 @@ argument_list|,
 literal|"not match mounted device"
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|mnttype
+operator|==
+name|MOUNT_UFS
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"Bogus super block\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|perror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3554,6 +3570,9 @@ name|RPC_ANYSOCK
 decl_stmt|;
 name|char
 modifier|*
+name|fsp
+decl_stmt|,
+modifier|*
 name|hostp
 decl_stmt|,
 modifier|*
@@ -3576,6 +3595,30 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|MAXPATHLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|strncpy
+argument_list|(
+name|buf
+argument_list|,
+name|spec
+argument_list|,
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
+name|buf
+index|[
+name|MAXPATHLEN
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|nam
@@ -3599,7 +3642,7 @@ name|delimp
 operator|=
 name|index
 argument_list|(
-name|spec
+name|buf
 argument_list|,
 literal|'@'
 argument_list|)
@@ -3614,6 +3657,10 @@ name|delimp
 operator|+
 literal|1
 expr_stmt|;
+name|fsp
+operator|=
+name|buf
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3623,7 +3670,7 @@ name|delimp
 operator|=
 name|index
 argument_list|(
-name|spec
+name|buf
 argument_list|,
 literal|':'
 argument_list|)
@@ -3634,9 +3681,9 @@ condition|)
 block|{
 name|hostp
 operator|=
-name|spec
+name|buf
 expr_stmt|;
-name|spec
+name|fsp
 operator|=
 name|delimp
 operator|+
@@ -3713,7 +3760,7 @@ name|nfhret
 operator|.
 name|stat
 operator|=
-name|EACCES
+name|ETIMEDOUT
 expr_stmt|;
 comment|/* Mark not yet successful */
 while|while
@@ -3866,7 +3913,7 @@ name|RPCMNT_MOUNT
 argument_list|,
 name|xdr_dir
 argument_list|,
-name|spec
+name|fsp
 argument_list|,
 name|xdr_fh
 argument_list|,
@@ -3987,7 +4034,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't access %s: "
+literal|"Mount RPC error on %s: "
 argument_list|,
 name|spec
 argument_list|)
