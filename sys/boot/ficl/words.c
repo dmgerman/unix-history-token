@@ -19355,6 +19355,9 @@ argument_list|,
 name|FW_DEFAULT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PNP
 name|dictAppendWord
 argument_list|(
 name|dp
@@ -19377,6 +19380,8 @@ argument_list|,
 name|FW_DEFAULT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|dictAppendWord
 argument_list|(
 name|dp

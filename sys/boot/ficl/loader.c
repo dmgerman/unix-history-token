@@ -1049,6 +1049,12 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PNP
+end_ifdef
+
 begin_function
 name|void
 name|ficlPnpdevices
@@ -1148,6 +1154,11 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
