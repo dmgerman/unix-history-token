@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002, 2003 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: ah_devid.h,v 1.7 2003/10/22 21:17:40 sam Exp $  */
+comment|/*-  * Copyright (c) 2002-2004 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: ah_devid.h,v 1.12 2004/10/21 22:48:57 sam Exp $  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,18 @@ value|0xa727
 end_define
 
 begin_comment
-comment|/* 3Com PCI vendor ID */
+comment|/* 3Com 3CRPAG175 vendor ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATHEROS_3COM2_VENDOR_ID
+value|0x10b7
+end_define
+
+begin_comment
+comment|/* 3Com 3CRDAG675 vendor ID */
 end_comment
 
 begin_comment
@@ -188,12 +199,131 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR5212_AR5312_REV2
+value|0x0052
+end_define
+
+begin_comment
+comment|/* AR5312 WMAC (AP31) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5212_AR5312_REV7
+value|0x0057
+end_define
+
+begin_comment
+comment|/* AR5312 WMAC (AP30-040) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5212_AR2313_REV8
+value|0x0058
+end_define
+
+begin_comment
+comment|/* AR2313 WMAC (AP43-030) */
+end_comment
+
+begin_comment
+comment|/* AR5212 compatible devid's also attach to 5212 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5212_DEVID_0014
+value|0x0014
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5212_DEVID_0015
+value|0x0015
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5212_DEVID_0016
+value|0x0016
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5212_DEVID_0017
+value|0x0017
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5212_DEVID_0018
+value|0x0018
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5212_DEVID_0019
+value|0x0019
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5212_AR2413
+value|0x001a
+end_define
+
+begin_comment
+comment|/* AR2413 aka Griffin-lite */
+end_comment
+
+begin_comment
+comment|/* AR5213 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5213_SREV_1_0
+value|0x0055
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5213_SREV_REG
+value|0x4020
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_SUBVENDOR_ID_NOG
 value|0x0e11
 end_define
 
 begin_comment
 comment|/* No 11G subvendor ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SUBVENDOR_ID_NEW_A
+value|0x7065
+end_define
+
+begin_comment
+comment|/* Update device to new RD */
 end_comment
 
 begin_endif
