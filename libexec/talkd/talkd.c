@@ -181,12 +181,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|sockt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|debug
 init|=
 literal|0
@@ -496,7 +490,7 @@ name|cc
 operator|=
 name|sendto
 argument_list|(
-name|sockt
+name|STDIN_FILENO
 argument_list|,
 operator|(
 name|char
