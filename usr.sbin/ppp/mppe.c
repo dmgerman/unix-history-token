@@ -1580,7 +1580,7 @@ modifier|*
 name|MPPEDispOpts
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|)
@@ -2092,7 +2092,7 @@ name|void
 name|MPPEInitOptsOutput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|,
@@ -2108,6 +2108,8 @@ name|mval
 decl_stmt|;
 name|o
 operator|->
+name|hdr
+operator|.
 name|len
 operator|=
 literal|6
@@ -2167,7 +2169,7 @@ name|int
 name|MPPESetOptsOutput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|,
@@ -2299,7 +2301,7 @@ name|int
 name|MPPESetOptsInput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|,
@@ -2560,7 +2562,7 @@ modifier|*
 name|MPPE_InitState
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|)
@@ -2701,7 +2703,7 @@ modifier|*
 name|MPPEInitInput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|)
@@ -2882,7 +2884,7 @@ modifier|*
 name|MPPEInitOutput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|)

@@ -316,7 +316,7 @@ name|int
 name|algorithm
 decl_stmt|;
 name|struct
-name|lcp_opt
+name|fsm_opt
 name|val
 decl_stmt|;
 block|}
@@ -360,7 +360,7 @@ name|state
 decl_stmt|;
 comment|/* Returned by implementations Init() */
 name|struct
-name|lcp_opt
+name|fsm_opt
 name|opt
 decl_stmt|;
 comment|/* Set by implementation's OptInit() */
@@ -445,7 +445,7 @@ name|Disp
 function_decl|)
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 parameter_list|)
 function_decl|;
@@ -483,7 +483,7 @@ name|Set
 function_decl|)
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 parameter_list|,
 specifier|const
@@ -500,7 +500,7 @@ name|Init
 function_decl|)
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 parameter_list|)
 function_decl|;
@@ -582,7 +582,7 @@ name|OptInit
 function_decl|)
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 parameter_list|,
 specifier|const
@@ -598,7 +598,7 @@ name|Set
 function_decl|)
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 parameter_list|,
 specifier|const
@@ -615,7 +615,7 @@ name|Init
 function_decl|)
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 parameter_list|)
 function_decl|;

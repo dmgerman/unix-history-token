@@ -2190,7 +2190,7 @@ modifier|*
 name|DeflateDispOpts
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|)
@@ -2235,7 +2235,7 @@ name|void
 name|DeflateInitOptsOutput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|,
@@ -2248,6 +2248,8 @@ parameter_list|)
 block|{
 name|o
 operator|->
+name|hdr
+operator|.
 name|len
 operator|=
 literal|4
@@ -2295,7 +2297,7 @@ name|int
 name|DeflateSetOptsOutput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|,
@@ -2310,6 +2312,8 @@ if|if
 condition|(
 name|o
 operator|->
+name|hdr
+operator|.
 name|len
 operator|!=
 literal|4
@@ -2392,7 +2396,7 @@ name|int
 name|DeflateSetOptsInput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|,
@@ -2410,6 +2414,8 @@ if|if
 condition|(
 name|o
 operator|->
+name|hdr
+operator|.
 name|len
 operator|!=
 literal|4
@@ -2555,7 +2561,7 @@ modifier|*
 name|DeflateInitInput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|)
@@ -2685,7 +2691,7 @@ modifier|*
 name|DeflateInitOutput
 parameter_list|(
 name|struct
-name|lcp_opt
+name|fsm_opt
 modifier|*
 name|o
 parameter_list|)
