@@ -1742,6 +1742,35 @@ comment|/* assuming reset worked */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Print a backtrace if we can.  */
+end_comment
+
+begin_function
+name|void
+name|backtrace
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DDB
+name|db_print_backtrace
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"Sorry, need DDB option to print backtrace"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
