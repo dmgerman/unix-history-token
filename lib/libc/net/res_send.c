@@ -3203,8 +3203,6 @@ name|wait
 goto|;
 block|}
 block|}
-else|else
-block|{
 name|Perror
 argument_list|(
 name|stderr
@@ -3220,7 +3218,6 @@ expr_stmt|;
 goto|goto
 name|next_ns
 goto|;
-block|}
 block|}
 if|if
 condition|(
