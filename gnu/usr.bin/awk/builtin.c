@@ -4338,6 +4338,7 @@ name|initstate
 argument_list|(
 operator|(
 name|unsigned
+name|long
 operator|)
 literal|1
 argument_list|,
@@ -4411,6 +4412,7 @@ name|initstate
 argument_list|(
 operator|(
 name|unsigned
+name|long
 operator|)
 literal|1
 argument_list|,
