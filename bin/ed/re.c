@@ -67,7 +67,7 @@ begin_decl_stmt
 name|char
 name|errmsg
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 operator|+
 literal|40
 index|]
