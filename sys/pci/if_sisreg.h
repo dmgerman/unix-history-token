@@ -219,14 +219,28 @@ value|0xB8
 end_define
 
 begin_comment
-comment|/* NS DP83815 registers */
+comment|/* NS DP83815/6 registers */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_IHR
+value|0x1C
+end_define
 
 begin_define
 define|#
 directive|define
 name|NS_CLKRUN
 value|0x3C
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_SRR
+value|0x58
 end_define
 
 begin_define
@@ -353,6 +367,31 @@ define|#
 directive|define
 name|NS_CLNRUN_CLKRUN_ENB
 value|0x00000001
+end_define
+
+begin_comment
+comment|/* NS silicon revisions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_SRR_15C
+value|0x302
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_SRR_15D
+value|0x403
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_SRR_16A
+value|0x505
 end_define
 
 begin_define
@@ -2089,6 +2128,13 @@ name|SIS_TYPE_83815
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIS_TYPE_83816
+value|4
+end_define
+
 begin_struct
 struct|struct
 name|sis_softc
@@ -2119,6 +2165,9 @@ modifier|*
 name|sis_intrhand
 decl_stmt|;
 name|device_t
+name|sis_self
+decl_stmt|;
+name|device_t
 name|sis_miibus
 decl_stmt|;
 name|u_int8_t
@@ -2132,6 +2181,9 @@ name|sis_rev
 decl_stmt|;
 name|u_int8_t
 name|sis_link
+decl_stmt|;
+name|u_int
+name|sis_srr
 decl_stmt|;
 name|struct
 name|sis_list_data
