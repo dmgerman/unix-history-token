@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	4.3 82/12/06"
+literal|"@(#)mbuf.c	4.4 82/12/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,11 +85,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"memory utilization:\n"
-argument_list|)
-expr_stmt|;
 name|klseek
 argument_list|(
 name|kmem
@@ -129,7 +124,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"\t%d/%d mbufs in use\n"
+literal|"%d/%d mbufs in use\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -146,7 +141,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d/%d mapped pages in use\n"
+literal|"%d/%d mapped pages in use\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -163,7 +158,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d requests for memory denied\n"
+literal|"%d requests for memory denied\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -200,7 +195,7 @@ name|CLBYTES
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%dKbytes allocated to network (%d%% in use)\n"
+literal|"%dKbytes allocated to network (%d%% in use)\n"
 argument_list|,
 name|totmem
 operator|/
