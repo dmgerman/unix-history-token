@@ -163,7 +163,7 @@ case|case
 name|SVR4_RLIMIT_VMEM
 case|:
 return|return
-name|RLIMIT_RSS
+name|RLIMIT_VMEM
 return|;
 default|default:
 return|return
