@@ -223,16 +223,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
-name|mp_tramp
+name|struct
+name|mtx
+name|ipi_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|ap_boot_mtx
+name|vm_offset_t
+name|mp_tramp
 decl_stmt|;
 end_decl_stmt
 
@@ -783,9 +782,9 @@ decl_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|ap_boot_mtx
+name|ipi_mtx
 argument_list|,
-literal|"ap boot"
+literal|"ipi"
 argument_list|,
 name|NULL
 argument_list|,

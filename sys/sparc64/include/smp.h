@@ -282,16 +282,16 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ipi_cache_args
-name|ipi_cache_args
+name|mtx
+name|ipi_mtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ipi_level_args
-name|ipi_level_args
+name|ipi_cache_args
+name|ipi_cache_args
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,20 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MACHINE_PMAP_H_
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_SYS_MUTEX_H_
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|__inline
@@ -434,6 +448,12 @@ name|ica
 operator|=
 operator|&
 name|ipi_cache_args
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ipi_mtx
+argument_list|)
 expr_stmt|;
 name|ica
 operator|->
@@ -510,6 +530,12 @@ operator|=
 operator|&
 name|ipi_cache_args
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ipi_mtx
+argument_list|)
+expr_stmt|;
 name|ica
 operator|->
 name|ica_mask
@@ -552,12 +578,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MACHINE_PMAP_H_
-end_ifdef
 
 begin_function
 specifier|static
@@ -619,6 +639,12 @@ name|ita
 operator|=
 operator|&
 name|ipi_tlb_args
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ipi_mtx
+argument_list|)
 expr_stmt|;
 name|ita
 operator|->
@@ -728,6 +754,12 @@ name|ita
 operator|=
 operator|&
 name|ipi_tlb_args
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ipi_mtx
+argument_list|)
 expr_stmt|;
 name|ita
 operator|->
@@ -847,6 +879,12 @@ operator|=
 operator|&
 name|ipi_tlb_args
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ipi_mtx
+argument_list|)
+expr_stmt|;
 name|ita
 operator|->
 name|ita_mask
@@ -949,6 +987,12 @@ operator|!=
 literal|0
 condition|)
 empty_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|ipi_mtx
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -957,6 +1001,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _MACHINE_PMAP_H_&& _SYS_MUTEX_H_ */
+end_comment
 
 begin_else
 else|#

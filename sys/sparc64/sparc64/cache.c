@@ -38,6 +38,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -762,9 +774,6 @@ operator|-
 name|DC_TAG_SHIFT
 operator|)
 expr_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|cookie
 operator|=
 name|ipi_dcache_page_inval
@@ -854,9 +863,6 @@ argument_list|(
 name|cookie
 argument_list|)
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -919,9 +925,6 @@ name|PAGE_SHIFT
 operator|-
 name|IC_TAG_SHIFT
 operator|)
-expr_stmt|;
-name|critical_enter
-argument_list|()
 expr_stmt|;
 name|cookie
 operator|=
@@ -1024,12 +1027,6 @@ name|ipi_wait
 argument_list|(
 name|cookie
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|critical_exit
-argument_list|()
 expr_stmt|;
 end_expr_stmt
 
