@@ -442,6 +442,10 @@ name|label
 name|mnt_fslabel
 decl_stmt|;
 comment|/* MAC label for the fs */
+name|int
+name|mnt_nvnodelistsize
+decl_stmt|;
+comment|/* # of vnodes on this mount */
 block|}
 struct|;
 end_struct
