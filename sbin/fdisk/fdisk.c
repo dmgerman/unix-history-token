@@ -967,6 +967,12 @@ literal|"NetBSD"
 block|}
 block|,
 block|{
+literal|0xAC
+block|,
+literal|"IBM JFS"
+block|}
+block|,
+block|{
 literal|0xB7
 block|,
 literal|"BSDI BSD/386 filesystem"
