@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -190,7 +190,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETCONNECTION -- make a connection with the outside world ** **	Parameters: **		none. ** **	Returns: **		The port for mail traffic. ** **	Side Effects: **		Waits for a connection. */
+comment|/* **  GETCONNECTION -- make a connection with the outside world ** **	This routine is horribly contorted to try to get around a bunch **	of 4.1a IPC bugs.  There appears to be nothing we can do to make **	it "right" -- the code to interrupt accepts just doesn't work **	right.  However, this is an attempt to minimize the probablity **	of problems. ** **	Parameters: **		none. ** **	Returns: **		The port for mail traffic. ** **	Side Effects: **		Waits for a connection. */
 end_comment
 
 begin_define
@@ -313,7 +313,7 @@ comment|/* get a socket for the SMTP connection */
 comment|/* do loop is to avoid 4.1b kernel bug (?) */
 name|i
 operator|=
-literal|50
+literal|60
 expr_stmt|;
 do|do
 block|{
@@ -339,7 +339,7 @@ literal|0
 condition|)
 name|sleep
 argument_list|(
-literal|5
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -420,14 +420,6 @@ operator|(
 name|s
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|errno
@@ -442,6 +434,14 @@ expr_stmt|;
 name|sleep
 argument_list|(
 literal|5
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
