@@ -2397,6 +2397,9 @@ condition|)
 block|{
 comment|/* handled by vm_fault now	  */
 comment|/* vm_page_zero_invalid(m, TRUE); */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2426,6 +2429,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2597,6 +2603,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2626,6 +2635,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 name|VM_PAGER_ERROR
 return|;
@@ -2637,6 +2649,9 @@ operator|-
 name|uio
 operator|.
 name|uio_resid
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2787,6 +2802,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3196,6 +3214,9 @@ argument_list|)
 operator|/
 name|PAGE_SIZE
 decl_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3226,6 +3247,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 return|return
 name|rtvals
