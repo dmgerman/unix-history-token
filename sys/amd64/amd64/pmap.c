@@ -764,7 +764,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|pt_entry_t
 modifier|*
 name|get_ptbase
 name|__P
@@ -871,7 +871,7 @@ operator|(
 name|pmap_t
 name|pmap
 operator|,
-name|unsigned
+name|pt_entry_t
 operator|*
 name|ptq
 operator|,
@@ -1016,7 +1016,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|pt_entry_t
 modifier|*
 name|pmap_pte_quick
 name|__P
@@ -1079,7 +1079,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|unsigned
+name|pd_entry_t
 name|pdir4mb
 decl_stmt|;
 end_decl_stmt
@@ -1090,7 +1090,7 @@ end_comment
 
 begin_function
 name|PMAP_INLINE
-name|unsigned
+name|pt_entry_t
 modifier|*
 name|pmap_pte
 parameter_list|(
@@ -1430,7 +1430,7 @@ argument_list|)
 comment|/* 	 * ptemap is used for pmap_pte_quick 	 */
 name|SYSMAP
 argument_list|(
-name|unsigned
+name|pt_entry_t
 operator|*
 argument_list|,
 name|PMAP1
@@ -1522,7 +1522,7 @@ operator|&
 name|CPUID_PSE
 condition|)
 block|{
-name|unsigned
+name|pd_entry_t
 name|ptditmp
 decl_stmt|;
 comment|/* 		 * Note that we have enabled PSE mode 		 */
@@ -1725,9 +1725,6 @@ index|[
 name|KPTDI
 index|]
 operator|=
-operator|(
-name|pd_entry_t
-operator|)
 name|pdir4mb
 expr_stmt|;
 name|cpu_invltlb
@@ -2238,12 +2235,9 @@ name|pmap_t
 name|pmap
 decl_stmt|;
 block|{
-name|unsigned
+name|pd_entry_t
 name|frame
 init|=
-operator|(
-name|unsigned
-operator|)
 name|pmap
 operator|->
 name|pm_pdir
@@ -2263,33 +2257,21 @@ operator|||
 name|frame
 operator|==
 operator|(
-operator|(
-operator|(
-name|unsigned
-operator|)
 name|PTDpde
-operator|)
 operator|&
 name|PG_FRAME
 operator|)
 condition|)
-block|{
 return|return
 name|PTmap
 return|;
-block|}
 comment|/* otherwise, we are alternate address space */
 if|if
 condition|(
 name|frame
 operator|!=
 operator|(
-operator|(
-operator|(
-name|unsigned
-operator|)
 name|APTDpde
-operator|)
 operator|&
 name|PG_FRAME
 operator|)
@@ -2359,14 +2341,8 @@ name|pde
 decl_stmt|,
 name|newpf
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|pde
 operator|=
-operator|(
-name|unsigned
-operator|)
 name|pmap
 operator|->
 name|pm_pdir
@@ -2375,7 +2351,10 @@ name|va
 operator|>>
 name|PDRSHIFT
 index|]
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pde
 operator|!=
 literal|0
 condition|)
@@ -2383,9 +2362,6 @@ block|{
 name|pd_entry_t
 name|frame
 init|=
-operator|(
-name|unsigned
-operator|)
 name|pmap
 operator|->
 name|pm_pdir
@@ -2406,34 +2382,23 @@ decl_stmt|;
 comment|/* are we current address space or kernel? */
 if|if
 condition|(
-operator|(
 name|pmap
 operator|==
 name|kernel_pmap
-operator|)
 operator|||
-operator|(
 name|frame
 operator|==
 operator|(
-operator|(
-operator|(
-name|unsigned
-operator|)
 name|PTDpde
-operator|)
 operator|&
 name|PG_FRAME
 operator|)
-operator|)
 condition|)
-block|{
 return|return
 name|PTmap
 operator|+
 name|index
 return|;
-block|}
 name|newpf
 operator|=
 name|pde
@@ -2521,29 +2486,33 @@ comment|/* XXX FIXME */
 name|vm_offset_t
 name|pdirindex
 decl_stmt|;
+if|if
+condition|(
+name|pmap
+operator|==
+literal|0
+condition|)
+return|return;
 name|pdirindex
 operator|=
 name|va
 operator|>>
 name|PDRSHIFT
 expr_stmt|;
-if|if
-condition|(
-name|pmap
-operator|&&
-operator|(
 name|rtval
 operator|=
-operator|(
-name|unsigned
-operator|)
 name|pmap
 operator|->
 name|pm_pdir
 index|[
 name|pdirindex
 index|]
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rtval
+operator|!=
+literal|0
 condition|)
 block|{
 name|pt_entry_t
@@ -8088,7 +8057,7 @@ name|defined
 argument_list|(
 name|PMAP_DIAGNOSTIC
 argument_list|)
-block|else { 		pd_entry_t *pdeaddr = pmap_pde(pmap, va); 		if (((origpte = *pdeaddr)& PG_V) == 0) {  			panic("pmap_enter: invalid kernel page table page, pdir=%p, pde=%p, va=%p\n", 				pmap->pm_pdir[PTDPTDI], origpte, va); 		} 	}
+block|else { 		pd_entry_t *pdeaddr = pmap_pde(pmap, va); 		origpte = *pdeaddr; 		if ((origpte& PG_V) == 0) {  			panic("pmap_enter: invalid kernel page table page, pdir=%p, pde=%p, va=%p\n", 				pmap->pm_pdir[PTDPTDI], origpte, va); 		} 	}
 endif|#
 directive|endif
 name|pte

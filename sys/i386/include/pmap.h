@@ -1120,7 +1120,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+name|pt_entry_t
 modifier|*
 name|pmap_pte
 name|__P
