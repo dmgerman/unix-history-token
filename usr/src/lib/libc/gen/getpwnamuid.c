@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getpwnamuid.c	4.7	85/01/21	*/
+comment|/*	getpwnamuid.c	4.7	85/02/04	*/
 end_comment
 
 begin_include
@@ -30,26 +30,6 @@ end_include
 begin_decl_stmt
 specifier|static
 name|char
-name|PASSWD
-index|[]
-init|=
-literal|"/etc/passwd"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|EMPTY
-index|[]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
 name|line
 index|[
 name|BUFSIZ
@@ -64,6 +44,18 @@ specifier|static
 name|struct
 name|passwd
 name|passwd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * The following are shared with getpwent.c  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|_pw_file
 decl_stmt|;
 end_decl_stmt
 
@@ -319,7 +311,7 @@ name|_pw_db
 operator|=
 name|dbm_open
 argument_list|(
-name|PASSWD
+name|_pw_file
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -356,6 +348,11 @@ name|pw_name
 argument_list|)
 condition|)
 empty_stmt|;
+if|if
+condition|(
+operator|!
+name|_pw_stayopen
+condition|)
 name|endpwent
 argument_list|()
 expr_stmt|;
@@ -369,9 +366,10 @@ if|if
 condition|(
 name|flock
 argument_list|(
+name|dbm_dirfno
+argument_list|(
 name|_pw_db
-operator|->
-name|dbm_dirf
+argument_list|)
 argument_list|,
 name|LOCK_SH
 argument_list|)
@@ -423,9 +421,10 @@ name|void
 operator|)
 name|flock
 argument_list|(
+name|dbm_dirfno
+argument_list|(
 name|_pw_db
-operator|->
-name|dbm_dirf
+argument_list|)
 argument_list|,
 name|LOCK_UN
 argument_list|)
@@ -494,7 +493,7 @@ name|_pw_db
 operator|=
 name|dbm_open
 argument_list|(
-name|PASSWD
+name|_pw_file
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -528,6 +527,11 @@ operator|!=
 name|uid
 condition|)
 empty_stmt|;
+if|if
+condition|(
+operator|!
+name|_pw_stayopen
+condition|)
 name|endpwent
 argument_list|()
 expr_stmt|;
@@ -541,9 +545,10 @@ if|if
 condition|(
 name|flock
 argument_list|(
+name|dbm_dirfno
+argument_list|(
 name|_pw_db
-operator|->
-name|dbm_dirf
+argument_list|)
 argument_list|,
 name|LOCK_SH
 argument_list|)
@@ -598,9 +603,10 @@ name|void
 operator|)
 name|flock
 argument_list|(
+name|dbm_dirfno
+argument_list|(
 name|_pw_db
-operator|->
-name|dbm_dirf
+argument_list|)
 argument_list|,
 name|LOCK_UN
 argument_list|)
