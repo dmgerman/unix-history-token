@@ -1285,15 +1285,14 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
+comment|/* XXX: This is the alias, but that should be good enough */
+name|sprintf
+argument_list|(
 name|cp
 operator|->
-name|cn_dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
+name|cn_name
 argument_list|,
-literal|0
+literal|"ofwcons"
 argument_list|)
 expr_stmt|;
 name|cp
