@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_re.c	6.1 %G%"
+literal|"@(#)ex_re.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,6 +307,10 @@ operator||=
 literal|01
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/*  * This code is commented out for now.  The problem is that we don't  * fix up the undo area the way we should.  Basically, I think what has  * to be done is to copy the undo area down (since we shrunk everything)  * and move the various pointers into it down too.  I will do this later  * when I have time. (Mark, 10-20-80)  */
 comment|/* 	 * Special case: g/.../d (avoid n^2 algorithm) 	 */
 if|if
 condition|(
@@ -337,6 +341,8 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|inopen

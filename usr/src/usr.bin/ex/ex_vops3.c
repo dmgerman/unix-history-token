@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops3.c	6.1 %G%"
+literal|"@(#)ex_vops3.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1652,11 +1652,17 @@ operator|!
 name|lnext
 argument_list|()
 condition|)
+block|{
+name|wdot
+operator|=
+name|NOLINE
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|c
 operator|=
 operator|*

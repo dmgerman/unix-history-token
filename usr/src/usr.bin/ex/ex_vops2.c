@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops2.c	6.1 %G%"
+literal|"@(#)ex_vops2.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,6 +978,32 @@ argument_list|,
 name|vcline
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"restoring doomed from %d to %d\n"
+argument_list|,
+name|doomed
+argument_list|,
+name|savedoomed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|ch
+operator|==
+literal|'R'
+condition|)
 name|doomed
 operator|=
 name|savedoomed

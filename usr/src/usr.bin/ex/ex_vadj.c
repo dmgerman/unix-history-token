@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vadj.c	6.1 %G%"
+literal|"@(#)ex_vadj.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,31 +383,6 @@ index|[
 name|l
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ADEBUG
-if|if
-condition|(
-name|trace
-condition|)
-name|tfixnl
-argument_list|()
-operator|,
-name|fprintf
-argument_list|(
-name|trace
-argument_list|,
-literal|"vreopen(%d, %d, %d)\n"
-argument_list|,
-name|p
-argument_list|,
-name|lineno
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|d
 operator|=
 name|vp
@@ -468,43 +443,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-if|if
-condition|(
-name|trace
-condition|)
-name|fprintf
-argument_list|(
-name|trace
-argument_list|,
-literal|"before pline in vreopen\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|pline
 argument_list|(
 name|lineno
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-if|if
-condition|(
-name|trace
-condition|)
-name|fprintf
-argument_list|(
-name|trace
-argument_list|,
-literal|"after pline in vreopen\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * When we are typing part of a line for hardcopy open, don't 	 * want to type the '$' marking an end of line if in list mode. 	 */
 if|if
 condition|(

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	6.1 %G%"
+literal|"@(#)ex_io.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1630,20 +1630,37 @@ block|{
 case|case
 literal|0405
 case|:
+comment|/* Interdata? overlay */
 case|case
 literal|0407
 case|:
+comment|/* unshared */
 case|case
 literal|0410
 case|:
+comment|/* shared text */
 case|case
 literal|0411
 case|:
+comment|/* separate I/D */
+case|case
+literal|0413
+case|:
+comment|/* VM/Unix demand paged */
+case|case
+literal|0430
+case|:
+comment|/* PDP-11 Overlay shared */
+case|case
+literal|0431
+case|:
+comment|/* PDP-11 Overlay sep I/D */
 name|error
 argument_list|(
 literal|" Executable"
 argument_list|)
 expr_stmt|;
+comment|/* 		 * We do not forbid the editing of portable archives 		 * because it is reasonable to edit them, especially 		 * if they are archives of text files.  This is 		 * especially useful if you archive source files together 		 * and copy them to another system with ~%take, since 		 * the files sometimes show up munged and must be fixed. 		 */
 case|case
 literal|0177545
 case|:

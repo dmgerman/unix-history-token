@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_voper.c	6.1 %G%"
+literal|"@(#)ex_voper.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +574,37 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"after lmatchp in %, dot=%d, wdot=%d, dol=%d\n"
+argument_list|,
+name|lineno
+argument_list|(
+name|dot
+argument_list|)
+argument_list|,
+name|lineno
+argument_list|(
+name|wdot
+argument_list|)
+argument_list|,
+name|lineno
+argument_list|(
+name|dol
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|getDOT
 argument_list|()
 expr_stmt|;

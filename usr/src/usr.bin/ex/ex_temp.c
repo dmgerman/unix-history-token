@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_temp.c	6.1 %G%"
+literal|"@(#)ex_temp.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2849,6 +2849,12 @@ name|strreg
 modifier|*
 name|sp
 decl_stmt|;
+name|char
+name|savelb
+index|[
+name|LBSIZE
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|isdigit
@@ -2944,6 +2950,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|CP
+argument_list|(
+name|savelb
+argument_list|,
+name|linebuf
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|addr
@@ -3005,6 +3018,13 @@ argument_list|()
 expr_stmt|;
 name|killed
 argument_list|()
+expr_stmt|;
+name|CP
+argument_list|(
+name|linebuf
+argument_list|,
+name|savelb
+argument_list|)
 expr_stmt|;
 block|}
 end_block

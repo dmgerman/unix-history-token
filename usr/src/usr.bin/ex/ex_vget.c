@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vget.c	6.1 %G%"
+literal|"@(#)ex_vget.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2198,6 +2198,12 @@ name|line
 modifier|*
 name|p
 decl_stmt|;
+name|char
+name|savelb
+index|[
+literal|1024
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2268,7 +2274,23 @@ name|fprintf
 argument_list|(
 name|trace
 argument_list|,
-literal|"  ["
+literal|"  [\n"
+argument_list|)
+expr_stmt|;
+name|CP
+argument_list|(
+name|savelb
+argument_list|,
+name|linebuf
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"linebuf = '%s'\n"
+argument_list|,
+name|linebuf
 argument_list|)
 expr_stmt|;
 for|for
@@ -2286,6 +2308,7 @@ condition|;
 name|p
 operator|++
 control|)
+block|{
 name|fprintf
 argument_list|(
 name|trace
@@ -2296,11 +2319,34 @@ operator|*
 name|p
 argument_list|)
 expr_stmt|;
+name|getline
+argument_list|(
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"'%s'\n"
+argument_list|,
+name|linebuf
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|trace
 argument_list|,
 literal|"]\n"
+argument_list|)
+expr_stmt|;
+name|CP
+argument_list|(
+name|linebuf
+argument_list|,
+name|savelb
 argument_list|)
 expr_stmt|;
 block|}
