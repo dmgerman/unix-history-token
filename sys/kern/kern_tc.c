@@ -1828,8 +1828,11 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Time stepped from %d.%09ld to %d.%09ld\n"
+literal|"Time stepped from %jd.%09ld to %jd.%09ld\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ts2
 operator|.
 name|tv_sec
@@ -1838,6 +1841,9 @@ name|ts2
 operator|.
 name|tv_nsec
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ts
 operator|->
 name|tv_sec
