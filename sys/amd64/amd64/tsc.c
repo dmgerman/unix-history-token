@@ -101,14 +101,6 @@ name|tsc_is_broken
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|u_int
-name|tsc_present
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -193,7 +185,11 @@ literal|0
 block|,
 comment|/* frequency */
 literal|"TSC"
+block|,
 comment|/* name */
+literal|800
+block|,
+comment|/* quality (adjusted in code) */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -298,7 +294,6 @@ name|tsc_timecounter
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
