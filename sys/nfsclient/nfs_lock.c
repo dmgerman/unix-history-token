@@ -502,7 +502,6 @@ name|a_op
 operator|==
 name|F_GETLK
 expr_stmt|;
-comment|/* 	 * XXX: the lm_cred assignment below directly exports a ucred 	 * structure to userland.  This is probably wrong, and should at 	 * least be xucred. 	 */
 name|bcopy
 argument_list|(
 name|VFSTONFS
