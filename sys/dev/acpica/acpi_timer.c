@@ -116,14 +116,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|bus_space_handle_t
-name|timer_bsh
+name|acpi_timer_bsh
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|bus_space_tag_t
-name|timer_bst
+name|acpi_timer_bst
 decl_stmt|;
 end_decl_stmt
 
@@ -214,7 +214,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|acpi_timer_test
+name|acpi_timer_boot_test
 parameter_list|(
 name|void
 parameter_list|)
@@ -224,7 +224,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|u_int
-name|read_counter
+name|acpi_timer_read
 parameter_list|(
 name|void
 parameter_list|)
@@ -234,7 +234,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|test_counter
+name|acpi_timer_test
 parameter_list|(
 name|void
 parameter_list|)
@@ -341,35 +341,23 @@ name|timecounter
 name|acpi_timer_timecounter
 init|=
 block|{
-operator|.
-name|tc_get_timecount
-operator|=
 name|acpi_timer_get_timecount_safe
 block|,
-operator|.
-name|tc_poll_pps
-operator|=
+comment|/* get_timecount function */
 literal|0
 block|,
-operator|.
-name|tc_counter_mask
-operator|=
+comment|/* no poll_pps */
 literal|0
 block|,
-operator|.
-name|tc_frequency
-operator|=
+comment|/* no default counter_mask */
 literal|0
 block|,
-operator|.
-name|tc_name
-operator|=
+comment|/* no default frequency */
 literal|"ACPI"
 block|,
-operator|.
-name|tc_quality
-operator|=
+comment|/* name */
 literal|1000
+comment|/* quality */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -377,7 +365,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|u_int
-name|read_counter
+name|acpi_timer_read
 parameter_list|()
 block|{
 name|uint32_t
@@ -387,18 +375,18 @@ name|tv
 operator|=
 name|bus_space_read_4
 argument_list|(
-name|timer_bst
+name|acpi_timer_bst
 argument_list|,
-name|timer_bsh
+name|acpi_timer_bsh
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|bus_space_barrier
 argument_list|(
-name|timer_bst
+name|acpi_timer_bst
 argument_list|,
-name|timer_bsh
+name|acpi_timer_bsh
 argument_list|,
 literal|0
 argument_list|,
@@ -600,14 +588,14 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-name|timer_bsh
+name|acpi_timer_bsh
 operator|=
 name|rman_get_bushandle
 argument_list|(
 name|acpi_timer_reg
 argument_list|)
 expr_stmt|;
-name|timer_bst
+name|acpi_timer_bst
 operator|=
 name|rman_get_bustag
 argument_list|(
@@ -648,7 +636,7 @@ argument_list|(
 literal|"debug.acpi.timer_test"
 argument_list|)
 condition|)
-name|acpi_timer_test
+name|acpi_timer_boot_test
 argument_list|()
 expr_stmt|;
 comment|/*      * If all tests of the counter succeed, use the ACPI-fast method.  If      * at least one failed, default to using the safe routine, which reads      * the timer multiple times to get a consistent value before returning.      */
@@ -671,7 +659,7 @@ operator|++
 control|)
 name|j
 operator|+=
-name|test_counter
+name|acpi_timer_test
 argument_list|()
 expr_stmt|;
 if|if
@@ -804,7 +792,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 operator|)
 return|;
@@ -835,12 +823,12 @@ name|u3
 decl_stmt|;
 name|u2
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 name|u3
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 do|do
@@ -855,7 +843,7 @@ name|u3
 expr_stmt|;
 name|u3
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 block|}
@@ -868,12 +856,6 @@ operator|||
 name|u2
 operator|>
 name|u3
-operator|||
-name|u3
-operator|-
-name|u1
-operator|>
-literal|15
 condition|)
 do|;
 return|return
@@ -1011,7 +993,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|test_counter
+name|acpi_timer_test
 parameter_list|()
 block|{
 name|uint32_t
@@ -1038,7 +1020,7 @@ literal|0
 expr_stmt|;
 name|last
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 for|for
@@ -1057,7 +1039,7 @@ control|)
 block|{
 name|this
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 name|delta
@@ -1173,7 +1155,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|acpi_timer_test
+name|acpi_timer_boot_test
 parameter_list|(
 name|void
 parameter_list|)
@@ -1187,17 +1169,17 @@ name|u3
 decl_stmt|;
 name|u1
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 name|u2
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 name|u3
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 name|device_printf
@@ -1255,7 +1237,7 @@ name|u3
 expr_stmt|;
 name|u3
 operator|=
-name|read_counter
+name|acpi_timer_read
 argument_list|()
 expr_stmt|;
 block|}
