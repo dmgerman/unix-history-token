@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -246,11 +246,19 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_43
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
+end_if
 
 begin_struct
 struct|struct
@@ -304,6 +312,21 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_43 || COMPAT_SUNOS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
 
 begin_struct
 struct|struct
