@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.32 (Berkeley) %G%"
+literal|"@(#)setup.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,6 +475,16 @@ name|secsize
 operator|=
 name|DEV_BSIZE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
+comment|/* 	 * On the tahoe, the disk label and the disk driver disagree. 	 * The label knows that sectors are 512 bytes, but the disk 	 * drivers will only transfer in 1024 sized pieces. 	 */
+name|secsize
+operator|=
+literal|1024
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Read in the superblock, looking for alternates if necessary 	 */
 if|if
 condition|(
