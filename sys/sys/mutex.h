@@ -879,7 +879,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|__mtx_lock_flags((m), (opts), LOCK_FILE, LOCK_LINE)
+value|_get_sleep_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -892,7 +892,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|__mtx_unlock_flags((m), (opts), LOCK_FILE, LOCK_LINE)
+value|_rel_sleep_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -905,7 +905,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|__mtx_lock_spin_flags((m), (opts), LOCK_FILE, LOCK_LINE)
+value|_get_spin_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -918,77 +918,13 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|__mtx_unlock_spin_flags((m), (opts), LOCK_FILE, LOCK_LINE)
+value|_rel_spin_lock((m))
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|__mtx_lock_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|opts
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-value|do {			\ 	MPASS(curthread != NULL);					\ 	KASSERT(((opts)& MTX_NOSWITCH) == 0,				\ 	    ("MTX_NOSWITCH used at %s:%d", (file), (line)));		\ 	_get_sleep_lock((m), curthread, (opts), (file), (line));	\ 	LOCK_LOG_LOCK("LOCK",&(m)->mtx_object, opts, m->mtx_recurse,	\ 	    (file), (line));						\ 	WITNESS_LOCK(&(m)->mtx_object, (opts) | LOP_EXCLUSIVE, (file),	\ 	    (line));							\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__mtx_lock_spin_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|opts
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-value|do {			\ 	MPASS(curthread != NULL);					\ 	_get_spin_lock((m), curthread, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("LOCK",&(m)->mtx_object, opts, m->mtx_recurse,	\ 	    (file), (line));						\ 	WITNESS_LOCK(&(m)->mtx_object, (opts) | LOP_EXCLUSIVE, (file),	\ 	    (line));							\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__mtx_unlock_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|opts
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-value|do {			\ 	MPASS(curthread != NULL);					\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_UNLOCK(&(m)->mtx_object, (opts) | LOP_EXCLUSIVE,	\ 	    (file), (line));						\ 	LOCK_LOG_LOCK("UNLOCK",&(m)->mtx_object, (opts),		\ 	    (m)->mtx_recurse, (file), (line));				\ 	_rel_sleep_lock((m), curthread, (opts), (file), (line));	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__mtx_unlock_spin_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|opts
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-value|do {		\ 	MPASS(curthread != NULL);					\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_UNLOCK(&(m)->mtx_object, (opts) | LOP_EXCLUSIVE,	\ 	    (file), (line));						\ 	LOCK_LOG_LOCK("UNLOCK",&(m)->mtx_object, (opts),		\ 	    (m)->mtx_recurse, (file), (line));				\ 	_rel_spin_lock((m));						\ } while (0)
-end_define
 
 begin_define
 define|#
