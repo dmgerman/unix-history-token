@@ -7047,6 +7047,11 @@ argument_list|,
 name|FXP_SCB_INTR_DISABLE
 argument_list|)
 expr_stmt|;
+name|FXP_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|fxp_poll
 argument_list|(
 name|ifp
@@ -7054,11 +7059,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|FXP_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return;
