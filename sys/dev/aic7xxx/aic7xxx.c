@@ -34547,10 +34547,38 @@ operator|&=
 operator|~
 name|AHC_TQINFIFO_BLOCKED
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("Incoming command from %d for %d:%d%s\n", 	       initiator, target, lun, 	       lstate == ahc->black_hole ? "(Black Holed)" : "");
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+if|if
+condition|(
+name|ahc_debug
+operator|&
+name|AHC_SHOW_TQIN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Incoming command from %d for %d:%d%s\n"
+argument_list|,
+name|initiator
+argument_list|,
+name|target
+argument_list|,
+name|lun
+argument_list|,
+name|lstate
+operator|==
+name|ahc
+operator|->
+name|black_hole
+condition|?
+literal|"(Black Holed)"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|SLIST_REMOVE_HEAD
@@ -34762,10 +34790,32 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * We weren't allowed to disconnect. 		 * We're hanging on the bus until a 		 * continue target I/O comes in response 		 * to this accept tio. 		 */
-if|#
-directive|if
-literal|0
-block|printf("Received Immediate Command %d:%d:%d - %p\n", 		       initiator, target, lun, ahc->pending_device);
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+if|if
+condition|(
+name|ahc_debug
+operator|&
+name|AHC_SHOW_TQIN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Received Immediate Command %d:%d:%d - %p\n"
+argument_list|,
+name|initiator
+argument_list|,
+name|target
+argument_list|,
+name|lun
+argument_list|,
+name|ahc
+operator|->
+name|pending_device
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|ahc
