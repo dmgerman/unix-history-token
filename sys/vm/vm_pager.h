@@ -689,6 +689,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  *	vm_pager_haspage  *  *	Check to see if an object's pager has the requested page.  The  *	object's pager will also set before and after to give the caller  *	some idea of the number of pages before and after the requested  *	page can be I/O'd efficiently.  *  *	This routine does not have to be called at any particular spl.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline

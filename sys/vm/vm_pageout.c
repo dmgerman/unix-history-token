@@ -4223,6 +4223,9 @@ decl_stmt|;
 name|int
 name|page_shortage
 decl_stmt|;
+name|int
+name|s0
+decl_stmt|;
 name|page_shortage
 operator|=
 operator|(
@@ -4260,6 +4263,11 @@ operator|<=
 literal|0
 condition|)
 return|return;
+name|s0
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|pcount
 operator|=
 name|cnt
@@ -4618,6 +4626,11 @@ operator|=
 name|next
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
