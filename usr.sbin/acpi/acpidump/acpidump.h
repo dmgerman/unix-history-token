@@ -1161,13 +1161,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|sflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|tflag
 decl_stmt|;
 end_decl_stmt

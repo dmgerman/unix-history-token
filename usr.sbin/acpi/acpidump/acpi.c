@@ -4015,8 +4015,6 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|sflag
-operator|&&
 name|ssdt
 operator|!=
 name|NULL
@@ -4105,8 +4103,6 @@ expr_stmt|;
 comment|/* Write out any SSDTs (if present and the user requested this.) */
 if|if
 condition|(
-name|sflag
-operator|&&
 name|rsdt
 operator|!=
 name|NULL
