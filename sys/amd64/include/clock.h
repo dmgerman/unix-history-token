@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.20 1996/10/25 13:01:08 bde Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.21 1996/10/30 22:38:34 asami Exp $  */
 end_comment
 
 begin_ifndef
@@ -329,45 +329,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|rtc_serialcombit
-name|__P
-argument_list|(
-operator|(
-name|int
-name|i
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|rtc_serialcom
-name|__P
-argument_list|(
-operator|(
-name|int
-name|i
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|rtc_outb
-name|__P
-argument_list|(
-operator|(
-name|int
-name|val
 operator|)
 argument_list|)
 decl_stmt|;
