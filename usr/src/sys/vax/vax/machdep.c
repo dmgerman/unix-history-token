@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3813,16 +3813,12 @@ end_decl_stmt
 begin_macro
 name|boot
 argument_list|(
-argument|paniced
-argument_list|,
 argument|arghowto
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|paniced
-decl_stmt|,
 name|arghowto
 decl_stmt|;
 end_decl_stmt
@@ -4052,9 +4048,9 @@ else|else
 block|{
 if|if
 condition|(
-name|paniced
-operator|==
-name|RB_PANIC
+name|howto
+operator|&
+name|RB_DUMP
 condition|)
 block|{
 name|doadump
