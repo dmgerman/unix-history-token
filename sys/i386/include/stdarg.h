@@ -106,6 +106,17 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|__va_size
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(((sizeof(type) + sizeof(int) - 1) / sizeof(int)) * sizeof(int))
+end_define
+
+begin_define
+define|#
+directive|define
 name|va_start
 parameter_list|(
 name|ap
@@ -120,17 +131,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|__va_size
-parameter_list|(
-name|type
-parameter_list|)
-define|\
-value|(((sizeof(type) + sizeof(int) - 1) / sizeof(int)) * sizeof(int))
-end_define
 
 begin_define
 define|#
