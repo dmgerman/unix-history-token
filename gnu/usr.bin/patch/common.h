@@ -99,6 +99,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Snprintf
+value|(void)snprintf
+end_define
+
+begin_define
+define|#
+directive|define
 name|Mktemp
 value|(void)mktemp
 end_define
@@ -115,6 +122,20 @@ define|#
 directive|define
 name|Strcat
 value|(void)strcat
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strlcpy
+value|(void)strlcpy
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strlcat
+value|(void)strlcat
 end_define
 
 begin_comment
