@@ -158,7 +158,7 @@ value|20
 end_define
 
 begin_comment
-comment|/*   * Swap size limit for auto-partitioning  */
+comment|/*  * Swap size limit for auto-partitioning (4G).  */
 end_comment
 
 begin_define
@@ -4248,7 +4248,7 @@ expr_stmt|;
 name|clear_wins
 argument_list|()
 expr_stmt|;
-comment|/*** This is where we assign focus to new label so it shows ***/
+comment|/* This is where we assign focus to new label so it shows. */
 block|{
 name|int
 name|i
