@@ -10714,7 +10714,7 @@ begin_define
 define|#
 directive|define
 name|BGE_JRAWLEN
-value|(BGE_JUMBO_FRAMELEN + ETHER_ALIGN)
+value|(BGE_JUMBO_FRAMELEN + ETHER_ALIGN + sizeof(u_int64_t))
 end_define
 
 begin_define
@@ -10744,6 +10744,20 @@ directive|define
 name|BGE_JMEM
 value|((BGE_JLEN * BGE_JSLOTS) + BGE_RESID)
 end_define
+
+begin_struct
+struct|struct
+name|bge_jslot
+block|{
+name|caddr_t
+name|bge_buf
+decl_stmt|;
+name|int
+name|bge_inuse
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Ring structures. Most of these reside in host memory and we tell  * the NIC where they are via the ring control blocks. The exceptions  * are the tx and command rings, which live in NIC memory and which  * we access via the shared memory window.  */
@@ -10846,7 +10860,8 @@ name|BGE_MINI_RX_RING_CNT
 index|]
 decl_stmt|;
 comment|/* Stick the jumbo mem management stuff here too. */
-name|caddr_t
+name|struct
+name|bge_jslot
 name|bge_jslots
 index|[
 name|BGE_JSLOTS
