@@ -5984,9 +5984,9 @@ literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: moused [-DRcdfs] [-I file] [-F rate] [-r resolution] [-S baudrate]"
 argument_list|,
-literal|"              [-a X [,Y]] [-C threshold] [-m N=M] [-w N] [-z N]"
+literal|"              [-V [-U threshold]] [-a X [,Y]] [-C threshold] [-m N=M] [-w N]"
 argument_list|,
-literal|"              [-t<mousetype>] [-l level] [-3 [-E timeout]] -p<port>"
+literal|"              [-z N] [-t<mousetype>] [-l level] [-3 [-E timeout]] -p<port>"
 argument_list|,
 literal|"       moused [-d] -i<port|if|type|model|all> -p<port>"
 argument_list|)
