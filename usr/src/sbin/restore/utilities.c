@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.9	(Berkeley)	83/04/11"
+literal|"@(#)utilities.c	3.10	(Berkeley)	83/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,20 +393,23 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"renameit"
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"Cannot rename %s to %s\n"
+name|stderr
+argument_list|,
+literal|"Warning: cannot rename %s to %s\n"
 argument_list|,
 name|from
 argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+literal|"rename"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|vprintf
 argument_list|(
@@ -565,6 +568,19 @@ argument_list|,
 literal|"removenode: non-empty directory"
 argument_list|)
 expr_stmt|;
+name|ep
+operator|->
+name|e_flags
+operator||=
+name|REMOVED
+expr_stmt|;
+name|ep
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|TMPNAME
+expr_stmt|;
 name|cp
 operator|=
 name|myname
@@ -582,32 +598,25 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"removenode"
+name|stderr
+argument_list|,
+literal|"Warning: "
 argument_list|)
 expr_stmt|;
-name|panic
+name|fflush
 argument_list|(
-literal|"Cannot remove node %s\n"
-argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-name|ep
-operator|->
-name|e_flags
-operator||=
-name|REMOVED
-expr_stmt|;
-name|ep
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|TMPNAME
-expr_stmt|;
 name|vprintf
 argument_list|(
 name|stdout
@@ -658,6 +667,19 @@ argument_list|,
 literal|"removeleaf: not a leaf"
 argument_list|)
 expr_stmt|;
+name|ep
+operator|->
+name|e_flags
+operator||=
+name|REMOVED
+expr_stmt|;
+name|ep
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|TMPNAME
+expr_stmt|;
 name|cp
 operator|=
 name|myname
@@ -675,32 +697,25 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"removeleaf"
+name|stderr
+argument_list|,
+literal|"Warning: "
 argument_list|)
 expr_stmt|;
-name|panic
+name|fflush
 argument_list|(
-literal|"Cannot remove leaf %s\n"
-argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-name|ep
-operator|->
-name|e_flags
-operator||=
-name|REMOVED
-expr_stmt|;
-name|ep
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|TMPNAME
-expr_stmt|;
 name|vprintf
 argument_list|(
 name|stdout
@@ -765,20 +780,23 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"linkit"
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"Cannot create symbolic link %s->%s\n"
+name|stderr
+argument_list|,
+literal|"Warning: cannot create symbolic link %s->%s\n"
 argument_list|,
 name|new
 argument_list|,
 name|existing
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+literal|"symlink"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 block|}
 elseif|else
@@ -801,20 +819,23 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"linkit"
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"Cannot create hard link %s->%s\n"
+name|stderr
+argument_list|,
+literal|"Warning: cannot create hard link %s->%s\n"
 argument_list|,
 name|new
 argument_list|,
 name|existing
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+literal|"link"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 block|}
 else|else
