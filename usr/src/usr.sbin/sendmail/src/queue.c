@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.47 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.48 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.47 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.48 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4925,6 +4925,12 @@ operator||=
 name|QGOODUID
 expr_stmt|;
 comment|/* flag as a "ctladdr"  */
+name|a
+operator|->
+name|q_mailer
+operator|=
+name|LocalMailer
+expr_stmt|;
 return|return
 name|a
 return|;

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.48 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.49 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.48 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.49 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,7 +296,7 @@ name|tTd
 argument_list|(
 literal|15
 argument_list|,
-literal|15
+literal|101
 argument_list|)
 condition|)
 operator|(
@@ -915,7 +915,7 @@ name|tTd
 argument_list|(
 literal|16
 argument_list|,
-literal|14
+literal|101
 argument_list|)
 condition|)
 block|{
