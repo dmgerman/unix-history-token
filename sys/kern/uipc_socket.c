@@ -6628,6 +6628,9 @@ case|case
 name|SO_TIMESTAMP
 case|:
 case|case
+name|SO_BINTIME
+case|:
+case|case
 name|SO_NOSIGPIPE
 case|:
 name|error
@@ -7494,6 +7497,9 @@ name|SO_OOBINLINE
 case|:
 case|case
 name|SO_TIMESTAMP
+case|:
+case|case
+name|SO_BINTIME
 case|:
 case|case
 name|SO_NOSIGPIPE

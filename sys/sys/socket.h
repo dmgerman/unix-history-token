@@ -483,6 +483,17 @@ begin_comment
 comment|/* there is an accept filter */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_BINTIME
+value|0x2000
+end_define
+
+begin_comment
+comment|/* timestamp received dgram traffic */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -2050,6 +2061,17 @@ end_define
 
 begin_comment
 comment|/* process creds (struct cmsgcred) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCM_BINTIME
+value|0x04
+end_define
+
+begin_comment
+comment|/* timestamp (struct bintime) */
 end_comment
 
 begin_endif
