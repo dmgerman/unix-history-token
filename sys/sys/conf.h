@@ -51,15 +51,11 @@ name|buf
 struct_decl|;
 end_struct_decl
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|snaphead
-argument_list|,
-name|inode
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_struct_decl
+struct_decl|struct
+name|snapdata
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -251,18 +247,10 @@ name|__sid_bsize_best
 decl_stmt|;
 comment|/* optimal block size */
 name|struct
-name|snaphead
-name|__sid_snapshots
-decl_stmt|;
-name|daddr_t
-name|__sid_snaplistsize
-decl_stmt|;
-comment|/* size of snapblklist. */
-name|daddr_t
+name|snapdata
 modifier|*
-name|__sid_snapblklist
+name|__sid_snapdata
 decl_stmt|;
-comment|/* known snapshot blocks. */
 name|int
 function_decl|(
 modifier|*
@@ -327,22 +315,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|si_snapshots
-value|__si_u.__si_disk.__sid_snapshots
-end_define
-
-begin_define
-define|#
-directive|define
-name|si_snaplistsize
-value|__si_u.__si_disk.__sid_snaplistsize
-end_define
-
-begin_define
-define|#
-directive|define
-name|si_snapblklist
-value|__si_u.__si_disk.__sid_snapblklist
+name|si_snapdata
+value|__si_u.__si_disk.__sid_snapdata
 end_define
 
 begin_define

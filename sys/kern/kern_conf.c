@@ -1169,14 +1169,6 @@ operator|->
 name|si_children
 argument_list|)
 expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|si
-operator|->
-name|si_snapshots
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|si
