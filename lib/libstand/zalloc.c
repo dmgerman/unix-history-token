@@ -746,6 +746,12 @@ name|base
 operator|+
 name|bytes
 expr_stmt|;
+name|mp
+operator|->
+name|mp_Size
+operator|=
+name|bytes
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -774,7 +780,24 @@ operator|->
 name|mp_Base
 condition|)
 block|{
-comment|/* mp->mp_Size += (char *)mp->mp_Base - (char *)base; */
+name|mp
+operator|->
+name|mp_Size
+operator|+=
+operator|(
+name|char
+operator|*
+operator|)
+name|mp
+operator|->
+name|mp_Base
+operator|-
+operator|(
+name|char
+operator|*
+operator|)
+name|base
+expr_stmt|;
 name|mp
 operator|->
 name|mp_Used
@@ -817,7 +840,22 @@ operator|>
 name|pend
 condition|)
 block|{
-comment|/* mp->mp_Size += (char *)base - (char *)pend; */
+name|mp
+operator|->
+name|mp_Size
+operator|+=
+operator|(
+name|char
+operator|*
+operator|)
+name|base
+operator|-
+operator|(
+name|char
+operator|*
+operator|)
+name|pend
+expr_stmt|;
 name|mp
 operator|->
 name|mp_Used
@@ -846,12 +884,6 @@ name|base
 expr_stmt|;
 block|}
 block|}
-name|mp
-operator|->
-name|mp_Size
-operator|+=
-name|bytes
-expr_stmt|;
 block|}
 end_function
 
