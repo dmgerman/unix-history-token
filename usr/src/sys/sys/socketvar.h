@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	4.14	82/01/19	*/
+comment|/*	socketvar.h	4.15	82/03/15	*/
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|SS_USERGONE
-value|0x01
+value|0x001
 end_define
 
 begin_comment
@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|SS_ISCONNECTED
-value|0x02
+value|0x002
 end_define
 
 begin_comment
@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|SS_ISCONNECTING
-value|0x04
+value|0x004
 end_define
 
 begin_comment
@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|SS_ISDISCONNECTING
-value|0x08
+value|0x008
 end_define
 
 begin_comment
@@ -187,7 +187,7 @@ begin_define
 define|#
 directive|define
 name|SS_CANTSENDMORE
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -198,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|SS_CANTRCVMORE
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -209,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|SS_CONNAWAITING
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -220,11 +220,44 @@ begin_define
 define|#
 directive|define
 name|SS_RCVATMARK
-value|0x80
+value|0x080
 end_define
 
 begin_comment
 comment|/* at mark on input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_PRIV
+value|0x100
+end_define
+
+begin_comment
+comment|/* privileged for broadcast, raw... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_NBIO
+value|0x200
+end_define
+
+begin_comment
+comment|/* non-blocking ops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_ASYNC
+value|0x400
+end_define
+
+begin_comment
+comment|/* async i/o notify */
 end_comment
 
 begin_comment
@@ -258,7 +291,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|(((so)->so_options& SO_NONBLOCKING) || ((so)->so_proto->pr_flags& PR_ATOMIC))
+value|(((so)->so_state& SS_NBIO) || ((so)->so_proto->pr_flags& PR_ATOMIC))
 end_define
 
 begin_comment

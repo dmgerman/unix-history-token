@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.10	82/02/08	*/
+comment|/*	tty.h	4.11	82/03/15	*/
 end_comment
 
 begin_ifdef
@@ -604,6 +604,17 @@ end_define
 
 begin_comment
 comment|/* tty in non-blocking mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_ASYNC
+value|040000
+end_define
+
+begin_comment
+comment|/* tty in async i/o mode */
 end_comment
 
 begin_comment

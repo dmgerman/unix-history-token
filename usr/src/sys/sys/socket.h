@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.13	82/01/24	*/
+comment|/*	socket.h	4.14	82/03/15	*/
 end_comment
 
 begin_comment
@@ -84,34 +84,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SO_NONBLOCKING
+name|SO_DONTLINGER
 value|0x04
 end_define
 
 begin_comment
-comment|/* don't block when i/o not possible */
+comment|/* don't linger on close */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SO_NOKEEPALIVE
+name|SO_KEEPALIVE
 value|0x08
 end_define
 
 begin_comment
-comment|/* don't keep connections alive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SO_DONTLINGER
-value|0x10
-end_define
-
-begin_comment
-comment|/* don't linger on close */
+comment|/* keep connections alive */
 end_comment
 
 begin_comment
