@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -114,16 +114,34 @@ parameter_list|)
 value|#x
 end_define
 
+begin_define
+define|#
+directive|define
+name|__const
+value|const
+end_define
+
+begin_comment
+comment|/* define reserved names to standard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__signed
+value|signed
+end_define
+
+begin_define
+define|#
+directive|define
+name|__volatile
+value|volatile
+end_define
+
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
-operator|!
 name|defined
 argument_list|(
 name|__cplusplus
@@ -133,13 +151,52 @@ end_if
 begin_define
 define|#
 directive|define
-name|inline
+name|__inline
+value|inline
 end_define
+
+begin_comment
+comment|/* convert to C++ keyword */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__inline
+end_define
+
+begin_comment
+comment|/* delete GCC keyword */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__cplusplus */
+end_comment
 
 begin_else
 else|#
@@ -188,52 +245,45 @@ parameter_list|)
 value|"x"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__const
+end_define
+
+begin_comment
+comment|/* delete pseudo-ANSI C keywords */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__inline
+end_define
+
+begin_define
+define|#
+directive|define
+name|__signed
+end_define
+
+begin_define
+define|#
+directive|define
+name|__volatile
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|KERNEL
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|const
-value|__const
-end_define
-
-begin_comment
-comment|/* GCC: ANSI C with -traditional */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|inline
-value|__inline
-end_define
-
-begin_define
-define|#
-directive|define
-name|signed
-value|__signed
-end_define
-
-begin_define
-define|#
-directive|define
-name|volatile
-value|__volatile
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__GNUC__ */
-end_comment
 
 begin_define
 define|#
@@ -268,6 +318,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* !__GNUC__ */
 end_comment
@@ -282,7 +337,38 @@ comment|/* !(__STDC__ || __cplusplus) */
 end_comment
 
 begin_comment
-comment|/*  * GCC has extensions for declaring functions as `pure' (always returns  * the same value given the same inputs, i.e., has no external state and  * no side effects) and `dead' (nonreturning).  These mainly affect  * optimization and warnings.  Unfortunately, GCC complains if these are  * used under strict ANSI mode (`gcc -ansi -pedantic'), hence we need to  * define them only if compiling without this.  */
+comment|/*  * GCC1 and some versions of GCC2 declare dead (non-returning) and  * pure (no side effects) functions using "volatile" and "const";  * unfortunately, these then cause warnings under "-ansi -pedantic".  * GCC2 uses a new, peculiar __attribute__((attrs)) style.  All of  * these work for GNU C++ (modulo a slight glitch in the C++ grammar  * in the distribution version of 2.5.5).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|||
+name|__GNUC__
+operator|<
+literal|2
+operator|||
+name|__GNUC_MINOR__
+operator|<
+literal|5
+end_if
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* delete __attribute__ if non-gcc or gcc1 */
 end_comment
 
 begin_if
@@ -314,10 +400,25 @@ name|__pure
 value|__const
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Delete pseudo-keywords wherever they are not available or needed. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__dead
+end_ifndef
 
 begin_define
 define|#
