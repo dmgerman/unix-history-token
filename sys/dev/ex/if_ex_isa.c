@@ -151,7 +151,7 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|ex_methods
+name|ex_isa_methods
 index|[]
 init|=
 block|{
@@ -196,12 +196,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|ex_driver
+name|ex_isa_driver
 init|=
 block|{
 literal|"ex"
 block|,
-name|ex_methods
+name|ex_isa_methods
 block|,
 sizeof|sizeof
 argument_list|(
@@ -212,12 +212,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|devclass_t
-name|ex_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -225,7 +219,7 @@ name|ex
 argument_list|,
 name|isa
 argument_list|,
-name|ex_driver
+name|ex_isa_driver
 argument_list|,
 name|ex_devclass
 argument_list|,
