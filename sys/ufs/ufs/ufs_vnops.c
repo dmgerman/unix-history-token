@@ -1853,7 +1853,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -1863,7 +1862,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -1874,7 +1872,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|vattr
 modifier|*
@@ -3000,17 +2997,14 @@ name|cred
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
 name|int
 name|mode
 decl_stmt|;
-specifier|register
 name|struct
 name|ucred
 modifier|*
@@ -3022,7 +3016,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -3163,7 +3156,6 @@ name|cred
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -3186,7 +3178,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -3211,7 +3202,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4585,7 +4575,6 @@ name|ap
 operator|->
 name|a_tvp
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -6372,7 +6361,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -6382,7 +6370,6 @@ name|ap
 operator|->
 name|a_dvp
 decl_stmt|;
-specifier|register
 name|struct
 name|vattr
 modifier|*
@@ -6392,7 +6379,6 @@ name|ap
 operator|->
 name|a_vap
 decl_stmt|;
-specifier|register
 name|struct
 name|componentname
 modifier|*
@@ -6402,7 +6388,6 @@ name|ap
 operator|->
 name|a_cnp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -7970,7 +7955,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -7984,7 +7968,6 @@ name|ap
 operator|->
 name|a_vpp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -8178,7 +8161,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -8843,7 +8825,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -8853,7 +8834,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -8958,7 +8938,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -8968,7 +8947,6 @@ name|ap
 operator|->
 name|a_bp
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -8978,7 +8956,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -9167,7 +9144,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -9177,7 +9153,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -10049,7 +10024,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -10299,7 +10273,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*

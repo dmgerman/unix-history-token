@@ -230,14 +230,12 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
 name|vdp
 decl_stmt|;
 comment|/* vnode for directory being searched */
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -2402,7 +2400,6 @@ name|vnode
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -2412,7 +2409,6 @@ name|int
 name|entryoffsetinblock
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4778,7 +4774,6 @@ name|parentino
 parameter_list|,
 name|cred
 parameter_list|)
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -4793,7 +4788,6 @@ modifier|*
 name|cred
 decl_stmt|;
 block|{
-specifier|register
 name|off_t
 name|off
 decl_stmt|;
@@ -4801,7 +4795,6 @@ name|struct
 name|dirtemplate
 name|dbuf
 decl_stmt|;
-specifier|register
 name|struct
 name|direct
 modifier|*

@@ -265,7 +265,6 @@ name|getinoquota
 parameter_list|(
 name|ip
 parameter_list|)
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -415,7 +414,6 @@ name|cred
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -433,13 +431,11 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dquot
 modifier|*
 name|dq
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -832,7 +828,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dquot
 modifier|*
@@ -1099,7 +1094,6 @@ name|cred
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -1117,13 +1111,11 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dquot
 modifier|*
 name|dq
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1516,7 +1508,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dquot
 modifier|*
@@ -1784,7 +1775,6 @@ name|chkdquot
 parameter_list|(
 name|ip
 parameter_list|)
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -1806,7 +1796,6 @@ operator|->
 name|v_mount
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1918,7 +1907,6 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|int
 name|type
 decl_stmt|;
@@ -2435,7 +2423,6 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|int
 name|type
 decl_stmt|;
@@ -2929,7 +2916,6 @@ name|caddr_t
 name|addr
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dquot
 modifier|*
@@ -3310,7 +3296,6 @@ name|caddr_t
 name|addr
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dquot
 modifier|*
@@ -4007,13 +3992,11 @@ decl_stmt|;
 name|u_long
 name|id
 decl_stmt|;
-specifier|register
 name|struct
 name|ufsmount
 modifier|*
 name|ump
 decl_stmt|;
-specifier|register
 name|int
 name|type
 decl_stmt|;
@@ -4714,7 +4697,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
 name|struct
 name|dquot
 modifier|*
@@ -5176,14 +5158,12 @@ name|dqflush
 parameter_list|(
 name|vp
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dquot
 modifier|*

@@ -348,7 +348,6 @@ name|ump
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -1440,7 +1439,6 @@ name|cred
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -1457,7 +1455,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -2391,7 +2388,6 @@ name|td
 parameter_list|,
 name|malloctype
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -2413,7 +2409,6 @@ modifier|*
 name|malloctype
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ufsmount
 modifier|*
@@ -2424,7 +2419,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -4196,7 +4190,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ufsmount
 modifier|*
@@ -4207,7 +4200,6 @@ argument_list|(
 name|mp
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -4609,7 +4601,6 @@ name|flags
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -4624,7 +4615,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ufsmount
 modifier|*
@@ -4851,7 +4841,6 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|struct
 name|statfs
 modifier|*
@@ -4863,13 +4852,11 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ufsmount
 modifier|*
 name|ump
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -6368,7 +6355,6 @@ name|fhp
 parameter_list|,
 name|vpp
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -6386,7 +6372,6 @@ modifier|*
 name|vpp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ufid
 modifier|*
@@ -6482,13 +6467,11 @@ modifier|*
 name|fhp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|ufid
 modifier|*
@@ -6609,7 +6592,6 @@ name|int
 name|waitfor
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -6622,7 +6604,6 @@ name|mp
 operator|->
 name|um_fs
 decl_stmt|;
-specifier|register
 name|struct
 name|buf
 modifier|*

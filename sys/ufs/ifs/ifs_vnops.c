@@ -811,7 +811,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -821,7 +820,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -832,7 +830,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|vattr
 modifier|*
@@ -1176,7 +1173,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*

@@ -473,13 +473,11 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*

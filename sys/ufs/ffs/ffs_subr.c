@@ -159,7 +159,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -323,13 +322,11 @@ block|{
 name|int
 name|inblk
 decl_stmt|;
-specifier|register
 name|int
 name|field
 decl_stmt|,
 name|subfield
 decl_stmt|;
-specifier|register
 name|int
 name|siz
 decl_stmt|,
@@ -498,7 +495,6 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -507,7 +503,6 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|ufs_daddr_t
 name|start
 decl_stmt|,

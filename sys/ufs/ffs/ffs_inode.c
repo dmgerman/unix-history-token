@@ -173,7 +173,6 @@ name|int
 name|waitfor
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -540,7 +539,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -551,7 +549,6 @@ decl_stmt|;
 name|ufs_daddr_t
 name|lastblock
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -587,7 +584,6 @@ operator|+
 name|NIADDR
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -614,7 +610,6 @@ name|blocksreleased
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1769,7 +1764,6 @@ name|i
 operator|--
 control|)
 block|{
-specifier|register
 name|long
 name|bsize
 decl_stmt|;
@@ -2142,7 +2136,6 @@ name|level
 parameter_list|,
 name|countp
 parameter_list|)
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -2164,7 +2157,6 @@ modifier|*
 name|countp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2173,7 +2165,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -2183,7 +2174,6 @@ name|ip
 operator|->
 name|i_fs
 decl_stmt|;
-specifier|register
 name|ufs_daddr_t
 modifier|*
 name|bap

@@ -224,7 +224,6 @@ modifier|*
 name|runb
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
