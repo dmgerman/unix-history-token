@@ -21,8 +21,19 @@ directive|ifdef
 name|I586_CPU
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|I586_CYCLECTR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|__asm __volatile(".byte 0x0f, 0x31" : "=A" (x))
+end_define
+
 begin_comment
-comment|/* 	 * This resets the CPU cycle counter to zero, to make our 	 * job easier in microtime().  Some fancy ifdefs could speed 	 * this up for Pentium-only kernels. 	 * We want this to be done as close as possible to the actual 	 * timer incrementing in hardclock(), because there is a window 	 * between the two where the value is no longer valid.  Experimentation 	 * may reveal a good precompensation to apply in microtime(). 	 */
+comment|/*  * When we update the clock, we also update this bias value which is  * automatically subtracted in microtime().  We assume that CPU_THISTICKLEN()  * has been called at some point in the past, so that an appropriate value is  * set up in i586_last_tick.  (This works even if we are not being called  * from hardclock because hardclock will have run before and will made the  * call.)  */
 end_comment
 
 begin_define
@@ -35,11 +46,17 @@ parameter_list|,
 name|ntime
 parameter_list|)
 define|\
-value|do { \ 	if(pentium_mhz) { \ 		__asm __volatile("cli\n" \ 				 "movl (%2),%%eax\n" \ 				 "movl %%eax,(%1)\n" \ 				 "movl 4(%2),%%eax\n" \ 				 "movl %%eax,4(%1)\n" \ 				 "movl $0x10,%%ecx\n" \ 				 "xorl %%eax,%%eax\n" \ 				 "movl %%eax,%%edx\n" \ 				 ".byte 0x0f, 0x30\n" \ 				 "sti\n" \ 				 "#%0%1%2" \ 				 : "=m"(*otime)
-comment|/* no outputs */
-value|\ 				 : "c"(otime), "b"(ntime)
-comment|/* fake input */
-value|\ 				 : "ax", "cx", "dx"); \ 	} else { \ 		*(otime) = *(ntime); \ 	} \ 	} while(0)
+value|do { \ 	if(pentium_mhz) { \ 		disable_intr(); \ 		i586_ctr_bias = i586_last_tick; \ 		*(otime) = *(ntime); \ 		enable_intr(); \ 	} else { \ 		*(otime) = *(ntime); \ 	} \ 	} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_THISTICKLEN
+parameter_list|(
+name|dflt
+parameter_list|)
+value|cpu_thisticklen(dflt)
 end_define
 
 begin_else
@@ -58,6 +75,16 @@ name|ntime
 parameter_list|)
 define|\
 value|(*(otime) = *(ntime))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_THISTICKLEN
+parameter_list|(
+name|dflt
+parameter_list|)
+value|dflt
 end_define
 
 begin_endif
@@ -120,6 +147,22 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|pentium_mhz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|long
+name|i586_last_tick
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|long
+name|i586_ctr_bias
 decl_stmt|;
 end_decl_stmt
 
@@ -199,6 +242,72 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I586_CPU
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|u_long
+name|cpu_thisticklen
+parameter_list|(
+name|u_long
+name|dflt
+parameter_list|)
+block|{
+name|long
+name|long
+name|old
+decl_stmt|;
+name|long
+name|rv
+decl_stmt|;
+if|if
+condition|(
+name|pentium_mhz
+condition|)
+block|{
+name|old
+operator|=
+name|i586_last_tick
+expr_stmt|;
+name|I586_CYCLECTR
+argument_list|(
+name|i586_last_tick
+argument_list|)
+expr_stmt|;
+name|rv
+operator|=
+operator|(
+name|i586_last_tick
+operator|-
+name|old
+operator|)
+operator|/
+name|pentium_mhz
+expr_stmt|;
+block|}
+else|else
+block|{
+name|rv
+operator|=
+name|dflt
+expr_stmt|;
+block|}
+return|return
+name|rv
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Driver to clock driver interface.  */
