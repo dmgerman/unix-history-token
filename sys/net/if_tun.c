@@ -740,7 +740,7 @@ operator|&
 name|TUN_OPEN
 condition|)
 return|return
-name|ENXIO
+name|EBUSY
 return|;
 name|ifp
 operator|=
