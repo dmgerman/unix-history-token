@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.2 %G%"
+literal|"@(#)pc.c 3.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1689,6 +1689,14 @@ operator|++
 index|]
 operator|=
 literal|"-lc"
+expr_stmt|;
+name|ldargs
+index|[
+name|ldargx
+operator|++
+index|]
+operator|=
+literal|"-lm"
 expr_stmt|;
 name|ldargs
 index|[
