@@ -29,6 +29,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * This function uses a presently undocumented interface to the kernel  * to walk the tree and get the type so it can print the value.  * This interface is under work and consideration, and should probably  * be killed with a big axe by the first person who can find the time.  * (be aware though, that the proper interface isn't as obvious as it  * may seem, there are various conflicting requirements.  */
 end_comment
