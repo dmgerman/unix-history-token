@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.22 1997/06/25 21:01:52 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.6 1997/07/07 00:02:55 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -663,6 +663,24 @@ name|X
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|POSTCODE_LO
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSTCODE_HI
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -737,6 +755,16 @@ directive|define
 name|START_AP_POST
 value|0x19
 end_define
+
+begin_comment
+comment|/* XXX FIXME: where does this really belong, isa.h/isa.c perhaps? */
+end_comment
+
+begin_decl_stmt
+name|int
+name|current_postcode
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/** FIXME: what system files declare these??? */
@@ -1945,6 +1973,25 @@ argument_list|(
 name|XCPUSTOP_OFFSET
 argument_list|,
 name|Xcpustop
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* install a 'Spurious INTerrupt' vector */
+name|setidt
+argument_list|(
+name|XSPURIOUSINT_OFFSET
+argument_list|,
+name|Xspuriousint
 argument_list|,
 name|SDT_SYS386IGT
 argument_list|,
@@ -4131,6 +4178,35 @@ decl_stmt|;
 name|int
 name|apic_pin
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SKIP_IRQ15_REDIRECT
+argument_list|)
+if|if
+condition|(
+name|isa_mask
+operator|==
+operator|(
+literal|1
+operator|<<
+literal|15
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"skipping ISA IRQ15 redirect\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|isa_mask
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* SKIP_IRQ15_REDIRECT */
 name|isa_irq
 operator|=
 name|ffs
@@ -6673,6 +6749,24 @@ argument_list|(
 name|TEST_CPUSTOP
 argument_list|)
 comment|/*  * When called the executing CPU will send an IPI to all other CPUs  *  requesting that they halt execution.  *  * Usually (but not necessarily) called with 'other_cpus' as its arg.  *  *  - Signals all CPUs in map to stop.  *  - Waits for each to stop.  *  * Returns:  *  -1: error  *   0: NA  *   1: ok  *  * XXX FIXME: this is not MP-safe, needs a lock to prevent multiple CPUs  *            from executing at same time.   */
+specifier|extern
+name|int
+name|cshits
+index|[
+literal|4
+index|]
+decl_stmt|;
+specifier|extern
+name|int
+name|lhits
+index|[
+literal|4
+index|]
+decl_stmt|;
+specifier|extern
+name|int
+name|sihits
+decl_stmt|;
 name|int
 name|stop_cpus
 parameter_list|(
@@ -6680,6 +6774,16 @@ name|u_int
 name|map
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|1
+name|int
+name|x
+decl_stmt|,
+name|y
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -6688,10 +6792,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|stopped_cpus
-operator|=
-literal|0
-expr_stmt|;
 comment|/* send IPI to all CPUs in map */
 if|#
 directive|if
@@ -6699,6 +6799,12 @@ name|defined
 argument_list|(
 name|DEBUG_CPUSTOP
 argument_list|)
+if|#
+directive|if
+literal|0
+block|POSTCODE(0xF0);
+endif|#
+directive|endif
 name|db_printf
 argument_list|(
 literal|"\nCPU%d stopping CPUs: 0x%08x\n"
@@ -6708,9 +6814,42 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"b4 stop: cshits: %d, %d, mplock: 0x%08x, lhits: %d, %d, sihits: %d\n"
+argument_list|,
+name|cshits
+index|[
+literal|0
+index|]
+argument_list|,
+name|cshits
+index|[
+literal|1
+index|]
+argument_list|,
+name|mp_lock
+argument_list|,
+name|lhits
+index|[
+literal|0
+index|]
+argument_list|,
+name|lhits
+index|[
+literal|1
+index|]
+argument_list|,
+name|sihits
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG_CPUSTOP */
+name|stopped_cpus
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -6732,23 +6871,17 @@ name|DEBUG_CPUSTOP
 argument_list|)
 name|db_printf
 argument_list|(
-literal|" stopped_cpus: 0x%08x, map: 0x%08x, spin\n"
-argument_list|,
-name|stopped_cpus
-argument_list|,
-name|map
+literal|"  spin\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG_CPUSTOP */
-while|while
-condition|(
-name|stopped_cpus
-operator|!=
-name|map
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+comment|/** */
+block|y = 0; 	while (stopped_cpus != map) {
 if|#
 directive|if
 literal|0
@@ -6756,16 +6889,18 @@ comment|/* spin */
 block|;
 else|#
 directive|else
-name|POSTCODE
-argument_list|(
-name|stopped_cpus
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
+block|POSTCODE_LO(stopped_cpus& 0x0f);
+define|#
+directive|define
+name|MAX_SPIN
+value|20000000
+block|for ( x = 0; x< MAX_SPIN; ++x ) 			; 		if (++y> 20) { 			stopped_cpus = map; 			break; 		} 		POSTCODE_LO(0x0f); 		for ( x = 0; x< MAX_SPIN; ++x ) 			;
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
+comment|/** 0 */
 if|#
 directive|if
 name|defined
@@ -6774,7 +6909,9 @@ name|DEBUG_CPUSTOP
 argument_list|)
 name|db_printf
 argument_list|(
-literal|"  spun\nstopped\n"
+literal|"  spun\nstopped, sihits: %d\n"
+argument_list|,
+name|sihits
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6800,6 +6937,61 @@ condition|)
 return|return
 literal|0
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_CPUSTOP
+argument_list|)
+if|#
+directive|if
+literal|0
+block|POSTCODE(0x90);
+endif|#
+directive|endif
+name|db_printf
+argument_list|(
+literal|"\nCPU%d restarting CPUs: 0x%08x (0x%08x)\n"
+argument_list|,
+name|cpuid
+argument_list|,
+name|map
+argument_list|,
+name|stopped_cpus
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"b4 restart: cshits: %d, %d, mplock: 0x%08x, lhits: %d, %d, sihits: %d\n"
+argument_list|,
+name|cshits
+index|[
+literal|0
+index|]
+argument_list|,
+name|cshits
+index|[
+literal|1
+index|]
+argument_list|,
+name|mp_lock
+argument_list|,
+name|lhits
+index|[
+literal|0
+index|]
+argument_list|,
+name|lhits
+index|[
+literal|1
+index|]
+argument_list|,
+name|sihits
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG_CPUSTOP */
 name|started_cpus
 operator|=
 name|map
@@ -6807,37 +6999,27 @@ expr_stmt|;
 comment|/* signal other cpus to restart */
 if|#
 directive|if
-name|defined
-argument_list|(
-name|DEBUG_CPUSTOP
-argument_list|)
-name|db_printf
-argument_list|(
-literal|"\nCPU%d restarting CPUs: 0x%08x (0x%08x)\n"
-argument_list|,
-name|cpuid
-argument_list|,
-name|started_cpus
-argument_list|,
-name|stopped_cpus
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG_CPUSTOP */
-while|while
-condition|(
-name|started_cpus
-condition|)
+literal|0
+comment|/** */
+block|while (started_cpus)
 comment|/* wait for each to clear its bit */
 comment|/* spin */
-empty_stmt|;
+block|;
+endif|#
+directive|endif
+comment|/** 0 */
 if|#
 directive|if
 name|defined
 argument_list|(
 name|DEBUG_CPUSTOP
 argument_list|)
+if|#
+directive|if
+literal|0
+block|POSTCODE(0xA0);
+endif|#
+directive|endif
 name|db_printf
 argument_list|(
 literal|" restarted\n"
