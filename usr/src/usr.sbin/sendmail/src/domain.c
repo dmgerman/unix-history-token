@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.2 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.3 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.2 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.3 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1182,7 +1182,7 @@ block|}
 comment|/* if we have a default lowest preference, include that */
 if|if
 condition|(
-name|FallBackMX
+name|fallbackMX
 operator|!=
 name|NULL
 operator|&&
@@ -1195,7 +1195,7 @@ name|nmx
 operator|++
 index|]
 operator|=
-name|FallBackMX
+name|fallbackMX
 expr_stmt|;
 return|return
 operator|(
