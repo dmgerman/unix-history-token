@@ -459,7 +459,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"uhcbsd:fi:o:m:"
+literal|"uhcbsfd:i:o:m:"
 argument_list|)
 operator|)
 operator|!=
