@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.20 2000/07/15 17:35:19 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.25 2000/08/08 23:50:40 ca Exp $  */
 end_comment
 
 begin_comment
@@ -3438,6 +3438,22 @@ begin_comment
 comment|/* has snprintf starting in 2.6 */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SOLARIS>= 20600 || (SOLARIS< 10000&& SOLARIS>= 206) */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|int32_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
@@ -3535,23 +3551,6 @@ literal|208
 operator|)
 end_if
 
-begin_undef
-undef|#
-directive|undef
-name|NETINET6
-end_undef
-
-begin_define
-define|#
-directive|define
-name|NETINET6
-value|1
-end_define
-
-begin_comment
-comment|/* IPv6 added in 2.8 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -3562,6 +3561,23 @@ end_define
 begin_comment
 comment|/* str*(3) added in 2.8 */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_PATH_SENDMAILPID
+end_undef
+
+begin_comment
+comment|/* tmpfs /var/run added in 2.8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/var/run/sendmail.pid"
+end_define
 
 begin_endif
 endif|#
@@ -17383,12 +17399,13 @@ begin_if
 if|#
 directive|if
 name|SFIO
-operator|&&
-name|defined
-argument_list|(
-name|ERRLIST_PREDEFINED
-argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ERRLIST_PREDEFINED
+end_ifdef
 
 begin_undef
 undef|#
@@ -17402,7 +17419,43 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SFIO&& defined(ERRLIST_PREDEFINED) */
+comment|/* ERRLIST_PREDEFINED */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HASSNPRINTF
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* sfio includes snprintf() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HASSNPRINTF */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SFIO */
 end_comment
 
 begin_ifndef

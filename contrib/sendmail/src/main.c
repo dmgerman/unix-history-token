@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: main.c,v 8.485.4.19 2000/06/29 01:31:02 gshapiro Exp $"
+literal|"@(#)$Id: main.c,v 8.485.4.27 2000/09/26 01:30:38 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -542,6 +542,15 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|STARTTLS
+name|bool
+name|tls_ok
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* STARTTLS */
 name|QUEUE_CHAR
 modifier|*
 name|new
@@ -3006,7 +3015,10 @@ name|CurEnv
 operator|->
 name|e_bodytype
 operator|=
+name|newstr
+argument_list|(
 name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -3025,7 +3037,10 @@ name|TRUE
 expr_stmt|;
 name|ConfFile
 operator|=
+name|newstr
+argument_list|(
 name|optarg
+argument_list|)
 expr_stmt|;
 name|dp
 operator|=
@@ -6575,6 +6590,8 @@ endif|#
 directive|endif
 comment|/* 0 */
 comment|/* initialize PRNG */
+name|tls_ok
+operator|=
 name|tls_rand_init
 argument_list|(
 name|RandFile
@@ -6609,6 +6626,10 @@ name|SMTP
 if|#
 directive|if
 name|STARTTLS
+if|if
+condition|(
+name|tls_ok
+condition|)
 block|{
 comment|/* init TLS for client, ignore result for now */
 operator|(
@@ -7274,18 +7295,31 @@ name|SASL
 comment|/* give a syserr or just disable AUTH ? */
 if|if
 condition|(
+operator|(
+name|i
+operator|=
 name|sasl_server_init
 argument_list|(
 name|srvcallbacks
 argument_list|,
 literal|"Sendmail"
 argument_list|)
+operator|)
 operator|!=
 name|SASL_OK
 condition|)
 name|syserr
 argument_list|(
-literal|"!sasl_server_init failed!"
+literal|"!sasl_server_init failed! [%s]"
+argument_list|,
+name|sasl_errstring
+argument_list|(
+name|i
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11096,6 +11130,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* _FFR_ADDR_TYPE */
+comment|/* skip leading spaces */
+while|while
+condition|(
+operator|*
+name|line
+operator|==
+literal|' '
+condition|)
+name|line
+operator|++
+expr_stmt|;
 switch|switch
 condition|(
 name|line

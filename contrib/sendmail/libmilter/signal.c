@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: signal.c,v 8.10.4.4 2000/07/14 06:16:57 msk Exp $"
+literal|"@(#)$Id: signal.c,v 8.10.4.7 2000/09/01 00:49:04 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ value|(pthread_mutex_trylock(mp) == 0)
 end_define
 
 begin_comment
-comment|/* ** thread to handle signals */
+comment|/* **  thread to handle signals */
 end_comment
 
 begin_decl_stmt
@@ -170,6 +170,10 @@ condition|)
 name|MilterStop
 operator|=
 name|v
+expr_stmt|;
+comment|/* close listen socket */
+name|mi_closener
+argument_list|()
 expr_stmt|;
 operator|(
 name|void

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: headers.c,v 8.203.4.6 2000/07/19 02:53:32 ca Exp $"
+literal|"@(#)$Id: headers.c,v 8.203.4.7 2000/08/22 21:50:36 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,7 +159,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect, readcf, and readqf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		pflag -- flags: **			CHHDR_DEF: this is a default value. **			CHHDR_CHECK: call rulesets. **		hdrp -- a pointer to the place to save the header. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
+comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect, readcf, and readqf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		pflag -- flags for chompheader() (from sendmail.h) **		hdrp -- a pointer to the place to save the header. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
 end_comment
 
 begin_decl_stmt
@@ -1805,6 +1805,13 @@ argument_list|(
 name|pflag
 argument_list|,
 name|CHHDR_USER
+argument_list|)
+operator|||
+name|bitset
+argument_list|(
+name|pflag
+argument_list|,
+name|CHHDR_QUEUE
 argument_list|)
 condition|)
 name|h

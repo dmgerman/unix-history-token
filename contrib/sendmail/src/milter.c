@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: milter.c,v 8.50.4.30 2000/07/18 07:24:51 gshapiro Exp $"
+literal|"@(#)$Id: milter.c,v 8.50.4.33 2000/09/19 19:40:15 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,6 +291,8 @@ decl_stmt|;
 block|{
 name|time_t
 name|readstart
+init|=
+literal|0
 decl_stmt|;
 name|ssize_t
 name|len
@@ -643,6 +645,8 @@ decl_stmt|;
 block|{
 name|time_t
 name|readstart
+init|=
+literal|0
 decl_stmt|;
 name|ssize_t
 name|expl
@@ -3591,6 +3595,14 @@ name|save_errno
 operator|=
 name|errno
 expr_stmt|;
+name|p
+operator|=
+name|CurHostName
+expr_stmt|;
+name|CurHostName
+operator|=
+name|at
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -3643,6 +3655,10 @@ argument_list|(
 name|save_errno
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|CurHostName
+operator|=
+name|p
 expr_stmt|;
 operator|(
 name|void
@@ -3899,7 +3915,7 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
-comment|/* collect the mailer name */
+comment|/* collect the filter name */
 for|for
 control|(
 name|p
@@ -4172,7 +4188,7 @@ argument_list|,
 literal|','
 argument_list|)
 expr_stmt|;
-comment|/* install the field into the mailer struct */
+comment|/* install the field into the filter struct */
 switch|switch
 condition|(
 name|fcode
@@ -4294,7 +4310,7 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-comment|/* enter the mailer into the symbol table */
+comment|/* enter the filter into the symbol table */
 name|s
 operator|=
 name|stab
@@ -4680,7 +4696,7 @@ argument_list|,
 literal|';'
 argument_list|)
 expr_stmt|;
-comment|/* install the field into the mailer struct */
+comment|/* install the field into the filter struct */
 switch|switch
 condition|(
 name|fcode

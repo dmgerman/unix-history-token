@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.11 2000/07/14 05:55:51 gshapiro Exp $ (with queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.17 2000/09/15 03:34:51 gshapiro Exp $ (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.11 2000/07/14 05:55:51 gshapiro Exp $ (without queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.17 2000/09/15 03:34:51 gshapiro Exp $ (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4584,6 +4584,8 @@ condition|(
 name|w
 operator|->
 name|w_host
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -4974,6 +4976,14 @@ condition|(
 name|QueueSortOrder
 operator|==
 name|QSO_BYFILENAME
+operator|&&
+name|QueueLimitSender
+operator|==
+name|NULL
+operator|&&
+name|QueueLimitRecipient
+operator|==
+name|NULL
 condition|)
 block|{
 name|w
@@ -8159,7 +8169,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|0
+name|CHHDR_QUEUE
 argument_list|,
 name|NULL
 argument_list|,
@@ -11358,6 +11368,22 @@ condition|)
 block|{
 if|if
 condition|(
+operator|*
+name|pw
+operator|->
+name|pw_dir
+operator|==
+literal|'\0'
+condition|)
+name|a
+operator|->
+name|q_home
+operator|=
+name|NULL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|pw
@@ -12016,6 +12042,44 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* skip over . and .. directories */
+if|if
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+operator|(
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+operator|||
+operator|(
+name|name
+index|[
+literal|2
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|name
+index|[
+literal|3
+index|]
+operator|==
+literal|'\0'
+operator|)
+operator|)
+condition|)
+return|return
+name|FALSE
+return|;
 if|#
 directive|if
 name|HASLSTAT

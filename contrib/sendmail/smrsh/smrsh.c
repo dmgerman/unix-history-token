@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1993 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1993 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: smrsh.c,v 8.31.4.4 2000/05/25 21:44:29 gshapiro Exp $"
+literal|"@(#)$Id: smrsh.c,v 8.31.4.5 2000/09/17 17:04:27 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
