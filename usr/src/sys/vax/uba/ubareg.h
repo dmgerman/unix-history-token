@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	6.3	84/02/15	*/
+comment|/*	ubareg.h	6.4	85/01/18	*/
 end_comment
 
 begin_comment
@@ -143,6 +143,14 @@ end_define
 begin_comment
 comment|/* unibus init complete */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UBACNFGR_BITS
+define|\
+value|"\40\40PARFLT\37WSQFLT\36URDFLT\35ISQFLT\34MXTFLT\33XMTFLT\30ADPDN\27ADPUP\23UBINIT\22UBPDN\21UBIC"
+end_define
 
 begin_comment
 comment|/* uba_cr */
