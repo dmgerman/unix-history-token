@@ -113,17 +113,6 @@ directive|include
 file|"collate.h"
 end_include
 
-begin_comment
-comment|/*  * XXX  * Arbitrarily limit the number of pathnames that glob may  * return, to prevent DoS attacks.  This should probably be  * configurable by the user.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_GLOBENTRIES
-value|16384
-end_define
-
 begin_define
 define|#
 directive|define
@@ -558,6 +547,9 @@ operator|*
 operator|,
 name|glob_t
 operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -574,6 +566,9 @@ name|Char
 operator|*
 operator|,
 name|glob_t
+operator|*
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
@@ -597,6 +592,9 @@ name|Char
 operator|*
 operator|,
 name|glob_t
+operator|*
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
@@ -624,6 +622,9 @@ operator|*
 operator|,
 name|glob_t
 operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -641,6 +642,9 @@ name|Char
 operator|*
 operator|,
 name|glob_t
+operator|*
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
@@ -685,6 +689,9 @@ operator|*
 operator|,
 name|glob_t
 operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -706,6 +713,9 @@ name|Char
 operator|*
 operator|,
 name|glob_t
+operator|*
+operator|,
+name|int
 operator|*
 operator|,
 name|int
@@ -820,6 +830,8 @@ name|patnext
 decl_stmt|;
 name|int
 name|c
+decl_stmt|,
+name|limit
 decl_stmt|;
 name|Char
 modifier|*
@@ -881,6 +893,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|GLOB_MAXPATH
+condition|)
+name|limit
+operator|=
+name|pglob
+operator|->
+name|gl_matchc
+expr_stmt|;
+else|else
+name|limit
+operator|=
+literal|0
+expr_stmt|;
 name|pglob
 operator|->
 name|gl_flags
@@ -1021,6 +1050,9 @@ argument_list|(
 name|patbuf
 argument_list|,
 name|pglob
+argument_list|,
+operator|&
+name|limit
 argument_list|)
 return|;
 else|else
@@ -1030,6 +1062,9 @@ argument_list|(
 name|patbuf
 argument_list|,
 name|pglob
+argument_list|,
+operator|&
+name|limit
 argument_list|)
 return|;
 block|}
@@ -1047,6 +1082,8 @@ parameter_list|(
 name|pattern
 parameter_list|,
 name|pglob
+parameter_list|,
+name|limit
 parameter_list|)
 specifier|const
 name|Char
@@ -1056,6 +1093,10 @@ decl_stmt|;
 name|glob_t
 modifier|*
 name|pglob
+decl_stmt|;
+name|int
+modifier|*
+name|limit
 decl_stmt|;
 block|{
 specifier|const
@@ -1098,6 +1139,8 @@ argument_list|(
 name|pattern
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 return|;
 while|while
@@ -1137,6 +1180,8 @@ name|pglob
 argument_list|,
 operator|&
 name|rv
+argument_list|,
+name|limit
 argument_list|)
 condition|)
 return|return
@@ -1148,6 +1193,8 @@ argument_list|(
 name|pattern
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 return|;
 block|}
@@ -1169,6 +1216,8 @@ parameter_list|,
 name|pglob
 parameter_list|,
 name|rv
+parameter_list|,
+name|limit
 parameter_list|)
 specifier|const
 name|Char
@@ -1191,6 +1240,9 @@ begin_decl_stmt
 name|int
 modifier|*
 name|rv
+decl_stmt|,
+modifier|*
+name|limit
 decl_stmt|;
 end_decl_stmt
 
@@ -1368,6 +1420,8 @@ argument_list|(
 name|patbuf
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 expr_stmt|;
 return|return
@@ -1541,6 +1595,8 @@ argument_list|(
 name|patbuf
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 expr_stmt|;
 comment|/* move after the comma, to the next string */
@@ -1885,6 +1941,8 @@ parameter_list|(
 name|pattern
 parameter_list|,
 name|pglob
+parameter_list|,
+name|limit
 parameter_list|)
 specifier|const
 name|Char
@@ -1894,6 +1952,10 @@ decl_stmt|;
 name|glob_t
 modifier|*
 name|pglob
+decl_stmt|;
+name|int
+modifier|*
+name|limit
 decl_stmt|;
 block|{
 specifier|const
@@ -2214,6 +2276,8 @@ argument_list|(
 name|patbuf
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 operator|)
 operator|!=
@@ -2269,6 +2333,8 @@ argument_list|(
 name|pattern
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 operator|)
 return|;
@@ -2373,6 +2439,8 @@ parameter_list|(
 name|pattern
 parameter_list|,
 name|pglob
+parameter_list|,
+name|limit
 parameter_list|)
 name|Char
 modifier|*
@@ -2381,6 +2449,10 @@ decl_stmt|;
 name|glob_t
 modifier|*
 name|pglob
+decl_stmt|;
+name|int
+modifier|*
+name|limit
 decl_stmt|;
 block|{
 name|Char
@@ -2415,6 +2487,8 @@ argument_list|,
 name|pattern
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 operator|)
 return|;
@@ -2437,6 +2511,8 @@ parameter_list|,
 name|pattern
 parameter_list|,
 name|pglob
+parameter_list|,
+name|limit
 parameter_list|)
 name|Char
 modifier|*
@@ -2454,6 +2530,13 @@ begin_decl_stmt
 name|glob_t
 modifier|*
 name|pglob
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|limit
 decl_stmt|;
 end_decl_stmt
 
@@ -2598,6 +2681,8 @@ argument_list|(
 name|pathbuf
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 operator|)
 return|;
@@ -2691,6 +2776,8 @@ argument_list|,
 name|p
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 operator|)
 return|;
@@ -2713,6 +2800,8 @@ parameter_list|,
 name|restpattern
 parameter_list|,
 name|pglob
+parameter_list|,
+name|limit
 parameter_list|)
 name|Char
 modifier|*
@@ -2733,6 +2822,13 @@ begin_decl_stmt
 name|glob_t
 modifier|*
 name|pglob
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|limit
 decl_stmt|;
 end_decl_stmt
 
@@ -2965,6 +3061,8 @@ argument_list|,
 name|restpattern
 argument_list|,
 name|pglob
+argument_list|,
+name|limit
 argument_list|)
 expr_stmt|;
 if|if
@@ -3017,6 +3115,8 @@ parameter_list|(
 name|path
 parameter_list|,
 name|pglob
+parameter_list|,
+name|limit
 parameter_list|)
 specifier|const
 name|Char
@@ -3026,6 +3126,10 @@ decl_stmt|;
 name|glob_t
 modifier|*
 name|pglob
+decl_stmt|;
+name|int
+modifier|*
+name|limit
 decl_stmt|;
 block|{
 specifier|register
@@ -3052,15 +3156,19 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+operator|*
+name|limit
+operator|&&
 name|pglob
 operator|->
 name|gl_pathc
 operator|>
-name|MAX_GLOBENTRIES
+operator|*
+name|limit
 condition|)
 return|return
 operator|(
-name|GLOB_ABEND
+name|GLOB_LIMIT
 operator|)
 return|;
 name|newsize
