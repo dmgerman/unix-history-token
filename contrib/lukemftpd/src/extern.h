@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: extern.h,v 1.43 2001/12/04 13:54:12 lukem Exp $	*/
+comment|/*	$NetBSD: extern.h,v 1.44 2002/05/30 00:24:47 enami Exp $	*/
 end_comment
 
 begin_comment
@@ -83,77 +83,18 @@ parameter_list|)
 value|strtol(x,y,z)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|HAVE_PRINTF_QD
-end_if
-
 begin_define
 define|#
 directive|define
-name|LLF
-value|"%qd"
+name|LLTMIN
+value|LONG_MIN
 end_define
 
 begin_define
 define|#
 directive|define
-name|LLFP
-parameter_list|(
-name|x
-parameter_list|)
-value|"%" x "qd"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLT
-value|long long
-end_define
-
-begin_define
-define|#
-directive|define
-name|ULLF
-value|"%qu"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ULLFP
-parameter_list|(
-name|x
-parameter_list|)
-value|"%" x "qu"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ULLT
-value|unsigned long long
-end_define
-
-begin_define
-define|#
-directive|define
-name|STRTOLL
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
-parameter_list|)
-value|strtoll(x,y,z)
+name|LLTMAX
+value|LONG_MAX
 end_define
 
 begin_else
@@ -223,10 +164,19 @@ parameter_list|)
 value|strtoll(x,y,z)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|LLTMIN
+value|LLONG_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLTMAX
+value|LLONG_MAX
+end_define
 
 begin_endif
 endif|#
@@ -317,8 +267,21 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -758,8 +721,21 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -849,17 +825,6 @@ name|char
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|LLT
-name|strsuftoll
-parameter_list|(
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1248,7 +1213,7 @@ name|classflag_t
 name|flags
 decl_stmt|;
 comment|/* Flags; see classflag_t above */
-name|int
+name|LLT
 name|limit
 decl_stmt|;
 comment|/* Max connections (-1 = unlimited) */
@@ -1269,8 +1234,7 @@ name|LLT
 name|maxrateput
 decl_stmt|;
 comment|/* Maximum put transfer rate throttle */
-name|unsigned
-name|int
+name|LLT
 name|maxtimeout
 decl_stmt|;
 comment|/* Maximum permitted timeout */
@@ -1284,11 +1248,11 @@ modifier|*
 name|notify
 decl_stmt|;
 comment|/* Files to notify about upon chdir */
-name|int
+name|LLT
 name|portmin
 decl_stmt|;
 comment|/* Minumum port for passive mode */
-name|int
+name|LLT
 name|portmax
 decl_stmt|;
 comment|/* Maximum port for passive mode */
@@ -1300,8 +1264,7 @@ name|LLT
 name|rateput
 decl_stmt|;
 comment|/* Put (STOR) transfer rate throttle */
-name|unsigned
-name|int
+name|LLT
 name|timeout
 decl_stmt|;
 comment|/* Default timeout */
@@ -1313,6 +1276,26 @@ name|mode_t
 name|umask
 decl_stmt|;
 comment|/* Umask to use */
+name|LLT
+name|mmapsize
+decl_stmt|;
+comment|/* mmap window size */
+name|LLT
+name|readsize
+decl_stmt|;
+comment|/* data read size */
+name|LLT
+name|writesize
+decl_stmt|;
+comment|/* data write size */
+name|LLT
+name|sendbufsize
+decl_stmt|;
+comment|/* SO_SNDBUF size */
+name|LLT
+name|sendlowat
+decl_stmt|;
+comment|/* SO_SNDLOWAT size */
 block|}
 struct|;
 end_struct
@@ -1324,8 +1307,15 @@ name|ftp_loop
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
 end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
@@ -1766,7 +1756,7 @@ begin_define
 define|#
 directive|define
 name|CURCLASSTYPE
-value|curclass.type == CLASS_GUEST  ? "GUEST"  : \ 		    	curclass.type == CLASS_CHROOT ? "CHROOT" : \ 		    	curclass.type == CLASS_REAL   ? "REAL"   : \ 			"<unknown>"
+value|curclass.type == CLASS_GUEST  ? "GUEST"  : \ 			curclass.type == CLASS_CHROOT ? "CHROOT" : \ 			curclass.type == CLASS_REAL   ? "REAL"   : \ 			"<unknown>"
 end_define
 
 begin_define

@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lukemftpd.h,v 1.18 2002/03/14 06:02:24 lukem Exp $ */
+comment|/* $Id: lukemftpd.h,v 1.20 2002/05/23 02:43:58 lukem Exp $ */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FTPD_VERSION
-value|"lukemftpd 1.2 beta 1"
+value|"lukemftpd 1.2 beta 2"
 end_define
 
 begin_include
@@ -137,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fnmatch.h>
 end_include
 
 begin_include
@@ -415,6 +409,34 @@ begin_include
 include|#
 directive|include
 file|"ftpglob.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_FNM_CASEFOLD
+end_if
+
+begin_include
+include|#
+directive|include
+file|<fnmatch.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"ftpfnmatch.h"
 end_include
 
 begin_endif

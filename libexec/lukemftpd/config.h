@@ -12,7 +12,7 @@ comment|/* config.h.in.  Generated automatically from configure.in by autoheader
 end_comment
 
 begin_comment
-comment|/* $Id: config.h.in,v 1.15 2001/04/28 07:11:46 lukem Exp $ */
+comment|/* $Id: config.h.in,v 1.16 2002/05/23 02:42:55 lukem Exp $ */
 end_comment
 
 begin_comment
@@ -757,6 +757,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if FNM_CASEFOLD is declared in<fnmatch.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FNM_CASEFOLD
+value|1
+end_define
+
+begin_comment
 comment|/* Define if optarg is declared in<stdlib.h> or<unistd.h> */
 end_comment
 
@@ -830,13 +841,35 @@ begin_comment
 comment|/* #undef NO_INTERNAL_LS */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<=
+literal|500020
+end_if
+
 begin_comment
 comment|/* Define if using S/Key */
 end_comment
 
-begin_comment
-comment|/* #undef SKEY */
-end_comment
+begin_define
+define|#
+directive|define
+name|SKEY
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Define this if compiling with SOCKS (the firewall traversal library).  * Also, you must define connect, getsockname, bind, accept, listen, and  * select to their R-versions.  */
