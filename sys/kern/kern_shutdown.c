@@ -975,7 +975,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot dump. No dump device defined.\n"
+literal|"Cannot dump. No dump device defined.\n"
 argument_list|)
 expr_stmt|;
 return|return;
