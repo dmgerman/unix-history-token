@@ -3172,7 +3172,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ste%d: bad receive status -- packet dropped"
+literal|"ste%d: bad receive status -- packet dropped\n"
 argument_list|,
 name|sc
 operator|->

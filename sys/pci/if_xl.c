@@ -8108,7 +8108,7 @@ block|{
 name|printf
 argument_list|(
 literal|"xl%d: bad receive status -- "
-literal|"packet dropped"
+literal|"packet dropped\n"
 argument_list|,
 name|sc
 operator|->
@@ -9712,7 +9712,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xl%d: no memory for tx list"
+literal|"xl%d: no memory for tx list\n"
 argument_list|,
 name|sc
 operator|->
@@ -9762,7 +9762,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"xl%d: no memory for tx list"
+literal|"xl%d: no memory for tx list\n"
 argument_list|,
 name|sc
 operator|->

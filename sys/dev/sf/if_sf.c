@@ -5903,7 +5903,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sf%d: no memory for tx list"
+literal|"sf%d: no memory for tx list\n"
 argument_list|,
 name|sc
 operator|->
@@ -5953,7 +5953,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sf%d: no memory for tx list"
+literal|"sf%d: no memory for tx list\n"
 argument_list|,
 name|sc
 operator|->
