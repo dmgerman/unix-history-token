@@ -1245,7 +1245,7 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
-literal|8
+name|IFQ_MAXLEN
 expr_stmt|;
 if|if
 condition|(
