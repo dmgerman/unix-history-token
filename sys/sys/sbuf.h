@@ -15,6 +15,12 @@ directive|define
 name|_SYS_SBUF_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
 begin_comment
 comment|/*  * Structure definition  */
 end_comment
@@ -28,12 +34,11 @@ modifier|*
 name|s_buf
 decl_stmt|;
 comment|/* storage buffer */
-name|struct
-name|sbuf
+name|void
 modifier|*
-name|s_next
+name|s_unused
 decl_stmt|;
-comment|/* next in chain */
+comment|/* binary compatibility. */
 name|int
 name|s_size
 decl_stmt|;
@@ -44,9 +49,19 @@ decl_stmt|;
 comment|/* current length of string */
 define|#
 directive|define
+name|SBUF_FIXEDLEN
+value|0x00000000
+comment|/* fixed length buffer (default) */
+define|#
+directive|define
 name|SBUF_AUTOEXTEND
 value|0x00000001
 comment|/* automatically extend buffer */
+define|#
+directive|define
+name|SBUF_USRFLAGMSK
+value|0x0000ffff
+comment|/* mask of flags the user may specify */
 define|#
 directive|define
 name|SBUF_DYNAMIC
@@ -86,17 +101,13 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 name|char
 modifier|*
-name|buf
 parameter_list|,
 name|int
-name|length
 parameter_list|,
 name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -108,7 +119,6 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -120,10 +130,8 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 name|int
-name|pos
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -135,15 +143,12 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
 parameter_list|,
 name|size_t
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -155,15 +160,12 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
 parameter_list|,
 name|size_t
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -175,12 +177,10 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -192,12 +192,10 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -209,12 +207,10 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -232,15 +228,50 @@ end_empty_stmt
 
 begin_function_decl
 name|int
+name|sbuf_vprintf
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|_BSD_VA_LIST_
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|int
 name|sbuf_putc
 parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 name|int
-name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sbuf_trim
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -252,7 +283,6 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -264,7 +294,6 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -277,7 +306,6 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -289,7 +317,6 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -301,7 +328,6 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -312,6 +338,32 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|struct
+name|sbuf
+modifier|*
+name|sbuf_uionew
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|sbuf_bcopyin
@@ -319,15 +371,12 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|uaddr
 parameter_list|,
 name|size_t
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -339,15 +388,12 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
-name|s
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|uaddr
 parameter_list|,
 name|size_t
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
