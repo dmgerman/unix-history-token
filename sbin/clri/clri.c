@@ -424,7 +424,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Cannot find special_device\n"
+literal|"Cannot find file system superblock\n"
 argument_list|)
 expr_stmt|;
 name|exit
