@@ -3943,6 +3943,19 @@ argument_list|,
 literal|"malloc"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"descriptor too big"
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|fdsp
