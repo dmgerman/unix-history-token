@@ -15,265 +15,6 @@ directive|define
 name|_MACHINE_FP_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|FPRS_DL
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPRS_DU
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPRS_FEF
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_CEXC_NX
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_CEXC_DZ
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_CEXC_UF
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_CEXC_OF
-value|(1<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_CEXC_NV
-value|(1<< 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_AEXC_NX
-value|(1<< 5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_AEXC_DZ
-value|(1<< 6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_AEXC_UF
-value|(1<< 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_AEXC_OF
-value|(1<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_AEXC_NV
-value|(1<< 9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_QNE
-value|(1<< 13)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_NS
-value|(1<< 22)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_TEM_NX
-value|(1<< 23)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_TEM_DZ
-value|(1<< 24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_TEM_UF
-value|(1<< 25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_TEM_OF
-value|(1<< 26)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_TEM_NV
-value|(1<< 27)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FCC0_SHIFT
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FCC0
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> FSR_FCC0_SHIFT)& 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FTT_SHIFT
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FTT
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> FSR_FTT_SHIFT)& 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_VER_SHIFT
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_VER
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> FSR_VER_SHIFT)& 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_RD_SHIFT
-value|30
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_RD
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> FSR_RD_SHIFT)& 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FCC1_SHIFT
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FCC1
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> FSR_FCC1_SHIFT)& 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FCC2_SHIFT
-value|34
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FCC2
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> FSR_FCC2_SHIFT)& 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FCC3_SHIFT
-value|36
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSR_FCC3
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> FSR_FCC3_SHIFT)& 3)
-end_define
-
 begin_comment
 comment|/* A block of 8 double-precision (16 single-precision) FP registers. */
 end_comment
@@ -313,6 +54,24 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|pcb
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|fp_init_thread
@@ -330,6 +89,25 @@ name|fp_enable_thread
 parameter_list|(
 name|struct
 name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fp_exception_other
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|trapframe
 modifier|*
 parameter_list|)
 function_decl|;
@@ -360,6 +138,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
