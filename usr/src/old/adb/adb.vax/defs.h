@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.3	82/12/19	*/
+comment|/*	defs.h	4.4	84/10/13	*/
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ptrace.h>
 end_include
 
 begin_include
@@ -202,74 +208,22 @@ name|FD
 value|0200
 end_define
 
-begin_define
-define|#
-directive|define
-name|SETTRC
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RDUSER
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIUSER
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|WDUSER
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|WIUSER
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|RUREGS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|WUREGS
-value|6
-end_define
+begin_comment
+comment|/* puns from<ptrace.h> */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|CONTIN
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXIT
-value|8
+value|PT_CONTINUE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SINGLE
-value|9
+value|PT_STEP
 end_define
 
 begin_comment

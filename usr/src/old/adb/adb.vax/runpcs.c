@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runpcs.c	4.4 %G%"
+literal|"@(#)runpcs.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -470,7 +470,7 @@ name|pid
 name|THEN
 name|ptrace
 argument_list|(
-name|EXIT
+name|PT_KILL
 argument_list|,
 name|pid
 argument_list|,
@@ -586,7 +586,7 @@ directive|endif
 name|THEN
 name|ptrace
 argument_list|(
-name|SETTRC
+name|PT_TRACE_ME
 argument_list|,
 literal|0
 argument_list|,
@@ -733,7 +733,7 @@ argument_list|()
 expr_stmt|;
 name|ptrace
 argument_list|(
-name|SINGLE
+name|PT_STEP
 argument_list|,
 name|pid
 argument_list|,
@@ -1166,7 +1166,7 @@ name|e1
 name|THEN
 name|ptrace
 argument_list|(
-name|WIUSER
+name|PT_WRITE_I
 argument_list|,
 name|pid
 argument_list|,
@@ -1183,7 +1183,7 @@ operator||
 operator|(
 name|ptrace
 argument_list|(
-name|RIUSER
+name|PT_READ_I
 argument_list|,
 name|pid
 argument_list|,
@@ -1200,7 +1200,7 @@ expr_stmt|;
 name|ELSE
 name|ptrace
 argument_list|(
-name|WDUSER
+name|PT_WRITE_D
 argument_list|,
 name|pid
 argument_list|,
@@ -1217,7 +1217,7 @@ operator||
 operator|(
 name|ptrace
 argument_list|(
-name|RDUSER
+name|PT_READ_D
 argument_list|,
 name|pid
 argument_list|,
@@ -1299,7 +1299,7 @@ name|ins
 operator|=
 name|ptrace
 argument_list|(
-name|RIUSER
+name|PT_READ_I
 argument_list|,
 name|pid
 argument_list|,
@@ -1310,7 +1310,7 @@ argument_list|)
 expr_stmt|;
 name|ptrace
 argument_list|(
-name|WIUSER
+name|PT_WRITE_I
 argument_list|,
 name|pid
 argument_list|,
@@ -1335,7 +1335,7 @@ name|ins
 init|=
 name|ptrace
 argument_list|(
-name|RDUSER
+name|PT_READ_D
 argument_list|,
 name|pid
 argument_list|,
@@ -1346,7 +1346,7 @@ argument_list|)
 decl_stmt|;
 name|ptrace
 argument_list|(
-name|WDUSER
+name|PT_WRITE_D
 argument_list|,
 name|pid
 argument_list|,
@@ -1517,7 +1517,7 @@ name|sigcode
 operator|=
 name|ptrace
 argument_list|(
-name|RUREGS
+name|PT_READ_U
 argument_list|,
 name|pid
 argument_list|,
@@ -1603,7 +1603,7 @@ operator|)
 operator|=
 name|ptrace
 argument_list|(
-name|RUREGS
+name|PT_READ_U
 argument_list|,
 name|pid
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	4.5 %G%"
+literal|"@(#)command.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -972,7 +972,7 @@ name|dot
 argument_list|;
 name|ptrace
 argument_list|(
-name|WUREGS
+name|PT_WRITE_U
 argument_list|,
 name|pid
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)access.c	4.7 %G%"
+literal|"@(#)access.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,17 +273,17 @@ condition|?
 operator|(
 name|rd
 condition|?
-name|RDUSER
+name|PT_READ_D
 else|:
-name|WDUSER
+name|PT_WRITE_D
 operator|)
 else|:
 operator|(
 name|rd
 condition|?
-name|RIUSER
+name|PT_READ_I
 else|:
-name|WIUSER
+name|PT_WRITE_I
 operator|)
 operator|)
 decl_stmt|;
