@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qdcons.c	1.2  Berkeley  %G%  *  *	derived from: @(#)qdcons.c  4.1 (ULTRIX    11/23/87  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qdcons.c	1.3  Berkeley  %G%  *  *	derived from: @(#)qdcons.c  4.1 (ULTRIX    11/23/87  */
 end_comment
 
 begin_comment
@@ -32,25 +32,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../ultrix/qdioctl.h"
+file|"../vaxuba/qdioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ultrix/qevent.h"
+file|"../vaxuba/qevent.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ultrix/qduser.h"
+file|"../vaxuba/qduser.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ultrix/qdreg.h"
+file|"../vaxuba/qdreg.h"
 end_include
 
 begin_undef
