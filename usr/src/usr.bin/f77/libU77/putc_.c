@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_putc[] = "@(#)putc_.c	1.2";  *  * write a character to the standard output  *  * calling sequence:  *	integer putc  *	ierror =  putc (char)  * where:  *	char will be sent to the standard output, usually the terminal  *	ierror will be 0 if successful; a system error code otherwise.  */
+comment|/* char id_putc[] = "@(#)putc_.c	1.3";  *  * write a character to the standard output  *  * calling sequence:  *	integer putc  *	ierror =  putc (char)  * where:  *	char will be sent to the standard output, usually the terminal  *	ierror will be 0 if successful; a system error code otherwise.  */
 end_comment
 
 begin_include
@@ -83,12 +83,21 @@ operator|!
 name|lu
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowwriting
 argument_list|(
 name|lu
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+operator|(
+name|long
+operator|)
+name|errno
+operator|)
+return|;
 name|putc
 argument_list|(
 operator|*
