@@ -108,10 +108,12 @@ parameter_list|)
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|s
 decl_stmt|;
 name|FILE
 modifier|*
+name|__restrict
 name|fp
 decl_stmt|;
 block|{

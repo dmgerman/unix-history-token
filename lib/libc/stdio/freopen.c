@@ -135,21 +135,19 @@ parameter_list|)
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|file
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|__restrict
 name|mode
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|f
@@ -612,7 +610,7 @@ name|fp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

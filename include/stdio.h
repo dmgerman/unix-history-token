@@ -522,7 +522,7 @@ directive|define
 name|stderr
 value|__stderrp
 name|__BEGIN_DECLS
-comment|/*  * Functions defined in ANSI C standard.  *  * XXX fgetpos(), fgets(), fopen(), fputs(), fread(), freopen(), fscanf(),  * fwrite(), scanf(), sscanf(), vscanf(), and vsscanf() are missing the  * restrict type-qualifier.  */
+comment|/*  * Functions defined in ANSI C standard.  */
 name|void
 name|clearerr
 parameter_list|(
@@ -588,9 +588,11 @@ name|fgetpos
 parameter_list|(
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|,
 name|fpos_t
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -602,11 +604,13 @@ name|fgets
 parameter_list|(
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|int
 parameter_list|,
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -619,10 +623,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -664,9 +670,11 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -677,6 +685,7 @@ name|fread
 parameter_list|(
 name|void
 modifier|*
+name|__restrict
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -684,6 +693,7 @@ name|size_t
 parameter_list|,
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -696,13 +706,16 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -713,10 +726,12 @@ name|fscanf
 parameter_list|(
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -768,6 +783,7 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|__restrict
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -775,6 +791,7 @@ name|size_t
 parameter_list|,
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -909,6 +926,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -974,10 +992,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -1111,6 +1131,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|__va_list
 parameter_list|)
@@ -1162,10 +1183,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|__va_list
 parameter_list|)

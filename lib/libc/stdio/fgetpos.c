@@ -63,10 +63,12 @@ name|fgetpos
 parameter_list|(
 name|FILE
 modifier|*
+name|__restrict
 name|fp
 parameter_list|,
 name|fpos_t
 modifier|*
+name|__restrict
 name|pos
 parameter_list|)
 block|{

@@ -275,10 +275,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* XXX missing restrict qualifier. */
-end_comment
-
 begin_function_decl
 name|int
 name|sigwait
@@ -286,9 +282,11 @@ parameter_list|(
 specifier|const
 name|sigset_t
 modifier|*
+name|__restrict
 parameter_list|,
 name|int
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl

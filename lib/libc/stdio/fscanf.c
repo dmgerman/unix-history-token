@@ -87,11 +87,13 @@ name|fscanf
 parameter_list|(
 name|FILE
 modifier|*
+name|__restrict
 name|fp
 parameter_list|,
 name|char
 specifier|const
 modifier|*
+name|__restrict
 name|fmt
 parameter_list|,
 modifier|...

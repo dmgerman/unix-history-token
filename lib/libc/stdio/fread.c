@@ -101,6 +101,7 @@ name|fp
 parameter_list|)
 name|void
 modifier|*
+name|__restrict
 name|buf
 decl_stmt|;
 name|size_t
@@ -110,6 +111,7 @@ name|count
 decl_stmt|;
 name|FILE
 modifier|*
+name|__restrict
 name|fp
 decl_stmt|;
 block|{

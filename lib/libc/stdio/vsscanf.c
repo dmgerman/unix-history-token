@@ -133,11 +133,13 @@ parameter_list|)
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|str
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|fmt
 decl_stmt|;
 name|__va_list

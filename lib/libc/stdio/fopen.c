@@ -111,11 +111,13 @@ parameter_list|)
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|file
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|mode
 decl_stmt|;
 block|{
