@@ -1954,7 +1954,7 @@ name|void
 modifier|*
 name|tmp
 decl_stmt|;
-comment|/* XXX this is probably incomplete. */
+comment|/*      * Associate interrupt handlers with devices.  XXX this may be incomplete.      */
 name|dname
 operator|=
 name|dev
@@ -1963,6 +1963,12 @@ name|id_driver
 operator|->
 name|name
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_AD1848
+argument_list|)
 if|if
 condition|(
 name|strcmp
@@ -1998,6 +2004,11 @@ name|id_ointr
 operator|=
 name|adintr
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|CONFIG_GUS
 if|if
 condition|(
 name|strcmp
@@ -2015,6 +2026,11 @@ name|id_ointr
 operator|=
 name|gusintr
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|CONFIG_PAS
 if|if
 condition|(
 name|strcmp
@@ -2032,6 +2048,25 @@ name|id_ointr
 operator|=
 name|pasintr
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NSB
+operator|>
+literal|0
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|CONFIG_MIDI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_AUDIO
+argument_list|)
+operator|)
 if|if
 condition|(
 name|strcmp
@@ -2049,6 +2084,8 @@ name|id_ointr
 operator|=
 name|sbintr
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|strcmp
@@ -2066,6 +2103,11 @@ name|id_ointr
 operator|=
 name|sndintr
 expr_stmt|;
+if|#
+directive|if
+name|NSSCAPE
+operator|>
+literal|0
 if|if
 condition|(
 name|strcmp
@@ -2092,6 +2134,13 @@ name|id_ointr
 operator|=
 name|sscapeintr
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NSND
+operator|>
+literal|0
 if|if
 condition|(
 name|strcmp
@@ -2109,6 +2158,8 @@ name|id_ointr
 operator|=
 name|m6850intr
 expr_stmt|;
+endif|#
+directive|endif
 name|unit
 operator|=
 name|driver_to_voxunit
