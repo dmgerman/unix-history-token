@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.11 (Berkeley) %G%"
+literal|"@(#)tape.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,12 +541,6 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
 specifier|extern
 name|int
 name|xtrmap
@@ -1136,6 +1130,12 @@ index|[
 name|TP_BSIZE
 index|]
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|nextvol
@@ -1894,6 +1894,12 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
 name|fprintf
 argument_list|(
 name|stdout
