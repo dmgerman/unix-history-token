@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	1.1 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	1.2 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -778,47 +778,25 @@ name|FORCECLOSE
 expr_stmt|;
 block|}
 comment|/* 	 * Clear out buffer cache.  I don't think we 	 * ever get anything cached at this level at the 	 * moment, but who knows... 	 */
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_unmount: calling mntflushbuf\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|mntflushbuf
-argument_list|(
-name|mp
-argument_list|,
+if|#
+directive|if
 literal|0
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_unmount: calling mntinvalbuf\n"
-argument_list|)
-expr_stmt|;
+block|printf("portal_unmount: calling mntflushbuf\n");
 endif|#
 directive|endif
-if|if
-condition|(
-name|mntinvalbuf
-argument_list|(
-name|mp
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
+block|mntflushbuf(mp, 0);
+ifdef|#
+directive|ifdef
+name|PORTAL_DIAGNOSTIC
+block|printf("portal_unmount: calling mntinvalbuf\n");
+endif|#
+directive|endif
+block|if (mntinvalbuf(mp, 1)) 		return (EBUSY);
+endif|#
+directive|endif
 if|if
 condition|(
 name|rootvp
@@ -1000,8 +978,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -1342,6 +1318,50 @@ block|}
 end_block
 
 begin_macro
+name|portal_vget
+argument_list|(
+argument|mp
+argument_list|,
+argument|ino
+argument_list|,
+argument|vpp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ino_t
+name|ino
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
 name|portal_fhtovp
 argument_list|(
 argument|mp
@@ -1441,6 +1461,8 @@ block|,
 name|portal_statfs
 block|,
 name|portal_sync
+block|,
+name|portal_vget
 block|,
 name|portal_fhtovp
 block|,
