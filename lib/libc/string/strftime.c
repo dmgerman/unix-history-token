@@ -983,6 +983,7 @@ operator|(
 literal|0
 operator|)
 return|;
+continue|continue;
 case|case
 literal|'r'
 case|:
