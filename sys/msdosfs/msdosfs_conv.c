@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.7 1995/11/07 14:06:41 phk Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.8 1996/04/05 16:31:49 ache Exp $ */
 end_comment
 
 begin_comment
@@ -229,11 +229,13 @@ operator|*
 literal|60
 operator|)
 operator|-
+operator|(
 name|wall_cmos_clock
 condition|?
 name|adjkerntz
 else|:
 literal|0
+operator|)
 expr_stmt|;
 comment|/* - daylight savings time correction */
 if|if
@@ -707,11 +709,7 @@ operator|*
 literal|60
 operator|)
 operator|+
-name|wall_cmos_clock
-condition|?
 name|adjkerntz
-else|:
-literal|0
 expr_stmt|;
 comment|/* + daylight savings time correction */
 name|tsp
