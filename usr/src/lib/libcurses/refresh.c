@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.37 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -973,7 +973,7 @@ name|nlsp
 decl_stmt|;
 comment|/* Last space in lines. */
 specifier|register
-name|short
+name|int
 name|wx
 decl_stmt|,
 name|lch
@@ -1103,6 +1103,17 @@ expr_stmt|;
 if|if
 condition|(
 name|wx
+operator|<
+literal|0
+condition|)
+name|wx
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|wx
 operator|>=
 name|win
 operator|->
@@ -1113,17 +1124,6 @@ operator|(
 name|OK
 operator|)
 return|;
-elseif|else
-if|if
-condition|(
-name|wx
-operator|<
-literal|0
-condition|)
-name|wx
-operator|=
-literal|0
-expr_stmt|;
 name|lch
 operator|=
 operator|*
@@ -1156,6 +1156,9 @@ if|if
 condition|(
 name|lch
 operator|>=
+operator|(
+name|int
+operator|)
 name|win
 operator|->
 name|maxx
@@ -2358,6 +2361,9 @@ operator|&=
 operator|~
 name|__ISDIRTY
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NO_JERKINESS
 comment|/* 	 * If we have a bottom unchanged region return.  Scrolling the 	 * bottom region up and then back down causes a screen jitter. 	 * This will increase the number of characters sent to the screen 	 * but it looks better. 	 */
 if|if
 condition|(
@@ -2370,6 +2376,9 @@ operator|-
 literal|1
 condition|)
 return|return;
+endif|#
+directive|endif
+comment|/* NO_JERKINESS */
 comment|/* 	 * Search for the largest block of text not changed. 	 * Invariants of the loop: 	 * - Startw is the index of the beginning of the examined block in win.          * - Starts is the index of the beginning of the examined block in  	 *    curscr. 	 * - Curs is the index of one past the end of the exmined block in win. 	 * - Curw is the index of one past the end of the exmined block in  	 *   curscr. 	 * - bsize is the current size of the examined block.          */
 for|for
 control|(
