@@ -590,7 +590,7 @@ name|pcb_pfs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Arrange for continuation at fork_return(), which 	 * will return to exception_restore().  Note that the 	 * child process doesn't stay in the kernel for long! 	 * 	 * XXX what is this +/- 16 stuff here? 	 */
+comment|/* 	 * Arrange for continuation at fork_return(), which 	 * will return to exception_restore().  Note that the 	 * child process doesn't stay in the kernel for long! 	 * 	 * The extra 16 bytes subtracted from sp is part of the ia64 	 * ABI - a function can assume that the 16 bytes above sp are 	 * available as scratch space. 	 */
 name|td2
 operator|->
 name|td_pcb
