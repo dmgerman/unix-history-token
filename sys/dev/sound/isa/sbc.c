@@ -1627,13 +1627,12 @@ if|if
 condition|(
 operator|!
 name|logical_id
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 name|dh
 operator|<
 name|dl
+operator|)
 condition|)
 block|{
 name|struct
@@ -1697,7 +1696,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* soft irq/dma configuration */
 name|x
@@ -1851,10 +1849,6 @@ condition|(
 name|logical_id
 condition|)
 block|{
-case|case
-literal|0x01008c0e
-case|:
-comment|/* CTL0001 */
 case|case
 literal|0x43008c0e
 case|:
