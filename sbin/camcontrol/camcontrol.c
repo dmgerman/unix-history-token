@@ -479,6 +479,9 @@ block|,
 name|readdefect_opts
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 block|{
 literal|"devlist"
 block|,
@@ -487,6 +490,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 block|{
 literal|"periphlist"
 block|,
@@ -1520,6 +1526,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2238,6 +2253,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function
 specifier|static
@@ -14062,10 +14083,10 @@ else|:
 name|stderr
 argument_list|,
 literal|"usage:  camcontrol<command>  [device id][generic args][command args]\n"
+literal|"        camcontrol devlist    [-v]\n"
 ifndef|#
 directive|ifndef
 name|MINIMALISTIC
-literal|"        camcontrol devlist    [-v]\n"
 literal|"        camcontrol periphlist [dev_id][-n dev_name] [-u unit]\n"
 literal|"        camcontrol tur        [dev_id][generic args]\n"
 literal|"        camcontrol inquiry    [dev_id][generic args] [-D] [-S] [-R]\n"
@@ -14967,6 +14988,9 @@ name|cam_dev
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 case|case
 name|CAM_ARG_DEVTREE
 case|:
@@ -14976,6 +15000,9 @@ name|getdevtree
 argument_list|()
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 case|case
 name|CAM_ARG_TUR
 case|:
