@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.19 (Berkeley) %G%"
+literal|"@(#)func.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4228,17 +4228,23 @@ name|Char
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|v
+while|while
+condition|(
 operator|++
-expr_stmt|;
+name|v
+operator|&&
+operator|*
+name|v
+condition|)
+for|for
+control|(
 name|maxi
 operator|=
 literal|1
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|maxi
-condition|)
+condition|;
+control|)
 for|for
 control|(
 name|maxi
@@ -4386,7 +4392,7 @@ endif|#
 directive|endif
 comment|/* NLS */
 block|}
-comment|/* 	     * Delete name, and start again cause the environment changes 	     */
+comment|/* 		 * Delete name, and start again cause the environment changes 		 */
 name|Unsetenv
 argument_list|(
 name|name
