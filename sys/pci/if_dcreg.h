@@ -3452,6 +3452,14 @@ name|struct
 name|callout_handle
 name|dc_stat_ch
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|int
+name|dc_srm_media
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
