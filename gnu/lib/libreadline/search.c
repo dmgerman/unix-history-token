@@ -697,7 +697,11 @@ literal|'W'
 argument_list|)
 case|:
 name|rl_unix_word_rubout
-argument_list|()
+argument_list|(
+literal|1
+argument_list|,
+name|c
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -707,7 +711,11 @@ literal|'U'
 argument_list|)
 case|:
 name|rl_unix_line_discard
-argument_list|()
+argument_list|(
+literal|1
+argument_list|,
+name|c
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
