@@ -49,9 +49,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BUF_ERROR
+name|BUF_DEF_SIZE
 value|256
 end_define
+
+begin_comment
+comment|/* Default buffer size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUF_ADD_INC
+value|256
+end_define
+
+begin_comment
+comment|/* Expansion increment when Adding */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -69,50 +84,24 @@ name|size_t
 name|size
 decl_stmt|;
 comment|/* Current size of the buffer */
-name|size_t
-name|left
-decl_stmt|;
-comment|/* Space left (== size - (inPtr - buffer)) */
 name|Byte
 modifier|*
-name|buffer
+name|buf
 decl_stmt|;
 comment|/* The buffer itself */
 name|Byte
 modifier|*
-name|inPtr
+name|end
 decl_stmt|;
 comment|/* Place to write to */
-name|Byte
-modifier|*
-name|outPtr
-decl_stmt|;
-comment|/* Place to read from */
 block|}
 name|Buffer
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Buf_AddByte adds a single byte to a buffer. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Buf_AddByte
-parameter_list|(
-name|bp
-parameter_list|,
-name|byte
-parameter_list|)
-define|\
-value|(void)(--(bp)->left<= 0 ? Buf_OvAddByte((bp), (byte)), 1 : \ 		(*(bp)->inPtr++ = (byte), *(bp)->inPtr = 0), 1)
-end_define
-
 begin_function_decl
 name|void
-name|Buf_OvAddByte
+name|Buf_AddByte
 parameter_list|(
 name|Buffer
 modifier|*
@@ -166,6 +155,7 @@ begin_function_decl
 name|size_t
 name|Buf_Size
 parameter_list|(
+specifier|const
 name|Buffer
 modifier|*
 parameter_list|)

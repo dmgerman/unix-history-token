@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#)buf.c	8.1 (Berkeley) 6/6/93  */
+comment|/*-  * Copyright (c) 2005 Max Okumoto  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#)buf.c	8.1 (Berkeley) 6/6/93  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * buf.c --  *	Functions for automatically-expanded buffers.  */
+comment|/*  * buf.c  *	Functions for automatically-expanded buffers.  */
 end_comment
 
 begin_include
@@ -54,13 +54,13 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|max
+name|MAX
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|max
+name|MAX
 parameter_list|(
 name|a
 parameter_list|,
@@ -75,61 +75,132 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * BufExpand --  * 	Expand the given buffer to hold the given number of additional  *	bytes.  *	Makes sure there's room for an extra NULL byte at the end of the  *	buffer in case it holds a string.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BufExpand
-parameter_list|(
-name|bp
-parameter_list|,
-name|nb
-parameter_list|)
-value|do {						\  	if ((bp)->left< (nb) + 1) {					\ 		int newSize = (bp)->size + max((nb) + 1, BUF_ADD_INC);	\ 		Byte *newBuf = erealloc((bp)->buffer, newSize);		\ 									\ 		(bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer);	\ 		(bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);	\ 		(bp)->buffer = newBuf;					\ 		(bp)->size = newSize;					\ 		(bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);	\ 	}								\     } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUF_DEF_SIZE
-value|256
-end_define
-
-begin_comment
-comment|/* Default buffer size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUF_ADD_INC
-value|256
-end_define
-
-begin_comment
-comment|/* Expansion increment when Adding */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUF_UNGET_INC
-value|16
-end_define
-
-begin_comment
-comment|/* Expansion increment when Ungetting */
-end_comment
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_OvAddByte --  *	Add a single byte to the buffer.  left is zero or negative.  *  * Results:  *	None.  *  * Side Effects:  *	The buffer may be expanded.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Returns the number of bytes in the buffer.  Doesn't include the  * null-terminating byte.  */
 end_comment
 
 begin_function
+specifier|inline
+name|size_t
+name|Buf_Size
+parameter_list|(
+specifier|const
+name|Buffer
+modifier|*
+name|buf
+parameter_list|)
+block|{
+return|return
+operator|(
+name|buf
+operator|->
+name|end
+operator|-
+name|buf
+operator|->
+name|buf
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Expand the buffer to hold the number of additional bytes, plus  * space to store a terminating NULL byte.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
 name|void
-name|Buf_OvAddByte
+name|BufExpand
+parameter_list|(
+name|Buffer
+modifier|*
+name|bp
+parameter_list|,
+name|size_t
+name|nb
+parameter_list|)
+block|{
+name|size_t
+name|len
+init|=
+name|Buf_Size
+argument_list|(
+name|bp
+argument_list|)
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|size
+operator|<
+name|len
+operator|+
+name|nb
+operator|+
+literal|1
+condition|)
+block|{
+name|size
+operator|=
+name|bp
+operator|->
+name|size
+operator|+
+name|MAX
+argument_list|(
+name|nb
+operator|+
+literal|1
+argument_list|,
+name|BUF_ADD_INC
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|size
+operator|=
+name|size
+expr_stmt|;
+name|bp
+operator|->
+name|buf
+operator|=
+name|erealloc
+argument_list|(
+name|bp
+operator|->
+name|buf
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|end
+operator|=
+name|bp
+operator|->
+name|buf
+operator|+
+name|len
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/**  * Add a single byte to the buffer.  */
+end_comment
+
+begin_function
+specifier|inline
+name|void
+name|Buf_AddByte
 parameter_list|(
 name|Buffer
 modifier|*
@@ -139,12 +210,6 @@ name|Byte
 name|byte
 parameter_list|)
 block|{
-name|bp
-operator|->
-name|left
-operator|=
-literal|0
-expr_stmt|;
 name|BufExpand
 argument_list|(
 name|bp
@@ -155,29 +220,27 @@ expr_stmt|;
 operator|*
 name|bp
 operator|->
-name|inPtr
-operator|++
+name|end
 operator|=
 name|byte
 expr_stmt|;
 name|bp
 operator|->
-name|left
-operator|--
+name|end
+operator|++
 expr_stmt|;
-comment|/* 	 * Null-terminate 	 */
 operator|*
 name|bp
 operator|->
-name|inPtr
+name|end
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_AddBytes --  *	Add a number of bytes to the buffer.  *  * Results:  *	None.  *  * Side Effects:  *	Guess what?  *  *-----------------------------------------------------------------------  */
+comment|/**  * Add bytes to the buffer.  */
 end_comment
 
 begin_function
@@ -189,57 +252,50 @@ modifier|*
 name|bp
 parameter_list|,
 name|size_t
-name|numBytes
+name|len
 parameter_list|,
 specifier|const
 name|Byte
 modifier|*
-name|bytesPtr
+name|bytes
 parameter_list|)
 block|{
 name|BufExpand
 argument_list|(
 name|bp
 argument_list|,
-name|numBytes
+name|len
 argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
 name|bp
 operator|->
-name|inPtr
+name|end
 argument_list|,
-name|bytesPtr
+name|bytes
 argument_list|,
-name|numBytes
+name|len
 argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|inPtr
+name|end
 operator|+=
-name|numBytes
+name|len
 expr_stmt|;
-name|bp
-operator|->
-name|left
-operator|-=
-name|numBytes
-expr_stmt|;
-comment|/* 	 * Null-terminate 	 */
 operator|*
 name|bp
 operator|->
-name|inPtr
+name|end
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_GetAll --  *	Get all the available data at once.  *  * Results:  *	A pointer to the data and the number of bytes available.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Get a reference to the internal buffer.  *  * len:  *	Pointer to where we return the number of bytes in the internal buffer.  *  * Returns:  *	return A pointer to the data.  */
 end_comment
 
 begin_function
@@ -253,65 +309,35 @@ name|bp
 parameter_list|,
 name|size_t
 modifier|*
-name|numBytesPtr
+name|len
 parameter_list|)
 block|{
 if|if
 condition|(
-name|numBytesPtr
+name|len
 operator|!=
 name|NULL
 condition|)
 operator|*
-name|numBytesPtr
+name|len
 operator|=
+name|Buf_Size
+argument_list|(
 name|bp
-operator|->
-name|inPtr
-operator|-
-name|bp
-operator|->
-name|outPtr
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|bp
 operator|->
-name|outPtr
+name|buf
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_Size --  *	Returns the number of bytes in the given buffer. Doesn't include  *	the null-terminating byte.  *  * Results:  *	The number of bytes.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-name|size_t
-name|Buf_Size
-parameter_list|(
-name|Buffer
-modifier|*
-name|buf
-parameter_list|)
-block|{
-return|return
-operator|(
-name|buf
-operator|->
-name|inPtr
-operator|-
-name|buf
-operator|->
-name|outPtr
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_Init --  *	Initialize a buffer. If no initial size is given, a reasonable  *	default is used.  *  * Results:  *	A buffer to be given to other functions in this library.  *  * Side Effects:  *	The buffer is created, the space allocated and pointers  *	initialized.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Initialize a buffer. If no initial size is given, a reasonable  * default is used.  *  * Returns:  *	A buffer object to be given to other functions in this library.  *  * Side Effects:  *	Space is allocated for the Buffer object and a internal buffer.  */
 end_comment
 
 begin_function
@@ -328,17 +354,6 @@ modifier|*
 name|bp
 decl_stmt|;
 comment|/* New Buffer */
-name|bp
-operator|=
-name|emalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|bp
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|size
@@ -350,9 +365,16 @@ operator|=
 name|BUF_DEF_SIZE
 expr_stmt|;
 name|bp
-operator|->
-name|left
 operator|=
+name|emalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|size
@@ -361,7 +383,7 @@ name|size
 expr_stmt|;
 name|bp
 operator|->
-name|buffer
+name|buf
 operator|=
 name|emalloc
 argument_list|(
@@ -370,22 +392,18 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|inPtr
+name|end
 operator|=
 name|bp
 operator|->
-name|outPtr
-operator|=
-name|bp
-operator|->
-name|buffer
+name|buf
 expr_stmt|;
 operator|*
 name|bp
 operator|->
-name|inPtr
+name|end
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -396,7 +414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_Destroy --  *	Destroy a buffer, and optionally free its data, too.  *  * Results:  *	None.  *  * Side Effects:  *	The buffer is freed.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Destroy a buffer, and optionally free its data, too.  *  * Side Effects:  *	Space for the Buffer object and possibly the internal buffer  *	is de-allocated.  */
 end_comment
 
 begin_function
@@ -419,7 +437,7 @@ name|free
 argument_list|(
 name|buf
 operator|->
-name|buffer
+name|buf
 argument_list|)
 expr_stmt|;
 name|free
@@ -431,7 +449,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_ReplaceLastByte --  *     Replace the last byte in a buffer.  *  * Results:  *     None.  *  * Side Effects:  *     If the buffer was empty intially, then a new byte will be added.  *     Otherwise, the last byte is overwritten.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Replace the last byte in a buffer.  If the buffer was empty  * intially, then a new byte will be added.  */
 end_comment
 
 begin_function
@@ -440,7 +458,7 @@ name|Buf_ReplaceLastByte
 parameter_list|(
 name|Buffer
 modifier|*
-name|buf
+name|bp
 parameter_list|,
 name|Byte
 name|byte
@@ -448,27 +466,30 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|buf
+name|bp
 operator|->
-name|inPtr
+name|end
 operator|==
-name|buf
+name|bp
 operator|->
-name|outPtr
+name|buf
 condition|)
+block|{
 name|Buf_AddByte
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 name|byte
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 operator|*
 operator|(
-name|buf
+name|bp
 operator|->
-name|inPtr
+name|end
 operator|-
 literal|1
 operator|)
@@ -476,7 +497,12 @@ operator|=
 name|byte
 expr_stmt|;
 block|}
+block|}
 end_function
+
+begin_comment
+comment|/**  * Clear the contents of the buffer.  */
+end_comment
 
 begin_function
 name|void
@@ -489,34 +515,16 @@ parameter_list|)
 block|{
 name|bp
 operator|->
-name|inPtr
+name|end
 operator|=
 name|bp
 operator|->
-name|buffer
+name|buf
 expr_stmt|;
+operator|*
 name|bp
 operator|->
-name|outPtr
-operator|=
-name|bp
-operator|->
-name|buffer
-expr_stmt|;
-name|bp
-operator|->
-name|left
-operator|=
-name|bp
-operator|->
-name|size
-expr_stmt|;
-name|bp
-operator|->
-name|inPtr
-index|[
-literal|0
-index|]
+name|end
 operator|=
 literal|'\0'
 expr_stmt|;
