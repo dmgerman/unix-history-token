@@ -2081,7 +2081,7 @@ argument_list|(
 name|lnkdev
 argument_list|,
 operator|&
-name|resbuf
+name|crsbuf
 argument_list|)
 argument_list|)
 condition|)
