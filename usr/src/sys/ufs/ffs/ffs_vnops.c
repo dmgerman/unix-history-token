@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
