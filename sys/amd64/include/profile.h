@@ -238,9 +238,9 @@ name|MCOUNT
 define|\
 value|void									\ mcount()								\ {									\ 	uintfptr_t selfpc, frompc;					\
 comment|/*								\ 	 * Find the return address for mcount,				\ 	 * and the return address for mcount's caller.			\ 	 *								\ 	 * selfpc = pc pushed by call to mcount				\ 	 */
-value|\ 	asm("movq 8(%%rbp),%0" : "=r" (selfpc));			\
+value|\ 	__asm("movq 8(%%rbp),%0" : "=r" (selfpc));			\
 comment|/*								\ 	 * frompc = pc pushed by call to mcount's caller.		\ 	 * The caller's stack frame has already been built, so %ebp is	\ 	 * the caller's frame pointer.  The caller's raddr is in the	\ 	 * caller's frame following the caller's caller's frame pointer.\ 	 */
-value|\ 	asm("movq (%%rbp),%0" : "=r" (frompc));				\ 	frompc = ((uintfptr_t *)frompc)[1];				\ 	_mcount(frompc, selfpc);					\ }
+value|\ 	__asm("movq (%%rbp),%0" : "=r" (frompc));				\ 	frompc = ((uintfptr_t *)frompc)[1];				\ 	_mcount(frompc, selfpc);					\ }
 end_define
 
 begin_else
