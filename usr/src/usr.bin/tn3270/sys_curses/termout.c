@@ -187,15 +187,6 @@ begin_comment
 comment|/* the screen has been stopped */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -209,15 +200,6 @@ end_comment
 
 begin_comment
 comment|/* at terminal and net again */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(SLOWSCREEN) */
 end_comment
 
 begin_decl_stmt
@@ -300,15 +282,6 @@ begin_comment
 comment|/* defined(unix) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -326,15 +299,6 @@ name|MAXSCREENSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(SLOWSCREEN) */
-end_comment
 
 begin_comment
 comment|/* Variables for transparent mode */
@@ -415,12 +379,6 @@ name|bellwinup
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
 name|inHighlightMode
 operator|=
 literal|0
@@ -430,9 +388,6 @@ argument_list|(
 name|Terminal
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
 block|}
 end_function
 
@@ -585,15 +540,6 @@ end_function
 begin_escape
 end_escape
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-end_if
-
 begin_comment
 comment|/* What is the screen address of the attribute byte for the terminal */
 end_comment
@@ -659,30 +605,12 @@ comment|/* unformatted screen... */
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(SLOWSCREEN) */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
 comment|/*  *	There are two algorithms for updating the screen.  *  The first, SlowScreen() optimizes the line between the  *  computer and the screen (say a 9600 baud line).  To do  *  this, we break out of the loop every so often to look  *  at any pending input from the network (so that successive  *  screens will only partially print until the final screen,  *  the one the user possibly wants to see, is displayed  *  in its entirety).  *  *	The second algorithm tries to optimize CPU time (by  *  being simpler) at the cost of the bandwidth to the  *  screen.  *  *	Of course, curses(3X) gets in here also.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-end_if
 
 begin_if
 if|#
@@ -1371,15 +1299,6 @@ comment|/* move data along */
 return|return;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(SLOWSCREEN) */
-end_comment
 
 begin_escape
 end_escape
@@ -2119,20 +2038,11 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* defined(unix) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
 name|ClearArray
 argument_list|(
 name|Terminal
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
 name|terminalCursorAddress
 operator|=
 name|SetBufferAddress
@@ -2166,11 +2076,6 @@ directive|if
 name|defined
 argument_list|(
 name|unix
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|SLOWSCREEN
 argument_list|)
 name|ioctl
 argument_list|(
@@ -2247,7 +2152,7 @@ comment|/* get signals going */
 block|}
 endif|#
 directive|endif
-comment|/* defined(unix)&& defined(SLOWSCREEN) */
+comment|/* defined(unix) */
 name|setcommandmode
 argument_list|()
 expr_stmt|;
@@ -2439,19 +2344,10 @@ expr_stmt|;
 name|standend
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
 name|inHighlightMode
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
 name|DoARefresh
 argument_list|()
 expr_stmt|;
@@ -2600,20 +2496,11 @@ name|clear
 argument_list|()
 expr_stmt|;
 comment|/* clear in curses */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
 name|ClearArray
 argument_list|(
 name|Terminal
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
 name|Clear3270
 argument_list|()
 expr_stmt|;
@@ -2684,12 +2571,6 @@ operator|+
 literal|3
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
 name|memset
 argument_list|(
 operator|(
@@ -2721,9 +2602,6 @@ name|COLS
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
 name|touchwin
 argument_list|(
 name|stdscr

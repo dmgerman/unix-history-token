@@ -9,15 +9,6 @@ directive|define
 name|INCLUDED_TERMINAL
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-end_if
-
 begin_comment
 comment|/*  * In the situation where we have a copy of the terminal screen in front  * of us, here are some macros to deal with them.  */
 end_comment
@@ -174,15 +165,6 @@ name|p
 parameter_list|)
 value|NeedToRedisplayAttr(c,p,FieldAttributes(p))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(SLOWSCREEN) */
-end_comment
 
 begin_define
 define|#
