@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)leave.c	4.2 (Berkeley) %G%"
+literal|"@(#)leave.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_comment
@@ -587,23 +593,30 @@ argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-literal|2
+name|SIGINT
 argument_list|,
-literal|1
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-literal|3
+name|SIGQUIT
 argument_list|,
-literal|1
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-literal|15
+name|SIGTERM
 argument_list|,
-literal|1
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTTOU
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 if|if
