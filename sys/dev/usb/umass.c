@@ -4934,7 +4934,14 @@ operator|&
 name|UMASS_PROTO_BBB
 argument_list|,
 operator|(
-literal|"sc->proto == 0x%02x wrong for umass_bbb_reset\n"
+literal|"%s: umass_bbb_reset: wrong sc->proto 0x%02x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|sc
 operator|->
@@ -5108,7 +5115,14 @@ operator|&
 name|UMASS_PROTO_BBB
 argument_list|,
 operator|(
-literal|"sc->proto == 0x%02x wrong for umass_bbb_transfer\n"
+literal|"%s: umass_bbb_transfer: wrong sc->proto 0x%02x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|sc
 operator|->
@@ -5503,7 +5517,14 @@ operator|&
 name|UMASS_PROTO_BBB
 argument_list|,
 operator|(
-literal|"sc->proto == 0x%02x wrong for umass_bbb_state\n"
+literal|"%s: umass_bbb_state: wrong sc->proto 0x%02x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|sc
 operator|->
@@ -6946,7 +6967,14 @@ name|UMASS_PROTO_CBI_I
 operator|)
 argument_list|,
 operator|(
-literal|"sc->proto == 0x%02x wrong for umass_cbi_adsc\n"
+literal|"%s: umass_cbi_adsc: wrong sc->proto 0x%02x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|sc
 operator|->
@@ -7073,7 +7101,14 @@ name|UMASS_PROTO_CBI_I
 operator|)
 argument_list|,
 operator|(
-literal|"sc->proto == 0x%02x wrong for umass_cbi_reset\n"
+literal|"%s: umass_cbi_reset: wrong sc->proto 0x%02x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|sc
 operator|->
@@ -7260,7 +7295,14 @@ name|UMASS_PROTO_CBI_I
 operator|)
 argument_list|,
 operator|(
-literal|"sc->proto == 0x%02x wrong for umass_cbi_transfer\n"
+literal|"%s: umass_cbi_transfer: wrong sc->proto 0x%02x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|sc
 operator|->
@@ -7447,7 +7489,14 @@ name|UMASS_PROTO_CBI_I
 operator|)
 argument_list|,
 operator|(
-literal|"sc->proto == 0x%02x wrong for umass_cbi_state\n"
+literal|"%s: umass_cbi_state: wrong sc->proto 0x%02x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|sc
 operator|->
