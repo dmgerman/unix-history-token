@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.37 1998/08/26 18:07:56 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.38 1999/01/28 01:56:31 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -564,26 +564,17 @@ operator|=
 operator|(
 name|random
 argument_list|()
-operator|&
-operator|(
-literal|0x7f
-operator|-
-literal|0x20
-operator|)
+operator|%
+literal|10
 operator|)
 operator|+
-literal|0x20
-expr_stmt|;
-operator|*
-name|cp
-operator|=
-literal|'\0'
+literal|'0'
 expr_stmt|;
 block|}
 else|else
-block|{
 endif|#
 directive|endif
+block|{
 operator|*
 name|cp
 operator|++
@@ -627,6 +618,7 @@ argument_list|()
 operator|&
 literal|0xff
 expr_stmt|;
+block|}
 name|len
 operator|=
 name|strlen
@@ -667,12 +659,6 @@ name|cp
 operator|+=
 name|len
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NORADIUS
-block|}
-endif|#
-directive|endif
 name|ChapOutput
 argument_list|(
 name|physical
@@ -727,13 +713,14 @@ name|int
 name|valsize
 decl_stmt|,
 name|len
-decl_stmt|;
-name|int
+decl_stmt|,
 name|arglen
 decl_stmt|,
 name|keylen
 decl_stmt|,
 name|namelen
+decl_stmt|,
+name|success
 decl_stmt|;
 name|char
 modifier|*
@@ -1369,6 +1356,10 @@ case|case
 name|CHAP_RESPONSE
 case|:
 comment|/*      * Get a secret key corresponds to the peer      */
+name|success
+operator|=
+literal|0
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NORADIUS
@@ -1388,6 +1379,11 @@ name|char
 name|chapname
 index|[
 name|AUTHLEN
+index|]
+decl_stmt|,
+name|chal
+index|[
+literal|17
 index|]
 decl_stmt|;
 if|if
@@ -1420,20 +1416,51 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|*
+name|answer
+operator|=
+name|chp
+operator|->
+name|id
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|answer
-argument_list|,
-name|cp
-operator|-
+operator|+
 literal|1
 argument_list|,
-literal|17
+name|cp
+argument_list|,
+literal|16
 argument_list|)
 expr_stmt|;
 name|answer
 index|[
 literal|17
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|chal
+argument_list|,
+name|physical
+operator|->
+name|dl
+operator|->
+name|chap
+operator|.
+name|challenge_data
+operator|+
+literal|1
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+name|chal
+index|[
+literal|16
 index|]
 operator|=
 literal|'\0'
@@ -1453,18 +1480,13 @@ name|chapname
 argument_list|,
 name|answer
 argument_list|,
-name|physical
-operator|->
-name|dl
-operator|->
-name|chap
-operator|.
-name|challenge_data
-operator|+
-literal|1
+name|chal
 argument_list|)
 condition|)
-break|break;
+name|success
+operator|=
+literal|1
+expr_stmt|;
 comment|/* And there was much rejoicing ! */
 block|}
 elseif|else
@@ -1607,6 +1629,15 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+name|success
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|success
+condition|)
 block|{
 name|datalink_GotAuthname
 argument_list|(
@@ -1674,7 +1705,7 @@ name|auth_iwait
 operator|==
 literal|0
 condition|)
-comment|/*            * Either I didn't need to authenticate, or I've already been            * told that I got the answer right.            */
+comment|/*          * Either I didn't need to authenticate, or I've already been          * told that I got the answer right.          */
 name|datalink_AuthOk
 argument_list|(
 name|physical
@@ -1682,10 +1713,10 @@ operator|->
 name|dl
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-block|}
-comment|/*      * Peer is not registerd, or response digest is wrong.      */
+else|else
+block|{
+comment|/*        * Peer is not registerd, or response digest is wrong.        */
 name|ChapOutput
 argument_list|(
 name|physical
@@ -1711,6 +1742,7 @@ name|dl
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 end_function
