@@ -8,7 +8,7 @@ comment|/*  Copyright 1988, 1989 by the Massachusetts Institute of Technology  P
 end_comment
 
 begin_comment
-comment|/*  *      newsyslog - roll over selected logs at the appropriate time,  *              keeping the a specified number of backup files around.  *  *      $Source: /a/cvsroot/src/usr.bin/newsyslog/newsyslog.c,v $  *      $Author: jtc $  */
+comment|/*  *      newsyslog - roll over selected logs at the appropriate time,  *              keeping the a specified number of backup files around.  *  *      $Source: /home/ncvs/src/usr.sbin/newsyslog/newsyslog.c,v $  *      $Author: graichen $  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.9 1995/01/21 21:53:46 jtc Exp $"
+literal|"$Id: newsyslog.c,v 1.1.1.1 1996/01/05 09:28:10 graichen Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -953,7 +953,7 @@ literal|4
 expr_stmt|;
 name|daytime
 index|[
-literal|16
+literal|15
 index|]
 operator|=
 literal|'\0'
