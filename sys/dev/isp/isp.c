@@ -495,7 +495,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Reset Hardware.  *  * Hit the chip over the head, download new f/w and set it running.  *  * Locking done elsewhere.  */
+comment|/*  * Reset Hardware.  *  * Hit the chip over the head, download new f/w if available and set it running.  *  * Locking done elsewhere.  */
 end_comment
 
 begin_function
@@ -695,34 +695,6 @@ index|]
 operator|=
 literal|'2'
 expr_stmt|;
-comment|/* 			 * Resident firmware for the 2200 appears 			 * to have SCCLUN enabled. 			 */
-ifndef|#
-directive|ifndef
-name|ISP2100_SCCLUN
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_mdvec
-operator|->
-name|dv_fwlen
-operator|==
-literal|0
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: WARNING- using resident f/w without"
-literal|" SCCLUN support defined\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 break|break;
 default|default:
 break|break;
@@ -1828,9 +1800,9 @@ name|isp
 operator|->
 name|isp_mdvec
 operator|->
-name|dv_fwlen
-operator|==
-literal|0
+name|dv_ispfw
+operator|!=
+name|NULL
 operator|)
 operator|||
 operator|(
@@ -1855,9 +1827,36 @@ name|isp
 operator|->
 name|isp_mdvec
 operator|->
-name|dv_fwlen
+name|dv_ispfw
 condition|)
 block|{
+name|u_int16_t
+name|fwlen
+init|=
+name|isp
+operator|->
+name|isp_mdvec
+operator|->
+name|dv_fwlen
+decl_stmt|;
+if|if
+condition|(
+name|fwlen
+operator|==
+literal|0
+condition|)
+name|fwlen
+operator|=
+name|isp
+operator|->
+name|isp_mdvec
+operator|->
+name|dv_ispfw
+index|[
+literal|3
+index|]
+expr_stmt|;
+comment|/* usually here */
 for|for
 control|(
 name|i
@@ -1866,11 +1865,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|isp
-operator|->
-name|isp_mdvec
-operator|->
-name|dv_fwlen
+name|fwlen
 condition|;
 name|i
 operator|++
