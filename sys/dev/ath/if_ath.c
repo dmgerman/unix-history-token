@@ -2830,6 +2830,9 @@ name|IEEE80211_S_RUN
 condition|)
 block|{
 comment|/* 		 * Rather than go directly to scan state, try to 		 * reassociate first.  If that fails then the state 		 * machine will drop us into scanning after timing 		 * out waiting for a probe response. 		 */
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|ieee80211_new_state
 argument_list|(
 name|ic
@@ -2839,6 +2842,9 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -8395,6 +8401,10 @@ decl_stmt|;
 name|HAL_STATUS
 name|status
 decl_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
+comment|/* XXX */
 name|DPRINTF
 argument_list|(
 name|ATH_DEBUG_RX_PROC
@@ -9106,6 +9116,10 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* in case of RXEOL */
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
+comment|/* XXX */
 undef|#
 directive|undef
 name|PA2DESC
