@@ -514,6 +514,10 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+name|gp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|ga
