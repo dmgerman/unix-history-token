@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socketvar.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socketvar.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -482,14 +482,25 @@ parameter_list|)
 value|sonewconn1((head), (connstatus))
 end_define
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|socket
 modifier|*
 name|sonewconn1
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|head
+operator|,
+name|int
+name|connstatus
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* strings for sleep message: */
@@ -509,32 +520,9 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Operations on sockets.  */
+comment|/*  * File operations on sockets.  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|file
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|ucred
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|uio
-struct_decl|;
-end_struct_decl
 
 begin_decl_stmt
 name|int
@@ -542,7 +530,6 @@ name|soo_read
 name|__P
 argument_list|(
 operator|(
-comment|/* read a socket into a uio structure */
 expr|struct
 name|file
 operator|*
@@ -568,7 +555,6 @@ name|soo_write
 name|__P
 argument_list|(
 operator|(
-comment|/* write socket from a uio structure */
 expr|struct
 name|file
 operator|*
@@ -594,7 +580,6 @@ name|soo_ioctl
 name|__P
 argument_list|(
 operator|(
-comment|/* do an ioctl operation on a socket */
 expr|struct
 name|file
 operator|*
@@ -621,7 +606,6 @@ name|soo_select
 name|__P
 argument_list|(
 operator|(
-comment|/* do a select operation on a socket */
 expr|struct
 name|file
 operator|*
@@ -645,7 +629,6 @@ name|soo_close
 name|__P
 argument_list|(
 operator|(
-comment|/* close socket */
 expr|struct
 name|file
 operator|*
@@ -659,6 +642,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
