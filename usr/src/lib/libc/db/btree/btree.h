@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -844,12 +844,12 @@ define|#
 directive|define
 name|BTF_FIXEDLEN
 value|0x002
-comment|/* fixed length records */
+comment|/* R: fixed length records */
 define|#
 directive|define
 name|BTF_INMEM
 value|0x004
-comment|/* in-memory tree */
+comment|/* B: in-memory tree */
 define|#
 directive|define
 name|BTF_METADIRTY
@@ -874,11 +874,16 @@ define|#
 directive|define
 name|BTF_RECNO
 value|0x080
-comment|/* record oriented tree */
+comment|/* R: record oriented tree */
+define|#
+directive|define
+name|BTF_RINMEM
+value|0x100
+comment|/* R: in-memory tree */
 define|#
 directive|define
 name|BTF_SEQINIT
-value|0x100
+value|0x200
 comment|/* sequential scan initialized */
 name|u_long
 name|bt_flags
@@ -888,30 +893,6 @@ block|}
 name|BTREE
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|ISSET
-parameter_list|(
-name|t
-parameter_list|,
-name|f
-parameter_list|)
-value|((t)->bt_flags& (f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOTSET
-parameter_list|(
-name|t
-parameter_list|,
-name|f
-parameter_list|)
-value|(!((t)->bt_flags& (f)))
-end_define
 
 begin_define
 define|#
@@ -928,13 +909,25 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNSET
+name|CLR
 parameter_list|(
 name|t
 parameter_list|,
 name|f
 parameter_list|)
 value|((t)->bt_flags&= ~(f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISSET
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|((t)->bt_flags& (f))
 end_define
 
 begin_include
