@@ -1135,9 +1135,11 @@ name|p
 decl_stmt|,
 modifier|*
 name|pref
-init|=
-name|NULL
 decl_stmt|;
+name|pref
+operator|=
+name|NULL
+expr_stmt|;
 name|SRtotal
 operator|=
 literal|0
