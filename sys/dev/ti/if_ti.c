@@ -5337,6 +5337,7 @@ value|(UDP_HDR_LEN)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|HDR_LEN
 init|=
