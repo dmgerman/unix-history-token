@@ -1555,6 +1555,8 @@ argument_list|,
 name|scp
 operator|->
 name|cursor_pos
+operator|+
+literal|1
 argument_list|,
 name|ch
 argument_list|,

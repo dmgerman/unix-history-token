@@ -1731,6 +1731,20 @@ block|{
 ifndef|#
 directive|ifndef
 name|SC_ALT_MOUSE_IMAGE
+if|if
+condition|(
+name|ISMOUSEAVAIL
+argument_list|(
+name|scp
+operator|->
+name|sc
+operator|->
+name|adp
+operator|->
+name|va_flags
+argument_list|)
+condition|)
+block|{
 name|u_char
 name|font_buf
 index|[
@@ -2342,9 +2356,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
+block|}
+else|else
+endif|#
+directive|endif
 comment|/* SC_ALT_MOUSE_IMAGE */
+block|{
 comment|/* Red, magenta and brown are mapped to green to to keep it readable */
 specifier|static
 specifier|const
@@ -2519,9 +2536,7 @@ argument_list|,
 name|color
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SC_ALT_MOUSE_IMAGE */
+block|}
 block|}
 end_function
 

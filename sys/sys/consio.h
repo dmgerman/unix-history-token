@@ -569,6 +569,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CONS_NO_SAVER
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CONS_LKM_SAVER
 value|0
 end_define

@@ -125,6 +125,55 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Always load font data if the pixel (raster text) mode is to be used. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SC_PIXEL_MODE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|SC_NO_FONT_LOADING
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*   * If font data is not available, the `arrow'-shaped mouse cursor cannot  * be drawn.  Use the alternative drawing method.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SC_NO_FONT_LOADING
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|SC_ALT_MOUSE_IMAGE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SC_ALT_MOUSE_IMAGE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1808,33 +1857,6 @@ parameter_list|)
 value|((scp)->status& UNKNOWN_MODE)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISMOUSEAVAIL
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SC_ALT_MOUSE_IMAGE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISMOUSEAVAIL
-parameter_list|(
-name|af
-parameter_list|)
-value|(1)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1844,15 +1866,6 @@ name|af
 parameter_list|)
 value|((af)& V_ADP_FONT)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SC_ALT_MOUSE_IMAGE */
-end_comment
 
 begin_define
 define|#
@@ -1873,15 +1886,6 @@ name|af
 parameter_list|)
 value|((af)& V_ADP_PALETTE)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ISMOUSEAVAIL */
-end_comment
 
 begin_define
 define|#
