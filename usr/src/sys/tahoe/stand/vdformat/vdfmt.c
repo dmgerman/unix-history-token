@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vdfmt.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)vdfmt.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,8 +307,6 @@ name|vddcaddr
 index|[
 name|ctlr
 index|]
-operator|+
-name|VBIOBASE
 operator|)
 expr_stmt|;
 if|if
