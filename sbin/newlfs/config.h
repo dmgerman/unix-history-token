@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|ROTDELAY
-value|4
+value|0
 end_define
 
 begin_comment
@@ -153,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|NRPOS
-value|8
+value|1
 end_define
 
 begin_comment
@@ -203,21 +203,21 @@ begin_define
 define|#
 directive|define
 name|DFL_LFSBLOCK
-value|4096
+value|8192
 end_define
 
 begin_define
 define|#
 directive|define
 name|DFL_LFSBLOCK_SHIFT
-value|12
+value|13
 end_define
 
 begin_define
 define|#
 directive|define
 name|DFL_LFSBLOCK_MASK
-value|0xFFF
+value|0x1FFF
 end_define
 
 end_unit

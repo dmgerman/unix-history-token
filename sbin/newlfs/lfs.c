@@ -655,7 +655,7 @@ name|partp
 parameter_list|,
 name|minfree
 parameter_list|,
-name|block_size
+name|bsize
 parameter_list|,
 name|seg_size
 parameter_list|)
@@ -676,7 +676,7 @@ name|int
 name|minfree
 decl_stmt|;
 name|int
-name|block_size
+name|bsize
 decl_stmt|;
 name|int
 name|seg_size
@@ -788,10 +788,6 @@ name|block_array_size
 decl_stmt|;
 comment|/* How many entries in block array */
 name|int
-name|bsize
-decl_stmt|;
-comment|/* Block size */
-name|int
 name|db_per_fb
 decl_stmt|;
 comment|/* Disk blocks per file block */
@@ -824,19 +820,6 @@ name|lfsp
 operator|=
 operator|&
 name|lfs_default
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|bsize
-operator|=
-name|block_size
-operator|)
-condition|)
-name|bsize
-operator|=
-name|DFL_LFSBLOCK
 expr_stmt|;
 if|if
 condition|(
