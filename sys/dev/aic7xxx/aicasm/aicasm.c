@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx SCSI host adapter firmware asssembler  *  * Copyright (c) 1997, 1998, 2000, 2001 Justin T. Gibbs.  * Copyright (c) 2001, 2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aicasm/aicasm.c#22 $  *  * $FreeBSD$  */
+comment|/*  * Aic7xxx SCSI host adapter firmware asssembler  *  * Copyright (c) 1997, 1998, 2000, 2001 Justin T. Gibbs.  * Copyright (c) 2001, 2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aicasm/aicasm.c#23 $  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2486,7 +2486,7 @@ name|fprintf
 argument_list|(
 name|listfile
 argument_list|,
-literal|"\t\t%s"
+literal|"             \t%s"
 argument_list|,
 name|buf
 argument_list|)
@@ -2499,7 +2499,7 @@ name|fprintf
 argument_list|(
 name|listfile
 argument_list|,
-literal|"%03x %02x%02x%02x%02x"
+literal|"%04x %02x%02x%02x%02x"
 argument_list|,
 name|instrptr
 argument_list|,
@@ -2586,6 +2586,16 @@ block|)
 empty_stmt|;
 endif|#
 directive|endif
+comment|/* 		 * Macro expansions can cause several instructions 		 * to be output for a single source line.  Only 		 * advance the line once in these cases. 		 */
+if|if
+condition|(
+name|line
+operator|==
+name|cur_instr
+operator|->
+name|srcline
+condition|)
+block|{
 name|fgets
 argument_list|(
 name|buf
@@ -2610,6 +2620,17 @@ expr_stmt|;
 name|line
 operator|++
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|listfile
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|instrptr
 operator|++
 expr_stmt|;
@@ -2641,7 +2662,7 @@ name|fprintf
 argument_list|(
 name|listfile
 argument_list|,
-literal|"\t\t%s"
+literal|"             %s"
 argument_list|,
 name|buf
 argument_list|)
