@@ -6909,11 +6909,6 @@ decl_stmt|,
 modifier|*
 name|buf2
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|struct
 name|addrinfo
 name|sentinel
@@ -7041,7 +7036,7 @@ name|q
 operator|.
 name|name
 operator|=
-name|name
+name|hostname
 expr_stmt|;
 name|q
 operator|.
@@ -7085,7 +7080,7 @@ name|q2
 operator|.
 name|name
 operator|=
-name|name
+name|hostname
 expr_stmt|;
 name|q2
 operator|.
@@ -7126,7 +7121,7 @@ name|q
 operator|.
 name|name
 operator|=
-name|name
+name|hostname
 expr_stmt|;
 name|q
 operator|.
@@ -7167,7 +7162,7 @@ name|q
 operator|.
 name|name
 operator|=
-name|name
+name|hostname
 expr_stmt|;
 name|q
 operator|.
