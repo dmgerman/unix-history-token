@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	6.4	84/08/28	*/
+comment|/*	trap.c	6.5	85/03/12	*/
 end_comment
 
 begin_include
@@ -874,16 +874,17 @@ operator|==
 literal|139
 condition|)
 block|{
-comment|/* XXX */
-name|sigcleanup
+comment|/* XXX 4.2 COMPATIBILITY */
+name|osigcleanup
 argument_list|()
 expr_stmt|;
-comment|/* XXX */
+comment|/* XXX 4.2 COMPATIBILITY */
 goto|goto
 name|done
 goto|;
-comment|/* XXX */
+comment|/* XXX 4.2 COMPATIBILITY */
 block|}
+comment|/* XXX 4.2 COMPATIBILITY */
 name|params
 operator|=
 operator|(
@@ -982,6 +983,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|callp
@@ -992,33 +994,14 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
-condition|)
-block|{
-ifndef|#
-directive|ifndef
-name|lint
-asm|asm("prober $3,r9,(r10)");
-comment|/* GROT */
-asm|asm("bnequ ok");
-comment|/* GROT */
+operator|)
+operator|&&
+operator|(
 name|u
 operator|.
 name|u_error
 operator|=
-name|EFAULT
-expr_stmt|;
-comment|/* GROT */
-goto|goto
-name|bad
-goto|;
-comment|/* GROT */
-asm|asm("ok:");
-comment|/* GROT */
-asm|asm("movc3 r9,(r10),_u+U_ARG");
-comment|/* GROT */
-else|#
-directive|else
-name|bcopy
+name|copyin
 argument_list|(
 name|params
 argument_list|,
@@ -1034,18 +1017,32 @@ name|u_int
 operator|)
 name|i
 argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-name|u
-operator|.
-name|u_ap
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|locr0
+index|[
+name|R0
+index|]
 operator|=
 name|u
 operator|.
-name|u_arg
+name|u_error
 expr_stmt|;
+name|locr0
+index|[
+name|PS
+index|]
+operator||=
+name|PSL_C
+expr_stmt|;
+comment|/* carry bit */
+goto|goto
+name|done
+goto|;
+block|}
 name|u
 operator|.
 name|u_r
@@ -1087,8 +1084,8 @@ operator|&&
 name|u
 operator|.
 name|u_eosys
-operator|==
-name|JUSTRETURN
+operator|!=
+name|RESTARTSYS
 condition|)
 name|u
 operator|.
@@ -1103,7 +1100,7 @@ name|u
 operator|.
 name|u_eosys
 operator|=
-name|JUSTRETURN
+name|NORMALRETURN
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1223,30 +1220,9 @@ name|u
 operator|.
 name|u_eosys
 operator|==
-name|RESTARTSYS
+name|NORMALRETURN
 condition|)
-name|pc
-operator|=
-name|opc
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-elseif|else
-if|if
-condition|(
-name|u
-operator|.
-name|u_eosys
-operator|==
-name|SIMULATERTI
-condition|)
-name|dorti
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-elseif|else
+block|{
 if|if
 condition|(
 name|u
@@ -1254,13 +1230,6 @@ operator|.
 name|u_error
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|lint
-name|bad
-label|:
-endif|#
-directive|endif
 name|locr0
 index|[
 name|R0
@@ -1312,6 +1281,22 @@ operator|~
 name|PSL_C
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|u
+operator|.
+name|u_eosys
+operator|==
+name|RESTARTSYS
+condition|)
+name|pc
+operator|=
+name|opc
+expr_stmt|;
+comment|/* else if (u.u_eosys == JUSTRETURN) */
+comment|/* nothing to do */
 name|done
 label|:
 name|p
